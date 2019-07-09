@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="crowbar_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\crowbar_icon.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="macaw" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\macaw.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="crowbar_icon_large" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\crowbar_icon_large.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="About_ProductDescription" xml:space="preserve">
+    <value>GoldSource and Source Engine Modding Toolset:
+* Decompiler of MDL and related files.
+* Compiler interface to StudioMDL.exe tool.
+* Model viewer interface to Half-Life Model Viewer tool.
+* Unpacker of Tactical Intervention FPX, Garry's Mod GMA, Vampire: The Masquerade - Bloodlines VPK files, and Source-engine VPK files.
+* Packer interface to Garry's Mod GMA and Source-engine VPK packer tools.
+* Downloader of Workshop items from any Steam game that allows public downloads.
+* Publisher of Workshop items for several Source-engine games.</value>
+  </data>
+  <data name="Decompile_DebugAniFileNameSuffix" xml:space="preserve">
+    <value>decompile-ANI.txt</value>
+  </data>
+  <data name="Decompile_DebugMdlFileNameSuffix" xml:space="preserve">
+    <value>decompile-MDL.txt</value>
+  </data>
+  <data name="Decompile_DebugPhyFileNameSuffix" xml:space="preserve">
+    <value>decompile-PHY.txt</value>
+  </data>
+  <data name="Decompile_DebugSequenceGroupMDLFileNameSuffix" xml:space="preserve">
+    <value>decompile-SequenceGroupMDL.txt</value>
+  </data>
+  <data name="Decompile_DebugTextureMDLFileNameSuffix" xml:space="preserve">
+    <value>decompile-TextureMDL.txt</value>
+  </data>
+  <data name="Decompile_DebugVtxFileNameSuffix" xml:space="preserve">
+    <value>decompile-VTX.txt</value>
+  </data>
+  <data name="Decompile_DebugVvdFileNameSuffix" xml:space="preserve">
+    <value>decompile-VVD.txt</value>
+  </data>
+  <data name="Decompile_LogFileNameSuffix" xml:space="preserve">
+    <value>decompile-log.txt</value>
+  </data>
+  <data name="About_AuthorLink" xml:space="preserve">
+    <value>http://steamcommunity.com/id/zeqmacaw</value>
+  </data>
+  <data name="About_ProductLink" xml:space="preserve">
+    <value>http://steamcommunity.com/groups/CrowbarTool</value>
+  </data>
+  <data name="ErrorMessageSDKMissingCause" xml:space="preserve">
+    <value>Possible causes: The game's SDK or Authoring Tools has not been installed (usually via Steam Library Tools) or the path given to Crowbar (via Set Up Games button) is incorrect.</value>
+  </data>
+  <data name="FindNext" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\FindNext.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FindPrevious" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\FindPrevious.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Unpack_LogFileNameSuffix" xml:space="preserve">
+    <value>unpack-log.txt</value>
+  </data>
+  <data name="EnterArrow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\EnterArrow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Find" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\Find.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\Refresh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="About_GotoSteamGroupText" xml:space="preserve">
+    <value>Goto Steam Group</value>
+  </data>
+  <data name="About_GotoSteamProfileText" xml:space="preserve">
+    <value>Goto Steam Profile</value>
+  </data>
+  <data name="CrowbarGuideBanner" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\CrowbarGuideBanner.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Help_CrowbarGuideLink" xml:space="preserve">
+    <value>http://steamcommunity.com/sharedfiles/filedetails/?id=791755353</value>
+  </data>
+  <data name="BugReportLink" xml:space="preserve">
+    <value>https://steamcommunity.com/groups/CrowbarTool/discussions/1/</value>
+  </data>
+  <data name="CancelRefresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CancelRefresh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CancelSearch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CancelSearch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BugReportLink1" xml:space="preserve">
+    <value>https://steamcommunity.com/groups/CrowbarTool/discussions/1/</value>
+  </data>
+  <data name="CrowbarSteamPipe" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CrowbarSteamPipe.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Link_SteamSubscriberAgreement" xml:space="preserve">
+    <value>https://steamcommunity.com/sharedfiles/workshoplegalagreement</value>
+  </data>
+  <data name="lzma" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\lzma.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Steamworks_NET" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Steamworks.NET.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="steam_api" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\steam_api.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Crowbar_Settings" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Crowbar Settings.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+</root>

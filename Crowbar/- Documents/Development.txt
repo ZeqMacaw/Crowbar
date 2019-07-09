@@ -1,0 +1,92 @@
+
+
+
+
+### Info
+################################################################################
+
+* Built using Visual Studio Community 2017
+* Programmed in Visual Basic .NET
+* Targetted to .NET Framework 4
+* Only uses "Release" Solution Configuration
+
+
+
+### Script error windows appear in VS Community 2017 when running code via "Start" button.
+################################################################################
+
+[20-Jan-2019]
+Workaround: Uncheck the option:"Tools > Options > Debugging > General > Enable Diagnostic Tools while debugging"
+
+
+
+###### How to workaround: textboxes fail to resize their right sides
+################################################################################
+
+### [2017-12-19] Visual Studio builds Crowbar where Decompile and Compile input textboxes fail to resize their right sides.
+
+Solution: Open the MainForm designer (where it should show something changed, even without changing anything).
+	Save the changes. Looking in the Undo list shows that Compile and Decompile controls were resized.
+
+
+
+###### How to insert a new string resource
+################################################################################
+
+### Method 1:
+PROJECT > Crowbar Properties > Resources > Strings
+Click in the * (new) row and name the new string resource.
+
+### Method 2:
+Solution Explorer 
+	Show All Files
+	Crowbar
+		MyProject
+			Resources.resx > View Code
+
+The new string resource should look something like the following. 
+Note that it should have the xml:space="preserve" attribute for the data element so copy-pasted text keeps the newlines and tabs.
+ <data name="About_ProductDescription" xml:space="preserve">
+    <value>Source Engine Model Toolset:
+	Decompiler of Valve's MDL and Related Files
+	Compiler Interface to Valve's StudioMDL.exe Tool
+	Model Viewer Interface to Valve's Half-Life Model Viewer Tool
+</value>
+  </data>
+
+
+
+### Widget Class Template
+################################################################################
+
+#Region "Creation and Destruction"
+
+#End Region
+
+#Region "Init and Free"
+
+#End Region
+
+#Region "Properties"
+
+#End Region
+
+#Region "Widget Event Handlers"
+
+#End Region
+
+#Region "Child Widget Event Handlers"
+
+#End Region
+
+#Region "Core Event Handlers"
+
+#End Region
+
+#Region "Private Methods"
+
+#End Region
+
+#Region "Data"
+
+#End Region

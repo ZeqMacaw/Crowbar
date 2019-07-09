@@ -1,0 +1,45 @@
+
+
+
+### Scope
+################################################################################
+
+* Decompile all model info that all other GoldSrc and Source engine MDL-based 
+	model decompilers do, including MDLDEC and MDL Decompiler.
+* Provide a good interface to GoldSrc and Source engine model compilers, i.e.
+	the many versions of StudioMDL.
+* Provide other tools related to GoldSrc and Source engine models, such as 
+	(but not limited to) decompiling, compiling, viewing, editing, and 
+	un/packing (vpk). This includes tools for handling texture files used 
+	by models.
+
+
+
+### Comparison with Cannonfodder's MDL Decompiler (also in StudioCompiler)
+###    (Crowbar is intended to decompile all data that MDL Decompiler can.)
+################################################################################
+
+* MDL Decompiler does not decompile all anim smd files correctly, particularly the L4D2 melee weapons.
+* MDL Decompiler (all versions) decompile the anim smd files rotated 90 degrees.
+* Weapon $attachment for cameras decompile correctly where MDL Decompiler did not.
+
+
+
+### Comparison with MDLDEC (also in Jed's Half-Life Model Viewer v1.36)
+###    (Crowbar is intended to decompile all data that MDLDEC can.)
+################################################################################
+
+* MLDDEC decompiles GoldSrc models.
+
+
+
+### Ideas for name of tool
+################################################################################
+
+- Crowbar - this seems to fit with "Hammer" being name of map tool
+	- crowbar can "break open" a model
+	- simple and elegant name
+- Zeq's Crowbar - to set it apart from any other tools with "crowbar" in name
+X Zeedec - several found via googling
+X Z Dec - single letter in name can be confusing
+X Moddec - several found via googling

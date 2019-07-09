@@ -1,0 +1,973 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AppSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GameSetups>
+    <GameSetup>
+      <GameName>Age of Chivalry</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2007\ageofchivalry\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2007\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Alien Swarm</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Alien Swarm\swarm\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Alien Swarm\swarm.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Alien Swarm\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Alien Swarm\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Alien Swarm\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Alien Swarm\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Alien Swarm: Reactive Drop</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Alien Swarm Reactive Drop\reactivedrop\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Alien Swarm Reactive Drop\reactivedrop.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Alien Swarm Reactive Drop\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Alien Swarm Reactive Drop\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Alien Swarm Reactive Drop\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Alien Swarm Reactive Drop\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Anarchy Arcade</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Anarchy Arcade\aarcade\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Anarchy Arcade\AArcade.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Anarchy Arcade\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Anarchy Arcade\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Anarchy Arcade\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Anarchy Arcade\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Aperture Tag: The Paint Gun Testing Initiative</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Aperture Tag\portal2\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Aperture Tag\portal2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Aperture Tag\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Aperture Tag\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Aperture Tag\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Aperture Tag\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Black Mesa</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Black Mesa\bms\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Black Mesa\bms.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Black Mesa\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Black Mesa\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Black Mesa\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Black Mesa\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Blade Symphony</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Blade Symphony\berimbau\GameInfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Blade Symphony\berimbau.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Blade Symphony\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Blade Symphony\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Blade Symphony\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Blade Symphony\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Bloody Good Time (using Source SDK Base 2013 MP)</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Bloody Good Time\pm\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Bloody Good Time\bgt.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>BrainBread 2</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\brainbread2\brainbread2\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\brainbread2\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\brainbread2\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\brainbread2\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\brainbread2\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\brainbread2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Codename CURE</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Codename CURE\cure\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Codename CURE\cure.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Codename CURE\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Codename CURE\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Codename CURE\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Codename CURE\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>CONSORTIUM</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Consortium\consortium\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Consortium\consortium.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Portal 2\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Portal 2\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Portal 2\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Portal 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Contagion</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Contagion\contagion\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Contagion\contagion.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Contagion\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Contagion\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Contagion\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Contagion\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Counter-Strike</GameName>
+      <GameEngine>GoldSource</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life\cstrike\liblist.gam</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life\hl.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Model Tools\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>C:\Program Files (x86)\Jed's Half-Life Model Viewer 1.3.6\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Hammer Editor\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Counter-Strike: Condition Zero</GameName>
+      <GameEngine>GoldSource</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life\czero\liblist.gam</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life\hl.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Model Tools\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>C:\Program Files (x86)\Jed's Half-Life Model Viewer 1.3.6\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Hammer Editor\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Counter-Strike: Condition Zero Deleted Scenes</GameName>
+      <GameEngine>GoldSource</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life\czeror\liblist.gam</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life\hl.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Model Tools\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>C:\Program Files (x86)\Jed's Half-Life Model Viewer 1.3.6\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Hammer Editor\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Counter-Strike: Global Offensive</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Counter-Strike Global Offensive\csgo\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Counter-Strike Global Offensive\csgo.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Counter-Strike Global Offensive\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Counter-Strike Global Offensive\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Counter-Strike Global Offensive\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Counter-Strike Global Offensive\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Counter-Strike: Source</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Counter-Strike Source\cstrike\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Counter-Strike Source\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Counter-Strike Source\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Counter-Strike Source\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Counter-Strike Source\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Counter-Strike Source\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Cry of Fear</GameName>
+      <GameEngine>GoldSource</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Cry of Fear\cryoffear\liblist.gam</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Cry of Fear\cof.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Model Tools\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>C:\Program Files (x86)\Jed's Half-Life Model Viewer 1.3.6\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Hammer Editor\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>D.I.P.R.I.P. Warm Up</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2007\diprip\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2007\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Dark Messiah Might &amp; Magic Multi-Player</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Dark Messiah Might and Magic Multi-Player\GameInfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Dark Messiah Might and Magic Multi-Player\mm.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Dark Messiah Might &amp; Magic Single Player</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Dark Messiah Might and Magic Single Player\mm\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Dark Messiah Might and Magic Single Player\mm.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Day of Defeat</GameName>
+      <GameEngine>GoldSource</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life\dod\liblist.gam</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life\hl.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Model Tools\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>C:\Program Files (x86)\Jed's Half-Life Model Viewer 1.3.6\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Hammer Editor\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Day of Defeat: Source</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Day of Defeat Source\dod\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Day of Defeat Source\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Day of Defeat Source\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Day of Defeat Source\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Day of Defeat Source\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Day of Defeat Source\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Day of Infamy</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\dayofinfamy\doi\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\dayofinfamy\dayofinfamy.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\dayofinfamy\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\dayofinfamy\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\dayofinfamy\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\dayofinfamy\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Dear Esther</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Dear Esther\dearesther\GameInfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Dear Esther\dearesther.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2009\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2009\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2009\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2009\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Deathmatch Classic</GameName>
+      <GameEngine>GoldSource</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life\dmc\liblist.gam</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life\hl.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Model Tools\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>C:\Program Files (x86)\Jed's Half-Life Model Viewer 1.3.6\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Hammer Editor\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Dino D-Day</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Dino D-Day\dinodday\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Dino D-Day\dinodday.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Dino D-Day\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Dino D-Day\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Dino D-Day\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Dino D-Day\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Double Action: Boogaloo</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Double Action\dab\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Double Action\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Double Action\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Double Action\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Double Action\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Double Action\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Dystopia</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Dystopia\dystopia\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Dystopia\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Dystopia\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Dystopia\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Dystopia\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Dystopia\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>E.Y.E: Divine Cybermancy</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\EYE\EYE\GameInfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\EYE\EYE.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Empires</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Empires\empires\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Empires\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Empires\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Empires\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Empires\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Empires\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Estranged: Act I</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Estranged Act I\estrangedact1\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Estranged Act I\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Estranged Act I\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Estranged Act I\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Estranged Act I\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Estranged Act I\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Eternal Silence</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base\esmod\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\ep1\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\ep1\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\ep1\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\ep1\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>FIREFIGHT RELOADED</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\FIREFIGHT RELOADED\firefightreloaded\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\FIREFIGHT RELOADED\fr.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\FIREFIGHT RELOADED\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\FIREFIGHT RELOADED\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\FIREFIGHT RELOADED\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\FIREFIGHT RELOADED\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Fistful of Frags</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Fistful of Frags\fof\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Fistful of Frags\sdk\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Fistful of Frags\sdk\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Fistful of Frags\sdk\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Fistful of Frags\sdk\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Fistful of Frags\sdk\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Garry's Mod</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\GarrysMod\garrysmod\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\GarrysMod\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\GarrysMod\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\GarrysMod\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\GarrysMod\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\GarrysMod\bin\gmad.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Half-Life</GameName>
+      <GameEngine>GoldSource</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life\valve\liblist.gam</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life\hl.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Model Tools\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>C:\Program Files (x86)\Jed's Half-Life Model Viewer 1.3.6\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Hammer Editor\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Half-Life 2</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\hl2\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Half-Life 2: Deathmatch</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2 Deathmatch\hl2mp\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2 Deathmatch\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2 Deathmatch\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2 Deathmatch\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2 Deathmatch\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2 Deathmatch\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Half-Life 2: Downfall</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2 DownFall\downfall\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2 DownFall\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2 DownFall\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2 DownFall\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2 DownFall\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2 DownFall\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Half-Life 2: Episode One</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\episodic\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Half-Life 2: Episode Two</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\ep2\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Half-Life 2: Lost Coast</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\lostcoast\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Half-Life 2: Update</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2 Update\hl2\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2 Update\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Half-Life Deathmatch: Source</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life 1 Source Deathmatch\hl1mp\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 1 Source Deathmatch\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 1 Source Deathmatch\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 1 Source Deathmatch\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 1 Source Deathmatch\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 1 Source Deathmatch\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Half-Life SDK</GameName>
+      <GameEngine>GoldSource</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life\valve\liblist.gam</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life\hl.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Model Tools\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>C:\Program Files (x86)\Jed's Half-Life Model Viewer 1.3.6\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Hammer Editor\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Half-Life: Before</GameName>
+      <GameEngine>GoldSource</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life\before\liblist.gam</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life\hl.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Model Tools\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>C:\Program Files (x86)\Jed's Half-Life Model Viewer 1.3.6\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Hammer Editor\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Half-Life: Blue Shift</GameName>
+      <GameEngine>GoldSource</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life\bshift\liblist.gam</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life\hl.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Model Tools\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>C:\Program Files (x86)\Jed's Half-Life Model Viewer 1.3.6\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Hammer Editor\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Half-Life: Opposing Force</GameName>
+      <GameEngine>GoldSource</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life\gearbox\liblist.gam</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life\hl.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Model Tools\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>C:\Program Files (x86)\Jed's Half-Life Model Viewer 1.3.6\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Hammer Editor\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Half-Life: Source</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\hl1\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>INFRA</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\infra\infra\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\infra\infra.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\infra\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\infra\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\infra\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Insurgency</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\insurgency2\insurgency\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\insurgency2\insurgency.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\insurgency2\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\insurgency2\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\insurgency2\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\insurgency2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Insurgency: Modern Infantry Combat</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base\insurgency\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Lambda Wars Beta</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Lambda Wars\lambdawars\GameInfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Lambda Wars\lambdawars.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Portal 2\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Portal 2\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Portal 2\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Portal 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Left 4 Dead</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\left 4 dead\left4dead\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\left 4 dead\left4dead.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\left 4 dead\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\left 4 dead\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\left 4 dead\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\left 4 dead\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Left 4 Dead 2</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\left4dead2\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\left4dead2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>MINERVA: Metastasis</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\MINERVA\metastasis\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\MINERVA\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\orangebox\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\orangebox\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\orangebox\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Modular Combat</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Modular Combat\2007\modularcombat\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Modular Combat\2007\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>NEOTOKYO</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\NEOTOKYO\NeotokyoSource\GameInfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\NEOTOKYO\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>No More Room in Hell</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\nmrih\nmrih\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\nmrih\sdk\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\nmrih\sdk\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\nmrih\sdk\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\nmrih\sdk\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\nmrih\sdk\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Nuclear Dawn</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Nuclear Dawn\nucleardawn\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Nuclear Dawn\nucleardawn.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Nuclear Dawn\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Nuclear Dawn\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Nuclear Dawn\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Nuclear Dawn\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Pirates, Vikings and Knights II</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\pirates, vikings and knights ii\pvkii\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\pirates, vikings and knights ii\sdkbase_pvkii\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\pirates, vikings and knights ii\sdkbase_pvkii\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\pirates, vikings and knights ii\sdkbase_pvkii\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\pirates, vikings and knights ii\sdkbase_pvkii\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\pirates, vikings and knights ii\sdkbase_pvkii\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Portal</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Portal\portal\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Portal\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Portal\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Portal\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Portal\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Portal\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Portal 2</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Portal 2\portal2\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Portal 2\portal2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Portal 2\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Portal 2\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Portal 2\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Portal 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Portal Stories: Mel</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Portal Stories Mel\portal_stories\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Portal Stories Mel\portal2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Portal 2\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Portal 2\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Portal 2\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Portal 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Postal 3</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Postal III\p3\GameInfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Postal III\p3.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Postal III\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Postal III\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Postal III\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Prospekt</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Prospekt\prospekt\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Prospekt\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Prospekt\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Prospekt\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Prospekt\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Prospekt\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Revelations 2012</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Revelations 2012\revelations\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Revelations 2012\revelations.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Rexaura</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Rexaura\rexaura\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Rexaura\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Rexaura\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Rexaura\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Rexaura\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Rexaura\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Ricochet</GameName>
+      <GameEngine>GoldSource</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life\ricochet\liblist.gam</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life\hl.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Model Tools\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>C:\Program Files (x86)\Jed's Half-Life Model Viewer 1.3.6\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Hammer Editor\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>SiN Episodes: Emergence</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\SiN Episodes Emergence\SE1\GameInfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\SiN Episodes Emergence\SinEpisodes.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\SinEpisodesSDK\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\SinEpisodesSDK\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\SinEpisodesSDK\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Team Fortress 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Smashball</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2007\Smashball\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2007\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Source Filmmaker</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\SourceFilmmaker\game\usermod\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\SourceFilmmaker\game\sfm.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\SourceFilmmaker\game\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\SourceFilmmaker\game\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\SourceFilmmaker\game\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\SourceFilmmaker\game\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Source SDK 2013 Multiplayer</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\hl2\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Source SDK 2013 Singleplayer</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Singleplayer\hl2\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Singleplayer\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Singleplayer\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Singleplayer\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Singleplayer\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Singleplayer\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Sven Co-op</GameName>
+      <GameEngine>GoldSource</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Sven Co-op\svencoop\liblist.gam</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Sven Co-op\svencoop.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Sven Co-op SDK\modelling\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>C:\Program Files (x86)\Jed's Half-Life Model Viewer 1.3.6\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Sven Co-op SDK\mapping\hammer\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Synergy</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Synergy\synergy\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Synergy\synergy.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Synergy\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Synergy\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Synergy\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Synergy\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Tactical Intervention</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\TacticalIntervention\tacint\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\TacticalIntervention\bin\tacint.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\TacticalIntervention\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\TacticalIntervention\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\TacticalIntervention\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\TacticalIntervention\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Team Fortress 2</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Team Fortress 2\tf\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Team Fortress 2\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Team Fortress 2\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Team Fortress 2\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Team Fortress 2\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Team Fortress 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Team Fortress Classic</GameName>
+      <GameEngine>GoldSource</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Half-Life\tfc\liblist.gam</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Half-Life\hl.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Model Tools\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>C:\Program Files (x86)\Jed's Half-Life Model Viewer 1.3.6\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Half-Life SDK\Hammer Editor\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>The Forgotten Ones</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\tfo\tfo\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\tfo\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\tfo\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\tfo\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\tfo\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\tfo\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>The Ship</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\The Ship\ship\GameInfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\The Ship\ship.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\ep1\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\ep1\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\ep1\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\ep1\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>The Stanley Parable</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\The Stanley Parable\thestanleyparable\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\The Stanley Parable\stanley.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Thinking with Time Machine</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Thinking with Time Machine\TWTM\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Thinking with Time Machine\portal2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Thinking with Time Machine\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Thinking with Time Machine\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Thinking with Time Machine\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Thinking with Time Machine\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Transmissions: Element 120</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Transmissions Element 120\te120\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Transmissions Element 120\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Transmissions Element 120\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Transmissions Element 120\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Transmissions Element 120\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Transmissions Element 120\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Wilson Chronicles - Beta</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Wilson Chronicles\wilson_chronicles\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Wilson Chronicles\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Wilson Chronicles\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Wilson Chronicles\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Zeno Clash</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\ZenoClash\zenozoik\GameInfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\ZenoClash\ZenoClash.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\ep1\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\ep1\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\ep1\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\ep1\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Zombie Panic! Source</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2007\zps\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2007\hl2.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+  </GameSetups>
+</AppSettings>

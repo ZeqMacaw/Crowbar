@@ -1,0 +1,330 @@
+
+
+
+[pre-10-Mar-2013]
+
+/ Implement drag-and-drop of mdl file onto open Crowbar.
+/ Implement drag-and-drop of mdl file onto Crowbar.exe.
+/ Verify that flex and flexpair stuff looks same for both Teenangst Zoey source and Crowbar decompile in Blender.
+/ BUG: Incorrect frame values for eyelid lines in qc file.
+/ BUG: For teenangst zoey, Crowbar misses these lines:
+	'localvar right_open left_open
+	'localvar right_lip_suppressor left_lip_suppressor
+	'localvar right_depressor_suppressor left_depressor_suppressor
+	'localvar right_corner_suppressor left_corner_suppressor
+	'localvar right_drop_suppressor left_drop_suppressor
+	'localvar right_drop left_drop
+	'localvar j_lowscale j_highscale
+	'localvar right_puff_suppressor left_puff_suppressor
+	'localvar(mouth_to_right)
+	'localvar(jaw_to_right)
+/ BUG: Decompiling L4D2 Zoey, this line is written incorrectly by Crowbar:
+	Crowbar:
+		$lod -1
+	mdldecompiler0.4.1:
+		$shadowlod
+/ BUG: Decompiling Teenangst Zoey does not write $mostlyopaque line.
+/ BUG: Decompiling melee weapon does not write a $model or $bodygroup qc command.
+
+
+
+[10-Mar-2013]
+
+=== Crowbar 0.5
+========================================
+
+/ IDEA: Change the generated qc file name to something different.
+	* Suggestions: decompiled, cbdecompiled
+/ IDEA: Create special compile.bat file as final step in decompiling.
+
+
+
+[11-Mar-2013]
+
+/ BUG: Using a folder for output that does not exist causes unhandled exception.
+	/ If output folder does not exist, create it.
+/ BUG: When main window is resized, several widgets are not resized appropriately.
+/ IDEA: Auto-create subfolder, "Decompiled" in same folder as mdl file.
+	15:23 - ??Funreal  ????: but i would be a nice addon to automaticly create a "Decompiled files" folder
+	15:25 - ??Funreal  ????: create a new folder in the input folder, with the decompiled files
+	15:26 - ZeqMacaw: ok, a sub folder where the mdl file is
+	15:26 - ??Funreal  ????: yeah
+	15:28 - ZeqMacaw: I could see extracting a bunch of mdl files from a vpk into one folder and then batch-decompiling them all into your suggested "Decompiled" subfolder
+/ BUG: Does not overwrite existing animation (such as ragdoll) smd files from previous runs.
+
+=== Crowbar 0.6
+========================================
+
+
+
+[15-Mar-2013]
+/ IDEA: Create anims folder and place all anim smd files there.
+
+
+
+[18-Mar-2013]
+/ BUG: Bat file has options for both world and view model. It should only have set of options for the decompiled model.
+/ IDEA: For the subtract anim option for $animation and $sequence qc commands, use the first $animation and frameIndex 0.
+
+
+
+[25-Mar-2013]
+/ IDEA: Redo writing of phymodel.smd lines in triangles section. They don't need any values past the ninth.
+/ IDEA from Stay Puft: Option for writing the "right-hand fix" for survivor models. 
+	- This will just zero out the xyz position values for "weapon_bone" in the reference smd file.
+
+=== Crowbar 0.7
+========================================
+
+
+
+[28-Mar-2013]
+- Implement $concave option for $collisionmodel qc command.
+	* Each "solid" in phy file contains multiple sections of faces, instead of just one.
+		Presumably, there is one face section per different texture indicated in smd file.
+
+
+
+[29-Mar-2013]
+/ Implement $concave option for $collisionmodel qc command.
+	* Each "solid" in phy file contains multiple sections of faces, instead of just one.
+		Presumably, there is one face section per different texture indicated in smd file.
+
+
+
+[25-Apr-2013]
+/ Implement $collisiontext qc command.
+
+
+
+[11-May-2013]
+/ BUG: Crashes with exception error for someone using "French (France)" region setting.
+	CAUSE: Using CInt(value) and CSng(value) when reading from file.
+	SOLUTION: Use Integer.Parse(value, TheApp.InternalNumberFormat) and Single.Parse(value, TheApp.InternalNumberFormat) instead.
+
+=== Crowbar 0.8
+========================================
+
+
+
+[21-May-2013]
+
+=== Crowbar 0.9
+========================================
+
+
+
+[-Jul-2013]
+/ IDEA: Use crowbar as background image for Decompile tab.
+
+
+
+[12-Jul-2013]
+/ IDEA: Add options to add, edit, and delete "game setups".
+	* Similar to StudioCompiler's window that opens when clicking the Configure button.
+
+
+[14-Jul-2013]
+/ IDEA: Run compiling in background thread.
+/ Implement cancelling of compile.
+/ Write extra text to compile log file.
+/ Kill studiomdl.exe process if Crowbar exits.
+/ BUG: User can size window too small. Set a minimum size for window.
+/ Save the custom model folder to settings file.
+
+
+
+[16-Jul-2013]
+/ IDEA: Run decompiling in background thread.
+/ IDEA: Add "Cancel Decompile" button.
+- IDEA: Use "logs" folder.
+
+
+
+[18-Jul-2013]
+/ BUG: Last bone of each frame in each animation smd file has incorrect data.
+
+
+[21-Jul-2013]
+/ BUG: Does not write all anim smd files. Seems to skip files for $animation that have no corresponding $sequence.
+/ IDEA: Include more cancellation spots in decompiling, particularly when writing anim smd files.
+/ IDEA: Use "<mdl_filename>_logs" folder.
+/ IDEA: Use "<mdl_filename>_anims" folder.
+/ Place "decompile.log" file into logs folder.
+- IDEA: Use the filename part of $modelname text as name or prefix to all decompiled files and the anims folder.
+	09:38 - k@rt: one question... will each decompiled model have the name "decompiled.qci"? 
+		One thing I always found frustrating about mdldecompiler is if you wanted to decompile multiple models 
+		to the same folder you had to manually go and change the names of the qc, the phymodel etc... 
+		Is it possible to give the option to add an optional prefix to all the outputted file names 
+		and alter the qc entries accordingly?
+	09:47 - ZeqMacaw: oh wait, Crowbar could use the name used in $modelname, perhaps
+	09:47 - k@rt: perfect!!
+	09:48 - ZeqMacaw: so Francis name or prefix would be: survivor_biker
+	09:48 - ZeqMacaw: so, survivor_biker.qci, survivor_biker_phymodel.smd, and so on
+	* "anims" folder => "survivor_biker_anims"
+
+
+
+[27-Jul-2013]
+/ BUG: Texture file names can sometimes show with paths.
+	/ Use Path.GetFileName() for eyeball texture file names and for $texturegroup qc file command.
+/ IDEA: Use the filename part of $modelname text as name or prefix to all decompiled files and the anims folder.
+
+
+
+[29-Jul-2013]
+/ IDEA: Button on Compile Log tab for opening compiled model in hlmv.
+
+
+
+[30-Jul-2013]
+- IDEA: Decompile all mdl files within same folder as given mdl file.
+	/ Use checkbox.
+- IDEA: Decompile all mdl files within subfolders of given mdl file.
+	/ Use checkbox.
+
+
+
+[31-Jul-2013]
+
+=== Crowbar 0.10
+========================================
+
+
+
+[02-Aug-2013]
+/ BUG: Decompiling a mod that has several vtx files (.dx90.vtx, .dx80.vtx, .sw.vtx, and .vtx)
+	makes mesh smd files with missing vertex lines.
+	* CAUSE: Crowbar uses the .vtx file before the others, if found.
+	* SOLUTION: Crowbar should try use in this order: 
+		.dx90.vtx, .dx80.vtx, .sw.vtx, .vtx
+
+
+
+[10-Sep-2013]
+/ BUG: Game Setup window is not saving info.
+	CAUSE: The bindings are not setup correctly.
+	SOLUTION: Setup the bindings correctly.
+/ Revised the Game Setup window:
+	- Moved Add button to right of name combobox at top, to make it more obvious to click that for a new game.
+	- Moved Delete button inside group box.
+	- Changed Close button to "Save and Close".
+	- Added Save button.
+	- Removed "X" button from top-right corner.
+/ Changed the games list used in the comboboxes to a sorted list.
+/ Added app1.config file with this info so that Crowbar will run when newer .Net Framework versions are installed:
+    <startup useLegacyV2RuntimeActivationPolicy="true">
+       <supportedRuntime version="v2.0"/>
+       <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0"/>
+    </startup>
+/ Added a default "Crowbar Settings.xml" file to be included in release.
+* Batch decompiling:
+	/ BUG: Decompile subfolders isn't run when its checkbox is enabled.
+		CAUSE: The "if" block prevents decompiling subfolders when the decompile folder checkbox is enabled.
+	X IDEA: Change the two batch decompile checkboxes into 3 radio buttons:
+		- Decompile the given MDL File
+		- Decompile all models in folder of given MDL File
+		- Decompile all models in folder and all subfolders of given MDL File
+	/ IDEA: Maybe use two extra "Decompile" buttons instead of checkboxes.
+		- Decompile MDL File
+		- Decompile folder of MDL file
+		- Decompile Folder and All Subfolders of MDL File
+
+
+
+[11-Sep-2013]
+- IDEA: Button on Compile Log tab for opening folder to compiled model files.
+	- Opens folder whether for hlmv or for game.
+
+
+
+[12-Sep-2013]
+/ IDEA: Button on Compile Log tab for opening folder to compiled model files.
+	- Opens folder whether for hlmv or for game.
+
+
+
+[22-Sep-2013]
+
+=== Crowbar 0.11
+========================================
+<li>Animations have been rotated 90 degrees so that they are oriented correctly.</li>
+<li>Decompile tab has two new buttons for decompiling models in a folder or in a folder and its subfolders.</li>
+<li>Setup Games window for Compile tab updated and works as originally intended.</li>
+<li>Added a button on Compile Log tab for opening the folder in which the compiled mdl file has been created.</li>
+<li>Updated to work with newer .NET Framework versions installed, because of some strange setup Microsoft now uses for them.</li>
+
+
+
+[03-Nov-2013]
+/ Add "Recompile" button on bottom of Compile Log tab to avoid having to click on Compile tab to recompile when recompiling a lot.
+/ Change HideSelection to "False" on the decompile log and compile log textboxes so they always auto-scroll to bottom of appended text.
+
+
+
+[06-Nov-2013]
+/ IDEA: Enable the "View compiled model in HLMV" button when compiled for game.
+	* Compiling for model viewer is only needed when replacing a model, i.e. using same file names.
+/ BUG: "Setup Games" should be "Set Up Games"
+/ IDEA: Add a tooltip to the "Compile for Model Viewer" button:
+	"Only needed when replacing a model, i.e. when custom model uses same file names as game model being replaced."
+/ IDEA: Change "Folder to put custom model files for viewing in Model Viewer:"
+	to: "Folder to put custom model files for viewing in Model Viewer when replacing a game model:"
+
+
+
+[16-Nov-2013]
+/ BUG: Decompiling the following model produces reference smd file with texture lines that don't have corresponding vertex data.
+	* Example file: C:\Program Files (x86)\Steam\steamapps\common\SourceFilmmaker\game\tf_movies\models\player\hwm\sniper.mdl
+	* Example data in smd file that is wrong (after the first triangle set shown here):
+		sniper_head_red
+		  6 -0.651407 79.851479 0.134712 -0.693731 -0.566432 0.444851 0.454107 -0.308005 1 6 1.000000
+		  6 -0.847682 80.080078 0.453508 -0.250650 -0.961356 0.113882 0.456626 -0.292196 1 6 1.000000
+		  6 -0.933979 80.127975 0.168670 -0.473671 -0.871903 -0.124182 0.449790 -0.298574 1 6 1.000000
+		sniper_head_red
+		sniper_head_red
+		sniper_head_red
+		sniper_head_red
+		sniper_head_red
+	SOLUTION: Change this line in .():
+			If aStripGroup.theVtxStrips IsNot Nothing AndAlso aStripGroup.theVtxIndexes IsNot Nothing Then
+		to:
+			If aStripGroup.theVtxStrips IsNot Nothing AndAlso aStripGroup.theVtxIndexes IsNot Nothing AndAlso aStripGroup.theVtxVertexes IsNot Nothing Then
+
+
+
+[17-Nov-2013]
+
+=== Crowbar 0.12
+========================================
+<li>"Recompile" button on "Compile Log" tab for quicker testing.</li>
+<li>Enable the "View compiled model in HLMV" button when compiled for game.</li>
+<li>FIX: Reference mesh SMD file of Source Filmmaker's TF2 HWM models now decompiles with valid SMD syntax. There are still some issues with bad flex lines (which can be commented out for compiling) and some missing SMD files for some player models.</li>
+
+
+
+[08-Dec-2013]
+/ BUG: Pasting into the QC file field a path file name that starts and ends with double-quote raises expection.
+	SOLUTION: Clean the path file name.
+/ BUG: Pasting into the MDL file field a path file name that starts and ends with double-quote prevents decompiling.
+	SOLUTION: Clean the path file name.
+/ BUG: Pasting into the Output Folder field a path file name that starts and ends with double-quote prevents decompiling.
+	SOLUTION: Clean the path file name.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

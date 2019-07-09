@@ -1,0 +1,328 @@
+History 2014
+
+
+
+[01-Feb-2014]
+/ Implement 12 possible ways to convert quaternion to euler angles.
+
+
+
+[02-Feb-2014]
+/ Fix reading-in and writing-out of "anim+bone" data.
+
+
+
+[03-Feb-2014]
+/ Find right conversion to use out of the 12 possible ways to convert quaternion to euler angles.
+
+
+
+[04-Feb-2014]
+- Fix use of $concave for the collision mesh of L4D2's van.mdl.
+
+
+
+[09-Feb-2014]
+/ Based on a bug report from atrblizzard decompiling a VTM:B model, I changed some lines in SourceQcFile.
+	Changed from:
+		Me.WriteHboxRelatedCommands()
+	To:
+		If theSourceEngineModel.theMdlFileHeader.theHitboxSets IsNot Nothing Then
+			Me.WriteHboxRelatedCommands()
+		End If
+
+
+
+[11-Feb-2014]
+/ Fix use of $concave for the collision mesh of L4D2's van.mdl.
+
+
+[12-Feb-2014]
+/ BUG: QC file $texturegroup does not list the texture file names correctly for TF2's "models\weapons\v_models\v_medigun_medic.mdl"
+/ BUG: Static prop ref meshes are not rotated correctly.
+/ Tweaked the $animation and $sequence lines in the qc file.
+
+
+
+[13-Feb-2014]
+/ IDEA: Comment-out $cbox qc line, and indicate it is unlikely used.
+/ IDEA: If $hbox is automatically generated, comment-out the $hbox lines.
+/ Fix up the name used for ref and lod mesh smd file name. 
+	* Sometimes, a file name has redundant name within it, such as "van_van.smd" and "van_van_lod1.smd".
+X Change from using "*_hlmv.qc" to using "*_hlmv.crowbarqc".
+	* The compiler always changes the extension to qc.
+/ Fix the qc lines of the blended sequences and animations.
+	/ Commented-out subtract, addlayer, and delta for both $animation and $sequence.
+
+=== Crowbar 0.14
+========================================
+
+
+
+[14-Feb-2014]
+/ Add "DecompileFolderName" to AppSettings.
+/ Use default value for "DecompileFolderName" of: "decompiled" + the Crowbar version number.
+/ DEV: Add "DecompileMdlPathFileName" to AppSettings.
+/ Change name of tabs to nouns, such as "Decompiler" and "Compiler".
+/ IDEA: Move the Decompile Log to its own tab page, along with related widgets.
+- DEV: Move each tab page's widgets to a user control.
+- Disable Decompiler widgets when decompiling.
+- Disable Compiler widgets when compiling.
+
+
+
+[15-Feb-2014]
+/ DEV: Move each tab page's widgets to a user control.
+/ IDEA: Include link to steam group on the About tabpage.
+
+
+
+[18-Feb-2014]
+/ Use 128x128 version of the Crowbar icon on the About page.
+/ Remove the horizontal crowbar image from the Decompile page.
+/ BUG: Typing C: into Output folder textbox and moving away from textbox cause its text to disappear.
+/ BUG: Tab order (tabbing between widgets) is messed up.
+- BUG: Right-click a QC file and choose "open with > Crowbar", It opens it in the DECOMPILE tab, in the MDL file bar.
+	* It should open in the Compile tab.
+- IDEA: Error report should have the following info:
+	- mdl or qc file name, depending on decompiling or compiling
+	- paths used in the decompile or compile
+
+=== Crowbar 0.15
+========================================
+
+
+
+[19-Feb-2014]
+/ BUG: 0.15 added 8 bytes to read in for version 49 mdl files, but that breaks some L4D2 version 49 models.
+	SOLUTION: Analyze offsets to determine when the extra bytes are used and adjust accordingly.
+/ BUG: "Cancel Decompile" button is not enabled during decompiling.
+/ BUG: Right-click a QC file and choose "open with > Crowbar", It opens it in the DECOMPILE tab, in the MDL file bar.
+	* It should open in the Compile tab.
+- IDEA: Use radio buttons for the two options of giving the folder to put decompiled files.
+- IDEA: Use checkboxes for different types of files to decompile.
+	- Default to having all boxes checked.
+	* Example:
+		- QC file
+			- Include extra info as comments
+		- Reference mesh SMD file
+			- Apply the L4D2 survivor "right-hand fix"
+		- Collision mesh SMD file
+		- Animation VTA file (face flexes)
+		- Animation SMD files
+			- Include debug info
+		- Procedural bones VRD file
+		- Debug info files
+
+
+
+[20-Feb-2014]
+/ IDEA: Use radio buttons for the two options of giving the folder to put decompiled files.
+/ IDEA: Use checkboxes for different types of files to decompile.
+		/ QC file
+			/ Include extra info as comments
+		/ Reference mesh SMD file
+			/ Apply the L4D2 survivor "right-hand fix"
+		/ Physics mesh SMD file
+		/ Animation VTA file (face flexes)
+		/ Animation SMD files
+			/ Include debug info
+		/ Procedural bones VRD file
+		/ Debug info files
+/ IDEA: batch compiling
+
+
+
+[21-Feb-2014]
+- BUG: Crowbar hangs when end of compile using Dota 2's compiler is used, due to "hit a key to continue".
+
+
+
+[22-Feb-2014]
+/ BUG: Context menu with Copy and Select All missing from the two log textboxes.
+/ Fixed VRD file values? Seems fixed for L4D2 Zoey.
+
+
+
+[24-Feb-2014]
+/ BUG: Clipboard does not hold copied error text from the Unhandled Exception window when application exits.
+
+
+
+[25-Feb-2014]
+
+=== Crowbar 0.16
+========================================
+
+
+
+[26-Feb-2014]
+/ BUG: Anim frames above 30 in some models are not decompiled correctly.
+	* CAUSE: Crowbar did not handle "animation sections".
+
+=== Crowbar 0.17
+========================================
+
+
+
+[28-Feb-2014]
+
+=== Crowbar 0.18
+========================================
+
+=== Crowbar 0.19 (public release with source code)
+========================================
+
+
+
+[01-Mar-2014]
+/ Change default Source Filmmaker GamePathFileName
+	FROM: C:\Program Files (x86)\Steam\steamapps\common\SourceFilmmaker\game\hl2\gameinfo.txt
+	TO: C:\Program Files (x86)\Steam\steamapps\common\SourceFilmmaker\game\usermod\gameinfo.txt
+/ Fixed some syntax with decompile log.
+/ BUG: Decompile log showed checking of extra files when decompiling an animation-only mdl.
+	* SOLUTION: Move code to determine "if animation-only mdl" from SourceMdlFile.ReadFileHeader() to SourceMdlFile.ReadMdlHeader01().
+/ BUG: [01-Mar-2014 6000 ANGRY BEES] "Dark Messiah of Might and Magic" npc_leanna.mdl not decompiling all files.
+	* CAUSE: Aniamtions with SourceMdlAnimationDesc.STUDIO_ALLZEROS flag are not handled correctly.
+/ BUG: Dota 2 models don't decompile with texture paths, so the $cdmaterials lines are missing from the qc file.
+
+
+
+[02-Mar-2014]
+- Decompile mdl version 10 models.
+
+
+
+[03-Mar-2014]
+/ BUG: When phy checksum does not match mdl checksum, the physics commands are not written to qc file.
+	/ Write out the commands, leaving the comment about mismatched checksums.
+- Decompile ANI file.
+
+
+
+[04-Mar-2014]
+- Decompile ANI file.
+
+
+
+[05-Mar-2014]
+- Decompile ANI file.
+
+
+
+[06-Mar-2014]
+/ Decompile ANI file.
+
+=== Crowbar 0.20
+========================================
+
+
+
+[09-Mar-2014]
+/ BUG: The $jigglebone angle_constraint option decompiles to radians instead of degrees.
+
+
+
+[10-Mar-2014]
+/ BUG: Uncheck verbose compiler option, close then reopen the program. The box will be unchecked but the command will reappear in the text field.
+
+
+
+[11-Mar-2014]
+/ batch decompiling -- on error, jump to the next mdl in the list
+	SOLUTION: Wrap code in Decompiler.DecompileOneModel() with "try".
+/ batch compiling -- on error, jump to the next qc in the list
+	SOLUTION: Wrap code in Compiler.CompileOneModel() with "try".
+/ "Skip current model decompile" button for batch decompiling.
+
+
+
+[12-Mar-2014]
+/ Redo Decompile Output Folder Full Path browse window to use file browse window 
+	for selecting a folder. Do in similar way as WinMerge.
+	* The folder browse window is awkward and the file browse window is better.
+
+
+
+[01-Apr-2014]
+
+=== Crowbar 0.21
+========================================
+
+
+
+[17-Apr-2014]
+/ In Compiler tab, change the button text 
+	From: "Compile to Different Subfolder:"
+	To  : "Compile to different subfolder (of "models" folder):"
+/ In Compiler tab, change the custom output folder 
+	From: custom
+	To  : for_model_viewer
+
+
+
+[19-Apr-2014]
+/ BUG: Reported that Decompile buttons were not showing at bottom of window. 
+	* The screenshot seems to indicate that Windows is not resizing the widgets properly. Unknown why.
+	* After some searching, saw something about using a Panel with "Dock = Fill" setting inside a UserControl, 
+		to make widgets inside UserControl use their Anchor property correctly.
+	* Also saw this article about Windows non-default text sizes causing the same visual problem:
+		http://blog.davidegrayson.com/2013/04/unusable-ui-caused-by-windows-forms.html
+	SOLUTION: Inserted a Panel (with "Dock = Fill" setting) in all UserControls, 
+		placing all widgets of the UserControl inside the Panel.
+
+
+
+[25-Apr-2014]
+- Decompile MDL from "Vampire the Masquerade - Bloodlines".
+
+
+[26-Apr-2014]
+- Decompile MDL from "Vampire the Masquerade - Bloodlines".
+/ Improve text of Decompile log.
+
+
+
+[03-Jun-2014]
+/ BUG: http://steamcommunity.com/groups/CrowbarTool/discussions/0/558749190834921362/#c540743213144819304
+
+
+
+[14-Jun-2014]
+/ BUG: http://steamcommunity.com/groups/CrowbarTool/discussions/0/558749190834921362/#c540744474765632508
+	Change in SourceMdlFile.ReadMdlAnimation()...
+		FROM:
+			boneIndex = Me.theInputFileReader.ReadByte()
+			If boneIndex = 255 Then
+				Continue For
+			End If
+		TO:
+			boneIndex = Me.theInputFileReader.ReadByte()
+			If boneIndex = 255 Then
+				Me.theInputFileReader.ReadByte()
+				Me.theInputFileReader.ReadInt16()
+				Continue For
+			End If
+
+
+
+[15-Jul-2014]
+/ Change default Counter-Strike Global Offensive CompilerPathFileName
+	FROM: C:\Program Files (x86)\Steam\steamapps\common\Source SDK Base 2013 Multiplayer\bin\studiomdl.exe
+	TO: C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\bin\studiomdl.exe
+/ For models decompiled from CSGO, added in roll, pitch, yaw values to end of $hbox QC command.
+	* NOTE that Valve did not change model version number of CSGO model even though version 49 models for other games do NOT compile with the extra roll, pitch, yaw values.
+		Crowbar handles this by adding the extra values only when model version >= 49 and the $hboxset is "cstrike".
+- Need to test the change to $hbox on various models in CSGO and other games.
+
+
+
+[04-Aug-2014]
+- Add in $animblocksize QC command.
+
+
+
+[07-Sep-2014]
+
+=== Crowbar 0.22
+========================================
