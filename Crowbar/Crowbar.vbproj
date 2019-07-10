@@ -124,10 +124,10 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Core\Compiler\CompilerInputInfo.vb" />
-    <Compile Include="Core\Debug\DebugFormatModule.vb" />
-    <Compile Include="Core\Debug\FileSeekLog.vb" />
+    <Compile Include="Core\DebugLog\DebugFormatModule.vb" />
+    <Compile Include="Core\DebugLog\FileSeekLog.vb" />
     <Compile Include="Core\GameSetup\GameSetup.vb" />
-    <Compile Include="Core\Debug\UnknownValue.vb" />
+    <Compile Include="Core\DebugLog\UnknownValue.vb" />
     <Compile Include="Core\- General\BindingListEx.vb" />
     <Compile Include="Core\- General\BindingListExAutoSort.vb" />
     <Compile Include="Core\- General\FileManager.vb" />
@@ -179,7 +179,7 @@
     <Compile Include="Core\SourceModel\- Base\SourceMdlAnimationDescBase.vb" />
     <Compile Include="Core\SourceModel\- Base\SourceMdlFileDataBase.vb" />
     <Compile Include="Core\SourceModel\- Base\SourceMdlSequenceDescBase.vb" />
-    <Compile Include="Core\Debug\AccessedBytesDebugFile.vb" />
+    <Compile Include="Core\DebugLog\AccessedBytesDebugFile.vb" />
     <Compile Include="Core\SourceModel\- Base\SourceModelProgressEventArgs.vb" />
     <Compile Include="Core\SourceModel\- Base\SourceModelProgressEventHandler.vb" />
     <Compile Include="Core\SourceModel\- Base\SourceFileNamesModule.vb" />
