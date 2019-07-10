@@ -834,6 +834,12 @@
     <Compile Include="Widgets\Publish SteamApp Tags\SourceFilmmakerTagsUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Widgets\Publish SteamApp Tags\ZombiePanicSourceTagsUserControl.Designer.vb">
+      <DependentUpon>ZombiePanicSourceTagsUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Widgets\Publish SteamApp Tags\ZombiePanicSourceTagsUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Widgets\- Application\AgreementRequiresAcceptanceForm.resx">
@@ -932,6 +938,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\Publish SteamApp Tags\SourceFilmmakerTagsUserControl.resx">
       <DependentUpon>SourceFilmmakerTagsUserControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\Publish SteamApp Tags\ZombiePanicSourceTagsUserControl.resx">
+      <DependentUpon>ZombiePanicSourceTagsUserControl.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
