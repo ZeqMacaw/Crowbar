@@ -512,6 +512,7 @@
     <Compile Include="Core\SteamAppInfos\GarrysModSteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\Left4Dead2SteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\SteamAppInfoBase.vb" />
+    <Compile Include="Core\SteamAppInfos\ZombiePanicSourceSteamAppInfo.vb" />
     <Compile Include="Core\Steam\BackgroundSteamPipe.vb" />
     <Compile Include="Core\Steam\SteamAppUserInfo.vb" />
     <Compile Include="Core\Steam\SteamPipe.vb" />
