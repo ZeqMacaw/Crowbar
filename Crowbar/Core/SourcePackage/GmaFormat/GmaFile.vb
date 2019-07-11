@@ -129,7 +129,10 @@ Public Class GmaFile
 			entryDataOutputText.Append(" fnumber=0")
 			entryDataOutputText.Append(" ofs=0x" + entry.offset.ToString("X8"))
 			entryDataOutputText.Append(" sz=" + entry.size.ToString("G0"))
+
 			Me.theGmaFileData.theEntryDataOutputTexts.Add(entryDataOutputText.ToString())
+			NotifyPackEntryRead(entry, entryDataOutputText.ToString())
+
 			entryDataOutputText.Clear()
 
 			fileNumberStored = Me.theInputFileReader.ReadUInt32()
