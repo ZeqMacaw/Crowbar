@@ -158,6 +158,7 @@
     <Compile Include="Core\SourceModel\SourceModel14\SourceModel14.vb" />
     <Compile Include="Core\SourceModel\SourceModel14\SourceQcFile14.vb" />
     <Compile Include="Core\SourceModel\SourceModel14\SourceSmdFile14.vb" />
+    <Compile Include="Core\SourceModel\SourceModel2531\SourceMdlFileData\SourceMdlUnknownStruct2531.vb" />
     <Compile Include="Core\SourcePackage\- Base\BasePackageFile.vb" />
     <Compile Include="Core\SourcePackage\- Base\BasePackageDirectoryEntry.vb" />
     <Compile Include="Core\SourcePackage\- Base\BasePackageFileData.vb" />
