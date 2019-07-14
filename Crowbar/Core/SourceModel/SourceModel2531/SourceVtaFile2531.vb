@@ -268,12 +268,12 @@ Public Class SourceVtaFile2531
 				'normal.y += (aVertAnim.nDeltaX / 255)
 				'normal.z += (aVertAnim.nDeltaZ / 255)
 				'TEST: Seems close, but pushes all flexes slightly to the right (when viewing from front).
-				'position.x += (aVertAnim.deltaX / 2550)
-				'position.y += (aVertAnim.deltaY / 2550)
-				'position.z += (aVertAnim.deltaZ / 2550)
-				'normal.x += (aVertAnim.nDeltaX / 2550)
-				'normal.y += (aVertAnim.nDeltaY / 2550)
-				'normal.z += (aVertAnim.nDeltaZ / 2550)
+				position.x += (aVertAnim.deltaX / 2550)
+				position.y += (aVertAnim.deltaY / 2550)
+				position.z += (aVertAnim.deltaZ / 2550)
+				normal.x += (aVertAnim.nDeltaX / 2550)
+				normal.y += (aVertAnim.nDeltaY / 2550)
+				normal.z += (aVertAnim.nDeltaZ / 2550)
 				'position.x += (aVertAnim.deltaX / 2550)
 				'position.y += (aVertAnim.deltaZ / 2550)
 				'position.z += (aVertAnim.deltaY / 2550)
@@ -344,9 +344,9 @@ Public Class SourceVtaFile2531
 				'position.y -= (aVertAnim.deltaX / 327670)
 				'position.z -= (aVertAnim.deltaZ / 327670)
 				'TEST: seems closest to being correct
-				position.x -= (aVertAnim.deltaX / 327670)
-				position.y -= (aVertAnim.deltaY / 327670)
-				position.z -= (aVertAnim.deltaZ / 327670)
+				'position.x -= (aVertAnim.deltaX / 327670)
+				'position.y -= (aVertAnim.deltaY / 327670)
+				'position.z -= (aVertAnim.deltaZ / 327670)
 				'TEST:
 				'position.x -= (aVertAnim.deltaX / 327670)
 				'position.y -= (aVertAnim.deltaZ / 327670)
@@ -425,6 +425,13 @@ Public Class SourceVtaFile2531
 				line += normal.y.ToString("0.000000", TheApp.InternalNumberFormat)
 				line += " "
 				line += normal.z.ToString("0.000000", TheApp.InternalNumberFormat)
+				line += "   #"
+				line += " " + aVertAnim.deltaX.ToString("0", TheApp.InternalNumberFormat)
+				line += " " + aVertAnim.deltaY.ToString("0", TheApp.InternalNumberFormat)
+				line += " " + aVertAnim.deltaZ.ToString("0", TheApp.InternalNumberFormat)
+				line += " " + aVertAnim.nDeltaX.ToString("0", TheApp.InternalNumberFormat)
+				line += " " + aVertAnim.nDeltaY.ToString("0", TheApp.InternalNumberFormat)
+				line += " " + aVertAnim.nDeltaZ.ToString("0", TheApp.InternalNumberFormat)
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
 		Catch ex As Exception

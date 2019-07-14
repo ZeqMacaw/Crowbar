@@ -83,8 +83,9 @@
 	Public attachmentOffset As Integer
 	Public eyeballCount As Integer
 	Public eyeballOffset As Integer
-	Public unknown03(1) As Integer
 
+	Public unknown00Count As Integer
+	Public unknown00Offset As Integer
 	Public unknown01Count As Integer
 	Public unknown01Offset As Integer
 	Public unknown02Count As Integer
@@ -96,6 +97,9 @@
 	Public theEyeballs As List(Of SourceMdlEyeball2531)
 	Public theMeshes As List(Of SourceMdlMesh2531)
 	Public theTangents As List(Of SourceMdlTangent2531)
+	Public theUnknown00s As List(Of SourceMdlModelUnknown00_2531)
+	Public theUnknown01s As List(Of SourceMdlModelUnknown01_2531)
+	Public theUnknown02s As List(Of SourceMdlModelUnknown02_2531)
 	Public theVertexesType0 As List(Of SourceMdlType0Vertex2531)
 	Public theVertexesType1 As List(Of SourceMdlType1Vertex2531)
 	Public theVertexesType2 As List(Of SourceMdlType2Vertex2531)

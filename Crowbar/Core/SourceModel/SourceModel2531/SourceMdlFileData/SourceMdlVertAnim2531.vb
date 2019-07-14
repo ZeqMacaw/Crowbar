@@ -23,16 +23,16 @@ Public Class SourceMdlVertAnim2531
 	'Public nDeltaY As Byte
 	'Public nDeltaZ As Byte
 	'------
-	'Public deltaX As SByte
-	'Public deltaY As SByte
-	'Public deltaZ As SByte
-	'Public nDeltaX As SByte
-	'Public nDeltaY As SByte
-	'Public nDeltaZ As SByte
+	Public deltaX As SByte
+	Public deltaY As SByte
+	Public deltaZ As SByte
+	Public nDeltaX As SByte
+	Public nDeltaY As SByte
+	Public nDeltaZ As SByte
 	'------
-	Public deltaX As Short
-	Public deltaY As Short
-	Public deltaZ As Short
+	'Public deltaX As Short
+	'Public deltaY As Short
+	'Public deltaZ As Short
 
 
 	'======
