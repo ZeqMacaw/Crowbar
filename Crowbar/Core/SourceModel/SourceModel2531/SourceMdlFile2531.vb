@@ -2563,9 +2563,18 @@ Public Class SourceMdlFile2531
 					'fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 					Dim anUnknown01 As New SourceMdlModelUnknown01_2531()
 
-					For x As Integer = 0 To anUnknown01.unknown.Length - 1
-						anUnknown01.unknown(x) = Me.theInputFileReader.ReadInt32()
-					Next
+					'For x As Integer = 0 To anUnknown01.unknown.Length - 1
+					'	anUnknown01.unknown(x) = Me.theInputFileReader.ReadInt32()
+					'Next
+					anUnknown01.unknownInt00 = Me.theInputFileReader.ReadInt32()
+					anUnknown01.unknownInt01 = Me.theInputFileReader.ReadInt32()
+					anUnknown01.unknownReal00 = Me.theInputFileReader.ReadSingle()
+					anUnknown01.unknownReal01 = Me.theInputFileReader.ReadSingle()
+					anUnknown01.unknownReal02 = Me.theInputFileReader.ReadSingle()
+					anUnknown01.unknownReal03 = Me.theInputFileReader.ReadSingle()
+					anUnknown01.unknownReal04 = Me.theInputFileReader.ReadSingle()
+					anUnknown01.unknownReal05 = Me.theInputFileReader.ReadSingle()
+					anUnknown01.unknownReal06 = Me.theInputFileReader.ReadSingle()
 
 					aModel.theUnknown01s.Add(anUnknown01)
 
@@ -2606,9 +2615,14 @@ Public Class SourceMdlFile2531
 					'fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 					Dim anUnknown02 As New SourceMdlModelUnknown02_2531()
 
-					For x As Integer = 0 To anUnknown02.unknown.Length - 1
-						anUnknown02.unknown(x) = Me.theInputFileReader.ReadInt32()
-					Next
+					'For x As Integer = 0 To anUnknown02.unknown.Length - 1
+					'	anUnknown02.unknown(x) = Me.theInputFileReader.ReadInt32()
+					'Next
+					anUnknown02.unknownInt00 = Me.theInputFileReader.ReadInt32()
+					anUnknown02.unknownReal00 = Me.theInputFileReader.ReadSingle()
+					anUnknown02.unknownReal01 = Me.theInputFileReader.ReadSingle()
+					anUnknown02.unknownReal02 = Me.theInputFileReader.ReadSingle()
+					anUnknown02.unknownReal03 = Me.theInputFileReader.ReadSingle()
 
 					aModel.theUnknown02s.Add(anUnknown02)
 
