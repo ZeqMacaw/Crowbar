@@ -415,6 +415,8 @@ Public Class SourceModel2531
 		mdlFile.ReadFlexRules()
 		mdlFile.ReadPoseParamDescs()
 
+		mdlFile.ReadUnknownStructs()
+
 		mdlFile.ReadTextures()
 		mdlFile.ReadTexturePaths()
 		mdlFile.ReadSkins()

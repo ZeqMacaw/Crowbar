@@ -333,6 +333,7 @@ Public Class SourceMdlFileData2531
 	Public theSurfacePropName As String
 	Public theTexturePaths As List(Of String)
 	Public theTextures As List(Of SourceMdlTexture2531)
+	Public theUnknownStructs As List(Of SourceMdlUnknownStruct2531)
 
 	Public theFlexFrames As List(Of FlexFrame2531)
 	Public theModelCommandIsUsed As Boolean

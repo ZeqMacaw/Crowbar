@@ -1294,6 +1294,68 @@ Public Class SourceMdlFile2531
 		End If
 	End Sub
 
+	Public Sub ReadUnknownStructs()
+		If Me.theMdlFileData.unknownCount > 0 Then
+			'Dim inputFileStreamPosition As Long
+			Dim fileOffsetStart As Long
+			Dim fileOffsetEnd As Long
+			'Dim fileOffsetStart2 As Long
+			'Dim fileOffsetEnd2 As Long
+
+			Try
+				Me.theInputFileReader.BaseStream.Seek(Me.theMdlFileData.unknownOffset, SeekOrigin.Begin)
+				'fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+
+				Me.theMdlFileData.theUnknownStructs = New List(Of SourceMdlUnknownStruct2531)(Me.theMdlFileData.unknownCount)
+				For i As Integer = 0 To Me.theMdlFileData.unknownCount - 1
+					fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+					Dim anUnknownStruct As New SourceMdlUnknownStruct2531()
+
+					anUnknownStruct.boneIndex = Me.theInputFileReader.ReadInt32()
+					anUnknownStruct.data01 = Me.theInputFileReader.ReadInt32()
+					anUnknownStruct.data02 = Me.theInputFileReader.ReadSingle()
+					anUnknownStruct.data03 = Me.theInputFileReader.ReadSingle()
+					anUnknownStruct.data04 = Me.theInputFileReader.ReadSingle()
+					anUnknownStruct.data05 = Me.theInputFileReader.ReadSingle()
+					anUnknownStruct.data06 = Me.theInputFileReader.ReadSingle()
+
+					Me.theMdlFileData.theUnknownStructs.Add(anUnknownStruct)
+
+					Dim tempText As String
+					tempText = " [boneIndex " + anUnknownStruct.boneIndex.ToString("000") + "]"
+					tempText += "  " + anUnknownStruct.data01.ToString()
+					tempText += "  " + anUnknownStruct.data02.ToString()
+					tempText += "  " + anUnknownStruct.data03.ToString()
+					tempText += "  " + anUnknownStruct.data04.ToString()
+					tempText += "  " + anUnknownStruct.data05.ToString()
+					tempText += "  " + anUnknownStruct.data06.ToString()
+					fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
+					Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "anUnknownStruct" + tempText)
+
+					'inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+
+					'If anUnknownStruct.nameOffset <> 0 Then
+					'	Me.theInputFileReader.BaseStream.Seek(poseInputFileStreamPosition + anUnknownStruct.nameOffset, SeekOrigin.Begin)
+					'	fileOffsetStart2 = Me.theInputFileReader.BaseStream.Position
+
+					'	anUnknownStruct.theName = FileManager.ReadNullTerminatedString(Me.theInputFileReader)
+
+					'	fileOffsetEnd2 = Me.theInputFileReader.BaseStream.Position - 1
+					'	If Not Me.theMdlFileData.theFileSeekLog.ContainsKey(fileOffsetStart2) Then
+					'		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart2, fileOffsetEnd2, "anUnknownStruct.theName = " + anUnknownStruct.theName)
+					'	End If
+					'Else
+					'	anUnknownStruct.theName = ""
+					'End If
+
+					'Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
+				Next
+			Catch ex As Exception
+				Dim debug As Integer = 4242
+			End Try
+		End If
+	End Sub
+
 	Public Sub ReadSequenceGroups()
 		If Me.theMdlFileData.sequenceGroupCount > 0 Then
 			'Dim boneInputFileStreamPosition As Long

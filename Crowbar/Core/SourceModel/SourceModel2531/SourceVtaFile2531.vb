@@ -347,6 +347,22 @@ Public Class SourceVtaFile2531
 				position.x -= (aVertAnim.deltaX / 327670)
 				position.y -= (aVertAnim.deltaY / 327670)
 				position.z -= (aVertAnim.deltaZ / 327670)
+				'TEST:
+				'position.x -= (aVertAnim.deltaX / 327670)
+				'position.y -= (aVertAnim.deltaZ / 327670)
+				'position.z -= (aVertAnim.deltaY / 327670)
+				'TEST:
+				'position.x -= (aVertAnim.deltaZ / 327670)
+				'position.y -= (aVertAnim.deltaX / 327670)
+				'position.z -= (aVertAnim.deltaY / 327670)
+				'TEST:
+				'position.x += (aVertAnim.deltaZ / 327670)
+				'position.y += (aVertAnim.deltaX / 327670)
+				'position.z += (aVertAnim.deltaY / 327670)
+				'TEST:
+				'position.x += (aVertAnim.deltaZ / 327670)
+				'position.y += (aVertAnim.deltaY / 327670)
+				'position.z += (aVertAnim.deltaX / 327670)
 				'------
 				'position.x += (aVertAnim.deltaX / 128)
 				'position.y += (aVertAnim.deltaY / 128)
