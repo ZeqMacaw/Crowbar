@@ -4,9 +4,10 @@
 	Public fileName(63) As Char
 	Public textureName(63) As Char
 	Public flags As Integer
-	Public width As UInt32
-	Public height As UInt32
-	Public dataOffset As UInt32
+	'Public width As UInt32
+	'Public height As UInt32
+	'Public dataOffset As UInt32
+	Public unknown As UInt32
 
 
 	Public theFileName As String

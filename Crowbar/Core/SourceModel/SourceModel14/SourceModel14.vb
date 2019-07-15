@@ -578,34 +578,34 @@ Public Class SourceModel14
 			qcFile.WriteHeaderComment()
 
 			qcFile.WriteModelNameCommand()
-			'qcFile.WriteCDCommand()
-			'qcFile.WriteCDTextureCommand()
-			'qcFile.WriteClipToTexturesCommand()
-			'qcFile.WriteScaleCommand()
+			qcFile.WriteCDCommand()
+			qcFile.WriteCDTextureCommand()
+			qcFile.WriteClipToTexturesCommand()
+			qcFile.WriteScaleCommand()
 
 			qcFile.WriteBodyGroupCommand()
 
 			qcFile.WriteFlagsCommand()
 			qcFile.WriteEyePositionCommand()
 
-			'qcFile.WriteExternalTexturesCommand()
-			'qcFile.WriteTextureGroupCommand()
+			qcFile.WriteExternalTexturesCommand()
+			qcFile.WriteTextureGroupCommand()
 			'If TheApp.Settings.DecompileDebugInfoFilesIsChecked Then
 			'	qcFile.WriteTextureFileNameComments()
 			'End If
-			'qcFile.WriteTexRenderMode()
+			qcFile.WriteTexRenderMode()
 
-			'qcFile.WriteAttachmentCommand()
+			qcFile.WriteAttachmentCommand()
 
 			qcFile.WriteCBoxCommand()
 			qcFile.WriteBBoxCommand()
-			'qcFile.WriteHBoxCommands()
+			qcFile.WriteHBoxCommands()
 
-			'qcFile.WriteControllerCommand()
+			qcFile.WriteControllerCommand()
 
-			'qcFile.WriteSequenceGroupSizeCommand()
+			qcFile.WriteSequenceGroupSizeCommand()
 			'qcFile.WriteSequenceGroupCommands()
-			'qcFile.WriteSequenceCommands()
+			qcFile.WriteSequenceCommands()
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		Finally

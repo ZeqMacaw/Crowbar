@@ -805,9 +805,10 @@ Public Class SourceMdlFile14
 					aTexture.textureName = Me.theInputFileReader.ReadChars(64)
 					aTexture.theTextureName = CStr(aTexture.textureName).Trim(Chr(0))
 					aTexture.flags = Me.theInputFileReader.ReadInt32()
-					aTexture.width = Me.theInputFileReader.ReadUInt32()
-					aTexture.height = Me.theInputFileReader.ReadUInt32()
-					aTexture.dataOffset = Me.theInputFileReader.ReadUInt32()
+					'aTexture.width = Me.theInputFileReader.ReadUInt32()
+					'aTexture.height = Me.theInputFileReader.ReadUInt32()
+					'aTexture.dataOffset = Me.theInputFileReader.ReadUInt32()
+					aTexture.unknown = Me.theInputFileReader.ReadUInt32()
 
 					''TODO: Unknown bytes.
 					'Me.theInputFileReader.ReadUInt32()
@@ -1097,8 +1098,8 @@ Public Class SourceMdlFile14
 				aModel.theName = CStr(aModel.name).Trim(Chr(0))
 				aModel.modelIndex = Me.theInputFileReader.ReadInt32()
 
-				For x As Integer = 0 To aModel.weightingHeaderOffsets.Length - 1
-					aModel.weightingHeaderOffsets(x) = Me.theInputFileReader.ReadInt32()
+				For x As Integer = 0 To aModel.meshOffsets.Length - 1
+					aModel.meshOffsets(x) = Me.theInputFileReader.ReadInt32()
 				Next
 
 				aBodyPart.theModels.Add(aModel)
@@ -1113,7 +1114,7 @@ Public Class SourceMdlFile14
 				'Me.ReadModelVertexes(aModel)
 				'Me.ReadModelNormals(aModel)
 				'Me.ReadMeshes(aModel)
-				Me.ReadWeightingHeaders(aModel)
+				Me.ReadMeshes(aModel)
 
 				Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
 			Next
@@ -1122,32 +1123,32 @@ Public Class SourceMdlFile14
 		End Try
 	End Sub
 
-	Private Sub ReadWeightingHeaders(ByVal aModel As SourceMdlModel14)
+	Private Sub ReadMeshes(ByVal aModel As SourceMdlModel14)
 		Dim inputFileStreamPosition As Long
 		Dim fileOffsetStart As Long
 		Dim fileOffsetEnd As Long
 
 		Try
-			aModel.theWeightingHeaders = New List(Of SourceMdlWeightingHeader14)(aModel.weightingHeaderOffsets.Length)
-			For x As Integer = 0 To aModel.weightingHeaderOffsets.Length - 1
-				If aModel.weightingHeaderOffsets(x) > 0 Then
-					Me.theInputFileReader.BaseStream.Seek(aModel.weightingHeaderOffsets(x), SeekOrigin.Begin)
+			aModel.theMeshes = New List(Of SourceMdlMesh14)(aModel.meshOffsets.Length)
+			For x As Integer = 0 To aModel.meshOffsets.Length - 1
+				If aModel.meshOffsets(x) > 0 Then
+					Me.theInputFileReader.BaseStream.Seek(aModel.meshOffsets(x), SeekOrigin.Begin)
 					fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-					Dim weightingHeader As New SourceMdlWeightingHeader14()
+					Dim aMesh As New SourceMdlMesh14()
 
-					weightingHeader.weightingHeaderIndex = Me.theInputFileReader.ReadInt32()
-					weightingHeader.weightingBoneDataCount = Me.theInputFileReader.ReadInt32()
-					weightingHeader.weightingBoneDataOffset = Me.theInputFileReader.ReadInt32()
+					aMesh.skinref = Me.theInputFileReader.ReadInt32()
+					aMesh.weightingBoneDataCount = Me.theInputFileReader.ReadInt32()
+					aMesh.weightingBoneDataOffset = Me.theInputFileReader.ReadInt32()
 
-					aModel.theWeightingHeaders.Add(weightingHeader)
+					aModel.theMeshes.Add(aMesh)
 
 					fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-					Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aModel.theWeightingHeader [" + aModel.theName + "]")
+					Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aModel.theMeshes [" + aModel.theName + "]")
 
 					inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 
-					Me.ReadWeightingBoneDatas(weightingHeader)
+					Me.ReadMeshMaps(aMesh)
 
 					Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
 				End If
@@ -1157,27 +1158,31 @@ Public Class SourceMdlFile14
 		End Try
 	End Sub
 
-	Private Sub ReadWeightingBoneDatas(ByVal weightingHeader As SourceMdlWeightingHeader14)
+	Private Sub ReadMeshMaps(ByVal aMesh As SourceMdlMesh14)
 		Dim fileOffsetStart As Long
 		Dim fileOffsetEnd As Long
 
 		Try
-			Me.theInputFileReader.BaseStream.Seek(weightingHeader.weightingBoneDataOffset, SeekOrigin.Begin)
+			Me.theInputFileReader.BaseStream.Seek(aMesh.weightingBoneDataOffset, SeekOrigin.Begin)
 			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-			weightingHeader.theWeightingBoneDatas = New List(Of SourceMdlWeightingBoneData14)(weightingHeader.weightingBoneDataCount)
-			For i As Integer = 0 To weightingHeader.weightingBoneDataCount - 1
-				Dim aBoneData As New SourceMdlWeightingBoneData14()
+			aMesh.theMeshMaps = New List(Of SourceMdlMeshMap14)(aMesh.weightingBoneDataCount)
+			For i As Integer = 0 To aMesh.weightingBoneDataCount - 1
+				Dim aMeshMap As New SourceMdlMeshMap14()
 
-				For x As Integer = 0 To aBoneData.theWeightingBoneIndexes.Length - 1
-					aBoneData.theWeightingBoneIndexes(x) = Me.theInputFileReader.ReadByte()
+				For x As Integer = 0 To aMeshMap.theWeightingBoneIndexes.Length - 1
+					aMeshMap.theWeightingBoneIndexes(x) = Me.theInputFileReader.ReadByte()
 				Next
+				aMeshMap.theTriangleOffset = Me.theInputFileReader.ReadUInt16()
+				aMeshMap.theTriangleCount = Me.theInputFileReader.ReadUInt16()
+				aMeshMap.theVertexIndexFrom = Me.theInputFileReader.ReadUInt16()
+				aMeshMap.theVertexIndexTo = Me.theInputFileReader.ReadUInt16()
 
-				weightingHeader.theWeightingBoneDatas.Add(aBoneData)
+				aMesh.theMeshMaps.Add(aMeshMap)
 			Next
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "weightingHeader.theWeightingBoneDatas " + weightingHeader.theWeightingBoneDatas.Count.ToString())
+			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aMesh.theMeshMaps " + aMesh.theMeshMaps.Count.ToString())
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		End Try
@@ -1396,41 +1401,41 @@ Public Class SourceMdlFile14
 	'	End If
 	'End Sub
 
-	Private Sub ReadTextureData(ByVal aTexture As SourceMdlTexture14)
-		'Dim boneInputFileStreamPosition As Long
-		'Dim inputFileStreamPosition As Long
-		Dim fileOffsetStart As Long
-		Dim fileOffsetEnd As Long
-		'Dim fileOffsetStart2 As Long
-		'Dim fileOffsetEnd2 As Long
+	'Private Sub ReadTextureData(ByVal aTexture As SourceMdlTexture14)
+	'	'Dim boneInputFileStreamPosition As Long
+	'	'Dim inputFileStreamPosition As Long
+	'	Dim fileOffsetStart As Long
+	'	Dim fileOffsetEnd As Long
+	'	'Dim fileOffsetStart2 As Long
+	'	'Dim fileOffsetEnd2 As Long
 
-		Try
-			Me.theInputFileReader.BaseStream.Seek(aTexture.dataOffset, SeekOrigin.Begin)
-			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+	'	Try
+	'		Me.theInputFileReader.BaseStream.Seek(aTexture.dataOffset, SeekOrigin.Begin)
+	'		fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-			aTexture.theData = New List(Of Byte)(CType(aTexture.width * aTexture.height, Integer))
-			'FROM: [1999] HLStandardSDK\SourceCode\utils\studiomdl\studiomdl.c
-			'      Void ResizeTexture(s_texture_t * ptexture)
-			'          ptexture->size = ptexture->skinwidth * ptexture->skinheight + 256 * 3;
-			For byteIndex As Long = 0 To (aTexture.width * aTexture.height + 256 * 3) - 1
-				'boneInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-				Dim data As Byte
+	'		aTexture.theData = New List(Of Byte)(CType(aTexture.width * aTexture.height, Integer))
+	'		'FROM: [1999] HLStandardSDK\SourceCode\utils\studiomdl\studiomdl.c
+	'		'      Void ResizeTexture(s_texture_t * ptexture)
+	'		'          ptexture->size = ptexture->skinwidth * ptexture->skinheight + 256 * 3;
+	'		For byteIndex As Long = 0 To (aTexture.width * aTexture.height + 256 * 3) - 1
+	'			'boneInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+	'			Dim data As Byte
 
-				data = Me.theInputFileReader.ReadByte()
+	'			data = Me.theInputFileReader.ReadByte()
 
-				aTexture.theData.Add(data)
+	'			aTexture.theData.Add(data)
 
-				'inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+	'			'inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 
-				'Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
-			Next
+	'			'Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
+	'		Next
 
-			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aTexture.theData")
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		End Try
-	End Sub
+	'		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
+	'		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aTexture.theData")
+	'	Catch ex As Exception
+	'		Dim debug As Integer = 4242
+	'	End Try
+	'End Sub
 
 #End Region
 

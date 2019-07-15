@@ -233,80 +233,91 @@ Public Class SourceSmdFile14
 		Dim vertex1Line As String = ""
 		Dim vertex2Line As String = ""
 		Dim vertex3Line As String = ""
-		'Dim materialIndex As Integer
+		Dim materialIndex As Integer
 		'Dim materialName As String
-		'Dim aMesh As SourceMdlMesh14
-		'Dim aTexture As SourceMdlTexture14
+		Dim aMesh As SourceMdlMesh14
+		Dim aTexture As SourceMdlTexture14
 		Dim boneIndex As Integer
 		Dim aVertexIndex As Integer
+		Dim aMeshMap As SourceMdlMeshMap14
 
 		'triangles
 		line = "triangles"
 		Me.theOutputFileStreamWriter.WriteLine(line)
 
 		Try
-			'If aBodyModel.theMeshes IsNot Nothing Then
-			'	For meshIndex As Integer = 0 To aBodyModel.theMeshes.Count - 1
-			'		aMesh = aBodyModel.theMeshes(meshIndex)
-			'		materialIndex = aMesh.skinref
-			'		aTexture = Me.theMdlFileData.theTextures(materialIndex)
-			'		materialName = aTexture.theFileName
+			'NOTE: Shows the mesh properly, but does not work with animation SMDs.
+			'For aVertexIndexIndex As Integer = 0 To Me.theMdlFileData.theIndexes.Count - 3 Step 3
+			'	materialLine = Me.theMdlFileData.theTextures(0).theTextureName
+			'	boneIndex = 0
 
-			'		'For groupIndex As Integer = 1 To aStripOrFan.theVertexInfos.Count - 2
-			'		'	materialLine = materialName
+			'	aVertexIndex = Me.theMdlFileData.theIndexes(aVertexIndexIndex)
+			'	vertex1Line = Me.GetVertexLine(boneIndex, Me.theMdlFileData.theVertexes(aVertexIndex), Me.theMdlFileData.theNormals(aVertexIndex), Me.theMdlFileData.theUVs(aVertexIndex), aBodyModel.theWeightingHeaders(0), Me.theMdlFileData.theWeightings(aVertexIndex))
+			'	aVertexIndex = Me.theMdlFileData.theIndexes(aVertexIndexIndex + 2)
+			'	vertex2Line = Me.GetVertexLine(boneIndex, Me.theMdlFileData.theVertexes(aVertexIndex), Me.theMdlFileData.theNormals(aVertexIndex), Me.theMdlFileData.theUVs(aVertexIndex), aBodyModel.theWeightingHeaders(0), Me.theMdlFileData.theWeightings(aVertexIndex))
+			'	aVertexIndex = Me.theMdlFileData.theIndexes(aVertexIndexIndex + 1)
+			'	vertex3Line = Me.GetVertexLine(boneIndex, Me.theMdlFileData.theVertexes(aVertexIndex), Me.theMdlFileData.theNormals(aVertexIndex), Me.theMdlFileData.theUVs(aVertexIndex), aBodyModel.theWeightingHeaders(0), Me.theMdlFileData.theWeightings(aVertexIndex))
 
-			'		'	vertex1Line = Me.GetVertexLine(aBodyModel, aStripOrFan.theVertexInfos(0), aTexture)
-			'		'	vertex2Line = Me.GetVertexLine(aBodyModel, aStripOrFan.theVertexInfos(groupIndex + 1), aTexture)
-			'		'	vertex3Line = Me.GetVertexLine(aBodyModel, aStripOrFan.theVertexInfos(groupIndex), aTexture)
+			'	If vertex1Line.StartsWith("// ") OrElse vertex2Line.StartsWith("// ") OrElse vertex3Line.StartsWith("// ") Then
+			'		materialLine = "// " + materialLine
+			'		If Not vertex1Line.StartsWith("// ") Then
+			'			vertex1Line = "// " + vertex1Line
+			'		End If
+			'		If Not vertex2Line.StartsWith("// ") Then
+			'			vertex2Line = "// " + vertex2Line
+			'		End If
+			'		If Not vertex3Line.StartsWith("// ") Then
+			'			vertex3Line = "// " + vertex3Line
+			'		End If
+			'	End If
+			'	Me.theOutputFileStreamWriter.WriteLine(materialLine)
+			'	'NOTE: Use 3,1,2 order to line up with Nightfire decompiler.
+			'	Me.theOutputFileStreamWriter.WriteLine(vertex3Line)
+			'	Me.theOutputFileStreamWriter.WriteLine(vertex1Line)
+			'	Me.theOutputFileStreamWriter.WriteLine(vertex2Line)
+			'	'Me.theOutputFileStreamWriter.WriteLine(vertex3Line)
+			'Next
+			'======
+			If aBodyModel.theMeshes IsNot Nothing Then
+				For meshIndex As Integer = 0 To aBodyModel.theMeshes.Count - 1
+					aMesh = aBodyModel.theMeshes(meshIndex)
 
-			'		'	If vertex1Line.StartsWith("// ") OrElse vertex2Line.StartsWith("// ") OrElse vertex3Line.StartsWith("// ") Then
-			'		'		materialLine = "// " + materialLine
-			'		'		If Not vertex1Line.StartsWith("// ") Then
-			'		'			vertex1Line = "// " + vertex1Line
-			'		'		End If
-			'		'		If Not vertex2Line.StartsWith("// ") Then
-			'		'			vertex2Line = "// " + vertex2Line
-			'		'		End If
-			'		'		If Not vertex3Line.StartsWith("// ") Then
-			'		'			vertex3Line = "// " + vertex3Line
-			'		'		End If
-			'		'	End If
-			'		'	Me.theOutputFileStreamWriter.WriteLine(materialLine)
-			'		'	Me.theOutputFileStreamWriter.WriteLine(vertex1Line)
-			'		'	Me.theOutputFileStreamWriter.WriteLine(vertex2Line)
-			'		'	Me.theOutputFileStreamWriter.WriteLine(vertex3Line)
-			'		'Next
-			'	Next
-			'End If
-			For aVertexIndexIndex As Integer = 0 To Me.theMdlFileData.theIndexes.Count - 3 Step 3
-				materialLine = Me.theMdlFileData.theTextures(0).theTextureName
+					materialIndex = aMesh.skinref
+					aTexture = Me.theMdlFileData.theTextures(materialIndex)
+					materialLine = aTexture.theTextureName
 
-				boneIndex = 0
+					For meshMapIndex As Integer = 0 To aMesh.theMeshMaps.Count - 1
+						aMeshMap = aMesh.theMeshMaps(meshMapIndex)
+						boneIndex = 0
 
-				aVertexIndex = Me.theMdlFileData.theIndexes(aVertexIndexIndex)
-				vertex1Line = Me.GetVertexLine(boneIndex, Me.theMdlFileData.theVertexes(aVertexIndex), Me.theMdlFileData.theNormals(aVertexIndex), Me.theMdlFileData.theUVs(aVertexIndex), aBodyModel.theWeightingHeaders(0), Me.theMdlFileData.theWeightings(aVertexIndex))
-				aVertexIndex = Me.theMdlFileData.theIndexes(aVertexIndexIndex + 2)
-				vertex2Line = Me.GetVertexLine(boneIndex, Me.theMdlFileData.theVertexes(aVertexIndex), Me.theMdlFileData.theNormals(aVertexIndex), Me.theMdlFileData.theUVs(aVertexIndex), aBodyModel.theWeightingHeaders(0), Me.theMdlFileData.theWeightings(aVertexIndex))
-				aVertexIndex = Me.theMdlFileData.theIndexes(aVertexIndexIndex + 1)
-				vertex3Line = Me.GetVertexLine(boneIndex, Me.theMdlFileData.theVertexes(aVertexIndex), Me.theMdlFileData.theNormals(aVertexIndex), Me.theMdlFileData.theUVs(aVertexIndex), aBodyModel.theWeightingHeaders(0), Me.theMdlFileData.theWeightings(aVertexIndex))
+						For triangleIndex As Integer = 0 To aMeshMap.theTriangleCount - 3 Step 3
+							aVertexIndex = Me.theMdlFileData.theIndexes(aMeshMap.theTriangleOffset + triangleIndex + 1)
+							vertex1Line = Me.GetVertexLine(boneIndex, Me.theMdlFileData.theVertexes(aVertexIndex), Me.theMdlFileData.theNormals(aVertexIndex), Me.theMdlFileData.theUVs(aVertexIndex), aMeshMap, Me.theMdlFileData.theWeightings(aVertexIndex))
+							aVertexIndex = Me.theMdlFileData.theIndexes(aMeshMap.theTriangleOffset + triangleIndex)
+							vertex2Line = Me.GetVertexLine(boneIndex, Me.theMdlFileData.theVertexes(aVertexIndex), Me.theMdlFileData.theNormals(aVertexIndex), Me.theMdlFileData.theUVs(aVertexIndex), aMeshMap, Me.theMdlFileData.theWeightings(aVertexIndex))
+							aVertexIndex = Me.theMdlFileData.theIndexes(aMeshMap.theTriangleOffset + triangleIndex + 2)
+							vertex3Line = Me.GetVertexLine(boneIndex, Me.theMdlFileData.theVertexes(aVertexIndex), Me.theMdlFileData.theNormals(aVertexIndex), Me.theMdlFileData.theUVs(aVertexIndex), aMeshMap, Me.theMdlFileData.theWeightings(aVertexIndex))
 
-				If vertex1Line.StartsWith("// ") OrElse vertex2Line.StartsWith("// ") OrElse vertex3Line.StartsWith("// ") Then
-					materialLine = "// " + materialLine
-					If Not vertex1Line.StartsWith("// ") Then
-						vertex1Line = "// " + vertex1Line
-					End If
-					If Not vertex2Line.StartsWith("// ") Then
-						vertex2Line = "// " + vertex2Line
-					End If
-					If Not vertex3Line.StartsWith("// ") Then
-						vertex3Line = "// " + vertex3Line
-					End If
-				End If
-				Me.theOutputFileStreamWriter.WriteLine(materialLine)
-				Me.theOutputFileStreamWriter.WriteLine(vertex1Line)
-				Me.theOutputFileStreamWriter.WriteLine(vertex2Line)
-				Me.theOutputFileStreamWriter.WriteLine(vertex3Line)
-			Next
+							If vertex1Line.StartsWith("// ") OrElse vertex2Line.StartsWith("// ") OrElse vertex3Line.StartsWith("// ") Then
+								materialLine = "// " + materialLine
+								If Not vertex1Line.StartsWith("// ") Then
+									vertex1Line = "// " + vertex1Line
+								End If
+								If Not vertex2Line.StartsWith("// ") Then
+									vertex2Line = "// " + vertex2Line
+								End If
+								If Not vertex3Line.StartsWith("// ") Then
+									vertex3Line = "// " + vertex3Line
+								End If
+							End If
+							Me.theOutputFileStreamWriter.WriteLine(materialLine)
+							Me.theOutputFileStreamWriter.WriteLine(vertex1Line)
+							Me.theOutputFileStreamWriter.WriteLine(vertex2Line)
+							Me.theOutputFileStreamWriter.WriteLine(vertex3Line)
+						Next
+					Next
+				Next
+			End If
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		End Try
@@ -323,7 +334,8 @@ Public Class SourceSmdFile14
 
 #Region "Private Methods"
 
-	Private Function GetVertexLine(ByVal boneIndex As Integer, ByVal position As SourceVector, ByVal normal As SourceVector, ByVal uv As SourceVector, ByVal weightingHeader As SourceMdlWeightingHeader14, ByVal weighting As SourceMdlWeighting14) As String
+	'Private Function GetVertexLine(ByVal boneIndex As Integer, ByVal position As SourceVector, ByVal normal As SourceVector, ByVal uv As SourceVector, ByVal weightingHeader As SourceMdlWeightingHeader14, ByVal weighting As SourceMdlWeighting14) As String
+	Private Function GetVertexLine(ByVal boneIndex As Integer, ByVal position As SourceVector, ByVal normal As SourceVector, ByVal uv As SourceVector, ByVal aMeshMap As SourceMdlMeshMap14, ByVal weighting As SourceMdlWeighting14) As String
 		Dim line As String
 
 		line = ""
@@ -355,7 +367,8 @@ Public Class SourceSmdFile14
 				line += weighting.boneCount.ToString(TheApp.InternalNumberFormat)
 				For x As Integer = 0 To weighting.boneCount - 1
 					line += " "
-					line += weightingHeader.theWeightingBoneDatas(0).theWeightingBoneIndexes(weighting.bones(x)).ToString(TheApp.InternalNumberFormat)
+					'line += weightingHeader.theWeightingBoneDatas(0).theWeightingBoneIndexes(weighting.bones(x)).ToString(TheApp.InternalNumberFormat)
+					line += aMeshMap.theWeightingBoneIndexes(weighting.bones(x)).ToString(TheApp.InternalNumberFormat)
 					line += " "
 					line += weighting.weights(x).ToString("0.000000", TheApp.InternalNumberFormat)
 				Next

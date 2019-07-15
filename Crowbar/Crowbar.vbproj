@@ -149,11 +149,10 @@
     <Compile Include="Core\SourceModel\SourceModel14\SourceMdlFile14.vb" />
     <Compile Include="Core\SourceModel\SourceModel14\SourceMdlFileData\SourceMdlBodyPart14.vb" />
     <Compile Include="Core\SourceModel\SourceModel14\SourceMdlFileData\SourceMdlFileData14.vb" />
-    <Compile Include="Core\SourceModel\SourceModel14\SourceMdlFileData\SourceMdlMesh14.vb" />
     <Compile Include="Core\SourceModel\SourceModel14\SourceMdlFileData\SourceMdlModel14.vb" />
     <Compile Include="Core\SourceModel\SourceModel14\SourceMdlFileData\SourceMdlTexture14.vb" />
-    <Compile Include="Core\SourceModel\SourceModel14\SourceMdlFileData\SourceMdlWeightingBoneData14.vb" />
-    <Compile Include="Core\SourceModel\SourceModel14\SourceMdlFileData\SourceMdlWeightingHeader14.vb" />
+    <Compile Include="Core\SourceModel\SourceModel14\SourceMdlFileData\SourceMdlMeshMap14.vb" />
+    <Compile Include="Core\SourceModel\SourceModel14\SourceMdlFileData\SourceMdlMesh14.vb" />
     <Compile Include="Core\SourceModel\SourceModel14\SourceMdlFileData\SourceMdlWeighting14.vb" />
     <Compile Include="Core\SourceModel\SourceModel14\SourceModel14.vb" />
     <Compile Include="Core\SourceModel\SourceModel14\SourceQcFile14.vb" />
