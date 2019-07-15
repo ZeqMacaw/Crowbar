@@ -332,7 +332,7 @@ Public Class SourceQcFile14
 		Dim line As String = ""
 		Dim aHitbox As SourceMdlHitbox10
 
-		If Me.theMdlFileData.theHitboxes.Count > 0 Then
+		If Me.theMdlFileData.theHitboxes IsNot Nothing AndAlso Me.theMdlFileData.theHitboxes.Count > 0 Then
 			Me.theOutputFileStreamWriter.WriteLine()
 
 			For j As Integer = 0 To Me.theMdlFileData.theHitboxes.Count - 1
