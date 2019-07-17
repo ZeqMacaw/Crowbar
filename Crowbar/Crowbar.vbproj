@@ -160,6 +160,7 @@
     <Compile Include="Core\SourcePackage\- Base\BasePackageFile.vb" />
     <Compile Include="Core\SourcePackage\- Base\BasePackageDirectoryEntry.vb" />
     <Compile Include="Core\SourcePackage\- Base\BasePackageFileData.vb" />
+    <Compile Include="Core\SourcePackage\Nightfire007Format\Nightfire007DirectoryEntry.vb" />
     <Compile Include="Core\SourcePackage\HfsFormat\HfsDirectoryEntry.vb" />
     <Compile Include="Core\SourcePackage\HfsFormat\HfsFile.vb" />
     <Compile Include="Core\SourcePackage\HfsFormat\HfsFileData.vb" />
@@ -504,6 +505,8 @@
     <Compile Include="Core\SourceModel\SourceModel49\SourceVtaFile49.vb" />
     <Compile Include="Core\SourceModel\SourceVtxFile\SourceVtxFile07\SourceVtxFile07.vb" />
     <Compile Include="Core\SourcePackage\HfsFormat\HfsMainDirectoryEntry.vb" />
+    <Compile Include="Core\SourcePackage\Nightfire007Format\Nightfire007File.vb" />
+    <Compile Include="Core\SourcePackage\Nightfire007Format\Nightfire007FileData.vb" />
     <Compile Include="Core\SourcePackage\SourcePackageEventArgs.vb" />
     <Compile Include="Core\SteamAppInfos\AnarchyArcadeSteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\BlackMesaSteamAppInfo.vb" />
