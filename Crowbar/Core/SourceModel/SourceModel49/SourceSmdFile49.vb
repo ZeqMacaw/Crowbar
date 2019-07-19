@@ -410,7 +410,7 @@ Public Class SourceSmdFile49
 		Next
 	End Sub
 
-	Public Sub WriteSkeletonSectionForAnimation(ByVal aSequenceDescBase As SourceMdlSequenceDescBase, ByVal anAnimationDescBase As SourceMdlAnimationDescBase)
+	Public Sub WriteSkeletonSectionForAnimation(ByVal aSequenceDescBase As SourceMdlSequenceDescBase, ByVal anAnimationDescBase As SourceMdlAnimationDescBase, Optional onlyWriteCorrectiveAnimationRootBones As Boolean = False)
 		Dim line As String = ""
 		Dim aBone As SourceMdlBone
 		Dim boneIndex As Integer
@@ -434,7 +434,12 @@ Public Class SourceSmdFile49
 
 		If Me.theMdlFileData.theBones IsNot Nothing Then
 			Me.theAnimationFrameLines = New SortedList(Of Integer, AnimationFrameLine)()
-			For frameIndex As Integer = 0 To anAnimationDesc.frameCount - 1
+
+			Dim frameCount As Integer = anAnimationDesc.frameCount
+			If onlyWriteCorrectiveAnimationRootBones Then
+				frameCount = 1
+			End If
+			For frameIndex As Integer = 0 To frameCount - 1
 				Me.theAnimationFrameLines.Clear()
 
 				If ((anAnimationDesc.flags And SourceMdlAnimationDesc.STUDIO_FRAMEANIM) <> 0) Then
@@ -455,6 +460,10 @@ Public Class SourceSmdFile49
 
 					For boneIndex = 0 To Me.theMdlFileData.theBones.Count - 1
 						aBone = Me.theMdlFileData.theBones(boneIndex)
+
+						If onlyWriteCorrectiveAnimationRootBones AndAlso aBone.parentBoneIndex <> -1 Then
+							Continue For
+						End If
 
 						aFrameLine = New AnimationFrameLine()
 						Me.theAnimationFrameLines.Add(boneIndex, aFrameLine)
@@ -948,6 +957,12 @@ Public Class SourceSmdFile49
 					Dim adjustedRotation As New SourceVector()
 					Me.AdjustPositionAndRotationByPiecewiseMovement(frameIndex, boneIndex, anAnimationDesc.theMovements, aFrameLine.position, aFrameLine.rotation, adjustedPosition, adjustedRotation)
 					Me.AdjustPositionAndRotation(boneIndex, adjustedPosition, adjustedRotation, position, rotation)
+
+					If onlyWriteCorrectiveAnimationRootBones Then
+						position.x = 0
+						position.y = 0
+						position.z = 0
+					End If
 
 					line = "    "
 					line += boneIndex.ToString(TheApp.InternalNumberFormat)

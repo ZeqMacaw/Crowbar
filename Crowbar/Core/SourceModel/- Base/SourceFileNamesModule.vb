@@ -209,6 +209,23 @@ Module SourceFileNamesModule
 		Return animationSmdRelativePathFileName
 	End Function
 
+	Public Function CreateCorrectiveAnimationName(ByVal givenAnimationSmdRelativePathFileName As String) As String
+		Dim animationName As String
+
+		animationName = givenAnimationSmdRelativePathFileName + "_" + "corrective_animation"
+
+		Return animationName
+	End Function
+
+	Public Function CreateCorrectiveAnimationSmdRelativePathFileName(ByVal givenAnimationSmdRelativePathFileName As String, ByVal modelName As String) As String
+		Dim animationSmdRelativePathFileName As String
+
+		animationSmdRelativePathFileName = CreateCorrectiveAnimationName(givenAnimationSmdRelativePathFileName) + ".smd"
+		animationSmdRelativePathFileName = Path.Combine(GetAnimationSmdRelativePath(modelName), animationSmdRelativePathFileName)
+
+		Return animationSmdRelativePathFileName
+	End Function
+
 	Public Function GetVrdFileName(ByVal modelName As String) As String
 		Dim vrdFileName As String
 
