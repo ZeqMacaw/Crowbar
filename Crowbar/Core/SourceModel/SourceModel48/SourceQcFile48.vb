@@ -2906,6 +2906,11 @@ Public Class SourceQcFile48
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 				line += " "
 				tempInteger = CInt(Math.Round(anIkRule.influenceEnd * endFrameIndex))
+				'NOTE: Limit to max frame. 
+				'      Example model that needs this: Half-Life 2 Deathmatch > "models\combine_soldier_anims.mdl"
+				If tempInteger > endFrameIndex Then
+					tempInteger = endFrameIndex
+				End If
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 
 				line += " target "
@@ -3116,7 +3121,13 @@ Public Class SourceQcFile48
 						influenceStart = (layer.influenceStart * (anAnimationDesc.frameCount - 1)).ToString("0", TheApp.InternalNumberFormat)
 						influencePeak = (layer.influencePeak * (anAnimationDesc.frameCount - 1)).ToString("0", TheApp.InternalNumberFormat)
 						influenceTail = (layer.influenceTail * (anAnimationDesc.frameCount - 1)).ToString("0", TheApp.InternalNumberFormat)
-						influenceEnd = (layer.influenceEnd * (anAnimationDesc.frameCount - 1)).ToString("0", TheApp.InternalNumberFormat)
+						Dim influenceEndValue As Double = layer.influenceEnd * (anAnimationDesc.frameCount - 1)
+						'NOTE: Limit to max frame. 
+						'      Example model that needs this: Half-Life 2 Deathmatch > "models\combine_soldier_anims.mdl"
+						If influenceEndValue > anAnimationDesc.frameCount - 1 Then
+							influenceEndValue = anAnimationDesc.frameCount - 1
+						End If
+						influenceEnd = (influenceEndValue).ToString("0", TheApp.InternalNumberFormat)
 					Else
 						influenceStart = layer.influenceStart.ToString("0.######", TheApp.InternalNumberFormat)
 						influencePeak = layer.influencePeak.ToString("0.######", TheApp.InternalNumberFormat)
