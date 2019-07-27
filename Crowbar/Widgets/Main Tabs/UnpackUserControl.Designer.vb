@@ -53,7 +53,6 @@ Partial Class UnpackUserControl
 		Me.PackageTreeView = New System.Windows.Forms.TreeView()
 		Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
 		Me.PackageListView = New System.Windows.Forms.ListView()
-		Me.PackageDataGridView = New System.Windows.Forms.DataGridView()
 		Me.OptionsGroupBox = New System.Windows.Forms.GroupBox()
 		Me.Panel1 = New System.Windows.Forms.Panel()
 		Me.FolderForEachPackageCheckBox = New System.Windows.Forms.CheckBox()
@@ -88,7 +87,6 @@ Partial Class UnpackUserControl
 		Me.SplitContainer3.Panel1.SuspendLayout()
 		Me.SplitContainer3.Panel2.SuspendLayout()
 		Me.SplitContainer3.SuspendLayout()
-		CType(Me.PackageDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.OptionsGroupBox.SuspendLayout()
 		Me.Panel1.SuspendLayout()
 		Me.SuspendLayout()
@@ -121,6 +119,7 @@ Partial Class UnpackUserControl
 		'
 		Me.OutputSamePathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.OutputSamePathTextBox.CueBannerText = ""
 		Me.OutputSamePathTextBox.Location = New System.Drawing.Point(209, 34)
 		Me.OutputSamePathTextBox.Name = "OutputSamePathTextBox"
 		Me.OutputSamePathTextBox.ReadOnly = True
@@ -131,6 +130,7 @@ Partial Class UnpackUserControl
 		'
 		Me.GameModelsOutputPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.GameModelsOutputPathTextBox.CueBannerText = ""
 		Me.GameModelsOutputPathTextBox.Location = New System.Drawing.Point(209, 34)
 		Me.GameModelsOutputPathTextBox.Name = "GameModelsOutputPathTextBox"
 		Me.GameModelsOutputPathTextBox.ReadOnly = True
@@ -171,6 +171,7 @@ Partial Class UnpackUserControl
 		'
 		Me.OutputPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.OutputPathTextBox.CueBannerText = ""
 		Me.OutputPathTextBox.Location = New System.Drawing.Point(209, 34)
 		Me.OutputPathTextBox.Name = "OutputPathTextBox"
 		Me.OutputPathTextBox.Size = New System.Drawing.Size(445, 21)
@@ -180,6 +181,7 @@ Partial Class UnpackUserControl
 		'
 		Me.OutputSubfolderTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.OutputSubfolderTextBox.CueBannerText = ""
 		Me.OutputSubfolderTextBox.Location = New System.Drawing.Point(209, 34)
 		Me.OutputSubfolderTextBox.Name = "OutputSubfolderTextBox"
 		Me.OutputSubfolderTextBox.Size = New System.Drawing.Size(445, 21)
@@ -227,6 +229,7 @@ Partial Class UnpackUserControl
 		'
 		Me.PackagePathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.PackagePathFileNameTextBox.CueBannerText = ""
 		Me.PackagePathFileNameTextBox.Location = New System.Drawing.Point(209, 5)
 		Me.PackagePathFileNameTextBox.Name = "PackagePathFileNameTextBox"
 		Me.PackagePathFileNameTextBox.Size = New System.Drawing.Size(445, 21)
@@ -299,7 +302,7 @@ Partial Class UnpackUserControl
 		'
 		Me.SplitContainer2.Panel2.Controls.Add(Me.OptionsGroupBox)
 		Me.SplitContainer2.Size = New System.Drawing.Size(770, 335)
-		Me.SplitContainer2.SplitterDistance = 580
+		Me.SplitContainer2.SplitterDistance = 572
 		Me.SplitContainer2.SplitterWidth = 6
 		Me.SplitContainer2.TabIndex = 0
 		'
@@ -311,7 +314,7 @@ Partial Class UnpackUserControl
 		Me.SelectionGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.SelectionGroupBox.Location = New System.Drawing.Point(0, 0)
 		Me.SelectionGroupBox.Name = "SelectionGroupBox"
-		Me.SelectionGroupBox.Size = New System.Drawing.Size(580, 335)
+		Me.SelectionGroupBox.Size = New System.Drawing.Size(572, 335)
 		Me.SelectionGroupBox.TabIndex = 0
 		Me.SelectionGroupBox.TabStop = False
 		Me.SelectionGroupBox.Text = "Selection in package files"
@@ -324,7 +327,7 @@ Partial Class UnpackUserControl
 		Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FindToolStripTextBox, Me.FindToolStripButton, Me.ToolStripSeparator1, Me.FilesSelectedCountToolStripLabel, Me.SizeSelectedTotalToolStripLabel, Me.RefreshListingToolStripButton})
 		Me.ToolStrip1.Location = New System.Drawing.Point(3, 307)
 		Me.ToolStrip1.Name = "ToolStrip1"
-		Me.ToolStrip1.Size = New System.Drawing.Size(574, 25)
+		Me.ToolStrip1.Size = New System.Drawing.Size(566, 25)
 		Me.ToolStrip1.Stretch = True
 		Me.ToolStrip1.TabIndex = 10
 		Me.ToolStrip1.Text = "ToolStrip1"
@@ -333,7 +336,7 @@ Partial Class UnpackUserControl
 		'
 		Me.FindToolStripTextBox.Font = New System.Drawing.Font("Segoe UI", 9.0!)
 		Me.FindToolStripTextBox.Name = "FindToolStripTextBox"
-		Me.FindToolStripTextBox.Size = New System.Drawing.Size(452, 25)
+		Me.FindToolStripTextBox.Size = New System.Drawing.Size(444, 25)
 		Me.FindToolStripTextBox.ToolTipText = "Text to find"
 		'
 		'FindToolStripButton
@@ -382,7 +385,7 @@ Partial Class UnpackUserControl
 		Me.SelectionPathTextBox.Location = New System.Drawing.Point(6, 19)
 		Me.SelectionPathTextBox.Name = "SelectionPathTextBox"
 		Me.SelectionPathTextBox.ReadOnly = True
-		Me.SelectionPathTextBox.Size = New System.Drawing.Size(568, 21)
+		Me.SelectionPathTextBox.Size = New System.Drawing.Size(560, 21)
 		Me.SelectionPathTextBox.TabIndex = 1
 		'
 		'SplitContainer3
@@ -401,8 +404,7 @@ Partial Class UnpackUserControl
 		'SplitContainer3.Panel2
 		'
 		Me.SplitContainer3.Panel2.Controls.Add(Me.PackageListView)
-		Me.SplitContainer3.Panel2.Controls.Add(Me.PackageDataGridView)
-		Me.SplitContainer3.Size = New System.Drawing.Size(568, 258)
+		Me.SplitContainer3.Size = New System.Drawing.Size(560, 258)
 		Me.SplitContainer3.SplitterDistance = 250
 		Me.SplitContainer3.TabIndex = 6
 		'
@@ -434,36 +436,12 @@ Partial Class UnpackUserControl
 		Me.PackageListView.Location = New System.Drawing.Point(0, 0)
 		Me.PackageListView.Name = "PackageListView"
 		Me.PackageListView.ShowGroups = False
-		Me.PackageListView.Size = New System.Drawing.Size(314, 258)
+		Me.PackageListView.Size = New System.Drawing.Size(306, 258)
 		Me.PackageListView.SmallImageList = Me.ImageList1
 		Me.PackageListView.Sorting = System.Windows.Forms.SortOrder.Ascending
 		Me.PackageListView.TabIndex = 1
 		Me.PackageListView.UseCompatibleStateImageBehavior = False
 		Me.PackageListView.View = System.Windows.Forms.View.Details
-		'
-		'PackageDataGridView
-		'
-		Me.PackageDataGridView.AllowUserToAddRows = False
-		Me.PackageDataGridView.AllowUserToDeleteRows = False
-		Me.PackageDataGridView.AllowUserToOrderColumns = True
-		Me.PackageDataGridView.AllowUserToResizeRows = False
-		Me.PackageDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
-		Me.PackageDataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-		Me.PackageDataGridView.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None
-		Me.PackageDataGridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText
-		Me.PackageDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-		Me.PackageDataGridView.Location = New System.Drawing.Point(267, 32)
-		Me.PackageDataGridView.Name = "PackageDataGridView"
-		Me.PackageDataGridView.ReadOnly = True
-		Me.PackageDataGridView.RowHeadersVisible = False
-		Me.PackageDataGridView.RowTemplate.DefaultCellStyle.BackColor = System.Drawing.SystemColors.AppWorkspace
-		Me.PackageDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-		Me.PackageDataGridView.ShowCellErrors = False
-		Me.PackageDataGridView.ShowEditingIcon = False
-		Me.PackageDataGridView.ShowRowErrors = False
-		Me.PackageDataGridView.Size = New System.Drawing.Size(322, 196)
-		Me.PackageDataGridView.TabIndex = 0
-		Me.PackageDataGridView.Visible = False
 		'
 		'OptionsGroupBox
 		'
@@ -471,7 +449,7 @@ Partial Class UnpackUserControl
 		Me.OptionsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.OptionsGroupBox.Location = New System.Drawing.Point(0, 0)
 		Me.OptionsGroupBox.Name = "OptionsGroupBox"
-		Me.OptionsGroupBox.Size = New System.Drawing.Size(184, 335)
+		Me.OptionsGroupBox.Size = New System.Drawing.Size(192, 335)
 		Me.OptionsGroupBox.TabIndex = 0
 		Me.OptionsGroupBox.TabStop = False
 		Me.OptionsGroupBox.Text = "Options"
@@ -489,7 +467,7 @@ Partial Class UnpackUserControl
 		Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.Panel1.Location = New System.Drawing.Point(3, 17)
 		Me.Panel1.Name = "Panel1"
-		Me.Panel1.Size = New System.Drawing.Size(178, 315)
+		Me.Panel1.Size = New System.Drawing.Size(186, 315)
 		Me.Panel1.TabIndex = 0
 		'
 		'FolderForEachPackageCheckBox
@@ -515,7 +493,7 @@ Partial Class UnpackUserControl
 		'EditGameSetupButton
 		'
 		Me.EditGameSetupButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.EditGameSetupButton.Location = New System.Drawing.Point(4620, 229)
+		Me.EditGameSetupButton.Location = New System.Drawing.Point(4935, 229)
 		Me.EditGameSetupButton.Name = "EditGameSetupButton"
 		Me.EditGameSetupButton.Size = New System.Drawing.Size(90, 23)
 		Me.EditGameSetupButton.TabIndex = 1
@@ -531,7 +509,7 @@ Partial Class UnpackUserControl
 		Me.GameSetupComboBox.FormattingEnabled = True
 		Me.GameSetupComboBox.Location = New System.Drawing.Point(3, 255)
 		Me.GameSetupComboBox.Name = "GameSetupComboBox"
-		Me.GameSetupComboBox.Size = New System.Drawing.Size(4707, 21)
+		Me.GameSetupComboBox.Size = New System.Drawing.Size(5022, 21)
 		Me.GameSetupComboBox.TabIndex = 2
 		Me.GameSetupComboBox.Visible = False
 		'
@@ -616,6 +594,7 @@ Partial Class UnpackUserControl
 		Me.UnpackerLogTextBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.UnpackerLogTextBox.CueBannerText = ""
 		Me.UnpackerLogTextBox.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.UnpackerLogTextBox.HideSelection = False
 		Me.UnpackerLogTextBox.Location = New System.Drawing.Point(0, -1)
@@ -694,7 +673,6 @@ Partial Class UnpackUserControl
 		Me.SplitContainer3.Panel2.ResumeLayout(False)
 		CType(Me.SplitContainer3, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.SplitContainer3.ResumeLayout(False)
-		CType(Me.PackageDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.OptionsGroupBox.ResumeLayout(False)
 		Me.Panel1.ResumeLayout(False)
 		Me.Panel1.PerformLayout()
@@ -730,7 +708,6 @@ Partial Class UnpackUserControl
 	Friend WithEvents GameSetupComboBox As System.Windows.Forms.ComboBox
 	Friend WithEvents EditGameSetupButton As System.Windows.Forms.Button
 	Friend WithEvents LogFileCheckBox As System.Windows.Forms.CheckBox
-	Friend WithEvents PackageDataGridView As System.Windows.Forms.DataGridView
 	Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
 	Friend WithEvents FilesSelectedCountToolStripLabel As System.Windows.Forms.ToolStripLabel
 	Friend WithEvents FindToolStripTextBox As ToolStripSpringTextBox

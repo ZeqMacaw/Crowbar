@@ -838,6 +838,9 @@
     <EmbeddedResource Include="Widgets\- Application\AgreementRequiresAcceptanceForm.resx">
       <DependentUpon>AgreementRequiresAcceptanceForm.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\- Application\BaseForm.resx">
+      <DependentUpon>BaseForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Widgets\- Application\DeleteItemForm.resx">
       <DependentUpon>DeleteItemForm.vb</DependentUpon>
     </EmbeddedResource>
