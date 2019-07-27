@@ -44,6 +44,13 @@ Public Class SourceVtxStripGroup06
 	Public theVtxVertexes As List(Of SourceVtxVertex06)
 
 
+	'FROM: SourceEngine2003_source HL2 Beta 2003\src_main\common\optimize.h
+	'      [Version 36]
+	'enum StripGroupFlags_t {
+	'	STRIPGROUP_IS_FLEXED	= 0x01,
+	'	STRIPGROUP_IS_HWSKINNED	= 0x02
+	'};
+	'------
 	'FROM: The Axel Project - source [MDL v37]\TAPSRC\src\public\optimize.h
 	'enum StripGroupFlags_t {
 	'	STRIPGROUP_IS_FLEXED	= 0x01,

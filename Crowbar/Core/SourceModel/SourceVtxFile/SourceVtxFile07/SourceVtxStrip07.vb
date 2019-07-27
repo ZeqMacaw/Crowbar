@@ -1,4 +1,4 @@
-Public Class SourceVtxStrip
+Public Class SourceVtxStrip07
 
 	'FROM: src/public/optimize.h
 	'// a strip is a piece of a stripgroup that is divided by bones 
@@ -47,7 +47,7 @@ Public Class SourceVtxStrip
 
 
 
-	Public theVtxBoneStateChanges As List(Of SourceVtxBoneStateChange)
+	Public theVtxBoneStateChanges As List(Of SourceVtxBoneStateChange07)
 
 
 

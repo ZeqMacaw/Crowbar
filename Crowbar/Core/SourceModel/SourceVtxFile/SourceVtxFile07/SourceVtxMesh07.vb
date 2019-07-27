@@ -1,4 +1,4 @@
-Public Class SourceVtxMesh
+Public Class SourceVtxMesh07
 
 	'FROM: src/public/optimize.h
 	'// a collection of locking groups:
@@ -28,7 +28,7 @@ Public Class SourceVtxMesh
 
 
 
-	Public theVtxStripGroups As List(Of SourceVtxStripGroup)
+	Public theVtxStripGroups As List(Of SourceVtxStripGroup07)
 
 
 

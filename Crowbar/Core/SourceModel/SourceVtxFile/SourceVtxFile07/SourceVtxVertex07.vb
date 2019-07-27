@@ -1,4 +1,4 @@
-Public Class SourceVtxVertex
+Public Class SourceVtxVertex07
 
 	'FROM: src/public/studio.h
 	'// NOTE!!! : Changing this number also changes the vtx file format!!!!!

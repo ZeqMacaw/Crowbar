@@ -1,4 +1,4 @@
-Public Class SourceVtxBodyPart
+Public Class SourceVtxBodyPart07
 
 	'FROM: src/public/optimize.h
 	'struct BodyPartHeader_t
@@ -18,6 +18,6 @@ Public Class SourceVtxBodyPart
 
 
 
-	Public theVtxModels As List(Of SourceVtxModel)
+	Public theVtxModels As List(Of SourceVtxModel07)
 
 End Class

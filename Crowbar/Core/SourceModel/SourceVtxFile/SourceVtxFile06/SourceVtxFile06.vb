@@ -285,7 +285,7 @@ Public Class SourceVtxFile06
 					Me.ReadSourceVtxStrips(stripGroupInputFileStreamPosition, aStripGroup)
 
 					'TODO: Set whether stripgroup has flex vertexes in it or not for $lod facial and nofacial options.
-					If (aStripGroup.flags And SourceVtxStripGroup.SourceStripGroupFlexed) > 0 OrElse (aStripGroup.flags And SourceVtxStripGroup.SourceStripGroupDeltaFixed) > 0 Then
+					If (aStripGroup.flags And SourceVtxStripGroup06.STRIPGROUP_IS_FLEXED) > 0 Then
 						aModelLod.theVtxModelLodUsesFacial = True
 						'------
 						'Dim aVtxVertex As SourceVtxVertex

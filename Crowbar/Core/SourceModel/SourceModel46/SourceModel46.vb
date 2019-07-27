@@ -461,10 +461,10 @@ Public Class SourceModel46
 
 	Protected Overrides Sub ReadVtxFile_Internal()
 		If Me.theVtxFileData Is Nothing Then
-			Me.theVtxFileData = New SourceVtxFileData46()
+			Me.theVtxFileData = New SourceVtxFileData07()
 		End If
 
-		Dim vtxFile As New SourceVtxFile46(Me.theInputFileReader, Me.theVtxFileData)
+		Dim vtxFile As New SourceVtxFile07(Me.theInputFileReader, Me.theVtxFileData, False)
 
 		vtxFile.ReadSourceVtxHeader()
 		If Me.theVtxFileData.lodCount > 0 Then
@@ -548,8 +548,8 @@ Public Class SourceModel46
 
 		'Dim smdFileName As String
 		Dim smdPathFileName As String
-		Dim aBodyPart As SourceVtxBodyPart
-		Dim aVtxModel As SourceVtxModel
+		Dim aBodyPart As SourceVtxBodyPart07
+		Dim aVtxModel As SourceVtxModel07
 		Dim aBodyModel As SourceMdlModel
 		Dim bodyPartVertexIndexStart As Integer
 
@@ -602,7 +602,7 @@ Public Class SourceModel46
 		Return status
 	End Function
 
-	Protected Overrides Sub WriteMeshSmdFile(ByVal lodIndex As Integer, ByVal aVtxModel As SourceVtxModel, ByVal aModel As SourceMdlModel, ByVal bodyPartVertexIndexStart As Integer)
+	Protected Overrides Sub WriteMeshSmdFile(ByVal lodIndex As Integer, ByVal aVtxModel As SourceVtxModel07, ByVal aModel As SourceMdlModel, ByVal bodyPartVertexIndexStart As Integer)
 		Dim smdFile As New SourceSmdFile46(Me.theOutputFileTextWriter, Me.theMdlFileData, Me.theVvdFileData)
 
 		Try
@@ -710,7 +710,7 @@ Public Class SourceModel46
 	Private theAniFileData As SourceAniFileData46
 	Private theMdlFileData As SourceMdlFileData46
 	'Private thePhyFileData As SourcePhyFileData46
-	Private theVtxFileData As SourceVtxFileData46
+	Private theVtxFileData As SourceVtxFileData07
 	Private theVvdFileData As SourceVvdFileData04
 
 #End Region

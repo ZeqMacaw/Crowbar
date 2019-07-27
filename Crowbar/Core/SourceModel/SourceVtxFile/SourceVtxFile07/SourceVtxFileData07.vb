@@ -60,7 +60,7 @@
 
 
 
-	Public theVtxBodyParts As List(Of SourceVtxBodyPart)
+	Public theVtxBodyParts As List(Of SourceVtxBodyPart07)
 	Public theVtxMaterialReplacementLists As List(Of SourceVtxMaterialReplacementList07)
 
 End Class

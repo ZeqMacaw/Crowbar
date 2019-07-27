@@ -73,10 +73,10 @@ Public Class SourceVtxFile07
 				Me.theInputFileReader.BaseStream.Seek(Me.theVtxFileOffsetStart + Me.theVtxFileData.bodyPartOffset, SeekOrigin.Begin)
 				fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-				Me.theVtxFileData.theVtxBodyParts = New List(Of SourceVtxBodyPart)(Me.theVtxFileData.bodyPartCount)
+				Me.theVtxFileData.theVtxBodyParts = New List(Of SourceVtxBodyPart07)(Me.theVtxFileData.bodyPartCount)
 				For i As Integer = 0 To Me.theVtxFileData.bodyPartCount - 1
 					bodyPartInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-					Dim aBodyPart As New SourceVtxBodyPart()
+					Dim aBodyPart As New SourceVtxBodyPart07()
 
 					aBodyPart.modelCount = Me.theInputFileReader.ReadInt32()
 					aBodyPart.modelOffset = Me.theInputFileReader.ReadInt32()
@@ -144,7 +144,7 @@ Public Class SourceVtxFile07
 
 #Region "Private Methods"
 
-	Private Sub ReadSourceVtxModels(ByVal bodyPartInputFileStreamPosition As Long, ByVal aBodyPart As SourceVtxBodyPart)
+	Private Sub ReadSourceVtxModels(ByVal bodyPartInputFileStreamPosition As Long, ByVal aBodyPart As SourceVtxBodyPart07)
 		If aBodyPart.modelCount > 0 AndAlso aBodyPart.modelOffset <> 0 Then
 			Dim modelInputFileStreamPosition As Long
 			Dim inputFileStreamPosition As Long
@@ -157,10 +157,10 @@ Public Class SourceVtxFile07
 				Me.theInputFileReader.BaseStream.Seek(bodyPartInputFileStreamPosition + aBodyPart.modelOffset, SeekOrigin.Begin)
 				fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-				aBodyPart.theVtxModels = New List(Of SourceVtxModel)(aBodyPart.modelCount)
+				aBodyPart.theVtxModels = New List(Of SourceVtxModel07)(aBodyPart.modelCount)
 				For j As Integer = 0 To aBodyPart.modelCount - 1
 					modelInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-					Dim aModel As New SourceVtxModel()
+					Dim aModel As New SourceVtxModel07()
 
 					aModel.lodCount = Me.theInputFileReader.ReadInt32()
 					aModel.lodOffset = Me.theInputFileReader.ReadInt32()
@@ -184,7 +184,7 @@ Public Class SourceVtxFile07
 		End If
 	End Sub
 
-	Private Sub ReadSourceVtxModelLods(ByVal modelInputFileStreamPosition As Long, ByVal aModel As SourceVtxModel)
+	Private Sub ReadSourceVtxModelLods(ByVal modelInputFileStreamPosition As Long, ByVal aModel As SourceVtxModel07)
 		Dim modelLodInputFileStreamPosition As Long
 		Dim inputFileStreamPosition As Long
 		Dim fileOffsetStart As Long
@@ -196,10 +196,10 @@ Public Class SourceVtxFile07
 			Me.theInputFileReader.BaseStream.Seek(modelInputFileStreamPosition + aModel.lodOffset, SeekOrigin.Begin)
 			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-			aModel.theVtxModelLods = New List(Of SourceVtxModelLod)(aModel.lodCount)
+			aModel.theVtxModelLods = New List(Of SourceVtxModelLod07)(aModel.lodCount)
 			For j As Integer = 0 To aModel.lodCount - 1
 				modelLodInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-				Dim aModelLod As New SourceVtxModelLod()
+				Dim aModelLod As New SourceVtxModelLod07()
 
 				aModelLod.meshCount = Me.theInputFileReader.ReadInt32()
 				aModelLod.meshOffset = Me.theInputFileReader.ReadInt32()
@@ -224,7 +224,7 @@ Public Class SourceVtxFile07
 		End Try
 	End Sub
 
-	Private Sub ReadSourceVtxMeshes(ByVal modelLodInputFileStreamPosition As Long, ByVal aModelLod As SourceVtxModelLod)
+	Private Sub ReadSourceVtxMeshes(ByVal modelLodInputFileStreamPosition As Long, ByVal aModelLod As SourceVtxModelLod07)
 		Dim meshInputFileStreamPosition As Long
 		Dim inputFileStreamPosition As Long
 		Dim fileOffsetStart As Long
@@ -236,10 +236,10 @@ Public Class SourceVtxFile07
 			Me.theInputFileReader.BaseStream.Seek(modelLodInputFileStreamPosition + aModelLod.meshOffset, SeekOrigin.Begin)
 			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-			aModelLod.theVtxMeshes = New List(Of SourceVtxMesh)(aModelLod.meshCount)
+			aModelLod.theVtxMeshes = New List(Of SourceVtxMesh07)(aModelLod.meshCount)
 			For j As Integer = 0 To aModelLod.meshCount - 1
 				meshInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-				Dim aMesh As New SourceVtxMesh()
+				Dim aMesh As New SourceVtxMesh07()
 
 				aMesh.stripGroupCount = Me.theInputFileReader.ReadInt32()
 				aMesh.stripGroupOffset = Me.theInputFileReader.ReadInt32()
@@ -379,7 +379,7 @@ Public Class SourceVtxFile07
 	'	End Try
 	'End Sub
 
-	Private Sub ReadSourceVtxStripGroups(ByVal meshInputFileStreamPosition As Long, ByVal aModelLod As SourceVtxModelLod, ByVal aMesh As SourceVtxMesh)
+	Private Sub ReadSourceVtxStripGroups(ByVal meshInputFileStreamPosition As Long, ByVal aModelLod As SourceVtxModelLod07, ByVal aMesh As SourceVtxMesh07)
 		Dim stripGroupInputFileStreamPosition As Long
 		Dim inputFileStreamPosition As Long
 		Dim fileOffsetStart As Long
@@ -391,10 +391,10 @@ Public Class SourceVtxFile07
 			Me.theInputFileReader.BaseStream.Seek(meshInputFileStreamPosition + aMesh.stripGroupOffset, SeekOrigin.Begin)
 			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-			aMesh.theVtxStripGroups = New List(Of SourceVtxStripGroup)(aMesh.stripGroupCount)
+			aMesh.theVtxStripGroups = New List(Of SourceVtxStripGroup07)(aMesh.stripGroupCount)
 			For j As Integer = 0 To aMesh.stripGroupCount - 1
 				stripGroupInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-				Dim aStripGroup As New SourceVtxStripGroup()
+				Dim aStripGroup As New SourceVtxStripGroup07()
 
 				aStripGroup.vertexCount = Me.theInputFileReader.ReadInt32()
 				aStripGroup.vertexOffset = Me.theInputFileReader.ReadInt32()
@@ -448,7 +448,7 @@ Public Class SourceVtxFile07
 				End If
 
 				'TODO: Set whether stripgroup has flex vertexes in it or not for $lod facial and nofacial options.
-				If (aStripGroup.flags And SourceVtxStripGroup.SourceStripGroupFlexed) > 0 OrElse (aStripGroup.flags And SourceVtxStripGroup.SourceStripGroupDeltaFixed) > 0 Then
+				If (aStripGroup.flags And SourceVtxStripGroup07.SourceStripGroupFlexed) > 0 OrElse (aStripGroup.flags And SourceVtxStripGroup07.SourceStripGroupDeltaFixed) > 0 Then
 					aModelLod.theVtxModelLodUsesFacial = True
 					'------
 					'Dim aVtxVertex As SourceVtxVertex
@@ -476,7 +476,7 @@ Public Class SourceVtxFile07
 		End Try
 	End Sub
 
-	Private Sub ReadSourceVtxVertexes(ByVal stripGroupInputFileStreamPosition As Long, ByVal aStripGroup As SourceVtxStripGroup)
+	Private Sub ReadSourceVtxVertexes(ByVal stripGroupInputFileStreamPosition As Long, ByVal aStripGroup As SourceVtxStripGroup07)
 		'Dim modelInputFileStreamPosition As Long
 		'Dim inputFileStreamPosition As Long
 		Dim fileOffsetStart As Long
@@ -488,10 +488,10 @@ Public Class SourceVtxFile07
 			Me.theInputFileReader.BaseStream.Seek(stripGroupInputFileStreamPosition + aStripGroup.vertexOffset, SeekOrigin.Begin)
 			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-			aStripGroup.theVtxVertexes = New List(Of SourceVtxVertex)(aStripGroup.vertexCount)
+			aStripGroup.theVtxVertexes = New List(Of SourceVtxVertex07)(aStripGroup.vertexCount)
 			For j As Integer = 0 To aStripGroup.vertexCount - 1
 				'modelInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-				Dim aVertex As New SourceVtxVertex()
+				Dim aVertex As New SourceVtxVertex07()
 
 				For i As Integer = 0 To MAX_NUM_BONES_PER_VERT - 1
 					aVertex.boneWeightIndex(i) = Me.theInputFileReader.ReadByte()
@@ -517,7 +517,7 @@ Public Class SourceVtxFile07
 		End Try
 	End Sub
 
-	Private Sub ReadSourceVtxIndexes(ByVal stripGroupInputFileStreamPosition As Long, ByVal aStripGroup As SourceVtxStripGroup)
+	Private Sub ReadSourceVtxIndexes(ByVal stripGroupInputFileStreamPosition As Long, ByVal aStripGroup As SourceVtxStripGroup07)
 		'Dim modelInputFileStreamPosition As Long
 		'Dim inputFileStreamPosition As Long
 		Dim fileOffsetStart As Long
@@ -547,7 +547,7 @@ Public Class SourceVtxFile07
 		End Try
 	End Sub
 
-	Private Sub ReadSourceVtxStrips(ByVal stripGroupInputFileStreamPosition As Long, ByVal aStripGroup As SourceVtxStripGroup)
+	Private Sub ReadSourceVtxStrips(ByVal stripGroupInputFileStreamPosition As Long, ByVal aStripGroup As SourceVtxStripGroup07)
 		Dim stripInputFileStreamPosition As Long
 		Dim inputFileStreamPosition As Long
 		Dim fileOffsetStart As Long
@@ -559,10 +559,10 @@ Public Class SourceVtxFile07
 			Me.theInputFileReader.BaseStream.Seek(stripGroupInputFileStreamPosition + aStripGroup.stripOffset, SeekOrigin.Begin)
 			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-			aStripGroup.theVtxStrips = New List(Of SourceVtxStrip)(aStripGroup.stripCount)
+			aStripGroup.theVtxStrips = New List(Of SourceVtxStrip07)(aStripGroup.stripCount)
 			For j As Integer = 0 To aStripGroup.stripCount - 1
 				stripInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-				Dim aStrip As New SourceVtxStrip()
+				Dim aStrip As New SourceVtxStrip07()
 
 				aStrip.indexCount = Me.theInputFileReader.ReadInt32()
 				aStrip.indexMeshIndex = Me.theInputFileReader.ReadInt32()
@@ -597,7 +597,7 @@ Public Class SourceVtxFile07
 		End Try
 	End Sub
 
-	Private Sub ReadSourceVtxTopologyIndexes(ByVal stripGroupInputFileStreamPosition As Long, ByVal aStripGroup As SourceVtxStripGroup)
+	Private Sub ReadSourceVtxTopologyIndexes(ByVal stripGroupInputFileStreamPosition As Long, ByVal aStripGroup As SourceVtxStripGroup07)
 		'Dim topologyInputFileStreamPosition As Long
 		'Dim inputFileStreamPosition As Long
 		Dim fileOffsetStart As Long
@@ -631,7 +631,7 @@ Public Class SourceVtxFile07
 		End Try
 	End Sub
 
-	Private Sub ReadSourceVtxBoneStateChanges(ByVal stripInputFileStreamPosition As Long, ByVal aStrip As SourceVtxStrip)
+	Private Sub ReadSourceVtxBoneStateChanges(ByVal stripInputFileStreamPosition As Long, ByVal aStrip As SourceVtxStrip07)
 		'TODO: On an alyx.mdl from SFM, aStrip.boneStateChangeCount is over 800,000, so maybe when astrip.flag has bit flag 4 set, skip this reading.
 		If ((aStrip.flags And 1) = 0) OrElse ((aStrip.flags And 4) > 0) Then
 			Exit Sub
@@ -657,11 +657,11 @@ Public Class SourceVtxFile07
 				fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
 				'aStrip.theVtxBoneStateChanges = New List(Of SourceVtxBoneStateChange)(aStrip.boneStateChangeCount)
-				aStrip.theVtxBoneStateChanges = New List(Of SourceVtxBoneStateChange)(boneStateChangeCount)
+				aStrip.theVtxBoneStateChanges = New List(Of SourceVtxBoneStateChange07)(boneStateChangeCount)
 				For j As Integer = 0 To boneStateChangeCount - 1
 					'modelInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					'fileOffsetStart = Me.theInputFileReader.BaseStream.Position
-					Dim aBoneStateChange As New SourceVtxBoneStateChange()
+					Dim aBoneStateChange As New SourceVtxBoneStateChange07()
 
 					aBoneStateChange.hardwareId = Me.theInputFileReader.ReadInt32()
 					aBoneStateChange.newBoneId = Me.theInputFileReader.ReadInt32()

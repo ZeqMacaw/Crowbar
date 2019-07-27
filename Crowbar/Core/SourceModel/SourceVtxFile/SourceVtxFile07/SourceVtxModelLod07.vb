@@ -1,4 +1,4 @@
-Public Class SourceVtxModelLod
+Public Class SourceVtxModelLod07
 
 	'FROM: src/public/optimize.h
 	'struct ModelLODHeader_t
@@ -21,7 +21,7 @@ Public Class SourceVtxModelLod
 
 
 
-	Public theVtxMeshes As List(Of SourceVtxMesh)
+	Public theVtxMeshes As List(Of SourceVtxMesh07)
 	Public theVtxModelLodUsesFacial As Boolean
 
 End Class

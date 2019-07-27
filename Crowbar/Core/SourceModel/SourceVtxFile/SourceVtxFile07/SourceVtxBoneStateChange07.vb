@@ -1,4 +1,4 @@
-Public Class SourceVtxBoneStateChange
+Public Class SourceVtxBoneStateChange07
 
 	'FROM: src/public/optimize.h
 	'struct BoneStateChangeHeader_t

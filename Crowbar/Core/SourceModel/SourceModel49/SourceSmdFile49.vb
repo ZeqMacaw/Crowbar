@@ -182,7 +182,7 @@ Public Class SourceSmdFile49
 		Me.theOutputFileStreamWriter.WriteLine(line)
 	End Sub
 
-	Public Sub WriteTrianglesSection(ByVal aVtxModel As SourceVtxModel, ByVal lodIndex As Integer, ByVal aModel As SourceMdlModel, ByVal bodyPartVertexIndexStart As Integer)
+	Public Sub WriteTrianglesSection(ByVal aVtxModel As SourceVtxModel07, ByVal lodIndex As Integer, ByVal aModel As SourceMdlModel, ByVal bodyPartVertexIndexStart As Integer)
 		Dim line As String = ""
 		Dim materialLine As String = ""
 		Dim vertex1Line As String = ""
@@ -193,9 +193,9 @@ Public Class SourceSmdFile49
 		line = "triangles"
 		Me.theOutputFileStreamWriter.WriteLine(line)
 
-		Dim aVtxLod As SourceVtxModelLod
-		Dim aVtxMesh As SourceVtxMesh
-		Dim aStripGroup As SourceVtxStripGroup
+		Dim aVtxLod As SourceVtxModelLod07
+		Dim aVtxMesh As SourceVtxMesh07
+		Dim aStripGroup As SourceVtxStripGroup07
 		'Dim cumulativeVertexCount As Integer
 		'Dim maxIndexForMesh As Integer
 		'Dim cumulativeMaxIndex As Integer
@@ -1582,9 +1582,9 @@ Public Class SourceSmdFile49
 		'End If
 	End Sub
 
-	Private Function WriteVertexLine(ByVal aStripGroup As SourceVtxStripGroup, ByVal aVtxIndexIndex As Integer, ByVal lodIndex As Integer, ByVal meshVertexIndexStart As Integer, ByVal bodyPartVertexIndexStart As Integer) As String
+	Private Function WriteVertexLine(ByVal aStripGroup As SourceVtxStripGroup07, ByVal aVtxIndexIndex As Integer, ByVal lodIndex As Integer, ByVal meshVertexIndexStart As Integer, ByVal bodyPartVertexIndexStart As Integer) As String
 		Dim aVtxVertexIndex As UShort
-		Dim aVtxVertex As SourceVtxVertex
+		Dim aVtxVertex As SourceVtxVertex07
 		Dim aVertex As SourceVertex
 		Dim vertexIndex As Integer
 		Dim line As String

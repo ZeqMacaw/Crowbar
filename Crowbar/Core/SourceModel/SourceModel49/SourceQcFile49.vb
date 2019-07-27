@@ -1143,8 +1143,8 @@ Public Class SourceQcFile49
 				Return
 			End If
 
-			Dim aBodyPart As SourceVtxBodyPart
-			Dim aVtxModel As SourceVtxModel
+			Dim aBodyPart As SourceVtxBodyPart07
+			Dim aVtxModel As SourceVtxModel07
 			Dim aBodyModel As SourceMdlModel
 			Dim lodIndex As Integer
 			Dim aLodQcInfo As LodQcInfo
@@ -4375,9 +4375,9 @@ Public Class SourceQcFile49
 	Public Sub WriteBodyGroupCommand()
 		Dim line As String = ""
 		Dim aBodyPart As SourceMdlBodyPart
-		Dim aVtxBodyPart As SourceVtxBodyPart
+		Dim aVtxBodyPart As SourceVtxBodyPart07
 		Dim aBodyModel As SourceMdlModel
-		Dim aVtxModel As SourceVtxModel
+		Dim aVtxModel As SourceVtxModel07
 
 		'$bodygroup "belt"
 		'{

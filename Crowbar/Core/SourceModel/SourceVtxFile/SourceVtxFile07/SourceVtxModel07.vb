@@ -1,4 +1,4 @@
-Public Class SourceVtxModel
+Public Class SourceVtxModel07
 
 	'FROM: src/public/optimize.h
 	'// This maps one to one with models in the mdl file.
@@ -20,6 +20,6 @@ Public Class SourceVtxModel
 
 
 
-	Public theVtxModelLods As List(Of SourceVtxModelLod)
+	Public theVtxModelLods As List(Of SourceVtxModelLod07)
 
 End Class

@@ -1,4 +1,4 @@
-Public Class SourceVtxStripGroup
+Public Class SourceVtxStripGroup07
 
 	'FROM: src/public/optimize.h
 	'// a locking group
@@ -93,19 +93,12 @@ Public Class SourceVtxStripGroup
 
 
 
-	Public theVtxVertexes As List(Of SourceVtxVertex)
+	Public theVtxVertexes As List(Of SourceVtxVertex07)
 	Public theVtxIndexes As List(Of UShort)
-	Public theVtxStrips As List(Of SourceVtxStrip)
+	Public theVtxStrips As List(Of SourceVtxStrip07)
 	Public theVtxTopologyIndexes As List(Of UShort)
 
 
-	'FROM: SourceEngine2003_source HL2 Beta 2003\src_main\common\optimize.h
-	'      [Version 36]
-	'enum StripGroupFlags_t {
-	'	STRIPGROUP_IS_FLEXED	= 0x01,
-	'	STRIPGROUP_IS_HWSKINNED	= 0x02
-	'};
-	'------
 	'FROM: src/public/optimize.h
 	'	Enum StripGroupFlags_t
 	'{

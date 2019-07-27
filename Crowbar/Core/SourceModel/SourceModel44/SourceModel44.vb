@@ -604,8 +604,8 @@ Public Class SourceModel44
 
 		'Dim smdFileName As String
 		Dim smdPathFileName As String
-		Dim aBodyPart As SourceVtxBodyPart
-		Dim aVtxModel As SourceVtxModel
+		Dim aBodyPart As SourceVtxBodyPart07
+		Dim aVtxModel As SourceVtxModel07
 		Dim aBodyModel As SourceMdlModel
 		Dim bodyPartVertexIndexStart As Integer
 
@@ -658,7 +658,7 @@ Public Class SourceModel44
 		Return status
 	End Function
 
-	Protected Overrides Sub WriteMeshSmdFile(ByVal lodIndex As Integer, ByVal aVtxModel As SourceVtxModel, ByVal aModel As SourceMdlModel, ByVal bodyPartVertexIndexStart As Integer)
+	Protected Overrides Sub WriteMeshSmdFile(ByVal lodIndex As Integer, ByVal aVtxModel As SourceVtxModel07, ByVal aModel As SourceMdlModel, ByVal bodyPartVertexIndexStart As Integer)
 		Dim smdFile As New SourceSmdFile44(Me.theOutputFileTextWriter, Me.theMdlFileData, Me.theVvdFileData)
 
 		Try

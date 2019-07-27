@@ -6,7 +6,7 @@ Public Class SourceQcFile45
 
 #Region "Creation and Destruction"
 
-	Public Sub New(ByVal outputFileStream As StreamWriter, ByVal outputPathFileName As String, ByVal mdlFileData As SourceMdlFileData45, ByVal vtxFileData As SourceVtxFileData45, ByVal phyFileData As SourcePhyFileData, ByVal aniFileData As SourceAniFileData45, ByVal modelName As String)
+	Public Sub New(ByVal outputFileStream As StreamWriter, ByVal outputPathFileName As String, ByVal mdlFileData As SourceMdlFileData45, ByVal vtxFileData As SourceVtxFileData07, ByVal phyFileData As SourcePhyFileData, ByVal aniFileData As SourceAniFileData45, ByVal modelName As String)
 		Me.theOutputFileStreamWriter = outputFileStream
 		Me.theMdlFileData = mdlFileData
 		Me.thePhyFileData = phyFileData
@@ -1167,8 +1167,8 @@ Public Class SourceQcFile45
 			'	Me.theOutputFileStreamWriter.WriteLine(line)
 			'Next
 			'======
-			Dim aBodyPart As SourceVtxBodyPart
-			Dim aVtxModel As SourceVtxModel
+			Dim aBodyPart As SourceVtxBodyPart07
+			Dim aVtxModel As SourceVtxModel07
 			Dim aBodyModel As SourceMdlModel
 			Dim aLodQcInfo As LodQcInfo
 			Dim aLodQcInfoList As List(Of LodQcInfo)
@@ -3976,9 +3976,9 @@ Public Class SourceQcFile45
 	Public Sub WriteBodyGroupCommand(ByVal startIndex As Integer)
 		Dim line As String = ""
 		Dim aBodyPart As SourceMdlBodyPart
-		Dim aVtxBodyPart As SourceVtxBodyPart
+		Dim aVtxBodyPart As SourceVtxBodyPart07
 		Dim aBodyModel As SourceMdlModel
-		Dim aVtxModel As SourceVtxModel
+		Dim aVtxModel As SourceVtxModel07
 
 		'$bodygroup "belt"
 		'{
@@ -4352,7 +4352,7 @@ Public Class SourceQcFile45
 	Private theAniFileData As SourceAniFileData45
 	Private theMdlFileData As SourceMdlFileData45
 	Private thePhyFileData As SourcePhyFileData
-	Private theVtxFileData As SourceVtxFileData45
+	Private theVtxFileData As SourceVtxFileData07
 	Private theModelName As String
 
 	Private theOutputPath As String
