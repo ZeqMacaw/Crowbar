@@ -195,7 +195,6 @@ Public Class SourceVtaFile49
 			'      - Eyelids are combined, e.g. second shapekey from source vta is upper_lid_lowerer
 			'        that contains both upper_right_lowerer and upper_left_lowerer.
 
-			'NOTE: This list of vertexes works; it imports into Blender correctly.
 			vertexIndex = aVertAnim.index + bodyAndMeshVertexIndexStart
 			If Me.theVvdFileData.fixupCount = 0 Then
 				aVertex = Me.theVvdFileData.theVertexes(vertexIndex)
