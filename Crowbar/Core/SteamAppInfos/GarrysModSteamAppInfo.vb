@@ -127,8 +127,9 @@ Public Class GarrysModSteamAppInfo
 			'      the length of the arguments added to the length of the full path to the process must be less than 2080. 
 			'      On Windows 7 and later versions, the length must be less than 32699. 
 			lzmaExeProcess.StartInfo.FileName = TheApp.LzmaExePathFileName
-			lzmaExeProcess.StartInfo.Arguments = "e """ + gmaPathFileName + """ """ + processedPathFileName + """ -d25 -fb256"
+			'lzmaExeProcess.StartInfo.Arguments = "e """ + gmaPathFileName + """ """ + processedPathFileName + """ -d25 -fb256"
 			'lzmaExeProcess.StartInfo.Arguments = "e """ + givenPathFileName + """ """ + processedPathFileName + """ -d25"
+			lzmaExeProcess.StartInfo.Arguments = "e """ + gmaPathFileName + """ """ + processedPathFileName + """ -d25 -fb32"
 #If DEBUG Then
 			lzmaExeProcess.StartInfo.CreateNoWindow = False
 #Else
