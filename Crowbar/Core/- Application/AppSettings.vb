@@ -200,6 +200,10 @@ Public Class AppSettings
 
 	Public Property SetUpGamesGameSetupSelectedIndex() As Integer
 		Get
+			'NOTE: Must change in the Get() because theGameSetups might not have been read-in yet (i.e. GameSetups appear *after* this setting in XML file).
+			If Me.theSetUpGamesGameSetupSelectedIndex >= Me.theGameSetups.Count Then
+				Me.theSetUpGamesGameSetupSelectedIndex = TheApp.Settings.GameSetups.Count - 1
+			End If
 			Return Me.theSetUpGamesGameSetupSelectedIndex
 		End Get
 		Set(ByVal value As Integer)
@@ -344,6 +348,10 @@ Public Class AppSettings
 
 	Public Property UnpackGameSetupSelectedIndex() As Integer
 		Get
+			'NOTE: Must change in the Get() because theGameSetups might not have been read-in yet (i.e. GameSetups appear *after* this setting in XML file).
+			If Me.theUnpackGameSetupSelectedIndex >= Me.theGameSetups.Count Then
+				Me.theUnpackGameSetupSelectedIndex = TheApp.Settings.GameSetups.Count - 1
+			End If
 			Return Me.theUnpackGameSetupSelectedIndex
 		End Get
 		Set(ByVal value As Integer)
@@ -417,6 +425,10 @@ Public Class AppSettings
 
 	Public Property PreviewGameSetupSelectedIndex() As Integer
 		Get
+			'NOTE: Must change in the Get() because theGameSetups might not have been read-in yet (i.e. GameSetups appear *after* this setting in XML file).
+			If Me.thePreviewGameSetupSelectedIndex >= Me.theGameSetups.Count Then
+				Me.thePreviewGameSetupSelectedIndex = TheApp.Settings.GameSetups.Count - 1
+			End If
 			Return Me.thePreviewGameSetupSelectedIndex
 		End Get
 		Set(ByVal value As Integer)
@@ -810,6 +822,10 @@ Public Class AppSettings
 
 	Public Property CompileGameSetupSelectedIndex() As Integer
 		Get
+			'NOTE: Must change in the Get() because theGameSetups might not have been read-in yet (i.e. GameSetups appear *after* this setting in XML file).
+			If Me.theCompileGameSetupSelectedIndex >= Me.theGameSetups.Count Then
+				Me.theCompileGameSetupSelectedIndex = TheApp.Settings.GameSetups.Count - 1
+			End If
 			Return Me.theCompileGameSetupSelectedIndex
 		End Get
 		Set(ByVal value As Integer)
@@ -962,6 +978,10 @@ Public Class AppSettings
 
 	Public Property ViewGameSetupSelectedIndex() As Integer
 		Get
+			'NOTE: Must change in the Get() because theGameSetups might not have been read-in yet (i.e. GameSetups appear *after* this setting in XML file).
+			If Me.theViewGameSetupSelectedIndex >= Me.theGameSetups.Count Then
+				Me.theViewGameSetupSelectedIndex = TheApp.Settings.GameSetups.Count - 1
+			End If
 			Return Me.theViewGameSetupSelectedIndex
 		End Get
 		Set(ByVal value As Integer)
@@ -1044,6 +1064,10 @@ Public Class AppSettings
 
 	Public Property PackGameSetupSelectedIndex() As Integer
 		Get
+			'NOTE: Must change in the Get() because theGameSetups might not have been read-in yet (i.e. GameSetups appear *after* this setting in XML file).
+			If Me.thePackGameSetupSelectedIndex >= Me.theGameSetups.Count Then
+				Me.thePackGameSetupSelectedIndex = TheApp.Settings.GameSetups.Count - 1
+			End If
 			Return Me.thePackGameSetupSelectedIndex
 		End Get
 		Set(ByVal value As Integer)
