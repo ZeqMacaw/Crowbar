@@ -1027,9 +1027,10 @@ Public Class SourceMdlFile49
 
 				animInputFileStreamPosition = anAnimationDesc.theOffsetStart
 
-				If Me.theMdlFileData.theFirstAnimationDesc Is Nothing AndAlso anAnimationDesc.theName(0) <> "@" Then
-					Me.theMdlFileData.theFirstAnimationDesc = anAnimationDesc
-				End If
+				'If Me.theMdlFileData.theFirstAnimationDesc Is Nothing AndAlso anAnimationDesc.theName(0) <> "@" Then
+				'If anAnimDescIndex = 5 AndAlso Me.theMdlFileData.theFirstAnimationDesc Is Nothing AndAlso anAnimationDesc.theName(0) <> "@" Then
+				'	Me.theMdlFileData.theFirstAnimationDesc = anAnimationDesc
+				'End If
 
 				If ((anAnimationDesc.flags And SourceMdlAnimationDesc.STUDIO_FRAMEANIM) <> 0) Then
 					anAnimationDesc.theSectionsOfFrameAnim = New List(Of SourceAniFrameAnim)()

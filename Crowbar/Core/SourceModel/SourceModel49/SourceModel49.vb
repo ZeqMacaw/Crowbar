@@ -739,9 +739,9 @@ Public Class SourceModel49
 
 			smdFile.WriteHeaderSection()
 			smdFile.WriteNodesSection(-2)
-			If Me.theMdlFileData.theFirstAnimationDesc IsNot Nothing AndAlso Me.theMdlFileData.theFirstAnimationDescFrameLines.Count = 0 Then
-				smdFile.CalculateFirstAnimDescFrameLinesForSubtract()
-			End If
+			'If Me.theMdlFileData.theFirstAnimationDesc IsNot Nothing AndAlso Me.theMdlFileData.theFirstAnimationDescFrameLines.Count = 0 Then
+			'	smdFile.CalculateFirstAnimDescFrameLinesForSubtract()
+			'End If
 			'If anAnimationDesc.animBlock > 0 AndAlso Me.theSourceEngineModel.MdlFileHeader.version >= 49 AndAlso Me.theSourceEngineModel.MdlFileHeader.version <> 2531 Then
 			'	smdFile.WriteSkeletonSectionForAnimationAni_VERSION49(aSequenceDesc, anAnimationDesc)
 			'Else

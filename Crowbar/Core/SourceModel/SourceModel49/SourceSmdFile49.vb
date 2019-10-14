@@ -944,10 +944,61 @@ Public Class SourceSmdFile49
 					'Me.AdjustPositionAndRotation(boneIndex, aFrameLine.position, aFrameLine.rotation, adjustedPosition, adjustedRotation)
 					'Me.AdjustPositionAndRotationByPiecewiseMovement(frameIndex, boneIndex, anAnimationDesc.theMovements, adjustedPosition, adjustedRotation, position, rotation)
 					'------
+
+
 					Dim adjustedPosition As New SourceVector()
 					Dim adjustedRotation As New SourceVector()
 					Me.AdjustPositionAndRotationByPiecewiseMovement(frameIndex, boneIndex, anAnimationDesc.theMovements, aFrameLine.position, aFrameLine.rotation, adjustedPosition, adjustedRotation)
-					Me.AdjustPositionAndRotation(boneIndex, adjustedPosition, adjustedRotation, position, rotation)
+
+					'======
+					'Me.AdjustPositionAndRotation(boneIndex, adjustedPosition, adjustedRotation, position, rotation)
+					'------
+					'Dim adjustedPosition2 As New SourceVector()
+					'Dim adjustedRotation2 As New SourceVector()
+					'Me.AdjustPositionAndRotation(boneIndex, adjustedPosition, adjustedRotation, adjustedPosition2, adjustedRotation2)
+					'If aFrameLine.position.debug_text = "ZERO" Then
+					'	Me.AdjustPositionAndRotationForDelta(boneIndex, adjustedPosition2, adjustedRotation2, position, rotation)
+					'Else
+					'	position.x = adjustedPosition2.x
+					'	position.y = adjustedPosition2.y
+					'	position.z = adjustedPosition2.z
+					'	rotation.x = adjustedRotation2.y
+					'	rotation.y = adjustedRotation2.z
+					'	rotation.z = adjustedRotation2.x
+					'End If
+					'------
+					Dim adjustedPosition2 As New SourceVector()
+					Dim adjustedRotation2 As New SourceVector()
+					If aFrameLine.position.debug_text = "ZERO" AndAlso Me.theMdlFileData.theFirstAnimationDescFrameLines.Count > 0 Then
+						Me.AdjustPositionAndRotationForDelta(boneIndex, adjustedPosition, adjustedRotation, adjustedPosition2, adjustedRotation2)
+					Else
+						adjustedPosition2.x = adjustedPosition.x
+						adjustedPosition2.y = adjustedPosition.y
+						adjustedPosition2.z = adjustedPosition.z
+						adjustedRotation2.x = adjustedRotation.x
+						adjustedRotation2.y = adjustedRotation.y
+						adjustedRotation2.z = adjustedRotation.z
+					End If
+					Me.AdjustPositionAndRotation(boneIndex, adjustedPosition2, adjustedRotation2, position, rotation)
+					If Me.theMdlFileData.theAnimationDescs.IndexOf(anAnimationDesc) = 1 AndAlso anAnimationDesc.theName(0) <> "@" AndAlso Me.theMdlFileData.theFirstAnimationDescFrameLines.Count = 0 Then
+						'Me.CalculateFirstAnimDescFrameLinesForSubtract()
+						Me.theMdlFileData.theFirstAnimationDesc = anAnimationDesc
+					End If
+					If Me.theMdlFileData.theFirstAnimationDesc IsNot Nothing AndAlso Me.theMdlFileData.theFirstAnimationDesc Is anAnimationDesc Then
+						Dim aFirstAnimationDescFrameLine As New AnimationFrameLine()
+						aFirstAnimationDescFrameLine.position = New SourceVector()
+						aFirstAnimationDescFrameLine.rotation = New SourceVector()
+						aFirstAnimationDescFrameLine.position.x = position.x
+						aFirstAnimationDescFrameLine.position.y = position.y
+						aFirstAnimationDescFrameLine.position.z = position.z
+						aFirstAnimationDescFrameLine.rotation.x = rotation.x
+						aFirstAnimationDescFrameLine.rotation.y = rotation.y
+						aFirstAnimationDescFrameLine.rotation.z = rotation.z
+						Me.theMdlFileData.theFirstAnimationDescFrameLines.Add(boneIndex, aFirstAnimationDescFrameLine)
+					End If
+					'======
+
+
 
 					line = "    "
 					line += boneIndex.ToString(TheApp.InternalNumberFormat)
@@ -1540,8 +1591,61 @@ Public Class SourceSmdFile49
 		End If
 	End Sub
 
-	Private Sub AdjustPositionAndRotationForDelta(ByVal iPosition As SourceVector, ByVal iRotation As SourceVector, ByRef oPosition As SourceVector, ByRef oRotation As SourceVector)
+	Private Sub AdjustPositionAndRotationForDelta(ByVal boneIndex As Integer, ByVal iPosition As SourceVector, ByVal iRotation As SourceVector, ByRef oPosition As SourceVector, ByRef oRotation As SourceVector)
+		'If iPosition.debug_text = "desc_delta" OrElse iPosition.debug_text.StartsWith("delta") Then
+		Dim aFirstAnimationDescFrameLine As AnimationFrameLine
+		aFirstAnimationDescFrameLine = Me.theMdlFileData.theFirstAnimationDescFrameLines(boneIndex)
 
+		oPosition.x = iPosition.x + aFirstAnimationDescFrameLine.position.x
+		oPosition.y = iPosition.y + aFirstAnimationDescFrameLine.position.y
+		oPosition.z = iPosition.z + aFirstAnimationDescFrameLine.position.z
+
+		Dim quat As New SourceQuaternion()
+		Dim quat2 As New SourceQuaternion()
+		Dim quatResult As New SourceQuaternion()
+		Dim magnitude As Double
+		'quat = MathModule.EulerAnglesToQuaternion(iRotation)
+		'quat2 = MathModule.EulerAnglesToQuaternion(aFirstAnimationDescFrameLine.rotation)
+		quat = MathModule.EulerAnglesToQuaternion(aFirstAnimationDescFrameLine.rotation)
+		quat2 = MathModule.EulerAnglesToQuaternion(iRotation)
+
+		'quat.x *= -1
+		'quat.y *= -1
+		'quat.z *= -1
+		'quatResult.x = quat.w * quat2.x + quat.x * quat2.w + quat.y * quat2.z - quat.z * quat2.y
+		'quatResult.y = quat.w * quat2.y - quat.x * quat2.z + quat.y * quat2.w + quat.z * quat2.x
+		'quatResult.z = quat.w * quat2.z + quat.x * quat2.y - quat.y * quat2.x + quat.z * quat2.w
+		'quatResult.w = quat.w * quat2.w + quat.x * quat2.x + quat.y * quat2.y - quat.z * quat2.z
+		quatResult.x = quat.w * quat2.x + quat.x * quat2.w + quat.y * quat2.z - quat.z * quat2.y
+		quatResult.y = quat.w * quat2.y - quat.x * quat2.z + quat.y * quat2.w + quat.z * quat2.x
+		quatResult.z = quat.w * quat2.z + quat.x * quat2.y - quat.y * quat2.x + quat.z * quat2.w
+		quatResult.w = quat.w * quat2.w - quat.x * quat2.x - quat.y * quat2.y - quat.z * quat2.z
+		'    double nx = q1.W * q2.X + q1.X * q2.W + q1.Y * q2.Z - q1.Z * q2.Y;
+		'    double ny = q1.W * q2.Y + q1.Y * q2.W + q1.Z * q2.X - q1.X * q2.Z;
+		'    double nz = q1.W * q2.Z + q1.Z * q2.W + q1.X * q2.Y - q1.Y * q2.X;
+		'    double nw = q1.W * q2.W - q1.X * q2.X - q1.Y * q2.Y - q1.Z * q2.Z;
+		'    x =  q1.x * q2.w + q1.y * q2.z - q1.z * q2.y + q1.w * q2.x;
+		'    y = -q1.x * q2.z + q1.y * q2.w + q1.z * q2.x + q1.w * q2.y;
+		'    z =  q1.x * q2.y - q1.y * q2.x + q1.z * q2.w + q1.w * q2.z;
+		'    w = -q1.x * q2.x - q1.y * q2.y - q1.z * q2.z + q1.w * q2.w;
+
+		magnitude = Math.Sqrt(quatResult.w * quatResult.w + quatResult.x * quatResult.x + quatResult.y * quatResult.y + quatResult.z * quatResult.z)
+		quatResult.x /= magnitude
+		quatResult.y /= magnitude
+		quatResult.z /= magnitude
+		quatResult.w /= magnitude
+
+		Dim tempRotation As New SourceVector()
+		tempRotation = MathModule.ToEulerAngles(quatResult)
+		'oRotation.x = tempRotation.y
+		'oRotation.y = tempRotation.z
+		'oRotation.z = tempRotation.x
+		oRotation.x = tempRotation.x
+		oRotation.y = tempRotation.y
+		oRotation.z = tempRotation.z
+		'oRotation.x = tempRotation.z
+		'oRotation.y = tempRotation.x
+		'oRotation.z = tempRotation.y
 	End Sub
 
 	Private Sub GetFrameInfo(ByVal frameIndex As Integer, ByVal boneIndex As Integer)
