@@ -11,37 +11,16 @@ Public Class ZombiePanicSourceSteamAppInfo
 		Me.ID = New AppId_t(17500)
 		Me.Name = "Zombie Panic! Source"
 		Me.UsesSteamUGC = True
-		Me.CanUseContentFolderOrFile = True
-		Me.ContentFileExtensionsAndDescriptions.Add("vpk", "Source Engine VPK Files")
+		Me.CanUseContentFolderOrFile = False
+		'Me.ContentFileExtensionsAndDescriptions.Add("vpk", "Source Engine VPK Files")
 		Me.TagsControlType = GetType(ZombiePanicSourceTagsUserControl)
 	End Sub
 
-	Public Enum ZombiePanicSourceGameModeTypeTags
-		<Description("None")> None
-		<Description("Hardcore")> Hardcore
-		<Description("Objective")> Objective
-		<Description("Survival")> Survival
-		<Description("Custom")> Custom
-	End Enum
-
-	Public Enum ZombiePanicSourceCustomModelsTypeTags
-		<Description("None")> None
-		<Description("Characters")> Characters
-		<Description("Props")> Props
-		<Description("Weapons")> Weapons
-	End Enum
-
-	Public Enum ZombiePanicSourceCustomSoundsTypeTags
-		<Description("None")> None
-		<Description("Characters Sounds")> CharactersSounds
-		<Description("Weapons Sounds")> WeaponsSounds
-	End Enum
-
-	Public Enum ZombiePanicSourceMiscellaneousTypeTags
-		<Description("None")> None
-		<Description("GUIs")> GUIs
-		<Description("Model Pack")> ModelPack
-		<Description("Sound Pack")> SoundPack
+	Public Enum ZombiePanicSourceTypeTags
+		<Description("GameMode")> GameMode
+		<Description("Custom Models")> CustomModels
+		<Description("Custom Sounds")> CustomSounds
+		<Description("Miscellaneous")> Miscellaneous
 	End Enum
 
 End Class
