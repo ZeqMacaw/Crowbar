@@ -28,7 +28,7 @@ Public Class GarrysModTagsUserControl
 
 	Private Sub GetAllCheckboxes(ByVal iWidgets As ControlCollection)
 		For Each widget As Control In iWidgets
-			If TypeOf widget Is CheckBoxEx Then
+			If TypeOf widget Is CheckBoxEx AndAlso widget IsNot Me.AddonTagCheckBox Then
 				Dim aCheckBox As CheckBoxEx = CType(widget, CheckBoxEx)
 				Me.theCheckBoxes.Add(aCheckBox)
 			End If
@@ -37,14 +37,24 @@ Public Class GarrysModTagsUserControl
 
 	Public Overrides Property ItemTags As BindingListEx(Of String)
 		Get
-			Dim tags As BindingListEx(Of String) = MyBase.ItemTags
-			If Not tags.Contains("Addon") Then
-				tags.Add("Addon")
-			End If
-			Return tags
+			'Dim tags As BindingListEx(Of String) = MyBase.ItemTags
+			'If Not tags.Contains("Addon") Then
+			'	tags.Add("Addon")
+			'	Me.AddonTagCheckBox.Checked = True
+			'	MyBase.RaiseTagsPropertyChanged()
+			'End If
+			'Return tags
+			Return MyBase.ItemTags
 		End Get
 		Set
 			MyBase.ItemTags = Value
+
+			Dim tags As BindingListEx(Of String) = MyBase.ItemTags
+			If Not tags.Contains("Addon") Then
+				tags.Add("Addon")
+				Me.AddonTagCheckBox.Checked = True
+				MyBase.RaiseTagsPropertyChanged()
+			End If
 
 			Me.theCheckmarkedCheckBoxes.Clear()
 			For Each selectedCheckBox As CheckBoxEx In Me.theCheckBoxes
