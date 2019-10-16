@@ -955,6 +955,8 @@
     <Content Include="- Documents\License.txt" />
     <Content Include="- Documents\History 2014.txt" />
     <Content Include="- Documents\Specifications.txt" />
+    <Content Include="Resources\WordWrap.png" />
+    <None Include="Resources\WordWrapOff.png" />
     <None Include="Resources\CrowbarSteamPipe.exe" />
     <Content Include="Resources\Steamworks.NET.dll" />
     <Content Include="Resources\steam_api.dll" />
