@@ -74,6 +74,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoUpdater.NET">
+      <HintPath>Resources\AutoUpdater.NET.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Steamworks.NET, Version=12.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Resources\Steamworks.NET.dll</HintPath>
@@ -956,6 +960,7 @@
     <Content Include="- Documents\History 2014.txt" />
     <Content Include="- Documents\Specifications.txt" />
     <None Include="Resources\CrowbarSteamPipe.exe" />
+    <Content Include="Resources\AutoUpdater.NET.dll" />
     <Content Include="Resources\Steamworks.NET.dll" />
     <Content Include="Resources\steam_api.dll" />
     <None Include="Resources\Crowbar Settings.xml" />

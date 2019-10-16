@@ -113,6 +113,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend ReadOnly Property AutoUpdater_NET() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("AutoUpdater_NET", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to https://steamcommunity.com/groups/CrowbarTool/discussions/1/.
         '''</summary>
         Friend ReadOnly Property BugReportLink() As String
