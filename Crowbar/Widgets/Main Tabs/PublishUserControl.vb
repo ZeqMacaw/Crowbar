@@ -324,6 +324,10 @@ Public Class PublishUserControl
 
 #Region "Child Widget Event Handlers"
 
+	Private Sub RefreshGameItemsButton_Click(sender As Object, e As EventArgs) Handles RefreshGameItemsButton.Click
+		Me.UpdateSteamAppWidgets()
+	End Sub
+
 	Private Sub OpenSteamSubscriberAgreementButton_Click(sender As Object, e As EventArgs) Handles OpenSteamSubscriberAgreementButton.Click
 		Me.OpenSteamSubscriberAgreement()
 	End Sub

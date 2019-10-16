@@ -13,6 +13,7 @@ Partial Class PublishUserControl
 		Me.components = New System.ComponentModel.Container()
 		Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PublishUserControl))
 		Me.TopMiddleSplitContainer = New Crowbar.SplitContainerEx()
+		Me.RefreshGameItemsButton = New System.Windows.Forms.Button()
 		Me.TextBox1 = New System.Windows.Forms.Label()
 		Me.OpenSteamSubscriberAgreementButton = New System.Windows.Forms.Button()
 		Me.AppIdComboBox = New System.Windows.Forms.ComboBox()
@@ -99,6 +100,7 @@ Partial Class PublishUserControl
 		'
 		'TopMiddleSplitContainer.Panel1
 		'
+		Me.TopMiddleSplitContainer.Panel1.Controls.Add(Me.RefreshGameItemsButton)
 		Me.TopMiddleSplitContainer.Panel1.Controls.Add(Me.TextBox1)
 		Me.TopMiddleSplitContainer.Panel1.Controls.Add(Me.OpenSteamSubscriberAgreementButton)
 		Me.TopMiddleSplitContainer.Panel1.Controls.Add(Me.AppIdComboBox)
@@ -113,6 +115,19 @@ Partial Class PublishUserControl
 		Me.TopMiddleSplitContainer.SplitterDistance = 140
 		Me.TopMiddleSplitContainer.SplitterWidth = 3
 		Me.TopMiddleSplitContainer.TabIndex = 28
+		'
+		'RefreshGameItemsButton
+		'
+		Me.RefreshGameItemsButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.RefreshGameItemsButton.BackgroundImage = Global.Crowbar.My.Resources.Resources.Refresh
+		Me.RefreshGameItemsButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+		Me.RefreshGameItemsButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+		Me.RefreshGameItemsButton.Location = New System.Drawing.Point(399, 0)
+		Me.RefreshGameItemsButton.Name = "RefreshGameItemsButton"
+		Me.RefreshGameItemsButton.Size = New System.Drawing.Size(23, 23)
+		Me.RefreshGameItemsButton.TabIndex = 36
+		Me.ToolTip1.SetToolTip(Me.RefreshGameItemsButton, "Refresh Game Items")
+		Me.RefreshGameItemsButton.UseVisualStyleBackColor = True
 		'
 		'TextBox1
 		'
@@ -143,7 +158,7 @@ Partial Class PublishUserControl
 		Me.AppIdComboBox.FormattingEnabled = True
 		Me.AppIdComboBox.Location = New System.Drawing.Point(44, 2)
 		Me.AppIdComboBox.Name = "AppIdComboBox"
-		Me.AppIdComboBox.Size = New System.Drawing.Size(378, 21)
+		Me.AppIdComboBox.Size = New System.Drawing.Size(349, 21)
 		Me.AppIdComboBox.TabIndex = 0
 		'
 		'Label8
@@ -803,4 +818,5 @@ Partial Class PublishUserControl
 	Friend WithEvents QuotaProgressBar As ProgressBarEx
 	Friend WithEvents ToggleWordWrapForDescriptionCheckBox As CheckBox
 	Friend WithEvents ToggleWordWrapForChangeNoteCheckBox As CheckBox
+	Friend WithEvents RefreshGameItemsButton As Button
 End Class
