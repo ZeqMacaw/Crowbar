@@ -201,7 +201,7 @@ Partial Class PublishUserControl
 		Me.ItemsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
 		Me.ItemsDataGridView.ShowCellErrors = False
 		Me.ItemsDataGridView.ShowRowErrors = False
-		Me.ItemsDataGridView.Size = New System.Drawing.Size(765, 87)
+		Me.ItemsDataGridView.Size = New System.Drawing.Size(765, 85)
 		Me.ItemsDataGridView.TabIndex = 3
 		'
 		'ToolStrip1
