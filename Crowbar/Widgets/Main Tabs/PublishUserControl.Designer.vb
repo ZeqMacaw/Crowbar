@@ -52,8 +52,10 @@ Partial Class PublishUserControl
 		Me.ItemContentPathFileNameTextBox = New Crowbar.TextBoxEx()
 		Me.ItemContentFolderOrFileLabel = New System.Windows.Forms.Label()
 		Me.DescriptionChangeNoteSplitContainer = New System.Windows.Forms.SplitContainer()
+		Me.ToggleWordWrapForDescriptionCheckBox = New System.Windows.Forms.CheckBox()
 		Me.ItemDescriptionLabel = New System.Windows.Forms.Label()
 		Me.ItemDescriptionTextBox = New Crowbar.RichTextBoxEx()
+		Me.ToggleWordWrapForChangeNoteCheckBox = New System.Windows.Forms.CheckBox()
 		Me.ItemChangeNoteLabel = New System.Windows.Forms.Label()
 		Me.ItemChangeNoteTextBox = New Crowbar.RichTextBoxEx()
 		Me.ItemPreviewImagePictureBox = New System.Windows.Forms.PictureBox()
@@ -541,16 +543,31 @@ Partial Class PublishUserControl
 		'
 		'DescriptionChangeNoteSplitContainer.Panel1
 		'
+		Me.DescriptionChangeNoteSplitContainer.Panel1.Controls.Add(Me.ToggleWordWrapForDescriptionCheckBox)
 		Me.DescriptionChangeNoteSplitContainer.Panel1.Controls.Add(Me.ItemDescriptionLabel)
 		Me.DescriptionChangeNoteSplitContainer.Panel1.Controls.Add(Me.ItemDescriptionTextBox)
 		'
 		'DescriptionChangeNoteSplitContainer.Panel2
 		'
+		Me.DescriptionChangeNoteSplitContainer.Panel2.Controls.Add(Me.ToggleWordWrapForChangeNoteCheckBox)
 		Me.DescriptionChangeNoteSplitContainer.Panel2.Controls.Add(Me.ItemChangeNoteLabel)
 		Me.DescriptionChangeNoteSplitContainer.Panel2.Controls.Add(Me.ItemChangeNoteTextBox)
 		Me.DescriptionChangeNoteSplitContainer.Size = New System.Drawing.Size(578, 121)
 		Me.DescriptionChangeNoteSplitContainer.SplitterDistance = 295
 		Me.DescriptionChangeNoteSplitContainer.TabIndex = 5
+		'
+		'ToggleWordWrapForDescriptionCheckBox
+		'
+		Me.ToggleWordWrapForDescriptionCheckBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.ToggleWordWrapForDescriptionCheckBox.Appearance = System.Windows.Forms.Appearance.Button
+		Me.ToggleWordWrapForDescriptionCheckBox.BackgroundImage = Global.Crowbar.My.Resources.Resources.WordWrapOff
+		Me.ToggleWordWrapForDescriptionCheckBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+		Me.ToggleWordWrapForDescriptionCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+		Me.ToggleWordWrapForDescriptionCheckBox.Location = New System.Drawing.Point(280, 3)
+		Me.ToggleWordWrapForDescriptionCheckBox.Name = "ToggleWordWrapForDescriptionCheckBox"
+		Me.ToggleWordWrapForDescriptionCheckBox.Size = New System.Drawing.Size(13, 13)
+		Me.ToggleWordWrapForDescriptionCheckBox.TabIndex = 16
+		Me.ToggleWordWrapForDescriptionCheckBox.UseVisualStyleBackColor = True
 		'
 		'ItemDescriptionLabel
 		'
@@ -558,7 +575,7 @@ Partial Class PublishUserControl
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ItemDescriptionLabel.Location = New System.Drawing.Point(-3, 3)
 		Me.ItemDescriptionLabel.Name = "ItemDescriptionLabel"
-		Me.ItemDescriptionLabel.Size = New System.Drawing.Size(296, 13)
+		Me.ItemDescriptionLabel.Size = New System.Drawing.Size(277, 13)
 		Me.ItemDescriptionLabel.TabIndex = 9
 		Me.ItemDescriptionLabel.Text = "Description (### / ### characters max):"
 		'
@@ -576,30 +593,41 @@ Partial Class PublishUserControl
 		Me.ItemDescriptionTextBox.Text = ""
 		Me.ItemDescriptionTextBox.WordWrap = False
 		'
+		'ToggleWordWrapForChangeNoteCheckBox
+		'
+		Me.ToggleWordWrapForChangeNoteCheckBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.ToggleWordWrapForChangeNoteCheckBox.Appearance = System.Windows.Forms.Appearance.Button
+		Me.ToggleWordWrapForChangeNoteCheckBox.BackgroundImage = Global.Crowbar.My.Resources.Resources.WordWrapOff
+		Me.ToggleWordWrapForChangeNoteCheckBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+		Me.ToggleWordWrapForChangeNoteCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+		Me.ToggleWordWrapForChangeNoteCheckBox.Location = New System.Drawing.Point(266, 3)
+		Me.ToggleWordWrapForChangeNoteCheckBox.Name = "ToggleWordWrapForChangeNoteCheckBox"
+		Me.ToggleWordWrapForChangeNoteCheckBox.Size = New System.Drawing.Size(13, 13)
+		Me.ToggleWordWrapForChangeNoteCheckBox.TabIndex = 17
+		Me.ToggleWordWrapForChangeNoteCheckBox.UseVisualStyleBackColor = True
+		'
 		'ItemChangeNoteLabel
 		'
 		Me.ItemChangeNoteLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ItemChangeNoteLabel.Location = New System.Drawing.Point(-3, 3)
 		Me.ItemChangeNoteLabel.Name = "ItemChangeNoteLabel"
-		Me.ItemChangeNoteLabel.Size = New System.Drawing.Size(271, 13)
+		Me.ItemChangeNoteLabel.Size = New System.Drawing.Size(263, 13)
 		Me.ItemChangeNoteLabel.TabIndex = 11
 		Me.ItemChangeNoteLabel.Text = "Content Changes (### / ### characters max):"
 		'
 		'ItemChangeNoteTextBox
 		'
-		'Me.ItemChangeNoteTextBox.AcceptsReturn = True
 		Me.ItemChangeNoteTextBox.AcceptsTab = True
 		Me.ItemChangeNoteTextBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ItemChangeNoteTextBox.CueBannerText = ""
 		Me.ItemChangeNoteTextBox.Location = New System.Drawing.Point(0, 19)
-		Me.ItemChangeNoteTextBox.Multiline = True
 		Me.ItemChangeNoteTextBox.Name = "ItemChangeNoteTextBox"
-		'Me.ItemChangeNoteTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
 		Me.ItemChangeNoteTextBox.Size = New System.Drawing.Size(279, 102)
 		Me.ItemChangeNoteTextBox.TabIndex = 6
+		Me.ItemChangeNoteTextBox.Text = ""
 		Me.ItemChangeNoteTextBox.WordWrap = False
 		'
 		'ItemPreviewImagePictureBox
@@ -666,7 +694,7 @@ Partial Class PublishUserControl
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.QueueListView.Location = New System.Drawing.Point(568, 0)
 		Me.QueueListView.Name = "QueueListView"
-		Me.QueueListView.Size = New System.Drawing.Size(202, 63)
+		Me.QueueListView.Size = New System.Drawing.Size(202, 74)
 		Me.QueueListView.TabIndex = 20
 		Me.QueueListView.UseCompatibleStateImageBehavior = False
 		'
@@ -680,7 +708,7 @@ Partial Class PublishUserControl
 		Me.LogTextBox.Location = New System.Drawing.Point(131, 0)
 		Me.LogTextBox.Name = "LogTextBox"
 		Me.LogTextBox.ReadOnly = True
-		Me.LogTextBox.Size = New System.Drawing.Size(434, 63)
+		Me.LogTextBox.Size = New System.Drawing.Size(434, 74)
 		Me.LogTextBox.TabIndex = 19
 		Me.LogTextBox.Text = ""
 		Me.LogTextBox.WordWrap = False
@@ -713,7 +741,6 @@ Partial Class PublishUserControl
 		Me.ItemTagsSplitContainer.ResumeLayout(False)
 		Me.DescriptionChangeNoteSplitContainer.Panel1.ResumeLayout(False)
 		Me.DescriptionChangeNoteSplitContainer.Panel2.ResumeLayout(False)
-		Me.DescriptionChangeNoteSplitContainer.Panel2.PerformLayout()
 		CType(Me.DescriptionChangeNoteSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.DescriptionChangeNoteSplitContainer.ResumeLayout(False)
 		CType(Me.ItemPreviewImagePictureBox, System.ComponentModel.ISupportInitialize).EndInit()
@@ -774,4 +801,6 @@ Partial Class PublishUserControl
 	Friend WithEvents SearchItemsToolStripComboBox As ToolStripComboBox
 	Friend WithEvents SaveTemplateButton As Button
 	Friend WithEvents QuotaProgressBar As ProgressBarEx
+	Friend WithEvents ToggleWordWrapForDescriptionCheckBox As CheckBox
+	Friend WithEvents ToggleWordWrapForChangeNoteCheckBox As CheckBox
 End Class

@@ -422,6 +422,16 @@ Public Class PublishUserControl
 		Me.SwapBetweenOwnerNameAndID()
 	End Sub
 
+	Private Sub ToggleWordWrapForDescriptionCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ToggleWordWrapForDescriptionCheckBox.CheckedChanged
+		Me.ToggleWordWrapImageOnCheckbox(CType(sender, CheckBox))
+		Me.ItemDescriptionTextBox.WordWrap = Me.ToggleWordWrapForDescriptionCheckBox.Checked
+	End Sub
+
+	Private Sub ToggleWordWrapForChangeNoteCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ToggleWordWrapForChangeNoteCheckBox.CheckedChanged
+		Me.ToggleWordWrapImageOnCheckbox(CType(sender, CheckBox))
+		Me.ItemChangeNoteTextBox.WordWrap = Me.ToggleWordWrapForChangeNoteCheckBox.Checked
+	End Sub
+
 	Private Sub BrowseContentPathFileNameButton_Click(sender As Object, e As EventArgs) Handles BrowseItemContentPathFileNameButton.Click
 		Me.BrowseForContentPathFolderOrFileName()
 	End Sub
@@ -1431,6 +1441,14 @@ Public Class PublishUserControl
 		Else
 			Me.ItemOwnerTextBox.DataBindings.Remove(Me.ItemOwnerTextBox.DataBindings("Text"))
 			Me.ItemOwnerTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "OwnerName", False, DataSourceUpdateMode.OnPropertyChanged)
+		End If
+	End Sub
+
+	Private Sub ToggleWordWrapImageOnCheckbox(ByVal aCheckBox As CheckBox)
+		If aCheckBox.Checked Then
+			aCheckBox.BackgroundImage = My.Resources.WordWrap
+		Else
+			aCheckBox.BackgroundImage = My.Resources.WordWrapOff
 		End If
 	End Sub
 
