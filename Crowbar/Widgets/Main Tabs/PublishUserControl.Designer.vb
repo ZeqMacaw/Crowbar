@@ -21,11 +21,11 @@ Partial Class PublishUserControl
 		Me.Panel1 = New System.Windows.Forms.Panel()
 		Me.ItemsDataGridView = New System.Windows.Forms.DataGridView()
 		Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
+		Me.AddItemToolStripButton = New System.Windows.Forms.ToolStripButton()
+		Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
 		Me.SearchItemsToolStripComboBox = New System.Windows.Forms.ToolStripComboBox()
 		Me.SearchItemsToolStripTextBox = New System.Windows.Forms.ToolStripTextBox()
 		Me.SearchItemsToolStripButton = New System.Windows.Forms.ToolStripButton()
-		Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-		Me.AddItemToolStripButton = New System.Windows.Forms.ToolStripButton()
 		Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
 		Me.ItemCountsToolStripLabel = New System.Windows.Forms.ToolStripLabel()
 		Me.FindItemToolStripTextBox = New Crowbar.ToolStripSpringTextBox()
@@ -209,7 +209,7 @@ Partial Class PublishUserControl
 		Me.ToolStrip1.CanOverflow = False
 		Me.ToolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom
 		Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-		Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SearchItemsToolStripComboBox, Me.SearchItemsToolStripTextBox, Me.SearchItemsToolStripButton, Me.ToolStripSeparator1, Me.AddItemToolStripButton, Me.ToolStripSeparator2, Me.ItemCountsToolStripLabel, Me.FindItemToolStripTextBox})
+		Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddItemToolStripButton, Me.ToolStripSeparator1, Me.SearchItemsToolStripComboBox, Me.SearchItemsToolStripTextBox, Me.SearchItemsToolStripButton, Me.ToolStripSeparator2, Me.ItemCountsToolStripLabel, Me.FindItemToolStripTextBox})
 		Me.ToolStrip1.Location = New System.Drawing.Point(0, 85)
 		Me.ToolStrip1.Name = "ToolStrip1"
 		Me.ToolStrip1.Size = New System.Drawing.Size(766, 25)
@@ -217,9 +217,24 @@ Partial Class PublishUserControl
 		Me.ToolStrip1.TabIndex = 30
 		Me.ToolStrip1.Text = "ToolStrip1"
 		'
+		'AddItemToolStripButton
+		'
+		Me.AddItemToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+		Me.AddItemToolStripButton.Image = CType(resources.GetObject("AddItemToolStripButton.Image"), System.Drawing.Image)
+		Me.AddItemToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+		Me.AddItemToolStripButton.Name = "AddItemToolStripButton"
+		Me.AddItemToolStripButton.Size = New System.Drawing.Size(55, 22)
+		Me.AddItemToolStripButton.Text = "Add Item"
+		'
+		'ToolStripSeparator1
+		'
+		Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+		Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
+		'
 		'SearchItemsToolStripComboBox
 		'
 		Me.SearchItemsToolStripComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.SearchItemsToolStripComboBox.Font = New System.Drawing.Font("Segoe UI", 9.0!)
 		Me.SearchItemsToolStripComboBox.Items.AddRange(New Object() {"ID:", "Title:", "Description:", "Owner:", "[All fields]:"})
 		Me.SearchItemsToolStripComboBox.Name = "SearchItemsToolStripComboBox"
 		Me.SearchItemsToolStripComboBox.Size = New System.Drawing.Size(80, 25)
@@ -240,20 +255,6 @@ Partial Class PublishUserControl
 		Me.SearchItemsToolStripButton.Size = New System.Drawing.Size(23, 22)
 		Me.SearchItemsToolStripButton.Text = "Search"
 		Me.SearchItemsToolStripButton.ToolTipText = "Search"
-		'
-		'ToolStripSeparator1
-		'
-		Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-		Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
-		'
-		'AddItemToolStripButton
-		'
-		Me.AddItemToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-		Me.AddItemToolStripButton.Image = CType(resources.GetObject("AddItemToolStripButton.Image"), System.Drawing.Image)
-		Me.AddItemToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-		Me.AddItemToolStripButton.Name = "AddItemToolStripButton"
-		Me.AddItemToolStripButton.Size = New System.Drawing.Size(55, 22)
-		Me.AddItemToolStripButton.Text = "Add Item"
 		'
 		'ToolStripSeparator2
 		'
