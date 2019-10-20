@@ -16,6 +16,47 @@ Public Class GarrysModSteamAppInfo
 		Me.TagsControlType = GetType(GarrysModTagsUserControl)
 	End Sub
 
+	Public Overrides Function ProcessFileAfterDownload(ByVal givenPathFileName As String, ByVal bw As BackgroundWorkerEx) As String
+		Dim processedPathFileName As String = Path.ChangeExtension(givenPathFileName, ".gma")
+
+		bw.ReportProgress(0, "Decompressing downloaded Garry's Mod workshop file into a GMA file." + vbCrLf)
+		Dim lzmaExeProcess As New Process()
+		Try
+			lzmaExeProcess.StartInfo.UseShellExecute = False
+			'NOTE: From Microsoft website: 
+			'      On Windows Vista and earlier versions of the Windows operating system, 
+			'      the length of the arguments added to the length of the full path to the process must be less than 2080. 
+			'      On Windows 7 and later versions, the length must be less than 32699. 
+			'FROM BAT file: lzma.exe d %1 "%~n1.gma"
+			lzmaExeProcess.StartInfo.FileName = TheApp.LzmaExePathFileName
+			lzmaExeProcess.StartInfo.Arguments = "d """ + givenPathFileName + """ """ + processedPathFileName + """"
+#If DEBUG Then
+			lzmaExeProcess.StartInfo.CreateNoWindow = False
+#Else
+				lzmaExeProcess.StartInfo.CreateNoWindow = True
+#End If
+			lzmaExeProcess.Start()
+			lzmaExeProcess.WaitForExit()
+			lzmaExeProcess.Close()
+		Catch ex As Exception
+			Throw New System.Exception("Crowbar tried to decompress the file """ + givenPathFileName + """ to """ + processedPathFileName + """ but Windows gave this message: " + ex.Message)
+		Finally
+			lzmaExeProcess.Close()
+			bw.ReportProgress(0, "Decompress done." + vbCrLf)
+		End Try
+
+		Try
+			If File.Exists(givenPathFileName) Then
+				File.Delete(givenPathFileName)
+				bw.ReportProgress(0, "Deleted: """ + givenPathFileName + """" + vbCrLf)
+			End If
+		Catch ex As Exception
+			bw.ReportProgress(0, "Crowbar tried to delete the file """ + givenPathFileName + """ but Windows gave this message: " + ex.Message)
+		End Try
+
+		Return processedPathFileName
+	End Function
+
 	Public Overrides Function ProcessFileBeforeUpload(ByVal item As WorkshopItem, ByVal bw As BackgroundWorkerEx) As String
 		Dim processedPathFileName As String = item.ContentPathFolderOrFileName
 		Me.theBackgroundWorker = bw
