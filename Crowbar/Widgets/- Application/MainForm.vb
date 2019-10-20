@@ -1,4 +1,3 @@
-Imports AutoUpdaterDotNET
 Imports System.Collections.ObjectModel
 Imports System.IO
 Imports System.Text
@@ -147,10 +146,6 @@ Public Class MainForm
 #Region "Widget Event Handlers"
 
 	Private Sub MainForm_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-		AutoUpdater.OpenDownloadPage = True
-		AutoUpdater.ReportErrors = True
-		AutoUpdater.Start("https://raw.githubusercontent.com/ZeqMacaw/test/master/update.xml")
-
 		Me.Init()
 
 		'TEST [UNHANDLED EXCEPTION] Use these lines to raise an exception and show the unhandled exception window.

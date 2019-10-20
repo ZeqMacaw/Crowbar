@@ -74,10 +74,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoUpdater.NET">
-      <HintPath>Resources\AutoUpdater.NET.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Steamworks.NET, Version=12.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Resources\Steamworks.NET.dll</HintPath>
@@ -532,6 +528,7 @@
     </Compile>
     <Compile Include="Core\Unpacker\PackageResourceFileNameInfo.vb" />
     <Compile Include="Core\Unpacker\PackagePathFileNameInfo.vb" />
+    <Compile Include="Core\Updater\Updater.vb" />
     <Compile Include="Core\Viewer\Viewer.vb">
       <SubType>Component</SubType>
     </Compile>
@@ -710,6 +707,12 @@
       <DependentUpon>PatchUserControl.vb</DependentUpon>
     </Compile>
     <Compile Include="Widgets\Main Tabs\PatchUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Widgets\Main Tabs\UpdateUserControl.Designer.vb">
+      <DependentUpon>UpdateUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Widgets\Main Tabs\UpdateUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Widgets\Main Tabs\ViewUserControl.Designer.vb">
@@ -896,6 +899,9 @@
       <DependentUpon>PatchUserControl.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\Main Tabs\UpdateUserControl.resx">
+      <DependentUpon>UpdateUserControl.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Widgets\Main Tabs\ViewUserControl.resx">
       <DependentUpon>ViewUserControl.vb</DependentUpon>
       <SubType>Designer</SubType>
@@ -960,7 +966,8 @@
     <Content Include="- Documents\History 2014.txt" />
     <Content Include="- Documents\Specifications.txt" />
     <None Include="Resources\CrowbarSteamPipe.exe" />
-    <Content Include="Resources\AutoUpdater.NET.dll" />
+    <Content Include="Resources\7zr.exe" />
+    <Content Include="Resources\CrowbarLauncher.exe" />
     <Content Include="Resources\Steamworks.NET.dll" />
     <Content Include="Resources\steam_api.dll" />
     <None Include="Resources\Crowbar Settings.xml" />

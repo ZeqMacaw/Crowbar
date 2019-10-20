@@ -71,8 +71,6 @@ Module Main
 		'End If
 		If desiredAssembly.Name = "Steamworks.NET" Then
 			Return Reflection.Assembly.Load(My.Resources.Steamworks_NET)
-		ElseIf desiredAssembly.Name = "AutoUpdater.NET" Then
-			Return Reflection.Assembly.Load(My.Resources.AutoUpdater_NET)
 		Else
 			Return Nothing
 		End If

@@ -113,16 +113,6 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized resource of type System.Byte[].
-        '''</summary>
-        Friend ReadOnly Property AutoUpdater_NET() As Byte()
-            Get
-                Dim obj As Object = ResourceManager.GetObject("AutoUpdater_NET", resourceCulture)
-                Return CType(obj,Byte())
-            End Get
-        End Property
-        
-        '''<summary>
         '''  Looks up a localized string similar to https://steamcommunity.com/groups/CrowbarTool/discussions/1/.
         '''</summary>
         Friend ReadOnly Property BugReportLink() As String
@@ -204,6 +194,16 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("CrowbarGuideBanner", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend ReadOnly Property CrowbarLauncher() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("CrowbarLauncher", resourceCulture)
+                Return CType(obj,Byte())
             End Get
         End Property
         
@@ -383,6 +383,16 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("Refresh", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend ReadOnly Property SevenZr() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("SevenZr", resourceCulture)
+                Return CType(obj,Byte())
             End Get
         End Property
         
