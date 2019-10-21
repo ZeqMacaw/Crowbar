@@ -66,15 +66,15 @@ Public Class DownloadUserControl
 			Me.theBackgroundSteamPipe.Kill()
 		End If
 
-		'RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
 
 		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 
-		'Me.FreeDownloadOptions()
+		Me.FreeDownloadOptions()
 
-		'Me.FreeOutputPathComboBox()
+		Me.FreeOutputPathComboBox()
 
-		'Me.ItemIdTextBox.DataBindings.Clear()
+		Me.ItemIdTextBox.DataBindings.Clear()
 	End Sub
 
 	Private Sub InitOutputPathComboBox()
@@ -100,6 +100,7 @@ Public Class DownloadUserControl
 		Me.PrependTitleCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DownloadPrependItemTitleIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.AppendDateTimeCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DownloadAppendItemUpdateDateTimeIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.ReplaceSpacesWithUnderscoresCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DownloadReplaceSpacesWithUnderscoresIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.ConvertToExpectedFileOrFolderCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DownloadConvertToExpectedFileOrFolderCheckBoxIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 	End Sub
 
 	Private Sub FreeDownloadOptions()
@@ -107,6 +108,7 @@ Public Class DownloadUserControl
 		Me.PrependTitleCheckBox.DataBindings.Clear()
 		Me.AppendDateTimeCheckBox.DataBindings.Clear()
 		Me.ReplaceSpacesWithUnderscoresCheckBox.DataBindings.Clear()
+		Me.ConvertToExpectedFileOrFolderCheckBox.DataBindings.Clear()
 	End Sub
 
 #End Region
@@ -698,7 +700,7 @@ Public Class DownloadUserControl
 	End Sub
 
 	Private Sub ProcessFileAfterDownload(ByRef pathFileName As String)
-		If Me.theSteamAppInfo IsNot Nothing Then
+		If Me.theSteamAppInfo IsNot Nothing AndAlso TheApp.Settings.DownloadConvertToExpectedFileOrFolderCheckBoxIsChecked Then
 			Try
 				Me.DownloadButton.Enabled = False
 				Me.CancelDownloadButton.Enabled = True
@@ -736,6 +738,14 @@ Public Class DownloadUserControl
 			Me.LogTextBox.AppendText("Final file: """ + pathFileName + """" + vbCrLf)
 			Me.DownloadedItemTextBox.Text = pathFileName
 		End If
+
+		RemoveHandler Me.theProcessAfterDownloadWorker.DoWork, AddressOf ProcessAfterDownloadWorker_DoWork
+		RemoveHandler Me.theProcessAfterDownloadWorker.ProgressChanged, AddressOf ProcessAfterDownloadWorker_ProgressChanged
+		RemoveHandler Me.theProcessAfterDownloadWorker.RunWorkerCompleted, AddressOf ProcessAfterDownloadWorker_RunWorkerCompleted
+		Me.theProcessAfterDownloadWorker = Nothing
+
+		Me.DownloadButton.Enabled = True
+		Me.CancelDownloadButton.Enabled = False
 	End Sub
 
 #End Region
