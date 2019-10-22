@@ -626,7 +626,7 @@ Public Class SourceSmdFile49
 						End If
 					Next
 				Else
-					Me.CalcAnimation(aSequenceDesc, anAnimationDesc, frameIndex)
+					Me.CalcAnimation(aSequenceDesc, anAnimationDesc, frameIndex, onlyWriteCorrectiveAnimationRootBones)
 				End If
 
 				If TheApp.Settings.DecompileStricterFormatIsChecked Then
@@ -2414,7 +2414,7 @@ Public Class SourceSmdFile49
 	'	}
 	'
 	'}
-	Private Sub CalcAnimation(ByVal aSequenceDesc As SourceMdlSequenceDesc, ByVal anAnimationDesc As SourceMdlAnimationDesc49, ByVal frameIndex As Integer)
+	Private Sub CalcAnimation(ByVal aSequenceDesc As SourceMdlSequenceDesc, ByVal anAnimationDesc As SourceMdlAnimationDesc49, ByVal frameIndex As Integer, Optional onlyWriteCorrectiveAnimationRootBones As Boolean = False)
 		Dim s As Double
 		Dim animIndex As Integer
 		Dim aBone As SourceMdlBone
@@ -2461,6 +2461,10 @@ Public Class SourceSmdFile49
 
 		For boneIndex As Integer = 0 To Me.theMdlFileData.theBones.Count - 1
 			aBone = Me.theMdlFileData.theBones(boneIndex)
+
+			If onlyWriteCorrectiveAnimationRootBones AndAlso aBone.parentBoneIndex <> -1 Then
+				Continue For
+			End If
 
 			If aSequenceDesc IsNot Nothing Then
 				aWeight = aSequenceDesc.theBoneWeights(boneIndex)
