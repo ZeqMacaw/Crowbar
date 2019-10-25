@@ -244,7 +244,7 @@ Public Class SourceModel49
 			For aBodyPartIndex As Integer = 0 To Me.theMdlFileData.theBodyParts.Count - 1
 				aBodyPart = Me.theMdlFileData.theBodyParts(aBodyPartIndex)
 
-				If aBodyPart.theFlexFrames Is Nothing OrElse aBodyPart.theFlexFrames.Count = 0 Then
+				If aBodyPart.theFlexFrames Is Nothing OrElse aBodyPart.theFlexFrames.Count <= 1 Then
 					Continue For
 				End If
 
