@@ -102,6 +102,9 @@ Public Class GarrysModSteamAppInfo
 			gmaPathFileName = item.ContentPathFolderOrFileName
 		End If
 
+		Dim gmaFileInfo As New FileInfo(gmaPathFileName)
+		Dim uncompressedFileSize As UInt32 = CUInt(gmaFileInfo.Length)
+
 		'NOTE: Compress GMA file for Garry's Mod before uploading it.
 		'      Calling lzma.exe (outside of Crowbar) works (i.e. subscribed item can be used within Garry's Mod), but does not compress to same bytes as Garry's Mod gmpublish.exe. 
 		'      In tests, files were smaller, possibly because lzma.exe has newer compression code than what Garry's Mod gmpublish.exe has.
@@ -127,8 +130,9 @@ Public Class GarrysModSteamAppInfo
 			'      the length of the arguments added to the length of the full path to the process must be less than 2080. 
 			'      On Windows 7 and later versions, the length must be less than 32699. 
 			lzmaExeProcess.StartInfo.FileName = TheApp.LzmaExePathFileName
-			lzmaExeProcess.StartInfo.Arguments = "e """ + gmaPathFileName + """ """ + processedPathFileName + """ -d25 -fb256"
+			'lzmaExeProcess.StartInfo.Arguments = "e """ + gmaPathFileName + """ """ + processedPathFileName + """ -d25 -fb256"
 			'lzmaExeProcess.StartInfo.Arguments = "e """ + givenPathFileName + """ """ + processedPathFileName + """ -d25"
+			lzmaExeProcess.StartInfo.Arguments = "e """ + gmaPathFileName + """ """ + processedPathFileName + """ -d25 -fb32"
 #If DEBUG Then
 			lzmaExeProcess.StartInfo.CreateNoWindow = False
 #Else
@@ -141,6 +145,35 @@ Public Class GarrysModSteamAppInfo
 			Throw New System.Exception("Crowbar tried to compress the file """ + gmaPathFileName + """ to """ + processedPathFileName + """ but Windows gave this message: " + ex.Message)
 		Finally
 			lzmaExeProcess.Close()
+		End Try
+
+		' Write 8 extra bytes after the lzma compressed data: 4 bytes for uncompressed file size and 4 magic bytes (BEEFCACE), both values in little-endian order.
+		Dim outputFileStream As FileStream = Nothing
+		Try
+			If File.Exists(processedPathFileName) Then
+				outputFileStream = New FileStream(processedPathFileName, FileMode.Open)
+				If outputFileStream IsNot Nothing Then
+					Dim inputFileWriter As BinaryWriter = Nothing
+					Try
+						inputFileWriter = New BinaryWriter(outputFileStream)
+
+						inputFileWriter.Seek(0, SeekOrigin.End)
+						inputFileWriter.Write(uncompressedFileSize)
+						'-1091581234   BEEFCACE in little endian order: CE CA EF BE
+						inputFileWriter.Write(-1091581234)
+					Catch
+					Finally
+						If inputFileWriter IsNot Nothing Then
+							inputFileWriter.Close()
+						End If
+					End Try
+				End If
+			End If
+		Catch
+		Finally
+			If outputFileStream IsNot Nothing Then
+				outputFileStream.Close()
+			End If
 		End Try
 
 		Return processedPathFileName
