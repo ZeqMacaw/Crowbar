@@ -1,5 +1,6 @@
 ﻿Imports System.ComponentModel
 Imports System.IO
+Imports System.Web.Script.Serialization
 Imports Steamworks
 
 Public Class GarrysModSteamAppInfo
@@ -232,22 +233,23 @@ Public Class GarrysModSteamAppInfo
 		fileStream = File.CreateText(addonJsonPathFileName)
 		fileStream.AutoFlush = True
 		Try
+			Dim jss As JavaScriptSerializer = New JavaScriptSerializer()
 			If File.Exists(addonJsonPathFileName) Then
 				fileStream.WriteLine("{")
-				fileStream.WriteLine(vbTab + """title"": """ + itemTitle + """,")
+				fileStream.WriteLine(vbTab + """title"": " + jss.Serialize(itemTitle) + ",")
 				If itemTags.Count > 1 Then
-					fileStream.WriteLine(vbTab + """type"": """ + itemTags(0) + """,")
+					fileStream.WriteLine(vbTab + """type"": " + jss.Serialize(itemTags(0)) + ",")
 					fileStream.WriteLine(vbTab + """tags"": ")
 					fileStream.WriteLine(vbTab + "[")
 					If itemTags.Count > 2 Then
-						fileStream.WriteLine(vbTab + vbTab + """" + itemTags(1) + """,")
-						fileStream.WriteLine(vbTab + vbTab + """" + itemTags(2) + """")
+						fileStream.WriteLine(vbTab + vbTab + jss.Serialize(itemTags(1)) + ",")
+						fileStream.WriteLine(vbTab + vbTab + jss.Serialize(itemTags(2)))
 					Else
-						fileStream.WriteLine(vbTab + vbTab + """" + itemTags(1) + """")
+						fileStream.WriteLine(vbTab + vbTab + jss.Serialize(itemTags(1)))
 					End If
 					fileStream.WriteLine(vbTab + "]")
 				Else
-					fileStream.WriteLine(vbTab + """type"": """ + itemTags(0) + """")
+					fileStream.WriteLine(vbTab + """type"": " + jss.Serialize(itemTags(0)))
 				End If
 				fileStream.WriteLine("}")
 				fileStream.Flush()
