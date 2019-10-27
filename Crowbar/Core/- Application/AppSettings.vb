@@ -296,6 +296,18 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	Public Property DownloadConvertToExpectedFileOrFolderCheckBoxIsChecked() As Boolean
+		Get
+			Return Me.theDownloadConvertToExpectedFileOrFolderCheckBoxIsChecked
+		End Get
+		Set(ByVal value As Boolean)
+			If Me.theDownloadConvertToExpectedFileOrFolderCheckBoxIsChecked <> value Then
+				Me.theDownloadConvertToExpectedFileOrFolderCheckBoxIsChecked = value
+				NotifyPropertyChanged("DownloadConvertToExpectedFileOrFolderCheckBoxIsChecked")
+			End If
+		End Set
+	End Property
+
 	Public Property UnpackPackagePathFolderOrFileName() As String
 		Get
 			Return Me.theUnpackPackagePathFolderOrFileName
@@ -1193,10 +1205,10 @@ Public Class AppSettings
 
 	Public Property OptionsAutoOpenVpkFileOption() As ActionType
 		Get
-			Return Me.theOptionsAutoOpenvpkFileOption
+			Return Me.theOptionsAutoOpenVpkFileOption
 		End Get
 		Set(ByVal value As ActionType)
-			Me.theOptionsAutoOpenvpkFileOption = value
+			Me.theOptionsAutoOpenVpkFileOption = value
 			NotifyPropertyChanged("OptionsAutoOpenVpkFileOption")
 		End Set
 	End Property
@@ -1503,6 +1515,7 @@ Public Class AppSettings
 		Me.DownloadPrependItemTitleIsChecked = True
 		Me.DownloadAppendItemUpdateDateTimeIsChecked = True
 		Me.DownloadReplaceSpacesWithUnderscoresIsChecked = True
+		Me.DownloadConvertToExpectedFileOrFolderCheckBoxIsChecked = True
 	End Sub
 
 	Public Sub SetDefaultUnpackOutputSubfolderName()
@@ -1672,6 +1685,7 @@ Public Class AppSettings
 	Private theDownloadPrependItemTitleIsChecked As Boolean
 	Private theDownloadAppendItemUpdateDateTimeIsChecked As Boolean
 	Private theDownloadReplaceSpacesWithUnderscoresIsChecked As Boolean
+	Private theDownloadConvertToExpectedFileOrFolderCheckBoxIsChecked As Boolean
 
 	' Unpack tab
 
@@ -1804,7 +1818,7 @@ Public Class AppSettings
 	' Publish tab
 
 	Private thePublishGameSelectedIndex As Integer
-    Private thePublishSteamAppUserInfos As BindingListExAutoSort(Of SteamAppUserInfo)
+	Private thePublishSteamAppUserInfos As BindingListExAutoSort(Of SteamAppUserInfo)
 	Private thePublishSearchField As PublishSearchFieldOptions
 	Private thePublishSearchText As String
 	'Private thePublishDragDroppedContentPath As String
