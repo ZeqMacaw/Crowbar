@@ -290,8 +290,9 @@ Public Class PublishUserControl
 		Me.ItemPostedTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Posted", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.ItemUpdatedTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Updated", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.ItemTitleTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Title", False, DataSourceUpdateMode.OnPropertyChanged)
-		Me.ItemDescriptionTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Description", False, DataSourceUpdateMode.OnPropertyChanged)
-		Me.ItemChangeNoteTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "ChangeNote", False, DataSourceUpdateMode.OnPropertyChanged)
+		'NOTE: For RichTextBox, set the Formatting argument to True when DataSourceUpdateMode.OnPropertyChanged is used, to prevent characters being entered in reverse order.
+		Me.ItemDescriptionTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Description", True, DataSourceUpdateMode.OnPropertyChanged)
+		Me.ItemChangeNoteTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "ChangeNote", True, DataSourceUpdateMode.OnPropertyChanged)
 		Me.ItemContentPathFileNameTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "ContentPathFolderOrFileName", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.ItemPreviewImagePathFileNameTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "PreviewImagePathFileName", False, DataSourceUpdateMode.OnPropertyChanged)
 
@@ -322,6 +323,10 @@ Public Class PublishUserControl
 #End Region
 
 #Region "Child Widget Event Handlers"
+
+	Private Sub RefreshGameItemsButton_Click(sender As Object, e As EventArgs) Handles RefreshGameItemsButton.Click
+		Me.UpdateSteamAppWidgets()
+	End Sub
 
 	Private Sub OpenSteamSubscriberAgreementButton_Click(sender As Object, e As EventArgs) Handles OpenSteamSubscriberAgreementButton.Click
 		Me.OpenSteamSubscriberAgreement()
@@ -419,6 +424,16 @@ Public Class PublishUserControl
 
 	Private Sub OwnerLabel_DoubleClick(sender As Object, e As EventArgs) Handles ItemOwnerLabel.DoubleClick
 		Me.SwapBetweenOwnerNameAndID()
+	End Sub
+
+	Private Sub ToggleWordWrapForDescriptionCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ToggleWordWrapForDescriptionCheckBox.CheckedChanged
+		Me.ToggleWordWrapImageOnCheckbox(CType(sender, CheckBox))
+		Me.ItemDescriptionTextBox.WordWrap = Me.ToggleWordWrapForDescriptionCheckBox.Checked
+	End Sub
+
+	Private Sub ToggleWordWrapForChangeNoteCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ToggleWordWrapForChangeNoteCheckBox.CheckedChanged
+		Me.ToggleWordWrapImageOnCheckbox(CType(sender, CheckBox))
+		Me.ItemChangeNoteTextBox.WordWrap = Me.ToggleWordWrapForChangeNoteCheckBox.Checked
 	End Sub
 
 	Private Sub BrowseContentPathFileNameButton_Click(sender As Object, e As EventArgs) Handles BrowseItemContentPathFileNameButton.Click
@@ -1430,6 +1445,14 @@ Public Class PublishUserControl
 		Else
 			Me.ItemOwnerTextBox.DataBindings.Remove(Me.ItemOwnerTextBox.DataBindings("Text"))
 			Me.ItemOwnerTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "OwnerName", False, DataSourceUpdateMode.OnPropertyChanged)
+		End If
+	End Sub
+
+	Private Sub ToggleWordWrapImageOnCheckbox(ByVal aCheckBox As CheckBox)
+		If aCheckBox.Checked Then
+			aCheckBox.BackgroundImage = My.Resources.WordWrap
+		Else
+			aCheckBox.BackgroundImage = My.Resources.WordWrapOff
 		End If
 	End Sub
 
