@@ -18,20 +18,20 @@ Public Class DownloadUserControl
 		InitializeComponent()
 	End Sub
 
-	'UserControl overrides dispose to clean up the component list.
-	<System.Diagnostics.DebuggerNonUserCode()>
-	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
-		Try
-			If disposing Then
-				Me.Free()
-				If components IsNot Nothing Then
-					components.Dispose()
-				End If
-			End If
-		Finally
-			MyBase.Dispose(disposing)
-		End Try
-	End Sub
+	''UserControl overrides dispose to clean up the component list.
+	'<System.Diagnostics.DebuggerNonUserCode()>
+	'Protected Overrides Sub Dispose(ByVal disposing As Boolean)
+	'	Try
+	'		If disposing Then
+	'			Me.Free()
+	'			If components IsNot Nothing Then
+	'				components.Dispose()
+	'			End If
+	'		End If
+	'	Finally
+	'		MyBase.Dispose(disposing)
+	'	End Try
+	'End Sub
 
 #End Region
 
