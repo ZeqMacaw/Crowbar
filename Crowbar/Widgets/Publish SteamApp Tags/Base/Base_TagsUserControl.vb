@@ -265,6 +265,10 @@ Public Class Base_TagsUserControl
 		End If
 	End Sub
 
+	Protected Sub RaiseTagsPropertyChanged()
+		RaiseEvent TagsPropertyChanged(Me, New EventArgs())
+	End Sub
+
 #End Region
 
 #Region "Data"

@@ -93,7 +93,7 @@ Partial Class DecompileUserControl
 		Me.DebugInfoCheckBox.AutoSize = True
 		Me.DebugInfoCheckBox.Location = New System.Drawing.Point(3, 95)
 		Me.DebugInfoCheckBox.Name = "DebugInfoCheckBox"
-		Me.DebugInfoCheckBox.Size = New System.Drawing.Size(207, 17)
+		Me.DebugInfoCheckBox.Size = New System.Drawing.Size(190, 17)
 		Me.DebugInfoCheckBox.TabIndex = 14
 		Me.DebugInfoCheckBox.Text = "Decompile-info comments and files"
 		Me.ToolTip1.SetToolTip(Me.DebugInfoCheckBox, "Write comments and extra files that include decompile info useful in debugging.")
@@ -104,7 +104,7 @@ Partial Class DecompileUserControl
 		Me.LogFileCheckBox.AutoSize = True
 		Me.LogFileCheckBox.Location = New System.Drawing.Point(3, 72)
 		Me.LogFileCheckBox.Name = "LogFileCheckBox"
-		Me.LogFileCheckBox.Size = New System.Drawing.Size(116, 17)
+		Me.LogFileCheckBox.Size = New System.Drawing.Size(108, 17)
 		Me.LogFileCheckBox.TabIndex = 13
 		Me.LogFileCheckBox.Text = "Write log to a file"
 		Me.ToolTip1.SetToolTip(Me.LogFileCheckBox, "Write the decompile log to a file.")
@@ -115,7 +115,7 @@ Partial Class DecompileUserControl
 		Me.DeclareSequenceQciCheckBox.AutoSize = True
 		Me.DeclareSequenceQciCheckBox.Location = New System.Drawing.Point(3, 141)
 		Me.DeclareSequenceQciCheckBox.Name = "DeclareSequenceQciCheckBox"
-		Me.DeclareSequenceQciCheckBox.Size = New System.Drawing.Size(161, 17)
+		Me.DeclareSequenceQciCheckBox.Size = New System.Drawing.Size(154, 17)
 		Me.DeclareSequenceQciCheckBox.TabIndex = 40
 		Me.DeclareSequenceQciCheckBox.Text = "$DeclareSequence QCI file"
 		Me.ToolTip1.SetToolTip(Me.DeclareSequenceQciCheckBox, "Write a QCI file with a $DeclareSequence line for each sequence in the MDL file. " &
@@ -127,7 +127,7 @@ Partial Class DecompileUserControl
 		Me.FormatForStricterImportersCheckBox.AutoSize = True
 		Me.FormatForStricterImportersCheckBox.Location = New System.Drawing.Point(3, 26)
 		Me.FormatForStricterImportersCheckBox.Name = "FormatForStricterImportersCheckBox"
-		Me.FormatForStricterImportersCheckBox.Size = New System.Drawing.Size(170, 17)
+		Me.FormatForStricterImportersCheckBox.Size = New System.Drawing.Size(162, 17)
 		Me.FormatForStricterImportersCheckBox.TabIndex = 12
 		Me.FormatForStricterImportersCheckBox.Text = "Format for stricter importers"
 		Me.ToolTip1.SetToolTip(Me.FormatForStricterImportersCheckBox, "Write decompiled files in a format that some importers expect, but is not as easy" &
@@ -139,7 +139,7 @@ Partial Class DecompileUserControl
 		Me.UseMixedCaseForKeywordsCheckBox.AutoSize = True
 		Me.UseMixedCaseForKeywordsCheckBox.Location = New System.Drawing.Point(20, 95)
 		Me.UseMixedCaseForKeywordsCheckBox.Name = "UseMixedCaseForKeywordsCheckBox"
-		Me.UseMixedCaseForKeywordsCheckBox.Size = New System.Drawing.Size(173, 17)
+		Me.UseMixedCaseForKeywordsCheckBox.Size = New System.Drawing.Size(165, 17)
 		Me.UseMixedCaseForKeywordsCheckBox.TabIndex = 42
 		Me.UseMixedCaseForKeywordsCheckBox.Text = "Use MixedCase for keywords"
 		Me.ToolTip1.SetToolTip(Me.UseMixedCaseForKeywordsCheckBox, "$CommandLikeThis instead of $commandlikethis")
@@ -150,7 +150,7 @@ Partial Class DecompileUserControl
 		Me.RemovePathFromMaterialFileNamesCheckBox.AutoSize = True
 		Me.RemovePathFromMaterialFileNamesCheckBox.Location = New System.Drawing.Point(20, 141)
 		Me.RemovePathFromMaterialFileNamesCheckBox.Name = "RemovePathFromMaterialFileNamesCheckBox"
-		Me.RemovePathFromMaterialFileNamesCheckBox.Size = New System.Drawing.Size(219, 17)
+		Me.RemovePathFromMaterialFileNamesCheckBox.Size = New System.Drawing.Size(207, 17)
 		Me.RemovePathFromMaterialFileNamesCheckBox.TabIndex = 41
 		Me.RemovePathFromMaterialFileNamesCheckBox.Text = "Remove path from material file names"
 		Me.ToolTip1.SetToolTip(Me.RemovePathFromMaterialFileNamesCheckBox, "Write only the file name in the SMD, even if a path was stored. This might cause " &
@@ -162,7 +162,7 @@ Partial Class DecompileUserControl
 		Me.UseUvsForDoomMusicCompilerCheckBox.AutoSize = True
 		Me.UseUvsForDoomMusicCompilerCheckBox.Location = New System.Drawing.Point(20, 164)
 		Me.UseUvsForDoomMusicCompilerCheckBox.Name = "UseUvsForDoomMusicCompilerCheckBox"
-		Me.UseUvsForDoomMusicCompilerCheckBox.Size = New System.Drawing.Size(309, 17)
+		Me.UseUvsForDoomMusicCompilerCheckBox.Size = New System.Drawing.Size(283, 17)
 		Me.UseUvsForDoomMusicCompilerCheckBox.TabIndex = 44
 		Me.UseUvsForDoomMusicCompilerCheckBox.Text = "Use UVs for DoomMusic's model compiler (GoldSource)"
 		Me.ToolTip1.SetToolTip(Me.UseUvsForDoomMusicCompilerCheckBox, "For DoomMusic's compiler, UV calculation is slightly different, so tick this for " &
@@ -174,7 +174,7 @@ Partial Class DecompileUserControl
 		Me.OverrideMdlVersionLabel.AutoSize = True
 		Me.OverrideMdlVersionLabel.Location = New System.Drawing.Point(3, 188)
 		Me.OverrideMdlVersionLabel.Name = "OverrideMdlVersionLabel"
-		Me.OverrideMdlVersionLabel.Size = New System.Drawing.Size(120, 13)
+		Me.OverrideMdlVersionLabel.Size = New System.Drawing.Size(114, 13)
 		Me.OverrideMdlVersionLabel.TabIndex = 46
 		Me.OverrideMdlVersionLabel.Text = "Override MDL version:"
 		Me.ToolTip1.SetToolTip(Me.OverrideMdlVersionLabel, "Decompile based on this selected version instead of what is stored in MDL file.")
@@ -235,7 +235,7 @@ Partial Class DecompileUserControl
 		Me.MdlPathFileNameTextBox.CueBannerText = ""
 		Me.MdlPathFileNameTextBox.Location = New System.Drawing.Point(219, 5)
 		Me.MdlPathFileNameTextBox.Name = "MdlPathFileNameTextBox"
-		Me.MdlPathFileNameTextBox.Size = New System.Drawing.Size(435, 22)
+		Me.MdlPathFileNameTextBox.Size = New System.Drawing.Size(435, 21)
 		Me.MdlPathFileNameTextBox.TabIndex = 1
 		'
 		'BrowseForMdlPathFolderOrFileNameButton
@@ -286,7 +286,7 @@ Partial Class DecompileUserControl
 		Me.OutputPathTextBox.CueBannerText = ""
 		Me.OutputPathTextBox.Location = New System.Drawing.Point(219, 34)
 		Me.OutputPathTextBox.Name = "OutputPathTextBox"
-		Me.OutputPathTextBox.Size = New System.Drawing.Size(435, 22)
+		Me.OutputPathTextBox.Size = New System.Drawing.Size(435, 21)
 		Me.OutputPathTextBox.TabIndex = 16
 		'
 		'OutputSubfolderTextBox
@@ -294,9 +294,9 @@ Partial Class DecompileUserControl
 		Me.OutputSubfolderTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.OutputSubfolderTextBox.CueBannerText = ""
-		Me.OutputSubfolderTextBox.Location = New System.Drawing.Point(209, 34)
+		Me.OutputSubfolderTextBox.Location = New System.Drawing.Point(219, 34)
 		Me.OutputSubfolderTextBox.Name = "OutputSubfolderTextBox"
-		Me.OutputSubfolderTextBox.Size = New System.Drawing.Size(445, 22)
+		Me.OutputSubfolderTextBox.Size = New System.Drawing.Size(435, 21)
 		Me.OutputSubfolderTextBox.TabIndex = 20
 		Me.OutputSubfolderTextBox.Visible = False
 		'
@@ -383,9 +383,9 @@ Partial Class DecompileUserControl
 		Me.Panel3.Controls.Add(Me.DeclareSequenceQciCheckBox)
 		Me.Panel3.Controls.Add(Me.FormatForStricterImportersCheckBox)
 		Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.Panel3.Location = New System.Drawing.Point(3, 18)
+		Me.Panel3.Location = New System.Drawing.Point(3, 17)
 		Me.Panel3.Name = "Panel3"
-		Me.Panel3.Size = New System.Drawing.Size(236, 222)
+		Me.Panel3.Size = New System.Drawing.Size(236, 223)
 		Me.Panel3.TabIndex = 0
 		'
 		'FolderForEachModelCheckBox
@@ -393,7 +393,7 @@ Partial Class DecompileUserControl
 		Me.FolderForEachModelCheckBox.AutoSize = True
 		Me.FolderForEachModelCheckBox.Location = New System.Drawing.Point(3, 3)
 		Me.FolderForEachModelCheckBox.Name = "FolderForEachModelCheckBox"
-		Me.FolderForEachModelCheckBox.Size = New System.Drawing.Size(139, 17)
+		Me.FolderForEachModelCheckBox.Size = New System.Drawing.Size(130, 17)
 		Me.FolderForEachModelCheckBox.TabIndex = 11
 		Me.FolderForEachModelCheckBox.Text = "Folder for each model"
 		Me.FolderForEachModelCheckBox.UseVisualStyleBackColor = True
@@ -476,9 +476,9 @@ Partial Class DecompileUserControl
 		Me.Panel1.Controls.Add(Me.ReferenceMeshSmdFileCheckBox)
 		Me.Panel1.Controls.Add(Me.QcFileCheckBox)
 		Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.Panel1.Location = New System.Drawing.Point(3, 18)
+		Me.Panel1.Location = New System.Drawing.Point(3, 17)
 		Me.Panel1.Name = "Panel1"
-		Me.Panel1.Size = New System.Drawing.Size(516, 222)
+		Me.Panel1.Size = New System.Drawing.Size(516, 223)
 		Me.Panel1.TabIndex = 11
 		'
 		'OnlyChangedMaterialsInTextureGroupLinesCheckBox
@@ -486,7 +486,7 @@ Partial Class DecompileUserControl
 		Me.OnlyChangedMaterialsInTextureGroupLinesCheckBox.AutoSize = True
 		Me.OnlyChangedMaterialsInTextureGroupLinesCheckBox.Location = New System.Drawing.Point(20, 49)
 		Me.OnlyChangedMaterialsInTextureGroupLinesCheckBox.Name = "OnlyChangedMaterialsInTextureGroupLinesCheckBox"
-		Me.OnlyChangedMaterialsInTextureGroupLinesCheckBox.Size = New System.Drawing.Size(264, 17)
+		Me.OnlyChangedMaterialsInTextureGroupLinesCheckBox.Size = New System.Drawing.Size(246, 17)
 		Me.OnlyChangedMaterialsInTextureGroupLinesCheckBox.TabIndex = 43
 		Me.OnlyChangedMaterialsInTextureGroupLinesCheckBox.Text = "Only changed materials in $texturegroup lines"
 		Me.OnlyChangedMaterialsInTextureGroupLinesCheckBox.UseVisualStyleBackColor = True
@@ -496,7 +496,7 @@ Partial Class DecompileUserControl
 		Me.SkinFamilyOnSingleLineCheckBox.AutoSize = True
 		Me.SkinFamilyOnSingleLineCheckBox.Location = New System.Drawing.Point(20, 26)
 		Me.SkinFamilyOnSingleLineCheckBox.Name = "SkinFamilyOnSingleLineCheckBox"
-		Me.SkinFamilyOnSingleLineCheckBox.Size = New System.Drawing.Size(258, 17)
+		Me.SkinFamilyOnSingleLineCheckBox.Size = New System.Drawing.Size(239, 17)
 		Me.SkinFamilyOnSingleLineCheckBox.TabIndex = 39
 		Me.SkinFamilyOnSingleLineCheckBox.Text = "Each $texturegroup skin-family on single line"
 		Me.SkinFamilyOnSingleLineCheckBox.UseVisualStyleBackColor = True
@@ -506,7 +506,7 @@ Partial Class DecompileUserControl
 		Me.TextureBmpFilesCheckBox.AutoSize = True
 		Me.TextureBmpFilesCheckBox.Location = New System.Drawing.Point(318, 3)
 		Me.TextureBmpFilesCheckBox.Name = "TextureBmpFilesCheckBox"
-		Me.TextureBmpFilesCheckBox.Size = New System.Drawing.Size(182, 17)
+		Me.TextureBmpFilesCheckBox.Size = New System.Drawing.Size(174, 17)
 		Me.TextureBmpFilesCheckBox.TabIndex = 38
 		Me.TextureBmpFilesCheckBox.Text = "Texture BMP files (GoldSource)"
 		Me.TextureBmpFilesCheckBox.UseVisualStyleBackColor = True
@@ -534,7 +534,7 @@ Partial Class DecompileUserControl
 		Me.Label2.AutoSize = True
 		Me.Label2.Location = New System.Drawing.Point(3, 202)
 		Me.Label2.Name = "Label2"
-		Me.Label2.Size = New System.Drawing.Size(80, 13)
+		Me.Label2.Size = New System.Drawing.Size(74, 13)
 		Me.Label2.TabIndex = 23
 		Me.Label2.Text = "Model format:"
 		Me.Label2.Visible = False
@@ -544,7 +544,7 @@ Partial Class DecompileUserControl
 		Me.IncludeDefineBoneLinesCheckBox.AutoSize = True
 		Me.IncludeDefineBoneLinesCheckBox.Location = New System.Drawing.Point(20, 72)
 		Me.IncludeDefineBoneLinesCheckBox.Name = "IncludeDefineBoneLinesCheckBox"
-		Me.IncludeDefineBoneLinesCheckBox.Size = New System.Drawing.Size(286, 17)
+		Me.IncludeDefineBoneLinesCheckBox.Size = New System.Drawing.Size(268, 17)
 		Me.IncludeDefineBoneLinesCheckBox.TabIndex = 2
 		Me.IncludeDefineBoneLinesCheckBox.Text = "Include $definebone lines (typical for view models)"
 		Me.IncludeDefineBoneLinesCheckBox.UseVisualStyleBackColor = True
@@ -554,7 +554,7 @@ Partial Class DecompileUserControl
 		Me.GroupIntoQciFilesCheckBox.AutoSize = True
 		Me.GroupIntoQciFilesCheckBox.Location = New System.Drawing.Point(80, 3)
 		Me.GroupIntoQciFilesCheckBox.Name = "GroupIntoQciFilesCheckBox"
-		Me.GroupIntoQciFilesCheckBox.Size = New System.Drawing.Size(129, 17)
+		Me.GroupIntoQciFilesCheckBox.Size = New System.Drawing.Size(120, 17)
 		Me.GroupIntoQciFilesCheckBox.TabIndex = 1
 		Me.GroupIntoQciFilesCheckBox.Text = "Group into QCI files"
 		Me.GroupIntoQciFilesCheckBox.UseVisualStyleBackColor = True
@@ -564,7 +564,7 @@ Partial Class DecompileUserControl
 		Me.PlaceInAnimsSubfolderCheckBox.AutoSize = True
 		Me.PlaceInAnimsSubfolderCheckBox.Location = New System.Drawing.Point(335, 141)
 		Me.PlaceInAnimsSubfolderCheckBox.Name = "PlaceInAnimsSubfolderCheckBox"
-		Me.PlaceInAnimsSubfolderCheckBox.Size = New System.Drawing.Size(159, 17)
+		Me.PlaceInAnimsSubfolderCheckBox.Size = New System.Drawing.Size(148, 17)
 		Me.PlaceInAnimsSubfolderCheckBox.TabIndex = 9
 		Me.PlaceInAnimsSubfolderCheckBox.Text = "Place in ""anims"" subfolder"
 		Me.PlaceInAnimsSubfolderCheckBox.UseVisualStyleBackColor = True
@@ -574,7 +574,7 @@ Partial Class DecompileUserControl
 		Me.LodMeshSmdFilesCheckBox.AutoSize = True
 		Me.LodMeshSmdFilesCheckBox.Location = New System.Drawing.Point(318, 26)
 		Me.LodMeshSmdFilesCheckBox.Name = "LodMeshSmdFilesCheckBox"
-		Me.LodMeshSmdFilesCheckBox.Size = New System.Drawing.Size(129, 17)
+		Me.LodMeshSmdFilesCheckBox.Size = New System.Drawing.Size(120, 17)
 		Me.LodMeshSmdFilesCheckBox.TabIndex = 5
 		Me.LodMeshSmdFilesCheckBox.Text = "LOD mesh SMD files"
 		Me.LodMeshSmdFilesCheckBox.UseVisualStyleBackColor = True
@@ -584,7 +584,7 @@ Partial Class DecompileUserControl
 		Me.ProceduralBonesVrdFileCheckBox.AutoSize = True
 		Me.ProceduralBonesVrdFileCheckBox.Location = New System.Drawing.Point(318, 95)
 		Me.ProceduralBonesVrdFileCheckBox.Name = "ProceduralBonesVrdFileCheckBox"
-		Me.ProceduralBonesVrdFileCheckBox.Size = New System.Drawing.Size(160, 17)
+		Me.ProceduralBonesVrdFileCheckBox.Size = New System.Drawing.Size(149, 17)
 		Me.ProceduralBonesVrdFileCheckBox.TabIndex = 10
 		Me.ProceduralBonesVrdFileCheckBox.Text = "Procedural bones VRD file"
 		Me.ProceduralBonesVrdFileCheckBox.UseVisualStyleBackColor = True
@@ -594,7 +594,7 @@ Partial Class DecompileUserControl
 		Me.BoneAnimationSmdFilesCheckBox.AutoSize = True
 		Me.BoneAnimationSmdFilesCheckBox.Location = New System.Drawing.Point(318, 118)
 		Me.BoneAnimationSmdFilesCheckBox.Name = "BoneAnimationSmdFilesCheckBox"
-		Me.BoneAnimationSmdFilesCheckBox.Size = New System.Drawing.Size(159, 17)
+		Me.BoneAnimationSmdFilesCheckBox.Size = New System.Drawing.Size(145, 17)
 		Me.BoneAnimationSmdFilesCheckBox.TabIndex = 8
 		Me.BoneAnimationSmdFilesCheckBox.Text = "Bone animation SMD files"
 		Me.BoneAnimationSmdFilesCheckBox.UseVisualStyleBackColor = True
@@ -604,7 +604,7 @@ Partial Class DecompileUserControl
 		Me.VertexAnimationVtaFileCheckBox.AutoSize = True
 		Me.VertexAnimationVtaFileCheckBox.Location = New System.Drawing.Point(318, 72)
 		Me.VertexAnimationVtaFileCheckBox.Name = "VertexAnimationVtaFileCheckBox"
-		Me.VertexAnimationVtaFileCheckBox.Size = New System.Drawing.Size(192, 17)
+		Me.VertexAnimationVtaFileCheckBox.Size = New System.Drawing.Size(186, 17)
 		Me.VertexAnimationVtaFileCheckBox.TabIndex = 7
 		Me.VertexAnimationVtaFileCheckBox.Text = "Vertex animation VTA file (flexes)"
 		Me.VertexAnimationVtaFileCheckBox.UseVisualStyleBackColor = True
@@ -614,7 +614,7 @@ Partial Class DecompileUserControl
 		Me.PhysicsMeshSmdFileCheckBox.AutoSize = True
 		Me.PhysicsMeshSmdFileCheckBox.Location = New System.Drawing.Point(318, 49)
 		Me.PhysicsMeshSmdFileCheckBox.Name = "PhysicsMeshSmdFileCheckBox"
-		Me.PhysicsMeshSmdFileCheckBox.Size = New System.Drawing.Size(138, 17)
+		Me.PhysicsMeshSmdFileCheckBox.Size = New System.Drawing.Size(130, 17)
 		Me.PhysicsMeshSmdFileCheckBox.TabIndex = 6
 		Me.PhysicsMeshSmdFileCheckBox.Text = "Physics mesh SMD file"
 		Me.PhysicsMeshSmdFileCheckBox.UseVisualStyleBackColor = True
@@ -624,7 +624,7 @@ Partial Class DecompileUserControl
 		Me.ReferenceMeshSmdFileCheckBox.AutoSize = True
 		Me.ReferenceMeshSmdFileCheckBox.Location = New System.Drawing.Point(3, 118)
 		Me.ReferenceMeshSmdFileCheckBox.Name = "ReferenceMeshSmdFileCheckBox"
-		Me.ReferenceMeshSmdFileCheckBox.Size = New System.Drawing.Size(153, 17)
+		Me.ReferenceMeshSmdFileCheckBox.Size = New System.Drawing.Size(145, 17)
 		Me.ReferenceMeshSmdFileCheckBox.TabIndex = 3
 		Me.ReferenceMeshSmdFileCheckBox.Text = "Reference mesh SMD file"
 		Me.ReferenceMeshSmdFileCheckBox.UseVisualStyleBackColor = True
@@ -634,7 +634,7 @@ Partial Class DecompileUserControl
 		Me.QcFileCheckBox.AutoSize = True
 		Me.QcFileCheckBox.Location = New System.Drawing.Point(3, 3)
 		Me.QcFileCheckBox.Name = "QcFileCheckBox"
-		Me.QcFileCheckBox.Size = New System.Drawing.Size(61, 17)
+		Me.QcFileCheckBox.Size = New System.Drawing.Size(58, 17)
 		Me.QcFileCheckBox.TabIndex = 0
 		Me.QcFileCheckBox.Text = "QC file"
 		Me.QcFileCheckBox.UseVisualStyleBackColor = True

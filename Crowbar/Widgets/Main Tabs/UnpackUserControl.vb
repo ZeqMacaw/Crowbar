@@ -239,10 +239,10 @@ Public Class UnpackUserControl
 	'	Me.FindTextInPackageFiles(FindDirection.Next)
 	'End Sub
 
-	'Private Sub PackageTreeView_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles PackageTreeView.AfterSelect
-	'	Me.UpdateSelectionPathText()
-	'	Me.ShowFilesInSelectedFolder()
-	'End Sub
+	Private Sub PackageTreeView_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles PackageTreeView.AfterSelect
+		Me.UpdateSelectionPathText()
+		Me.ShowFilesInSelectedFolder()
+	End Sub
 
 	Private Sub PackageTreeView_ItemDrag(sender As Object, e As ItemDragEventArgs) Handles PackageTreeView.ItemDrag
 		If Me.PackageTreeView.SelectedNode IsNot Nothing Then
@@ -268,8 +268,9 @@ Public Class UnpackUserControl
 		'NOTE: This selects the node before dragging starts; otherwise dragging would use whatever was selected before the mousedown.
 		treeView.SelectedNode = clickedNode
 
-		Me.UpdateSelectionPathText()
-		Me.ShowFilesInSelectedFolder()
+		'Me.UpdateSelectionPathText()
+		'Me.ShowFilesInSelectedFolder()
+		Me.PackageListView.SelectedItems.Clear()
 	End Sub
 
 	''NOTE: Need this because listview item stays selected when selecting its parent folder.
@@ -1138,6 +1139,9 @@ Public Class UnpackUserControl
 		If resourceInfo.IsFolder Then
 			Dim selectedTreeNode As TreeNode
 			selectedTreeNode = Me.PackageTreeView.SelectedNode
+			If selectedTreeNode Is Nothing Then
+				selectedTreeNode = Me.PackageTreeView.Nodes(0)
+			End If
 			Me.PackageTreeView.SelectedNode = selectedTreeNode.Nodes(resourceInfo.Name)
 		Else
 			' Extract the file to the user's temp folder and open it as if it were opened in File Explorer.

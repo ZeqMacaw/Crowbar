@@ -553,6 +553,8 @@ Public Class DownloadUserControl
 				Me.theItemIdText = root.response.publishedfiledetails(0).publishedfileid
 				Me.theItemTimeUpdatedText = root.response.publishedfiledetails(0).time_updated.ToString()
 			End If
+		Catch ex As Exception
+			Dim debug As Integer = 4242
 		Finally
 			If reader IsNot Nothing Then
 				reader.Close()
