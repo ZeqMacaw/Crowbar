@@ -61,8 +61,8 @@ Public Class SteamAppInfoBase
 		'steamAppInfos.Add(anAppInfo)
 		'anAppInfo = New SteamAppInfo("Team Fortress 2")
 		'steamAppInfos.Add(anAppInfo)
-		'anAppInfo = New SteamAppInfo("Zombie Panic! Source")
-		'steamAppInfos.Add(anAppInfo)
+		anAppInfo = New ZombiePanicSourceSteamAppInfo()
+		steamAppInfos.Add(anAppInfo)
 
 		Return steamAppInfos
 	End Function

@@ -961,13 +961,13 @@
     <GameSetup>
       <GameName>Zombie Panic! Source</GameName>
       <GameEngine>Source</GameEngine>
-      <GamePathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2007\zps\gameinfo.txt</GamePathFileName>
-      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2007\hl2.exe</GameAppPathFileName>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Zombie Panic Source\zps\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Zombie Panic Source\zps.exe</GameAppPathFileName>
       <GameAppOptions />
-      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\studiomdl.exe</CompilerPathFileName>
-      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\hlmv.exe</ViewerPathFileName>
-      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\SourceSDK\bin\source2007\bin\hammer.exe</MappingToolPathFileName>
-      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Zombie Panic Source\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Zombie Panic Source\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Zombie Panic Source\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Zombie Panic Source\bin\vpk.exe</PackerPathFileName>
     </GameSetup>
   </GameSetups>
 </AppSettings>

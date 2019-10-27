@@ -59,7 +59,7 @@ Public Class Base_TagsUserControl
 						Me.theWidgets.Add(widget)
 					End If
 				End If
-			ElseIf TypeOf widget Is GroupBox Then
+			ElseIf TypeOf widget Is GroupBox OrElse TypeOf widget Is Panel Then
 				Me.GetAllWidgets(widget.Controls)
 			End If
 		Next
