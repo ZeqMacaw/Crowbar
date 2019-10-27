@@ -604,4 +604,6 @@
 	Public theBoneTransforms As List(Of SourceMdlBoneTransform)
 	Public theLinearBoneTable As SourceMdlLinearBone
 
+	Public theCorrectiveAnimationSmdRelativePathFileNames As List(Of String)
+
 End Class

@@ -2039,6 +2039,7 @@ Public Class SourceQcFile49
 		Me.WriteWeightListCommand()
 		'NOTE: Must write $animation lines before $sequence lines that use them.
 		Try
+			Me.WriteCorrectiveAnimationBlock()
 			Me.WriteAnimationOrDeclareAnimationCommand()
 		Catch ex As Exception
 			Dim debug As Integer = 4242
@@ -2213,6 +2214,36 @@ Public Class SourceQcFile49
 			line = "}"
 			Me.theOutputFileStreamWriter.WriteLine(commentTag + line)
 		Next
+	End Sub
+
+	Private Sub WriteCorrectiveAnimationBlock()
+		If Me.theMdlFileData.theCorrectiveAnimationSmdRelativePathFileNames IsNot Nothing Then
+			Dim line As String = ""
+			Dim animationName As String
+
+			For i As Integer = 0 To Me.theMdlFileData.theCorrectiveAnimationSmdRelativePathFileNames.Count - 1
+				Dim correctiveAnimationSmdRelativePathFileName As String = Me.theMdlFileData.theCorrectiveAnimationSmdRelativePathFileNames(i)
+
+				Me.theOutputFileStreamWriter.WriteLine()
+				'NOTE: The $Animation command must have name first and file name second and on same line as the command.
+				If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+					line = "$Animation"
+				Else
+					line = "$animation"
+				End If
+				animationName = Path.GetFileNameWithoutExtension(correctiveAnimationSmdRelativePathFileName)
+				line += " """
+				line += animationName
+				line += """ """
+				line += correctiveAnimationSmdRelativePathFileName
+				line += """"
+				'NOTE: Opening brace must be on same line as the command.
+				line += " {"
+				Me.theOutputFileStreamWriter.WriteLine(line)
+				line = "}"
+				Me.theOutputFileStreamWriter.WriteLine(line)
+			Next
+		End If
 	End Sub
 
 	Private Sub WriteAnimationOrDeclareAnimationCommand()
@@ -2569,6 +2600,11 @@ Public Class SourceQcFile49
 				line += "loop"
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			End If
+		End If
+
+		If anAnimationDesc.theCorrectiveSubtractAnimationOptionIsUsed Then
+			'NOTE: Using first linked sequence because the corrective animation SMD file should be the same no matter what sequence uses the animation.
+			Me.WriteAnimationOrSequenceSubtractOption(SourceFileNamesModule.CreateCorrectiveAnimationName(anAnimationDesc.theLinkedSequences(0).theName))
 		End If
 
 		Me.WriteCmdListOptions(aSequenceDesc, anAnimationDesc, impliedAnimDesc)
@@ -3034,22 +3070,32 @@ Public Class SourceQcFile49
 			'      "Workaround to Recompile Models that Have Problems Due to Delta Animations"
 			'      https://steamcommunity.com/sharedfiles/filedetails/?id=1774302855
 			'NOTE: [2017-12-15] Added this code to fix the issue of the jigglebones+delta problem when recompiling L4D2 survivor_teenangst_light.
-			Dim anAnimationDesc As SourceMdlAnimationDesc49
-			anAnimationDesc = Me.theMdlFileData.theAnimationDescs(aSequenceDesc.theAnimDescIndexes(0))
-			If anAnimationDesc.theName = "@" + aSequenceDesc.theName Then
-				line = vbTab
-				line += "// This subtract option added by Crowbar to prevent jigglebone problems when delta sequences are recompiled."
-				Me.theOutputFileStreamWriter.WriteLine(line)
-
-				line = vbTab
-				line += "subtract"
-				line += " """
-				line += aSequenceDesc.theName
-				line += """ "
-				line += "0"
-				Me.theOutputFileStreamWriter.WriteLine(line)
+			'Dim anAnimationDesc As SourceMdlAnimationDesc49
+			'anAnimationDesc = Me.theMdlFileData.theAnimationDescs(aSequenceDesc.theAnimDescIndexes(0))
+			'If anAnimationDesc.theName = "@" + aSequenceDesc.theName Then
+			'	Me.WriteSequenceSubtractOption(aSequenceDesc.theName)
+			'End If
+			'======
+			If aSequenceDesc.theCorrectiveSubtractAnimationOptionIsUsed Then
+				Me.WriteAnimationOrSequenceSubtractOption(SourceFileNamesModule.CreateCorrectiveAnimationName(aSequenceDesc.theName))
 			End If
 		End If
+	End Sub
+
+	Private Sub WriteAnimationOrSequenceSubtractOption(ByVal anAnimationOrSequenceName As String)
+		Dim line As String = ""
+
+		line = vbTab
+		line += "// Crowbar writes this subtract option to prevent jigglebone and poseparameter problems when delta sequences are recompiled."
+		Me.theOutputFileStreamWriter.WriteLine(line)
+
+		line = vbTab
+		line += "subtract"
+		line += " """
+		line += anAnimationOrSequenceName
+		line += """ "
+		line += "0"
+		Me.theOutputFileStreamWriter.WriteLine(line)
 	End Sub
 
 	Private Sub WriteSequenceLayerInfo(ByVal aSeqDesc As SourceMdlSequenceDesc)
