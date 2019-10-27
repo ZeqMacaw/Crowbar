@@ -2695,6 +2695,10 @@ Public Class SourceQcFile48
 		Dim line As String = ""
 
 		If anAnimationDesc.theIkRules IsNot Nothing Then
+			Dim endFrameIndex As Integer
+			Dim tempInteger As Integer
+			endFrameIndex = anAnimationDesc.frameCount - 1
+
 			For Each anIkRule As SourceMdlIkRule In anAnimationDesc.theIkRules
 				line = vbTab
 				line += "ikrule"
@@ -2853,6 +2857,64 @@ Public Class SourceQcFile48
 				'	line += " "
 				'	line += "usesource"
 				'End If
+				'======
+				'NOTE: Writing all ikrule options because studiomdl will ignore any that are not used by a type.
+
+				tempInteger = CInt(Math.Round(anIkRule.contact * endFrameIndex))
+				line += " contact "
+				line += tempInteger.ToString(TheApp.InternalNumberFormat)
+
+				line += " fakeorigin "
+				line += anIkRule.pos.x.ToString("0.##", TheApp.InternalNumberFormat)
+				line += " "
+				line += anIkRule.pos.y.ToString("0.##", TheApp.InternalNumberFormat)
+				line += " "
+				line += anIkRule.pos.z.ToString("0.##", TheApp.InternalNumberFormat)
+
+				Dim angles As SourceVector
+				angles = MathModule.ToEulerAngles(anIkRule.q)
+				line += " fakerotate "
+				line += angles.x.ToString("0.##", TheApp.InternalNumberFormat)
+				line += " "
+				line += angles.y.ToString("0.##", TheApp.InternalNumberFormat)
+				line += " "
+				line += angles.z.ToString("0.##", TheApp.InternalNumberFormat)
+
+				line += " floor "
+				line += anIkRule.floor.ToString("0.##", TheApp.InternalNumberFormat)
+
+				line += " height "
+				line += anIkRule.height.ToString("0.##", TheApp.InternalNumberFormat)
+
+				'NOTE: Not using pad because radius option can be used instead.
+				''pRule->radius = verify_atof( token ) / 2.0f;
+				'line += " pad "
+				'line += (anIkRule.radius * 2).ToString("0.##", TheApp.InternalNumberFormat)
+
+				'pRule->radius = verify_atof( token );
+				line += " radius "
+				line += anIkRule.radius.ToString("0.##", TheApp.InternalNumberFormat)
+
+				line += " range "
+				tempInteger = CInt(Math.Round(anIkRule.influenceStart * endFrameIndex))
+				line += tempInteger.ToString(TheApp.InternalNumberFormat)
+				line += " "
+				tempInteger = CInt(Math.Round(anIkRule.influencePeak * endFrameIndex))
+				line += tempInteger.ToString(TheApp.InternalNumberFormat)
+				line += " "
+				tempInteger = CInt(Math.Round(anIkRule.influenceTail * endFrameIndex))
+				line += tempInteger.ToString(TheApp.InternalNumberFormat)
+				line += " "
+				tempInteger = CInt(Math.Round(anIkRule.influenceEnd * endFrameIndex))
+				'NOTE: Limit to max frame. 
+				'      Example model that needs this: Half-Life 2 Deathmatch > "models\combine_soldier_anims.mdl"
+				If tempInteger > endFrameIndex Then
+					tempInteger = endFrameIndex
+				End If
+				line += tempInteger.ToString(TheApp.InternalNumberFormat)
+
+				line += " target "
+				line += anIkRule.slot.ToString(TheApp.InternalNumberFormat)
 
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
@@ -3059,7 +3121,13 @@ Public Class SourceQcFile48
 						influenceStart = (layer.influenceStart * (anAnimationDesc.frameCount - 1)).ToString("0", TheApp.InternalNumberFormat)
 						influencePeak = (layer.influencePeak * (anAnimationDesc.frameCount - 1)).ToString("0", TheApp.InternalNumberFormat)
 						influenceTail = (layer.influenceTail * (anAnimationDesc.frameCount - 1)).ToString("0", TheApp.InternalNumberFormat)
-						influenceEnd = (layer.influenceEnd * (anAnimationDesc.frameCount - 1)).ToString("0", TheApp.InternalNumberFormat)
+						Dim influenceEndValue As Double = layer.influenceEnd * (anAnimationDesc.frameCount - 1)
+						'NOTE: Limit to max frame. 
+						'      Example model that needs this: Half-Life 2 Deathmatch > "models\combine_soldier_anims.mdl"
+						If influenceEndValue > anAnimationDesc.frameCount - 1 Then
+							influenceEndValue = anAnimationDesc.frameCount - 1
+						End If
+						influenceEnd = (influenceEndValue).ToString("0", TheApp.InternalNumberFormat)
 					Else
 						influenceStart = layer.influenceStart.ToString("0.######", TheApp.InternalNumberFormat)
 						influencePeak = layer.influencePeak.ToString("0.######", TheApp.InternalNumberFormat)

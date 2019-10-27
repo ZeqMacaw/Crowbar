@@ -1725,15 +1725,15 @@ Public Class SourceMdlFile48
 					anIkRule.theAttachmentName = ""
 				End If
 
-				'If anIkRule.compressedIkErrorOffset <> 0 Then
-				'	Dim compressedIkErrorsEndOffset As Long
+				If anIkRule.compressedIkErrorOffset <> 0 Then
+					Dim compressedIkErrorsEndOffset As Long
 
-				'	compressedIkErrorsEndOffset = Me.ReadCompressedIkErrors(ikRuleInputFileStreamPosition, ikRuleIndex, anAnimationDesc)
+					compressedIkErrorsEndOffset = Me.ReadCompressedIkErrors(ikRuleInputFileStreamPosition, ikRuleIndex, anAnimationDesc)
 
-				'	'If fileOffsetEndOfIkRuleExtraData < compressedIkErrorsEndOffset Then
-				'	'	fileOffsetEndOfIkRuleExtraData = compressedIkErrorsEndOffset
-				'	'End If
-				'End If
+					'If fileOffsetEndOfIkRuleExtraData < compressedIkErrorsEndOffset Then
+					'	fileOffsetEndOfIkRuleExtraData = compressedIkErrorsEndOffset
+					'End If
+				End If
 
 				If anIkRule.ikErrorOffset <> 0 Then
 					Dim debug As Integer = 4242
@@ -1743,12 +1743,20 @@ Public Class SourceMdlFile48
 			Next
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "anAnimationDesc.theIkRules " + anAnimationDesc.theIkRules.Count.ToString())
+			'Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "anAnimationDesc.theIkRules " + anAnimationDesc.theIkRules.Count.ToString())
+			Dim description As String
+			description = "anAnimationDesc.theIkRules " + anAnimationDesc.theIkRules.Count.ToString()
+			If anAnimationDesc.animBlock > 0 AndAlso anAnimationDesc.animblockIkRuleOffset = 0 Then
+				description += "   [animblockIkRuleOffset = 0]"
+			End If
+			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, description)
 
 			Me.theMdlFileData.theFileSeekLog.LogToEndAndAlignToNextStart(Me.theInputFileReader, fileOffsetEnd, 4, "anAnimationDesc.theIkRules alignment")
 
-			Return Me.theInputFileReader.BaseStream.Position - 1
+			'Return Me.theInputFileReader.BaseStream.Position - 1
 		End If
+
+		Return 0
 	End Function
 
 	Private Function ReadCompressedIkErrors(ByVal ikRuleInputFileStreamPosition As Long, ByVal ikRuleIndex As Integer, ByVal anAnimationDesc As SourceMdlAnimationDesc48) As Long
