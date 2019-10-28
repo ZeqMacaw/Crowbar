@@ -18,7 +18,17 @@ Public Class GarrysModSteamAppInfo
 	End Sub
 
 	Public Overrides Function ProcessFileAfterDownload(ByVal givenPathFileName As String, ByVal bw As BackgroundWorkerEx) As String
-		Dim processedPathFileName As String = Path.ChangeExtension(givenPathFileName, ".gma")
+		Dim processedGivenPathFileName As String = Path.ChangeExtension(givenPathFileName, ".lzma")
+		Try
+			If File.Exists(givenPathFileName) Then
+				File.Move(givenPathFileName, processedGivenPathFileName)
+				bw.ReportProgress(0, "Renamed """ + Path.GetFileName(givenPathFileName) + """ to """ + Path.GetFileName(processedGivenPathFileName) + """" + vbCrLf)
+			End If
+		Catch ex As Exception
+			bw.ReportProgress(0, "Crowbar tried to rename the file """ + Path.GetFileName(givenPathFileName) + """ to """ + Path.GetFileName(processedGivenPathFileName) + """ but Windows gave this message: " + ex.Message)
+		End Try
+
+		Dim processedPathFileName As String = Path.ChangeExtension(processedGivenPathFileName, ".gma")
 
 		bw.ReportProgress(0, "Decompressing downloaded Garry's Mod workshop file into a GMA file." + vbCrLf)
 		Dim lzmaExeProcess As New Process()
@@ -30,7 +40,7 @@ Public Class GarrysModSteamAppInfo
 			'      On Windows 7 and later versions, the length must be less than 32699. 
 			'FROM BAT file: lzma.exe d %1 "%~n1.gma"
 			lzmaExeProcess.StartInfo.FileName = TheApp.LzmaExePathFileName
-			lzmaExeProcess.StartInfo.Arguments = "d """ + givenPathFileName + """ """ + processedPathFileName + """"
+			lzmaExeProcess.StartInfo.Arguments = "d """ + processedGivenPathFileName + """ """ + processedPathFileName + """"
 #If DEBUG Then
 			lzmaExeProcess.StartInfo.CreateNoWindow = False
 #Else
@@ -38,21 +48,20 @@ Public Class GarrysModSteamAppInfo
 #End If
 			lzmaExeProcess.Start()
 			lzmaExeProcess.WaitForExit()
-			lzmaExeProcess.Close()
 		Catch ex As Exception
-			Throw New System.Exception("Crowbar tried to decompress the file """ + givenPathFileName + """ to """ + processedPathFileName + """ but Windows gave this message: " + ex.Message)
+			Throw New System.Exception("Crowbar tried to decompress the file """ + processedGivenPathFileName + """ to """ + processedPathFileName + """ but Windows gave this message: " + ex.Message)
 		Finally
 			lzmaExeProcess.Close()
 			bw.ReportProgress(0, "Decompress done." + vbCrLf)
 		End Try
 
 		Try
-			If File.Exists(givenPathFileName) Then
-				File.Delete(givenPathFileName)
-				bw.ReportProgress(0, "Deleted: """ + givenPathFileName + """" + vbCrLf)
+			If File.Exists(processedGivenPathFileName) Then
+				File.Delete(processedGivenPathFileName)
+				bw.ReportProgress(0, "Deleted: """ + processedGivenPathFileName + """" + vbCrLf)
 			End If
 		Catch ex As Exception
-			bw.ReportProgress(0, "Crowbar tried to delete the file """ + givenPathFileName + """ but Windows gave this message: " + ex.Message)
+			bw.ReportProgress(0, "Crowbar tried to delete the file """ + processedGivenPathFileName + """ but Windows gave this message: " + ex.Message)
 		End Try
 
 		Return processedPathFileName
