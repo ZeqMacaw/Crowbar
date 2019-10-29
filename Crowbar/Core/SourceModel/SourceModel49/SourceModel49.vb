@@ -200,36 +200,38 @@ Public Class SourceModel49
 		Dim writeStatus As String
 
 		Try
-			For sequenceIndex As Integer = 0 To Me.theCorrectiveSubtractSequences.Count - 1
-				aSequenceDesc = Me.theCorrectiveSubtractSequences(sequenceIndex)
+			If Me.theCorrectiveSubtractSequences IsNot Nothing Then
+				For sequenceIndex As Integer = 0 To Me.theCorrectiveSubtractSequences.Count - 1
+					aSequenceDesc = Me.theCorrectiveSubtractSequences(sequenceIndex)
 
-				smdPathFileName = Path.Combine(modelOutputPath, SourceFileNamesModule.CreateCorrectiveAnimationSmdRelativePathFileName(aSequenceDesc.theName, Me.Name))
-				smdPath = FileManager.GetPath(smdPathFileName)
-				If FileManager.PathExistsAfterTryToCreate(smdPath) Then
-					Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, smdPathFileName)
-					'NOTE: Check here in case writing is canceled in the above event.
-					If Me.theWritingIsCanceled Then
-						status = StatusMessage.Canceled
-						Return status
-					ElseIf Me.theWritingSingleFileIsCanceled Then
-						Me.theWritingSingleFileIsCanceled = False
-						Continue For
+					smdPathFileName = Path.Combine(modelOutputPath, SourceFileNamesModule.CreateCorrectiveAnimationSmdRelativePathFileName(aSequenceDesc.theName, Me.Name))
+					smdPath = FileManager.GetPath(smdPathFileName)
+					If FileManager.PathExistsAfterTryToCreate(smdPath) Then
+						Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, smdPathFileName)
+						'NOTE: Check here in case writing is canceled in the above event.
+						If Me.theWritingIsCanceled Then
+							status = StatusMessage.Canceled
+							Return status
+						ElseIf Me.theWritingSingleFileIsCanceled Then
+							Me.theWritingSingleFileIsCanceled = False
+							Continue For
+						End If
+
+						writeStatus = "Failed"
+
+						For j As Integer = 0 To aSequenceDesc.theAnimDescIndexes.Count - 1
+							anAnimationDesc = Me.theMdlFileData.theAnimationDescs(aSequenceDesc.theAnimDescIndexes(j))
+							writeStatus = Me.WriteCorrectiveAnimationSmdFile(smdPathFileName, Nothing, anAnimationDesc)
+						Next
+
+						If writeStatus = "Success" Then
+							Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, smdPathFileName)
+						Else
+							Me.NotifySourceModelProgress(ProgressOptions.WritingFileFailed, writeStatus)
+						End If
 					End If
-
-					writeStatus = "Failed"
-
-					For j As Integer = 0 To aSequenceDesc.theAnimDescIndexes.Count - 1
-						anAnimationDesc = Me.theMdlFileData.theAnimationDescs(aSequenceDesc.theAnimDescIndexes(j))
-						writeStatus = Me.WriteCorrectiveAnimationSmdFile(smdPathFileName, Nothing, anAnimationDesc)
-					Next
-
-					If writeStatus = "Success" Then
-						Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, smdPathFileName)
-					Else
-						Me.NotifySourceModelProgress(ProgressOptions.WritingFileFailed, writeStatus)
-					End If
-				End If
-			Next
+				Next
+			End If
 
 			For anAnimDescIndex As Integer = 0 To Me.theMdlFileData.theAnimationDescs.Count - 1
 				anAnimationDesc = Me.theMdlFileData.theAnimationDescs(anAnimDescIndex)
