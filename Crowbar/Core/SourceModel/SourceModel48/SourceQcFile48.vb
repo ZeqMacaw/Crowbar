@@ -2897,25 +2897,44 @@ Public Class SourceQcFile48
 
 				line += " range "
 				tempInteger = CInt(Math.Round(anIkRule.influenceStart * endFrameIndex))
+				'NOTE: Subtract max frame from value if over max frame. 
+				If tempInteger > endFrameIndex Then
+					tempInteger -= endFrameIndex
+				End If
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 				line += " "
 				tempInteger = CInt(Math.Round(anIkRule.influencePeak * endFrameIndex))
+				'NOTE: Subtract max frame from value if over max frame. 
+				'      Example model that needs this: "h3_hunter.mdl" (Compiled from source files from someone on Discord.)
+				If tempInteger > endFrameIndex Then
+					tempInteger -= endFrameIndex
+				End If
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 				line += " "
 				tempInteger = CInt(Math.Round(anIkRule.influenceTail * endFrameIndex))
+				'NOTE: Subtract max frame from value if over max frame. 
+				'      Example model that needs this: "h3_hunter.mdl" (Compiled from source files from someone on Discord.)
+				If tempInteger > endFrameIndex Then
+					tempInteger -= endFrameIndex
+				End If
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 				line += " "
 				tempInteger = CInt(Math.Round(anIkRule.influenceEnd * endFrameIndex))
-				'NOTE: Limit to max frame. 
+				'NOTE: Subtract max frame from value if over max frame. 
 				'      Example model that needs this: Half-Life 2 Deathmatch > "models\combine_soldier_anims.mdl"
 				If tempInteger > endFrameIndex Then
-					tempInteger = endFrameIndex
+					tempInteger -= endFrameIndex
 				End If
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 
 				line += " target "
 				line += anIkRule.slot.ToString(TheApp.InternalNumberFormat)
 
+				'TEST: 
+				'      Example model that needs this: "h3_hunter.mdl" (Compiled from source files from someone on Discord.)
+				If aSequenceDesc IsNot Nothing AndAlso anAnimationDesc.theMovements IsNot Nothing AndAlso anAnimationDesc.theMovements.Count > 0 Then
+					line += " usesequence "
+				End If
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
 		End If
@@ -2976,7 +2995,7 @@ Public Class SourceQcFile48
 		'End If
 
 		'TEST: [2017-12-24]
-		If anAnimationDesc.theMovements IsNot Nothing AndAlso anAnimationDesc.theMovements.Count > 0 Then
+		If  anAnimationDesc.theMovements IsNot Nothing AndAlso anAnimationDesc.theMovements.Count > 0 Then
 			For Each aMovement As SourceMdlMovement In anAnimationDesc.theMovements
 				line = vbTab
 				line += "walkframe"
