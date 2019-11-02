@@ -2861,6 +2861,10 @@ Public Class SourceQcFile48
 				'NOTE: Writing all ikrule options because studiomdl will ignore any that are not used by a type.
 
 				tempInteger = CInt(Math.Round(anIkRule.contact * endFrameIndex))
+				'NOTE: Subtract max frame from value if over max frame. 
+				If tempInteger > endFrameIndex Then
+					tempInteger -= endFrameIndex
+				End If
 				line += " contact "
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 
