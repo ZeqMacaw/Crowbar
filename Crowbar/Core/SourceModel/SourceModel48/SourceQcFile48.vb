@@ -2995,7 +2995,7 @@ Public Class SourceQcFile48
 		'End If
 
 		'TEST: [2017-12-24]
-		If  anAnimationDesc.theMovements IsNot Nothing AndAlso anAnimationDesc.theMovements.Count > 0 Then
+		If anAnimationDesc.theMovements IsNot Nothing AndAlso anAnimationDesc.theMovements.Count > 0 Then
 			For Each aMovement As SourceMdlMovement In anAnimationDesc.theMovements
 				line = vbTab
 				line += "walkframe"
