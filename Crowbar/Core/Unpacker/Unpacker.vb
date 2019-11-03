@@ -1049,6 +1049,15 @@ Public Class Unpacker
 
 	'Private Sub UnpackEntryDatasToFiles(ByVal vpkFileData As BasePackageFileData, ByVal vpkPathFileName As String, ByVal entries As List(Of VpkDirectoryEntry), ByVal extractPath As String)
 	Private Sub UnpackEntryDatasToFiles(ByVal vpkFileData As BasePackageFileData, ByVal vpkPathFileName As String, ByVal entries As List(Of BasePackageDirectoryEntry))
+		' Example: [03-Nov-2019] Left 4 Dead main multi-file VPK does not have a "pak01_048.vpk" file.
+		If Not File.Exists(vpkPathFileName) Then
+			Me.UpdateProgress(2, "WARNING: Package file not found - """ + vpkPathFileName + """. The following files are indicated as being in the missing package file: ")
+			For Each entry As BasePackageDirectoryEntry In entries
+				Me.UpdateProgress(3, """" + entry.thePathFileName + """")
+			Next
+			Exit Sub
+		End If
+
 		Dim inputFileStream As FileStream = Nothing
 		Me.theInputFileReader = Nothing
 
@@ -1124,12 +1133,12 @@ Public Class Unpacker
 			End If
 
 			If entry.thePathFileName.StartsWith("<") Then
-				Me.UpdateProgress(2, "Extracted: """ + entry.thePathFileName + """ as """ + entry.theRealPathFileName + """")
+				Me.UpdateProgress(2, "Unpacked: """ + entry.thePathFileName + """ as """ + entry.theRealPathFileName + """")
 			Else
-				Me.UpdateProgress(2, "Extracted: " + entry.thePathFileName)
+				Me.UpdateProgress(2, "Unpacked: " + entry.thePathFileName)
 			End If
 		Else
-			Me.UpdateProgress(2, "WARNING: Not extracted: " + entry.thePathFileName)
+			Me.UpdateProgress(2, "WARNING: Not unpacked: " + entry.thePathFileName)
 		End If
 	End Sub
 
