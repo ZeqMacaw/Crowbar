@@ -55,10 +55,10 @@ Partial Class MainForm
 		Me.AboutTabPage = New System.Windows.Forms.TabPage()
 		Me.AboutUserControl1 = New Crowbar.AboutUserControl()
 		Me.UpdateTabPage = New System.Windows.Forms.TabPage()
+		Me.UpdateUserControl1 = New Crowbar.UpdateUserControl()
 		Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
 		Me.AboutCrowbarToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
 		Me.MainToolTip = New System.Windows.Forms.ToolTip(Me.components)
-		Me.UpdateUserControl1 = New Crowbar.UpdateUserControl()
 		Me.MainTabControl.SuspendLayout()
 		Me.SetUpGamesTabPage.SuspendLayout()
 		Me.DownloadTabPage.SuspendLayout()
@@ -279,6 +279,11 @@ Partial Class MainForm
 		Me.UpdateTabPage.Name = "UpdateTabPage"
 		Me.UpdateTabPage.UseVisualStyleBackColor = True
 		'
+		'UpdateUserControl1
+		'
+		resources.ApplyResources(Me.UpdateUserControl1, "UpdateUserControl1")
+		Me.UpdateUserControl1.Name = "UpdateUserControl1"
+		'
 		'ToolStripMenuItem2
 		'
 		Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
@@ -288,11 +293,6 @@ Partial Class MainForm
 		'
 		Me.AboutCrowbarToolStripMenuItem2.Name = "AboutCrowbarToolStripMenuItem2"
 		resources.ApplyResources(Me.AboutCrowbarToolStripMenuItem2, "AboutCrowbarToolStripMenuItem2")
-		'
-		'UpdateUserControl1
-		'
-		resources.ApplyResources(Me.UpdateUserControl1, "UpdateUserControl1")
-		Me.UpdateUserControl1.Name = "UpdateUserControl1"
 		'
 		'MainForm
 		'
