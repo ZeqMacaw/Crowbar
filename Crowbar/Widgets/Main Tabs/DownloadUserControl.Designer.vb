@@ -5,10 +5,19 @@ Partial Class DownloadUserControl
 	'Required by the Windows Form Designer
 	Private components As System.ComponentModel.IContainer
 
-    'NOTE: The following procedure is required by the Windows Form Designer
-    'It can be modified using the Windows Form Designer.  
-    'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+	'Form overrides dispose to clean up the component list.
+	<System.Diagnostics.DebuggerNonUserCode()>
+	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
+		If disposing AndAlso components IsNot Nothing Then
+			components.Dispose()
+		End If
+		MyBase.Dispose(disposing)
+	End Sub
+
+	'NOTE: The following procedure is required by the Windows Form Designer
+	'It can be modified using the Windows Form Designer.  
+	'Do not modify it using the code editor.
+	<System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
 		Me.components = New System.ComponentModel.Container()
 		Me.ItemIdTextBox = New Crowbar.TextBoxEx()
@@ -21,6 +30,7 @@ Partial Class DownloadUserControl
 		Me.GotoOutputPathButton = New System.Windows.Forms.Button()
 		Me.BrowseForOutputPathButton = New System.Windows.Forms.Button()
 		Me.OptionsGroupBox = New Crowbar.GroupBoxEx()
+		Me.ConvertToExpectedFileOrFolderCheckBox = New Crowbar.CheckBoxEx()
 		Me.OptionsUseDefaultsButton = New System.Windows.Forms.Button()
 		Me.ReplaceSpacesWithUnderscoresCheckBox = New Crowbar.CheckBoxEx()
 		Me.AppendDateTimeCheckBox = New Crowbar.CheckBoxEx()
@@ -35,6 +45,7 @@ Partial Class DownloadUserControl
 		Me.DownloadedItemTextBox = New Crowbar.TextBoxEx()
 		Me.Label1 = New System.Windows.Forms.Label()
 		Me.DownloadedItemButton = New System.Windows.Forms.Button()
+		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
 		Me.OptionsGroupBox.SuspendLayout()
 		Me.SuspendLayout()
 		'
@@ -132,6 +143,7 @@ Partial Class DownloadUserControl
 		'
 		Me.OptionsGroupBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.OptionsGroupBox.Controls.Add(Me.ConvertToExpectedFileOrFolderCheckBox)
 		Me.OptionsGroupBox.Controls.Add(Me.OptionsUseDefaultsButton)
 		Me.OptionsGroupBox.Controls.Add(Me.ReplaceSpacesWithUnderscoresCheckBox)
 		Me.OptionsGroupBox.Controls.Add(Me.AppendDateTimeCheckBox)
@@ -147,6 +159,18 @@ Partial Class DownloadUserControl
 		Me.OptionsGroupBox.TabIndex = 9
 		Me.OptionsGroupBox.TabStop = False
 		Me.OptionsGroupBox.Text = "Output File Name Options"
+		'
+		'ConvertToExpectedFileOrFolderCheckBox
+		'
+		Me.ConvertToExpectedFileOrFolderCheckBox.AutoSize = True
+		Me.ConvertToExpectedFileOrFolderCheckBox.IsReadOnly = False
+		Me.ConvertToExpectedFileOrFolderCheckBox.Location = New System.Drawing.Point(230, 20)
+		Me.ConvertToExpectedFileOrFolderCheckBox.Name = "ConvertToExpectedFileOrFolderCheckBox"
+		Me.ConvertToExpectedFileOrFolderCheckBox.Size = New System.Drawing.Size(187, 17)
+		Me.ConvertToExpectedFileOrFolderCheckBox.TabIndex = 7
+		Me.ConvertToExpectedFileOrFolderCheckBox.Text = "Convert to expected file or folder"
+		Me.ToolTip1.SetToolTip(Me.ConvertToExpectedFileOrFolderCheckBox, "Example: Garry's Mod uses compressed GMA (LZMA) instead of GMA.")
+		Me.ConvertToExpectedFileOrFolderCheckBox.UseVisualStyleBackColor = True
 		'
 		'OptionsUseDefaultsButton
 		'
@@ -348,4 +372,6 @@ Partial Class DownloadUserControl
 	Friend WithEvents Label1 As Label
 	Friend WithEvents DownloadedItemButton As Button
 	Friend WithEvents ExampleOutputFileNameTextBox As TextBoxEx
+	Friend WithEvents ConvertToExpectedFileOrFolderCheckBox As CheckBoxEx
+	Friend WithEvents ToolTip1 As ToolTip
 End Class

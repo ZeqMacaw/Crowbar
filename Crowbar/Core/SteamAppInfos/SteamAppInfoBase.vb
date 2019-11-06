@@ -61,8 +61,8 @@ Public Class SteamAppInfoBase
 		'steamAppInfos.Add(anAppInfo)
 		'anAppInfo = New SteamAppInfo("Team Fortress 2")
 		'steamAppInfos.Add(anAppInfo)
-		'anAppInfo = New SteamAppInfo("Zombie Panic! Source")
-		'steamAppInfos.Add(anAppInfo)
+		anAppInfo = New ZombiePanicSourceSteamAppInfo()
+		steamAppInfos.Add(anAppInfo)
 
 		Return steamAppInfos
 	End Function
@@ -73,7 +73,7 @@ Public Class SteamAppInfoBase
 		Me.ContentFileExtensionsAndDescriptions = New SortedList(Of String, String)()
 	End Sub
 
-	Public Overridable Function ProcessFileAfterDownload(ByVal givenPathFileName As String) As String
+	Public Overridable Function ProcessFileAfterDownload(ByVal givenPathFileName As String, ByVal bw As BackgroundWorkerEx) As String
 		Dim processedPathFileName As String = givenPathFileName
 		Return processedPathFileName
 	End Function
