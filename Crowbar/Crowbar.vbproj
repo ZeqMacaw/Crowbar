@@ -529,6 +529,7 @@
     </Compile>
     <Compile Include="Core\Unpacker\PackageResourceFileNameInfo.vb" />
     <Compile Include="Core\Unpacker\PackagePathFileNameInfo.vb" />
+    <Compile Include="Core\Updater\Updater.vb" />
     <Compile Include="Core\Viewer\Viewer.vb">
       <SubType>Component</SubType>
     </Compile>
@@ -707,6 +708,12 @@
       <DependentUpon>PatchUserControl.vb</DependentUpon>
     </Compile>
     <Compile Include="Widgets\Main Tabs\PatchUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Widgets\Main Tabs\UpdateUserControl.Designer.vb">
+      <DependentUpon>UpdateUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Widgets\Main Tabs\UpdateUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Widgets\Main Tabs\ViewUserControl.Designer.vb">
@@ -899,6 +906,9 @@
       <DependentUpon>PatchUserControl.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\Main Tabs\UpdateUserControl.resx">
+      <DependentUpon>UpdateUserControl.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Widgets\Main Tabs\ViewUserControl.resx">
       <DependentUpon>ViewUserControl.vb</DependentUpon>
       <SubType>Designer</SubType>
@@ -968,6 +978,8 @@
     <Content Include="Resources\WordWrap.png" />
     <None Include="Resources\WordWrapOff.png" />
     <None Include="Resources\CrowbarSteamPipe.exe" />
+    <Content Include="Resources\7zr.exe" />
+    <Content Include="Resources\CrowbarLauncher.exe" />
     <Content Include="Resources\Steamworks.NET.dll" />
     <Content Include="Resources\steam_api.dll" />
     <None Include="Resources\Crowbar Settings.xml" />

@@ -173,9 +173,6 @@ Public Class App
 		Dim crowbarSteamPipePathFileName As String = Path.Combine(Me.GetCustomDataPath(), App.CrowbarSteamPipeFileName)
 		Me.WriteResourceToFileIfDifferent(My.Resources.CrowbarSteamPipe, crowbarSteamPipePathFileName)
 
-		'Me.SevenzaExePathFileName = Path.Combine(Me.GetCustomDataPath(), App.theSevenzaEXEFileName)
-		'Me.WriteResourceToFileIfDifferent(My.Resources.Sevenza, Me.SevenzaExePathFileName)
-
 		Me.LzmaExePathFileName = Path.Combine(Me.GetCustomDataPath(), App.theLzmaExeFileName)
 		Me.WriteResourceToFileIfDifferent(My.Resources.lzma, Me.LzmaExePathFileName)
 
@@ -191,6 +188,14 @@ Public Class App
 			Exit Sub
 		Finally
 		End Try
+	End Sub
+
+	Public Sub WriteUpdaterFiles()
+		Me.SevenZrExePathFileName = Path.Combine(Me.GetCustomDataPath(), App.theSevenZrEXEFileName)
+		Me.WriteResourceToFileIfDifferent(My.Resources.SevenZr, Me.SevenZrExePathFileName)
+
+		Me.CrowbarLauncherExePathFileName = Path.Combine(Me.GetCustomDataPath(), App.theCrowbarLauncherEXEFileName)
+		Me.WriteResourceToFileIfDifferent(My.Resources.CrowbarLauncher, Me.CrowbarLauncherExePathFileName)
 	End Sub
 
 	Public Sub WriteSteamAppIdFile(ByVal appID As UInteger)
@@ -403,9 +408,11 @@ Public Class App
 
 	Private Const theSteamAPIDLLFileName As String = "steam_api.dll"
 	Private Const theSteamworksDotNetDLLFileName As String = "Steamworks.NET.dll"
-	'Private Const theSevenzaEXEFileName As String = "7za.exe"
+	Private Const theSevenZrEXEFileName As String = "7zr.exe"
+	Private Const theCrowbarLauncherEXEFileName As String = "CrowbarLauncher.exe"
 	Private Const theLzmaExeFileName As String = "lzma.exe"
-	'Public SevenzaExePathFileName As String
+	Public SevenZrExePathFileName As String
+	Public CrowbarLauncherExePathFileName As String
 	Public LzmaExePathFileName As String
 	Public SteamAppInfos As List(Of SteamAppInfoBase)
 

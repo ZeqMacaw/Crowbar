@@ -200,6 +200,16 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Byte[].
         '''</summary>
+        Friend ReadOnly Property CrowbarLauncher() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("CrowbarLauncher", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
         Friend ReadOnly Property CrowbarSteamPipe() As Byte()
             Get
                 Dim obj As Object = ResourceManager.GetObject("CrowbarSteamPipe", resourceCulture)
@@ -373,6 +383,16 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("Refresh", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend ReadOnly Property SevenZr() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("SevenZr", resourceCulture)
+                Return CType(obj,Byte())
             End Get
         End Property
         
