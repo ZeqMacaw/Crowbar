@@ -164,7 +164,8 @@ Public Class Updater
 		Me.theDownloadFileCompletedHandler = download_DownloadFileCompleted
 		Me.theLocalPath = localPath
 		Me.theDownloadTaskIsEnabled = True
-		Me.theCheckForUpdate_RunWorkerCompleted = checkForUpdate_RunWorkerCompleted
+		Me.theUpdateTaskIsEnabled = False
+		Me.theCheckForUpdateRunWorkerCompletedHandler = checkForUpdate_RunWorkerCompleted
 		Me.theCheckForUpdateBackgroundWorker = BackgroundWorkerEx.RunBackgroundWorker(Me.theCheckForUpdateBackgroundWorker, AddressOf Me.CheckForUpdate_DoWork, checkForUpdate_ProgressChanged, AddressOf Me.CheckForUpdate_RunWorkerCompleted, Nothing)
 	End Sub
 
@@ -176,16 +177,14 @@ Public Class Updater
 
 	Private Sub DownloadAfterCheckForUpdate()
 		Dim localPathFileName As String = Path.Combine(Me.theLocalPath, Me.theLocalFileName)
-		If File.Exists(localPathFileName) Then
-			'TODO: rename the download
-		End If
+		localPathFileName = FileManager.GetTestedPathFileName(localPathFileName)
 
-		'Dim uri As Uri = New Uri("https://github.com/ZeqMacaw/test/blob/master/update.xml")
 		Dim remoteFileUri As New Uri(Me.theRemoteFileLink)
 
 		Me.theWebClient = New WebClient()
 		AddHandler Me.theWebClient.DownloadProgressChanged, Me.theDownloadProgressChangedHandler
-		AddHandler Me.theWebClient.DownloadFileCompleted, Me.theDownloadFileCompletedHandler
+		'AddHandler Me.theWebClient.DownloadFileCompleted, Me.theDownloadFileCompletedHandler
+		AddHandler Me.theWebClient.DownloadFileCompleted, AddressOf Me.Download_DownloadFileCompleted
 		Me.theWebClient.DownloadFileAsync(remoteFileUri, localPathFileName, localPathFileName)
 	End Sub
 
@@ -193,14 +192,23 @@ Public Class Updater
 
 #Region "Update"
 
-	Public Sub Update(ByVal checkForUpdate_ProgressChanged As ProgressChangedEventHandler, ByVal checkForUpdate_RunWorkerCompleted As RunWorkerCompletedEventHandler, ByVal given_ProgressChanged As ProgressChangedEventHandler, ByVal given_RunWorkerCompleted As RunWorkerCompletedEventHandler)
+	Public Sub Update(ByVal checkForUpdate_ProgressChanged As ProgressChangedEventHandler, ByVal checkForUpdate_RunWorkerCompleted As RunWorkerCompletedEventHandler, ByVal download_DownloadProgressChanged As DownloadProgressChangedEventHandler, ByVal download_DownloadFileCompleted As AsyncCompletedEventHandler, ByVal localPath As String, ByVal update_ProgressChanged As ProgressChangedEventHandler, ByVal update_RunWorkerCompleted As RunWorkerCompletedEventHandler)
+		Me.theDownloadProgressChangedHandler = download_DownloadProgressChanged
+		Me.theDownloadFileCompletedHandler = download_DownloadFileCompleted
+		Me.theUpdateProgressChangedHandler = update_ProgressChanged
+		Me.theUpdateRunWorkerCompletedHandler = update_RunWorkerCompleted
+		Me.theLocalPath = localPath
 		Me.theDownloadTaskIsEnabled = True
-		'Me.CheckForUpdate(checkForUpdate_ProgressChanged, checkForUpdate_RunWorkerCompleted)
-
-		Me.theUpdateBackgroundWorker = BackgroundWorkerEx.RunBackgroundWorker(Me.theUpdateBackgroundWorker, AddressOf Me.Update_DoWork, given_ProgressChanged, given_RunWorkerCompleted, Nothing)
+		Me.theUpdateTaskIsEnabled = True
+		Me.theCheckForUpdateRunWorkerCompletedHandler = checkForUpdate_RunWorkerCompleted
+		Me.theCheckForUpdateBackgroundWorker = BackgroundWorkerEx.RunBackgroundWorker(Me.theCheckForUpdateBackgroundWorker, AddressOf Me.CheckForUpdate_DoWork, checkForUpdate_ProgressChanged, AddressOf Me.CheckForUpdate_RunWorkerCompleted, Nothing)
 	End Sub
 
 	Private theUpdateBackgroundWorker As BackgroundWorkerEx
+
+	Private Sub UpdateAfterDownload()
+		Me.theUpdateBackgroundWorker = BackgroundWorkerEx.RunBackgroundWorker(Me.theUpdateBackgroundWorker, AddressOf Me.Update_DoWork, Me.theUpdateProgressChangedHandler, Me.theUpdateRunWorkerCompletedHandler, Nothing)
+	End Sub
 
 	'NOTE: This is run in a background thread.
 	Private Sub Update_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs)
@@ -212,7 +220,6 @@ Public Class Updater
 		Dim appDataPath As String = FileManager.GetPath(TheApp.SevenZrExePathFileName)
 		Directory.SetCurrentDirectory(appDataPath)
 
-		'TODO: Decompress, via 7zr.exe, Crowbar.7z file into appdata folder.
 		Dim compressedNewCrowbarFileName As String = "Crowbar_2019-10-16_0.64.7z"
 		Dim sevenZrExeProcess As New Process()
 		Try
@@ -279,7 +286,21 @@ Public Class Updater
 				Me.DownloadAfterCheckForUpdate()
 			End If
 		End If
-		Me.theCheckForUpdate_RunWorkerCompleted(Me, e)
+		Me.theCheckForUpdateRunWorkerCompletedHandler(sender, e)
+	End Sub
+
+	Private Sub Download_DownloadFileCompleted(ByVal sender As Object, ByVal e As AsyncCompletedEventArgs)
+		If e.Cancelled Then
+		Else
+			If Me.theUpdateTaskIsEnabled Then
+				Dim client As WebClient = CType(sender, WebClient)
+				RemoveHandler client.DownloadFileCompleted, AddressOf Me.Download_DownloadFileCompleted
+				client = Nothing
+
+				Me.UpdateAfterDownload()
+			End If
+		End If
+		Me.theDownloadFileCompletedHandler(sender, e)
 	End Sub
 
 #End Region
@@ -291,13 +312,16 @@ Public Class Updater
 #Region "Data"
 
 	Private theWebClient As WebClient
-	Private theCheckForUpdate_RunWorkerCompleted As RunWorkerCompletedEventHandler
+	Private theCheckForUpdateRunWorkerCompletedHandler As RunWorkerCompletedEventHandler
 	Private theDownloadProgressChangedHandler As DownloadProgressChangedEventHandler
 	Private theDownloadFileCompletedHandler As AsyncCompletedEventHandler
 	Private theDownloadTaskIsEnabled As Boolean
 	Private theRemoteFileLink As String
 	Private theLocalPath As String
 	Private theLocalFileName As String
+	Private theUpdateProgressChangedHandler As ProgressChangedEventHandler
+	Private theUpdateRunWorkerCompletedHandler As RunWorkerCompletedEventHandler
+	Private theUpdateTaskIsEnabled As Boolean
 
 #End Region
 

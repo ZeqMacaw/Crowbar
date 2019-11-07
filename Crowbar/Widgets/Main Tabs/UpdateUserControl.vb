@@ -238,7 +238,7 @@ Public Class UpdateUserControl
 	Private Sub UpdateApp()
 		Me.UpdateCommandWidgets(True)
 		Me.CancelUpdateButton.Enabled = True
-		Me.theUpdater.Update(AddressOf CheckForUpdate_ProgressChanged, AddressOf CheckForUpdate_RunWorkerCompleted, AddressOf Update_ProgressChanged, AddressOf Update_RunWorkerCompleted)
+		Me.theUpdater.Update(AddressOf CheckForUpdate_ProgressChanged, AddressOf CheckForUpdate_RunWorkerCompleted, AddressOf Download_DownloadProgressChanged, AddressOf Download_DownloadFileCompleted, Me.DownloadFolderTextBox.Text, AddressOf Update_ProgressChanged, AddressOf Update_RunWorkerCompleted)
 	End Sub
 
 	Private Sub CancelUpdate()

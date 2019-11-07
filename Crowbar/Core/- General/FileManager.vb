@@ -464,6 +464,28 @@ Public Class FileManager
 		Return cleanPathFileName
 	End Function
 
+	Public Shared Function GetTestedPathFileName(ByVal iPathFileName As String) As String
+		Dim testedPathFileName As String = iPathFileName
+		Dim pathFileNameWithoutExtension As String = FileManager.GetPathFileNameWithoutExtension(iPathFileName)
+		Dim extension As String = Path.GetExtension(iPathFileName)
+		Dim number As Integer = 1
+		While File.Exists(testedPathFileName)
+			testedPathFileName = pathFileNameWithoutExtension + "(" + number.ToString() + ")" + extension
+			number += 1
+		End While
+		Return testedPathFileName
+	End Function
+
+	Public Shared Function GetTestedPath(ByVal iPath As String) As String
+		Dim testedPathFileName As String = iPath
+		Dim number As Integer = 1
+		While Directory.Exists(testedPathFileName)
+			testedPathFileName = iPath + "(" + number.ToString() + ")"
+			number += 1
+		End While
+		Return testedPathFileName
+	End Function
+
 	Public Shared Function GetLongestExtantPath(ByVal iPath As String, Optional ByRef topNonextantPath As String = "") As String
 		If iPath <> "" AndAlso Not Directory.Exists(iPath) Then
 			topNonextantPath = iPath
