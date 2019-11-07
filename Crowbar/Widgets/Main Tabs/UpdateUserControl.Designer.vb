@@ -27,7 +27,7 @@ Partial Class UpdateUserControl
 		Me.CheckForUpdateButton = New System.Windows.Forms.Button()
 		Me.DownloadButton = New System.Windows.Forms.Button()
 		Me.CheckBox1 = New System.Windows.Forms.CheckBox()
-		Me.CheckBox2 = New System.Windows.Forms.CheckBox()
+		Me.UpdateToNewPathCheckBox = New System.Windows.Forms.CheckBox()
 		Me.ChangelogTextBox = New Crowbar.RichTextBoxEx()
 		Me.GroupBoxEx1 = New Crowbar.GroupBoxEx()
 		Me.CancelUpdateButton = New System.Windows.Forms.Button()
@@ -88,15 +88,15 @@ Partial Class UpdateUserControl
 		Me.CheckBox1.Text = "Copy settings from current version to new version"
 		Me.CheckBox1.UseVisualStyleBackColor = True
 		'
-		'CheckBox2
+		'UpdateToNewPathCheckBox
 		'
-		Me.CheckBox2.AutoSize = True
-		Me.CheckBox2.Location = New System.Drawing.Point(6, 20)
-		Me.CheckBox2.Name = "CheckBox2"
-		Me.CheckBox2.Size = New System.Drawing.Size(242, 17)
-		Me.CheckBox2.TabIndex = 4
-		Me.CheckBox2.Text = "Update to new folder (keep current version):"
-		Me.CheckBox2.UseVisualStyleBackColor = True
+		Me.UpdateToNewPathCheckBox.AutoSize = True
+		Me.UpdateToNewPathCheckBox.Location = New System.Drawing.Point(6, 20)
+		Me.UpdateToNewPathCheckBox.Name = "UpdateToNewPathCheckBox"
+		Me.UpdateToNewPathCheckBox.Size = New System.Drawing.Size(242, 17)
+		Me.UpdateToNewPathCheckBox.TabIndex = 4
+		Me.UpdateToNewPathCheckBox.Text = "Update to new folder (keep current version):"
+		Me.UpdateToNewPathCheckBox.UseVisualStyleBackColor = True
 		'
 		'ChangelogTextBox
 		'
@@ -119,7 +119,7 @@ Partial Class UpdateUserControl
 		Me.GroupBoxEx1.Controls.Add(Me.UpdateFolderTextBox)
 		Me.GroupBoxEx1.Controls.Add(Me.UpdateProgressBarEx)
 		Me.GroupBoxEx1.Controls.Add(Me.UpdateButton)
-		Me.GroupBoxEx1.Controls.Add(Me.CheckBox2)
+		Me.GroupBoxEx1.Controls.Add(Me.UpdateToNewPathCheckBox)
 		Me.GroupBoxEx1.Controls.Add(Me.CheckBox1)
 		Me.GroupBoxEx1.IsReadOnly = False
 		Me.GroupBoxEx1.Location = New System.Drawing.Point(3, 438)
@@ -314,7 +314,7 @@ Partial Class UpdateUserControl
 	Friend WithEvents CheckForUpdateButton As Button
 	Friend WithEvents DownloadButton As Button
 	Friend WithEvents CheckBox1 As CheckBox
-	Friend WithEvents CheckBox2 As CheckBox
+	Friend WithEvents UpdateToNewPathCheckBox As CheckBox
 	Friend WithEvents ChangelogTextBox As RichTextBoxEx
 	Friend WithEvents GroupBoxEx1 As GroupBoxEx
 	Friend WithEvents UpdateProgressBarEx As ProgressBarEx

@@ -93,7 +93,9 @@ Public Class AppSettings
 		Me.SetDefaultOptionsContextMenuOptions()
 
 		Me.theUpdateDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+		Me.theUpdateUpdateToNewPathIsChecked = False
 		Me.theUpdateUpdateDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+		Me.theUpdateCopySettingsIsChecked = True
 
 		'Me.Init()
 	End Sub
@@ -1514,6 +1516,16 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	Public Property UpdateUpdateToNewPathIsChecked() As Boolean
+		Get
+			Return Me.theUpdateUpdateToNewPathIsChecked
+		End Get
+		Set(ByVal value As Boolean)
+			Me.theUpdateUpdateToNewPathIsChecked = value
+			NotifyPropertyChanged("UpdateUpdateToNewPathIsChecked")
+		End Set
+	End Property
+
 	Public Property UpdateUpdateDownloadPath() As String
 		Get
 			Return Me.theUpdateUpdateDownloadPath
@@ -1521,6 +1533,16 @@ Public Class AppSettings
 		Set(ByVal value As String)
 			Me.theUpdateUpdateDownloadPath = value
 			NotifyPropertyChanged("UpdateUpdateDownloadPath")
+		End Set
+	End Property
+
+	Public Property UpdateCopySettingsIsChecked() As Boolean
+		Get
+			Return Me.theUpdateCopySettingsIsChecked
+		End Get
+		Set(ByVal value As Boolean)
+			Me.theUpdateCopySettingsIsChecked = value
+			NotifyPropertyChanged("UpdateCopySettingsIsChecked")
 		End Set
 	End Property
 
@@ -1892,7 +1914,9 @@ Public Class AppSettings
 	' Update tab
 
 	Private theUpdateDownloadPath As String
+	Private theUpdateUpdateToNewPathIsChecked As Boolean
 	Private theUpdateUpdateDownloadPath As String
+	Private theUpdateCopySettingsIsChecked As Boolean
 
 #End Region
 

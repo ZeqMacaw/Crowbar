@@ -176,8 +176,8 @@ Public Class Updater
 	End Sub
 
 	Private Sub DownloadAfterCheckForUpdate()
-		Dim localPathFileName As String = Path.Combine(Me.theLocalPath, Me.theLocalFileName)
-		localPathFileName = FileManager.GetTestedPathFileName(localPathFileName)
+		Me.theLocalPathFileName = Path.Combine(Me.theLocalPath, Me.theLocalFileName)
+		Me.theLocalPathFileName = FileManager.GetTestedPathFileName(Me.theLocalPathFileName)
 
 		Dim remoteFileUri As New Uri(Me.theRemoteFileLink)
 
@@ -185,7 +185,7 @@ Public Class Updater
 		AddHandler Me.theWebClient.DownloadProgressChanged, Me.theDownloadProgressChangedHandler
 		'AddHandler Me.theWebClient.DownloadFileCompleted, Me.theDownloadFileCompletedHandler
 		AddHandler Me.theWebClient.DownloadFileCompleted, AddressOf Me.Download_DownloadFileCompleted
-		Me.theWebClient.DownloadFileAsync(remoteFileUri, localPathFileName, localPathFileName)
+		Me.theWebClient.DownloadFileAsync(remoteFileUri, Me.theLocalPathFileName, Me.theLocalPathFileName)
 	End Sub
 
 #End Region
@@ -212,15 +212,22 @@ Public Class Updater
 
 	'NOTE: This is run in a background thread.
 	Private Sub Update_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs)
-		' Copy SevenZr.exe and CrowbarLauncher.exe from resources into appdata folder.
 		TheApp.WriteUpdaterFiles()
 
 		Dim currentFolder As String
 		currentFolder = Directory.GetCurrentDirectory()
-		Dim appDataPath As String = FileManager.GetPath(TheApp.SevenZrExePathFileName)
-		Directory.SetCurrentDirectory(appDataPath)
+		Directory.SetCurrentDirectory(Me.theLocalPath)
 
-		Dim compressedNewCrowbarFileName As String = "Crowbar_2019-10-16_0.64.7z"
+		Me.Decompress()
+		Me.OpenNewVersion()
+
+		Directory.SetCurrentDirectory(currentFolder)
+
+		TheApp.DeleteUpdaterFiles()
+	End Sub
+
+	'NOTE: This is run in a background thread.
+	Private Sub Decompress()
 		Dim sevenZrExeProcess As New Process()
 		Try
 			sevenZrExeProcess.StartInfo.UseShellExecute = False
@@ -229,7 +236,7 @@ Public Class Updater
 			'      the length of the arguments added to the length of the full path to the process must be less than 2080. 
 			'      On Windows 7 and later versions, the length must be less than 32699. 
 			sevenZrExeProcess.StartInfo.FileName = TheApp.SevenZrExePathFileName
-			sevenZrExeProcess.StartInfo.Arguments = "x """ + compressedNewCrowbarFileName + """"
+			sevenZrExeProcess.StartInfo.Arguments = "x """ + Me.theLocalFileName + """"
 #If DEBUG Then
 			sevenZrExeProcess.StartInfo.CreateNoWindow = False
 #Else
@@ -238,40 +245,51 @@ Public Class Updater
 			sevenZrExeProcess.Start()
 			sevenZrExeProcess.WaitForExit()
 		Catch ex As Exception
-			Throw New System.Exception("Crowbar tried to decompress the file """ + compressedNewCrowbarFileName + """ but Windows gave this message: " + ex.Message)
+			Throw New System.Exception("Crowbar tried to decompress the file """ + Me.theLocalPathFileName + """ but Windows gave this message: " + ex.Message)
 		Finally
 			sevenZrExeProcess.Close()
 		End Try
+	End Sub
 
-		Dim newCrowbarPathFileName As String = Path.Combine(appDataPath, "Crowbar.exe")
+	'NOTE: This is run in a background thread.
+	Private Sub OpenNewVersion()
+		Dim newCrowbarPathFileName As String = Path.Combine(Me.theLocalPath, "Crowbar.exe")
 		If File.Exists(newCrowbarPathFileName) Then
 			' Run CrowbarLauncher.exe and exit Crowbar.
-			Dim crowbarLauncherExeProcess As New Process()
+			Dim crowbarOrLauncherExeProcess As New Process()
 			Dim startupPath As String = Application.StartupPath
 			Dim currentCrowbarExePathFileName As String = Path.Combine(startupPath, "Crowbar.exe")
+
 			Try
-				crowbarLauncherExeProcess.StartInfo.UseShellExecute = False
-				'NOTE: From Microsoft website: 
-				'      On Windows Vista and earlier versions of the Windows operating system, 
-				'      the length of the arguments added to the length of the full path to the process must be less than 2080. 
-				'      On Windows 7 and later versions, the length must be less than 32699. 
-				crowbarLauncherExeProcess.StartInfo.FileName = TheApp.CrowbarLauncherExePathFileName
-				crowbarLauncherExeProcess.StartInfo.Arguments = Process.GetCurrentProcess().Id.ToString() + " """ + currentCrowbarExePathFileName + """"
+				crowbarOrLauncherExeProcess.StartInfo.UseShellExecute = False
+				If TheApp.Settings.UpdateUpdateToNewPathIsChecked Then
+					'NOTE: From Microsoft website: 
+					'      On Windows Vista and earlier versions of the Windows operating system, 
+					'      the length of the arguments added to the length of the full path to the process must be less than 2080. 
+					'      On Windows 7 and later versions, the length must be less than 32699. 
+					crowbarOrLauncherExeProcess.StartInfo.FileName = newCrowbarPathFileName
+					If TheApp.Settings.UpdateCopySettingsIsChecked Then
+						crowbarOrLauncherExeProcess.StartInfo.Arguments = App.SettingsParameter + """" + TheApp.GetAppSettingsPathFileName() + """"
+					Else
+						crowbarOrLauncherExeProcess.StartInfo.Arguments = ""
+					End If
+				Else
+					crowbarOrLauncherExeProcess.StartInfo.FileName = TheApp.CrowbarLauncherExePathFileName
+					crowbarOrLauncherExeProcess.StartInfo.Arguments = Process.GetCurrentProcess().Id.ToString() + " """ + currentCrowbarExePathFileName + """"
+				End If
 #If DEBUG Then
-				crowbarLauncherExeProcess.StartInfo.CreateNoWindow = False
+				crowbarOrLauncherExeProcess.StartInfo.CreateNoWindow = False
 #Else
 				lzmaExeProcess.StartInfo.CreateNoWindow = True
 #End If
-				crowbarLauncherExeProcess.Start()
+				crowbarOrLauncherExeProcess.Start()
 				Application.Exit()
 			Catch ex As Exception
 				Dim debug As Integer = 4242
-				'Throw New System.Exception("Crowbar tried to compress the file """ + gmaPathFileName + """ to """ + processedPathFileName + """ but Windows gave this message: " + ex.Message)
+				'Throw New System.Exception("Crowbar tried to open new version but Windows gave this message: " + ex.Message)
 			Finally
 			End Try
 		End If
-
-		Directory.SetCurrentDirectory(currentFolder)
 	End Sub
 
 #End Region
@@ -293,13 +311,13 @@ Public Class Updater
 		If e.Cancelled Then
 		Else
 			If Me.theUpdateTaskIsEnabled Then
-				Dim client As WebClient = CType(sender, WebClient)
-				RemoveHandler client.DownloadFileCompleted, AddressOf Me.Download_DownloadFileCompleted
-				client = Nothing
-
 				Me.UpdateAfterDownload()
 			End If
 		End If
+
+		Dim client As WebClient = CType(sender, WebClient)
+		RemoveHandler client.DownloadFileCompleted, AddressOf Me.Download_DownloadFileCompleted
+		client = Nothing
 		Me.theDownloadFileCompletedHandler(sender, e)
 	End Sub
 
@@ -319,6 +337,7 @@ Public Class Updater
 	Private theRemoteFileLink As String
 	Private theLocalPath As String
 	Private theLocalFileName As String
+	Private theLocalPathFileName As String
 	Private theUpdateProgressChangedHandler As ProgressChangedEventHandler
 	Private theUpdateRunWorkerCompletedHandler As RunWorkerCompletedEventHandler
 	Private theUpdateTaskIsEnabled As Boolean

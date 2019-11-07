@@ -193,13 +193,13 @@ Public Class UpdateUserControl
 	End Sub
 
 	Private Sub Download()
-		If FileManager.PathExistsAfterTryToCreate(Me.DownloadFolderTextBox.Text) Then
+		If FileManager.PathExistsAfterTryToCreate(TheApp.Settings.UpdateDownloadPath) Then
 			Me.DownloadProgressBarEx.Text = "Checking for update..."
 			Me.DownloadProgressBarEx.Value = 0
 
 			Me.UpdateCommandWidgets(True)
 			Me.CancelDownloadButton.Enabled = True
-			Me.theUpdater.Download(AddressOf CheckForUpdate_ProgressChanged, AddressOf CheckForUpdate_RunWorkerCompleted, AddressOf Download_DownloadProgressChanged, AddressOf Download_DownloadFileCompleted, Me.DownloadFolderTextBox.Text)
+			Me.theUpdater.Download(AddressOf CheckForUpdate_ProgressChanged, AddressOf CheckForUpdate_RunWorkerCompleted, AddressOf Download_DownloadProgressChanged, AddressOf Download_DownloadFileCompleted, TheApp.Settings.UpdateDownloadPath)
 		Else
 			Me.DownloadProgressBarEx.Text = "Download failed to start because folder does not exist"
 			Me.DownloadProgressBarEx.Value = 0
@@ -238,7 +238,13 @@ Public Class UpdateUserControl
 	Private Sub UpdateApp()
 		Me.UpdateCommandWidgets(True)
 		Me.CancelUpdateButton.Enabled = True
-		Me.theUpdater.Update(AddressOf CheckForUpdate_ProgressChanged, AddressOf CheckForUpdate_RunWorkerCompleted, AddressOf Download_DownloadProgressChanged, AddressOf Download_DownloadFileCompleted, Me.DownloadFolderTextBox.Text, AddressOf Update_ProgressChanged, AddressOf Update_RunWorkerCompleted)
+		Dim localPath As String
+		If TheApp.Settings.UpdateUpdateToNewPathIsChecked Then
+			localPath = TheApp.Settings.UpdateUpdateDownloadPath
+		Else
+			localPath = TheApp.GetCustomDataPath()
+		End If
+		Me.theUpdater.Update(AddressOf CheckForUpdate_ProgressChanged, AddressOf CheckForUpdate_RunWorkerCompleted, AddressOf Download_DownloadProgressChanged, AddressOf Download_DownloadFileCompleted, localPath, AddressOf Update_ProgressChanged, AddressOf Update_RunWorkerCompleted)
 	End Sub
 
 	Private Sub CancelUpdate()
