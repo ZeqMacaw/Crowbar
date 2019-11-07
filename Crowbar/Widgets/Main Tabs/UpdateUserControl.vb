@@ -22,15 +22,47 @@ Public Class UpdateUserControl
 
 	Private Sub Init()
 		Me.DownloadFolderTextBox.DataBindings.Add("Text", TheApp.Settings, "UpdateDownloadPath", False, DataSourceUpdateMode.OnValidation)
+
+		Me.UpdateToNewPathCheckBox.DataBindings.Add("Checked", TheApp.Settings, "UpdateUpdateToNewPathIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.UpdateFolderTextBox.DataBindings.Add("Text", TheApp.Settings, "UpdateUpdateDownloadPath", False, DataSourceUpdateMode.OnValidation)
+		Me.UpdateCopySettingsCheckBox.DataBindings.Add("Checked", TheApp.Settings, "UpdateCopySettingsIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 
 		AddHandler Me.DownloadFolderTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
 		AddHandler Me.UpdateFolderTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+
+		Me.CurrentVersionLabel.Text = "Current Version: " + My.Application.Info.Version.ToString(2)
 	End Sub
 
 	Private Sub Free()
 		RemoveHandler Me.DownloadFolderTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
 		RemoveHandler Me.UpdateFolderTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+
+		Me.DownloadFolderTextBox.DataBindings.Clear()
+
+		Me.UpdateToNewPathCheckBox.DataBindings.Clear()
+		Me.UpdateFolderTextBox.DataBindings.Clear()
+		Me.UpdateCopySettingsCheckBox.DataBindings.Clear()
+	End Sub
+
+#End Region
+
+#Region "Methods"
+
+	Public Sub CheckForUpdate()
+		Me.CheckForUpdateTextBox.Text = "Checking for update..."
+		Me.UpdateCommandWidgets(True)
+		Me.CancelCheckButton.Enabled = True
+		Me.theUpdater.CheckForUpdate(AddressOf CheckForUpdate_ProgressChanged, AddressOf CheckForUpdate_RunWorkerCompleted)
+	End Sub
+
+#End Region
+
+#Region "Events"
+
+	Public Delegate Sub UpdateAvailableEventHandler(ByVal sender As Object, ByVal e As UpdateAvailableEventArgs)
+	Public Event UpdateAvailable As UpdateAvailableEventHandler
+	Protected Sub NotifyUpdateAvailable(ByVal updateIsAvailable As Boolean)
+		RaiseEvent UpdateAvailable(Me, New UpdateAvailableEventArgs(updateIsAvailable))
 	End Sub
 
 #End Region
@@ -63,6 +95,10 @@ Public Class UpdateUserControl
 		Me.CancelDownload()
 	End Sub
 
+	Private Sub GotoDownloadFileButton_Click(sender As Object, e As EventArgs) Handles GotoDownloadFileButton.Click
+		Me.GotoDownloadFile()
+	End Sub
+
 	Private Sub BrowseForUpdateFolderButton_Click(sender As Object, e As EventArgs) Handles BrowseForUpdateFolderButton.Click
 		Me.BrowseForUpdateDownloadPath()
 	End Sub
@@ -93,10 +129,11 @@ Public Class UpdateUserControl
 			Dim outputInfo As Updater.StatusOutputInfo = Nothing
 			outputInfo = CType(e.Result, Updater.StatusOutputInfo)
 			Me.CheckForUpdateTextBox.Text = CType(outputInfo.StatusMessage, String)
+			NotifyUpdateAvailable(outputInfo.UpdateIsAvailable)
 
 			If outputInfo.DownloadIsEnabled Then
-				Me.DownloadProgressBarEx.Text = "Starting download..."
-				Me.DownloadProgressBarEx.Value = 0
+				Me.theCurrentProgressBar.Text = "Starting download..."
+				Me.theCurrentProgressBar.Value = 0
 			End If
 		End If
 
@@ -105,31 +142,29 @@ Public Class UpdateUserControl
 	End Sub
 
 	Private Sub Download_DownloadProgressChanged(ByVal sender As Object, ByVal e As DownloadProgressChangedEventArgs)
-		Me.UpdateProgressBar(Me.DownloadProgressBarEx, e.BytesReceived, e.TotalBytesToReceive)
+		Me.UpdateProgressBar(Me.theCurrentProgressBar, e.BytesReceived, e.TotalBytesToReceive)
 	End Sub
 
 	Private Sub Download_DownloadFileCompleted(ByVal sender As Object, ByVal e As AsyncCompletedEventArgs)
+		Dim pathFileName As String = CType(e.UserState, String)
 		If e.Cancelled Then
-			'	Me.LogTextBox.AppendText("Download cancelled." + vbCrLf)
-			'	Me.DownloadProgressBar.Text = ""
-			'	Me.DownloadProgressBar.Value = 0
+			Me.theCurrentProgressBar.Text = "Download failed."
+			Me.theCurrentProgressBar.Value = 0
 
-			'	Dim pathFileName As String = CType(e.UserState, String)
-			'	If File.Exists(pathFileName) Then
-			'		Try
-			'			File.Delete(pathFileName)
-			'		Catch ex As Exception
-			'			Me.LogTextBox.AppendText("WARNING: Problem deleting incomplete downloaded file." + vbCrLf)
-			'		End Try
-			'	End If
-		Else
-			Dim pathFileName As String = CType(e.UserState, String)
 			If File.Exists(pathFileName) Then
-				'Me.ProcessUpdateXml()
-				'Me.LogTextBox.AppendText("Download complete." + vbCrLf + "Downloaded file: """ + pathFileName + """" + vbCrLf)
-				'Me.DownloadedItemTextBox.Text = pathFileName
-				'Else
-				'	Me.LogTextBox.AppendText("Download failed." + vbCrLf)
+				Try
+					File.Delete(pathFileName)
+				Catch ex As Exception
+					Me.theCurrentProgressBar.Text += "WARNING: Problem deleting incomplete downloaded file: """ + pathFileName + """"
+				End Try
+			End If
+		Else
+			If File.Exists(pathFileName) Then
+				Me.theCurrentProgressBar.Text = "Download complete. Downloaded file: """ + pathFileName + """" + Me.theCurrentProgressBar.Text
+				Me.GotoDownloadFileButton.Enabled = True
+				Me.theDownloadedPathFileName = pathFileName
+			Else
+				Me.theCurrentProgressBar.Text = "Download failed."
 			End If
 		End If
 
@@ -157,12 +192,6 @@ Public Class UpdateUserControl
 #End Region
 
 #Region "Private Methods"
-
-	Private Sub CheckForUpdate()
-		Me.UpdateCommandWidgets(True)
-		Me.CancelCheckButton.Enabled = True
-		Me.theUpdater.CheckForUpdate(AddressOf CheckForUpdate_ProgressChanged, AddressOf CheckForUpdate_RunWorkerCompleted)
-	End Sub
 
 	Private Sub CancelCheckForUpdate()
 		Me.theUpdater.CancelCheckForUpdate()
@@ -196,9 +225,11 @@ Public Class UpdateUserControl
 		If FileManager.PathExistsAfterTryToCreate(TheApp.Settings.UpdateDownloadPath) Then
 			Me.DownloadProgressBarEx.Text = "Checking for update..."
 			Me.DownloadProgressBarEx.Value = 0
+			Me.theCurrentProgressBar = Me.DownloadProgressBarEx
 
 			Me.UpdateCommandWidgets(True)
 			Me.CancelDownloadButton.Enabled = True
+			Me.GotoDownloadFileButton.Enabled = False
 			Me.theUpdater.Download(AddressOf CheckForUpdate_ProgressChanged, AddressOf CheckForUpdate_RunWorkerCompleted, AddressOf Download_DownloadProgressChanged, AddressOf Download_DownloadFileCompleted, TheApp.Settings.UpdateDownloadPath)
 		Else
 			Me.DownloadProgressBarEx.Text = "Download failed to start because folder does not exist"
@@ -208,6 +239,10 @@ Public Class UpdateUserControl
 
 	Private Sub CancelDownload()
 		Me.theUpdater.CancelDownload()
+	End Sub
+
+	Public Sub GotoDownloadFile()
+		FileManager.OpenWindowsExplorer(Me.theDownloadedPathFileName)
 	End Sub
 
 	Private Sub BrowseForUpdateDownloadPath()
@@ -236,6 +271,10 @@ Public Class UpdateUserControl
 
 	' Named UpdateApp to avoid confusion with existing UserControl.Update().
 	Private Sub UpdateApp()
+		Me.UpdateProgressBarEx.Text = "Checking for update..."
+		Me.UpdateProgressBarEx.Value = 0
+		Me.theCurrentProgressBar = Me.UpdateProgressBarEx
+
 		Me.UpdateCommandWidgets(True)
 		Me.CancelUpdateButton.Enabled = True
 		Dim localPath As String
@@ -274,8 +313,29 @@ Public Class UpdateUserControl
 
 #Region "Data"
 
+	Private theCurrentProgressBar As ProgressBarEx
 	Private theUpdater As Updater
+	Private theDownloadedPathFileName As String
 
 #End Region
+
+	Public Class UpdateAvailableEventArgs
+		Inherits System.EventArgs
+
+		Public Sub New(ByVal updateIsAvailable As Boolean)
+			MyBase.New()
+
+			Me.theUpdateIsAvailable = updateIsAvailable
+		End Sub
+
+		Public ReadOnly Property UpdateIsAvailable As Boolean
+			Get
+				Return Me.theUpdateIsAvailable
+			End Get
+		End Property
+
+		Private theUpdateIsAvailable As Boolean
+
+	End Class
 
 End Class

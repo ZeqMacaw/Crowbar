@@ -26,7 +26,7 @@ Partial Class UpdateUserControl
 		Me.UpdateButton = New System.Windows.Forms.Button()
 		Me.CheckForUpdateButton = New System.Windows.Forms.Button()
 		Me.DownloadButton = New System.Windows.Forms.Button()
-		Me.CheckBox1 = New System.Windows.Forms.CheckBox()
+		Me.UpdateCopySettingsCheckBox = New System.Windows.Forms.CheckBox()
 		Me.UpdateToNewPathCheckBox = New System.Windows.Forms.CheckBox()
 		Me.ChangelogTextBox = New Crowbar.RichTextBoxEx()
 		Me.GroupBoxEx1 = New Crowbar.GroupBoxEx()
@@ -44,6 +44,8 @@ Partial Class UpdateUserControl
 		Me.CheckForUpdateProgressBar = New Crowbar.ProgressBarEx()
 		Me.CancelCheckButton = New System.Windows.Forms.Button()
 		Me.GroupBoxEx3 = New Crowbar.GroupBoxEx()
+		Me.CurrentVersionLabel = New System.Windows.Forms.Label()
+		Me.GotoDownloadFileButton = New System.Windows.Forms.Button()
 		Me.GroupBoxEx1.SuspendLayout()
 		Me.GroupBoxEx2.SuspendLayout()
 		Me.GroupBoxEx3.SuspendLayout()
@@ -76,17 +78,17 @@ Partial Class UpdateUserControl
 		Me.DownloadButton.Text = "Download"
 		Me.DownloadButton.UseVisualStyleBackColor = True
 		'
-		'CheckBox1
+		'UpdateCopySettingsCheckBox
 		'
-		Me.CheckBox1.AutoSize = True
-		Me.CheckBox1.Checked = True
-		Me.CheckBox1.CheckState = System.Windows.Forms.CheckState.Checked
-		Me.CheckBox1.Location = New System.Drawing.Point(6, 43)
-		Me.CheckBox1.Name = "CheckBox1"
-		Me.CheckBox1.Size = New System.Drawing.Size(267, 17)
-		Me.CheckBox1.TabIndex = 3
-		Me.CheckBox1.Text = "Copy settings from current version to new version"
-		Me.CheckBox1.UseVisualStyleBackColor = True
+		Me.UpdateCopySettingsCheckBox.AutoSize = True
+		Me.UpdateCopySettingsCheckBox.Checked = True
+		Me.UpdateCopySettingsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked
+		Me.UpdateCopySettingsCheckBox.Location = New System.Drawing.Point(6, 43)
+		Me.UpdateCopySettingsCheckBox.Name = "UpdateCopySettingsCheckBox"
+		Me.UpdateCopySettingsCheckBox.Size = New System.Drawing.Size(267, 17)
+		Me.UpdateCopySettingsCheckBox.TabIndex = 3
+		Me.UpdateCopySettingsCheckBox.Text = "Copy settings from current version to new version"
+		Me.UpdateCopySettingsCheckBox.UseVisualStyleBackColor = True
 		'
 		'UpdateToNewPathCheckBox
 		'
@@ -120,7 +122,7 @@ Partial Class UpdateUserControl
 		Me.GroupBoxEx1.Controls.Add(Me.UpdateProgressBarEx)
 		Me.GroupBoxEx1.Controls.Add(Me.UpdateButton)
 		Me.GroupBoxEx1.Controls.Add(Me.UpdateToNewPathCheckBox)
-		Me.GroupBoxEx1.Controls.Add(Me.CheckBox1)
+		Me.GroupBoxEx1.Controls.Add(Me.UpdateCopySettingsCheckBox)
 		Me.GroupBoxEx1.IsReadOnly = False
 		Me.GroupBoxEx1.Location = New System.Drawing.Point(3, 438)
 		Me.GroupBoxEx1.Name = "GroupBoxEx1"
@@ -175,6 +177,7 @@ Partial Class UpdateUserControl
 		'
 		Me.GroupBoxEx2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.GroupBoxEx2.Controls.Add(Me.GotoDownloadFileButton)
 		Me.GroupBoxEx2.Controls.Add(Me.CancelDownloadButton)
 		Me.GroupBoxEx2.Controls.Add(Me.Label2)
 		Me.GroupBoxEx2.Controls.Add(Me.BrowseForDownloadFolderButton)
@@ -194,7 +197,7 @@ Partial Class UpdateUserControl
 		'
 		Me.CancelDownloadButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.CancelDownloadButton.Enabled = False
-		Me.CancelDownloadButton.Location = New System.Drawing.Point(689, 47)
+		Me.CancelDownloadButton.Location = New System.Drawing.Point(608, 47)
 		Me.CancelDownloadButton.Name = "CancelDownloadButton"
 		Me.CancelDownloadButton.Size = New System.Drawing.Size(75, 23)
 		Me.CancelDownloadButton.TabIndex = 12
@@ -236,7 +239,7 @@ Partial Class UpdateUserControl
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.DownloadProgressBarEx.Location = New System.Drawing.Point(87, 47)
 		Me.DownloadProgressBarEx.Name = "DownloadProgressBarEx"
-		Me.DownloadProgressBarEx.Size = New System.Drawing.Size(596, 23)
+		Me.DownloadProgressBarEx.Size = New System.Drawing.Size(515, 23)
 		Me.DownloadProgressBarEx.TabIndex = 6
 		'
 		'CheckForUpdateTextBox
@@ -277,6 +280,7 @@ Partial Class UpdateUserControl
 		Me.GroupBoxEx3.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.GroupBoxEx3.Controls.Add(Me.CurrentVersionLabel)
 		Me.GroupBoxEx3.Controls.Add(Me.CheckForUpdateButton)
 		Me.GroupBoxEx3.Controls.Add(Me.CheckForUpdateTextBox)
 		Me.GroupBoxEx3.Controls.Add(Me.CheckForUpdateProgressBar)
@@ -290,6 +294,27 @@ Partial Class UpdateUserControl
 		Me.GroupBoxEx3.TabIndex = 14
 		Me.GroupBoxEx3.TabStop = False
 		Me.GroupBoxEx3.Text = "Check for Update - Check for latest version and get changelog"
+		'
+		'CurrentVersionLabel
+		'
+		Me.CurrentVersionLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.CurrentVersionLabel.AutoSize = True
+		Me.CurrentVersionLabel.Location = New System.Drawing.Point(653, 0)
+		Me.CurrentVersionLabel.Name = "CurrentVersionLabel"
+		Me.CurrentVersionLabel.Size = New System.Drawing.Size(111, 13)
+		Me.CurrentVersionLabel.TabIndex = 14
+		Me.CurrentVersionLabel.Text = "Current Version: 0.00"
+		'
+		'GotoDownloadFileButton
+		'
+		Me.GotoDownloadFileButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.GotoDownloadFileButton.Enabled = False
+		Me.GotoDownloadFileButton.Location = New System.Drawing.Point(689, 47)
+		Me.GotoDownloadFileButton.Name = "GotoDownloadFileButton"
+		Me.GotoDownloadFileButton.Size = New System.Drawing.Size(75, 23)
+		Me.GotoDownloadFileButton.TabIndex = 13
+		Me.GotoDownloadFileButton.Text = "Goto"
+		Me.GotoDownloadFileButton.UseVisualStyleBackColor = True
 		'
 		'UpdateUserControl
 		'
@@ -313,7 +338,7 @@ Partial Class UpdateUserControl
 	Friend WithEvents UpdateButton As Button
 	Friend WithEvents CheckForUpdateButton As Button
 	Friend WithEvents DownloadButton As Button
-	Friend WithEvents CheckBox1 As CheckBox
+	Friend WithEvents UpdateCopySettingsCheckBox As CheckBox
 	Friend WithEvents UpdateToNewPathCheckBox As CheckBox
 	Friend WithEvents ChangelogTextBox As RichTextBoxEx
 	Friend WithEvents GroupBoxEx1 As GroupBoxEx
@@ -331,4 +356,6 @@ Partial Class UpdateUserControl
 	Friend WithEvents CancelDownloadButton As Button
 	Friend WithEvents CancelCheckButton As Button
 	Friend WithEvents GroupBoxEx3 As GroupBoxEx
+	Friend WithEvents CurrentVersionLabel As Label
+	Friend WithEvents GotoDownloadFileButton As Button
 End Class

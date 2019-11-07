@@ -32,6 +32,10 @@ Public Class MainForm
 			Me.Location = TheApp.Settings.WindowLocation
 			Me.Size = TheApp.Settings.WindowSize
 			Me.WindowState = TheApp.Settings.WindowState
+
+			If TheApp.CommandLineOption_Settings_IsEnabled Then
+				TheApp.Settings.MainWindowSelectedTabIndex = Me.MainTabControl.TabPages.IndexOf(Me.UpdateTabPage)
+			End If
 			Me.MainTabControl.SelectedIndex = TheApp.Settings.MainWindowSelectedTabIndex
 
 			Dim aScreen As Screen
@@ -88,6 +92,9 @@ Public Class MainForm
 		AddHandler Me.ViewViewUserControl.UseInDecompileButton.Click, AddressOf Me.ViewUserControl_UseInDecompileButton_Click
 		AddHandler Me.PackUserControl1.SetUpGamesButton.Click, AddressOf Me.PackSetUpGamesButton_Click
 		AddHandler Me.PublishUserControl1.UseInDownloadToolStripMenuItem.Click, AddressOf Me.PublishUserControl1_UseInDownloadToolStripMenuItem_Click
+		AddHandler Me.UpdateUserControl1.UpdateAvailable, AddressOf Me.UpdateUserControl1_UpdateAvailable
+
+		Me.UpdateUserControl1.CheckForUpdate()
 	End Sub
 
 	Private Sub Free()
@@ -108,6 +115,7 @@ Public Class MainForm
 		RemoveHandler Me.ViewViewUserControl.UseInDecompileButton.Click, AddressOf Me.ViewUserControl_UseInDecompileButton_Click
 		RemoveHandler Me.PackUserControl1.SetUpGamesButton.Click, AddressOf Me.PackSetUpGamesButton_Click
 		RemoveHandler Me.PublishUserControl1.UseInDownloadToolStripMenuItem.Click, AddressOf Me.PublishUserControl1_UseInDownloadToolStripMenuItem_Click
+		RemoveHandler Me.UpdateUserControl1.UpdateAvailable, AddressOf Me.UpdateUserControl1_UpdateAvailable
 
 		If Me.WindowState = FormWindowState.Normal Then
 			TheApp.Settings.WindowLocation = Me.Location
@@ -129,15 +137,18 @@ Public Class MainForm
 #Region "Methods"
 
 	Public Sub Startup(ByVal commandLineValues As ReadOnlyCollection(Of String))
-		If commandLineValues.Count > 1 AndAlso commandLineValues(1) <> "" Then
-			Me.SetDroppedPathFileName(True, commandLineValues(1))
+		If commandLineValues.Count > 1 Then
+			Dim command As String = commandLineValues(1)
+			If command <> "" AndAlso Not TheApp.CommandLineValueIsAnAppSetting(command) Then
+				Me.SetDroppedPathFileName(True, command)
 
-			''TEST: Every file selected and dropped onto EXE is a string in the array, starting at index 1. Index 0 is the EXE path file name.
-			'Dim text As New StringBuilder()
-			'For Each arg As String In commandLineParams
-			'	text.AppendLine(arg)
-			'Next
-			'MessageBox.Show(text.ToString())
+				''TEST: Every file selected and dropped onto EXE is a string in the array, starting at index 1. Index 0 is the EXE path file name.
+				'Dim text As New StringBuilder()
+				'For Each arg As String In commandLineParams
+				'	text.AppendLine(arg)
+				'Next
+				'MessageBox.Show(text.ToString())
+			End If
 		End If
 	End Sub
 
@@ -271,6 +282,14 @@ Public Class MainForm
 
 	Private Sub PublishUserControl1_UseInDownloadToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
 		Me.MainTabControl.SelectTab(Me.DownloadTabPage)
+	End Sub
+
+	Private Sub UpdateUserControl1_UpdateAvailable(ByVal sender As System.Object, ByVal e As UpdateUserControl.UpdateAvailableEventArgs)
+		If e.UpdateIsAvailable Then
+			Me.UpdateTabPage.Text = "Update Available"
+		Else
+			Me.UpdateTabPage.Text = "Update"
+		End If
 	End Sub
 
 #End Region

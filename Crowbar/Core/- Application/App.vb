@@ -93,6 +93,12 @@ Public Class App
 		End Get
 	End Property
 
+	Public ReadOnly Property CommandLineOption_Settings_IsEnabled() As Boolean
+		Get
+			Return Me.theCommandLineOption_Settings_IsEnabled
+		End Get
+	End Property
+
 	Public ReadOnly Property ErrorPathFileName() As String
 		Get
 			Return Path.Combine(Me.GetCustomDataPath(), Me.ErrorFileName)
@@ -162,6 +168,10 @@ Public Class App
 #End Region
 
 #Region "Methods"
+
+	Public Function CommandLineValueIsAnAppSetting(ByVal commandLineValue As String) As Boolean
+		Return commandLineValue.StartsWith(App.SettingsParameter)
+	End Function
 
 	Public Sub WriteRequiredFiles()
 		Dim steamAPIDLLPathFileName As String = Path.Combine(Me.GetCustomDataPath(), App.theSteamAPIDLLFileName)
@@ -304,13 +314,16 @@ Public Class App
 		Dim appSettingsPathFileName As String
 		appSettingsPathFileName = Me.GetAppSettingsPathFileName()
 
+		Dim commandLineOption_Settings_IsEnabled As Boolean = False
 		Dim commandLineValues As New ReadOnlyCollection(Of String)(System.Environment.GetCommandLineArgs())
 		If commandLineValues.Count > 1 AndAlso commandLineValues(1) <> "" Then
 			Dim command As String = commandLineValues(1)
 			If command.StartsWith(App.SettingsParameter) Then
+				commandLineOption_Settings_IsEnabled = True
 				Dim oldAppSettingsPathFileName As String = command.Replace(App.SettingsParameter, "")
+				oldAppSettingsPathFileName = oldAppSettingsPathFileName.Replace("""", "")
 				If File.Exists(oldAppSettingsPathFileName) Then
-					File.Copy(oldAppSettingsPathFileName, appSettingsPathFileName)
+					File.Copy(oldAppSettingsPathFileName, appSettingsPathFileName, True)
 				End If
 			End If
 		End If
@@ -436,6 +449,7 @@ Public Class App
 	Private theSettings As AppSettings
 	'NOTE: Use slash at start to avoid confusing with a pathFileName that Windows Explorer might use with auto-open.
 	Public Const SettingsParameter As String = "/settings="
+	Private theCommandLineOption_Settings_IsEnabled As Boolean
 
 	' Location of the exe.
 	Private theAppPath As String

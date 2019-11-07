@@ -19,6 +19,7 @@ Public Class Updater
 
 	Public Class StatusOutputInfo
 		Public StatusMessage As String
+		Public UpdateIsAvailable As Boolean
 		Public DownloadIsEnabled As Boolean
 	End Class
 
@@ -99,6 +100,8 @@ Public Class Updater
 				response.Close()
 			End If
 
+			Dim outputInfo As New Updater.StatusOutputInfo()
+			outputInfo.UpdateIsAvailable = False
 			Dim updateCheckStatusMessage As String
 			If appVersion Is Nothing Then
 				updateCheckStatusMessage = "Unable to get update info. Please try again later.   "
@@ -106,6 +109,7 @@ Public Class Updater
 				updateCheckStatusMessage = "Crowbar is up to date.   "
 			ElseIf appVersion > My.Application.Info.Version Then
 				updateCheckStatusMessage = "Update to version " + appVersion.ToString(2) + " available.   Size: " + MathModule.ByteUnitsConversion(fileSize) + "   "
+				outputInfo.UpdateIsAvailable = True
 			Else
 				'NOTE: Should not get here if versioning is done correctly.
 				updateCheckStatusMessage = ""
@@ -113,7 +117,6 @@ Public Class Updater
 			Dim now As DateTime = DateTime.Now()
 			Dim lastCheckedMessage As String = "Last checked: " + now.ToLongDateString() + " " + now.ToShortTimeString()
 
-			Dim outputInfo As New Updater.StatusOutputInfo()
 			outputInfo.StatusMessage = updateCheckStatusMessage + lastCheckedMessage
 			outputInfo.DownloadIsEnabled = Me.theDownloadTaskIsEnabled
 			e.Result = outputInfo
@@ -179,13 +182,15 @@ Public Class Updater
 		Me.theLocalPathFileName = Path.Combine(Me.theLocalPath, Me.theLocalFileName)
 		Me.theLocalPathFileName = FileManager.GetTestedPathFileName(Me.theLocalPathFileName)
 
-		Dim remoteFileUri As New Uri(Me.theRemoteFileLink)
+		If FileManager.PathExistsAfterTryToCreate(Me.theLocalPath) Then
+			Dim remoteFileUri As New Uri(Me.theRemoteFileLink)
 
-		Me.theWebClient = New WebClient()
-		AddHandler Me.theWebClient.DownloadProgressChanged, Me.theDownloadProgressChangedHandler
-		'AddHandler Me.theWebClient.DownloadFileCompleted, Me.theDownloadFileCompletedHandler
-		AddHandler Me.theWebClient.DownloadFileCompleted, AddressOf Me.Download_DownloadFileCompleted
-		Me.theWebClient.DownloadFileAsync(remoteFileUri, Me.theLocalPathFileName, Me.theLocalPathFileName)
+			Me.theWebClient = New WebClient()
+			AddHandler Me.theWebClient.DownloadProgressChanged, Me.theDownloadProgressChangedHandler
+			'AddHandler Me.theWebClient.DownloadFileCompleted, Me.theDownloadFileCompletedHandler
+			AddHandler Me.theWebClient.DownloadFileCompleted, AddressOf Me.Download_DownloadFileCompleted
+			Me.theWebClient.DownloadFileAsync(remoteFileUri, Me.theLocalPathFileName, Me.theLocalPathFileName)
+		End If
 	End Sub
 
 #End Region
@@ -238,6 +243,10 @@ Public Class Updater
 			sevenZrExeProcess.StartInfo.FileName = TheApp.SevenZrExePathFileName
 			sevenZrExeProcess.StartInfo.Arguments = "x """ + Me.theLocalFileName + """"
 #If DEBUG Then
+			' Use this to test first version with Update feature. Can delete this line after done testing.
+			File.Copy("E:\Users\ZeqMacaw\Documents\- local\todo\tools\Crowbar\Crowbar\bin\x86\Debug\Crowbar.7z", Path.Combine(Me.theLocalPath, "Crowbar.7z"))
+			sevenZrExeProcess.StartInfo.Arguments = "x ""Crowbar.7z"""
+
 			sevenZrExeProcess.StartInfo.CreateNoWindow = False
 #Else
 						lzmaExeProcess.StartInfo.CreateNoWindow = True
@@ -248,6 +257,14 @@ Public Class Updater
 			Throw New System.Exception("Crowbar tried to decompress the file """ + Me.theLocalPathFileName + """ but Windows gave this message: " + ex.Message)
 		Finally
 			sevenZrExeProcess.Close()
+		End Try
+
+		Try
+			If File.Exists(Me.theLocalPathFileName) Then
+				File.Delete(Me.theLocalPathFileName)
+			End If
+		Catch ex As Exception
+			Dim debug As Integer = 4242
 		End Try
 	End Sub
 
