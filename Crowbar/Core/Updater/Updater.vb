@@ -5,68 +5,40 @@ Imports System.Web.Script.Serialization
 Imports System.Xml
 
 Public Class Updater
-	Implements INotifyPropertyChanged
 
 #Region "Creation and Destruction"
 
 	Public Sub New()
 		MyBase.New()
 
-		Me.theUpdateCheckMessage = "[not checked yet]"
-		Me.theChangelog = ""
-
-		Me.isRunning = False
 	End Sub
 
 #End Region
 
-#Region "Init and Free"
+#Region "CheckForUpdate"
 
-#End Region
+	Public Class StatusOutputInfo
+		Public StatusMessage As String
+		Public DownloadIsEnabled As Boolean
+	End Class
 
-#Region "Properties"
+	Public Sub CheckForUpdate(ByVal given_ProgressChanged As ProgressChangedEventHandler, ByVal given_RunWorkerCompleted As RunWorkerCompletedEventHandler)
+		Me.theDownloadTaskIsEnabled = False
+		Me.theCheckForUpdateBackgroundWorker = BackgroundWorkerEx.RunBackgroundWorker(Me.theCheckForUpdateBackgroundWorker, AddressOf Me.CheckForUpdate_DoWork, given_ProgressChanged, given_RunWorkerCompleted, Nothing)
+	End Sub
 
-	Public Property UpdateCheckMessage() As String
-		Get
-			Return Me.theUpdateCheckMessage
-		End Get
-		Set(ByVal value As String)
-			If Me.theUpdateCheckMessage <> value Then
-				Me.theUpdateCheckMessage = value
-				NotifyPropertyChanged("UpdateCheckMessage")
-			End If
-		End Set
-	End Property
-
-	Public Property Changelog() As String
-		Get
-			Return Me.theChangelog
-		End Get
-		Set(ByVal value As String)
-			If Me.theChangelog <> value Then
-				Me.theChangelog = value
-				NotifyPropertyChanged("Changelog")
-			End If
-		End Set
-	End Property
-
-#End Region
-
-#Region "Methods"
-
-	Public Sub Run()
-		If Not Me.isRunning Then
-			Me.isRunning = True
-
-			Dim worker As BackgroundWorkerEx = Nothing
-			Dim inputInfo As String = ""
-			worker = BackgroundWorkerEx.RunBackgroundWorker(worker, AddressOf Me.Worker_DoWork, AddressOf Me.Worker_ProgressChanged, AddressOf Me.Worker_RunWorkerCompleted, inputInfo)
-
+	Public Sub CancelCheckForUpdate()
+		If Me.theCheckForUpdateBackgroundWorker IsNot Nothing AndAlso Me.theCheckForUpdateBackgroundWorker.IsBusy Then
+			Me.theCheckForUpdateBackgroundWorker.CancelAsync()
 		End If
 	End Sub
 
-	Public Sub CheckForUpdate()
-		Me.isRunning = True
+	Private theCheckForUpdateBackgroundWorker As BackgroundWorkerEx
+
+	'NOTE: This is run in a background thread.
+	Private Sub CheckForUpdate_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs)
+		Dim bw As BackgroundWorkerEx = CType(sender, BackgroundWorkerEx)
+
 		Dim appVersion As Version = Nothing
 		Dim fileSize As ULong = 0
 
@@ -90,6 +62,8 @@ Public Class Updater
 		Dim response As HttpWebResponse = Nothing
 		Dim dataStream As Stream
 		Dim reader As StreamReader = Nothing
+		Dim remoteFileLink As String = ""
+		Dim localFileName As String = ""
 		Try
 			response = CType(request.GetResponse(), HttpWebResponse)
 			dataStream = response.GetResponseStream()
@@ -108,12 +82,12 @@ Public Class Updater
 			'Dim appVersionIsOlder As Boolean = appVersion < My.Application.Info.Version
 			'Dim appVersionIsEqual As Boolean = appVersion = My.Application.Info.Version
 
-			'NOTE: Call the property so the NotifyPropertyChanged event is raised.
-			Me.Changelog = appNameVersion + vbCrLf + CType(root("body"), String)
+			bw.ReportProgress(0, appNameVersion + vbCrLf + CType(root("body"), String))
 
 			Dim assets As ArrayList = CType(root("assets"), ArrayList)
 			Dim asset As Dictionary(Of String, Object) = CType(assets(0), Dictionary(Of String, Object))
-			Dim FileLink As String = CType(asset("browser_download_url"), String)
+			Me.theRemoteFileLink = CType(asset("browser_download_url"), String)
+			Me.theLocalFileName = CType(asset("name"), String)
 			fileSize = CType(asset("size"), ULong)
 		Catch ex As Exception
 			Dim debug As Integer = 4242
@@ -138,29 +112,98 @@ Public Class Updater
 			End If
 			Dim now As DateTime = DateTime.Now()
 			Dim lastCheckedMessage As String = "Last checked: " + now.ToLongDateString() + " " + now.ToShortTimeString()
-			'NOTE: Call the property so the NotifyPropertyChanged event is raised.
-			Me.UpdateCheckMessage = updateCheckStatusMessage + lastCheckedMessage
-			Me.isRunning = False
+
+			Dim outputInfo As New Updater.StatusOutputInfo()
+			outputInfo.StatusMessage = updateCheckStatusMessage + lastCheckedMessage
+			outputInfo.DownloadIsEnabled = Me.theDownloadTaskIsEnabled
+			e.Result = outputInfo
 		End Try
 	End Sub
 
-	Public Sub DownloadNewVersion()
-		Dim uri As Uri = New Uri("https://github.com/ZeqMacaw/test/blob/master/update.xml")
-		Dim appDataPath As String = FileManager.GetPath(TheApp.SevenZrExePathFileName)
-		Dim outputPathFileName As String = Path.Combine(appDataPath, "update.xml")
+#End Region
 
-		'Me.LogTextBox.AppendText("Downloading workshop item as: """ + outputPathFileName + """" + vbCrLf)
+#Region "Comments"
 
-		'Me.DownloadButton.Enabled = False
-		'Me.CancelDownloadButton.Enabled = True
+	''NOTE: This is run in a background thread.
+	'Private Sub Worker_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs)
+	'	Dim bw As BackgroundWorkerEx = CType(sender, BackgroundWorkerEx)
+	'	Dim outputInfo As String = ""
 
-		Me.theWebClient = New WebClient()
-		AddHandler Me.theWebClient.DownloadProgressChanged, AddressOf WebClient_DownloadProgressChanged
-		AddHandler Me.theWebClient.DownloadFileCompleted, AddressOf WebClient_DownloadFileCompleted
-		Me.theWebClient.DownloadFileAsync(uri, outputPathFileName, outputPathFileName)
+	'	'TODO: In background worker, download release web page and changelog.
+	'	'TODO: Show info.
+	'	'TODO: In Download_RunWorkerCompleted, run the background worker for downloading the app file.
+	'	'TODO: In DownloadAppFile_RunWorkerCompleted, run the new app.
+	'	'TODO: Copy SevenZr.exe and CrowbarLauncher.exe from resources into appdata folder.
+	'	'TODO: Decompress, via 7zr.exe, Crowbar.7z file into appdata folder.
+	'	'TODO: Run CrowbarLauncher.exe, which moves new Crowbar.exe to where current Crowbar.exe is and then runs the new Crowbar.exe.
+	'	'TODO: Crowbar when opened, deletes CrowbarLauncher.exe if it exists.
+	'	'InstalledVersion = mainAssembly.GetName().Version;
+	'	'args.IsUpdateAvailable = CurrentVersion > InstalledVersion;
+
+	'	e.Result = outputInfo
+	'End Sub
+
+	'Private Sub Worker_ProgressChanged(ByVal sender As System.Object, ByVal e As System.ComponentModel.ProgressChangedEventArgs)
+	'	If e.ProgressPercentage = 0 Then
+	'	ElseIf e.ProgressPercentage = 1 Then
+	'	End If
+	'End Sub
+
+	'Private Sub Worker_RunWorkerCompleted(ByVal sender As System.Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs)
+	'	If e.Cancelled Then
+	'	Else
+	'	End If
+	'End Sub
+
+#End Region
+
+#Region "Download"
+
+	Public Sub Download(ByVal checkForUpdate_ProgressChanged As ProgressChangedEventHandler, ByVal checkForUpdate_RunWorkerCompleted As RunWorkerCompletedEventHandler, ByVal download_DownloadProgressChanged As DownloadProgressChangedEventHandler, ByVal download_DownloadFileCompleted As AsyncCompletedEventHandler, ByVal localPath As String)
+		Me.theDownloadProgressChangedHandler = download_DownloadProgressChanged
+		Me.theDownloadFileCompletedHandler = download_DownloadFileCompleted
+		Me.theLocalPath = localPath
+		Me.theDownloadTaskIsEnabled = True
+		Me.theCheckForUpdate_RunWorkerCompleted = checkForUpdate_RunWorkerCompleted
+		Me.theCheckForUpdateBackgroundWorker = BackgroundWorkerEx.RunBackgroundWorker(Me.theCheckForUpdateBackgroundWorker, AddressOf Me.CheckForUpdate_DoWork, checkForUpdate_ProgressChanged, AddressOf Me.CheckForUpdate_RunWorkerCompleted, Nothing)
 	End Sub
 
-	Public Sub DecompressAndRunNewVersion()
+	Public Sub CancelDownload()
+		If Me.theWebClient IsNot Nothing Then
+			Me.theWebClient.CancelAsync()
+		End If
+	End Sub
+
+	Private Sub DownloadAfterCheckForUpdate()
+		Dim localPathFileName As String = Path.Combine(Me.theLocalPath, Me.theLocalFileName)
+		If File.Exists(localPathFileName) Then
+			'TODO: rename the download
+		End If
+
+		'Dim uri As Uri = New Uri("https://github.com/ZeqMacaw/test/blob/master/update.xml")
+		Dim remoteFileUri As New Uri(Me.theRemoteFileLink)
+
+		Me.theWebClient = New WebClient()
+		AddHandler Me.theWebClient.DownloadProgressChanged, Me.theDownloadProgressChangedHandler
+		AddHandler Me.theWebClient.DownloadFileCompleted, Me.theDownloadFileCompletedHandler
+		Me.theWebClient.DownloadFileAsync(remoteFileUri, localPathFileName, localPathFileName)
+	End Sub
+
+#End Region
+
+#Region "Update"
+
+	Public Sub Update(ByVal checkForUpdate_ProgressChanged As ProgressChangedEventHandler, ByVal checkForUpdate_RunWorkerCompleted As RunWorkerCompletedEventHandler, ByVal given_ProgressChanged As ProgressChangedEventHandler, ByVal given_RunWorkerCompleted As RunWorkerCompletedEventHandler)
+		Me.theDownloadTaskIsEnabled = True
+		'Me.CheckForUpdate(checkForUpdate_ProgressChanged, checkForUpdate_RunWorkerCompleted)
+
+		Me.theUpdateBackgroundWorker = BackgroundWorkerEx.RunBackgroundWorker(Me.theUpdateBackgroundWorker, AddressOf Me.Update_DoWork, given_ProgressChanged, given_RunWorkerCompleted, Nothing)
+	End Sub
+
+	Private theUpdateBackgroundWorker As BackgroundWorkerEx
+
+	'NOTE: This is run in a background thread.
+	Private Sub Update_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs)
 		' Copy SevenZr.exe and CrowbarLauncher.exe from resources into appdata folder.
 		TheApp.WriteUpdaterFiles()
 
@@ -228,111 +271,33 @@ Public Class Updater
 
 #Region "Core Event Handlers"
 
-	Private Sub WebClient_DownloadProgressChanged(ByVal sender As Object, ByVal e As DownloadProgressChangedEventArgs)
-		''Me.DownloadProgressBar.Text = e.BytesReceived.ToString("N0") + " / " + e.TotalBytesToReceive.ToString("N0") + " bytes   " + e.ProgressPercentage.ToString() + " %"
-		''Me.DownloadProgressBar.Value = CInt(e.BytesReceived * Me.DownloadProgressBar.Maximum / e.TotalBytesToReceive)
-		'Me.UpdateProgressBar(e.BytesReceived, e.TotalBytesToReceive)
-	End Sub
-
-	Private Sub WebClient_DownloadFileCompleted(ByVal sender As Object, ByVal e As AsyncCompletedEventArgs)
+	Private Sub CheckForUpdate_RunWorkerCompleted(ByVal sender As System.Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs)
 		If e.Cancelled Then
-			'	Me.LogTextBox.AppendText("Download cancelled." + vbCrLf)
-			'	Me.DownloadProgressBar.Text = ""
-			'	Me.DownloadProgressBar.Value = 0
-
-			'	Dim pathFileName As String = CType(e.UserState, String)
-			'	If File.Exists(pathFileName) Then
-			'		Try
-			'			File.Delete(pathFileName)
-			'		Catch ex As Exception
-			'			Me.LogTextBox.AppendText("WARNING: Problem deleting incomplete downloaded file." + vbCrLf)
-			'		End Try
-			'	End If
+			'Me.CheckForUpdateTextBox.Text = "Check canceled."
 		Else
-			Dim pathFileName As String = CType(e.UserState, String)
-			If File.Exists(pathFileName) Then
-				Me.ProcessUpdateXml()
-				'Me.LogTextBox.AppendText("Download complete." + vbCrLf + "Downloaded file: """ + pathFileName + """" + vbCrLf)
-				'Me.DownloadedItemTextBox.Text = pathFileName
-				'Else
-				'	Me.LogTextBox.AppendText("Download failed." + vbCrLf)
+			If Me.theDownloadTaskIsEnabled Then
+				Me.DownloadAfterCheckForUpdate()
 			End If
 		End If
-
-		RemoveHandler Me.theWebClient.DownloadProgressChanged, AddressOf Me.WebClient_DownloadProgressChanged
-		RemoveHandler Me.theWebClient.DownloadFileCompleted, AddressOf Me.WebClient_DownloadFileCompleted
-		Me.theWebClient = Nothing
-
-		'Me.DownloadButton.Enabled = True
-		'Me.CancelDownloadButton.Enabled = False
-	End Sub
-
-	'NOTE: This is run in a background thread.
-	Private Sub Worker_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs)
-		Dim bw As BackgroundWorkerEx = CType(sender, BackgroundWorkerEx)
-		Dim outputInfo As String = ""
-
-		'TODO: In background worker, download release web page and changelog.
-		'TODO: Show info.
-		'TODO: In Download_RunWorkerCompleted, run the background worker for downloading the app file.
-		'TODO: In DownloadAppFile_RunWorkerCompleted, run the new app.
-		'TODO: Copy SevenZr.exe and CrowbarLauncher.exe from resources into appdata folder.
-		'TODO: Decompress, via 7zr.exe, Crowbar.7z file into appdata folder.
-		'TODO: Run CrowbarLauncher.exe, which moves new Crowbar.exe to where current Crowbar.exe is and then runs the new Crowbar.exe.
-		'TODO: Crowbar when opened, deletes CrowbarLauncher.exe if it exists.
-		'InstalledVersion = mainAssembly.GetName().Version;
-		'args.IsUpdateAvailable = CurrentVersion > InstalledVersion;
-
-		e.Result = outputInfo
-	End Sub
-
-	Private Sub Worker_ProgressChanged(ByVal sender As System.Object, ByVal e As System.ComponentModel.ProgressChangedEventArgs)
-		If e.ProgressPercentage = 0 Then
-		ElseIf e.ProgressPercentage = 1 Then
-		End If
-	End Sub
-
-	Private Sub Worker_RunWorkerCompleted(ByVal sender As System.Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs)
-		If e.Cancelled Then
-		Else
-		End If
-
-		Me.isRunning = False
+		Me.theCheckForUpdate_RunWorkerCompleted(Me, e)
 	End Sub
 
 #End Region
 
 #Region "Events"
 
-	Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged
-
-#End Region
-
-#Region "Private Methods"
-
-	Private Sub ProcessUpdateXml()
-
-	End Sub
-
-	Private Sub CancelDownload()
-		If Me.theWebClient IsNot Nothing Then
-			Me.theWebClient.CancelAsync()
-		End If
-	End Sub
-
-	Protected Sub NotifyPropertyChanged(ByVal info As String)
-		RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(info))
-	End Sub
-
 #End Region
 
 #Region "Data"
 
-	Private theUpdateCheckMessage As String
-	Private theChangelog As String
-
-	Private isRunning As Boolean
 	Private theWebClient As WebClient
+	Private theCheckForUpdate_RunWorkerCompleted As RunWorkerCompletedEventHandler
+	Private theDownloadProgressChangedHandler As DownloadProgressChangedEventHandler
+	Private theDownloadFileCompletedHandler As AsyncCompletedEventHandler
+	Private theDownloadTaskIsEnabled As Boolean
+	Private theRemoteFileLink As String
+	Private theLocalPath As String
+	Private theLocalFileName As String
 
 #End Region
 

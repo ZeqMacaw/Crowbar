@@ -92,6 +92,9 @@ Public Class AppSettings
 		Me.SetDefaultOptionsDragAndDropOptions()
 		Me.SetDefaultOptionsContextMenuOptions()
 
+		Me.theUpdateDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+		Me.theUpdateUpdateDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+
 		'Me.Init()
 	End Sub
 
@@ -1501,6 +1504,26 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	Public Property UpdateDownloadPath() As String
+		Get
+			Return Me.theUpdateDownloadPath
+		End Get
+		Set(ByVal value As String)
+			Me.theUpdateDownloadPath = value
+			NotifyPropertyChanged("UpdateDownloadPath")
+		End Set
+	End Property
+
+	Public Property UpdateUpdateDownloadPath() As String
+		Get
+			Return Me.theUpdateUpdateDownloadPath
+		End Get
+		Set(ByVal value As String)
+			Me.theUpdateUpdateDownloadPath = value
+			NotifyPropertyChanged("UpdateUpdateDownloadPath")
+		End Set
+	End Property
+
 #End Region
 
 #Region "Core Event Handlers"
@@ -1865,6 +1888,11 @@ Public Class AppSettings
 	Private theOptionsCompileQcFileIsChecked As Boolean
 	Private theOptionsCompileFolderIsChecked As Boolean
 	Private theOptionsCompileFolderAndSubfoldersIsChecked As Boolean
+
+	' Update tab
+
+	Private theUpdateDownloadPath As String
+	Private theUpdateUpdateDownloadPath As String
 
 #End Region
 

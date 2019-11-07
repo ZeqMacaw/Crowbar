@@ -30,19 +30,19 @@ Partial Class UpdateUserControl
 		Me.CheckBox2 = New System.Windows.Forms.CheckBox()
 		Me.ChangelogTextBox = New Crowbar.RichTextBoxEx()
 		Me.GroupBoxEx1 = New Crowbar.GroupBoxEx()
-		Me.Button3 = New System.Windows.Forms.Button()
-		Me.TextBoxEx2 = New Crowbar.TextBoxEx()
-		Me.ProgressBarEx1 = New Crowbar.ProgressBarEx()
+		Me.CancelUpdateButton = New System.Windows.Forms.Button()
+		Me.BrowseForUpdateFolderButton = New System.Windows.Forms.Button()
+		Me.UpdateFolderTextBox = New Crowbar.TextBoxEx()
+		Me.UpdateProgressBarEx = New Crowbar.ProgressBarEx()
 		Me.GroupBoxEx2 = New Crowbar.GroupBoxEx()
+		Me.CancelDownloadButton = New System.Windows.Forms.Button()
 		Me.Label2 = New System.Windows.Forms.Label()
-		Me.Button1 = New System.Windows.Forms.Button()
-		Me.TextBoxEx1 = New Crowbar.TextBoxEx()
-		Me.ProgressBarEx2 = New Crowbar.ProgressBarEx()
+		Me.BrowseForDownloadFolderButton = New System.Windows.Forms.Button()
+		Me.DownloadFolderTextBox = New Crowbar.TextBoxEx()
+		Me.DownloadProgressBarEx = New Crowbar.ProgressBarEx()
 		Me.CheckForUpdateTextBox = New Crowbar.TextBoxEx()
 		Me.CheckForUpdateProgressBar = New Crowbar.ProgressBarEx()
 		Me.CancelCheckButton = New System.Windows.Forms.Button()
-		Me.CancelDownloadButton = New System.Windows.Forms.Button()
-		Me.CancelUpdateButton = New System.Windows.Forms.Button()
 		Me.GroupBoxEx3 = New Crowbar.GroupBoxEx()
 		Me.GroupBoxEx1.SuspendLayout()
 		Me.GroupBoxEx2.SuspendLayout()
@@ -115,9 +115,9 @@ Partial Class UpdateUserControl
 		Me.GroupBoxEx1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.GroupBoxEx1.Controls.Add(Me.CancelUpdateButton)
-		Me.GroupBoxEx1.Controls.Add(Me.Button3)
-		Me.GroupBoxEx1.Controls.Add(Me.TextBoxEx2)
-		Me.GroupBoxEx1.Controls.Add(Me.ProgressBarEx1)
+		Me.GroupBoxEx1.Controls.Add(Me.BrowseForUpdateFolderButton)
+		Me.GroupBoxEx1.Controls.Add(Me.UpdateFolderTextBox)
+		Me.GroupBoxEx1.Controls.Add(Me.UpdateProgressBarEx)
 		Me.GroupBoxEx1.Controls.Add(Me.UpdateButton)
 		Me.GroupBoxEx1.Controls.Add(Me.CheckBox2)
 		Me.GroupBoxEx1.Controls.Add(Me.CheckBox1)
@@ -131,34 +131,45 @@ Partial Class UpdateUserControl
 		Me.GroupBoxEx1.Text = "Update - Update current version to latest version - Crowbar will close and reopen" &
 	""
 		'
-		'Button3
+		'CancelUpdateButton
 		'
-		Me.Button3.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.Button3.Location = New System.Drawing.Point(689, 16)
-		Me.Button3.Name = "Button3"
-		Me.Button3.Size = New System.Drawing.Size(75, 23)
-		Me.Button3.TabIndex = 10
-		Me.Button3.Text = "Browse..."
-		Me.Button3.UseVisualStyleBackColor = True
+		Me.CancelUpdateButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.CancelUpdateButton.Enabled = False
+		Me.CancelUpdateButton.Location = New System.Drawing.Point(689, 66)
+		Me.CancelUpdateButton.Name = "CancelUpdateButton"
+		Me.CancelUpdateButton.Size = New System.Drawing.Size(75, 23)
+		Me.CancelUpdateButton.TabIndex = 13
+		Me.CancelUpdateButton.Text = "Cancel"
+		Me.CancelUpdateButton.UseVisualStyleBackColor = True
 		'
-		'TextBoxEx2
+		'BrowseForUpdateFolderButton
 		'
-		Me.TextBoxEx2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+		Me.BrowseForUpdateFolderButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.BrowseForUpdateFolderButton.Location = New System.Drawing.Point(689, 16)
+		Me.BrowseForUpdateFolderButton.Name = "BrowseForUpdateFolderButton"
+		Me.BrowseForUpdateFolderButton.Size = New System.Drawing.Size(75, 23)
+		Me.BrowseForUpdateFolderButton.TabIndex = 10
+		Me.BrowseForUpdateFolderButton.Text = "Browse..."
+		Me.BrowseForUpdateFolderButton.UseVisualStyleBackColor = True
+		'
+		'UpdateFolderTextBox
+		'
+		Me.UpdateFolderTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TextBoxEx2.CueBannerText = ""
-		Me.TextBoxEx2.Location = New System.Drawing.Point(254, 18)
-		Me.TextBoxEx2.Name = "TextBoxEx2"
-		Me.TextBoxEx2.Size = New System.Drawing.Size(429, 21)
-		Me.TextBoxEx2.TabIndex = 9
+		Me.UpdateFolderTextBox.CueBannerText = ""
+		Me.UpdateFolderTextBox.Location = New System.Drawing.Point(254, 18)
+		Me.UpdateFolderTextBox.Name = "UpdateFolderTextBox"
+		Me.UpdateFolderTextBox.Size = New System.Drawing.Size(429, 21)
+		Me.UpdateFolderTextBox.TabIndex = 9
 		'
-		'ProgressBarEx1
+		'UpdateProgressBarEx
 		'
-		Me.ProgressBarEx1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+		Me.UpdateProgressBarEx.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ProgressBarEx1.Location = New System.Drawing.Point(87, 66)
-		Me.ProgressBarEx1.Name = "ProgressBarEx1"
-		Me.ProgressBarEx1.Size = New System.Drawing.Size(596, 23)
-		Me.ProgressBarEx1.TabIndex = 5
+		Me.UpdateProgressBarEx.Location = New System.Drawing.Point(87, 66)
+		Me.UpdateProgressBarEx.Name = "UpdateProgressBarEx"
+		Me.UpdateProgressBarEx.Size = New System.Drawing.Size(596, 23)
+		Me.UpdateProgressBarEx.TabIndex = 5
 		'
 		'GroupBoxEx2
 		'
@@ -166,9 +177,9 @@ Partial Class UpdateUserControl
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.GroupBoxEx2.Controls.Add(Me.CancelDownloadButton)
 		Me.GroupBoxEx2.Controls.Add(Me.Label2)
-		Me.GroupBoxEx2.Controls.Add(Me.Button1)
-		Me.GroupBoxEx2.Controls.Add(Me.TextBoxEx1)
-		Me.GroupBoxEx2.Controls.Add(Me.ProgressBarEx2)
+		Me.GroupBoxEx2.Controls.Add(Me.BrowseForDownloadFolderButton)
+		Me.GroupBoxEx2.Controls.Add(Me.DownloadFolderTextBox)
+		Me.GroupBoxEx2.Controls.Add(Me.DownloadProgressBarEx)
 		Me.GroupBoxEx2.Controls.Add(Me.DownloadButton)
 		Me.GroupBoxEx2.IsReadOnly = False
 		Me.GroupBoxEx2.Location = New System.Drawing.Point(3, 356)
@@ -179,6 +190,17 @@ Partial Class UpdateUserControl
 		Me.GroupBoxEx2.TabStop = False
 		Me.GroupBoxEx2.Text = "Download - Download the new version (compressed file) for manually updating"
 		'
+		'CancelDownloadButton
+		'
+		Me.CancelDownloadButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.CancelDownloadButton.Enabled = False
+		Me.CancelDownloadButton.Location = New System.Drawing.Point(689, 47)
+		Me.CancelDownloadButton.Name = "CancelDownloadButton"
+		Me.CancelDownloadButton.Size = New System.Drawing.Size(75, 23)
+		Me.CancelDownloadButton.TabIndex = 12
+		Me.CancelDownloadButton.Text = "Cancel"
+		Me.CancelDownloadButton.UseVisualStyleBackColor = True
+		'
 		'Label2
 		'
 		Me.Label2.AutoSize = True
@@ -188,34 +210,34 @@ Partial Class UpdateUserControl
 		Me.Label2.TabIndex = 9
 		Me.Label2.Text = "Download folder:"
 		'
-		'Button1
+		'BrowseForDownloadFolderButton
 		'
-		Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.Button1.Location = New System.Drawing.Point(689, 18)
-		Me.Button1.Name = "Button1"
-		Me.Button1.Size = New System.Drawing.Size(75, 23)
-		Me.Button1.TabIndex = 8
-		Me.Button1.Text = "Browse..."
-		Me.Button1.UseVisualStyleBackColor = True
+		Me.BrowseForDownloadFolderButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.BrowseForDownloadFolderButton.Location = New System.Drawing.Point(689, 18)
+		Me.BrowseForDownloadFolderButton.Name = "BrowseForDownloadFolderButton"
+		Me.BrowseForDownloadFolderButton.Size = New System.Drawing.Size(75, 23)
+		Me.BrowseForDownloadFolderButton.TabIndex = 8
+		Me.BrowseForDownloadFolderButton.Text = "Browse..."
+		Me.BrowseForDownloadFolderButton.UseVisualStyleBackColor = True
 		'
-		'TextBoxEx1
+		'DownloadFolderTextBox
 		'
-		Me.TextBoxEx1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+		Me.DownloadFolderTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TextBoxEx1.CueBannerText = ""
-		Me.TextBoxEx1.Location = New System.Drawing.Point(101, 20)
-		Me.TextBoxEx1.Name = "TextBoxEx1"
-		Me.TextBoxEx1.Size = New System.Drawing.Size(582, 21)
-		Me.TextBoxEx1.TabIndex = 7
+		Me.DownloadFolderTextBox.CueBannerText = ""
+		Me.DownloadFolderTextBox.Location = New System.Drawing.Point(101, 20)
+		Me.DownloadFolderTextBox.Name = "DownloadFolderTextBox"
+		Me.DownloadFolderTextBox.Size = New System.Drawing.Size(582, 21)
+		Me.DownloadFolderTextBox.TabIndex = 7
 		'
-		'ProgressBarEx2
+		'DownloadProgressBarEx
 		'
-		Me.ProgressBarEx2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+		Me.DownloadProgressBarEx.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ProgressBarEx2.Location = New System.Drawing.Point(87, 47)
-		Me.ProgressBarEx2.Name = "ProgressBarEx2"
-		Me.ProgressBarEx2.Size = New System.Drawing.Size(596, 23)
-		Me.ProgressBarEx2.TabIndex = 6
+		Me.DownloadProgressBarEx.Location = New System.Drawing.Point(87, 47)
+		Me.DownloadProgressBarEx.Name = "DownloadProgressBarEx"
+		Me.DownloadProgressBarEx.Size = New System.Drawing.Size(596, 23)
+		Me.DownloadProgressBarEx.TabIndex = 6
 		'
 		'CheckForUpdateTextBox
 		'
@@ -227,6 +249,7 @@ Partial Class UpdateUserControl
 		Me.CheckForUpdateTextBox.ReadOnly = True
 		Me.CheckForUpdateTextBox.Size = New System.Drawing.Size(596, 21)
 		Me.CheckForUpdateTextBox.TabIndex = 9
+		Me.CheckForUpdateTextBox.Text = "[not checked yet]"
 		'
 		'CheckForUpdateProgressBar
 		'
@@ -248,28 +271,6 @@ Partial Class UpdateUserControl
 		Me.CancelCheckButton.TabIndex = 11
 		Me.CancelCheckButton.Text = "Cancel"
 		Me.CancelCheckButton.UseVisualStyleBackColor = True
-		'
-		'CancelDownloadButton
-		'
-		Me.CancelDownloadButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.CancelDownloadButton.Enabled = False
-		Me.CancelDownloadButton.Location = New System.Drawing.Point(689, 47)
-		Me.CancelDownloadButton.Name = "CancelDownloadButton"
-		Me.CancelDownloadButton.Size = New System.Drawing.Size(75, 23)
-		Me.CancelDownloadButton.TabIndex = 12
-		Me.CancelDownloadButton.Text = "Cancel"
-		Me.CancelDownloadButton.UseVisualStyleBackColor = True
-		'
-		'CancelUpdateButton
-		'
-		Me.CancelUpdateButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.CancelUpdateButton.Enabled = False
-		Me.CancelUpdateButton.Location = New System.Drawing.Point(689, 66)
-		Me.CancelUpdateButton.Name = "CancelUpdateButton"
-		Me.CancelUpdateButton.Size = New System.Drawing.Size(75, 23)
-		Me.CancelUpdateButton.TabIndex = 13
-		Me.CancelUpdateButton.Text = "Cancel"
-		Me.CancelUpdateButton.UseVisualStyleBackColor = True
 		'
 		'GroupBoxEx3
 		'
@@ -316,14 +317,14 @@ Partial Class UpdateUserControl
 	Friend WithEvents CheckBox2 As CheckBox
 	Friend WithEvents ChangelogTextBox As RichTextBoxEx
 	Friend WithEvents GroupBoxEx1 As GroupBoxEx
-	Friend WithEvents ProgressBarEx1 As ProgressBarEx
+	Friend WithEvents UpdateProgressBarEx As ProgressBarEx
 	Friend WithEvents GroupBoxEx2 As GroupBoxEx
-	Friend WithEvents ProgressBarEx2 As ProgressBarEx
+	Friend WithEvents DownloadProgressBarEx As ProgressBarEx
 	Friend WithEvents Label2 As Label
-	Friend WithEvents Button1 As Button
-	Friend WithEvents TextBoxEx1 As TextBoxEx
-	Friend WithEvents Button3 As Button
-	Friend WithEvents TextBoxEx2 As TextBoxEx
+	Friend WithEvents BrowseForDownloadFolderButton As Button
+	Friend WithEvents DownloadFolderTextBox As TextBoxEx
+	Friend WithEvents BrowseForUpdateFolderButton As Button
+	Friend WithEvents UpdateFolderTextBox As TextBoxEx
 	Friend WithEvents CheckForUpdateTextBox As TextBoxEx
 	Friend WithEvents CheckForUpdateProgressBar As ProgressBarEx
 	Friend WithEvents CancelUpdateButton As Button
