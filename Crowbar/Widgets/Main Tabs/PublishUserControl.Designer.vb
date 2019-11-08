@@ -710,7 +710,7 @@ Partial Class PublishUserControl
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.QueueListView.Location = New System.Drawing.Point(568, 0)
 		Me.QueueListView.Name = "QueueListView"
-		Me.QueueListView.Size = New System.Drawing.Size(202, 62)
+		Me.QueueListView.Size = New System.Drawing.Size(202, 61)
 		Me.QueueListView.TabIndex = 20
 		Me.QueueListView.UseCompatibleStateImageBehavior = False
 		'
@@ -724,7 +724,7 @@ Partial Class PublishUserControl
 		Me.LogTextBox.Location = New System.Drawing.Point(131, 0)
 		Me.LogTextBox.Name = "LogTextBox"
 		Me.LogTextBox.ReadOnly = True
-		Me.LogTextBox.Size = New System.Drawing.Size(434, 62)
+		Me.LogTextBox.Size = New System.Drawing.Size(434, 61)
 		Me.LogTextBox.TabIndex = 19
 		Me.LogTextBox.Text = ""
 		Me.LogTextBox.WordWrap = False
