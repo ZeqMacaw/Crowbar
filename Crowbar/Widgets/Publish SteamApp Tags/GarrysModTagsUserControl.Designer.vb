@@ -45,7 +45,7 @@ Partial Class GarrysModTagsUserControl
 		Me.ComboBox1.FormattingEnabled = True
 		Me.ComboBox1.Location = New System.Drawing.Point(44, 0)
 		Me.ComboBox1.Name = "ComboBox1"
-		Me.ComboBox1.Size = New System.Drawing.Size(120, 21)
+		Me.ComboBox1.Size = New System.Drawing.Size(110, 21)
 		Me.ComboBox1.TabIndex = 1
 		Me.ComboBox1.Tag = "TagsEnabled"
 		'
@@ -181,7 +181,7 @@ Partial Class GarrysModTagsUserControl
 		Me.GroupBox1.Location = New System.Drawing.Point(3, 27)
 		Me.GroupBox1.Name = "GroupBox1"
 		Me.GroupBox1.SelectedValue = Nothing
-		Me.GroupBox1.Size = New System.Drawing.Size(161, 235)
+		Me.GroupBox1.Size = New System.Drawing.Size(151, 228)
 		Me.GroupBox1.TabIndex = 2
 		Me.GroupBox1.TabStop = False
 		Me.GroupBox1.Text = "Choose up to two"
@@ -191,7 +191,7 @@ Partial Class GarrysModTagsUserControl
 		Me.AddonTagCheckBox.AutoSize = True
 		Me.AddonTagCheckBox.Enabled = False
 		Me.AddonTagCheckBox.IsReadOnly = False
-		Me.AddonTagCheckBox.Location = New System.Drawing.Point(72, 268)
+		Me.AddonTagCheckBox.Location = New System.Drawing.Point(72, 261)
 		Me.AddonTagCheckBox.Name = "AddonTagCheckBox"
 		Me.AddonTagCheckBox.Size = New System.Drawing.Size(57, 17)
 		Me.AddonTagCheckBox.TabIndex = 9
@@ -202,7 +202,7 @@ Partial Class GarrysModTagsUserControl
 		'Label2
 		'
 		Me.Label2.AutoSize = True
-		Me.Label2.Location = New System.Drawing.Point(3, 269)
+		Me.Label2.Location = New System.Drawing.Point(3, 262)
 		Me.Label2.Name = "Label2"
 		Me.Label2.Size = New System.Drawing.Size(63, 13)
 		Me.Label2.TabIndex = 10
@@ -218,7 +218,7 @@ Partial Class GarrysModTagsUserControl
 		Me.Controls.Add(Me.Label1)
 		Me.Controls.Add(Me.ComboBox1)
 		Me.Name = "GarrysModTagsUserControl"
-		Me.Size = New System.Drawing.Size(184, 299)
+		Me.Size = New System.Drawing.Size(168, 299)
 		Me.GroupBox1.ResumeLayout(False)
 		Me.GroupBox1.PerformLayout()
 		Me.ResumeLayout(False)
