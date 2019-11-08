@@ -270,7 +270,7 @@ Public Class DecompileUserControl
 	End Sub
 
 	Private Sub DecompileOptionsUseDefaultsButton_Click(sender As Object, e As EventArgs) Handles DecompileOptionsUseDefaultsButton.Click
-		TheApp.Settings.SetDefaultDecompileOptions()
+		TheApp.Settings.SetDefaultDecompileReCreateFilesOptions()
 	End Sub
 
 	Private Sub DecompileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DecompileButton.Click
