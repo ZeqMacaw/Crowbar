@@ -9,12 +9,6 @@ Public Class PackUserControl
 
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
-
-		'NOTE: Try-Catch is needed so that widget will be shown in MainForm without raising exception.
-		Try
-			Me.Init()
-		Catch
-		End Try
 	End Sub
 
 #End Region
@@ -123,10 +117,27 @@ Public Class PackUserControl
 #Region "Widget Event Handlers"
 
 	Private Sub PackUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
+		'NOTE: Code is here instead of Designer file to avoid syntax error when VS adds a line about binding to the type tag.
+		Me.GarrysModTagsUserControl1 = New Crowbar.GarrysModTagsUserControl()
+		Me.GarrysModTagsUserControl1.Font = New System.Drawing.Font("Tahoma", 8.25!)
+		Me.GarrysModTagsUserControl1.Location = New System.Drawing.Point(179, 28)
+		Me.GarrysModTagsUserControl1.Name = "GarrysModTagsUserControl1"
+		Me.GarrysModTagsUserControl1.Orientation = Crowbar.AppEnums.OrientationType.Horizontal
+		Me.GarrysModTagsUserControl1.Size = New System.Drawing.Size(366, 97)
+		Me.GarrysModTagsUserControl1.TabIndex = 14
+		Me.GarrysModTagsUserControl1.Visible = False
+		Me.Panel2.Controls.Add(Me.GarrysModTagsUserControl1)
+
 		'NOTE: This code prevents Visual Studio often inexplicably extending the right side of these textboxes.
 		Me.InputPathFileNameTextBox.Size = New System.Drawing.Size(Me.BrowseForInputFolderOrFileNameButton.Left - Me.BrowseForInputFolderOrFileNameButton.Margin.Left - Me.InputPathFileNameTextBox.Margin.Right - Me.InputPathFileNameTextBox.Left, 21)
 		Me.OutputPathTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputPathTextBox.Margin.Right - Me.OutputPathTextBox.Left, 21)
 		Me.OutputParentPathTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputParentPathTextBox.Margin.Right - Me.OutputParentPathTextBox.Left, 21)
+
+		''NOTE: Try-Catch is needed so that widget will be shown in MainForm without raising exception.
+		'Try
+		Me.Init()
+		'Catch
+		'End Try
 	End Sub
 
 #End Region
@@ -331,15 +342,19 @@ Public Class PackUserControl
 
 	Private Sub UpdatePackerOptions()
 		'TODO: Add 'Write multi-file VPK' option.
-		'Dim gameSetup As GameSetup
-		'gameSetup = TheApp.Settings.GameSetups(TheApp.Settings.PackGameSetupSelectedIndex)
-		'If Path.GetFileName(gameSetup.PackerPathFileName) = "gmad.exe" Then
-		Me.MultiFileVpkCheckBox.Visible = False
-		Me.EditPackerOptionsText("M", False)
-		'Else
-		'	Me.MultiFileVpkCheckBox.Visible = True
-		'	Me.EditPackerOptionsText("M", TheApp.Settings.PackOptionMultiFileVpkIsChecked)
-		'End If
+		Dim gameSetup As GameSetup
+		gameSetup = TheApp.Settings.GameSetups(TheApp.Settings.PackGameSetupSelectedIndex)
+		If Path.GetFileName(gameSetup.PackerPathFileName) = "gmad.exe" Then
+			Me.MultiFileVpkCheckBox.Visible = False
+			Me.EditPackerOptionsText("M", False)
+
+			Me.GarrysModTagsUserControl1.Visible = True
+		Else
+			'Me.MultiFileVpkCheckBox.Visible = True
+			'Me.EditPackerOptionsText("M", TheApp.Settings.PackOptionMultiFileVpkIsChecked)
+
+			Me.GarrysModTagsUserControl1.Visible = False
+		End If
 
 		Me.SetPackerOptionsText()
 	End Sub
@@ -507,6 +522,8 @@ Public Class PackUserControl
 #End Region
 
 #Region "Data"
+
+	Friend WithEvents GarrysModTagsUserControl1 As GarrysModTagsUserControl
 
 	Private theSelectedPackerOptions As List(Of String)
 

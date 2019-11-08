@@ -179,4 +179,9 @@ Public Module AppEnums
 		<Description("57")> MDLv57
 	End Enum
 
+	Public Enum OrientationType
+		<Description("Horizontal")> Horizontal
+		<Description("Vertical")> Vertical
+	End Enum
+
 End Module

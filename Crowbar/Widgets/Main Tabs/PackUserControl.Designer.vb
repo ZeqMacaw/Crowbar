@@ -36,26 +36,26 @@ Partial Class PackUserControl
 		Me.InputPathFileNameTextBox = New Crowbar.TextBoxEx()
 		Me.BrowseForInputFolderOrFileNameButton = New System.Windows.Forms.Button()
 		Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
-		Me.UseAllInPublishButton = New System.Windows.Forms.Button()
 		Me.OptionsGroupBox = New System.Windows.Forms.GroupBox()
 		Me.Label4 = New System.Windows.Forms.Label()
 		Me.DirectPackerOptionsTextBox = New System.Windows.Forms.TextBox()
 		Me.PackerOptionsTextBox = New System.Windows.Forms.TextBox()
 		Me.Panel2 = New System.Windows.Forms.Panel()
+		Me.MultiFileVpkCheckBox = New System.Windows.Forms.CheckBox()
 		Me.PackOptionsUseDefaultsButton = New System.Windows.Forms.Button()
 		Me.LogFileCheckBox = New System.Windows.Forms.CheckBox()
 		Me.Label3 = New System.Windows.Forms.Label()
 		Me.GameSetupComboBox = New System.Windows.Forms.ComboBox()
 		Me.SetUpGamesButton = New System.Windows.Forms.Button()
-		Me.CancelPackButton = New System.Windows.Forms.Button()
-		Me.SkipCurrentFolderButton = New System.Windows.Forms.Button()
 		Me.PackButton = New System.Windows.Forms.Button()
+		Me.SkipCurrentFolderButton = New System.Windows.Forms.Button()
+		Me.CancelPackButton = New System.Windows.Forms.Button()
+		Me.UseAllInPublishButton = New System.Windows.Forms.Button()
 		Me.LogRichTextBox = New Crowbar.RichTextBoxEx()
 		Me.UseInReleaseButton = New System.Windows.Forms.Button()
 		Me.PackedFilesComboBox = New System.Windows.Forms.ComboBox()
 		Me.GotoPackedFileButton = New System.Windows.Forms.Button()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-		Me.MultiFileVpkCheckBox = New System.Windows.Forms.CheckBox()
 		Me.Panel1.SuspendLayout()
 		CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SplitContainer2.Panel1.SuspendLayout()
@@ -205,11 +205,11 @@ Partial Class PackUserControl
 		'
 		'SplitContainer2.Panel1
 		'
-		Me.SplitContainer2.Panel1.Controls.Add(Me.UseAllInPublishButton)
 		Me.SplitContainer2.Panel1.Controls.Add(Me.OptionsGroupBox)
-		Me.SplitContainer2.Panel1.Controls.Add(Me.CancelPackButton)
-		Me.SplitContainer2.Panel1.Controls.Add(Me.SkipCurrentFolderButton)
 		Me.SplitContainer2.Panel1.Controls.Add(Me.PackButton)
+		Me.SplitContainer2.Panel1.Controls.Add(Me.SkipCurrentFolderButton)
+		Me.SplitContainer2.Panel1.Controls.Add(Me.CancelPackButton)
+		Me.SplitContainer2.Panel1.Controls.Add(Me.UseAllInPublishButton)
 		Me.SplitContainer2.Panel1MinSize = 90
 		'
 		'SplitContainer2.Panel2
@@ -220,20 +220,8 @@ Partial Class PackUserControl
 		Me.SplitContainer2.Panel2.Controls.Add(Me.GotoPackedFileButton)
 		Me.SplitContainer2.Panel2MinSize = 90
 		Me.SplitContainer2.Size = New System.Drawing.Size(770, 472)
-		Me.SplitContainer2.SplitterDistance = 275
+		Me.SplitContainer2.SplitterDistance = 285
 		Me.SplitContainer2.TabIndex = 29
-		'
-		'UseAllInPublishButton
-		'
-		Me.UseAllInPublishButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.UseAllInPublishButton.Enabled = False
-		Me.UseAllInPublishButton.Location = New System.Drawing.Point(348, 250)
-		Me.UseAllInPublishButton.Name = "UseAllInPublishButton"
-		Me.UseAllInPublishButton.Size = New System.Drawing.Size(110, 23)
-		Me.UseAllInPublishButton.TabIndex = 4
-		Me.UseAllInPublishButton.Text = "Use All in Publish"
-		Me.UseAllInPublishButton.UseVisualStyleBackColor = True
-		Me.UseAllInPublishButton.Visible = False
 		'
 		'OptionsGroupBox
 		'
@@ -246,14 +234,14 @@ Partial Class PackUserControl
 		Me.OptionsGroupBox.Controls.Add(Me.Panel2)
 		Me.OptionsGroupBox.Location = New System.Drawing.Point(0, 0)
 		Me.OptionsGroupBox.Name = "OptionsGroupBox"
-		Me.OptionsGroupBox.Size = New System.Drawing.Size(770, 244)
+		Me.OptionsGroupBox.Size = New System.Drawing.Size(770, 249)
 		Me.OptionsGroupBox.TabIndex = 0
 		Me.OptionsGroupBox.TabStop = False
 		Me.OptionsGroupBox.Text = "Options"
 		'
 		'Label4
 		'
-		Me.Label4.Location = New System.Drawing.Point(6, 151)
+		Me.Label4.Location = New System.Drawing.Point(6, 161)
 		Me.Label4.Name = "Label4"
 		Me.Label4.Size = New System.Drawing.Size(393, 13)
 		Me.Label4.TabIndex = 16
@@ -263,7 +251,7 @@ Partial Class PackUserControl
 		'
 		Me.DirectPackerOptionsTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.DirectPackerOptionsTextBox.Location = New System.Drawing.Point(6, 167)
+		Me.DirectPackerOptionsTextBox.Location = New System.Drawing.Point(6, 177)
 		Me.DirectPackerOptionsTextBox.Name = "DirectPackerOptionsTextBox"
 		Me.DirectPackerOptionsTextBox.Size = New System.Drawing.Size(758, 21)
 		Me.DirectPackerOptionsTextBox.TabIndex = 17
@@ -273,7 +261,7 @@ Partial Class PackUserControl
 		Me.PackerOptionsTextBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.PackerOptionsTextBox.Location = New System.Drawing.Point(6, 193)
+		Me.PackerOptionsTextBox.Location = New System.Drawing.Point(6, 203)
 		Me.PackerOptionsTextBox.Multiline = True
 		Me.PackerOptionsTextBox.Name = "PackerOptionsTextBox"
 		Me.PackerOptionsTextBox.ReadOnly = True
@@ -293,8 +281,19 @@ Partial Class PackUserControl
 		Me.Panel2.Controls.Add(Me.SetUpGamesButton)
 		Me.Panel2.Location = New System.Drawing.Point(3, 17)
 		Me.Panel2.Name = "Panel2"
-		Me.Panel2.Size = New System.Drawing.Size(764, 131)
+		Me.Panel2.Size = New System.Drawing.Size(764, 141)
 		Me.Panel2.TabIndex = 0
+		'
+		'MultiFileVpkCheckBox
+		'
+		Me.MultiFileVpkCheckBox.AutoSize = True
+		Me.MultiFileVpkCheckBox.Location = New System.Drawing.Point(6, 51)
+		Me.MultiFileVpkCheckBox.Name = "MultiFileVpkCheckBox"
+		Me.MultiFileVpkCheckBox.Size = New System.Drawing.Size(116, 17)
+		Me.MultiFileVpkCheckBox.TabIndex = 13
+		Me.MultiFileVpkCheckBox.Text = "Write multi-file VPK"
+		Me.MultiFileVpkCheckBox.UseVisualStyleBackColor = True
+		Me.MultiFileVpkCheckBox.Visible = False
 		'
 		'PackOptionsUseDefaultsButton
 		'
@@ -346,37 +345,49 @@ Partial Class PackUserControl
 		Me.SetUpGamesButton.Text = "Set Up Games"
 		Me.SetUpGamesButton.UseVisualStyleBackColor = True
 		'
-		'CancelPackButton
+		'PackButton
 		'
-		Me.CancelPackButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.CancelPackButton.Enabled = False
-		Me.CancelPackButton.Location = New System.Drawing.Point(232, 250)
-		Me.CancelPackButton.Name = "CancelPackButton"
-		Me.CancelPackButton.Size = New System.Drawing.Size(110, 23)
-		Me.CancelPackButton.TabIndex = 3
-		Me.CancelPackButton.Text = "Cancel Pack"
-		Me.CancelPackButton.UseVisualStyleBackColor = True
+		Me.PackButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.PackButton.Location = New System.Drawing.Point(0, 255)
+		Me.PackButton.Name = "PackButton"
+		Me.PackButton.Size = New System.Drawing.Size(110, 23)
+		Me.PackButton.TabIndex = 1
+		Me.PackButton.Text = "Pack"
+		Me.PackButton.UseVisualStyleBackColor = True
 		'
 		'SkipCurrentFolderButton
 		'
 		Me.SkipCurrentFolderButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.SkipCurrentFolderButton.Enabled = False
-		Me.SkipCurrentFolderButton.Location = New System.Drawing.Point(116, 250)
+		Me.SkipCurrentFolderButton.Location = New System.Drawing.Point(116, 255)
 		Me.SkipCurrentFolderButton.Name = "SkipCurrentFolderButton"
 		Me.SkipCurrentFolderButton.Size = New System.Drawing.Size(110, 23)
 		Me.SkipCurrentFolderButton.TabIndex = 2
 		Me.SkipCurrentFolderButton.Text = "Skip Current Folder"
 		Me.SkipCurrentFolderButton.UseVisualStyleBackColor = True
 		'
-		'PackButton
+		'CancelPackButton
 		'
-		Me.PackButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.PackButton.Location = New System.Drawing.Point(0, 250)
-		Me.PackButton.Name = "PackButton"
-		Me.PackButton.Size = New System.Drawing.Size(110, 23)
-		Me.PackButton.TabIndex = 1
-		Me.PackButton.Text = "Pack"
-		Me.PackButton.UseVisualStyleBackColor = True
+		Me.CancelPackButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.CancelPackButton.Enabled = False
+		Me.CancelPackButton.Location = New System.Drawing.Point(232, 255)
+		Me.CancelPackButton.Name = "CancelPackButton"
+		Me.CancelPackButton.Size = New System.Drawing.Size(110, 23)
+		Me.CancelPackButton.TabIndex = 3
+		Me.CancelPackButton.Text = "Cancel Pack"
+		Me.CancelPackButton.UseVisualStyleBackColor = True
+		'
+		'UseAllInPublishButton
+		'
+		Me.UseAllInPublishButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.UseAllInPublishButton.Enabled = False
+		Me.UseAllInPublishButton.Location = New System.Drawing.Point(348, 255)
+		Me.UseAllInPublishButton.Name = "UseAllInPublishButton"
+		Me.UseAllInPublishButton.Size = New System.Drawing.Size(110, 23)
+		Me.UseAllInPublishButton.TabIndex = 4
+		Me.UseAllInPublishButton.Text = "Use All in Publish"
+		Me.UseAllInPublishButton.UseVisualStyleBackColor = True
+		Me.UseAllInPublishButton.Visible = False
 		'
 		'LogRichTextBox
 		'
@@ -389,7 +400,7 @@ Partial Class PackUserControl
 		Me.LogRichTextBox.Location = New System.Drawing.Point(0, 0)
 		Me.LogRichTextBox.Name = "LogRichTextBox"
 		Me.LogRichTextBox.ReadOnly = True
-		Me.LogRichTextBox.Size = New System.Drawing.Size(770, 164)
+		Me.LogRichTextBox.Size = New System.Drawing.Size(770, 159)
 		Me.LogRichTextBox.TabIndex = 0
 		Me.LogRichTextBox.Text = ""
 		Me.LogRichTextBox.WordWrap = False
@@ -398,7 +409,7 @@ Partial Class PackUserControl
 		'
 		Me.UseInReleaseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.UseInReleaseButton.Enabled = False
-		Me.UseInReleaseButton.Location = New System.Drawing.Point(632, 170)
+		Me.UseInReleaseButton.Location = New System.Drawing.Point(632, 165)
 		Me.UseInReleaseButton.Name = "UseInReleaseButton"
 		Me.UseInReleaseButton.Size = New System.Drawing.Size(89, 23)
 		Me.UseInReleaseButton.TabIndex = 3
@@ -412,7 +423,7 @@ Partial Class PackUserControl
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.PackedFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.PackedFilesComboBox.FormattingEnabled = True
-		Me.PackedFilesComboBox.Location = New System.Drawing.Point(0, 171)
+		Me.PackedFilesComboBox.Location = New System.Drawing.Point(0, 166)
 		Me.PackedFilesComboBox.Name = "PackedFilesComboBox"
 		Me.PackedFilesComboBox.Size = New System.Drawing.Size(721, 21)
 		Me.PackedFilesComboBox.TabIndex = 1
@@ -420,23 +431,12 @@ Partial Class PackUserControl
 		'GotoPackedFileButton
 		'
 		Me.GotoPackedFileButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.GotoPackedFileButton.Location = New System.Drawing.Point(727, 170)
+		Me.GotoPackedFileButton.Location = New System.Drawing.Point(727, 165)
 		Me.GotoPackedFileButton.Name = "GotoPackedFileButton"
 		Me.GotoPackedFileButton.Size = New System.Drawing.Size(43, 23)
 		Me.GotoPackedFileButton.TabIndex = 4
 		Me.GotoPackedFileButton.Text = "Goto"
 		Me.GotoPackedFileButton.UseVisualStyleBackColor = True
-		'
-		'MultiFileVpkCheckBox
-		'
-		Me.MultiFileVpkCheckBox.AutoSize = True
-		Me.MultiFileVpkCheckBox.Location = New System.Drawing.Point(6, 51)
-		Me.MultiFileVpkCheckBox.Name = "MultiFileVpkCheckBox"
-		Me.MultiFileVpkCheckBox.Size = New System.Drawing.Size(116, 17)
-		Me.MultiFileVpkCheckBox.TabIndex = 13
-		Me.MultiFileVpkCheckBox.Text = "Write multi-file VPK"
-		Me.MultiFileVpkCheckBox.UseVisualStyleBackColor = True
-		Me.MultiFileVpkCheckBox.Visible = False
 		'
 		'PackUserControl
 		'

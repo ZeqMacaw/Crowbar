@@ -261,7 +261,7 @@ Public Class GarrysModSteamAppInfo
 
 		Try
 			If File.Exists(addonJsonPathFileName) Then
-				'TODO: Move the addon.json file temporarily instead of deleting it, because it is the user's data.
+				'NOTE: User's data in Crowbar overrides data in "addon.json" file.
 				File.Delete(addonJsonPathFileName)
 			End If
 		Catch ex As Exception
