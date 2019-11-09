@@ -129,6 +129,10 @@ Public Class UnpackUserControl
 			End While
 		End If
 
+		If TheApp.Settings.UnpackerIsRunning Then
+			Exit Sub
+		End If
+
 		Me.UpdateWidgets(True)
 		Me.PackageTreeView.Nodes(0).Text = "<refreshing>"
 		Me.PackageTreeView.Nodes(0).Nodes.Clear()
