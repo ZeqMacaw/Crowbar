@@ -125,41 +125,6 @@ Public Class Updater
 
 #End Region
 
-#Region "Comments"
-
-	''NOTE: This is run in a background thread.
-	'Private Sub Worker_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs)
-	'	Dim bw As BackgroundWorkerEx = CType(sender, BackgroundWorkerEx)
-	'	Dim outputInfo As String = ""
-
-	'	'TODO: In background worker, download release web page and changelog.
-	'	'TODO: Show info.
-	'	'TODO: In Download_RunWorkerCompleted, run the background worker for downloading the app file.
-	'	'TODO: In DownloadAppFile_RunWorkerCompleted, run the new app.
-	'	'TODO: Copy SevenZr.exe and CrowbarLauncher.exe from resources into appdata folder.
-	'	'TODO: Decompress, via 7zr.exe, Crowbar.7z file into appdata folder.
-	'	'TODO: Run CrowbarLauncher.exe, which moves new Crowbar.exe to where current Crowbar.exe is and then runs the new Crowbar.exe.
-	'	'TODO: Crowbar when opened, deletes CrowbarLauncher.exe if it exists.
-	'	'InstalledVersion = mainAssembly.GetName().Version;
-	'	'args.IsUpdateAvailable = CurrentVersion > InstalledVersion;
-
-	'	e.Result = outputInfo
-	'End Sub
-
-	'Private Sub Worker_ProgressChanged(ByVal sender As System.Object, ByVal e As System.ComponentModel.ProgressChangedEventArgs)
-	'	If e.ProgressPercentage = 0 Then
-	'	ElseIf e.ProgressPercentage = 1 Then
-	'	End If
-	'End Sub
-
-	'Private Sub Worker_RunWorkerCompleted(ByVal sender As System.Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs)
-	'	If e.Cancelled Then
-	'	Else
-	'	End If
-	'End Sub
-
-#End Region
-
 #Region "Download"
 
 	Public Sub Download(ByVal checkForUpdate_ProgressChanged As ProgressChangedEventHandler, ByVal checkForUpdate_RunWorkerCompleted As RunWorkerCompletedEventHandler, ByVal download_DownloadProgressChanged As DownloadProgressChangedEventHandler, ByVal download_DownloadFileCompleted As AsyncCompletedEventHandler, ByVal localPath As String)
@@ -173,7 +138,8 @@ Public Class Updater
 	End Sub
 
 	Public Sub CancelDownload()
-		If Me.theWebClient IsNot Nothing Then
+		Me.CancelCheckForUpdate()
+		If Me.theWebClient IsNot Nothing AndAlso Me.theWebClient.IsBusy Then
 			Me.theWebClient.CancelAsync()
 		End If
 	End Sub
@@ -207,6 +173,14 @@ Public Class Updater
 		Me.theUpdateTaskIsEnabled = True
 		Me.theCheckForUpdateRunWorkerCompletedHandler = checkForUpdate_RunWorkerCompleted
 		Me.theCheckForUpdateBackgroundWorker = BackgroundWorkerEx.RunBackgroundWorker(Me.theCheckForUpdateBackgroundWorker, AddressOf Me.CheckForUpdate_DoWork, checkForUpdate_ProgressChanged, AddressOf Me.CheckForUpdate_RunWorkerCompleted, Nothing)
+	End Sub
+
+	Public Sub CancelUpdate()
+		Me.CancelCheckForUpdate()
+		Me.CancelDownload()
+		If Me.theUpdateBackgroundWorker IsNot Nothing AndAlso Me.theUpdateBackgroundWorker.IsBusy Then
+			Me.theUpdateBackgroundWorker.CancelAsync()
+		End If
 	End Sub
 
 	Private theUpdateBackgroundWorker As BackgroundWorkerEx

@@ -35,6 +35,7 @@ Partial Class UpdateUserControl
 		Me.UpdateFolderTextBox = New Crowbar.TextBoxEx()
 		Me.UpdateProgressBarEx = New Crowbar.ProgressBarEx()
 		Me.GroupBoxEx2 = New Crowbar.GroupBoxEx()
+		Me.GotoDownloadFileButton = New System.Windows.Forms.Button()
 		Me.CancelDownloadButton = New System.Windows.Forms.Button()
 		Me.Label2 = New System.Windows.Forms.Label()
 		Me.BrowseForDownloadFolderButton = New System.Windows.Forms.Button()
@@ -45,7 +46,6 @@ Partial Class UpdateUserControl
 		Me.CancelCheckButton = New System.Windows.Forms.Button()
 		Me.GroupBoxEx3 = New Crowbar.GroupBoxEx()
 		Me.CurrentVersionLabel = New System.Windows.Forms.Label()
-		Me.GotoDownloadFileButton = New System.Windows.Forms.Button()
 		Me.GroupBoxEx1.SuspendLayout()
 		Me.GroupBoxEx2.SuspendLayout()
 		Me.GroupBoxEx3.SuspendLayout()
@@ -193,6 +193,17 @@ Partial Class UpdateUserControl
 		Me.GroupBoxEx2.TabStop = False
 		Me.GroupBoxEx2.Text = "Download - Download the new version (compressed file) for manually updating"
 		'
+		'GotoDownloadFileButton
+		'
+		Me.GotoDownloadFileButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.GotoDownloadFileButton.Enabled = False
+		Me.GotoDownloadFileButton.Location = New System.Drawing.Point(689, 47)
+		Me.GotoDownloadFileButton.Name = "GotoDownloadFileButton"
+		Me.GotoDownloadFileButton.Size = New System.Drawing.Size(75, 23)
+		Me.GotoDownloadFileButton.TabIndex = 13
+		Me.GotoDownloadFileButton.Text = "Goto"
+		Me.GotoDownloadFileButton.UseVisualStyleBackColor = True
+		'
 		'CancelDownloadButton
 		'
 		Me.CancelDownloadButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -304,17 +315,6 @@ Partial Class UpdateUserControl
 		Me.CurrentVersionLabel.Size = New System.Drawing.Size(111, 13)
 		Me.CurrentVersionLabel.TabIndex = 14
 		Me.CurrentVersionLabel.Text = "Current Version: 0.00"
-		'
-		'GotoDownloadFileButton
-		'
-		Me.GotoDownloadFileButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.GotoDownloadFileButton.Enabled = False
-		Me.GotoDownloadFileButton.Location = New System.Drawing.Point(689, 47)
-		Me.GotoDownloadFileButton.Name = "GotoDownloadFileButton"
-		Me.GotoDownloadFileButton.Size = New System.Drawing.Size(75, 23)
-		Me.GotoDownloadFileButton.TabIndex = 13
-		Me.GotoDownloadFileButton.Text = "Goto"
-		Me.GotoDownloadFileButton.UseVisualStyleBackColor = True
 		'
 		'UpdateUserControl
 		'

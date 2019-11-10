@@ -87,6 +87,10 @@ Public Class UpdateUserControl
 		Me.BrowseForDownloadPath()
 	End Sub
 
+	Private Sub CancelCheckButton_Click(sender As Object, e As EventArgs) Handles CancelCheckButton.Click
+		Me.CancelCheckForUpdate()
+	End Sub
+
 	Private Sub DownloadButton_Click(sender As Object, e As EventArgs) Handles DownloadButton.Click
 		Me.Download()
 	End Sub
@@ -287,7 +291,7 @@ Public Class UpdateUserControl
 	End Sub
 
 	Private Sub CancelUpdate()
-		'TODO: CancelUpdate()
+		Me.theUpdater.CancelUpdate()
 	End Sub
 
 	Private Sub UpdateCommandWidgets(ByVal taskIsRunning As Boolean)
