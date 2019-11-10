@@ -46,6 +46,7 @@ Public Class AppSettings
 		Me.theUnpackMode = InputOptions.File
 
 		Me.thePreviewMdlPathFileName = ""
+		Me.thePreviewOverrideMdlVersion = SupportedMdlVersion.DoNotOverride
 		Me.thePreviewGameSetupSelectedIndex = 0
 
 		Me.theDecompileMdlPathFileName = ""
@@ -55,6 +56,7 @@ Public Class AppSettings
 		Me.theDecompileOutputFullPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
 		Me.SetDefaultDecompileOptions()
 		Me.theDecompileMode = InputOptions.File
+		Me.theDecompileOverrideMdlVersion = SupportedMdlVersion.DoNotOverride
 
 		Me.theCompileQcPathFileName = ""
 		Me.theCompileOutputFolderIsChecked = True
@@ -70,6 +72,7 @@ Public Class AppSettings
 		Me.thePatchMode = InputOptions.File
 
 		Me.theViewMdlPathFileName = ""
+		Me.theViewOverrideMdlVersion = SupportedMdlVersion.DoNotOverride
 		Me.theViewGameSetupSelectedIndex = 0
 
 		Me.thePackInputPathFileName = ""
@@ -432,6 +435,16 @@ Public Class AppSettings
 		Set(ByVal value As String)
 			Me.thePreviewMdlPathFileName = value
 			NotifyPropertyChanged("PreviewMdlPathFileName")
+		End Set
+	End Property
+
+	Public Property PreviewOverrideMdlVersion() As SupportedMdlVersion
+		Get
+			Return Me.thePreviewOverrideMdlVersion
+		End Get
+		Set(ByVal value As SupportedMdlVersion)
+			Me.thePreviewOverrideMdlVersion = value
+			NotifyPropertyChanged("PreviewOverrideMdlVersion")
 		End Set
 	End Property
 
@@ -985,6 +998,16 @@ Public Class AppSettings
 		Set(ByVal value As String)
 			Me.theViewMdlPathFileName = value
 			NotifyPropertyChanged("ViewMdlPathFileName")
+		End Set
+	End Property
+
+	Public Property ViewOverrideMdlVersion() As SupportedMdlVersion
+		Get
+			Return Me.theViewOverrideMdlVersion
+		End Get
+		Set(ByVal value As SupportedMdlVersion)
+			Me.theViewOverrideMdlVersion = value
+			NotifyPropertyChanged("ViewOverrideMdlVersion")
 		End Set
 	End Property
 
@@ -1709,6 +1732,7 @@ Public Class AppSettings
 	' Preview tab
 
 	Private thePreviewMdlPathFileName As String
+	Private thePreviewOverrideMdlVersion As SupportedMdlVersion
 	Private thePreviewGameSetupSelectedIndex As Integer
 
 	Private thePreviewDataViewerIsRunning As Boolean
@@ -1792,6 +1816,7 @@ Public Class AppSettings
 	' View tab
 
 	Private theViewMdlPathFileName As String
+	Private theViewOverrideMdlVersion As SupportedMdlVersion
 	Private theViewGameSetupSelectedIndex As Integer
 
 	Private theViewDataViewerIsRunning As Boolean

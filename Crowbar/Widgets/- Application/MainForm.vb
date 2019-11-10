@@ -75,7 +75,7 @@ Public Class MainForm
 		AddHandler Me.UnpackUserControl1.UseAllInDecompileButton.Click, AddressOf Me.UnpackUserControl_UseAllInDecompileButton_Click
 		AddHandler Me.UnpackUserControl1.UseInPreviewButton.Click, AddressOf Me.UnpackUserControl_UseInPreviewButton_Click
 		AddHandler Me.UnpackUserControl1.UseInDecompileButton.Click, AddressOf Me.UnpackUserControl_UseInDecompileButton_Click
-		AddHandler Me.PreviewViewUserControl.EditGameSetupButton.Click, AddressOf Me.PreviewSetUpGamesButton_Click
+		AddHandler Me.PreviewViewUserControl.SetUpGameButton.Click, AddressOf Me.PreviewSetUpGamesButton_Click
 		AddHandler Me.PreviewViewUserControl.UseInDecompileButton.Click, AddressOf Me.ViewUserControl_UseInDecompileButton_Click
 		AddHandler Me.DecompilerUserControl1.UseAllInCompileButton.Click, AddressOf Me.DecompilerUserControl1_UseAllInCompileButton_Click
 		'AddHandler Me.DecompilerUserControl1.UseInEditButton.Click, AddressOf Me.DecompilerUserControl1_UseInEditButton_Click
@@ -84,7 +84,7 @@ Public Class MainForm
 		'AddHandler Me.CompilerUserControl1.UseAllInPackButton.Click, AddressOf Me.CompilerUserControl1_UseAllInPackButton_Click
 		AddHandler Me.CompilerUserControl1.UseInViewButton.Click, AddressOf Me.CompilerUserControl1_UseInViewButton_Click
 		'AddHandler Me.CompilerUserControl1.UseInPackButton.Click, AddressOf Me.CompilerUserControl1_UseInPackButton_Click
-		AddHandler Me.ViewViewUserControl.EditGameSetupButton.Click, AddressOf Me.ViewSetUpGamesButton_Click
+		AddHandler Me.ViewViewUserControl.SetUpGameButton.Click, AddressOf Me.ViewSetUpGamesButton_Click
 		AddHandler Me.ViewViewUserControl.UseInDecompileButton.Click, AddressOf Me.ViewUserControl_UseInDecompileButton_Click
 		AddHandler Me.PackUserControl1.SetUpGamesButton.Click, AddressOf Me.PackSetUpGamesButton_Click
 		AddHandler Me.PublishUserControl1.UseInDownloadToolStripMenuItem.Click, AddressOf Me.PublishUserControl1_UseInDownloadToolStripMenuItem_Click
@@ -95,7 +95,7 @@ Public Class MainForm
 		RemoveHandler Me.UnpackUserControl1.UseAllInDecompileButton.Click, AddressOf Me.UnpackUserControl_UseAllInDecompileButton_Click
 		RemoveHandler Me.UnpackUserControl1.UseInPreviewButton.Click, AddressOf Me.UnpackUserControl_UseInPreviewButton_Click
 		RemoveHandler Me.UnpackUserControl1.UseInDecompileButton.Click, AddressOf Me.UnpackUserControl_UseInDecompileButton_Click
-		RemoveHandler Me.PreviewViewUserControl.EditGameSetupButton.Click, AddressOf Me.PreviewSetUpGamesButton_Click
+		RemoveHandler Me.PreviewViewUserControl.SetUpGameButton.Click, AddressOf Me.PreviewSetUpGamesButton_Click
 		RemoveHandler Me.PreviewViewUserControl.UseInDecompileButton.Click, AddressOf Me.ViewUserControl_UseInDecompileButton_Click
 		RemoveHandler Me.DecompilerUserControl1.UseAllInCompileButton.Click, AddressOf Me.DecompilerUserControl1_UseAllInCompileButton_Click
 		'RemoveHandler Me.DecompilerUserControl1.UseInEditButton.Click, AddressOf Me.DecompilerUserControl1_UseInEditButton_Click
@@ -104,7 +104,7 @@ Public Class MainForm
 		'RemoveHandler Me.CompilerUserControl1.UseAllInPackButton.Click, AddressOf Me.CompilerUserControl1_UseAllInPackButton_Click
 		RemoveHandler Me.CompilerUserControl1.UseInViewButton.Click, AddressOf Me.CompilerUserControl1_UseInViewButton_Click
 		'RemoveHandler Me.CompilerUserControl1.UseInPackButton.Click, AddressOf Me.CompilerUserControl1_UseInPackButton_Click
-		RemoveHandler Me.ViewViewUserControl.EditGameSetupButton.Click, AddressOf Me.ViewSetUpGamesButton_Click
+		RemoveHandler Me.ViewViewUserControl.SetUpGameButton.Click, AddressOf Me.ViewSetUpGamesButton_Click
 		RemoveHandler Me.ViewViewUserControl.UseInDecompileButton.Click, AddressOf Me.ViewUserControl_UseInDecompileButton_Click
 		RemoveHandler Me.PackUserControl1.SetUpGamesButton.Click, AddressOf Me.PackSetUpGamesButton_Click
 		RemoveHandler Me.PublishUserControl1.UseInDownloadToolStripMenuItem.Click, AddressOf Me.PublishUserControl1_UseInDownloadToolStripMenuItem_Click
