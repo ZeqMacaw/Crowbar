@@ -401,8 +401,11 @@ Public Class DownloadUserControl
 	End Sub
 
 	Private Sub DownloadFromLink()
-		Dim itemLink As String = ""
 		Me.LogTextBox.Text = ""
+		Me.DownloadProgressBar.Text = ""
+		Me.DownloadProgressBar.Value = 0
+
+		Dim itemLink As String = ""
 		Dim itemID As String = Me.GetItemID()
 		Dim appID As UInteger = 0
 		If itemID = "0" Then
