@@ -77,6 +77,7 @@ Partial Class DecompileUserControl
 		Me.UseInCompileButton = New System.Windows.Forms.Button()
 		Me.GotoDecompiledFileButton = New System.Windows.Forms.Button()
 		Me.UseInEditButton = New System.Windows.Forms.Button()
+		Me.PrefixMeshFileNamesWithModelNameCheckBox = New System.Windows.Forms.CheckBox()
 		Me.Panel2.SuspendLayout()
 		CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SplitContainer1.Panel1.SuspendLayout()
@@ -91,7 +92,7 @@ Partial Class DecompileUserControl
 		'DebugInfoCheckBox
 		'
 		Me.DebugInfoCheckBox.AutoSize = True
-		Me.DebugInfoCheckBox.Location = New System.Drawing.Point(3, 95)
+		Me.DebugInfoCheckBox.Location = New System.Drawing.Point(3, 118)
 		Me.DebugInfoCheckBox.Name = "DebugInfoCheckBox"
 		Me.DebugInfoCheckBox.Size = New System.Drawing.Size(190, 17)
 		Me.DebugInfoCheckBox.TabIndex = 14
@@ -102,7 +103,7 @@ Partial Class DecompileUserControl
 		'LogFileCheckBox
 		'
 		Me.LogFileCheckBox.AutoSize = True
-		Me.LogFileCheckBox.Location = New System.Drawing.Point(3, 72)
+		Me.LogFileCheckBox.Location = New System.Drawing.Point(3, 95)
 		Me.LogFileCheckBox.Name = "LogFileCheckBox"
 		Me.LogFileCheckBox.Size = New System.Drawing.Size(108, 17)
 		Me.LogFileCheckBox.TabIndex = 13
@@ -113,7 +114,7 @@ Partial Class DecompileUserControl
 		'DeclareSequenceQciCheckBox
 		'
 		Me.DeclareSequenceQciCheckBox.AutoSize = True
-		Me.DeclareSequenceQciCheckBox.Location = New System.Drawing.Point(3, 141)
+		Me.DeclareSequenceQciCheckBox.Location = New System.Drawing.Point(3, 164)
 		Me.DeclareSequenceQciCheckBox.Name = "DeclareSequenceQciCheckBox"
 		Me.DeclareSequenceQciCheckBox.Size = New System.Drawing.Size(154, 17)
 		Me.DeclareSequenceQciCheckBox.TabIndex = 40
@@ -125,7 +126,7 @@ Partial Class DecompileUserControl
 		'FormatForStricterImportersCheckBox
 		'
 		Me.FormatForStricterImportersCheckBox.AutoSize = True
-		Me.FormatForStricterImportersCheckBox.Location = New System.Drawing.Point(3, 26)
+		Me.FormatForStricterImportersCheckBox.Location = New System.Drawing.Point(3, 49)
 		Me.FormatForStricterImportersCheckBox.Name = "FormatForStricterImportersCheckBox"
 		Me.FormatForStricterImportersCheckBox.Size = New System.Drawing.Size(162, 17)
 		Me.FormatForStricterImportersCheckBox.TabIndex = 12
@@ -172,7 +173,7 @@ Partial Class DecompileUserControl
 		'OverrideMdlVersionLabel
 		'
 		Me.OverrideMdlVersionLabel.AutoSize = True
-		Me.OverrideMdlVersionLabel.Location = New System.Drawing.Point(3, 188)
+		Me.OverrideMdlVersionLabel.Location = New System.Drawing.Point(3, 202)
 		Me.OverrideMdlVersionLabel.Name = "OverrideMdlVersionLabel"
 		Me.OverrideMdlVersionLabel.Size = New System.Drawing.Size(114, 13)
 		Me.OverrideMdlVersionLabel.TabIndex = 46
@@ -183,7 +184,7 @@ Partial Class DecompileUserControl
 		'
 		Me.OverrideMdlVersionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.OverrideMdlVersionComboBox.FormattingEnabled = True
-		Me.OverrideMdlVersionComboBox.Location = New System.Drawing.Point(123, 185)
+		Me.OverrideMdlVersionComboBox.Location = New System.Drawing.Point(123, 199)
 		Me.OverrideMdlVersionComboBox.Name = "OverrideMdlVersionComboBox"
 		Me.OverrideMdlVersionComboBox.Size = New System.Drawing.Size(100, 21)
 		Me.OverrideMdlVersionComboBox.TabIndex = 45
@@ -375,6 +376,7 @@ Partial Class DecompileUserControl
 		'Panel3
 		'
 		Me.Panel3.AutoScroll = True
+		Me.Panel3.Controls.Add(Me.PrefixMeshFileNamesWithModelNameCheckBox)
 		Me.Panel3.Controls.Add(Me.OverrideMdlVersionLabel)
 		Me.Panel3.Controls.Add(Me.OverrideMdlVersionComboBox)
 		Me.Panel3.Controls.Add(Me.FolderForEachModelCheckBox)
@@ -699,6 +701,17 @@ Partial Class DecompileUserControl
 		Me.UseInEditButton.UseVisualStyleBackColor = True
 		Me.UseInEditButton.Visible = False
 		'
+		'PrefixMeshFileNamesWithModelNameCheckBox
+		'
+		Me.PrefixMeshFileNamesWithModelNameCheckBox.AutoSize = True
+		Me.PrefixMeshFileNamesWithModelNameCheckBox.Location = New System.Drawing.Point(3, 26)
+		Me.PrefixMeshFileNamesWithModelNameCheckBox.Name = "PrefixMeshFileNamesWithModelNameCheckBox"
+		Me.PrefixMeshFileNamesWithModelNameCheckBox.Size = New System.Drawing.Size(216, 17)
+		Me.PrefixMeshFileNamesWithModelNameCheckBox.TabIndex = 47
+		Me.PrefixMeshFileNamesWithModelNameCheckBox.Text = "Prefix mesh file names with model name"
+		Me.ToolTip1.SetToolTip(Me.PrefixMeshFileNamesWithModelNameCheckBox, "Avoid file name conflicts.")
+		Me.PrefixMeshFileNamesWithModelNameCheckBox.UseVisualStyleBackColor = True
+		'
 		'DecompileUserControl
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -775,4 +788,5 @@ Partial Class DecompileUserControl
 	Friend WithEvents UseUvsForDoomMusicCompilerCheckBox As System.Windows.Forms.CheckBox
 	Friend WithEvents OverrideMdlVersionLabel As System.Windows.Forms.Label
 	Friend WithEvents OverrideMdlVersionComboBox As System.Windows.Forms.ComboBox
+	Friend WithEvents PrefixMeshFileNamesWithModelNameCheckBox As CheckBox
 End Class

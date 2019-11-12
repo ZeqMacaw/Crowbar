@@ -69,12 +69,14 @@ Public Class DecompileUserControl
 		Me.VertexAnimationVtaFileCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileVertexAnimationVtaFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.ProceduralBonesVrdFileCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileProceduralBonesVrdFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 
-		Me.DeclareSequenceQciCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileDeclareSequenceQciFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
-
 		Me.FolderForEachModelCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileFolderForEachModelIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.PrefixMeshFileNamesWithModelNameCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompilePrefixFileNamesWithModelNameIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.FormatForStricterImportersCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileStricterFormatIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
+
 		Me.LogFileCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileLogFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.DebugInfoCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileDebugInfoFilesIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
-		Me.FormatForStricterImportersCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileStricterFormatIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
+
+		Me.DeclareSequenceQciCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileDeclareSequenceQciFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 
 		Dim anEnumList As IList
 		anEnumList = EnumHelper.ToList(GetType(SupportedMdlVersion))
@@ -120,12 +122,14 @@ Public Class DecompileUserControl
 		Me.VertexAnimationVtaFileCheckBox.DataBindings.Clear()
 		Me.ProceduralBonesVrdFileCheckBox.DataBindings.Clear()
 
-		Me.DeclareSequenceQciCheckBox.DataBindings.Clear()
-
 		Me.FolderForEachModelCheckBox.DataBindings.Clear()
+		Me.PrefixMeshFileNamesWithModelNameCheckBox.DataBindings.Clear()
+		Me.FormatForStricterImportersCheckBox.DataBindings.Clear()
+
 		Me.LogFileCheckBox.DataBindings.Clear()
 		Me.DebugInfoCheckBox.DataBindings.Clear()
-		Me.FormatForStricterImportersCheckBox.DataBindings.Clear()
+
+		Me.DeclareSequenceQciCheckBox.DataBindings.Clear()
 
 		Me.OverrideMdlVersionComboBox.DataBindings.Clear()
 	End Sub
