@@ -82,13 +82,15 @@ Public Class ViewUserControl
 #Region "Methods"
 
 	Public Sub RunDataViewer()
-		theDataViewer = New Viewer()
-		AddHandler theDataViewer.ProgressChanged, AddressOf Me.DataViewerBackgroundWorker_ProgressChanged
-		AddHandler theDataViewer.RunWorkerCompleted, AddressOf Me.DataViewerBackgroundWorker_RunWorkerCompleted
-		Me.AppSettingDataViewerIsRunning = True
-		theDataViewer.Run(Me.AppSettingMdlPathFileName)
+		If Not Me.AppSettingDataViewerIsRunning Then
+			theDataViewer = New Viewer()
+			AddHandler theDataViewer.ProgressChanged, AddressOf Me.DataViewerBackgroundWorker_ProgressChanged
+			AddHandler theDataViewer.RunWorkerCompleted, AddressOf Me.DataViewerBackgroundWorker_RunWorkerCompleted
+			Me.AppSettingDataViewerIsRunning = True
+			theDataViewer.Run(Me.AppSettingMdlPathFileName)
 
-		'TODO: If viewer is not running, give user indication of what prevents viewing.
+			'TODO: If viewer is not running, give user indication of what prevents viewing.
+		End If
 	End Sub
 
 #End Region
