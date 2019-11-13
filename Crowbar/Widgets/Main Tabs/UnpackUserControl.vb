@@ -140,6 +140,7 @@ Public Class UnpackUserControl
 		'Me.CancelUnpackButton.Text = "Cancel Listing"
 		Me.CancelUnpackButton.Enabled = False
 		Me.UnpackerLogTextBox.Text = ""
+		Me.thePackageCount = 0
 
 		AddHandler TheApp.Unpacker.ProgressChanged, AddressOf Me.ListerBackgroundWorker_ProgressChanged
 		AddHandler TheApp.Unpacker.RunWorkerCompleted, AddressOf Me.ListerBackgroundWorker_RunWorkerCompleted
@@ -437,6 +438,8 @@ Public Class UnpackUserControl
 			''Me.theEntryIndex = -1
 		ElseIf e.ProgressPercentage = 1 Then
 			Me.theEntryIndex = -1
+			Me.thePackageCount += 1
+			Me.UpdateContentsGroupBox()
 		ElseIf e.ProgressPercentage = 2 Then
 			Me.theArchivePathFileName = line
 		ElseIf e.ProgressPercentage = 3 Then
@@ -780,6 +783,14 @@ Public Class UnpackUserControl
 			End If
 		ElseIf TheApp.Settings.UnpackOutputFolderOption = UnpackOutputPathOptions.WorkFolder Then
 			FileManager.OpenWindowsExplorer(TheApp.Settings.UnpackOutputFullPath)
+		End If
+	End Sub
+
+	Private Sub UpdateContentsGroupBox()
+		If Me.thePackageCount > 1 Then
+			Me.ContentsGroupBox.Text = "Contents of " + Me.thePackageCount.ToString("N0") + " packages"
+		Else
+			Me.ContentsGroupBox.Text = "Contents of package"
 		End If
 	End Sub
 
@@ -1266,6 +1277,7 @@ Public Class UnpackUserControl
 	Private thePackEntries As List(Of Integer)
 	Private theGivenHardLinkFileName As String
 
+	Private thePackageCount As Integer
 	Private theArchivePathFileName As String
 	Private theEntryIndex As Integer
 
