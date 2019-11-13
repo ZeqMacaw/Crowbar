@@ -58,7 +58,7 @@ Public Class DecompileUserControl
 
 		Me.ReferenceMeshSmdFileCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileReferenceMeshSmdFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.RemovePathFromMaterialFileNamesCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileRemovePathFromSmdMaterialFileNamesIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
-		Me.UseUvsForDoomMusicCompilerCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileUseUvsForDoomMusicCompilerIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.UseNonValveUvConversionCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileUseNonValveUvConversionIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 
 		Me.BoneAnimationSmdFilesCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileBoneAnimationSmdFilesIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.PlaceInAnimsSubfolderCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileBoneAnimationPlaceInSubfolderIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
@@ -110,7 +110,7 @@ Public Class DecompileUserControl
 		Me.IncludeDefineBoneLinesCheckBox.DataBindings.Clear()
 		Me.ReferenceMeshSmdFileCheckBox.DataBindings.Clear()
 		Me.RemovePathFromMaterialFileNamesCheckBox.DataBindings.Clear()
-		Me.UseUvsForDoomMusicCompilerCheckBox.DataBindings.Clear()
+		Me.UseNonValveUvConversionCheckBox.DataBindings.Clear()
 		Me.BoneAnimationSmdFilesCheckBox.DataBindings.Clear()
 		Me.PlaceInAnimsSubfolderCheckBox.DataBindings.Clear()
 
@@ -473,7 +473,7 @@ Public Class DecompileUserControl
 		Me.UseMixedCaseForKeywordsCheckBox.Enabled = TheApp.Settings.DecompileQcFileIsChecked
 
 		Me.RemovePathFromMaterialFileNamesCheckBox.Enabled = TheApp.Settings.DecompileReferenceMeshSmdFileIsChecked
-		Me.UseUvsForDoomMusicCompilerCheckBox.Enabled = TheApp.Settings.DecompileReferenceMeshSmdFileIsChecked
+		Me.UseNonValveUvConversionCheckBox.Enabled = TheApp.Settings.DecompileReferenceMeshSmdFileIsChecked
 
 		Me.PlaceInAnimsSubfolderCheckBox.Enabled = TheApp.Settings.DecompileBoneAnimationSmdFilesIsChecked
 
