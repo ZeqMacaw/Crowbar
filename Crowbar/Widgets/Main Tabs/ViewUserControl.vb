@@ -205,12 +205,15 @@ Public Class ViewUserControl
 
 		If e.ProgressPercentage = 0 Then
 			Me.InfoRichTextBox.Text = ""
-			Me.InfoRichTextBox.AppendText(line + vbCr)
+			'Me.InfoRichTextBox.AppendText(line + vbCr)
 			'Me.AppSettingDataViewerIsRunning = True
+			Me.MessageTextBox.Text = ""
+			Me.MessageTextBox.AppendText(line + vbCrLf)
 		ElseIf e.ProgressPercentage = 1 Then
 			Me.InfoRichTextBox.AppendText(line + vbCr)
 		ElseIf e.ProgressPercentage = 100 Then
-			Me.InfoRichTextBox.AppendText(line + vbCr)
+			'Me.InfoRichTextBox.AppendText(line + vbCr)
+			Me.MessageTextBox.AppendText(line + vbCrLf)
 		End If
 	End Sub
 
@@ -225,16 +228,16 @@ Public Class ViewUserControl
 
 		If e.ProgressPercentage = 0 Then
 			Me.MessageTextBox.Text = ""
-			Me.MessageTextBox.AppendText(line + vbCr)
+			Me.MessageTextBox.AppendText(line + vbCrLf)
 
 			Dim modelViewer As Viewer = CType(sender, Viewer)
 			If modelViewer Is Me.theModelViewerWithModel Then
 				Me.UpdateWidgets(True)
 			End If
 		ElseIf e.ProgressPercentage = 1 Then
-			Me.MessageTextBox.AppendText(line + vbCr)
+			Me.MessageTextBox.AppendText(line + vbCrLf)
 		ElseIf e.ProgressPercentage = 100 Then
-			Me.MessageTextBox.AppendText(line + vbCr)
+			Me.MessageTextBox.AppendText(line + vbCrLf)
 		End If
 	End Sub
 
