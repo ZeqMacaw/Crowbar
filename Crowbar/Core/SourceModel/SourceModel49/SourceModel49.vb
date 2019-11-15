@@ -488,6 +488,8 @@ Public Class SourceModel49
 		'TODO: ReadLocalIkAutoPlayLocks()
 		mdlFile.ReadFlexControllerUis()
 
+		mdlFile.ReadBodygroupPresets()
+
 		'mdlFile.ReadFinalBytesAlignment()
 		'mdlFile.ReadUnknownValues(Me.theMdlFileData.theFileSeekLog)
 		mdlFile.ReadUnreadBytes()
