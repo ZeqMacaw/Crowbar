@@ -108,6 +108,7 @@ Public Class SourceMdlBone
 	Public theName As String
 	Public theAxisInterpBone As SourceMdlAxisInterpBone
 	Public theQuatInterpBone As SourceMdlQuatInterpBone
+	Public theAimAtBone As SourceMdlAimAtBone
 	Public theJiggleBone As SourceMdlJiggleBone
 	Public theSurfacePropName As String
 

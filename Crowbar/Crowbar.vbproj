@@ -147,6 +147,7 @@
     </Compile>
     <Compile Include="Core\Packer\PackerInputInfo.vb" />
     <Compile Include="Core\Packer\PackerOutputInfo.vb" />
+    <Compile Include="Core\SourceModel\SourceCommon\SourceMdlFileData\SourceMdlAimAtBone.vb" />
     <Compile Include="Core\SourceModel\SourceModel14\SourceMdlFile14.vb" />
     <Compile Include="Core\SourceModel\SourceModel14\SourceMdlFileData\SourceMdlBodyPart14.vb" />
     <Compile Include="Core\SourceModel\SourceModel14\SourceMdlFileData\SourceMdlFileData14.vb" />
