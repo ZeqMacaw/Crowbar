@@ -120,7 +120,7 @@ Public Class PackUserControl
 		'NOTE: Code is here instead of Designer file to avoid syntax error when VS adds a line about binding to the type tag.
 		Me.GarrysModTagsUserControl1 = New Crowbar.GarrysModTagsUserControl()
 		Me.GarrysModTagsUserControl1.Font = New System.Drawing.Font("Tahoma", 8.25!)
-		Me.GarrysModTagsUserControl1.Location = New System.Drawing.Point(179, 28)
+		Me.GarrysModTagsUserControl1.Location = New System.Drawing.Point(179, 51)
 		Me.GarrysModTagsUserControl1.Name = "GarrysModTagsUserControl1"
 		Me.GarrysModTagsUserControl1.Orientation = Crowbar.AppEnums.OrientationType.Horizontal
 		Me.GarrysModTagsUserControl1.Size = New System.Drawing.Size(366, 97)
@@ -348,11 +348,15 @@ Public Class PackUserControl
 			Me.MultiFileVpkCheckBox.Visible = False
 			Me.EditPackerOptionsText("M", False)
 
+			Me.GmaTitleLabel.Visible = True
+			Me.GmaTitleTextBox.Visible = True
 			Me.GarrysModTagsUserControl1.Visible = True
 		Else
 			'Me.MultiFileVpkCheckBox.Visible = True
 			'Me.EditPackerOptionsText("M", TheApp.Settings.PackOptionMultiFileVpkIsChecked)
 
+			Me.GmaTitleLabel.Visible = False
+			Me.GmaTitleTextBox.Visible = False
 			Me.GarrysModTagsUserControl1.Visible = False
 		End If
 

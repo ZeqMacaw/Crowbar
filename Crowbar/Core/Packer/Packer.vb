@@ -1,5 +1,6 @@
 ﻿Imports System.ComponentModel
 Imports System.IO
+Imports System.Web.Script.Serialization
 
 Public Class Packer
 	Inherits BackgroundWorker
@@ -263,9 +264,115 @@ Public Class Packer
 		Dim result As String = "success"
 
 		'TODO: Determine what to check before Packer runs for a folder.
+		Dim gamePackerPathFileName As String = Me.GetGamePackerPathFileName()
+		Dim gamePackerFileName As String = Path.GetFileName(gamePackerPathFileName)
+		If gamePackerFileName = "gmad.exe" Then
+			'Dim addonJsonPathFileName As String = Me.CreateAddonJsonFile(item.ContentPathFolderOrFileName, item.Title, item.Tags)
+			'If File.Exists(addonJsonPathFileName) Then
+
+			'End If
+		End If
 
 		Return result
 	End Function
+
+	'Example 01:
+	'{
+	'	"title"		:	"My Server Content",
+	'	"type"		:	"ServerContent",
+	'	"tags"		:	[ "roleplay", "realism" ],
+	'	"ignore"	:
+	'	[
+	'		"*.psd",
+	'		"*.vcproj",
+	'		"*.svn*"
+	'	]
+	'}
+	'Example 02:
+	'{
+	'	"title": "Ragdoll Fight",
+	'	"type": "tool",
+	'	"tags": 
+	'	[
+	'		"scenic",
+	'		"fun"
+	'	]
+	'}
+	Private Function CreateAddonJsonFile(ByVal addonJsonPath As String, ByVal itemTitle As String, ByVal itemTags As BindingListEx(Of String)) As String
+		Dim addonJsonPathFileName As String = Path.Combine(addonJsonPath, "addon.json")
+
+		ArrangeTagsForEasierUseInAddonJsonFile(itemTags)
+
+		Try
+			If File.Exists(addonJsonPathFileName) Then
+				'NOTE: User's data in Crowbar overrides data in "addon.json" file.
+				File.Delete(addonJsonPathFileName)
+			End If
+		Catch ex As Exception
+			Throw New System.Exception("Crowbar tried to delete an old temp file """ + addonJsonPathFileName + """ but Windows gave this message: " + ex.Message)
+		End Try
+
+		Dim fileStream As StreamWriter
+		fileStream = File.CreateText(addonJsonPathFileName)
+		fileStream.AutoFlush = True
+		Try
+			Dim jss As JavaScriptSerializer = New JavaScriptSerializer()
+			If File.Exists(addonJsonPathFileName) Then
+				fileStream.WriteLine("{")
+				fileStream.WriteLine(vbTab + """title"": " + jss.Serialize(itemTitle) + ",")
+				If itemTags.Count > 1 Then
+					fileStream.WriteLine(vbTab + """type"": " + jss.Serialize(itemTags(0)) + ",")
+					fileStream.WriteLine(vbTab + """tags"": ")
+					fileStream.WriteLine(vbTab + "[")
+					If itemTags.Count > 2 Then
+						fileStream.WriteLine(vbTab + vbTab + jss.Serialize(itemTags(1)) + ",")
+						fileStream.WriteLine(vbTab + vbTab + jss.Serialize(itemTags(2)))
+					Else
+						fileStream.WriteLine(vbTab + vbTab + jss.Serialize(itemTags(1)))
+					End If
+					fileStream.WriteLine(vbTab + "]")
+				Else
+					fileStream.WriteLine(vbTab + """type"": " + jss.Serialize(itemTags(0)))
+				End If
+				fileStream.WriteLine("}")
+				fileStream.Flush()
+			End If
+		Catch ex As Exception
+			'NOTE: This is here in case I missed something, such as itemTags being empty.
+			Dim debug As Integer = 4242
+		Finally
+			If fileStream IsNot Nothing Then
+				fileStream.Flush()
+				fileStream.Close()
+				fileStream = Nothing
+			End If
+		End Try
+
+		Return addonJsonPathFileName
+	End Function
+
+	Private Sub ArrangeTagsForEasierUseInAddonJsonFile(ByRef tags As BindingListEx(Of String))
+		Dim anEnumList As IList
+		anEnumList = EnumHelper.ToList(GetType(GarrysModSteamAppInfo.GarrysModTypeTags))
+		Dim index As Integer
+		For Each tag As String In tags
+			index = EnumHelper.IndexOfKeyAsCasInsensitiveString(tag, anEnumList)
+			If index <> -1 Then
+				tags.Remove(tag)
+				tags.Insert(0, tag)
+				Exit For
+			End If
+		Next
+		For tagIndex As Integer = 0 To tags.Count - 1
+			If tags(tagIndex) <> "ServerContent" AndAlso tags(tagIndex) <> "Addon" Then
+				tags(tagIndex) = tags(tagIndex).ToLower()
+			End If
+		Next
+		'NOTE: Not sure how this became empty for me in testing, so let's make sure there is a tag so Crowbar does not show exception window.
+		If tags.Count = 0 Then
+			tags.Add("ServerContent")
+		End If
+	End Sub
 
 	Private Sub RunPackerApp(ByVal inputPath As String)
 		Dim currentFolder As String = Directory.GetCurrentDirectory()

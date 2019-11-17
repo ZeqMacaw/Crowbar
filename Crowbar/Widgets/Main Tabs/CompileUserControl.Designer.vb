@@ -88,11 +88,11 @@ Partial Class CompileUserControl
 		Me.CompilerOptionsTextBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.CompilerOptionsTextBox.Location = New System.Drawing.Point(3, 175)
+		Me.CompilerOptionsTextBox.Location = New System.Drawing.Point(3, 176)
 		Me.CompilerOptionsTextBox.Multiline = True
 		Me.CompilerOptionsTextBox.Name = "CompilerOptionsTextBox"
 		Me.CompilerOptionsTextBox.ReadOnly = True
-		Me.CompilerOptionsTextBox.Size = New System.Drawing.Size(758, 45)
+		Me.CompilerOptionsTextBox.Size = New System.Drawing.Size(758, 44)
 		Me.CompilerOptionsTextBox.TabIndex = 15
 		'
 		'GameSetupComboBox
@@ -290,6 +290,7 @@ Partial Class CompileUserControl
 		'
 		Me.QcPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.QcPathFileNameTextBox.CueBannerText = ""
 		Me.QcPathFileNameTextBox.Location = New System.Drawing.Point(209, 7)
 		Me.QcPathFileNameTextBox.Name = "QcPathFileNameTextBox"
 		Me.QcPathFileNameTextBox.Size = New System.Drawing.Size(445, 21)
@@ -299,6 +300,7 @@ Partial Class CompileUserControl
 		'
 		Me.GameModelsOutputPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.GameModelsOutputPathTextBox.CueBannerText = ""
 		Me.GameModelsOutputPathTextBox.Location = New System.Drawing.Point(209, 34)
 		Me.GameModelsOutputPathTextBox.Name = "GameModelsOutputPathTextBox"
 		Me.GameModelsOutputPathTextBox.ReadOnly = True
@@ -309,6 +311,7 @@ Partial Class CompileUserControl
 		'
 		Me.OutputPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.OutputPathTextBox.CueBannerText = ""
 		Me.OutputPathTextBox.Location = New System.Drawing.Point(209, 34)
 		Me.OutputPathTextBox.Name = "OutputPathTextBox"
 		Me.OutputPathTextBox.Size = New System.Drawing.Size(445, 21)
@@ -318,6 +321,7 @@ Partial Class CompileUserControl
 		'
 		Me.OutputSubfolderTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.OutputSubfolderTextBox.CueBannerText = ""
 		Me.OutputSubfolderTextBox.Location = New System.Drawing.Point(209, 34)
 		Me.OutputSubfolderTextBox.Name = "OutputSubfolderTextBox"
 		Me.OutputSubfolderTextBox.Size = New System.Drawing.Size(445, 21)
@@ -511,9 +515,9 @@ Partial Class CompileUserControl
 		Me.CompileOptionsSizerLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.CompileOptionsSizerLabel.Enabled = False
-		Me.CompileOptionsSizerLabel.Location = New System.Drawing.Point(3, 175)
+		Me.CompileOptionsSizerLabel.Location = New System.Drawing.Point(3, 176)
 		Me.CompileOptionsSizerLabel.Name = "CompileOptionsSizerLabel"
-		Me.CompileOptionsSizerLabel.Size = New System.Drawing.Size(761, 47)
+		Me.CompileOptionsSizerLabel.Size = New System.Drawing.Size(758, 44)
 		Me.CompileOptionsSizerLabel.TabIndex = 37
 		'
 		'SkipCurrentModelButton
@@ -566,6 +570,7 @@ Partial Class CompileUserControl
 		Me.CompileLogRichTextBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.CompileLogRichTextBox.CueBannerText = ""
 		Me.CompileLogRichTextBox.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.CompileLogRichTextBox.HideSelection = False
 		Me.CompileLogRichTextBox.Location = New System.Drawing.Point(0, 0)

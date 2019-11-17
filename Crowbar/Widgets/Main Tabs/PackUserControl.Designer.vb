@@ -37,16 +37,19 @@ Partial Class PackUserControl
 		Me.BrowseForInputFolderOrFileNameButton = New System.Windows.Forms.Button()
 		Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
 		Me.OptionsGroupBox = New System.Windows.Forms.GroupBox()
-		Me.Label4 = New System.Windows.Forms.Label()
-		Me.DirectPackerOptionsTextBox = New System.Windows.Forms.TextBox()
-		Me.PackerOptionsTextBox = New System.Windows.Forms.TextBox()
 		Me.Panel2 = New System.Windows.Forms.Panel()
+		Me.GmaTitleLabel = New System.Windows.Forms.Label()
+		Me.GmaTitleTextBox = New Crowbar.TextBoxEx()
 		Me.MultiFileVpkCheckBox = New System.Windows.Forms.CheckBox()
 		Me.PackOptionsUseDefaultsButton = New System.Windows.Forms.Button()
 		Me.LogFileCheckBox = New System.Windows.Forms.CheckBox()
 		Me.Label3 = New System.Windows.Forms.Label()
 		Me.GameSetupComboBox = New System.Windows.Forms.ComboBox()
 		Me.SetUpGamesButton = New System.Windows.Forms.Button()
+		Me.DirectPackerOptionsLabel = New System.Windows.Forms.Label()
+		Me.DirectPackerOptionsTextBox = New System.Windows.Forms.TextBox()
+		Me.PackerOptionsTextBox = New System.Windows.Forms.TextBox()
+		Me.PackerOptionsSizerLabel = New System.Windows.Forms.Label()
 		Me.PackButton = New System.Windows.Forms.Button()
 		Me.SkipCurrentFolderButton = New System.Windows.Forms.Button()
 		Me.CancelPackButton = New System.Windows.Forms.Button()
@@ -220,7 +223,7 @@ Partial Class PackUserControl
 		Me.SplitContainer2.Panel2.Controls.Add(Me.GotoPackedFileButton)
 		Me.SplitContainer2.Panel2MinSize = 90
 		Me.SplitContainer2.Size = New System.Drawing.Size(770, 472)
-		Me.SplitContainer2.SplitterDistance = 285
+		Me.SplitContainer2.SplitterDistance = 296
 		Me.SplitContainer2.TabIndex = 29
 		'
 		'OptionsGroupBox
@@ -228,61 +231,53 @@ Partial Class PackUserControl
 		Me.OptionsGroupBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.OptionsGroupBox.Controls.Add(Me.Label4)
-		Me.OptionsGroupBox.Controls.Add(Me.DirectPackerOptionsTextBox)
-		Me.OptionsGroupBox.Controls.Add(Me.PackerOptionsTextBox)
 		Me.OptionsGroupBox.Controls.Add(Me.Panel2)
 		Me.OptionsGroupBox.Location = New System.Drawing.Point(0, 0)
 		Me.OptionsGroupBox.Name = "OptionsGroupBox"
-		Me.OptionsGroupBox.Size = New System.Drawing.Size(770, 249)
+		Me.OptionsGroupBox.Size = New System.Drawing.Size(770, 265)
 		Me.OptionsGroupBox.TabIndex = 0
 		Me.OptionsGroupBox.TabStop = False
 		Me.OptionsGroupBox.Text = "Options"
 		'
-		'Label4
-		'
-		Me.Label4.Location = New System.Drawing.Point(6, 161)
-		Me.Label4.Name = "Label4"
-		Me.Label4.Size = New System.Drawing.Size(393, 13)
-		Me.Label4.TabIndex = 16
-		Me.Label4.Text = "Direct entry of command-line options (in case they are not included above):"
-		'
-		'DirectPackerOptionsTextBox
-		'
-		Me.DirectPackerOptionsTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.DirectPackerOptionsTextBox.Location = New System.Drawing.Point(6, 177)
-		Me.DirectPackerOptionsTextBox.Name = "DirectPackerOptionsTextBox"
-		Me.DirectPackerOptionsTextBox.Size = New System.Drawing.Size(758, 21)
-		Me.DirectPackerOptionsTextBox.TabIndex = 17
-		'
-		'PackerOptionsTextBox
-		'
-		Me.PackerOptionsTextBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-			Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.PackerOptionsTextBox.Location = New System.Drawing.Point(6, 203)
-		Me.PackerOptionsTextBox.Multiline = True
-		Me.PackerOptionsTextBox.Name = "PackerOptionsTextBox"
-		Me.PackerOptionsTextBox.ReadOnly = True
-		Me.PackerOptionsTextBox.Size = New System.Drawing.Size(758, 45)
-		Me.PackerOptionsTextBox.TabIndex = 18
-		'
 		'Panel2
 		'
-		Me.Panel2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Panel2.AutoScroll = True
+		Me.Panel2.Controls.Add(Me.GmaTitleLabel)
+		Me.Panel2.Controls.Add(Me.GmaTitleTextBox)
 		Me.Panel2.Controls.Add(Me.MultiFileVpkCheckBox)
 		Me.Panel2.Controls.Add(Me.PackOptionsUseDefaultsButton)
 		Me.Panel2.Controls.Add(Me.LogFileCheckBox)
 		Me.Panel2.Controls.Add(Me.Label3)
 		Me.Panel2.Controls.Add(Me.GameSetupComboBox)
 		Me.Panel2.Controls.Add(Me.SetUpGamesButton)
+		Me.Panel2.Controls.Add(Me.DirectPackerOptionsLabel)
+		Me.Panel2.Controls.Add(Me.DirectPackerOptionsTextBox)
+		Me.Panel2.Controls.Add(Me.PackerOptionsTextBox)
+		Me.Panel2.Controls.Add(Me.PackerOptionsSizerLabel)
+		Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.Panel2.Location = New System.Drawing.Point(3, 17)
 		Me.Panel2.Name = "Panel2"
-		Me.Panel2.Size = New System.Drawing.Size(764, 141)
+		Me.Panel2.Size = New System.Drawing.Size(764, 245)
 		Me.Panel2.TabIndex = 0
+		'
+		'GmaTitleLabel
+		'
+		Me.GmaTitleLabel.AutoSize = True
+		Me.GmaTitleLabel.Location = New System.Drawing.Point(182, 31)
+		Me.GmaTitleLabel.Name = "GmaTitleLabel"
+		Me.GmaTitleLabel.Size = New System.Drawing.Size(31, 13)
+		Me.GmaTitleLabel.TabIndex = 27
+		Me.GmaTitleLabel.Text = "Title:"
+		Me.GmaTitleLabel.Visible = False
+		'
+		'GmaTitleTextBox
+		'
+		Me.GmaTitleTextBox.CueBannerText = ""
+		Me.GmaTitleTextBox.Location = New System.Drawing.Point(223, 28)
+		Me.GmaTitleTextBox.Name = "GmaTitleTextBox"
+		Me.GmaTitleTextBox.Size = New System.Drawing.Size(315, 21)
+		Me.GmaTitleTextBox.TabIndex = 26
+		Me.GmaTitleTextBox.Visible = False
 		'
 		'MultiFileVpkCheckBox
 		'
@@ -298,7 +293,7 @@ Partial Class PackUserControl
 		'PackOptionsUseDefaultsButton
 		'
 		Me.PackOptionsUseDefaultsButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.PackOptionsUseDefaultsButton.Location = New System.Drawing.Point(671, 91)
+		Me.PackOptionsUseDefaultsButton.Location = New System.Drawing.Point(671, 92)
 		Me.PackOptionsUseDefaultsButton.Name = "PackOptionsUseDefaultsButton"
 		Me.PackOptionsUseDefaultsButton.Size = New System.Drawing.Size(90, 23)
 		Me.PackOptionsUseDefaultsButton.TabIndex = 12
@@ -320,9 +315,9 @@ Partial Class PackUserControl
 		Me.Label3.AutoSize = True
 		Me.Label3.Location = New System.Drawing.Point(3, 5)
 		Me.Label3.Name = "Label3"
-		Me.Label3.Size = New System.Drawing.Size(173, 13)
+		Me.Label3.Size = New System.Drawing.Size(135, 13)
 		Me.Label3.TabIndex = 0
-		Me.Label3.Text = "Game that has the archive packer:"
+		Me.Label3.Text = "Game that has the packer:"
 		'
 		'GameSetupComboBox
 		'
@@ -330,9 +325,9 @@ Partial Class PackUserControl
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.GameSetupComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.GameSetupComboBox.FormattingEnabled = True
-		Me.GameSetupComboBox.Location = New System.Drawing.Point(179, 1)
+		Me.GameSetupComboBox.Location = New System.Drawing.Point(144, 1)
 		Me.GameSetupComboBox.Name = "GameSetupComboBox"
-		Me.GameSetupComboBox.Size = New System.Drawing.Size(486, 21)
+		Me.GameSetupComboBox.Size = New System.Drawing.Size(521, 21)
 		Me.GameSetupComboBox.TabIndex = 1
 		'
 		'SetUpGamesButton
@@ -345,10 +340,49 @@ Partial Class PackUserControl
 		Me.SetUpGamesButton.Text = "Set Up Games"
 		Me.SetUpGamesButton.UseVisualStyleBackColor = True
 		'
+		'DirectPackerOptionsLabel
+		'
+		Me.DirectPackerOptionsLabel.Location = New System.Drawing.Point(3, 155)
+		Me.DirectPackerOptionsLabel.Name = "DirectPackerOptionsLabel"
+		Me.DirectPackerOptionsLabel.Size = New System.Drawing.Size(393, 13)
+		Me.DirectPackerOptionsLabel.TabIndex = 16
+		Me.DirectPackerOptionsLabel.Text = "Direct entry of command-line options (in case they are not included above):"
+		'
+		'DirectPackerOptionsTextBox
+		'
+		Me.DirectPackerOptionsTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.DirectPackerOptionsTextBox.Location = New System.Drawing.Point(3, 171)
+		Me.DirectPackerOptionsTextBox.Name = "DirectPackerOptionsTextBox"
+		Me.DirectPackerOptionsTextBox.Size = New System.Drawing.Size(758, 21)
+		Me.DirectPackerOptionsTextBox.TabIndex = 17
+		'
+		'PackerOptionsTextBox
+		'
+		Me.PackerOptionsTextBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+			Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.PackerOptionsTextBox.Location = New System.Drawing.Point(3, 198)
+		Me.PackerOptionsTextBox.Multiline = True
+		Me.PackerOptionsTextBox.Name = "PackerOptionsTextBox"
+		Me.PackerOptionsTextBox.ReadOnly = True
+		Me.PackerOptionsTextBox.Size = New System.Drawing.Size(758, 44)
+		Me.PackerOptionsTextBox.TabIndex = 18
+		'
+		'PackerOptionsSizerLabel
+		'
+		Me.PackerOptionsSizerLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.PackerOptionsSizerLabel.Enabled = False
+		Me.PackerOptionsSizerLabel.Location = New System.Drawing.Point(3, 198)
+		Me.PackerOptionsSizerLabel.Name = "PackerOptionsSizerLabel"
+		Me.PackerOptionsSizerLabel.Size = New System.Drawing.Size(742, 44)
+		Me.PackerOptionsSizerLabel.TabIndex = 38
+		'
 		'PackButton
 		'
 		Me.PackButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.PackButton.Location = New System.Drawing.Point(0, 255)
+		Me.PackButton.Location = New System.Drawing.Point(0, 271)
 		Me.PackButton.Name = "PackButton"
 		Me.PackButton.Size = New System.Drawing.Size(110, 23)
 		Me.PackButton.TabIndex = 1
@@ -359,7 +393,7 @@ Partial Class PackUserControl
 		'
 		Me.SkipCurrentFolderButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.SkipCurrentFolderButton.Enabled = False
-		Me.SkipCurrentFolderButton.Location = New System.Drawing.Point(116, 255)
+		Me.SkipCurrentFolderButton.Location = New System.Drawing.Point(116, 271)
 		Me.SkipCurrentFolderButton.Name = "SkipCurrentFolderButton"
 		Me.SkipCurrentFolderButton.Size = New System.Drawing.Size(110, 23)
 		Me.SkipCurrentFolderButton.TabIndex = 2
@@ -370,7 +404,7 @@ Partial Class PackUserControl
 		'
 		Me.CancelPackButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.CancelPackButton.Enabled = False
-		Me.CancelPackButton.Location = New System.Drawing.Point(232, 255)
+		Me.CancelPackButton.Location = New System.Drawing.Point(232, 271)
 		Me.CancelPackButton.Name = "CancelPackButton"
 		Me.CancelPackButton.Size = New System.Drawing.Size(110, 23)
 		Me.CancelPackButton.TabIndex = 3
@@ -381,7 +415,7 @@ Partial Class PackUserControl
 		'
 		Me.UseAllInPublishButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.UseAllInPublishButton.Enabled = False
-		Me.UseAllInPublishButton.Location = New System.Drawing.Point(348, 255)
+		Me.UseAllInPublishButton.Location = New System.Drawing.Point(348, 271)
 		Me.UseAllInPublishButton.Name = "UseAllInPublishButton"
 		Me.UseAllInPublishButton.Size = New System.Drawing.Size(110, 23)
 		Me.UseAllInPublishButton.TabIndex = 4
@@ -400,7 +434,7 @@ Partial Class PackUserControl
 		Me.LogRichTextBox.Location = New System.Drawing.Point(0, 0)
 		Me.LogRichTextBox.Name = "LogRichTextBox"
 		Me.LogRichTextBox.ReadOnly = True
-		Me.LogRichTextBox.Size = New System.Drawing.Size(770, 159)
+		Me.LogRichTextBox.Size = New System.Drawing.Size(770, 143)
 		Me.LogRichTextBox.TabIndex = 0
 		Me.LogRichTextBox.Text = ""
 		Me.LogRichTextBox.WordWrap = False
@@ -409,7 +443,7 @@ Partial Class PackUserControl
 		'
 		Me.UseInReleaseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.UseInReleaseButton.Enabled = False
-		Me.UseInReleaseButton.Location = New System.Drawing.Point(632, 165)
+		Me.UseInReleaseButton.Location = New System.Drawing.Point(632, 149)
 		Me.UseInReleaseButton.Name = "UseInReleaseButton"
 		Me.UseInReleaseButton.Size = New System.Drawing.Size(89, 23)
 		Me.UseInReleaseButton.TabIndex = 3
@@ -423,7 +457,7 @@ Partial Class PackUserControl
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.PackedFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.PackedFilesComboBox.FormattingEnabled = True
-		Me.PackedFilesComboBox.Location = New System.Drawing.Point(0, 166)
+		Me.PackedFilesComboBox.Location = New System.Drawing.Point(0, 150)
 		Me.PackedFilesComboBox.Name = "PackedFilesComboBox"
 		Me.PackedFilesComboBox.Size = New System.Drawing.Size(721, 21)
 		Me.PackedFilesComboBox.TabIndex = 1
@@ -431,7 +465,7 @@ Partial Class PackUserControl
 		'GotoPackedFileButton
 		'
 		Me.GotoPackedFileButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.GotoPackedFileButton.Location = New System.Drawing.Point(727, 165)
+		Me.GotoPackedFileButton.Location = New System.Drawing.Point(727, 149)
 		Me.GotoPackedFileButton.Name = "GotoPackedFileButton"
 		Me.GotoPackedFileButton.Size = New System.Drawing.Size(43, 23)
 		Me.GotoPackedFileButton.TabIndex = 4
@@ -452,7 +486,6 @@ Partial Class PackUserControl
 		CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.SplitContainer2.ResumeLayout(False)
 		Me.OptionsGroupBox.ResumeLayout(False)
-		Me.OptionsGroupBox.PerformLayout()
 		Me.Panel2.ResumeLayout(False)
 		Me.Panel2.PerformLayout()
 		Me.ResumeLayout(False)
@@ -486,9 +519,12 @@ Partial Class PackUserControl
 	Friend WithEvents LogRichTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents PackedFilesComboBox As System.Windows.Forms.ComboBox
 	Friend WithEvents GotoPackedFileButton As System.Windows.Forms.Button
-	Friend WithEvents Label4 As Label
+	Friend WithEvents DirectPackerOptionsLabel As Label
 	Friend WithEvents DirectPackerOptionsTextBox As TextBox
 	Friend WithEvents PackerOptionsTextBox As TextBox
 	Friend WithEvents ToolTip1 As ToolTip
 	Friend WithEvents MultiFileVpkCheckBox As CheckBox
+	Friend WithEvents GmaTitleTextBox As TextBoxEx
+	Friend WithEvents GmaTitleLabel As Label
+	Friend WithEvents PackerOptionsSizerLabel As Label
 End Class
