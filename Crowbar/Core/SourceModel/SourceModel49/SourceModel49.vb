@@ -524,7 +524,7 @@ Public Class SourceModel49
 		End If
 
 		'TEST: When a model has a nameCopy, it seems to also use the VTF file strip group topology fields.
-		Dim vtxFile As New SourceVtxFile07(Me.theInputFileReader, Me.theVtxFileData, Me.theMdlFileData.nameCopyOffset > 0)
+		Dim vtxFile As New SourceVtxFile07(Me.theInputFileReader, Me.theVtxFileData)
 
 		vtxFile.ReadSourceVtxHeader()
 		'TODO: Why is this "If" statement needed?
