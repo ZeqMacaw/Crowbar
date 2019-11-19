@@ -62,12 +62,14 @@ Module MathModule
 
 	Public Function DegreesToRadians(ByVal degrees As Double) As Double
 		' 57.29578 = 180 / pi
-		Return degrees / 57.29578
+		'Return degrees / 57.29578
+		Return degrees * 3.1415926535897931 / 180
 	End Function
 
 	Public Function RadiansToDegrees(ByVal radians As Double) As Double
 		' 57.29578 = 180 / pi
-		Return radians * 57.29578
+		'Return radians * 57.29578
+		Return radians * 180 / 3.1415926535897931
 	End Function
 
 	'//Purpose: Converts 3x3 rotation matrix to degrees (XYZ).
