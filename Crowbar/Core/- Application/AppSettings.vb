@@ -53,8 +53,12 @@ Public Class AppSettings
 		Me.theDecompileOutputFolderOption = DecompileOutputPathOptions.WorkFolder
 		Me.SetDefaultDecompileOutputSubfolderName()
 		Me.theDecompileOutputFullPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-		Me.SetDefaultDecompileOptions()
+		Me.SetDefaultDecompileReCreateFilesOptions()
 		Me.theDecompileMode = InputOptions.File
+		Me.theDecompileFolderForEachModelIsChecked = False
+		Me.theDecompileStricterFormatIsChecked = False
+		Me.theDecompileLogFileIsChecked = False
+		Me.theDecompileDebugInfoFilesIsChecked = False
 
 		Me.theCompileQcPathFileName = ""
 		Me.theCompileOutputFolderIsChecked = True
@@ -1535,7 +1539,7 @@ Public Class AppSettings
 		Me.DecompileOutputSubfolderName = "decompiled " + My.Application.Info.Version.ToString(2)
 	End Sub
 
-	Public Sub SetDefaultDecompileOptions()
+	Public Sub SetDefaultDecompileReCreateFilesOptions()
 		'NOTE: Call the properties so the NotifyPropertyChanged events are raised.
 		Me.DecompileQcFileIsChecked = True
 		Me.DecompileGroupIntoQciFilesIsChecked = False
@@ -1556,12 +1560,6 @@ Public Class AppSettings
 		Me.DecompilePhysicsMeshSmdFileIsChecked = True
 		Me.DecompileVertexAnimationVtaFileIsChecked = True
 		Me.DecompileProceduralBonesVrdFileIsChecked = True
-
-		Me.DecompileFolderForEachModelIsChecked = False
-		Me.DecompileStricterFormatIsChecked = False
-
-		Me.DecompileLogFileIsChecked = False
-		Me.DecompileDebugInfoFilesIsChecked = False
 	End Sub
 
 	Public Sub SetDefaultCompileOutputSubfolderName()
