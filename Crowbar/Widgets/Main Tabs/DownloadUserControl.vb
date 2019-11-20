@@ -254,7 +254,7 @@ Public Class DownloadUserControl
 
 				Dim outputPathFileName As String
 				outputPathFileName = Path.Combine(outputPath, outputFileName)
-				outputPathFileName = Me.GetTestedPathFileName(outputPathFileName)
+				outputPathFileName = FileManager.GetTestedPathFileName(outputPathFileName)
 
 				File.WriteAllBytes(outputPathFileName, outputInfo.ContentFile)
 				If File.Exists(outputPathFileName) Then
@@ -273,7 +273,7 @@ Public Class DownloadUserControl
 
 				Dim targetOutputPath As String
 				targetOutputPath = Path.Combine(outputPath, outputFolder)
-				targetOutputPath = Me.GetTestedPath(targetOutputPath)
+				targetOutputPath = FileManager.GetTestedPath(targetOutputPath)
 
 				If Directory.Exists(outputInfo.ContentFolderOrFileName) Then
 					FileManager.CopyFolder(outputInfo.ContentFolderOrFileName, targetOutputPath, True)
@@ -578,7 +578,7 @@ Public Class DownloadUserControl
 
 		Dim outputPathFileName As String
 		outputPathFileName = Path.Combine(outputPath, outputFileName)
-		outputPathFileName = Me.GetTestedPathFileName(outputPathFileName)
+		outputPathFileName = FileManager.GetTestedPathFileName(outputPathFileName)
 
 		Me.LogTextBox.AppendText("Downloading workshop item as: """ + outputPathFileName + """" + vbCrLf)
 
@@ -607,28 +607,6 @@ Public Class DownloadUserControl
 		inputInfo.PublishedItemID = itemID
 		Me.theBackgroundSteamPipe.UnsubscribeItem(AddressOf Me.UnsubscribeItem_ProgressChanged, AddressOf Me.UnsubscribeItem_RunWorkerCompleted, inputInfo)
 	End Sub
-
-	Private Function GetTestedPathFileName(ByVal iPathFileName As String) As String
-		Dim testedPathFileName As String = iPathFileName
-		Dim pathFileNameWithoutExtension As String = FileManager.GetPathFileNameWithoutExtension(iPathFileName)
-		Dim extension As String = Path.GetExtension(iPathFileName)
-		Dim number As Integer = 1
-		While File.Exists(testedPathFileName)
-			testedPathFileName = pathFileNameWithoutExtension + "(" + number.ToString() + ")" + extension
-			number += 1
-		End While
-		Return testedPathFileName
-	End Function
-
-	Private Function GetTestedPath(ByVal iPath As String) As String
-		Dim testedPathFileName As String = iPath
-		Dim number As Integer = 1
-		While Directory.Exists(testedPathFileName)
-			testedPathFileName = iPath + "(" + number.ToString() + ")"
-			number += 1
-		End While
-		Return testedPathFileName
-	End Function
 
 	Private Function GetOutputPath() As String
 		Dim outputPath As String = ""

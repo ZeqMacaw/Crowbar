@@ -38,8 +38,10 @@ Partial Class MainForm
 		Me.PreviewViewUserControl = New Crowbar.ViewUserControl()
 		Me.DecompileTabPage = New System.Windows.Forms.TabPage()
 		Me.DecompilerUserControl1 = New Crowbar.DecompileUserControl()
+		Me.EditTabPage = New System.Windows.Forms.TabPage()
 		Me.CompileTabPage = New System.Windows.Forms.TabPage()
 		Me.CompilerUserControl1 = New Crowbar.CompileUserControl()
+		Me.PatchTabPage = New System.Windows.Forms.TabPage()
 		Me.ViewTabPage = New System.Windows.Forms.TabPage()
 		Me.ViewViewUserControl = New Crowbar.ViewUserControl()
 		Me.PackTabPage = New System.Windows.Forms.TabPage()
@@ -52,6 +54,8 @@ Partial Class MainForm
 		Me.HelpUserControl1 = New Crowbar.HelpUserControl()
 		Me.AboutTabPage = New System.Windows.Forms.TabPage()
 		Me.AboutUserControl1 = New Crowbar.AboutUserControl()
+		Me.UpdateTabPage = New System.Windows.Forms.TabPage()
+		Me.UpdateUserControl1 = New Crowbar.UpdateUserControl()
 		Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
 		Me.AboutCrowbarToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
 		Me.MainToolTip = New System.Windows.Forms.ToolTip(Me.components)
@@ -68,6 +72,7 @@ Partial Class MainForm
 		Me.OptionsTabPage.SuspendLayout()
 		Me.HelpTabPage.SuspendLayout()
 		Me.AboutTabPage.SuspendLayout()
+		Me.UpdateTabPage.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'AboutCrowbarToolStripMenuItem
@@ -93,13 +98,16 @@ Partial Class MainForm
 		Me.MainTabControl.Controls.Add(Me.UnpackTabPage)
 		Me.MainTabControl.Controls.Add(Me.PreviewTabPage)
 		Me.MainTabControl.Controls.Add(Me.DecompileTabPage)
+		Me.MainTabControl.Controls.Add(Me.EditTabPage)
 		Me.MainTabControl.Controls.Add(Me.CompileTabPage)
+		Me.MainTabControl.Controls.Add(Me.PatchTabPage)
 		Me.MainTabControl.Controls.Add(Me.ViewTabPage)
 		Me.MainTabControl.Controls.Add(Me.PackTabPage)
 		Me.MainTabControl.Controls.Add(Me.PublishTabPage)
 		Me.MainTabControl.Controls.Add(Me.OptionsTabPage)
 		Me.MainTabControl.Controls.Add(Me.HelpTabPage)
 		Me.MainTabControl.Controls.Add(Me.AboutTabPage)
+		Me.MainTabControl.Controls.Add(Me.UpdateTabPage)
 		resources.ApplyResources(Me.MainTabControl, "MainTabControl")
 		Me.MainTabControl.Name = "MainTabControl"
 		Me.MainTabControl.SelectedIndex = 0
@@ -166,6 +174,12 @@ Partial Class MainForm
 		resources.ApplyResources(Me.DecompilerUserControl1, "DecompilerUserControl1")
 		Me.DecompilerUserControl1.Name = "DecompilerUserControl1"
 		'
+		'EditTabPage
+		'
+		resources.ApplyResources(Me.EditTabPage, "EditTabPage")
+		Me.EditTabPage.Name = "EditTabPage"
+		Me.EditTabPage.UseVisualStyleBackColor = True
+		'
 		'CompileTabPage
 		'
 		Me.CompileTabPage.BackColor = System.Drawing.SystemColors.Control
@@ -177,6 +191,12 @@ Partial Class MainForm
 		'
 		resources.ApplyResources(Me.CompilerUserControl1, "CompilerUserControl1")
 		Me.CompilerUserControl1.Name = "CompilerUserControl1"
+		'
+		'PatchTabPage
+		'
+		resources.ApplyResources(Me.PatchTabPage, "PatchTabPage")
+		Me.PatchTabPage.Name = "PatchTabPage"
+		Me.PatchTabPage.UseVisualStyleBackColor = True
 		'
 		'ViewTabPage
 		'
@@ -252,6 +272,18 @@ Partial Class MainForm
 		resources.ApplyResources(Me.AboutUserControl1, "AboutUserControl1")
 		Me.AboutUserControl1.Name = "AboutUserControl1"
 		'
+		'UpdateTabPage
+		'
+		Me.UpdateTabPage.Controls.Add(Me.UpdateUserControl1)
+		resources.ApplyResources(Me.UpdateTabPage, "UpdateTabPage")
+		Me.UpdateTabPage.Name = "UpdateTabPage"
+		Me.UpdateTabPage.UseVisualStyleBackColor = True
+		'
+		'UpdateUserControl1
+		'
+		resources.ApplyResources(Me.UpdateUserControl1, "UpdateUserControl1")
+		Me.UpdateUserControl1.Name = "UpdateUserControl1"
+		'
 		'ToolStripMenuItem2
 		'
 		Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
@@ -282,6 +314,7 @@ Partial Class MainForm
 		Me.OptionsTabPage.ResumeLayout(False)
 		Me.HelpTabPage.ResumeLayout(False)
 		Me.AboutTabPage.ResumeLayout(False)
+		Me.UpdateTabPage.ResumeLayout(False)
 		Me.ResumeLayout(False)
 
 	End Sub
@@ -318,4 +351,8 @@ Partial Class MainForm
 	Friend WithEvents AboutCrowbarToolStripMenuItem2 As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents ToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents ToolStripMenuItem2 As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents EditTabPage As TabPage
+	Friend WithEvents PatchTabPage As TabPage
+	Friend WithEvents UpdateTabPage As TabPage
+	Friend WithEvents UpdateUserControl1 As UpdateUserControl
 End Class
