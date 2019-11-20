@@ -5,11 +5,10 @@ Public Class SourceVtxFile07
 
 #Region "Creation and Destruction"
 
-	Public Sub New(ByVal vtxFileReader As BinaryReader, ByVal vtxFileData As SourceVtxFileData07, ByVal vtfStripGroupUsesTopologyFields As Boolean, Optional ByVal vtxFileOffsetStart As Long = 0)
+	Public Sub New(ByVal vtxFileReader As BinaryReader, ByVal vtxFileData As SourceVtxFileData07, Optional ByVal vtxFileOffsetStart As Long = 0)
 		Me.theInputFileReader = vtxFileReader
 		Me.theVtxFileOffsetStart = vtxFileOffsetStart
 		Me.theVtxFileData = vtxFileData
-		Me.theStripGroupAndStripUseExtraFields = vtfStripGroupUsesTopologyFields
 
 		Me.theVtxFileData.theFileSeekLog.FileSize = Me.theInputFileReader.BaseStream.Length
 	End Sub
@@ -53,14 +52,11 @@ Public Class SourceVtxFile07
 	Public Sub ReadSourceVtxBodyParts()
 		If Me.theVtxFileData.bodyPartCount > 0 Then
 			'NOTE: Stuff that is part of determining vtx strip group size.
-			'Me.theFirstMeshWithStripGroups = Nothing
-			'Me.theFirstMeshWithStripGroupsInputFileStreamPosition = -1
-			'Me.theSecondMeshWithStripGroups = Nothing
-			'Me.theExpectedStartOfSecondStripGroupList = -1
-			'Me.theStripGroupUsesExtra8Bytes = False
-			'------
-			'Me.theStripGroupUsesTopologyFields = False
-			'Me.AnalyzeVtxStripGroups()
+			Me.theFirstMeshWithStripGroups = Nothing
+			Me.theFirstMeshWithStripGroupsInputFileStreamPosition = -1
+			Me.theSecondMeshWithStripGroups = Nothing
+			Me.theExpectedStartOfSecondStripGroupList = -1
+			Me.theStripGroupAndStripUseExtraFields = False
 
 			Dim bodyPartInputFileStreamPosition As Long
 			Dim inputFileStreamPosition As Long
@@ -250,28 +246,26 @@ Public Class SourceVtxFile07
 				inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 
 				If aMesh.stripGroupCount > 0 AndAlso aMesh.stripGroupOffset <> 0 Then
-					'If Me.theFirstMeshWithStripGroups Is Nothing Then
-					'	Me.theFirstMeshWithStripGroups = aMesh
-					'	Me.theFirstMeshWithStripGroupsInputFileStreamPosition = meshInputFileStreamPosition
-					'	Me.AnalyzeVtxStripGroups(meshInputFileStreamPosition, aMesh)
-					'	Me.ReadSourceVtxStripGroups(meshInputFileStreamPosition, aMesh)
-					'ElseIf Me.theSecondMeshWithStripGroups Is Nothing Then
-					'	Me.theSecondMeshWithStripGroups = aMesh
-					'	If Me.theExpectedStartOfSecondStripGroupList <> (meshInputFileStreamPosition + aMesh.stripGroupOffset) Then
-					'		Me.theStripGroupUsesExtra8Bytes = True
+					If Me.theFirstMeshWithStripGroups Is Nothing Then
+						Me.theFirstMeshWithStripGroups = aMesh
+						Me.theFirstMeshWithStripGroupsInputFileStreamPosition = meshInputFileStreamPosition
+						Me.AnalyzeVtxStripGroups(meshInputFileStreamPosition, aMesh)
+						Me.ReadSourceVtxStripGroups(meshInputFileStreamPosition, aModelLod, aMesh)
+					ElseIf Me.theSecondMeshWithStripGroups Is Nothing Then
+						Me.theSecondMeshWithStripGroups = aMesh
+						If Me.theExpectedStartOfSecondStripGroupList <> (meshInputFileStreamPosition + aMesh.stripGroupOffset) Then
+							Me.theStripGroupAndStripUseExtraFields = True
 
-					'		If aMesh.theVtxStripGroups IsNot Nothing Then
-					'			aMesh.theVtxStripGroups.Clear()
-					'		End If
+							If aMesh.theVtxStripGroups IsNot Nothing Then
+								aMesh.theVtxStripGroups.Clear()
+							End If
 
-					'		Me.ReadSourceVtxStripGroups(Me.theFirstMeshWithStripGroupsInputFileStreamPosition, Me.theFirstMeshWithStripGroups)
-					'	End If
-					'	Me.ReadSourceVtxStripGroups(meshInputFileStreamPosition, aMesh)
-					'Else
-					'	Me.ReadSourceVtxStripGroups(meshInputFileStreamPosition, aMesh)
-					'End If
-					'------
-					Me.ReadSourceVtxStripGroups(meshInputFileStreamPosition, aModelLod, aMesh)
+							Me.ReadSourceVtxStripGroups(Me.theFirstMeshWithStripGroupsInputFileStreamPosition, aModelLod, Me.theFirstMeshWithStripGroups)
+						End If
+						Me.ReadSourceVtxStripGroups(meshInputFileStreamPosition, aModelLod, aMesh)
+					Else
+						Me.ReadSourceVtxStripGroups(meshInputFileStreamPosition, aModelLod, aMesh)
+					End If
 				End If
 
 				Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
@@ -284,100 +278,34 @@ Public Class SourceVtxFile07
 		End Try
 	End Sub
 
-	''TEST: / Save the first mesh that has strip groups and loop through the mesh's strip groups.
-	''      / Get the file offset and store as Me.theExpectedStartOfSecondStripGroupList.
-	''      / When the next strip group's offset is read in, compare with Me.theExpectedStartOfSecondStripGroupList.
-	''      If equal, then read from first mesh with strip groups without further checking.
-	''      Else (if unequal), then read from first mesh with strip groups 
-	''          and continue reading remaining data using larger strip group size.
-	''      WORKS for the SFM, Dota 2, and L4D2 models I tested.
-	'Private Sub AnalyzeVtxStripGroups(ByVal meshInputFileStreamPosition As Long, ByVal aMesh As SourceVtxMesh)
-	'	Try
-	'		Me.theInputFileReader.BaseStream.Seek(meshInputFileStreamPosition + aMesh.stripGroupOffset, SeekOrigin.Begin)
-	'		aMesh.theVtxStripGroups = New List(Of SourceVtxStripGroup)(aMesh.stripGroupCount)
-	'		For j As Integer = 0 To aMesh.stripGroupCount - 1
-	'			Dim aStripGroup As New SourceVtxStripGroup()
-	'			aStripGroup.vertexCount = Me.theInputFileReader.ReadInt32()
-	'			aStripGroup.vertexOffset = Me.theInputFileReader.ReadInt32()
-	'			aStripGroup.indexCount = Me.theInputFileReader.ReadInt32()
-	'			aStripGroup.indexOffset = Me.theInputFileReader.ReadInt32()
-	'			aStripGroup.stripCount = Me.theInputFileReader.ReadInt32()
-	'			aStripGroup.stripOffset = Me.theInputFileReader.ReadInt32()
-	'			aStripGroup.flags = Me.theInputFileReader.ReadByte()
-	'		Next
+	'TEST: / Save the first mesh that has strip groups and loop through the mesh's strip groups.
+	'      / Get the file offset and store as Me.theExpectedStartOfSecondStripGroupList.
+	'      / When the next strip group's offset is read in, compare with Me.theExpectedStartOfSecondStripGroupList.
+	'      If equal, then read from first mesh with strip groups without further checking.
+	'      Else (if unequal), then read from first mesh with strip groups 
+	'          and continue reading remaining data using larger strip group size.
+	'      WORKS for the SFM, Dota 2, and L4D2 models I tested.
+	Private Sub AnalyzeVtxStripGroups(ByVal meshInputFileStreamPosition As Long, ByVal aMesh As SourceVtxMesh)
+		Try
+			Me.theInputFileReader.BaseStream.Seek(meshInputFileStreamPosition + aMesh.stripGroupOffset, SeekOrigin.Begin)
+			aMesh.theVtxStripGroups = New List(Of SourceVtxStripGroup)(aMesh.stripGroupCount)
+			For j As Integer = 0 To aMesh.stripGroupCount - 1
+				Dim aStripGroup As New SourceVtxStripGroup()
+				aStripGroup.vertexCount = Me.theInputFileReader.ReadInt32()
+				aStripGroup.vertexOffset = Me.theInputFileReader.ReadInt32()
+				aStripGroup.indexCount = Me.theInputFileReader.ReadInt32()
+				aStripGroup.indexOffset = Me.theInputFileReader.ReadInt32()
+				aStripGroup.stripCount = Me.theInputFileReader.ReadInt32()
+				aStripGroup.stripOffset = Me.theInputFileReader.ReadInt32()
+				aStripGroup.flags = Me.theInputFileReader.ReadByte()
+			Next
 
-	'		Me.theExpectedStartOfSecondStripGroupList = Me.theInputFileReader.BaseStream.Position
-	'	Catch ex As Exception
-	'		'NOTE: It can reach here if Crowbar is still trying to figure out if the extra 8 bytes are needed.
-	'		Dim debug As Integer = 4242
-	'	End Try
-	'End Sub
-	'Private Sub AnalyzeVtxStripGroups()
-	'	Try
-	'		Me.theInputFileReader.BaseStream.Seek(Me.theVtxFileData.bodyPartOffset, SeekOrigin.Begin)
-
-	'		Me.theVtxFileData.theVtxBodyParts = New List(Of SourceVtxBodyPart)(Me.theVtxFileData.bodyPartCount)
-	'		For i As Integer = 0 To Me.theVtxFileData.bodyPartCount - 1
-	'			bodyPartInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-	'			Dim aBodyPart As New SourceVtxBodyPart()
-
-	'			aBodyPart.modelCount = Me.theInputFileReader.ReadInt32()
-	'			aBodyPart.modelOffset = Me.theInputFileReader.ReadInt32()
-
-	'			Me.theVtxFileData.theVtxBodyParts.Add(aBodyPart)
-
-	'			inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-
-	'			If aBodyPart.modelCount > 0 AndAlso aBodyPart.modelOffset <> 0 Then
-	'				Me.theInputFileReader.BaseStream.Seek(bodyPartInputFileStreamPosition + aBodyPart.modelOffset, SeekOrigin.Begin)
-
-	'				aBodyPart.theVtxModels = New List(Of SourceVtxModel)(aBodyPart.modelCount)
-	'				For j As Integer = 0 To aBodyPart.modelCount - 1
-	'					modelInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-	'					Dim aModel As New SourceVtxModel()
-
-	'					aModel.lodCount = Me.theInputFileReader.ReadInt32()
-	'					aModel.lodOffset = Me.theInputFileReader.ReadInt32()
-
-	'					aBodyPart.theVtxModels.Add(aModel)
-
-	'					inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-
-	'					If aModel.lodCount > 0 AndAlso aModel.lodOffset <> 0 Then
-	'						Me.ReadSourceVtxModelLods(modelInputFileStreamPosition, aModel)
-	'					End If
-
-	'					Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
-	'				Next
-	'			End If
-
-	'			Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
-	'		Next
-
-
-
-	'		Me.theInputFileReader.BaseStream.Seek(meshInputFileStreamPosition + aMesh.stripGroupOffset, SeekOrigin.Begin)
-	'		aMesh.theVtxStripGroups = New List(Of SourceVtxStripGroup)(aMesh.stripGroupCount)
-	'		For j As Integer = 0 To aMesh.stripGroupCount - 1
-	'			Dim aStripGroup As New SourceVtxStripGroup()
-	'			aStripGroup.vertexCount = Me.theInputFileReader.ReadInt32()
-	'			aStripGroup.vertexOffset = Me.theInputFileReader.ReadInt32()
-	'			aStripGroup.indexCount = Me.theInputFileReader.ReadInt32()
-	'			aStripGroup.indexOffset = Me.theInputFileReader.ReadInt32()
-	'			aStripGroup.stripCount = Me.theInputFileReader.ReadInt32()
-	'			aStripGroup.stripOffset = Me.theInputFileReader.ReadInt32()
-	'			aStripGroup.flags = Me.theInputFileReader.ReadByte()
-	'		Next
-
-	'		'TODO: If aMesh.stripGroupCount > 1 then
-	'		'        Add together the vertexCount from all strips.
-	'		'        If an offset is out of range, then set topologyFieldsAreUsed.
-	'		'        If the counts do not equal the stripGroup's vertexCount, then set topologyFieldsAreUsed.
-	'	Catch ex As Exception
-	'		'NOTE: It can reach here if Crowbar is still trying to figure out if the extra 8 bytes are needed.
-	'		Dim debug As Integer = 4242
-	'	End Try
-	'End Sub
+			Me.theExpectedStartOfSecondStripGroupList = Me.theInputFileReader.BaseStream.Position
+		Catch ex As Exception
+			'NOTE: It can reach here if Crowbar is still trying to figure out if the extra 8 bytes are needed.
+			Dim debug As Integer = 4242
+		End Try
+	End Sub
 
 	Private Sub ReadSourceVtxStripGroups(ByVal meshInputFileStreamPosition As Long, ByVal aModelLod As SourceVtxModelLod, ByVal aMesh As SourceVtxMesh)
 		Dim stripGroupInputFileStreamPosition As Long
@@ -447,7 +375,7 @@ Public Class SourceVtxFile07
 					End If
 				End If
 
-				'TODO: Set whether stripgroup has flex vertexes in it or not for $lod facial and nofacial options.
+				' Set whether stripgroup has flex vertexes in it or not for $lod facial and nofacial options.
 				If (aStripGroup.flags And SourceVtxStripGroup.SourceStripGroupFlexed) > 0 OrElse (aStripGroup.flags And SourceVtxStripGroup.SourceStripGroupDeltaFixed) > 0 Then
 					aModelLod.theVtxModelLodUsesFacial = True
 					'------
@@ -743,12 +671,10 @@ Public Class SourceVtxFile07
 	Private theVtxFileOffsetStart As Long
 	Private theVtxFileData As SourceVtxFileData07
 
-	'Private theFirstMeshWithStripGroups As SourceVtxMesh
-	'Private theFirstMeshWithStripGroupsInputFileStreamPosition As Long
-	'Private theSecondMeshWithStripGroups As SourceVtxMesh
-	'Private theExpectedStartOfSecondStripGroupList As Long
-	'Private theStripGroupUsesExtra8Bytes As Boolean
-	'------
+	Private theFirstMeshWithStripGroups As SourceVtxMesh
+	Private theFirstMeshWithStripGroupsInputFileStreamPosition As Long
+	Private theSecondMeshWithStripGroups As SourceVtxMesh
+	Private theExpectedStartOfSecondStripGroupList As Long
 	Private theStripGroupAndStripUseExtraFields As Boolean
 
 #End Region

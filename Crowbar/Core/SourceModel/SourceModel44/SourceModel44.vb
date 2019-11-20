@@ -511,7 +511,7 @@ Public Class SourceModel44
 			Me.theVtxFileData = New SourceVtxFileData07()
 		End If
 
-		Dim vtxFile As New SourceVtxFile07(Me.theInputFileReader, Me.theVtxFileData, False)
+		Dim vtxFile As New SourceVtxFile07(Me.theInputFileReader, Me.theVtxFileData)
 
 		vtxFile.ReadSourceVtxHeader()
 		If Me.theVtxFileData.lodCount > 0 Then
