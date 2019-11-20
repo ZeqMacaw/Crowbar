@@ -153,7 +153,7 @@ Public Class DownloadUserControl
 		Me.CancelDownload()
 	End Sub
 
-	Private Sub DownloadedItemButton_Click(sender As Object, e As EventArgs) Handles DownloadedItemButton.Click
+	Private Sub DownloadedItemButton_Click(sender As Object, e As EventArgs) Handles GotoDownloadedItemButton.Click
 		Me.GotoDownloadedItem()
 	End Sub
 
