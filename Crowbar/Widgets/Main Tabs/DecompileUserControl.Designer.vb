@@ -30,7 +30,7 @@ Partial Class DecompileUserControl
 		Me.FormatForStricterImportersCheckBox = New System.Windows.Forms.CheckBox()
 		Me.UseMixedCaseForKeywordsCheckBox = New System.Windows.Forms.CheckBox()
 		Me.RemovePathFromMaterialFileNamesCheckBox = New System.Windows.Forms.CheckBox()
-		Me.UseUvsForDoomMusicCompilerCheckBox = New System.Windows.Forms.CheckBox()
+		Me.UseNonValveUvConversionCheckBox = New System.Windows.Forms.CheckBox()
 		Me.OverrideMdlVersionLabel = New System.Windows.Forms.Label()
 		Me.OverrideMdlVersionComboBox = New System.Windows.Forms.ComboBox()
 		Me.Panel2 = New System.Windows.Forms.Panel()
@@ -157,17 +157,17 @@ Partial Class DecompileUserControl
 		"problem with $CDMaterials in QC file.")
 		Me.RemovePathFromMaterialFileNamesCheckBox.UseVisualStyleBackColor = True
 		'
-		'UseUvsForDoomMusicCompilerCheckBox
+		'UseNonValveUvConversionCheckBox
 		'
-		Me.UseUvsForDoomMusicCompilerCheckBox.AutoSize = True
-		Me.UseUvsForDoomMusicCompilerCheckBox.Location = New System.Drawing.Point(20, 164)
-		Me.UseUvsForDoomMusicCompilerCheckBox.Name = "UseUvsForDoomMusicCompilerCheckBox"
-		Me.UseUvsForDoomMusicCompilerCheckBox.Size = New System.Drawing.Size(283, 17)
-		Me.UseUvsForDoomMusicCompilerCheckBox.TabIndex = 44
-		Me.UseUvsForDoomMusicCompilerCheckBox.Text = "Use UVs for DoomMusic's model compiler (GoldSource)"
-		Me.ToolTip1.SetToolTip(Me.UseUvsForDoomMusicCompilerCheckBox, "For DoomMusic's compiler, UV calculation is slightly different, so tick this for " &
-		"better results.")
-		Me.UseUvsForDoomMusicCompilerCheckBox.UseVisualStyleBackColor = True
+		Me.UseNonValveUvConversionCheckBox.AutoSize = True
+		Me.UseNonValveUvConversionCheckBox.Location = New System.Drawing.Point(20, 164)
+		Me.UseNonValveUvConversionCheckBox.Name = "UseNonValveUvConversionCheckBox"
+		Me.UseNonValveUvConversionCheckBox.Size = New System.Drawing.Size(231, 17)
+		Me.UseNonValveUvConversionCheckBox.TabIndex = 44
+		Me.UseNonValveUvConversionCheckBox.Text = "Use non-Valve UV conversion (GoldSource)"
+		Me.ToolTip1.SetToolTip(Me.UseNonValveUvConversionCheckBox, "[ u=s/width ] and [ v=1-(t/height) ] instead of Valve's [ u=s/(width-1) ] and [ v" &
+		"=1-(t/(height-1)) ]")
+		Me.UseNonValveUvConversionCheckBox.UseVisualStyleBackColor = True
 		'
 		'OverrideMdlVersionLabel
 		'
@@ -456,7 +456,7 @@ Partial Class DecompileUserControl
 		'Panel1
 		'
 		Me.Panel1.AutoScroll = True
-		Me.Panel1.Controls.Add(Me.UseUvsForDoomMusicCompilerCheckBox)
+		Me.Panel1.Controls.Add(Me.UseNonValveUvConversionCheckBox)
 		Me.Panel1.Controls.Add(Me.OnlyChangedMaterialsInTextureGroupLinesCheckBox)
 		Me.Panel1.Controls.Add(Me.UseMixedCaseForKeywordsCheckBox)
 		Me.Panel1.Controls.Add(Me.RemovePathFromMaterialFileNamesCheckBox)
@@ -772,7 +772,7 @@ Partial Class DecompileUserControl
 	Friend WithEvents Panel3 As System.Windows.Forms.Panel
 	Friend WithEvents OnlyChangedMaterialsInTextureGroupLinesCheckBox As System.Windows.Forms.CheckBox
 	Friend WithEvents OutputSubfolderTextBox As Crowbar.TextBoxEx
-	Friend WithEvents UseUvsForDoomMusicCompilerCheckBox As System.Windows.Forms.CheckBox
+	Friend WithEvents UseNonValveUvConversionCheckBox As System.Windows.Forms.CheckBox
 	Friend WithEvents OverrideMdlVersionLabel As System.Windows.Forms.Label
 	Friend WithEvents OverrideMdlVersionComboBox As System.Windows.Forms.ComboBox
 End Class

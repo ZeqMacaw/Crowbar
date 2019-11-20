@@ -411,7 +411,7 @@ Public Class SourceSmdFile10
 					texCoordY = aVertexInfo.t
 				End If
 			Else
-				If TheApp.Settings.DecompileUseUvsForDoomMusicCompilerIsChecked Then
+				If TheApp.Settings.DecompileUseNonValveUvConversionIsChecked Then
 					' Match DoomMusic's StudioMDL (StudioMDL with Texture Shifting fix v1.02) because that compiler fixes texture shifting as well as some other stuff.
 					'TODO: Is DoomMusic's texture UV calculation incorrect? Should it be using the "- 1" like the original Valve compiler?
 					texCoordX = aVertexInfo.s / (aTexture.width)

@@ -721,13 +721,13 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	Public Property DecompileUseUvsForDoomMusicCompilerIsChecked() As Boolean
+	Public Property DecompileUseNonValveUvConversionIsChecked() As Boolean
 		Get
-			Return Me.theDecompileUseUvsForDoomMusicCompilerIsChecked
+			Return Me.theDecompileUseNonValveUvConversionIsChecked
 		End Get
 		Set(ByVal value As Boolean)
-			Me.theDecompileUseUvsForDoomMusicCompilerIsChecked = value
-			NotifyPropertyChanged("DecompileUseUvsForDoomMusicCompilerIsChecked")
+			Me.theDecompileUseNonValveUvConversionIsChecked = value
+			NotifyPropertyChanged("DecompileUseNonValveUvConversionIsChecked")
 		End Set
 	End Property
 
@@ -1546,7 +1546,7 @@ Public Class AppSettings
 
 		Me.DecompileReferenceMeshSmdFileIsChecked = True
 		Me.DecompileRemovePathFromSmdMaterialFileNamesIsChecked = True
-		Me.DecompileUseUvsForDoomMusicCompilerIsChecked = False
+		Me.DecompileUseNonValveUvConversionIsChecked = False
 
 		Me.DecompileBoneAnimationSmdFilesIsChecked = True
 		Me.DecompileBoneAnimationPlaceInSubfolderIsChecked = True
@@ -1732,7 +1732,7 @@ Public Class AppSettings
 
 	Private theDecompileReferenceMeshSmdFileIsChecked As Boolean
 	Private theDecompileRemovePathFromSmdMaterialFileNamesIsChecked As Boolean
-	Private theDecompileUseUvsForDoomMusicCompilerIsChecked As Boolean
+	Private theDecompileUseNonValveUvConversionIsChecked As Boolean
 
 	Private theDecompileBoneAnimationSmdFilesIsChecked As Boolean
 	Private theDecompileBoneAnimationPlaceInSubfolderIsChecked As Boolean
