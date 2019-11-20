@@ -34,13 +34,15 @@ Partial Class ViewUserControl
 		Me.InfoRichTextBox = New Crowbar.RichTextBoxEx()
 		Me.OpenMappingToolButton = New System.Windows.Forms.Button()
 		Me.RunGameButton = New System.Windows.Forms.Button()
-		Me.Label3 = New System.Windows.Forms.Label()
+		Me.GameLabel = New System.Windows.Forms.Label()
 		Me.GameSetupComboBox = New System.Windows.Forms.ComboBox()
-		Me.EditGameSetupButton = New System.Windows.Forms.Button()
+		Me.SetUpGameButton = New System.Windows.Forms.Button()
 		Me.ViewAsReplacementButton = New System.Windows.Forms.Button()
 		Me.UseInDecompileButton = New System.Windows.Forms.Button()
 		Me.OpenViewerButton = New System.Windows.Forms.Button()
 		Me.MessageTextBox = New Crowbar.TextBoxEx()
+		Me.OverrideMdlVersionLabel = New System.Windows.Forms.Label()
+		Me.OverrideMdlVersionComboBox = New System.Windows.Forms.ComboBox()
 		Me.Panel2.SuspendLayout()
 		CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SplitContainer1.Panel1.SuspendLayout()
@@ -63,9 +65,10 @@ Partial Class ViewUserControl
 		'
 		Me.MdlPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.MdlPathFileNameTextBox.CueBannerText = ""
 		Me.MdlPathFileNameTextBox.Location = New System.Drawing.Point(58, 5)
 		Me.MdlPathFileNameTextBox.Name = "MdlPathFileNameTextBox"
-		Me.MdlPathFileNameTextBox.Size = New System.Drawing.Size(596, 22)
+		Me.MdlPathFileNameTextBox.Size = New System.Drawing.Size(596, 21)
 		Me.MdlPathFileNameTextBox.TabIndex = 1
 		'
 		'BrowseForMdlFileButton
@@ -83,14 +86,16 @@ Partial Class ViewUserControl
 		Me.Label1.AutoSize = True
 		Me.Label1.Location = New System.Drawing.Point(3, 8)
 		Me.Label1.Name = "Label1"
-		Me.Label1.Size = New System.Drawing.Size(52, 13)
+		Me.Label1.Size = New System.Drawing.Size(48, 13)
 		Me.Label1.TabIndex = 0
 		Me.Label1.Text = "MDL file:"
 		'
 		'Panel2
 		'
+		Me.Panel2.Controls.Add(Me.OverrideMdlVersionLabel)
 		Me.Panel2.Controls.Add(Me.Label1)
 		Me.Panel2.Controls.Add(Me.MdlPathFileNameTextBox)
+		Me.Panel2.Controls.Add(Me.OverrideMdlVersionComboBox)
 		Me.Panel2.Controls.Add(Me.BrowseForMdlFileButton)
 		Me.Panel2.Controls.Add(Me.GotoMdlFileButton)
 		Me.Panel2.Controls.Add(Me.SplitContainer1)
@@ -116,7 +121,7 @@ Partial Class ViewUserControl
 		Me.SplitContainer1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.SplitContainer1.Location = New System.Drawing.Point(3, 32)
+		Me.SplitContainer1.Location = New System.Drawing.Point(3, 59)
 		Me.SplitContainer1.Name = "SplitContainer1"
 		Me.SplitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal
 		'
@@ -127,19 +132,19 @@ Partial Class ViewUserControl
 		'
 		'SplitContainer1.Panel2
 		'
-		Me.SplitContainer1.Panel2.Controls.Add(Me.OpenMappingToolButton)
-		Me.SplitContainer1.Panel2.Controls.Add(Me.RunGameButton)
-		Me.SplitContainer1.Panel2.Controls.Add(Me.Label3)
+		Me.SplitContainer1.Panel2.Controls.Add(Me.GameLabel)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.GameSetupComboBox)
-		Me.SplitContainer1.Panel2.Controls.Add(Me.EditGameSetupButton)
+		Me.SplitContainer1.Panel2.Controls.Add(Me.SetUpGameButton)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.ViewButton)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.ViewAsReplacementButton)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.UseInDecompileButton)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.OpenViewerButton)
+		Me.SplitContainer1.Panel2.Controls.Add(Me.OpenMappingToolButton)
+		Me.SplitContainer1.Panel2.Controls.Add(Me.RunGameButton)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.MessageTextBox)
 		Me.SplitContainer1.Panel2MinSize = 90
-		Me.SplitContainer1.Size = New System.Drawing.Size(770, 501)
-		Me.SplitContainer1.SplitterDistance = 384
+		Me.SplitContainer1.Size = New System.Drawing.Size(770, 474)
+		Me.SplitContainer1.SplitterDistance = 363
 		Me.SplitContainer1.TabIndex = 13
 		'
 		'GroupBox1
@@ -148,18 +153,19 @@ Partial Class ViewUserControl
 		Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.GroupBox1.Location = New System.Drawing.Point(0, 0)
 		Me.GroupBox1.Name = "GroupBox1"
-		Me.GroupBox1.Size = New System.Drawing.Size(770, 384)
+		Me.GroupBox1.Size = New System.Drawing.Size(770, 363)
 		Me.GroupBox1.TabIndex = 4
 		Me.GroupBox1.TabStop = False
 		Me.GroupBox1.Text = "Info"
 		'
 		'InfoRichTextBox
 		'
+		Me.InfoRichTextBox.CueBannerText = ""
 		Me.InfoRichTextBox.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.InfoRichTextBox.Location = New System.Drawing.Point(3, 18)
+		Me.InfoRichTextBox.Location = New System.Drawing.Point(3, 17)
 		Me.InfoRichTextBox.Name = "InfoRichTextBox"
 		Me.InfoRichTextBox.ReadOnly = True
-		Me.InfoRichTextBox.Size = New System.Drawing.Size(764, 363)
+		Me.InfoRichTextBox.Size = New System.Drawing.Size(764, 343)
 		Me.InfoRichTextBox.TabIndex = 0
 		Me.InfoRichTextBox.Text = ""
 		Me.InfoRichTextBox.WordWrap = False
@@ -184,14 +190,14 @@ Partial Class ViewUserControl
 		Me.RunGameButton.Text = "Run Game"
 		Me.RunGameButton.UseVisualStyleBackColor = True
 		'
-		'Label3
+		'GameLabel
 		'
-		Me.Label3.AutoSize = True
-		Me.Label3.Location = New System.Drawing.Point(0, 8)
-		Me.Label3.Name = "Label3"
-		Me.Label3.Size = New System.Drawing.Size(175, 13)
-		Me.Label3.TabIndex = 5
-		Me.Label3.Text = "Game that has the model viewer:"
+		Me.GameLabel.AutoSize = True
+		Me.GameLabel.Location = New System.Drawing.Point(0, 8)
+		Me.GameLabel.Name = "GameLabel"
+		Me.GameLabel.Size = New System.Drawing.Size(166, 13)
+		Me.GameLabel.TabIndex = 5
+		Me.GameLabel.Text = "Game that has the model viewer:"
 		'
 		'GameSetupComboBox
 		'
@@ -204,15 +210,15 @@ Partial Class ViewUserControl
 		Me.GameSetupComboBox.Size = New System.Drawing.Size(493, 21)
 		Me.GameSetupComboBox.TabIndex = 6
 		'
-		'EditGameSetupButton
+		'SetUpGameButton
 		'
-		Me.EditGameSetupButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.EditGameSetupButton.Location = New System.Drawing.Point(680, 3)
-		Me.EditGameSetupButton.Name = "EditGameSetupButton"
-		Me.EditGameSetupButton.Size = New System.Drawing.Size(90, 23)
-		Me.EditGameSetupButton.TabIndex = 7
-		Me.EditGameSetupButton.Text = "Set Up Games"
-		Me.EditGameSetupButton.UseVisualStyleBackColor = True
+		Me.SetUpGameButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.SetUpGameButton.Location = New System.Drawing.Point(680, 3)
+		Me.SetUpGameButton.Name = "SetUpGameButton"
+		Me.SetUpGameButton.Size = New System.Drawing.Size(90, 23)
+		Me.SetUpGameButton.TabIndex = 7
+		Me.SetUpGameButton.Text = "Set Up Games"
+		Me.SetUpGameButton.UseVisualStyleBackColor = True
 		'
 		'ViewAsReplacementButton
 		'
@@ -249,12 +255,31 @@ Partial Class ViewUserControl
 		Me.MessageTextBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.MessageTextBox.CueBannerText = ""
 		Me.MessageTextBox.Location = New System.Drawing.Point(0, 61)
 		Me.MessageTextBox.Multiline = True
 		Me.MessageTextBox.Name = "MessageTextBox"
 		Me.MessageTextBox.ReadOnly = True
-		Me.MessageTextBox.Size = New System.Drawing.Size(770, 51)
+		Me.MessageTextBox.Size = New System.Drawing.Size(770, 45)
 		Me.MessageTextBox.TabIndex = 12
+		'
+		'OverrideMdlVersionLabel
+		'
+		Me.OverrideMdlVersionLabel.AutoSize = True
+		Me.OverrideMdlVersionLabel.Location = New System.Drawing.Point(3, 35)
+		Me.OverrideMdlVersionLabel.Name = "OverrideMdlVersionLabel"
+		Me.OverrideMdlVersionLabel.Size = New System.Drawing.Size(114, 13)
+		Me.OverrideMdlVersionLabel.TabIndex = 48
+		Me.OverrideMdlVersionLabel.Text = "Override MDL version:"
+		'
+		'OverrideMdlVersionComboBox
+		'
+		Me.OverrideMdlVersionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.OverrideMdlVersionComboBox.FormattingEnabled = True
+		Me.OverrideMdlVersionComboBox.Location = New System.Drawing.Point(123, 32)
+		Me.OverrideMdlVersionComboBox.Name = "OverrideMdlVersionComboBox"
+		Me.OverrideMdlVersionComboBox.Size = New System.Drawing.Size(100, 21)
+		Me.OverrideMdlVersionComboBox.TabIndex = 47
 		'
 		'ViewUserControl
 		'
@@ -279,8 +304,8 @@ Partial Class ViewUserControl
 	Friend WithEvents BrowseForMdlFileButton As System.Windows.Forms.Button
 	Friend WithEvents Label1 As System.Windows.Forms.Label
 	Friend WithEvents Panel2 As System.Windows.Forms.Panel
-	Friend WithEvents Label3 As System.Windows.Forms.Label
-	Friend WithEvents EditGameSetupButton As System.Windows.Forms.Button
+	Friend WithEvents GameLabel As System.Windows.Forms.Label
+	Friend WithEvents SetUpGameButton As System.Windows.Forms.Button
 	Friend WithEvents GameSetupComboBox As System.Windows.Forms.ComboBox
 	Friend WithEvents GotoMdlFileButton As System.Windows.Forms.Button
 	Friend WithEvents ViewAsReplacementButton As System.Windows.Forms.Button
@@ -292,5 +317,6 @@ Partial Class ViewUserControl
 	Friend WithEvents SplitContainer1 As System.Windows.Forms.SplitContainer
 	Friend WithEvents RunGameButton As System.Windows.Forms.Button
 	Friend WithEvents OpenMappingToolButton As System.Windows.Forms.Button
-
+	Friend WithEvents OverrideMdlVersionLabel As Label
+	Friend WithEvents OverrideMdlVersionComboBox As ComboBox
 End Class
