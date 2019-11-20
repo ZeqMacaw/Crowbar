@@ -957,7 +957,7 @@
     <None Include="Resources\crowbar_icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Core\GameModel\TextFiles\" />
+    <Folder Include="Core\GameModel\UncompiledFiles\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
