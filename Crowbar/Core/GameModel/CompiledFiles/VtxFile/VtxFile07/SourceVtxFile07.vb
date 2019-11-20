@@ -285,12 +285,12 @@ Public Class SourceVtxFile07
 	'      Else (if unequal), then read from first mesh with strip groups 
 	'          and continue reading remaining data using larger strip group size.
 	'      WORKS for the SFM, Dota 2, and L4D2 models I tested.
-	Private Sub AnalyzeVtxStripGroups(ByVal meshInputFileStreamPosition As Long, ByVal aMesh As SourceVtxMesh)
+	Private Sub AnalyzeVtxStripGroups(ByVal meshInputFileStreamPosition As Long, ByVal aMesh As SourceVtxMesh07)
 		Try
 			Me.theInputFileReader.BaseStream.Seek(meshInputFileStreamPosition + aMesh.stripGroupOffset, SeekOrigin.Begin)
-			aMesh.theVtxStripGroups = New List(Of SourceVtxStripGroup)(aMesh.stripGroupCount)
+			aMesh.theVtxStripGroups = New List(Of SourceVtxStripGroup07)(aMesh.stripGroupCount)
 			For j As Integer = 0 To aMesh.stripGroupCount - 1
-				Dim aStripGroup As New SourceVtxStripGroup()
+				Dim aStripGroup As New SourceVtxStripGroup07()
 				aStripGroup.vertexCount = Me.theInputFileReader.ReadInt32()
 				aStripGroup.vertexOffset = Me.theInputFileReader.ReadInt32()
 				aStripGroup.indexCount = Me.theInputFileReader.ReadInt32()
@@ -671,9 +671,9 @@ Public Class SourceVtxFile07
 	Private theVtxFileOffsetStart As Long
 	Private theVtxFileData As SourceVtxFileData07
 
-	Private theFirstMeshWithStripGroups As SourceVtxMesh
+	Private theFirstMeshWithStripGroups As SourceVtxMesh07
 	Private theFirstMeshWithStripGroupsInputFileStreamPosition As Long
-	Private theSecondMeshWithStripGroups As SourceVtxMesh
+	Private theSecondMeshWithStripGroups As SourceVtxMesh07
 	Private theExpectedStartOfSecondStripGroupList As Long
 	Private theStripGroupAndStripUseExtraFields As Boolean
 
