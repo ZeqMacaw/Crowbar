@@ -2782,7 +2782,7 @@ Public Class SourceQcFile49
 	'			pData += size;
 	'		}
 	'------
-	'TODO: Other sub-options for ikrule option.
+	' Other sub-options for ikrule option.
 	'	bone          - Looks like this data is not stored directly and might not be extractable from other data.
 	'	contact       /
 	'	fakeorigin    - 
@@ -2844,6 +2844,10 @@ Public Class SourceQcFile49
 				'NOTE: Writing all ikrule options because studiomdl will ignore any that are not used by a type.
 
 				tempInteger = CInt(Math.Round(anIkRule.contact * endFrameIndex))
+				'NOTE: Subtract max frame from value if over max frame. 
+				If tempInteger > endFrameIndex Then
+					tempInteger -= endFrameIndex
+				End If
 				line += " contact "
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 
@@ -2880,19 +2884,40 @@ Public Class SourceQcFile49
 
 				line += " range "
 				tempInteger = CInt(Math.Round(anIkRule.influenceStart * endFrameIndex))
+				'NOTE: Subtract max frame from value if over max frame. 
+				If tempInteger > endFrameIndex Then
+					tempInteger -= endFrameIndex
+				End If
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 				line += " "
 				tempInteger = CInt(Math.Round(anIkRule.influencePeak * endFrameIndex))
+				'NOTE: Subtract max frame from value if over max frame. 
+				If tempInteger > endFrameIndex Then
+					tempInteger -= endFrameIndex
+				End If
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 				line += " "
 				tempInteger = CInt(Math.Round(anIkRule.influenceTail * endFrameIndex))
+				'NOTE: Subtract max frame from value if over max frame. 
+				If tempInteger > endFrameIndex Then
+					tempInteger -= endFrameIndex
+				End If
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 				line += " "
 				tempInteger = CInt(Math.Round(anIkRule.influenceEnd * endFrameIndex))
+				'NOTE: Subtract max frame from value if over max frame. 
+				If tempInteger > endFrameIndex Then
+					tempInteger -= endFrameIndex
+				End If
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 
 				line += " target "
 				line += anIkRule.slot.ToString(TheApp.InternalNumberFormat)
+
+				' A MDL v48 needs this, so most likely v49 does, too.
+				If aSequenceDesc IsNot Nothing AndAlso anAnimationDesc.theMovements IsNot Nothing AndAlso anAnimationDesc.theMovements.Count > 0 Then
+					line += " usesequence "
+				End If
 
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
