@@ -540,7 +540,7 @@ Public Class DownloadUserControl
 			Me.theAppIdText = appID.ToString()
 			Me.theSteamAppInfo = Nothing
 			Try
-				If TheApp.Settings.PublishSteamAppUserInfos.Count > 0 Then
+				If TheApp.SteamAppInfos.Count > 0 Then
 					'NOTE: Use this temp var because appID as a ByRef var can not be used in a lambda expression used in next line.
 					Dim steamAppID As New Steamworks.AppId_t(appID)
 					Me.theSteamAppInfo = TheApp.SteamAppInfos.First(Function(info) info.ID = steamAppID)
