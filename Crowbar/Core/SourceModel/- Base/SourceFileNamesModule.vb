@@ -117,7 +117,7 @@ Module SourceFileNamesModule
 			End Try
 			bodyModelFileNameWithoutExtension = Path.GetFileNameWithoutExtension(bodyModelFileName)
 
-			If Not bodyModelFileName.ToLower(TheApp.InternalCultureInfo).StartsWith(modelName.ToLower(TheApp.InternalCultureInfo)) Then
+			If TheApp.Settings.DecompilePrefixFileNamesWithModelNameIsChecked AndAlso Not bodyModelFileName.ToLower(TheApp.InternalCultureInfo).StartsWith(modelName.ToLower(TheApp.InternalCultureInfo)) Then
 				bodyGroupSmdFileName += modelName + "_"
 			End If
 			bodyGroupSmdFileName += bodyModelFileNameWithoutExtension

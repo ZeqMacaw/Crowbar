@@ -665,16 +665,6 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	Public Property DecompileDeclareSequenceQciFileIsChecked() As Boolean
-		Get
-			Return Me.theDecompileDeclareSequenceQciFileIsChecked
-		End Get
-		Set(ByVal value As Boolean)
-			Me.theDecompileDeclareSequenceQciFileIsChecked = value
-			NotifyPropertyChanged("DecompileDeclareSequenceQciFileIsChecked")
-		End Set
-	End Property
-
 	Public Property DecompileFolderForEachModelIsChecked() As Boolean
 		Get
 			Return Me.theDecompileFolderForEachModelIsChecked
@@ -682,6 +672,26 @@ Public Class AppSettings
 		Set(ByVal value As Boolean)
 			Me.theDecompileFolderForEachModelIsChecked = value
 			NotifyPropertyChanged("DecompileFolderForEachModelIsChecked")
+		End Set
+	End Property
+
+	Public Property DecompilePrefixFileNamesWithModelNameIsChecked() As Boolean
+		Get
+			Return Me.theDecompilePrefixFileNamesWithModelNameIsChecked
+		End Get
+		Set(ByVal value As Boolean)
+			Me.theDecompilePrefixFileNamesWithModelNameIsChecked = value
+			NotifyPropertyChanged("DecompilePrefixFileNamesWithModelNameIsChecked")
+		End Set
+	End Property
+
+	Public Property DecompileStricterFormatIsChecked() As Boolean
+		Get
+			Return Me.theDecompileStricterFormatIsChecked
+		End Get
+		Set(ByVal value As Boolean)
+			Me.theDecompileStricterFormatIsChecked = value
+			NotifyPropertyChanged("DecompileStricterFormatIsChecked")
 		End Set
 	End Property
 
@@ -705,13 +715,13 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	Public Property DecompileStricterFormatIsChecked() As Boolean
+	Public Property DecompileDeclareSequenceQciFileIsChecked() As Boolean
 		Get
-			Return Me.theDecompileStricterFormatIsChecked
+			Return Me.theDecompileDeclareSequenceQciFileIsChecked
 		End Get
 		Set(ByVal value As Boolean)
-			Me.theDecompileStricterFormatIsChecked = value
-			NotifyPropertyChanged("DecompileStricterFormatIsChecked")
+			Me.theDecompileDeclareSequenceQciFileIsChecked = value
+			NotifyPropertyChanged("DecompileDeclareSequenceQciFileIsChecked")
 		End Set
 	End Property
 
@@ -1744,9 +1754,10 @@ Public Class AppSettings
 	Private theDecompileDeclareSequenceQciFileIsChecked As Boolean
 
 	Private theDecompileFolderForEachModelIsChecked As Boolean
+	Private theDecompilePrefixFileNamesWithModelNameIsChecked As Boolean
+	Private theDecompileStricterFormatIsChecked As Boolean
 	Private theDecompileLogFileIsChecked As Boolean
 	Private theDecompileDebugInfoFilesIsChecked As Boolean
-	Private theDecompileStricterFormatIsChecked As Boolean
 
 	Private theDecompileOverrideMdlVersion As SupportedMdlVersion
 
