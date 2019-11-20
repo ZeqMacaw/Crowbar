@@ -38,10 +38,8 @@ Partial Class MainForm
 		Me.PreviewViewUserControl = New Crowbar.ViewUserControl()
 		Me.DecompileTabPage = New System.Windows.Forms.TabPage()
 		Me.DecompilerUserControl1 = New Crowbar.DecompileUserControl()
-		Me.EditTabPage = New System.Windows.Forms.TabPage()
 		Me.CompileTabPage = New System.Windows.Forms.TabPage()
 		Me.CompilerUserControl1 = New Crowbar.CompileUserControl()
-		Me.PatchTabPage = New System.Windows.Forms.TabPage()
 		Me.ViewTabPage = New System.Windows.Forms.TabPage()
 		Me.ViewViewUserControl = New Crowbar.ViewUserControl()
 		Me.PackTabPage = New System.Windows.Forms.TabPage()
@@ -98,9 +96,7 @@ Partial Class MainForm
 		Me.MainTabControl.Controls.Add(Me.UnpackTabPage)
 		Me.MainTabControl.Controls.Add(Me.PreviewTabPage)
 		Me.MainTabControl.Controls.Add(Me.DecompileTabPage)
-		Me.MainTabControl.Controls.Add(Me.EditTabPage)
 		Me.MainTabControl.Controls.Add(Me.CompileTabPage)
-		Me.MainTabControl.Controls.Add(Me.PatchTabPage)
 		Me.MainTabControl.Controls.Add(Me.ViewTabPage)
 		Me.MainTabControl.Controls.Add(Me.PackTabPage)
 		Me.MainTabControl.Controls.Add(Me.PublishTabPage)
@@ -174,12 +170,6 @@ Partial Class MainForm
 		resources.ApplyResources(Me.DecompilerUserControl1, "DecompilerUserControl1")
 		Me.DecompilerUserControl1.Name = "DecompilerUserControl1"
 		'
-		'EditTabPage
-		'
-		resources.ApplyResources(Me.EditTabPage, "EditTabPage")
-		Me.EditTabPage.Name = "EditTabPage"
-		Me.EditTabPage.UseVisualStyleBackColor = True
-		'
 		'CompileTabPage
 		'
 		Me.CompileTabPage.BackColor = System.Drawing.SystemColors.Control
@@ -191,12 +181,6 @@ Partial Class MainForm
 		'
 		resources.ApplyResources(Me.CompilerUserControl1, "CompilerUserControl1")
 		Me.CompilerUserControl1.Name = "CompilerUserControl1"
-		'
-		'PatchTabPage
-		'
-		resources.ApplyResources(Me.PatchTabPage, "PatchTabPage")
-		Me.PatchTabPage.Name = "PatchTabPage"
-		Me.PatchTabPage.UseVisualStyleBackColor = True
 		'
 		'ViewTabPage
 		'
@@ -351,8 +335,6 @@ Partial Class MainForm
 	Friend WithEvents AboutCrowbarToolStripMenuItem2 As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents ToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents ToolStripMenuItem2 As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents EditTabPage As TabPage
-	Friend WithEvents PatchTabPage As TabPage
 	Friend WithEvents UpdateTabPage As TabPage
 	Friend WithEvents UpdateUserControl1 As UpdateUserControl
 End Class
