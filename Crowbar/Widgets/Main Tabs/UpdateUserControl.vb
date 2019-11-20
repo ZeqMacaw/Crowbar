@@ -135,7 +135,10 @@ Public Class UpdateUserControl
 			Me.CheckForUpdateTextBox.Text = CType(outputInfo.StatusMessage, String)
 			NotifyUpdateAvailable(outputInfo.UpdateIsAvailable)
 
-			If outputInfo.DownloadIsEnabled Then
+			If outputInfo.UpdateIsEnabled AndAlso Not outputInfo.UpdateIsAvailable Then
+				Me.theCurrentProgressBar.Text = "No available update."
+				Me.theCurrentProgressBar.Value = 0
+			ElseIf outputInfo.DownloadIsEnabled AndAlso Not (outputInfo.UpdateIsEnabled AndAlso Not outputInfo.UpdateIsAvailable) Then
 				Me.theCurrentProgressBar.Text = "Starting download..."
 				Me.theCurrentProgressBar.Value = 0
 			End If
@@ -159,12 +162,12 @@ Public Class UpdateUserControl
 				Try
 					File.Delete(pathFileName)
 				Catch ex As Exception
-					Me.theCurrentProgressBar.Text += "WARNING: Problem deleting incomplete downloaded file: """ + pathFileName + """"
+					Me.theCurrentProgressBar.Text += "WARNING: Problem deleting incomplete downloaded file: """ + Path.GetFileName(pathFileName) + """"
 				End Try
 			End If
 		Else
 			If File.Exists(pathFileName) Then
-				Me.theCurrentProgressBar.Text = "Download complete. Downloaded file: """ + pathFileName + """" + Me.theCurrentProgressBar.Text
+				Me.theCurrentProgressBar.Text = "Downloaded file: """ + Path.GetFileName(pathFileName) + """   " + Me.theCurrentProgressBar.Text
 				Me.GotoDownloadFileButton.Enabled = True
 				Me.theDownloadedPathFileName = pathFileName
 			Else

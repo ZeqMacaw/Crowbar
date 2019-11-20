@@ -21,6 +21,7 @@ Public Class Updater
 		Public StatusMessage As String
 		Public UpdateIsAvailable As Boolean
 		Public DownloadIsEnabled As Boolean
+		Public UpdateIsEnabled As Boolean
 	End Class
 
 	Public Sub CheckForUpdate(ByVal given_ProgressChanged As ProgressChangedEventHandler, ByVal given_RunWorkerCompleted As RunWorkerCompletedEventHandler)
@@ -40,7 +41,6 @@ Public Class Updater
 	Private Sub CheckForUpdate_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs)
 		Dim bw As BackgroundWorkerEx = CType(sender, BackgroundWorkerEx)
 
-		Dim appVersion As Version = Nothing
 		Dim fileSize As ULong = 0
 
 		'FROM: https://www.codeproject.com/Questions/1255767/Could-not-create-SSL-TLS-secure-channel
@@ -77,7 +77,7 @@ Public Class Updater
 			Dim appNameVersion As String = CType(root("name"), String)
 			'NOTE: Must append ".0.0" to version so that Version comparisons are correct.
 			Dim appVersionText As String = appNameVersion.Replace("Crowbar ", "") + ".0.0"
-			appVersion = New Version(appVersionText)
+			Me.theAppVersion = New Version(appVersionText)
 
 			'Dim appVersionIsNewer As Boolean = appVersion > My.Application.Info.Version
 			'Dim appVersionIsOlder As Boolean = appVersion < My.Application.Info.Version
@@ -103,22 +103,23 @@ Public Class Updater
 			Dim outputInfo As New Updater.StatusOutputInfo()
 			outputInfo.UpdateIsAvailable = False
 			Dim updateCheckStatusMessage As String
-			If appVersion Is Nothing Then
+			If Me.theAppVersion Is Nothing Then
 				updateCheckStatusMessage = "Unable to get update info. Please try again later.   "
-			ElseIf appVersion = My.Application.Info.Version Then
+			ElseIf Me.theAppVersion = My.Application.Info.Version Then
 				updateCheckStatusMessage = "Crowbar is up to date.   "
-			ElseIf appVersion > My.Application.Info.Version Then
-				updateCheckStatusMessage = "Update to version " + appVersion.ToString(2) + " available.   Size: " + MathModule.ByteUnitsConversion(fileSize) + "   "
+			ElseIf Me.theAppVersion > My.Application.Info.Version Then
+				updateCheckStatusMessage = "Update to version " + Me.theAppVersion.ToString(2) + " available.   Size: " + MathModule.ByteUnitsConversion(fileSize) + "   "
 				outputInfo.UpdateIsAvailable = True
 			Else
 				'NOTE: Should not get here if versioning is done correctly.
-				updateCheckStatusMessage = ""
+				updateCheckStatusMessage = "Crowbar is up to date.   "
 			End If
 			Dim now As DateTime = DateTime.Now()
 			Dim lastCheckedMessage As String = "Last checked: " + now.ToLongDateString() + " " + now.ToShortTimeString()
 
 			outputInfo.StatusMessage = updateCheckStatusMessage + lastCheckedMessage
 			outputInfo.DownloadIsEnabled = Me.theDownloadTaskIsEnabled
+			outputInfo.UpdateIsEnabled = Me.theUpdateTaskIsEnabled
 			e.Result = outputInfo
 		End Try
 	End Sub
@@ -145,6 +146,10 @@ Public Class Updater
 	End Sub
 
 	Private Sub DownloadAfterCheckForUpdate()
+		If Me.theUpdateTaskIsEnabled AndAlso Me.theAppVersion <= My.Application.Info.Version Then
+			Exit Sub
+		End If
+
 		Me.theLocalPathFileName = Path.Combine(Me.theLocalPath, Me.theLocalFileName)
 		Me.theLocalPathFileName = FileManager.GetTestedPathFileName(Me.theLocalPathFileName)
 
@@ -267,7 +272,7 @@ Public Class Updater
 #If DEBUG Then
 				crowbarOrLauncherExeProcess.StartInfo.CreateNoWindow = False
 #Else
-				lzmaExeProcess.StartInfo.CreateNoWindow = True
+				crowbarOrLauncherExeProcess.StartInfo.CreateNoWindow = True
 #End If
 				crowbarOrLauncherExeProcess.Start()
 				Application.Exit()
@@ -328,6 +333,8 @@ Public Class Updater
 	Private theUpdateProgressChangedHandler As ProgressChangedEventHandler
 	Private theUpdateRunWorkerCompletedHandler As RunWorkerCompletedEventHandler
 	Private theUpdateTaskIsEnabled As Boolean
+
+	Private theAppVersion As Version = Nothing
 
 #End Region
 
