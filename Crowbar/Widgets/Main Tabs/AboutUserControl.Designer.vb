@@ -30,12 +30,14 @@ Partial Class AboutUserControl
 		Me.AuthorLinkLabel = New System.Windows.Forms.LinkLabel()
 		Me.ProductNameLinkLabel = New System.Windows.Forms.LinkLabel()
 		Me.Panel1 = New System.Windows.Forms.Panel()
+		Me.PayPalPictureBox = New System.Windows.Forms.PictureBox()
 		Me.GroupBox1 = New System.Windows.Forms.GroupBox()
 		Me.Credits3TextBox = New System.Windows.Forms.TextBox()
 		Me.Credits2TextBox = New System.Windows.Forms.TextBox()
 		Me.GotoSteamProfileLinkLabel = New System.Windows.Forms.LinkLabel()
 		Me.GotoSteamGroupLinkLabel = New System.Windows.Forms.LinkLabel()
 		Me.Panel1.SuspendLayout()
+		CType(Me.PayPalPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.GroupBox1.SuspendLayout()
 		Me.SuspendLayout()
 		'
@@ -126,6 +128,7 @@ Partial Class AboutUserControl
 		'
 		'Panel1
 		'
+		Me.Panel1.Controls.Add(Me.PayPalPictureBox)
 		Me.Panel1.Controls.Add(Me.GroupBox1)
 		Me.Panel1.Controls.Add(Me.GotoSteamProfileLinkLabel)
 		Me.Panel1.Controls.Add(Me.GotoSteamGroupLinkLabel)
@@ -141,6 +144,16 @@ Partial Class AboutUserControl
 		Me.Panel1.Name = "Panel1"
 		Me.Panel1.Size = New System.Drawing.Size(776, 536)
 		Me.Panel1.TabIndex = 7
+		'
+		'PayPalPictureBox
+		'
+		Me.PayPalPictureBox.Cursor = System.Windows.Forms.Cursors.Hand
+		Me.PayPalPictureBox.Image = Global.Crowbar.My.Resources.Resources._26_Grey_PayPal_Pill_Button
+		Me.PayPalPictureBox.Location = New System.Drawing.Point(43, 412)
+		Me.PayPalPictureBox.Name = "PayPalPictureBox"
+		Me.PayPalPictureBox.Size = New System.Drawing.Size(84, 26)
+		Me.PayPalPictureBox.TabIndex = 11
+		Me.PayPalPictureBox.TabStop = False
 		'
 		'GroupBox1
 		'
@@ -217,6 +230,7 @@ Partial Class AboutUserControl
 		Me.Size = New System.Drawing.Size(776, 536)
 		Me.Panel1.ResumeLayout(False)
 		Me.Panel1.PerformLayout()
+		CType(Me.PayPalPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.GroupBox1.ResumeLayout(False)
 		Me.GroupBox1.PerformLayout()
 		Me.ResumeLayout(False)
@@ -235,5 +249,5 @@ Partial Class AboutUserControl
 	Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
 	Friend WithEvents Credits3TextBox As System.Windows.Forms.TextBox
 	Friend WithEvents Credits2TextBox As System.Windows.Forms.TextBox
-
+	Friend WithEvents PayPalPictureBox As PictureBox
 End Class

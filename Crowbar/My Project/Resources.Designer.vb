@@ -61,6 +61,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property _26_Grey_PayPal_Pill_Button() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("_26_Grey_PayPal_Pill_Button", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to http://steamcommunity.com/id/zeqmacaw.
         '''</summary>
         Friend ReadOnly Property About_AuthorLink() As String
@@ -84,6 +94,15 @@ Namespace My.Resources
         Friend ReadOnly Property About_GotoSteamProfileText() As String
             Get
                 Return ResourceManager.GetString("About_GotoSteamProfileText", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to http://paypal.me/zeqmacaw.
+        '''</summary>
+        Friend ReadOnly Property About_PayPalLink() As String
+            Get
+                Return ResourceManager.GetString("About_PayPalLink", resourceCulture)
             End Get
         End Property
         

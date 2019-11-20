@@ -77,6 +77,10 @@ Public Class AboutUserControl
 		End If
 	End Sub
 
+	Private Sub PayPalPictureBox_Click(sender As Object, e As EventArgs) Handles PayPalPictureBox.Click
+		System.Diagnostics.Process.Start(My.Resources.About_PayPalLink)
+	End Sub
+
 #End Region
 
 #Region "Core Event Handlers"
