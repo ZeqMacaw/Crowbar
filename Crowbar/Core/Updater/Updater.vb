@@ -217,13 +217,9 @@ Public Class Updater
 			sevenZrExeProcess.StartInfo.FileName = TheApp.SevenZrExePathFileName
 			sevenZrExeProcess.StartInfo.Arguments = "x """ + Me.theLocalFileName + """"
 #If DEBUG Then
-			' Use this to test first version with Update feature. Can delete this line after done testing.
-			File.Copy("E:\Users\ZeqMacaw\Documents\- local\todo\tools\Crowbar\Crowbar\bin\x86\Debug\Crowbar.7z", Path.Combine(Me.theLocalPath, "Crowbar.7z"))
-			sevenZrExeProcess.StartInfo.Arguments = "x ""Crowbar.7z"""
-
 			sevenZrExeProcess.StartInfo.CreateNoWindow = False
 #Else
-						lzmaExeProcess.StartInfo.CreateNoWindow = True
+			sevenZrExeProcess.StartInfo.CreateNoWindow = True
 #End If
 			sevenZrExeProcess.Start()
 			sevenZrExeProcess.WaitForExit()

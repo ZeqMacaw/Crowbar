@@ -53,7 +53,7 @@ Public Class MainForm
 #If DEBUG Then
 				crowbarLauncherExeProcess.StartInfo.CreateNoWindow = False
 #Else
-				lzmaExeProcess.StartInfo.CreateNoWindow = True
+				crowbarLauncherExeProcess.StartInfo.CreateNoWindow = True
 #End If
 				crowbarLauncherExeProcess.Start()
 				Application.Exit()
