@@ -468,7 +468,7 @@ Public Class SourceQcFile49
 						'	aFlexFrame = Me.theMdlFileData.theFlexFrames(flexFrameIndex)
 						For flexFrameIndex As Integer = 1 To aBodyPart.theFlexFrames.Count - 1
 							aFlexFrame = aBodyPart.theFlexFrames(flexFrameIndex)
-							If aFlexFrame.flexName = eyelidName Then
+							If aFlexFrame.flexName = eyelidName OrElse (aFlexFrame.flexHasPartner AndAlso aFlexFrame.flexPartnerName = eyelidName) Then
 								If aFlexFrame.flexes(0).target0 = -11 Then
 									frameIndex = flexFrameIndex
 									Exit For
@@ -497,7 +497,7 @@ Public Class SourceQcFile49
 						'	aFlexFrame = Me.theMdlFileData.theFlexFrames(flexFrameIndex)
 						For flexFrameIndex As Integer = 1 To aBodyPart.theFlexFrames.Count - 1
 							aFlexFrame = aBodyPart.theFlexFrames(flexFrameIndex)
-							If aFlexFrame.flexName = eyelidName Then
+							If aFlexFrame.flexName = eyelidName OrElse (aFlexFrame.flexHasPartner AndAlso aFlexFrame.flexPartnerName = eyelidName) Then
 								If aFlexFrame.flexes(0).target3 = 11 Then
 									frameIndex = flexFrameIndex
 									Exit For
@@ -545,7 +545,7 @@ Public Class SourceQcFile49
 						'	aFlexFrame = Me.theMdlFileData.theFlexFrames(flexFrameIndex)
 						For flexFrameIndex As Integer = 1 To aBodyPart.theFlexFrames.Count - 1
 							aFlexFrame = aBodyPart.theFlexFrames(flexFrameIndex)
-							If aFlexFrame.flexName = eyelidName Then
+							If aFlexFrame.flexName = eyelidName OrElse (aFlexFrame.flexHasPartner AndAlso aFlexFrame.flexPartnerName = eyelidName) Then
 								If aFlexFrame.flexes(0).target0 = -11 Then
 									frameIndex = flexFrameIndex
 									Exit For
@@ -574,7 +574,7 @@ Public Class SourceQcFile49
 						'	aFlexFrame = Me.theMdlFileData.theFlexFrames(flexFrameIndex)
 						For flexFrameIndex As Integer = 1 To aBodyPart.theFlexFrames.Count - 1
 							aFlexFrame = aBodyPart.theFlexFrames(flexFrameIndex)
-							If aFlexFrame.flexName = eyelidName Then
+							If aFlexFrame.flexName = eyelidName OrElse (aFlexFrame.flexHasPartner AndAlso aFlexFrame.flexPartnerName = eyelidName) Then
 								If aFlexFrame.flexes(0).target3 = 11 Then
 									frameIndex = flexFrameIndex
 									Exit For
@@ -654,9 +654,11 @@ Public Class SourceQcFile49
 	End Sub
 
 	Private Sub WriteGroupFlex()
-		Me.WriteFlexLines()
-		Me.WriteFlexControllerLines()
-		Me.WriteFlexRuleLines()
+		If Me.theBodyPartForFlexWriting.theFlexFrames IsNot Nothing AndAlso Me.theBodyPartForFlexWriting.theFlexFrames.Count > 1 Then
+			Me.WriteFlexLines()
+			Me.WriteFlexControllerLines()
+			Me.WriteFlexRuleLines()
+		End If
 	End Sub
 
 	Private Sub WriteFlexLines()
@@ -665,142 +667,142 @@ Public Class SourceQcFile49
 		' Write flexfile (contains flexDescs).
 		'If Me.theMdlFileData.theFlexFrames IsNot Nothing AndAlso Me.theMdlFileData.theFlexFrames.Count > 0 Then
 		'NOTE: Count > 1 to avoid writing just a defaultflex frame.
-		If Me.theBodyPartForFlexWriting.theFlexFrames IsNot Nothing AndAlso Me.theBodyPartForFlexWriting.theFlexFrames.Count > 1 Then
-			Dim bodyPartIndex As Integer
-			bodyPartIndex = Me.theMdlFileData.theBodyParts.IndexOf(Me.theBodyPartForFlexWriting)
+		'If Me.theBodyPartForFlexWriting.theFlexFrames IsNot Nothing AndAlso Me.theBodyPartForFlexWriting.theFlexFrames.Count > 1 Then
+		Dim bodyPartIndex As Integer
+		bodyPartIndex = Me.theMdlFileData.theBodyParts.IndexOf(Me.theBodyPartForFlexWriting)
 
-			line = ""
-			Me.theOutputFileStreamWriter.WriteLine(line)
+		line = ""
+		Me.theOutputFileStreamWriter.WriteLine(line)
 
-			line = vbTab
-			line += "flexfile"
-			'line += Path.GetFileNameWithoutExtension(CStr(Me.theSourceEngineModel.theMdlFileHeader.theBodyParts(0).theModels(0).name).Trim(Chr(0)))
-			'line += ".vta"""
-			line += " """
-			line += SourceFileNamesModule.GetVtaFileName(Me.theModelName, bodyPartIndex)
-			line += """ "
-			Me.theOutputFileStreamWriter.WriteLine(line)
+		line = vbTab
+		line += "flexfile"
+		'line += Path.GetFileNameWithoutExtension(CStr(Me.theSourceEngineModel.theMdlFileHeader.theBodyParts(0).theModels(0).name).Trim(Chr(0)))
+		'line += ".vta"""
+		line += " """
+		line += SourceFileNamesModule.GetVtaFileName(Me.theModelName, bodyPartIndex)
+		line += """ "
+		Me.theOutputFileStreamWriter.WriteLine(line)
 
-			line = vbTab
-			line += "{"
-			Me.theOutputFileStreamWriter.WriteLine(line)
+		line = vbTab
+		line += "{"
+		Me.theOutputFileStreamWriter.WriteLine(line)
 
-			'======
+		'======
+		line = vbTab
+		line += vbTab
+		line += "defaultflex frame 0"
+		Me.theOutputFileStreamWriter.WriteLine(line)
+
+		'NOTE: Start at index 1 because defaultflex frame is at index 0.
+		Dim aFlexFrame As FlexFrame
+		'For frameIndex As Integer = 1 To Me.theMdlFileData.theFlexFrames.Count - 1
+		'	aFlexFrame = Me.theMdlFileData.theFlexFrames(frameIndex)
+		For frameIndex As Integer = 1 To Me.theBodyPartForFlexWriting.theFlexFrames.Count - 1
+			aFlexFrame = Me.theBodyPartForFlexWriting.theFlexFrames(frameIndex)
 			line = vbTab
 			line += vbTab
-			line += "defaultflex frame 0"
+			If Me.theMdlFileData.theFlexDescs(aFlexFrame.flexes(0).flexDescIndex).theDescIsUsedByEyelid Then
+				line += "// Already in eyelid lines: "
+			End If
+			If aFlexFrame.flexHasPartner Then
+				line += "flexpair """
+				line += aFlexFrame.flexName.Substring(0, aFlexFrame.flexName.Length - 1)
+			Else
+				line += "flex """
+				line += aFlexFrame.flexName
+			End If
+			line += """"
+			If aFlexFrame.flexHasPartner Then
+				line += " "
+				line += aFlexFrame.flexSplit.ToString("0.######", TheApp.InternalNumberFormat)
+			End If
+			line += " frame "
+			line += CStr(frameIndex)
 			Me.theOutputFileStreamWriter.WriteLine(line)
+		Next
+		'======
+		'Dim aBodyPart As SourceMdlBodyPart
+		'Dim aModel As SourceMdlModel
+		'Dim frameIndex As Integer
+		'Dim flexDescHasBeenWritten As List(Of Integer)
+		'Dim meshVertexIndexStart As Integer
+		'frameIndex = 0
+		'flexDescHasBeenWritten = New List(Of Integer)
 
-			'NOTE: Start at index 1 because defaultflex frame is at index 0.
-			Dim aFlexFrame As FlexFrame
-			'For frameIndex As Integer = 1 To Me.theMdlFileData.theFlexFrames.Count - 1
-			'	aFlexFrame = Me.theMdlFileData.theFlexFrames(frameIndex)
-			For frameIndex As Integer = 1 To Me.theBodyPartForFlexWriting.theFlexFrames.Count - 1
-				aFlexFrame = Me.theBodyPartForFlexWriting.theFlexFrames(frameIndex)
-				line = vbTab
-				line += vbTab
-				If Me.theMdlFileData.theFlexDescs(aFlexFrame.flexes(0).flexDescIndex).theDescIsUsedByEyelid Then
-					line += "// Already in eyelid lines: "
-				End If
-				If aFlexFrame.flexHasPartner Then
-					line += "flexpair """
-					line += aFlexFrame.flexName.Substring(0, aFlexFrame.flexName.Length - 1)
-				Else
-					line += "flex """
-					line += aFlexFrame.flexName
-				End If
-				line += """"
-				If aFlexFrame.flexHasPartner Then
-					line += " "
-					line += aFlexFrame.flexSplit.ToString("0.######", TheApp.InternalNumberFormat)
-				End If
-				line += " frame "
-				line += CStr(frameIndex)
-				Me.theOutputFileStreamWriter.WriteLine(line)
-			Next
-			'======
-			'Dim aBodyPart As SourceMdlBodyPart
-			'Dim aModel As SourceMdlModel
-			'Dim frameIndex As Integer
-			'Dim flexDescHasBeenWritten As List(Of Integer)
-			'Dim meshVertexIndexStart As Integer
-			'frameIndex = 0
-			'flexDescHasBeenWritten = New List(Of Integer)
+		'line = vbTab
+		'line += "defaultflex frame "
+		'line += frameIndex.ToString()
+		'Me.theOutputFileStreamWriter.WriteLine(line)
 
-			'line = vbTab
-			'line += "defaultflex frame "
-			'line += frameIndex.ToString()
-			'Me.theOutputFileStreamWriter.WriteLine(line)
+		'For bodyPartIndex As Integer = 0 To theSourceEngineModel.theMdlFileHeader.theBodyParts.Count - 1
+		'	aBodyPart = theSourceEngineModel.theMdlFileHeader.theBodyParts(bodyPartIndex)
 
-			'For bodyPartIndex As Integer = 0 To theSourceEngineModel.theMdlFileHeader.theBodyParts.Count - 1
-			'	aBodyPart = theSourceEngineModel.theMdlFileHeader.theBodyParts(bodyPartIndex)
+		'	If aBodyPart.theModels IsNot Nothing AndAlso aBodyPart.theModels.Count > 0 Then
+		'		For modelIndex As Integer = 0 To aBodyPart.theModels.Count - 1
+		'			aModel = aBodyPart.theModels(modelIndex)
 
-			'	If aBodyPart.theModels IsNot Nothing AndAlso aBodyPart.theModels.Count > 0 Then
-			'		For modelIndex As Integer = 0 To aBodyPart.theModels.Count - 1
-			'			aModel = aBodyPart.theModels(modelIndex)
+		'			If aModel.theMeshes IsNot Nothing AndAlso aModel.theMeshes.Count > 0 Then
+		'				For meshIndex As Integer = 0 To aModel.theMeshes.Count - 1
+		'					Dim aMesh As SourceMdlMesh
+		'					aMesh = aModel.theMeshes(meshIndex)
 
-			'			If aModel.theMeshes IsNot Nothing AndAlso aModel.theMeshes.Count > 0 Then
-			'				For meshIndex As Integer = 0 To aModel.theMeshes.Count - 1
-			'					Dim aMesh As SourceMdlMesh
-			'					aMesh = aModel.theMeshes(meshIndex)
+		'					meshVertexIndexStart = Me.theSourceEngineModel.theMdlFileHeader.theBodyParts(bodyPartIndex).theModels(modelIndex).theMeshes(meshIndex).vertexIndexStart
 
-			'					meshVertexIndexStart = Me.theSourceEngineModel.theMdlFileHeader.theBodyParts(bodyPartIndex).theModels(modelIndex).theMeshes(meshIndex).vertexIndexStart
+		'					If aMesh.theFlexes IsNot Nothing AndAlso aMesh.theFlexes.Count > 0 Then
+		'						For flexIndex As Integer = 0 To aMesh.theFlexes.Count - 1
+		'							Dim aFlex As SourceMdlFlex
+		'							aFlex = aMesh.theFlexes(flexIndex)
 
-			'					If aMesh.theFlexes IsNot Nothing AndAlso aMesh.theFlexes.Count > 0 Then
-			'						For flexIndex As Integer = 0 To aMesh.theFlexes.Count - 1
-			'							Dim aFlex As SourceMdlFlex
-			'							aFlex = aMesh.theFlexes(flexIndex)
+		'							If flexDescHasBeenWritten.Contains(aFlex.flexDescIndex) Then
+		'								Continue For
+		'							Else
+		'								flexDescHasBeenWritten.Add(aFlex.flexDescIndex)
+		'							End If
 
-			'							If flexDescHasBeenWritten.Contains(aFlex.flexDescIndex) Then
-			'								Continue For
-			'							Else
-			'								flexDescHasBeenWritten.Add(aFlex.flexDescIndex)
-			'							End If
+		'							line = vbTab
+		'							Dim aFlexDescPartnerIndex As Integer
+		'							'Dim aFlexPartner As SourceMdlFlex
+		'							aFlexDescPartnerIndex = aMesh.theFlexes(flexIndex).flexDescPartnerIndex
+		'							If aFlexDescPartnerIndex > 0 Then
+		'								'aFlexPartner = theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlexDescPartnerIndex)
+		'								If Not flexDescHasBeenWritten.Contains(aFlex.flexDescPartnerIndex) Then
+		'									flexDescHasBeenWritten.Add(aFlex.flexDescPartnerIndex)
+		'								End If
+		'								line += "flexpair """
+		'								Dim flexName As String
+		'								flexName = theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theName
+		'								line += flexName.Remove(flexName.Length - 1, 1)
+		'								line += """"
+		'								line += " "
+		'								line += Me.GetSplit(aFlex, meshVertexIndexStart).ToString("0.######", TheApp.InternalNumberFormat)
 
-			'							line = vbTab
-			'							Dim aFlexDescPartnerIndex As Integer
-			'							'Dim aFlexPartner As SourceMdlFlex
-			'							aFlexDescPartnerIndex = aMesh.theFlexes(flexIndex).flexDescPartnerIndex
-			'							If aFlexDescPartnerIndex > 0 Then
-			'								'aFlexPartner = theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlexDescPartnerIndex)
-			'								If Not flexDescHasBeenWritten.Contains(aFlex.flexDescPartnerIndex) Then
-			'									flexDescHasBeenWritten.Add(aFlex.flexDescPartnerIndex)
-			'								End If
-			'								line += "flexpair """
-			'								Dim flexName As String
-			'								flexName = theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theName
-			'								line += flexName.Remove(flexName.Length - 1, 1)
-			'								line += """"
-			'								line += " "
-			'								line += Me.GetSplit(aFlex, meshVertexIndexStart).ToString("0.######", TheApp.InternalNumberFormat)
+		'								theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theDescIsUsedByFlex = True
+		'								theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescPartnerIndex).theDescIsUsedByFlex = True
+		'							Else
+		'								line += "flex """
+		'								line += theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theName
+		'								line += """"
 
-			'								theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theDescIsUsedByFlex = True
-			'								theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescPartnerIndex).theDescIsUsedByFlex = True
-			'							Else
-			'								line += "flex """
-			'								line += theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theName
-			'								line += """"
+		'								theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theDescIsUsedByFlex = True
+		'							End If
+		'							line += " frame "
+		'							'NOTE: Start at second frame because first frame is "basis" frame.
+		'							frameIndex += 1
+		'							line += frameIndex.ToString()
+		'							'line += theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theVtaFrameIndex.ToString()
+		'							Me.theOutputFileStreamWriter.WriteLine(line)
+		'						Next
+		'					End If
+		'				Next
+		'			End If
+		'		Next
+		'	End If
+		'Next
 
-			'								theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theDescIsUsedByFlex = True
-			'							End If
-			'							line += " frame "
-			'							'NOTE: Start at second frame because first frame is "basis" frame.
-			'							frameIndex += 1
-			'							line += frameIndex.ToString()
-			'							'line += theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theVtaFrameIndex.ToString()
-			'							Me.theOutputFileStreamWriter.WriteLine(line)
-			'						Next
-			'					End If
-			'				Next
-			'			End If
-			'		Next
-			'	End If
-			'Next
-
-			line = vbTab
-			line += "}"
-			Me.theOutputFileStreamWriter.WriteLine(line)
-		End If
+		line = vbTab
+		line += "}"
+		Me.theOutputFileStreamWriter.WriteLine(line)
+		'End If
 	End Sub
 
 	Private Sub WriteFlexControllerLines()
@@ -2039,6 +2041,7 @@ Public Class SourceQcFile49
 		Me.WriteWeightListCommand()
 		'NOTE: Must write $animation lines before $sequence lines that use them.
 		Try
+			Me.WriteCorrectiveAnimationBlock()
 			Me.WriteAnimationOrDeclareAnimationCommand()
 		Catch ex As Exception
 			Dim debug As Integer = 4242
@@ -2213,6 +2216,36 @@ Public Class SourceQcFile49
 			line = "}"
 			Me.theOutputFileStreamWriter.WriteLine(commentTag + line)
 		Next
+	End Sub
+
+	Private Sub WriteCorrectiveAnimationBlock()
+		If Me.theMdlFileData.theCorrectiveAnimationSmdRelativePathFileNames IsNot Nothing Then
+			Dim line As String = ""
+			Dim animationName As String
+
+			For i As Integer = 0 To Me.theMdlFileData.theCorrectiveAnimationSmdRelativePathFileNames.Count - 1
+				Dim correctiveAnimationSmdRelativePathFileName As String = Me.theMdlFileData.theCorrectiveAnimationSmdRelativePathFileNames(i)
+
+				Me.theOutputFileStreamWriter.WriteLine()
+				'NOTE: The $Animation command must have name first and file name second and on same line as the command.
+				If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+					line = "$Animation"
+				Else
+					line = "$animation"
+				End If
+				animationName = Path.GetFileNameWithoutExtension(correctiveAnimationSmdRelativePathFileName)
+				line += " """
+				line += animationName
+				line += """ """
+				line += correctiveAnimationSmdRelativePathFileName
+				line += """"
+				'NOTE: Opening brace must be on same line as the command.
+				line += " {"
+				Me.theOutputFileStreamWriter.WriteLine(line)
+				line = "}"
+				Me.theOutputFileStreamWriter.WriteLine(line)
+			Next
+		End If
 	End Sub
 
 	Private Sub WriteAnimationOrDeclareAnimationCommand()
@@ -2571,6 +2604,11 @@ Public Class SourceQcFile49
 			End If
 		End If
 
+		If anAnimationDesc.theCorrectiveSubtractAnimationOptionIsUsed Then
+			'NOTE: Using first linked sequence because the corrective animation SMD file should be the same no matter what sequence uses the animation.
+			Me.WriteAnimationOrSequenceSubtractOption(SourceFileNamesModule.CreateCorrectiveAnimationName(anAnimationDesc.theLinkedSequences(0).theName))
+		End If
+
 		Me.WriteCmdListOptions(aSequenceDesc, anAnimationDesc, impliedAnimDesc)
 	End Sub
 
@@ -2744,7 +2782,7 @@ Public Class SourceQcFile49
 	'			pData += size;
 	'		}
 	'------
-	'TODO: Other sub-options for ikrule option.
+	' Other sub-options for ikrule option.
 	'	bone          - Looks like this data is not stored directly and might not be extractable from other data.
 	'	contact       /
 	'	fakeorigin    - 
@@ -2806,6 +2844,10 @@ Public Class SourceQcFile49
 				'NOTE: Writing all ikrule options because studiomdl will ignore any that are not used by a type.
 
 				tempInteger = CInt(Math.Round(anIkRule.contact * endFrameIndex))
+				'NOTE: Subtract max frame from value if over max frame. 
+				If tempInteger > endFrameIndex Then
+					tempInteger -= endFrameIndex
+				End If
 				line += " contact "
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 
@@ -2842,19 +2884,40 @@ Public Class SourceQcFile49
 
 				line += " range "
 				tempInteger = CInt(Math.Round(anIkRule.influenceStart * endFrameIndex))
+				'NOTE: Subtract max frame from value if over max frame. 
+				If tempInteger > endFrameIndex Then
+					tempInteger -= endFrameIndex
+				End If
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 				line += " "
 				tempInteger = CInt(Math.Round(anIkRule.influencePeak * endFrameIndex))
+				'NOTE: Subtract max frame from value if over max frame. 
+				If tempInteger > endFrameIndex Then
+					tempInteger -= endFrameIndex
+				End If
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 				line += " "
 				tempInteger = CInt(Math.Round(anIkRule.influenceTail * endFrameIndex))
+				'NOTE: Subtract max frame from value if over max frame. 
+				If tempInteger > endFrameIndex Then
+					tempInteger -= endFrameIndex
+				End If
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 				line += " "
 				tempInteger = CInt(Math.Round(anIkRule.influenceEnd * endFrameIndex))
+				'NOTE: Subtract max frame from value if over max frame. 
+				If tempInteger > endFrameIndex Then
+					tempInteger -= endFrameIndex
+				End If
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 
 				line += " target "
 				line += anIkRule.slot.ToString(TheApp.InternalNumberFormat)
+
+				' A MDL v48 needs this, so most likely v49 does, too.
+				If aSequenceDesc IsNot Nothing AndAlso anAnimationDesc.theMovements IsNot Nothing AndAlso anAnimationDesc.theMovements.Count > 0 Then
+					line += " usesequence "
+				End If
 
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
@@ -3034,22 +3097,32 @@ Public Class SourceQcFile49
 			'      "Workaround to Recompile Models that Have Problems Due to Delta Animations"
 			'      https://steamcommunity.com/sharedfiles/filedetails/?id=1774302855
 			'NOTE: [2017-12-15] Added this code to fix the issue of the jigglebones+delta problem when recompiling L4D2 survivor_teenangst_light.
-			Dim anAnimationDesc As SourceMdlAnimationDesc49
-			anAnimationDesc = Me.theMdlFileData.theAnimationDescs(aSequenceDesc.theAnimDescIndexes(0))
-			If anAnimationDesc.theName = "@" + aSequenceDesc.theName Then
-				line = vbTab
-				line += "// This subtract option added by Crowbar to prevent jigglebone problems when delta sequences are recompiled."
-				Me.theOutputFileStreamWriter.WriteLine(line)
-
-				line = vbTab
-				line += "subtract"
-				line += " """
-				line += aSequenceDesc.theName
-				line += """ "
-				line += "0"
-				Me.theOutputFileStreamWriter.WriteLine(line)
+			'Dim anAnimationDesc As SourceMdlAnimationDesc49
+			'anAnimationDesc = Me.theMdlFileData.theAnimationDescs(aSequenceDesc.theAnimDescIndexes(0))
+			'If anAnimationDesc.theName = "@" + aSequenceDesc.theName Then
+			'	Me.WriteSequenceSubtractOption(aSequenceDesc.theName)
+			'End If
+			'======
+			If aSequenceDesc.theCorrectiveSubtractAnimationOptionIsUsed Then
+				Me.WriteAnimationOrSequenceSubtractOption(SourceFileNamesModule.CreateCorrectiveAnimationName(aSequenceDesc.theName))
 			End If
 		End If
+	End Sub
+
+	Private Sub WriteAnimationOrSequenceSubtractOption(ByVal anAnimationOrSequenceName As String)
+		Dim line As String = ""
+
+		line = vbTab
+		line += "// Crowbar writes this subtract option to prevent jigglebone and poseparameter problems when delta sequences are recompiled."
+		Me.theOutputFileStreamWriter.WriteLine(line)
+
+		line = vbTab
+		line += "subtract"
+		line += " """
+		line += anAnimationOrSequenceName
+		line += """ "
+		line += "0"
+		Me.theOutputFileStreamWriter.WriteLine(line)
 	End Sub
 
 	Private Sub WriteSequenceLayerInfo(ByVal aSeqDesc As SourceMdlSequenceDesc)

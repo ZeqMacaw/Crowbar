@@ -562,13 +562,13 @@ Public MustInherit Class SourceModel
 		Return status
 	End Function
 
-	Public Overridable Function GetOverviewTextLines(ByVal mdlPathFileName As String) As List(Of String)
+	Public Overridable Function GetOverviewTextLines(ByVal mdlPathFileName As String, ByVal mdlVersionOverride As SupportedMdlVersion) As List(Of String)
 		Dim textLines As New List(Of String)()
 
 		Try
 			Me.ReadFile(mdlPathFileName, AddressOf Me.ReadMdlFileForViewer_Internal)
 
-			Me.GetHeaderDataFromMdlFile(textLines)
+			Me.GetHeaderDataFromMdlFile(textLines, mdlVersionOverride)
 			textLines.Add("")
 			Me.GetModelFileDataFromMdlFile(textLines)
 			textLines.Add("")
@@ -847,7 +847,7 @@ Public MustInherit Class SourceModel
 
 #Region "Private Methods"
 
-	Private Sub GetHeaderDataFromMdlFile(ByVal ioTextLines As List(Of String))
+	Private Sub GetHeaderDataFromMdlFile(ByVal ioTextLines As List(Of String), ByVal mdlVersionOverride As SupportedMdlVersion)
 		'Dim mdlFileData48 As SourceMdlFileData48 = Nothing
 		'Dim mdlFileData49 As SourceMdlFileData49 = Nothing
 		'If Me.theMdlFileDataGeneric.version = 48 Then
@@ -867,7 +867,12 @@ Public MustInherit Class SourceModel
 			ioTextLines.Add("ERROR: MDL file type ID is not IDST. This is either a corrupted MDL file or not a GoldSource or Source model file.")
 		End If
 
-		ioTextLines.Add("MDL file version: " + Me.theMdlFileDataGeneric.version.ToString("N0"))
+		Dim extraVersionText As String = ""
+		If mdlVersionOverride <> SupportedMdlVersion.DoNotOverride Then
+			extraVersionText = "   Model version override: " + EnumHelper.GetDescription(mdlVersionOverride)
+		End If
+		ioTextLines.Add("MDL file version: " + Me.theMdlFileDataGeneric.version.ToString("N0") + extraVersionText)
+
 		ioTextLines.Add("MDL stored file name: """ + Me.theMdlFileDataGeneric.theModelName + """")
 		'If mdlFileData48 IsNot Nothing AndAlso mdlFileData48.nameCopyOffset > 0 Then
 		'	ioTextLines.Add("MDL stored file name copy: """ + mdlFileData48.theNameCopy + """")

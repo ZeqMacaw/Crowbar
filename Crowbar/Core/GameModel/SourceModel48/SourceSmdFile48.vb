@@ -693,11 +693,11 @@ Public Class SourceSmdFile48
 
 		If aBone.parentBoneIndex = -1 Then
 			If movements IsNot Nothing AndAlso frameIndex > 0 Then
-				Dim previousFrameIndex As Integer
+				Dim previousEndFrameIndex As Integer
 				Dim vecPos As SourceVector
 				Dim vecAngle As SourceVector
 
-				previousFrameIndex = 0
+				previousEndFrameIndex = 0
 				vecPos = New SourceVector()
 				vecAngle = New SourceVector()
 
@@ -705,28 +705,29 @@ Public Class SourceSmdFile48
 					If frameIndex <= aMovement.endframeIndex Then
 						Dim f As Double
 						Dim d As Double
-						f = (frameIndex - previousFrameIndex) / (aMovement.endframeIndex - previousFrameIndex)
+						f = (frameIndex - previousEndFrameIndex) / (aMovement.endframeIndex - previousEndFrameIndex)
 						d = aMovement.v0 * f + 0.5 * (aMovement.v1 - aMovement.v0) * f * f
 						vecPos.x = vecPos.x + d * aMovement.vector.x
 						vecPos.y = vecPos.y + d * aMovement.vector.y
 						vecPos.z = vecPos.z + d * aMovement.vector.z
-						vecAngle.y = vecAngle.y * (1 - f) + MathModule.DegreesToRadians(aMovement.angle) * f
+						vecAngle.y = vecAngle.y * (1 - f) + aMovement.angle * f
 
 						Exit For
 					Else
-						previousFrameIndex = aMovement.endframeIndex
+						previousEndFrameIndex = aMovement.endframeIndex
 						vecPos.x = aMovement.position.x
 						vecPos.y = aMovement.position.y
 						vecPos.z = aMovement.position.z
-						vecAngle.y = MathModule.DegreesToRadians(aMovement.angle)
+						vecAngle.y = aMovement.angle
 					End If
 				Next
 
-				'NOTE: Testing for this is in MDL v49 code.
-				oPosition.x = iPosition.x + vecPos.x
-				oPosition.y = iPosition.y + vecPos.y
-				oPosition.z = iPosition.z + vecPos.z
-				oRotation.z = iRotation.z + vecAngle.y
+				Dim tmp As New SourceVector()
+				oRotation.z = MathModule.DegreesToRadians(MathModule.RadiansToDegrees(iRotation.z) + vecAngle.y)
+				tmp = MathModule.VectorYawRotate(iPosition, MathModule.DegreesToRadians(vecAngle.y))
+				oPosition.x = tmp.x + vecPos.x
+				oPosition.y = tmp.y + vecPos.y
+				oPosition.z = tmp.z + vecPos.z
 			End If
 		End If
 	End Sub

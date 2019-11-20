@@ -192,6 +192,7 @@ Public Class SourceModel49
 	Public Overrides Function WriteBoneAnimationSmdFiles(ByVal modelOutputPath As String) As AppEnums.StatusMessage
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
 
+		Dim aSequenceDesc As SourceMdlSequenceDesc
 		Dim anAnimationDesc As SourceMdlAnimationDesc49
 		Dim smdPath As String
 		'Dim smdFileName As String
@@ -199,6 +200,39 @@ Public Class SourceModel49
 		Dim writeStatus As String
 
 		Try
+			If Me.theCorrectiveSubtractSequences IsNot Nothing Then
+				For sequenceIndex As Integer = 0 To Me.theCorrectiveSubtractSequences.Count - 1
+					aSequenceDesc = Me.theCorrectiveSubtractSequences(sequenceIndex)
+
+					smdPathFileName = Path.Combine(modelOutputPath, SourceFileNamesModule.CreateCorrectiveAnimationSmdRelativePathFileName(aSequenceDesc.theName, Me.Name))
+					smdPath = FileManager.GetPath(smdPathFileName)
+					If FileManager.PathExistsAfterTryToCreate(smdPath) Then
+						Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, smdPathFileName)
+						'NOTE: Check here in case writing is canceled in the above event.
+						If Me.theWritingIsCanceled Then
+							status = StatusMessage.Canceled
+							Return status
+						ElseIf Me.theWritingSingleFileIsCanceled Then
+							Me.theWritingSingleFileIsCanceled = False
+							Continue For
+						End If
+
+						writeStatus = "Failed"
+
+						For j As Integer = 0 To aSequenceDesc.theAnimDescIndexes.Count - 1
+							anAnimationDesc = Me.theMdlFileData.theAnimationDescs(aSequenceDesc.theAnimDescIndexes(j))
+							writeStatus = Me.WriteCorrectiveAnimationSmdFile(smdPathFileName, Nothing, anAnimationDesc)
+						Next
+
+						If writeStatus = "Success" Then
+							Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, smdPathFileName)
+						Else
+							Me.NotifySourceModelProgress(ProgressOptions.WritingFileFailed, writeStatus)
+						End If
+					End If
+				Next
+			End If
+
 			For anAnimDescIndex As Integer = 0 To Me.theMdlFileData.theAnimationDescs.Count - 1
 				anAnimationDesc = Me.theMdlFileData.theAnimationDescs(anAnimDescIndex)
 
@@ -244,7 +278,7 @@ Public Class SourceModel49
 			For aBodyPartIndex As Integer = 0 To Me.theMdlFileData.theBodyParts.Count - 1
 				aBodyPart = Me.theMdlFileData.theBodyParts(aBodyPartIndex)
 
-				If aBodyPart.theFlexFrames Is Nothing OrElse aBodyPart.theFlexFrames.Count = 0 Then
+				If aBodyPart.theFlexFrames Is Nothing OrElse aBodyPart.theFlexFrames.Count <= 1 Then
 					Continue For
 				End If
 
@@ -492,7 +526,7 @@ Public Class SourceModel49
 		End If
 
 		'TEST: When a model has a nameCopy, it seems to also use the VTF file strip group topology fields.
-		Dim vtxFile As New SourceVtxFile07(Me.theInputFileReader, Me.theVtxFileData, Me.theMdlFileData.nameCopyOffset > 0)
+		Dim vtxFile As New SourceVtxFile07(Me.theInputFileReader, Me.theVtxFileData)
 
 		vtxFile.ReadSourceVtxHeader()
 		'TODO: Why is this "If" statement needed?
@@ -568,6 +602,7 @@ Public Class SourceModel49
 
 			qcFile.WriteGroup("bone", AddressOf qcFile.WriteGroupBone, False, False)
 
+			Me.SetUpCorrectiveSubtractAnimationBlocks()
 			qcFile.WriteGroup("animation", AddressOf qcFile.WriteGroupAnimation, False, False)
 
 			qcFile.WriteGroup("collision", AddressOf qcFile.WriteGroupCollision, False, False)
@@ -781,6 +816,78 @@ Public Class SourceModel49
 		mdlFile.WriteInternalAniFileName(internalAniFileName)
 	End Sub
 
+	Private Sub SetUpCorrectiveSubtractAnimationBlocks()
+		If Me.theMdlFileData.theSequenceDescs IsNot Nothing Then
+			Dim line As String = ""
+
+			For i As Integer = 0 To Me.theMdlFileData.theSequenceDescs.Count - 1
+				Dim aSequenceDesc As SourceMdlSequenceDesc
+				aSequenceDesc = Me.theMdlFileData.theSequenceDescs(i)
+
+				If (aSequenceDesc.flags And SourceMdlAnimationDesc.STUDIO_DELTA) > 0 Then
+					If Me.theCorrectiveSubtractSequences Is Nothing Then
+						Me.theCorrectiveSubtractSequences = New List(Of SourceMdlSequenceDesc)()
+						Me.theMdlFileData.theCorrectiveAnimationSmdRelativePathFileNames = New List(Of String)()
+					End If
+
+					If aSequenceDesc.theAnimDescIndexes IsNot Nothing OrElse aSequenceDesc.theAnimDescIndexes.Count > 0 Then
+						Me.theCorrectiveSubtractSequences.Add(aSequenceDesc)
+						Me.theMdlFileData.theCorrectiveAnimationSmdRelativePathFileNames.Add(SourceFileNamesModule.CreateCorrectiveAnimationSmdRelativePathFileName(aSequenceDesc.theName, Me.Name))
+
+						Dim anAnimationDesc As SourceMdlAnimationDesc49
+						Dim name As String
+						For j As Integer = 0 To aSequenceDesc.theAnimDescIndexes.Count - 1
+							anAnimationDesc = Me.theMdlFileData.theAnimationDescs(aSequenceDesc.theAnimDescIndexes(j))
+							name = anAnimationDesc.theName
+
+							line = vbTab
+							line += """"
+							If name(0) = "@" Then
+								'NOTE: There should only be one implied anim desc.
+								aSequenceDesc.theCorrectiveSubtractAnimationOptionIsUsed = True
+							Else
+								anAnimationDesc.theCorrectiveSubtractAnimationOptionIsUsed = True
+							End If
+						Next
+					End If
+				End If
+			Next
+		End If
+	End Sub
+
+	Private Function WriteCorrectiveAnimationSmdFile(ByVal smdPathFileName As String, ByVal aSequenceDesc As SourceMdlSequenceDescBase, ByVal anAnimationDesc As SourceMdlAnimationDescBase) As String
+		Dim status As String = "Success"
+
+		Try
+			Me.theOutputFileTextWriter = File.CreateText(smdPathFileName)
+
+			Dim smdFile As New SourceSmdFile49(Me.theOutputFileTextWriter, Me.theMdlFileData)
+
+			Try
+				smdFile.WriteHeaderComment()
+
+				smdFile.WriteHeaderSection()
+				smdFile.WriteNodesSection(-2)
+				smdFile.WriteSkeletonSectionForAnimation(aSequenceDesc, anAnimationDesc, True)
+			Catch ex As Exception
+				Dim debug As Integer = 4242
+			End Try
+		Catch ex As PathTooLongException
+			status = "ERROR: Crowbar tried to create """ + smdPathFileName + """ but the system gave this message: " + ex.Message
+		Catch ex As Exception
+			Dim debug As Integer = 4242
+		Finally
+			If Me.theOutputFileTextWriter IsNot Nothing Then
+				If Me.theOutputFileTextWriter.BaseStream IsNot Nothing Then
+					Me.theOutputFileTextWriter.Flush()
+				End If
+				Me.theOutputFileTextWriter.Close()
+			End If
+		End Try
+
+		Return status
+	End Function
+
 #End Region
 
 #Region "Data"
@@ -790,6 +897,8 @@ Public Class SourceModel49
 	'Private thePhyFileData49 As SourcePhyFileData
 	Private theVtxFileData As SourceVtxFileData07
 	Private theVvdFileData49 As SourceVvdFileData04
+
+	Private theCorrectiveSubtractSequences As List(Of SourceMdlSequenceDesc)
 
 #End Region
 

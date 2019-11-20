@@ -620,8 +620,11 @@ Public Class SourceMdlFile10
 					'boneInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					Dim aTexture As New SourceMdlTexture10()
 
-					aTexture.fileName = Me.theInputFileReader.ReadChars(64)
-					aTexture.theFileName = CStr(aTexture.fileName).Trim(Chr(0))
+					'aTexture.fileName = Me.theInputFileReader.ReadChars(64)
+					'aTexture.theFileName = CStr(aTexture.fileName).Trim(Chr(0))
+					Dim bytes() As Byte = Me.theInputFileReader.ReadBytes(64)
+					aTexture.theFileName = Text.Encoding.Default.GetString(bytes)
+					aTexture.theFileName = aTexture.theFileName.Trim(Chr(0))
 					aTexture.flags = Me.theInputFileReader.ReadInt32()
 					aTexture.width = Me.theInputFileReader.ReadUInt32()
 					aTexture.height = Me.theInputFileReader.ReadUInt32()

@@ -464,10 +464,15 @@ Public Class SourceMdlFile49
 					End If
 					If aBone.proceduralRuleOffset <> 0 Then
 						If aBone.proceduralRuleType = SourceMdlBone.STUDIO_PROC_AXISINTERP Then
+							'TODO: The source file for this info seems to be in a different file than the VRD file.
 							Me.ReadAxisInterpBone(boneInputFileStreamPosition, aBone)
 						ElseIf aBone.proceduralRuleType = SourceMdlBone.STUDIO_PROC_QUATINTERP Then
 							Me.theMdlFileData.theProceduralBonesCommandIsUsed = True
 							Me.ReadQuatInterpBone(boneInputFileStreamPosition, aBone)
+						ElseIf aBone.proceduralRuleType = SourceMdlBone.STUDIO_PROC_AIMATBONE OrElse aBone.proceduralRuleType = SourceMdlBone.STUDIO_PROC_AIMATATTACH Then
+							Me.theMdlFileData.theProceduralBonesCommandIsUsed = True
+							' Used by pistons on Portal 2 "player\ballbot.mdl" model.
+							Me.ReadAimAtBone(boneInputFileStreamPosition, aBone)
 						ElseIf aBone.proceduralRuleType = SourceMdlBone.STUDIO_PROC_JIGGLE Then
 							Me.ReadJiggleBone(boneInputFileStreamPosition, aBone)
 						End If
@@ -492,7 +497,7 @@ Public Class SourceMdlFile49
 				fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 				Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theMdlFileData.theBones " + Me.theMdlFileData.theBones.Count.ToString())
 
-				Me.theMdlFileData.theFileSeekLog.LogToEndAndAlignToNextStart(Me.theInputFileReader, fileOffsetEnd, 4, "theMdlFileData.theBones alignment")
+				'Me.theMdlFileData.theFileSeekLog.LogToEndAndAlignToNextStart(Me.theInputFileReader, fileOffsetEnd, 4, "theMdlFileData.theBones alignment")
 			Catch ex As Exception
 				Dim debug As Integer = 4242
 			End Try
@@ -566,6 +571,42 @@ Public Class SourceMdlFile49
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aBone.theQuatInterpBone")
 		Catch
+		End Try
+	End Sub
+
+	Private Sub ReadAimAtBone(ByVal boneInputFileStreamPosition As Long, ByVal aBone As SourceMdlBone)
+		Dim aimAtBoneInputFileStreamPosition As Long
+		Dim fileOffsetStart As Long
+		Dim fileOffsetEnd As Long
+
+		Try
+			Me.theInputFileReader.BaseStream.Seek(boneInputFileStreamPosition + aBone.proceduralRuleOffset, SeekOrigin.Begin)
+			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+
+			aimAtBoneInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+			aBone.theAimAtBone = New SourceMdlAimAtBone()
+			aBone.theAimAtBone.parentBoneIndex = Me.theInputFileReader.ReadInt32()
+			aBone.theAimAtBone.aimBoneOrAttachmentIndex = Me.theInputFileReader.ReadInt32()
+
+			aBone.theAimAtBone.aim = New SourceVector()
+			aBone.theAimAtBone.aim.x = Me.theInputFileReader.ReadSingle()
+			aBone.theAimAtBone.aim.y = Me.theInputFileReader.ReadSingle()
+			aBone.theAimAtBone.aim.z = Me.theInputFileReader.ReadSingle()
+
+			aBone.theAimAtBone.up = New SourceVector()
+			aBone.theAimAtBone.up.x = Me.theInputFileReader.ReadSingle()
+			aBone.theAimAtBone.up.y = Me.theInputFileReader.ReadSingle()
+			aBone.theAimAtBone.up.z = Me.theInputFileReader.ReadSingle()
+
+			aBone.theAimAtBone.basePos = New SourceVector()
+			aBone.theAimAtBone.basePos.x = Me.theInputFileReader.ReadSingle()
+			aBone.theAimAtBone.basePos.y = Me.theInputFileReader.ReadSingle()
+			aBone.theAimAtBone.basePos.z = Me.theInputFileReader.ReadSingle()
+
+			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
+			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aBone.theAimAtBone")
+		Catch ex As Exception
+			Dim debug As Integer = 4242
 		End Try
 	End Sub
 
@@ -4307,6 +4348,7 @@ Public Class SourceMdlFile49
 												aFlexFrame.flexDescription += "+"
 												aFlexFrame.flexDescription += Me.theMdlFileData.theFlexDescs(aFlex.flexDescPartnerIndex).theName
 												aFlexFrame.flexHasPartner = True
+												aFlexFrame.flexPartnerName = Me.theMdlFileData.theFlexDescs(aFlex.flexDescPartnerIndex).theName
 												aFlexFrame.flexSplit = Me.GetSplit(aFlex, meshVertexIndexStart)
 												Me.theMdlFileData.theFlexDescs(aFlex.flexDescPartnerIndex).theDescIsUsedByFlex = True
 											Else

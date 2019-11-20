@@ -5,25 +5,46 @@ VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Crowbar", "Crowbar\Crowbar.vbproj", "{632B4ABC-9AF3-480D-8640-FDA6FB637AD7}"
 	ProjectSection(ProjectDependencies) = postProject
+		{20B2D012-34BC-411C-BD8D-B09E03C72AAE} = {20B2D012-34BC-411C-BD8D-B09E03C72AAE}
 		{8ED62942-7349-4076-89AD-4EEFF224800B} = {8ED62942-7349-4076-89AD-4EEFF224800B}
 	EndProjectSection
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "CrowbarSteamPipe", "CrowbarSteamPipe\CrowbarSteamPipe.vbproj", "{8ED62942-7349-4076-89AD-4EEFF224800B}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "CrowbarLauncher", "CrowbarLauncher\CrowbarLauncher.vbproj", "{20B2D012-34BC-411C-BD8D-B09E03C72AAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{632B4ABC-9AF3-480D-8640-FDA6FB637AD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{632B4ABC-9AF3-480D-8640-FDA6FB637AD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{632B4ABC-9AF3-480D-8640-FDA6FB637AD7}.Debug|x86.ActiveCfg = Debug|x86
 		{632B4ABC-9AF3-480D-8640-FDA6FB637AD7}.Debug|x86.Build.0 = Debug|x86
+		{632B4ABC-9AF3-480D-8640-FDA6FB637AD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{632B4ABC-9AF3-480D-8640-FDA6FB637AD7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{632B4ABC-9AF3-480D-8640-FDA6FB637AD7}.Release|x86.ActiveCfg = Release|x86
 		{632B4ABC-9AF3-480D-8640-FDA6FB637AD7}.Release|x86.Build.0 = Release|x86
+		{8ED62942-7349-4076-89AD-4EEFF224800B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ED62942-7349-4076-89AD-4EEFF224800B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8ED62942-7349-4076-89AD-4EEFF224800B}.Debug|x86.ActiveCfg = Debug|x86
 		{8ED62942-7349-4076-89AD-4EEFF224800B}.Debug|x86.Build.0 = Debug|x86
+		{8ED62942-7349-4076-89AD-4EEFF224800B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ED62942-7349-4076-89AD-4EEFF224800B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8ED62942-7349-4076-89AD-4EEFF224800B}.Release|x86.ActiveCfg = Release|x86
 		{8ED62942-7349-4076-89AD-4EEFF224800B}.Release|x86.Build.0 = Release|x86
+		{20B2D012-34BC-411C-BD8D-B09E03C72AAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20B2D012-34BC-411C-BD8D-B09E03C72AAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20B2D012-34BC-411C-BD8D-B09E03C72AAE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{20B2D012-34BC-411C-BD8D-B09E03C72AAE}.Debug|x86.Build.0 = Debug|Any CPU
+		{20B2D012-34BC-411C-BD8D-B09E03C72AAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20B2D012-34BC-411C-BD8D-B09E03C72AAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20B2D012-34BC-411C-BD8D-B09E03C72AAE}.Release|x86.ActiveCfg = Release|Any CPU
+		{20B2D012-34BC-411C-BD8D-B09E03C72AAE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

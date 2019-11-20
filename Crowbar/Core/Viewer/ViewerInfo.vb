@@ -5,6 +5,7 @@ Public Class ViewerInfo
 	Public mdlPathFileName As String
 	Public viewAsReplacement As Boolean
 	Public viewAsReplacementExtraSubfolder As String
+	Public mdlVersionOverride As SupportedMdlVersion
 
 	Public Enum ViewerActionType
 		GetData

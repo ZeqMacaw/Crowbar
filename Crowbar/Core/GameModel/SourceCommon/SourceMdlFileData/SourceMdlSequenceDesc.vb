@@ -3,6 +3,7 @@ Public Class SourceMdlSequenceDesc
 
 	Public Sub New()
 		Me.theWeightListIndex = -1
+		Me.theCorrectiveSubtractAnimationOptionIsUsed = False
 	End Sub
 
 	'// sequence descriptions
@@ -254,5 +255,6 @@ Public Class SourceMdlSequenceDesc
 
 
 	Public theBoneWeightsAreDefault As Boolean
+	Public theCorrectiveSubtractAnimationOptionIsUsed As Boolean
 
 End Class

@@ -2469,7 +2469,14 @@ Public Class SourceQcFile48
 		Next
 
 		If aSequenceDesc.theActivityName <> "" Then
+			If aSequenceDesc.activityWeight < 1 Then
+				line += "// The following line is commented-out because compiling with current compilers shows this error: Activity ACT_IDLE has a zero weight (weights must be integers > 0)"
+			End If
+
 			line = vbTab
+			If aSequenceDesc.activityWeight < 1 Then
+				line += "//"
+			End If
 			line += "activity "
 			line += """"
 			line += aSequenceDesc.theActivityName
@@ -2691,10 +2698,35 @@ Public Class SourceQcFile48
 	'weightlist         // done
 	'worldspaceblend       //
 	'worldspaceblendloop   // 
+	'------
+	' Other sub-options for ikrule option.
+	'	height
+	'	target
+	'	range
+	'	floor
+	'	pad
+	'	radius
+	'	contact
+	'	usesequence   [converted into mstudiocompressedikerror_t?][Test to see if this is baked-in by doing test decompile+recompiles.]
+	'	usesource     [converted into mstudiocompressedikerror_t?][Test to see if this is baked-in by doing test decompile+recompiles.]
+	'	fakeorigin
+	'	fakerotate
+	'	bone
+	'If anIkRule.type = SourceMdlIkRule.IK_UNLATCH Then
+	'	line += " "
+	'	line += "usesource"
+	'End If
+	'======
 	Private Sub WriteCmdListOptions(ByVal aSequenceDesc As SourceMdlSequenceDesc, ByVal anAnimationDesc As SourceMdlAnimationDesc48, ByVal impliedAnimDesc As SourceMdlAnimationDesc48)
 		Dim line As String = ""
 
 		If anAnimationDesc.theIkRules IsNot Nothing Then
+			Dim endFrameIndex As Integer
+			Dim tempInteger As Integer
+			Dim tempCounter As Integer
+			Dim tempCountertrippedMoreThanOnce As Boolean
+			endFrameIndex = anAnimationDesc.frameCount - 1
+
 			For Each anIkRule As SourceMdlIkRule In anAnimationDesc.theIkRules
 				line = vbTab
 				line += "ikrule"
@@ -2729,130 +2761,133 @@ Public Class SourceQcFile48
 					line += "unlatch"
 				End If
 
-				'	while (TokenAvailable())
-				'	{
-				'		GetToken( false );
-				'		if (stricmp( token, "height" ) == 0)
-				'		{
-				'			GetToken( false );
-				'			pRule->height = verify_atof( token );
-				'		}
-				'		else if (stricmp( token, "target" ) == 0)
-				'		{
-				'			// slot
-				'			GetToken( false );
-				'			pRule->slot = verify_atoi( token );
-				'		}
-				'		else if (stricmp( token, "range" ) == 0)
-				'		{
-				'			// ramp
-				'			GetToken( false );
-				'			if (token[0] == '.')
-				'				pRule->start = -1;
-				'			else
-				'				pRule->start = verify_atoi( token );
-				'
-				'			GetToken( false );
-				'			if (token[0] == '.')
-				'				pRule->peak = -1;
-				'			else
-				'				pRule->peak = verify_atoi( token );
-				'	
-				'			GetToken( false );
-				'			if (token[0] == '.')
-				'				pRule->tail = -1;
-				'			else
-				'				pRule->tail = verify_atoi( token );
-				'
-				'			GetToken( false );
-				'			if (token[0] == '.')
-				'				pRule->end = -1;
-				'			else
-				'				pRule->end = verify_atoi( token );
-				'		}
-				'		else if (stricmp( token, "floor" ) == 0)
-				'		{
-				'			GetToken( false );
-				'			pRule->floor = verify_atof( token );
-				'		}
-				'		else if (stricmp( token, "pad" ) == 0)
-				'		{
-				'			GetToken( false );
-				'			pRule->radius = verify_atof( token ) / 2.0f;
-				'		}
-				'		else if (stricmp( token, "radius" ) == 0)
-				'		{
-				'			GetToken( false );
-				'			pRule->radius = verify_atof( token );
-				'		}
-				'		else if (stricmp( token, "contact" ) == 0)
-				'		{
-				'			GetToken( false );
-				'			pRule->contact = verify_atoi( token );
-				'		}
-				'		else if (stricmp( token, "usesequence" ) == 0)
-				'		{
-				'			pRule->usesequence = true;
-				'			pRule->usesource = false;
-				'		}
-				'		else if (stricmp( token, "usesource" ) == 0)
-				'		{
-				'			pRule->usesequence = false;
-				'			pRule->usesource = true;
-				'		}
-				'		else if (stricmp( token, "fakeorigin" ) == 0)
-				'		{
-				'			GetToken( false );
-				'			pRule->pos.x = verify_atof( token );
-				'			GetToken( false );
-				'			pRule->pos.y = verify_atof( token );
-				'			GetToken( false );
-				'			pRule->pos.z = verify_atof( token );
-				'
-				'			pRule->bone = -1;
-				'		}
-				'		else if (stricmp( token, "fakerotate" ) == 0)
-				'		{
-				'			QAngle ang;
-				'
-				'			GetToken( false );
-				'			ang.x = verify_atof( token );
-				'			GetToken( false );
-				'			ang.y = verify_atof( token );
-				'			GetToken( false );
-				'			ang.z = verify_atof( token );
-				'
-				'			AngleQuaternion( ang, pRule->q );
-				'
-				'			pRule->bone = -1;
-				'		}
-				'		else if (stricmp( token, "bone" ) == 0)
-				'		{
-				'			strcpy( pRule->bonename, token );
-				'		}
-				'		else
-				'		{
-				'			UnGetToken();
-				'			return;
-				'		}
-				'	}
-				'TODO: Other sub-options for ikrule option.
-				'	height
-				'	target
-				'	range
-				'	floor
-				'	pad
-				'	radius
-				'	contact
-				'	usesequence   [converted into mstudiocompressedikerror_t?][Test to see if this is baked-in by doing test decompile+recompiles.]
-				'	usesource     [converted into mstudiocompressedikerror_t?][Test to see if this is baked-in by doing test decompile+recompiles.]
-				'	fakeorigin
-				'	fakerotate
-				'	bone
-				'If anIkRule.type = SourceMdlIkRule.IK_UNLATCH Then
-				'	line += " "
-				'	line += "usesource"
-				'End If
+				'NOTE: Writing all ikrule options because studiomdl will ignore any that are not used by a type.
+
+				tempInteger = CInt(Math.Round(anIkRule.contact * endFrameIndex))
+				'NOTE: Subtract max frame from value if over max frame. 
+				tempCounter = 0
+				While tempInteger > endFrameIndex
+					tempInteger -= endFrameIndex
+					tempCounter += 1
+				End While
+				If tempCounter > 1 Then
+					tempCountertrippedMoreThanOnce = True
+				End If
+				line += " contact "
+				line += tempInteger.ToString(TheApp.InternalNumberFormat)
+
+				line += " fakeorigin "
+				line += anIkRule.pos.x.ToString("0.##", TheApp.InternalNumberFormat)
+				line += " "
+				line += anIkRule.pos.y.ToString("0.##", TheApp.InternalNumberFormat)
+				line += " "
+				line += anIkRule.pos.z.ToString("0.##", TheApp.InternalNumberFormat)
+
+				Dim angles As SourceVector
+				angles = MathModule.ToEulerAngles(anIkRule.q)
+				line += " fakerotate "
+				line += angles.x.ToString("0.##", TheApp.InternalNumberFormat)
+				line += " "
+				line += angles.y.ToString("0.##", TheApp.InternalNumberFormat)
+				line += " "
+				line += angles.z.ToString("0.##", TheApp.InternalNumberFormat)
+
+				line += " floor "
+				line += anIkRule.floor.ToString("0.##", TheApp.InternalNumberFormat)
+
+				line += " height "
+				line += anIkRule.height.ToString("0.##", TheApp.InternalNumberFormat)
+
+				'NOTE: Not using pad because radius option can be used instead.
+				''pRule->radius = verify_atof( token ) / 2.0f;
+				'line += " pad "
+				'line += (anIkRule.radius * 2).ToString("0.##", TheApp.InternalNumberFormat)
+
+				'pRule->radius = verify_atof( token );
+				line += " radius "
+				line += anIkRule.radius.ToString("0.##", TheApp.InternalNumberFormat)
+
+				line += " range "
+				tempInteger = CInt(Math.Round(anIkRule.influenceStart * endFrameIndex))
+				'NOTE: Subtract max frame from value if over max frame. 
+				tempCounter = 0
+				While tempInteger > endFrameIndex
+					tempInteger -= endFrameIndex
+					tempCounter += 1
+				End While
+				If tempCounter > 1 Then
+					tempCountertrippedMoreThanOnce = True
+				End If
+				line += tempInteger.ToString(TheApp.InternalNumberFormat)
+				line += " "
+				tempInteger = CInt(Math.Round(anIkRule.influencePeak * endFrameIndex))
+				'NOTE: Subtract max frame from value if over max frame. 
+				'      Example model that needs this: "h3_hunter.mdl" (Compiled from source files from someone on Discord.)
+				tempCounter = 0
+				While tempInteger > endFrameIndex
+					tempInteger -= endFrameIndex
+					tempCounter += 1
+				End While
+				If tempCounter > 1 Then
+					tempCountertrippedMoreThanOnce = True
+				End If
+				line += tempInteger.ToString(TheApp.InternalNumberFormat)
+				line += " "
+				tempInteger = CInt(Math.Round(anIkRule.influenceTail * endFrameIndex))
+				'NOTE: Subtract max frame from value if over max frame. 
+				'      Example model that needs this: "h3_hunter.mdl" (Compiled from source files from someone on Discord.)
+				tempCounter = 0
+				While tempInteger > endFrameIndex
+					tempInteger -= endFrameIndex
+					tempCounter += 1
+				End While
+				If tempCounter > 1 Then
+					tempCountertrippedMoreThanOnce = True
+				End If
+				line += tempInteger.ToString(TheApp.InternalNumberFormat)
+				line += " "
+				tempInteger = CInt(Math.Round(anIkRule.influenceEnd * endFrameIndex))
+				'NOTE: Subtract max frame from value if over max frame. 
+				'      Example model that needs this: Half-Life 2 Deathmatch > "models\combine_soldier_anims.mdl"
+				tempCounter = 0
+				While tempInteger > endFrameIndex
+					tempInteger -= endFrameIndex
+					tempCounter += 1
+				End While
+				If tempCounter > 1 Then
+					tempCountertrippedMoreThanOnce = True
+				End If
+				line += tempInteger.ToString(TheApp.InternalNumberFormat)
+
+				line += " target "
+				line += anIkRule.slot.ToString(TheApp.InternalNumberFormat)
+
+				' Example model that needs this: "h3_hunter.mdl" [2019-06-19 decompile missing ikchain info] (Compiled from source files from someone on Discord.)
+				' Another example: HL2 "alyx_animations.mdl"
+				If aSequenceDesc IsNot Nothing Then
+					If anAnimationDesc.theMovements IsNot Nothing AndAlso anAnimationDesc.theMovements.Count > 0 Then
+						line += " usesequence "
+					ElseIf aSequenceDesc.theAutoLayers IsNot Nothing AndAlso aSequenceDesc.theAutoLayers.Count > 0 Then
+						Dim layer As SourceMdlAutoLayer
+						Dim otherSequence As SourceMdlSequenceDesc
+						Dim otherAnimationDesc As SourceMdlAnimationDesc48
+						For j As Integer = 0 To aSequenceDesc.theAutoLayers.Count - 1
+							layer = aSequenceDesc.theAutoLayers(j)
+							otherSequence = Me.theMdlFileData.theSequenceDescs(layer.sequenceIndex)
+							For k As Integer = 0 To aSequenceDesc.theAnimDescIndexes.Count - 1
+								otherAnimationDesc = Me.theMdlFileData.theAnimationDescs(otherSequence.theAnimDescIndexes(k))
+								If otherAnimationDesc.frameCount > anAnimationDesc.frameCount Then
+									line += " usesequence "
+									' Set j to max so outer loop stops.
+									j = aSequenceDesc.theAutoLayers.Count
+									Exit For
+								End If
+							Next
+						Next
+					ElseIf tempCountertrippedMoreThanOnce Then
+						line += " usesequence "
+					End If
+				End If
 
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
@@ -3059,7 +3094,13 @@ Public Class SourceQcFile48
 						influenceStart = (layer.influenceStart * (anAnimationDesc.frameCount - 1)).ToString("0", TheApp.InternalNumberFormat)
 						influencePeak = (layer.influencePeak * (anAnimationDesc.frameCount - 1)).ToString("0", TheApp.InternalNumberFormat)
 						influenceTail = (layer.influenceTail * (anAnimationDesc.frameCount - 1)).ToString("0", TheApp.InternalNumberFormat)
-						influenceEnd = (layer.influenceEnd * (anAnimationDesc.frameCount - 1)).ToString("0", TheApp.InternalNumberFormat)
+						Dim influenceEndValue As Double = layer.influenceEnd * (anAnimationDesc.frameCount - 1)
+						'NOTE: Limit to max frame. 
+						'      Example model that needs this: Half-Life 2 Deathmatch > "models\combine_soldier_anims.mdl"
+						If influenceEndValue > anAnimationDesc.frameCount - 1 Then
+							influenceEndValue = anAnimationDesc.frameCount - 1
+						End If
+						influenceEnd = (influenceEndValue).ToString("0", TheApp.InternalNumberFormat)
 					Else
 						influenceStart = layer.influenceStart.ToString("0.######", TheApp.InternalNumberFormat)
 						influencePeak = layer.influencePeak.ToString("0.######", TheApp.InternalNumberFormat)

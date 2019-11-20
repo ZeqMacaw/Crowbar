@@ -430,7 +430,7 @@ Public Class SourceModel52
 		End If
 
 		'TEST: When a model has a nameCopy, it seems to also use the VTF file strip group topology fields.
-		Dim vtxFile As New SourceVtxFile07(Me.theInputFileReader, Me.theVtxFileData, Me.theMdlFileData.nameCopyOffset > 0)
+		Dim vtxFile As New SourceVtxFile07(Me.theInputFileReader, Me.theVtxFileData)
 
 		vtxFile.ReadSourceVtxHeader()
 		If Me.theVtxFileData.lodCount > 0 Then

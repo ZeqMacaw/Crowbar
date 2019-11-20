@@ -1,3 +1,4 @@
+Imports System.Collections.ObjectModel
 Imports System.Globalization
 Imports System.IO
 Imports System.Text
@@ -69,10 +70,10 @@ Public Class App
 		Dim documentsPath As String
 		documentsPath = Path.Combine(Me.theAppPath, "Documents")
 		AppConstants.HelpTutorialLink = Path.Combine(documentsPath, AppConstants.HelpTutorialLink)
-        AppConstants.HelpContentsLink = Path.Combine(documentsPath, AppConstants.HelpContentsLink)
-        AppConstants.HelpIndexLink = Path.Combine(documentsPath, AppConstants.HelpIndexLink)
-        AppConstants.HelpTipsLink = Path.Combine(documentsPath, AppConstants.HelpTipsLink)
-    End Sub
+		AppConstants.HelpContentsLink = Path.Combine(documentsPath, AppConstants.HelpContentsLink)
+		AppConstants.HelpIndexLink = Path.Combine(documentsPath, AppConstants.HelpIndexLink)
+		AppConstants.HelpTipsLink = Path.Combine(documentsPath, AppConstants.HelpTipsLink)
+	End Sub
 
 	Private Sub Free()
 		If Me.theSettings IsNot Nothing Then
@@ -89,6 +90,12 @@ Public Class App
 	Public ReadOnly Property Settings() As AppSettings
 		Get
 			Return Me.theSettings
+		End Get
+	End Property
+
+	Public ReadOnly Property CommandLineOption_Settings_IsEnabled() As Boolean
+		Get
+			Return Me.theCommandLineOption_Settings_IsEnabled
 		End Get
 	End Property
 
@@ -162,6 +169,10 @@ Public Class App
 
 #Region "Methods"
 
+	Public Function CommandLineValueIsAnAppSetting(ByVal commandLineValue As String) As Boolean
+		Return commandLineValue.StartsWith(App.SettingsParameter)
+	End Function
+
 	Public Sub WriteRequiredFiles()
 		Dim steamAPIDLLPathFileName As String = Path.Combine(Me.GetCustomDataPath(), App.theSteamAPIDLLFileName)
 		Me.WriteResourceToFileIfDifferent(My.Resources.steam_api, steamAPIDLLPathFileName)
@@ -172,9 +183,6 @@ Public Class App
 
 		Dim crowbarSteamPipePathFileName As String = Path.Combine(Me.GetCustomDataPath(), App.CrowbarSteamPipeFileName)
 		Me.WriteResourceToFileIfDifferent(My.Resources.CrowbarSteamPipe, crowbarSteamPipePathFileName)
-
-		'Me.SevenzaExePathFileName = Path.Combine(Me.GetCustomDataPath(), App.theSevenzaEXEFileName)
-		'Me.WriteResourceToFileIfDifferent(My.Resources.Sevenza, Me.SevenzaExePathFileName)
 
 		Me.LzmaExePathFileName = Path.Combine(Me.GetCustomDataPath(), App.theLzmaExeFileName)
 		Me.WriteResourceToFileIfDifferent(My.Resources.lzma, Me.LzmaExePathFileName)
@@ -190,6 +198,34 @@ Public Class App
 			'Throw New Exception(ex.Message, ex.InnerException)
 			Exit Sub
 		Finally
+		End Try
+	End Sub
+
+	Public Sub WriteUpdaterFiles()
+		Me.SevenZrExePathFileName = Path.Combine(Me.GetCustomDataPath(), App.theSevenZrEXEFileName)
+		Me.WriteResourceToFileIfDifferent(My.Resources.SevenZr, Me.SevenZrExePathFileName)
+
+		Me.CrowbarLauncherExePathFileName = Path.Combine(Me.GetCustomDataPath(), App.theCrowbarLauncherEXEFileName)
+		Me.WriteResourceToFileIfDifferent(My.Resources.CrowbarLauncher, Me.CrowbarLauncherExePathFileName)
+	End Sub
+
+	Public Sub DeleteUpdaterFiles()
+		Me.SevenZrExePathFileName = Path.Combine(Me.GetCustomDataPath(), App.theSevenZrEXEFileName)
+		Try
+			If File.Exists(Me.SevenZrExePathFileName) Then
+				File.Delete(Me.SevenZrExePathFileName)
+			End If
+		Catch ex As Exception
+			Dim debug As Integer = 4242
+		End Try
+
+		Me.CrowbarLauncherExePathFileName = Path.Combine(Me.GetCustomDataPath(), App.theCrowbarLauncherEXEFileName)
+		Try
+			If File.Exists(Me.CrowbarLauncherExePathFileName) Then
+				File.Delete(Me.CrowbarLauncherExePathFileName)
+			End If
+		Catch ex As Exception
+			Dim debug As Integer = 4242
 		End Try
 	End Sub
 
@@ -266,6 +302,10 @@ Public Class App
 		End If
 	End Function
 
+	Public Function GetAppSettingsPathFileName() As String
+		Return Path.Combine(Me.GetCustomDataPath(), App.theAppSettingsFileName)
+	End Function
+
 #End Region
 
 #Region "Private Methods"
@@ -273,6 +313,20 @@ Public Class App
 	Private Sub LoadAppSettings()
 		Dim appSettingsPathFileName As String
 		appSettingsPathFileName = Me.GetAppSettingsPathFileName()
+
+		Dim commandLineOption_Settings_IsEnabled As Boolean = False
+		Dim commandLineValues As New ReadOnlyCollection(Of String)(System.Environment.GetCommandLineArgs())
+		If commandLineValues.Count > 1 AndAlso commandLineValues(1) <> "" Then
+			Dim command As String = commandLineValues(1)
+			If command.StartsWith(App.SettingsParameter) Then
+				commandLineOption_Settings_IsEnabled = True
+				Dim oldAppSettingsPathFileName As String = command.Replace(App.SettingsParameter, "")
+				oldAppSettingsPathFileName = oldAppSettingsPathFileName.Replace("""", "")
+				If File.Exists(oldAppSettingsPathFileName) Then
+					File.Copy(oldAppSettingsPathFileName, appSettingsPathFileName, True)
+				End If
+			End If
+		End If
 
 		If File.Exists(appSettingsPathFileName) Then
 			Try
@@ -285,10 +339,6 @@ Public Class App
 			Me.CreateAppSettings()
 		End If
 	End Sub
-
-	Private Function GetAppSettingsPathFileName() As String
-		Return Path.Combine(Me.GetCustomDataPath(), App.theAppSettingsFileName)
-	End Function
 
 	Private Sub CreateAppSettings()
 		Me.theSettings = New AppSettings()
@@ -397,15 +447,20 @@ Public Class App
 	Private theInternalNumberFormat As NumberFormatInfo
 
 	Private theSettings As AppSettings
+	'NOTE: Use slash at start to avoid confusing with a pathFileName that Windows Explorer might use with auto-open.
+	Public Const SettingsParameter As String = "/settings="
+	Private theCommandLineOption_Settings_IsEnabled As Boolean
 
 	' Location of the exe.
 	Private theAppPath As String
 
 	Private Const theSteamAPIDLLFileName As String = "steam_api.dll"
 	Private Const theSteamworksDotNetDLLFileName As String = "Steamworks.NET.dll"
-	'Private Const theSevenzaEXEFileName As String = "7za.exe"
+	Private Const theSevenZrEXEFileName As String = "7zr.exe"
+	Private Const theCrowbarLauncherEXEFileName As String = "CrowbarLauncher.exe"
 	Private Const theLzmaExeFileName As String = "lzma.exe"
-	'Public SevenzaExePathFileName As String
+	Public SevenZrExePathFileName As String
+	Public CrowbarLauncherExePathFileName As String
 	Public LzmaExePathFileName As String
 	Public SteamAppInfos As List(Of SteamAppInfoBase)
 

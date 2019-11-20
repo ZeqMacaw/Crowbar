@@ -121,25 +121,29 @@ Public Class SourceSmdFile10
 				position.x = aFrameLine.position.x
 				position.y = aFrameLine.position.y
 				position.z = aFrameLine.position.z
+
 				If Me.theMdlFileData.theBones(boneIndex).parentBoneIndex = -1 Then
-					'void ExtractMotion( )
-					'[...]
-					'			for (j = 0; j < sequence[i].numframes; j++)
-					'[...]
-					'						VectorScale( motion, j * 1.0 / (sequence[i].numframes - 1), adj );
-					'[...]
-					'							VectorSubtract( sequence[i].panim[q]->pos[k][j], adj, sequence[i].panim[q]->pos[k][j] );
-					'[...]
-					'			VectorCopy( motion, sequence[i].linearmovement );
-					scale = frameIndex / (aSequenceDesc.frameCount - 1)
-					If (aSequenceDesc.motiontype And SourceModule10.STUDIO_LX) = SourceModule10.STUDIO_LX Then
-						position.x += scale * aSequenceDesc.linearmovement.x
-					End If
-					If (aSequenceDesc.motiontype And SourceModule10.STUDIO_LY) = SourceModule10.STUDIO_LY Then
-						position.y += scale * aSequenceDesc.linearmovement.y
-					End If
-					If (aSequenceDesc.motiontype And SourceModule10.STUDIO_LZ) = SourceModule10.STUDIO_LZ Then
-						position.z += scale * aSequenceDesc.linearmovement.z
+					' Extract root-bone motion.
+					If aSequenceDesc.frameCount > 1 Then
+						'void ExtractMotion( )
+						'[...]
+						'			for (j = 0; j < sequence[i].numframes; j++)
+						'[...]
+						'						VectorScale( motion, j * 1.0 / (sequence[i].numframes - 1), adj );
+						'[...]
+						'							VectorSubtract( sequence[i].panim[q]->pos[k][j], adj, sequence[i].panim[q]->pos[k][j] );
+						'[...]
+						'			VectorCopy( motion, sequence[i].linearmovement );
+						scale = frameIndex / (aSequenceDesc.frameCount - 1)
+						If (aSequenceDesc.motiontype And SourceModule10.STUDIO_LX) = SourceModule10.STUDIO_LX Then
+							position.x += scale * aSequenceDesc.linearmovement.x
+						End If
+						If (aSequenceDesc.motiontype And SourceModule10.STUDIO_LY) = SourceModule10.STUDIO_LY Then
+							position.y += scale * aSequenceDesc.linearmovement.y
+						End If
+						If (aSequenceDesc.motiontype And SourceModule10.STUDIO_LZ) = SourceModule10.STUDIO_LZ Then
+							position.z += scale * aSequenceDesc.linearmovement.z
+						End If
 					End If
 
 					'	defaultzrotation = Q_PI / 2;
@@ -407,7 +411,7 @@ Public Class SourceSmdFile10
 					texCoordY = aVertexInfo.t
 				End If
 			Else
-				If TheApp.Settings.DecompileUseUvsForDoomMusicCompilerIsChecked Then
+				If TheApp.Settings.DecompileUseNonValveUvConversionIsChecked Then
 					' Match DoomMusic's StudioMDL (StudioMDL with Texture Shifting fix v1.02) because that compiler fixes texture shifting as well as some other stuff.
 					'TODO: Is DoomMusic's texture UV calculation incorrect? Should it be using the "- 1" like the original Valve compiler?
 					texCoordX = aVertexInfo.s / (aTexture.width)

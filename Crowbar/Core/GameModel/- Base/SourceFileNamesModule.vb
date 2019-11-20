@@ -117,7 +117,7 @@ Module SourceFileNamesModule
 			End Try
 			bodyModelFileNameWithoutExtension = Path.GetFileNameWithoutExtension(bodyModelFileName)
 
-			If Not bodyModelFileName.ToLower(TheApp.InternalCultureInfo).StartsWith(modelName.ToLower(TheApp.InternalCultureInfo)) Then
+			If TheApp.Settings.DecompilePrefixFileNamesWithModelNameIsChecked AndAlso Not bodyModelFileName.ToLower(TheApp.InternalCultureInfo).StartsWith(modelName.ToLower(TheApp.InternalCultureInfo)) Then
 				bodyGroupSmdFileName += modelName + "_"
 			End If
 			bodyGroupSmdFileName += bodyModelFileNameWithoutExtension
@@ -205,6 +205,23 @@ Module SourceFileNamesModule
 				animationSmdRelativePathFileName += ".smd"
 			End If
 		End If
+
+		Return animationSmdRelativePathFileName
+	End Function
+
+	Public Function CreateCorrectiveAnimationName(ByVal givenAnimationSmdRelativePathFileName As String) As String
+		Dim animationName As String
+
+		animationName = givenAnimationSmdRelativePathFileName + "_" + "corrective_animation"
+
+		Return animationName
+	End Function
+
+	Public Function CreateCorrectiveAnimationSmdRelativePathFileName(ByVal givenAnimationSmdRelativePathFileName As String, ByVal modelName As String) As String
+		Dim animationSmdRelativePathFileName As String
+
+		animationSmdRelativePathFileName = CreateCorrectiveAnimationName(givenAnimationSmdRelativePathFileName) + ".smd"
+		animationSmdRelativePathFileName = Path.Combine(GetAnimationSmdRelativePath(modelName), animationSmdRelativePathFileName)
 
 		Return animationSmdRelativePathFileName
 	End Function
