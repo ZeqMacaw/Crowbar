@@ -277,6 +277,7 @@ Public Class GarrysModSteamAppInfo
 			Throw New System.Exception("Crowbar tried to delete an old temp file """ + addonJsonPathFileName + """ but Windows gave this message: " + ex.Message)
 		End Try
 
+		' Remove the "Addon" tag because it should not go into the json file.
 		itemTags.Remove("Addon")
 
 		Dim fileStream As StreamWriter
@@ -313,6 +314,9 @@ Public Class GarrysModSteamAppInfo
 				fileStream.Close()
 				fileStream = Nothing
 			End If
+
+			'NOTE: Add the "Addon" tag back because itemTags is an object used throughout app and is not a local copy.
+			itemTags.Add("Addon")
 		End Try
 
 		Return addonJsonPathFileName
