@@ -377,8 +377,10 @@ Public Class CompileUserControl
 			Me.EditCompilerOptionsText("definebones", TheApp.Settings.CompileOptionDefineBonesIsChecked)
 			Me.SetCompilerOptionsText()
 			Me.UpdateCompilerOptionDefineBonesWidgets()
-			'ElseIf e.PropertyName = "CompileOptionDefineBonesCreateFileIsChecked" Then
+		ElseIf e.PropertyName = "CompileOptionDefineBonesCreateFileIsChecked" Then
+			Me.UpdateCompilerOptionDefineBonesWidgets()
 			'ElseIf e.PropertyName = "CompileOptionDefineBonesModifyQcFileIsChecked" Then
+			'	Me.UpdateCompilerOptionDefineBonesWidgets()
 		ElseIf e.PropertyName = "CompileOptionNoP4IsChecked" Then
 			Me.EditCompilerOptionsText("nop4", TheApp.Settings.CompileOptionNoP4IsChecked)
 			Me.SetCompilerOptionsText()
