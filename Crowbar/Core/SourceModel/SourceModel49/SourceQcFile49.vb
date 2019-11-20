@@ -468,7 +468,7 @@ Public Class SourceQcFile49
 						'	aFlexFrame = Me.theMdlFileData.theFlexFrames(flexFrameIndex)
 						For flexFrameIndex As Integer = 1 To aBodyPart.theFlexFrames.Count - 1
 							aFlexFrame = aBodyPart.theFlexFrames(flexFrameIndex)
-							If aFlexFrame.flexName = eyelidName Then
+							If aFlexFrame.flexName = eyelidName OrElse (aFlexFrame.flexHasPartner AndAlso aFlexFrame.flexPartnerName = eyelidName) Then
 								If aFlexFrame.flexes(0).target0 = -11 Then
 									frameIndex = flexFrameIndex
 									Exit For
@@ -497,7 +497,7 @@ Public Class SourceQcFile49
 						'	aFlexFrame = Me.theMdlFileData.theFlexFrames(flexFrameIndex)
 						For flexFrameIndex As Integer = 1 To aBodyPart.theFlexFrames.Count - 1
 							aFlexFrame = aBodyPart.theFlexFrames(flexFrameIndex)
-							If aFlexFrame.flexName = eyelidName Then
+							If aFlexFrame.flexName = eyelidName OrElse (aFlexFrame.flexHasPartner AndAlso aFlexFrame.flexPartnerName = eyelidName) Then
 								If aFlexFrame.flexes(0).target3 = 11 Then
 									frameIndex = flexFrameIndex
 									Exit For
@@ -545,7 +545,7 @@ Public Class SourceQcFile49
 						'	aFlexFrame = Me.theMdlFileData.theFlexFrames(flexFrameIndex)
 						For flexFrameIndex As Integer = 1 To aBodyPart.theFlexFrames.Count - 1
 							aFlexFrame = aBodyPart.theFlexFrames(flexFrameIndex)
-							If aFlexFrame.flexName = eyelidName Then
+							If aFlexFrame.flexName = eyelidName OrElse (aFlexFrame.flexHasPartner AndAlso aFlexFrame.flexPartnerName = eyelidName) Then
 								If aFlexFrame.flexes(0).target0 = -11 Then
 									frameIndex = flexFrameIndex
 									Exit For
@@ -574,7 +574,7 @@ Public Class SourceQcFile49
 						'	aFlexFrame = Me.theMdlFileData.theFlexFrames(flexFrameIndex)
 						For flexFrameIndex As Integer = 1 To aBodyPart.theFlexFrames.Count - 1
 							aFlexFrame = aBodyPart.theFlexFrames(flexFrameIndex)
-							If aFlexFrame.flexName = eyelidName Then
+							If aFlexFrame.flexName = eyelidName OrElse (aFlexFrame.flexHasPartner AndAlso aFlexFrame.flexPartnerName = eyelidName) Then
 								If aFlexFrame.flexes(0).target3 = 11 Then
 									frameIndex = flexFrameIndex
 									Exit For

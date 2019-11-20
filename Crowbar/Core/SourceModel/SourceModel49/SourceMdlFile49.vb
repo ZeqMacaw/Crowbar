@@ -4348,6 +4348,7 @@ Public Class SourceMdlFile49
 												aFlexFrame.flexDescription += "+"
 												aFlexFrame.flexDescription += Me.theMdlFileData.theFlexDescs(aFlex.flexDescPartnerIndex).theName
 												aFlexFrame.flexHasPartner = True
+												aFlexFrame.flexPartnerName = Me.theMdlFileData.theFlexDescs(aFlex.flexDescPartnerIndex).theName
 												aFlexFrame.flexSplit = Me.GetSplit(aFlex, meshVertexIndexStart)
 												Me.theMdlFileData.theFlexDescs(aFlex.flexDescPartnerIndex).theDescIsUsedByFlex = True
 											Else
