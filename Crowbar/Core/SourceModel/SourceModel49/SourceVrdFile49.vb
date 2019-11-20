@@ -150,6 +150,58 @@ Public Class SourceVrdFile49
 							line += aTrigger.pos.z.ToString("0.######", TheApp.InternalNumberFormat)
 							Me.theOutputFileStreamWriter.WriteLine(line)
 						Next
+					ElseIf aBone.proceduralRuleType = SourceMdlBone.STUDIO_PROC_AIMATBONE OrElse aBone.proceduralRuleType = SourceMdlBone.STUDIO_PROC_AIMATATTACH Then
+						aBoneName = StringClass.RemoveUptoAndIncludingFirstDotCharacterFromString(aBone.theName)
+
+						aParentBone = Me.theMdlFileData.theBones(aBone.theAimAtBone.parentBoneIndex)
+						aParentBoneName = StringClass.RemoveUptoAndIncludingFirstDotCharacterFromString(aParentBone.theName)
+
+						Dim anAimName As String
+						If aBone.proceduralRuleType = SourceMdlBone.STUDIO_PROC_AIMATBONE Then
+							Dim anAimBone As SourceMdlBone
+							anAimBone = Me.theMdlFileData.theBones(aBone.theAimAtBone.aimBoneOrAttachmentIndex)
+							anAimName = StringClass.RemoveUptoAndIncludingFirstDotCharacterFromString(anAimBone.theName)
+						Else
+							Dim anAimAttachment As SourceMdlAttachment
+							anAimAttachment = Me.theMdlFileData.theAttachments(aBone.theAimAtBone.aimBoneOrAttachmentIndex)
+							anAimName = StringClass.RemoveUptoAndIncludingFirstDotCharacterFromString(anAimAttachment.theName)
+						End If
+
+						line = "<aimconstraint>"
+						line += " "
+						line += aBoneName
+						line += " "
+						line += aParentBoneName
+						line += " "
+						line += anAimName
+						Me.theOutputFileStreamWriter.WriteLine(line)
+
+						line = "<aimvector>"
+						line += " "
+						line += aBone.theAimAtBone.aim.x.ToString("0.######", TheApp.InternalNumberFormat)
+						line += " "
+						line += aBone.theAimAtBone.aim.y.ToString("0.######", TheApp.InternalNumberFormat)
+						line += " "
+						line += aBone.theAimAtBone.aim.z.ToString("0.######", TheApp.InternalNumberFormat)
+						Me.theOutputFileStreamWriter.WriteLine(line)
+
+						line = "<upvector>"
+						line += " "
+						line += aBone.theAimAtBone.up.x.ToString("0.######", TheApp.InternalNumberFormat)
+						line += " "
+						line += aBone.theAimAtBone.up.y.ToString("0.######", TheApp.InternalNumberFormat)
+						line += " "
+						line += aBone.theAimAtBone.up.z.ToString("0.######", TheApp.InternalNumberFormat)
+						Me.theOutputFileStreamWriter.WriteLine(line)
+
+						line = "<basepos>"
+						line += " "
+						line += aBone.theAimAtBone.basePos.x.ToString("0.######", TheApp.InternalNumberFormat)
+						line += " "
+						line += aBone.theAimAtBone.basePos.y.ToString("0.######", TheApp.InternalNumberFormat)
+						line += " "
+						line += aBone.theAimAtBone.basePos.z.ToString("0.######", TheApp.InternalNumberFormat)
+						Me.theOutputFileStreamWriter.WriteLine(line)
 					End If
 				End If
 			Next
