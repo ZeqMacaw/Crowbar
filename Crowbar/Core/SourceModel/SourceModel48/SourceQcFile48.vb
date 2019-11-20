@@ -2469,7 +2469,14 @@ Public Class SourceQcFile48
 		Next
 
 		If aSequenceDesc.theActivityName <> "" Then
+			If aSequenceDesc.activityWeight < 1 Then
+				line += "// The following line is commented-out because compiling with current compilers shows this error: Activity ACT_IDLE has a zero weight (weights must be integers > 0)"
+			End If
+
 			line = vbTab
+			If aSequenceDesc.activityWeight < 1 Then
+				line += "//"
+			End If
 			line += "activity "
 			line += """"
 			line += aSequenceDesc.theActivityName
