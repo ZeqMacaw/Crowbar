@@ -251,9 +251,6 @@ Public Class DownloadUserControl
 
 				Dim outputFileName As String
 				outputFileName = Me.GetOutputFileName(outputInfo.ItemTitle, outputInfo.PublishedItemID, outputInfo.ContentFolderOrFileName, outputInfo.ItemUpdated_Text)
-				'NOTE: Remove colons here to prevent GetCleanPathFileName() from removing everything up to first colon.
-				outputFileName = outputFileName.Replace(":", "")
-				outputFileName = FileManager.GetCleanPathFileName(outputFileName, False)
 
 				Dim outputPathFileName As String
 				outputPathFileName = Path.Combine(outputPath, outputFileName)
@@ -273,9 +270,6 @@ Public Class DownloadUserControl
 
 				Dim outputFolder As String
 				outputFolder = Me.GetOutputFileName(outputInfo.ItemTitle, outputInfo.PublishedItemID, outputInfo.ContentFolderOrFileName, outputInfo.ItemUpdated_Text)
-				'NOTE: Remove colons here to prevent GetCleanPathFileName() from removing everything up to first colon.
-				outputFolder = outputFolder.Replace(":", "")
-				outputFolder = FileManager.GetCleanPathFileName(outputFolder, False)
 
 				Dim targetOutputPath As String
 				targetOutputPath = Path.Combine(outputPath, outputFolder)
@@ -407,8 +401,11 @@ Public Class DownloadUserControl
 	End Sub
 
 	Private Sub DownloadFromLink()
-		Dim itemLink As String = ""
 		Me.LogTextBox.Text = ""
+		Me.DownloadProgressBar.Text = ""
+		Me.DownloadProgressBar.Value = 0
+
+		Dim itemLink As String = ""
 		Dim itemID As String = Me.GetItemID()
 		Dim appID As UInteger = 0
 		If itemID = "0" Then
@@ -578,9 +575,6 @@ Public Class DownloadUserControl
 
 		Dim outputFileName As String
 		outputFileName = Me.GetOutputFileName(Me.theItemTitle, Me.theItemIdText, givenFileName, Me.theItemTimeUpdatedText)
-		'NOTE: Remove colons here to prevent GetCleanPathFileName() from removing everything up to first colon.
-		outputFileName = outputFileName.Replace(":", "")
-		outputFileName = FileManager.GetCleanPathFileName(outputFileName, False)
 
 		Dim outputPathFileName As String
 		outputPathFileName = Path.Combine(outputPath, outputFileName)
@@ -687,6 +681,8 @@ Public Class DownloadUserControl
 			outputFileName = outputFileName.Replace(" ", "_")
 		End If
 
+		'NOTE: Remove colons here to prevent GetCleanPathFileName() from removing everything up to first colon.
+		outputFileName = outputFileName.Replace(":", "_")
 		outputFileName = FileManager.GetCleanPathFileName(outputFileName, False)
 		outputFileName = outputFileName.Replace("\", "_")
 
