@@ -285,6 +285,7 @@ Public Class SourceSmdFile2531
 							boneIndex = faceSection.theBoneIndex
 						End If
 						aBone = Me.theMdlFileData.theBones(boneIndex)
+						'aBone = Me.theMdlFileData.theBones(faceSection.theBoneIndex)
 
 						For triangleIndex As Integer = 0 To faceSection.theFaces.Count - 1
 							aTriangle = faceSection.theFaces(triangleIndex)
@@ -293,9 +294,11 @@ Public Class SourceSmdFile2531
 							Me.theOutputFileStreamWriter.WriteLine(line)
 
 							For vertexIndex As Integer = 0 To aTriangle.vertexIndex.Length - 1
-								phyVertex = collisionData.theVertices(aTriangle.vertexIndex(vertexIndex))
+								'phyVertex = collisionData.theVertices(aTriangle.vertexIndex(vertexIndex))
+								phyVertex = faceSection.theVertices(aTriangle.vertexIndex(vertexIndex))
 
 								aVectorTransformed = Me.TransformPhyVertex(aBone, phyVertex.vertex, aSourcePhysCollisionModel)
+								'aVectorTransformed = Me.TransformPhyVertex(aBone, phyVertex.vertex)
 
 								line = "    "
 								line += faceSection.theBoneIndex.ToString(TheApp.InternalNumberFormat)
@@ -320,8 +323,8 @@ Public Class SourceSmdFile2531
 					Next
 				Next
 			End If
-		Catch
-
+		Catch ex As Exception
+			Dim debug As Integer = 4242
 		End Try
 
 		line = "end"
@@ -1227,6 +1230,7 @@ Public Class SourceSmdFile2531
 	End Function
 
 	Private Function TransformPhyVertex(ByVal aBone As SourceMdlBone2531, ByVal vertex As SourceVector, ByVal aSourcePhysCollisionModel As SourcePhyPhysCollisionModel) As SourceVector
+		'Private Function TransformPhyVertex(ByVal aBone As SourceMdlBone2531, ByVal vertex As SourceVector) As SourceVector
 		Dim aVectorTransformed As New SourceVector
 		Dim aVector As New SourceVector()
 

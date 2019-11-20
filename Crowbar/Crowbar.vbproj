@@ -286,7 +286,6 @@
     <Compile Include="Core\GameModel\SourceModel2531\SourceMdlFileData\SourceMdlType0Vertex2531.vb" />
     <Compile Include="Core\GameModel\SourceModel2531\SourceMdlFileData\SourceMdlVertAnim2531.vb" />
     <Compile Include="Core\GameModel\SourceModel2531\SourceModule2531.vb" />
-    <Compile Include="Core\GameModel\SourceModel2531\SourcePhyFile2531.vb" />
     <Compile Include="Core\GameModel\SourceModel2531\SourceQcFile2531.vb" />
     <Compile Include="Core\GameModel\SourceModel2531\SourceVtaFile2531.vb" />
     <Compile Include="Core\GameModel\SourceModel27\SourceMdlFileData\SourceMdlBodyPart27.vb" />
