@@ -96,11 +96,19 @@ Public Class SourcePhyFile
 				vertexDataOffset = Me.theInputFileReader.ReadInt32()
 				vertexDataStreamPosition = faceDataStreamPosition + vertexDataOffset
 
-				'TODO: Verify why this is using "- 1". Needed for L4D2 survivor_teenangst.
-				faceSection.theBoneIndex = Me.theInputFileReader.ReadInt32() - 1
-				If faceSection.theBoneIndex < 0 Then
-					faceSection.theBoneIndex = 0
-					Me.thePhyFileData.theSourcePhyIsCollisionModel = True
+				If vphyId <> "VPHY" Then
+					' This is MDL v37 model, so use different code.
+					faceSection.theBoneIndex = Me.theInputFileReader.ReadInt32()
+					If Me.thePhyFileData.solidCount = 1 Then
+						Me.thePhyFileData.theSourcePhyIsCollisionModel = True
+					End If
+				Else
+					'TODO: Verify why this is using "- 1". Needed for L4D2 survivor_teenangst.
+					faceSection.theBoneIndex = Me.theInputFileReader.ReadInt32() - 1
+					If faceSection.theBoneIndex < 0 Then
+						faceSection.theBoneIndex = 0
+						Me.thePhyFileData.theSourcePhyIsCollisionModel = True
+					End If
 				End If
 
 				Me.theInputFileReader.ReadInt32()
@@ -357,7 +365,6 @@ Public Class SourcePhyFile
 					For triangleIndex As Integer = 0 To faceSection.theFaces.Count - 1
 						aTriangle = faceSection.theFaces(triangleIndex)
 
-						'Me.CalculateFaceNormal(collisionData, aTriangle)
 						Me.CalculateFaceNormal(faceSection, aTriangle)
 					Next
 				Next
@@ -395,7 +402,6 @@ Public Class SourcePhyFile
 					thereIsAValue = FileManager.ReadKeyValueLine(Me.theInputFileReader, key, value)
 					If thereIsAValue Then
 						If key = "index" Then
-							'aSourcePhysCollisionModel.theIndex = CInt(value)
 							aSourcePhysCollisionModel.theIndex = Integer.Parse(value, TheApp.InternalNumberFormat)
 						ElseIf key = "name" Then
 							aSourcePhysCollisionModel.theName = value
@@ -403,12 +409,10 @@ Public Class SourcePhyFile
 							aSourcePhysCollisionModel.theParentIsValid = True
 							aSourcePhysCollisionModel.theParentName = value
 						ElseIf key = "mass" Then
-							'aSourcePhysCollisionModel.theMass = CSng(value)
 							aSourcePhysCollisionModel.theMass = Single.Parse(value, TheApp.InternalNumberFormat)
 						ElseIf key = "surfaceprop" Then
 							aSourcePhysCollisionModel.theSurfaceProp = value
 						ElseIf key = "damping" Then
-							'aSourcePhysCollisionModel.theDamping = CSng(value)
 							aSourcePhysCollisionModel.theDamping = Single.Parse(value, TheApp.InternalNumberFormat)
 							If Me.theDampingToCountMap.ContainsKey(aSourcePhysCollisionModel.theDamping) Then
 								Me.theDampingToCountMap(aSourcePhysCollisionModel.theDamping) += 1
@@ -416,7 +420,6 @@ Public Class SourcePhyFile
 								Me.theDampingToCountMap.Add(aSourcePhysCollisionModel.theDamping, 1)
 							End If
 						ElseIf key = "rotdamping" Then
-							'aSourcePhysCollisionModel.theRotDamping = CSng(value)
 							aSourcePhysCollisionModel.theRotDamping = Single.Parse(value, TheApp.InternalNumberFormat)
 							If Me.theRotDampingToCountMap.ContainsKey(aSourcePhysCollisionModel.theRotDamping) Then
 								Me.theRotDampingToCountMap(aSourcePhysCollisionModel.theRotDamping) += 1
@@ -425,10 +428,11 @@ Public Class SourcePhyFile
 							End If
 						ElseIf key = "drag" Then
 							aSourcePhysCollisionModel.theDragCoefficientIsValid = True
-							'aSourcePhysCollisionModel.theDragCoefficient = CSng(value)
 							aSourcePhysCollisionModel.theDragCoefficient = Single.Parse(value, TheApp.InternalNumberFormat)
+						ElseIf key = "rollingDrag" Then
+							aSourcePhysCollisionModel.theRollingDragCoefficientIsValid = True
+							aSourcePhysCollisionModel.theRollingDragCoefficient = Single.Parse(value, TheApp.InternalNumberFormat)
 						ElseIf key = "inertia" Then
-							'aSourcePhysCollisionModel.theInertia = CSng(value)
 							aSourcePhysCollisionModel.theInertia = Single.Parse(value, TheApp.InternalNumberFormat)
 							If Me.theInertiaToCountMap.ContainsKey(aSourcePhysCollisionModel.theInertia) Then
 								Me.theInertiaToCountMap(aSourcePhysCollisionModel.theInertia) += 1
@@ -436,11 +440,9 @@ Public Class SourcePhyFile
 								Me.theInertiaToCountMap.Add(aSourcePhysCollisionModel.theInertia, 1)
 							End If
 						ElseIf key = "volume" Then
-							'aSourcePhysCollisionModel.theVolume = CSng(value)
 							aSourcePhysCollisionModel.theVolume = Single.Parse(value, TheApp.InternalNumberFormat)
 						ElseIf key = "massbias" Then
 							aSourcePhysCollisionModel.theMassBiasIsValid = True
-							'aSourcePhysCollisionModel.theMassBias = CSng(value)
 							aSourcePhysCollisionModel.theMassBias = Single.Parse(value, TheApp.InternalNumberFormat)
 						End If
 					End If
@@ -517,37 +519,26 @@ Public Class SourcePhyFile
 					thereIsAValue = FileManager.ReadKeyValueLine(Me.theInputFileReader, key, value)
 					If thereIsAValue Then
 						If key = "parent" Then
-							'aSourceRagdollConstraintDesc.theParentIndex = CInt(value)
 							aSourceRagdollConstraintDesc.theParentIndex = Integer.Parse(value, TheApp.InternalNumberFormat)
 						ElseIf key = "child" Then
-							'aSourceRagdollConstraintDesc.theChildIndex = CInt(value)
 							aSourceRagdollConstraintDesc.theChildIndex = Integer.Parse(value, TheApp.InternalNumberFormat)
 						ElseIf key = "xmin" Then
-							'aSourceRagdollConstraintDesc.theXMin = CSng(value)
 							aSourceRagdollConstraintDesc.theXMin = Single.Parse(value, TheApp.InternalNumberFormat)
 						ElseIf key = "xmax" Then
-							'aSourceRagdollConstraintDesc.theXMax = CSng(value)
 							aSourceRagdollConstraintDesc.theXMax = Single.Parse(value, TheApp.InternalNumberFormat)
 						ElseIf key = "xfriction" Then
-							'aSourceRagdollConstraintDesc.theXFriction = CSng(value)
 							aSourceRagdollConstraintDesc.theXFriction = Single.Parse(value, TheApp.InternalNumberFormat)
 						ElseIf key = "ymin" Then
-							'aSourceRagdollConstraintDesc.theYMin = CSng(value)
 							aSourceRagdollConstraintDesc.theYMin = Single.Parse(value, TheApp.InternalNumberFormat)
 						ElseIf key = "ymax" Then
-							'aSourceRagdollConstraintDesc.theYMax = CSng(value)
 							aSourceRagdollConstraintDesc.theYMax = Single.Parse(value, TheApp.InternalNumberFormat)
 						ElseIf key = "yfriction" Then
-							'aSourceRagdollConstraintDesc.theYFriction = CSng(value)
 							aSourceRagdollConstraintDesc.theYFriction = Single.Parse(value, TheApp.InternalNumberFormat)
 						ElseIf key = "zmin" Then
-							'aSourceRagdollConstraintDesc.theZMin = CSng(value)
 							aSourceRagdollConstraintDesc.theZMin = Single.Parse(value, TheApp.InternalNumberFormat)
 						ElseIf key = "zmax" Then
-							'aSourceRagdollConstraintDesc.theZMax = CSng(value)
 							aSourceRagdollConstraintDesc.theZMax = Single.Parse(value, TheApp.InternalNumberFormat)
 						ElseIf key = "zfriction" Then
-							'aSourceRagdollConstraintDesc.theZFriction = CSng(value)
 							aSourceRagdollConstraintDesc.theZFriction = Single.Parse(value, TheApp.InternalNumberFormat)
 						End If
 					End If
@@ -721,30 +712,6 @@ Public Class SourcePhyFile
 
 #Region "Private Methods"
 
-	'void calcNormal(float v[3][3], float out[3])
-	'    float v1[3],v2[3];						// Vector 1 (x,y,z) & Vector 2 (x,y,z)
-	'    static const int x = 0;						// Define X Coord
-	'    static const int y = 1;						// Define Y Coord
-	'    static const int z = 2;						// Define Z Coord
-
-	'    // Finds The Vector Between 2 Points By Subtracting
-	'    // The x,y,z Coordinates From One Point To Another.
-
-	'    // Calculate The Vector From Point 1 To Point 0
-	'    v1[x] = v[0][x] - v[1][x];					// Vector 1.x=Vertex[0].x-Vertex[1].x
-	'    v1[y] = v[0][y] - v[1][y];					// Vector 1.y=Vertex[0].y-Vertex[1].y
-	'    v1[z] = v[0][z] - v[1][z];					// Vector 1.z=Vertex[0].y-Vertex[1].z
-	'    // Calculate The Vector From Point 2 To Point 1
-	'    v2[x] = v[1][x] - v[2][x];					// Vector 2.x=Vertex[0].x-Vertex[1].x
-	'    v2[y] = v[1][y] - v[2][y];					// Vector 2.y=Vertex[0].y-Vertex[1].y
-	'    v2[z] = v[1][z] - v[2][z];					// Vector 2.z=Vertex[0].z-Vertex[1].z
-	'    // Compute The Cross Product To Give Us A Surface Normal
-	'    out[x] = v1[y]*v2[z] - v1[z]*v2[y];				// Cross Product For Y - Z
-	'    out[y] = v1[z]*v2[x] - v1[x]*v2[z];				// Cross Product For X - Z
-	'    out[z] = v1[x]*v2[y] - v1[y]*v2[x];				// Cross Product For X - Y
-
-	'    ReduceToUnit(out);						// Normalize The Vectors
-	'Private Sub CalculateFaceNormal(ByVal collisionData As SourcePhyCollisionData, ByVal aTriangle As SourcePhyFace)
 	Private Sub CalculateFaceNormal(ByVal faceSection As SourcePhyFaceSection, ByVal aTriangle As SourcePhyFace)
 		Dim vertex(3) As SourceVector
 		Dim vector0 As New SourceVector()
@@ -752,30 +719,29 @@ Public Class SourcePhyFile
 		Dim normalVector As New SourceVector()
 
 		For vertexIndex As Integer = 0 To 2
-			'vertex(vertexIndex) = collisionData.theVertices(aTriangle.vertexIndex(vertexIndex)).vertex
 			vertex(vertexIndex) = faceSection.theVertices(aTriangle.vertexIndex(vertexIndex)).vertex
 		Next
 
 		vector0.x = vertex(0).x - vertex(1).x
 		vector0.y = vertex(0).y - vertex(1).y
-		vector0.z = vertex(0).y - vertex(1).z
+		vector0.z = vertex(0).z - vertex(1).z
 
 		vector1.x = vertex(1).x - vertex(2).x
 		vector1.y = vertex(1).y - vertex(2).y
 		vector1.z = vertex(1).z - vertex(2).z
 
 		normalVector = vector0.CrossProduct(vector1)
-		normalVector = normalVector.Normalize()
+		'NOTE: Do not need to normalize here. It will be normalized once after all of the normals are added together.
+		'normalVector = normalVector.Normalize()
 
 		Dim phyVertex As SourcePhyVertex
 		For vertexIndex As Integer = 0 To 2
-			'TODO: Instead of writing directly to vertex normal, write to list of custom normals, 
-			'      so that later an average of the custom normals can be assigned as the final vertex normal.
-			'collisionData.theVertices(aTriangle.vertexIndex(vertexIndex)).Normal.x = normalVector.x
-			'collisionData.theVertices(aTriangle.vertexIndex(vertexIndex)).Normal.y = normalVector.y
-			'collisionData.theVertices(aTriangle.vertexIndex(vertexIndex)).Normal.z = normalVector.z
+			'NOTE: Instead of storing all of the normals, just store one and keep adding to it. 
+			'      Can then just do the normalize once when normal is first accessed.
 			phyVertex = faceSection.theVertices(aTriangle.vertexIndex(vertexIndex))
-			phyVertex.Normals.Add(normalVector)
+			phyVertex.Normal.x += normalVector.x
+			phyVertex.Normal.y += normalVector.y
+			phyVertex.Normal.z += normalVector.z
 		Next
 	End Sub
 
