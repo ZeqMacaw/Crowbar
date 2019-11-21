@@ -223,7 +223,8 @@ Public Class SourceSmdFile32
 							Me.theOutputFileStreamWriter.WriteLine(line)
 
 							For vertexIndex As Integer = 0 To aTriangle.vertexIndex.Length - 1
-								phyVertex = collisionData.theVertices(aTriangle.vertexIndex(vertexIndex))
+								'phyVertex = collisionData.theVertices(aTriangle.vertexIndex(vertexIndex))
+								phyVertex = faceSection.theVertices(aTriangle.vertexIndex(vertexIndex))
 
 								aVectorTransformed = Me.TransformPhyVertex(aBone, phyVertex.vertex, aSourcePhysCollisionModel)
 

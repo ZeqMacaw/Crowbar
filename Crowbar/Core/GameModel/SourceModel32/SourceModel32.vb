@@ -383,7 +383,7 @@ Public Class SourceModel32
 			Me.thePhyFileDataGeneric = New SourcePhyFileData()
 		End If
 
-		Dim phyFile As New SourcePhyFile37(Me.theInputFileReader, Me.thePhyFileDataGeneric)
+		Dim phyFile As New SourcePhyFile(Me.theInputFileReader, Me.thePhyFileDataGeneric)
 
 		phyFile.ReadSourcePhyHeader()
 		If Me.thePhyFileDataGeneric.solidCount > 0 Then
