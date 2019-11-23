@@ -1,5 +1,4 @@
 Imports System.IO
-Imports System.Text
 
 Public Class SourceAniFile45
 	Inherits SourceMdlFile45
@@ -19,12 +18,6 @@ Public Class SourceAniFile45
 
 #End Region
 
-#Region "Delegates"
-
-	Public Delegate Sub ReadAniAnimationDelegate(ByVal aniFileInputFileStreamPosition As Long, ByVal aniFileStreamEndPosition As Long, ByVal anAnimationDesc As SourceMdlAnimationDesc, ByVal sectionFrameCount As Integer, ByVal sectionIndex As Integer)
-
-#End Region
-
 #Region "Methods"
 
 	'FROM: SourceEngine2006_source\public\write.cpp
@@ -33,8 +26,6 @@ Public Class SourceAniFile45
 	'for (i = 0; i < animcount; i++) 
 	'{
 	'	{
-	'		//ZM: This is for animations found in separate MDL files, i.e. $includemodel.
-
 	'		static int iCurAnim = 0;
 
 	'		// align all animation data to cache line boundaries
@@ -107,15 +98,14 @@ Public Class SourceAniFile45
 	'		pBlockData = pBlockEnd;
 	'	}
 	'}
-	Public Sub ReadAniBlocks()
-		'Public Sub ReadAniBlocks(ByVal delegateReadAniAnimation As ReadAniAnimationDelegate)
+	Public Sub ReadAnimationAniBlocks()
 		If Me.theRealMdlFileData.theAnimationDescs IsNot Nothing Then
 			'Dim inputFileStreamPosition As Long
 			Dim fileOffsetStart As Long
 			Dim fileOffsetEnd As Long
 			Dim animInputFileStreamPosition As Long
 			Dim animBlockInputFileStreamPosition As Long
-			Dim animBlockInputFileStreamEndPosition As Long
+			'Dim animBlockInputFileStreamEndPosition As Long
 			Dim anAnimationDesc As SourceMdlAnimationDesc45
 			'Dim aSectionOfAnimation As List(Of SourceMdlAnimation)
 
@@ -135,7 +125,7 @@ Public Class SourceAniFile45
 					Dim sectionCount As Integer
 
 					animBlockInputFileStreamPosition = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.animBlock).dataStart
-					animBlockInputFileStreamEndPosition = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.animBlock).dataEnd
+					'animBlockInputFileStreamEndPosition = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.animBlock).dataEnd
 
 					Try
 						Dim sectionIndex As Integer
@@ -151,14 +141,12 @@ Public Class SourceAniFile45
 								End If
 
 								animBlockInputFileStreamPosition = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.theSections(sectionIndex).animBlock).dataStart
-								animBlockInputFileStreamEndPosition = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.theSections(sectionIndex).animBlock).dataEnd
-								Me.ReadAniAnimation(animBlockInputFileStreamPosition + anAnimationDesc.theSections(sectionIndex).animOffset, animBlockInputFileStreamEndPosition + anAnimationDesc.theSections(sectionIndex).animOffset, anAnimationDesc, sectionFrameCount, sectionIndex)
-								'delegateReadAniAnimation.Invoke(animBlockInputFileStreamPosition + anAnimationDesc.theSections(sectionIndex).animOffset, animBlockInputFileStreamEndPosition + anAnimationDesc.theSections(sectionIndex).animOffset, anAnimationDesc, sectionFrameCount, sectionIndex)
+								'animBlockInputFileStreamEndPosition = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.theSections(sectionIndex).animBlock).dataEnd
+								Me.ReadAniAnimation(animBlockInputFileStreamPosition + anAnimationDesc.theSections(sectionIndex).animOffset, anAnimationDesc, sectionFrameCount, sectionIndex)
 							Next
 						Else
 							sectionIndex = 0
-							Me.ReadAniAnimation(animBlockInputFileStreamPosition + anAnimationDesc.animOffset, animBlockInputFileStreamEndPosition + anAnimationDesc.animOffset, anAnimationDesc, anAnimationDesc.frameCount, sectionIndex)
-							'delegateReadAniAnimation.Invoke(animBlockInputFileStreamPosition + anAnimationDesc.animOffset, animBlockInputFileStreamEndPosition + anAnimationDesc.animOffset, anAnimationDesc, anAnimationDesc.frameCount, sectionIndex)
+							Me.ReadAniAnimation(animBlockInputFileStreamPosition + anAnimationDesc.animOffset, anAnimationDesc, anAnimationDesc.frameCount, sectionIndex)
 						End If
 
 						If anAnimationDesc.ikRuleCount > 0 Then
@@ -181,17 +169,17 @@ Public Class SourceAniFile45
 		End If
 	End Sub
 
-	Public Overridable Sub ReadAniAnimation(ByVal aniFileInputFileStreamPosition As Long, ByVal aniFileStreamEndPosition As Long, ByVal anAnimationDesc As SourceMdlAnimationDesc45, ByVal sectionFrameCount As Integer, ByVal sectionIndex As Integer)
+#End Region
+
+#Region "Private Methods"
+
+	Private Sub ReadAniAnimation(ByVal aniFileInputFileStreamPosition As Long, ByVal anAnimationDesc As SourceMdlAnimationDesc45, ByVal sectionFrameCount As Integer, ByVal sectionIndex As Integer)
 		Me.theInputFileReader.BaseStream.Seek(aniFileInputFileStreamPosition, SeekOrigin.Begin)
 
 		Dim aSectionOfAnimation As List(Of SourceMdlAnimation)
 		aSectionOfAnimation = anAnimationDesc.theSectionsOfAnimations(sectionIndex)
 		Me.ReadMdlAnimation(Me.theInputFileReader.BaseStream.Position, anAnimationDesc, sectionFrameCount, aSectionOfAnimation)
 	End Sub
-
-#End Region
-
-#Region "Private Methods"
 
 #End Region
 

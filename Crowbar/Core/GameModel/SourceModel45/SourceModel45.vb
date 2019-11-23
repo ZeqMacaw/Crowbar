@@ -313,7 +313,7 @@ Public Class SourceModel45
 		aniFile.ReadMdlHeader00("ANI File Header 00")
 		aniFile.ReadMdlHeader01("ANI File Header 01")
 
-		aniFile.ReadAniBlocks()
+		aniFile.ReadAnimationAniBlocks()
 	End Sub
 
 	Protected Overrides Sub ReadMdlFile_Internal()

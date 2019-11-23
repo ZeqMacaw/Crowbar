@@ -1070,6 +1070,7 @@ Public Class SourceMdlFile44
 					aSectionOfAnimation = New List(Of SourceMdlAnimation)()
 					anAnimationDesc.theSectionsOfAnimations.Add(aSectionOfAnimation)
 
+					Dim sectionIndex As Integer
 					If anAnimationDesc.sectionOffset <> 0 AndAlso anAnimationDesc.sectionFrameCount > 0 Then
 						Dim sectionFrameCount As Integer
 						Dim sectionCount As Integer
@@ -1086,14 +1087,14 @@ Public Class SourceMdlFile44
 						sectionCount = CInt(Math.Truncate(anAnimationDesc.frameCount / anAnimationDesc.sectionFrameCount)) + 2
 
 						'NOTE: First sectionOfAnimation was created above.
-						For sectionIndex As Integer = 1 To sectionCount - 1
+						For sectionIndex = 1 To sectionCount - 1
 							aSectionOfAnimation = New List(Of SourceMdlAnimation)()
 							anAnimationDesc.theSectionsOfAnimations.Add(aSectionOfAnimation)
 						Next
 
 						Dim adjustedAnimOffset As Long
 						If anAnimationDesc.animBlock = 0 Then
-							For sectionIndex As Integer = 0 To sectionCount - 1
+							For sectionIndex = 0 To sectionCount - 1
 								If anAnimationDesc.theSections(sectionIndex).animBlock = 0 Then
 									'NOTE: This is weird, but it fits with a few oddball models (such as L4D2 "left4dead2\ghostanim.mdl") while not messing up the normal ones.
 									adjustedAnimOffset = anAnimationDesc.theSections(sectionIndex).animOffset + (anAnimationDesc.animOffset - anAnimationDesc.theSections(0).animOffset)
@@ -1108,12 +1109,13 @@ Public Class SourceMdlFile44
 										sectionFrameCount = anAnimationDesc.frameCount - ((sectionCount - 2) * anAnimationDesc.sectionFrameCount)
 									End If
 
-									Me.ReadMdlAnimation(animInputFileStreamPosition + adjustedAnimOffset, anAnimationDesc, sectionFrameCount, aSectionOfAnimation, (sectionIndex >= sectionCount - 2) Or (anAnimationDesc.frameCount = (sectionIndex + 1) * anAnimationDesc.sectionFrameCount))
+									Me.ReadMdlAnimation(animInputFileStreamPosition + adjustedAnimOffset, anAnimationDesc, sectionFrameCount, sectionIndex, (sectionIndex >= sectionCount - 2) Or (anAnimationDesc.frameCount = (sectionIndex + 1) * anAnimationDesc.sectionFrameCount))
 								End If
 							Next
 						End If
 					ElseIf anAnimationDesc.animBlock = 0 Then
-						Me.ReadMdlAnimation(animInputFileStreamPosition + anAnimationDesc.animOffset, anAnimationDesc, anAnimationDesc.frameCount, anAnimationDesc.theSectionsOfAnimations(0), True)
+						sectionIndex = 0
+						Me.ReadMdlAnimation(animInputFileStreamPosition + anAnimationDesc.animOffset, anAnimationDesc, anAnimationDesc.frameCount, sectionIndex, True)
 					End If
 				End If
 
@@ -1187,7 +1189,7 @@ Public Class SourceMdlFile44
 		Return fileOffsetEnd
 	End Function
 
-	Protected Sub ReadMdlAnimation(ByVal animInputFileStreamPosition As Long, ByVal anAnimationDesc As SourceMdlAnimationDesc44, ByVal sectionFrameCount As Integer, ByVal aSectionOfAnimation As List(Of SourceMdlAnimation), ByVal lastSectionIsBeingRead As Boolean)
+	Protected Sub ReadMdlAnimation(ByVal animInputFileStreamPosition As Long, ByVal anAnimationDesc As SourceMdlAnimationDesc44, ByVal sectionFrameCount As Integer, ByVal sectionIndex As Integer, ByVal lastSectionIsBeingRead As Boolean)
 		Dim animationInputFileStreamPosition As Long
 		Dim nextAnimationInputFileStreamPosition As Long
 		Dim animValuePointerInputFileStreamPosition As Long
@@ -1198,6 +1200,9 @@ Public Class SourceMdlFile44
 		Dim anAnimation As SourceMdlAnimation
 		Dim boneCount As Integer
 		Dim boneIndex As Byte
+
+		Dim aSectionOfAnimation As List(Of SourceMdlAnimation)
+		aSectionOfAnimation = anAnimationDesc.theSectionsOfAnimations(sectionIndex)
 
 		Me.theInputFileReader.BaseStream.Seek(animInputFileStreamPosition, SeekOrigin.Begin)
 
