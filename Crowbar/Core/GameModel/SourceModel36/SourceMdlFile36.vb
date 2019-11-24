@@ -41,7 +41,7 @@ Public Class SourceMdlFile36
 
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 		If logDescription <> "" Then
-			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, logDescription + " (Actual version: " + Me.theMdlFileData.version.ToString() + "; expected version: 36)")
+			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, logDescription + " (Actual version: " + Me.theMdlFileData.version.ToString() + "; override version: 36)")
 		End If
 	End Sub
 

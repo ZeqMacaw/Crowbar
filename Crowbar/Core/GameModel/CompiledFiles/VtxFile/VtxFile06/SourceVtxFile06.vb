@@ -45,7 +45,7 @@ Public Class SourceVtxFile06
 		Me.theVtxFileData.bodyPartOffset = Me.theInputFileReader.ReadInt32()
 
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-		Me.theVtxFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "VTX File Header (Actual version: " + Me.theVtxFileData.version.ToString() + "; expected version: 6)")
+		Me.theVtxFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "VTX File Header (Actual version: " + Me.theVtxFileData.version.ToString() + "; override version: 6)")
 	End Sub
 
 	Public Sub ReadSourceVtxBodyParts()
