@@ -1146,9 +1146,8 @@ Public Class SourceMdlFile49
 				'	'End If
 				'End If
 				Try
-					Dim animInputFileStreamPosition As Long = anAnimationDesc.theOffsetStart
-
 					If anAnimationDesc.animBlock = 0 Then
+						Dim animInputFileStreamPosition As Long = anAnimationDesc.theOffsetStart
 						Dim sectionIndex As Integer
 						If anAnimationDesc.theSections IsNot Nothing AndAlso anAnimationDesc.theSections.Count > 0 Then
 							Dim sectionCount As Integer = anAnimationDesc.theSections.Count
@@ -1181,8 +1180,6 @@ Public Class SourceMdlFile49
 						Me.ReadMdlIkRules(animInputFileStreamPosition, anAnimationDesc)
 						Me.ReadLocalHierarchies(animInputFileStreamPosition, anAnimationDesc)
 					End If
-
-					'Me.ReadMdlMovements(animInputFileStreamPosition, anAnimationDesc)
 				Catch ex As Exception
 					Dim debug As Integer = 4242
 				End Try
