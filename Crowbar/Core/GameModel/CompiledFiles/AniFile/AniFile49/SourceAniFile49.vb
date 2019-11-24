@@ -34,9 +34,11 @@ Public Class SourceAniFile49
 					If anAnimationDesc.theSections IsNot Nothing AndAlso anAnimationDesc.theSections.Count > 0 Then
 						Dim sectionCount As Integer = anAnimationDesc.theSections.Count
 						Dim sectionFrameCount As Integer
+						Dim section As SourceMdlAnimationSection
 
 						For sectionIndex = 0 To sectionCount - 1
-							If anAnimationDesc.theSections(sectionIndex).animBlock > 0 Then
+							section = anAnimationDesc.theSections(sectionIndex)
+							If section.animBlock > 0 Then
 								If sectionIndex < sectionCount - 2 Then
 									sectionFrameCount = anAnimationDesc.sectionFrameCount
 								Else
@@ -45,9 +47,9 @@ Public Class SourceAniFile49
 									sectionFrameCount = anAnimationDesc.frameCount - ((sectionCount - 2) * anAnimationDesc.sectionFrameCount)
 								End If
 
-								animBlockInputFileStreamPosition = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.theSections(sectionIndex).animBlock).dataStart
+								animBlockInputFileStreamPosition = Me.theRealMdlFileData.theAnimBlocks(section.animBlock).dataStart
 								'animBlockInputFileStreamEndPosition = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.theSections(sectionIndex).animBlock).dataEnd
-								Me.ReadAnimationFrames(animBlockInputFileStreamPosition + anAnimationDesc.theSections(sectionIndex).animOffset, anAnimationDesc, sectionFrameCount, sectionIndex, (sectionIndex >= sectionCount - 2) Or (anAnimationDesc.frameCount = (sectionIndex + 1) * anAnimationDesc.sectionFrameCount))
+								Me.ReadAnimationFrames(animBlockInputFileStreamPosition + section.animOffset, anAnimationDesc, sectionFrameCount, sectionIndex, (sectionIndex >= sectionCount - 2) Or (anAnimationDesc.frameCount = (sectionIndex + 1) * anAnimationDesc.sectionFrameCount))
 							End If
 						Next
 					ElseIf anAnimationDesc.animBlock > 0 Then

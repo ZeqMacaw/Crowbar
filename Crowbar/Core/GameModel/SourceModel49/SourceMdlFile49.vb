@@ -1087,96 +1087,40 @@ Public Class SourceMdlFile49
 	Public Sub ReadAnimationMdlBlocks()
 		If Me.theMdlFileData.theAnimationDescs IsNot Nothing Then
 			For Each anAnimationDesc As SourceMdlAnimationDesc49 In Me.theMdlFileData.theAnimationDescs
-
-				'Dim animInputFileStreamPosition As Long = anAnimationDesc.theOffsetStart
-
-				'If ((anAnimationDesc.flags And SourceMdlAnimationDesc.STUDIO_FRAMEANIM) <> 0) Then
-				'	'Dim sectionIndex As Integer
-				'	'If anAnimationDesc.theSections IsNot Nothing AndAlso anAnimationDesc.theSections.Count > 0 Then
-				'	'	Dim sectionCount As Integer = anAnimationDesc.theSections.Count
-				'	'	Dim sectionFrameCount As Integer
-
-				'	'	If anAnimationDesc.animBlock = 0 Then
-				'	'		For sectionIndex = 0 To sectionCount - 1
-				'	'			If anAnimationDesc.theSections(sectionIndex).animBlock = 0 Then
-				'	'				If sectionIndex < sectionCount - 2 Then
-				'	'					sectionFrameCount = anAnimationDesc.sectionFrameCount
-				'	'				Else
-				'	'					'NOTE: Due to the weird calculation of sectionCount in studiomdl, this line is called twice, which means there are two "last" sections.
-				'	'					'      This also likely means that the last section is bogus unused data.
-				'	'					sectionFrameCount = anAnimationDesc.frameCount - ((sectionCount - 2) * anAnimationDesc.sectionFrameCount)
-				'	'				End If
-
-				'	'				Me.ReadAnimationFrameByBone(animInputFileStreamPosition + anAnimationDesc.theSections(sectionIndex).animOffset, anAnimationDesc, sectionFrameCount, sectionIndex, (sectionIndex >= sectionCount - 2) Or (anAnimationDesc.frameCount = (sectionIndex + 1) * anAnimationDesc.sectionFrameCount))
-				'	'			End If
-				'	'		Next
-				'	'	End If
-				'	'ElseIf anAnimationDesc.animBlock = 0 Then
-				'	'	sectionIndex = 0
-				'	'	Me.ReadAnimationFrameByBone(animInputFileStreamPosition + anAnimationDesc.animOffset, anAnimationDesc, anAnimationDesc.frameCount, sectionIndex, True)
-				'	'End If
-				'Else
-				'	'Dim sectionIndex As Integer
-				'	'If anAnimationDesc.theSections IsNot Nothing AndAlso anAnimationDesc.theSections.Count > 0 Then
-				'	'	Dim sectionCount As Integer = anAnimationDesc.theSections.Count
-				'	'	Dim sectionFrameCount As Integer
-
-				'	'	Dim adjustedAnimOffset As Long
-				'	'	If anAnimationDesc.animBlock = 0 Then
-				'	'		For sectionIndex = 0 To sectionCount - 1
-				'	'			If anAnimationDesc.theSections(sectionIndex).animBlock = 0 Then
-				'	'				'NOTE: This is weird, but it fits with a few oddball models (such as L4D2 "left4dead2\ghostanim.mdl") while not messing up the normal ones.
-				'	'				adjustedAnimOffset = anAnimationDesc.theSections(sectionIndex).animOffset + (anAnimationDesc.animOffset - anAnimationDesc.theSections(0).animOffset)
-
-				'	'				If sectionIndex < sectionCount - 2 Then
-				'	'					sectionFrameCount = anAnimationDesc.sectionFrameCount
-				'	'				Else
-				'	'					'NOTE: Due to the weird calculation of sectionCount in studiomdl, this line is called twice, which means there are two "last" sections.
-				'	'					'      This also likely means that the last section is bogus unused data.
-				'	'					sectionFrameCount = anAnimationDesc.frameCount - ((sectionCount - 2) * anAnimationDesc.sectionFrameCount)
-				'	'				End If
-
-				'	'				Me.ReadMdlAnimation(animInputFileStreamPosition + adjustedAnimOffset, anAnimationDesc, sectionFrameCount, sectionIndex, (sectionIndex >= sectionCount - 2) Or (anAnimationDesc.frameCount = (sectionIndex + 1) * anAnimationDesc.sectionFrameCount))
-				'	'			End If
-				'	'		Next
-				'	'	End If
-				'	'ElseIf anAnimationDesc.animBlock = 0 Then
-				'	'	sectionIndex = 0
-				'	'	Me.ReadMdlAnimation(animInputFileStreamPosition + anAnimationDesc.animOffset, anAnimationDesc, anAnimationDesc.frameCount, sectionIndex, True)
-				'	'End If
-				'End If
 				Try
-					If anAnimationDesc.animBlock = 0 Then
-						Dim animInputFileStreamPosition As Long = anAnimationDesc.theOffsetStart
-						Dim sectionIndex As Integer
-						If anAnimationDesc.theSections IsNot Nothing AndAlso anAnimationDesc.theSections.Count > 0 Then
-							Dim sectionCount As Integer = anAnimationDesc.theSections.Count
-							Dim sectionFrameCount As Integer
+					Dim animInputFileStreamPosition As Long = anAnimationDesc.theOffsetStart
+					Dim sectionIndex As Integer
 
-							Dim adjustedAnimOffset As Long
-							If anAnimationDesc.animBlock = 0 Then
-								For sectionIndex = 0 To sectionCount - 1
-									If anAnimationDesc.theSections(sectionIndex).animBlock = 0 Then
-										'NOTE: This is weird, but it fits with a few oddball models (such as L4D2 "left4dead2\ghostanim.mdl") while not messing up the normal ones.
-										adjustedAnimOffset = anAnimationDesc.theSections(sectionIndex).animOffset + (anAnimationDesc.animOffset - anAnimationDesc.theSections(0).animOffset)
+					'NOTE: Need to check section.animBlock no matter what anAnimationDesc.animBlock is.
+					If anAnimationDesc.theSections IsNot Nothing AndAlso anAnimationDesc.theSections.Count > 0 Then
+						Dim sectionCount As Integer = anAnimationDesc.theSections.Count
+						Dim sectionFrameCount As Integer
+						Dim section As SourceMdlAnimationSection
+						Dim adjustedAnimOffset As Long
 
-										If sectionIndex < sectionCount - 2 Then
-											sectionFrameCount = anAnimationDesc.sectionFrameCount
-										Else
-											'NOTE: Due to the weird calculation of sectionCount in studiomdl, this line is called twice, which means there are two "last" sections.
-											'      This also likely means that the last section is bogus unused data.
-											sectionFrameCount = anAnimationDesc.frameCount - ((sectionCount - 2) * anAnimationDesc.sectionFrameCount)
-										End If
+						For sectionIndex = 0 To sectionCount - 1
+							section = anAnimationDesc.theSections(sectionIndex)
+							If section.animBlock = 0 Then
+								'NOTE: This is weird, but it fits with a few oddball models (such as L4D2 "left4dead2\ghostanim.mdl") while not messing up the normal ones.
+								adjustedAnimOffset = section.animOffset + (anAnimationDesc.animOffset - anAnimationDesc.theSections(0).animOffset)
 
-										Me.ReadAnimationFrames(animInputFileStreamPosition + adjustedAnimOffset, anAnimationDesc, sectionFrameCount, sectionIndex, (sectionIndex >= sectionCount - 2) Or (anAnimationDesc.frameCount = (sectionIndex + 1) * anAnimationDesc.sectionFrameCount))
-									End If
-								Next
+								If sectionIndex < sectionCount - 2 Then
+									sectionFrameCount = anAnimationDesc.sectionFrameCount
+								Else
+									'NOTE: Due to the weird calculation of sectionCount in studiomdl, this line is called twice, which means there are two "last" sections.
+									'      This also likely means that the last section is bogus unused data.
+									sectionFrameCount = anAnimationDesc.frameCount - ((sectionCount - 2) * anAnimationDesc.sectionFrameCount)
+								End If
+
+								Me.ReadAnimationFrames(animInputFileStreamPosition + adjustedAnimOffset, anAnimationDesc, sectionFrameCount, sectionIndex, (sectionIndex >= sectionCount - 2) Or (anAnimationDesc.frameCount = (sectionIndex + 1) * anAnimationDesc.sectionFrameCount))
 							End If
-						Else
-							sectionIndex = 0
-							Me.ReadAnimationFrames(animInputFileStreamPosition + anAnimationDesc.animOffset, anAnimationDesc, anAnimationDesc.frameCount, sectionIndex, True)
-						End If
+						Next
+					ElseIf anAnimationDesc.animBlock = 0 Then
+						sectionIndex = 0
+						Me.ReadAnimationFrames(animInputFileStreamPosition + anAnimationDesc.animOffset, anAnimationDesc, anAnimationDesc.frameCount, sectionIndex, True)
+					End If
 
+					If anAnimationDesc.animBlock = 0 Then
 						Me.ReadMdlIkRules(animInputFileStreamPosition, anAnimationDesc)
 						Me.ReadLocalHierarchies(animInputFileStreamPosition, anAnimationDesc)
 					End If
