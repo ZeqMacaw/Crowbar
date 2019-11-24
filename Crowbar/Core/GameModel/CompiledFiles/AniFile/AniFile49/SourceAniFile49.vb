@@ -24,25 +24,20 @@ Public Class SourceAniFile49
 	'Public Sub ReadAniBlocks(ByVal delegateReadAniAnimation As ReadAniAnimationDelegate)
 	Public Sub ReadAnimationAniBlocks()
 		If Me.theRealMdlFileData.theAnimationDescs IsNot Nothing Then
-			Dim animBlockInputFileStreamPosition As Long
-			'Dim animBlockInputFileStreamEndPosition As Long
-			Dim anAnimationDesc As SourceMdlAnimationDesc49
-
-			For anAnimDescIndex As Integer = 0 To Me.theRealMdlFileData.theAnimationDescs.Count - 1
-				anAnimationDesc = Me.theRealMdlFileData.theAnimationDescs(anAnimDescIndex)
-
-				animBlockInputFileStreamPosition = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.animBlock).dataStart
-				'animBlockInputFileStreamEndPosition = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.animBlock).dataEnd
-
+			For Each anAnimationDesc As SourceMdlAnimationDesc49 In Me.theRealMdlFileData.theAnimationDescs
 				Try
-					Dim sectionIndex As Integer
-					If anAnimationDesc.theSections IsNot Nothing AndAlso anAnimationDesc.theSections.Count > 0 Then
-						Dim sectionFrameCount As Integer
-						Dim sectionCount As Integer
+					If anAnimationDesc.animBlock > 0 Then
+						Dim animBlockInputFileStreamPosition As Long = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.animBlock).dataStart
+						'Dim animBlockInputFileStreamEndPosition As Long = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.animBlock).dataEnd
+						Dim sectionIndex As Integer
 
-						sectionCount = anAnimationDesc.theSections.Count
-						For sectionIndex = 0 To sectionCount - 1
-							If anAnimationDesc.theSections(sectionIndex).animBlock > 0 Then
+						If anAnimationDesc.theSections IsNot Nothing AndAlso anAnimationDesc.theSections.Count > 0 Then
+							Dim sectionCount As Integer = anAnimationDesc.theSections.Count
+							Dim sectionFrameCount As Integer
+
+							For sectionIndex = 0 To sectionCount - 1
+								'TODO: Can a section have a different animblock index than anAnimationDesc? It seems like: No.
+								'If anAnimationDesc.theSections(sectionIndex).animBlock > 0 Then
 								If sectionIndex < sectionCount - 2 Then
 									sectionFrameCount = anAnimationDesc.sectionFrameCount
 								Else
@@ -54,14 +49,13 @@ Public Class SourceAniFile49
 								animBlockInputFileStreamPosition = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.theSections(sectionIndex).animBlock).dataStart
 								'animBlockInputFileStreamEndPosition = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.theSections(sectionIndex).animBlock).dataEnd
 								Me.ReadAniAnimation(animBlockInputFileStreamPosition + anAnimationDesc.theSections(sectionIndex).animOffset, anAnimationDesc, sectionFrameCount, sectionIndex, (sectionIndex >= sectionCount - 2) Or (anAnimationDesc.frameCount = (sectionIndex + 1) * anAnimationDesc.sectionFrameCount))
-							End If
-						Next
-					ElseIf anAnimationDesc.animBlock > 0 Then
-						sectionIndex = 0
-						Me.ReadAniAnimation(animBlockInputFileStreamPosition + anAnimationDesc.animOffset, anAnimationDesc, anAnimationDesc.frameCount, sectionIndex, True)
-					End If
+								'End If
+							Next
+						Else
+							sectionIndex = 0
+							Me.ReadAniAnimation(animBlockInputFileStreamPosition + anAnimationDesc.animOffset, anAnimationDesc, anAnimationDesc.frameCount, sectionIndex, True)
+						End If
 
-					If anAnimationDesc.animBlock > 0 Then
 						Me.ReadMdlIkRules(animBlockInputFileStreamPosition + anAnimationDesc.animblockIkRuleOffset, anAnimationDesc)
 						Me.ReadLocalHierarchies(animBlockInputFileStreamPosition, anAnimationDesc)
 					End If
