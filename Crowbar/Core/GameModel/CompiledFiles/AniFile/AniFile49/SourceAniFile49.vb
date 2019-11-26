@@ -48,7 +48,7 @@ Public Class SourceAniFile49
 								End If
 
 								animBlockInputFileStreamPosition = Me.theRealMdlFileData.theAnimBlocks(section.animBlock).dataStart
-								'animBlockInputFileStreamEndPosition = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.theSections(sectionIndex).animBlock).dataEnd
+								'animBlockInputFileStreamEndPosition = Me.theRealMdlFileData.theAnimBlocks(section.animBlock).dataEnd
 								Me.ReadAnimationFrames(animBlockInputFileStreamPosition + section.animOffset, anAnimationDesc, sectionFrameCount, sectionIndex, (sectionIndex >= sectionCount - 2) Or (anAnimationDesc.frameCount = (sectionIndex + 1) * anAnimationDesc.sectionFrameCount))
 							End If
 						Next

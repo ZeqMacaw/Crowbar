@@ -3,6 +3,7 @@ Public Class SourceMdlAnimationDesc48
 
 	Public Sub New()
 		Me.theLinkedSequences = New List(Of SourceMdlSequenceDesc)()
+		Me.theCorrectiveSubtractAnimationOptionIsUsed = False
 	End Sub
 
 	'FROM: SourceEngine2007_source\src_main\public\studio.h
@@ -128,10 +129,8 @@ Public Class SourceMdlAnimationDesc48
 	''	inline char * const pszName( void ) const { return ((char *)this) + sznameindex; }
 	'Public theName As String
 
-	'Public theAnimations As List(Of SourceMdlAnimation)
 	Public theSectionsOfAnimations As List(Of List(Of SourceMdlAnimation))
-	'Public theAniFrameAnims As List(Of SourceAniFrameAnim)
-	Public theAniFrameAnim As SourceAniFrameAnim49
+	Public theSectionsOfFrameAnim As List(Of SourceAniFrameAnim49)
 	Public theIkRules As List(Of SourceMdlIkRule)
 	Public theSections As List(Of SourceMdlAnimationSection)
 	Public theMovements As List(Of SourceMdlMovement)
@@ -140,6 +139,7 @@ Public Class SourceMdlAnimationDesc48
 	Public theAnimIsLinkedToSequence As Boolean
 	Public theLinkedSequences As List(Of SourceMdlSequenceDesc)
 	Public theOffsetStart As Long
+	Public theCorrectiveSubtractAnimationOptionIsUsed As Boolean
 
 
 
@@ -188,5 +188,10 @@ Public Class SourceMdlAnimationDesc48
 	'NOTE: STUDIO_EVENT used internally by game engine and not needed by Crowbar.
 	Public Const STUDIO_EVENT As Integer = &H2000
 	Public Const STUDIO_WORLD As Integer = &H4000
+	'------
+	'VERSION 49 (and maybe v48)
+	Public Const STUDIO_FRAMEANIM As Integer = &H40
+	Public Const STUDIO_NOFORCELOOP As Integer = &H8000
+	Public Const STUDIO_EVENT_CLIENT As Integer = &H10000
 
 End Class
