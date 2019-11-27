@@ -353,7 +353,6 @@
     <Compile Include="Core\GameModel\SourceModel37\SourceVrdFile37.vb" />
     <Compile Include="Core\GameModel\SourceModel37\SourceVtaFile37.vb" />
     <Compile Include="Core\GameModel\SourceModel45\SourceAniFile45.vb" />
-    <Compile Include="Core\GameModel\SourceModel45\SourceAniFileData\SourceAniFileData45.vb" />
     <Compile Include="Core\GameModel\SourceModel45\SourceMdlFile45.vb" />
     <Compile Include="Core\GameModel\SourceModel45\SourceMdlFileData\SourceMdlAnimationDesc45.vb" />
     <Compile Include="Core\GameModel\SourceModel45\SourceMdlFileData\SourceMdlFileData45.vb" />
@@ -363,7 +362,6 @@
     <Compile Include="Core\GameModel\SourceModel45\SourceVrdFile45.vb" />
     <Compile Include="Core\GameModel\SourceModel45\SourceVtaFile45.vb" />
     <Compile Include="Core\GameModel\SourceModel46\SourceAniFile46.vb" />
-    <Compile Include="Core\GameModel\SourceModel46\SourceAniFileData\SourceAniFileData46.vb" />
     <Compile Include="Core\GameModel\SourceModel46\SourceMdlFile46.vb" />
     <Compile Include="Core\GameModel\SourceModel46\SourceMdlFileData\SourceMdlAnimationDesc46.vb" />
     <Compile Include="Core\GameModel\SourceModel46\SourceMdlFileData\SourceMdlFileData46.vb" />
@@ -375,7 +373,6 @@
     <Compile Include="Core\GameModel\SourceModel48\SourceMdlFile48.vb" />
     <Compile Include="Core\GameModel\SourceModel48\SourceModel48.vb" />
     <Compile Include="Core\GameModel\SourceModel52\SourceAniFile52.vb" />
-    <Compile Include="Core\GameModel\SourceModel52\SourceAniFileData\SourceAniFileData52.vb" />
     <Compile Include="Core\GameModel\SourceModel52\SourceAniFileData\SourceAniFrameAnim52.vb" />
     <Compile Include="Core\GameModel\SourceModel52\SourceMdlFile52.vb" />
     <Compile Include="Core\GameModel\SourceModel52\SourceMdlFileData\SourceMdlAnimationDesc52.vb" />
@@ -454,7 +451,6 @@
     <Compile Include="Core\GameModel\SourceModel38\SourceMdlFileData\SourceMdlFileData38.vb" />
     <Compile Include="Core\GameModel\SourceModel38\SourceModel38.vb" />
     <Compile Include="Core\GameModel\CompiledFiles\AniFile\AniFile44\SourceAniFile44.vb" />
-    <Compile Include="Core\GameModel\CompiledFiles\AniFile\AniFile44\SourceAniFileData44.vb" />
     <Compile Include="Core\GameModel\SourceModel44\SourceMdlFile44.vb" />
     <Compile Include="Core\GameModel\SourceModel44\SourceMdlFileData\SourceMdlAnimationDesc44.vb" />
     <Compile Include="Core\GameModel\SourceModel44\SourceMdlFileData\SourceMdlFileData44.vb" />
@@ -464,7 +460,6 @@
     <Compile Include="Core\GameModel\SourceModel44\SourceVrdFile44.vb" />
     <Compile Include="Core\GameModel\SourceModel44\SourceVtaFile44.vb" />
     <Compile Include="Core\GameModel\CompiledFiles\VvdFile\VvdFile04\SourceVvdFile04.vb" />
-    <Compile Include="Core\GameModel\SourceModel48\SourceAniFileData\SourceAniFileData48.vb" />
     <Compile Include="Core\GameModel\SourceModel48\SourceMdlFileData\SourceMdlAnimationDesc48.vb" />
     <Compile Include="Core\GameModel\SourceModel48\SourceMdlFileData\SourceMdlFileData48.vb" />
     <Compile Include="Core\GameModel\SourceCommon\SourceMdlFileData\SourceMdlLocalHierarchy.vb" />
@@ -477,7 +472,6 @@
     <Compile Include="Core\GameModel\SourceModel48\SourceSmdFile48.vb" />
     <Compile Include="Core\GameModel\SourceModel48\SourceVrdFile48.vb" />
     <Compile Include="Core\GameModel\SourceModel48\SourceVtaFile48.vb" />
-    <Compile Include="Core\GameModel\CompiledFiles\AniFile\AniFile49\SourceAniFileData49.vb" />
     <Compile Include="Core\GameModel\SourceModel49\SourceMdlFileData\SourceMdlAnimationDesc49.vb" />
     <Compile Include="Core\GameModel\SourceModel49\SourceMdlFileData\SourceMdlFileData49.vb" />
     <Compile Include="Core\GameModel\CompiledFiles\VtxFile\VtxFile07\SourceVtxFileData07.vb" />

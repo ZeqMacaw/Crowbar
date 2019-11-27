@@ -6,11 +6,12 @@ Public Class SourceQcFile53
 
 #Region "Creation and Destruction"
 
-	Public Sub New(ByVal outputFileStream As StreamWriter, ByVal outputPathFileName As String, ByVal mdlFileData As SourceMdlFileData53, ByVal vtxFileData As SourceVtxFileData07, ByVal phyFileData As SourcePhyFileData, ByVal aniFileData As SourceAniFileData49, ByVal modelName As String)
+	'Public Sub New(ByVal outputFileStream As StreamWriter, ByVal outputPathFileName As String, ByVal mdlFileData As SourceMdlFileData53, ByVal vtxFileData As SourceVtxFileData07, ByVal phyFileData As SourcePhyFileData, ByVal aniFileData As SourceAniFileData49, ByVal modelName As String)
+	Public Sub New(ByVal outputFileStream As StreamWriter, ByVal outputPathFileName As String, ByVal mdlFileData As SourceMdlFileData53, ByVal vtxFileData As SourceVtxFileData07, ByVal phyFileData As SourcePhyFileData, ByVal modelName As String)
 		Me.theOutputFileStreamWriter = outputFileStream
 		Me.theMdlFileData = mdlFileData
 		Me.thePhyFileData = phyFileData
-		Me.theAniFileData = aniFileData
+		'Me.theAniFileData = aniFileData
 		Me.theVtxFileData = vtxFileData
 		Me.theModelName = modelName
 
@@ -4319,7 +4320,7 @@ Public Class SourceQcFile53
 
 	'Private theModel As SourceModel
 	Private theOutputFileStreamWriter As StreamWriter
-	Private theAniFileData As SourceAniFileData49
+	'Private theAniFileData As SourceAniFileData49
 	Private theMdlFileData As SourceMdlFileData53
 	Private thePhyFileData As SourcePhyFileData
 	Private theVtxFileData As SourceVtxFileData07

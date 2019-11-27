@@ -355,7 +355,8 @@ Public Class SourceModel44
 
 	Protected Overrides Sub ReadAniFile_Internal()
 		If Me.theAniFileData Is Nothing Then
-			Me.theAniFileData = New SourceAniFileData44()
+			'Me.theAniFileData = New SourceAniFileData44()
+			Me.theAniFileData = New SourceMdlFileData44()
 			Me.theAniFileDataGeneric = Me.theAniFileData
 		End If
 
@@ -534,7 +535,8 @@ Public Class SourceModel44
 	End Sub
 
 	Protected Overrides Sub WriteQcFile()
-		Dim qcFile As New SourceQcFile44(Me.theOutputFileTextWriter, Me.theQcPathFileName, Me.theMdlFileData, Me.theVtxFileData, Me.thePhyFileDataGeneric, Me.theAniFileData, Me.theName)
+		'Dim qcFile As New SourceQcFile44(Me.theOutputFileTextWriter, Me.theQcPathFileName, Me.theMdlFileData, Me.theVtxFileData, Me.thePhyFileDataGeneric, Me.theAniFileData, Me.theName)
+		Dim qcFile As New SourceQcFile44(Me.theOutputFileTextWriter, Me.theQcPathFileName, Me.theMdlFileData, Me.theVtxFileData, Me.thePhyFileDataGeneric, Me.theName)
 
 		Try
 			qcFile.WriteHeaderComment()
@@ -766,7 +768,8 @@ Public Class SourceModel44
 
 #Region "Data"
 
-	Private theAniFileData As SourceAniFileData44
+	'Private theAniFileData As SourceAniFileData44
+	Private theAniFileData As SourceMdlFileData44
 	Private theMdlFileData As SourceMdlFileData44
 	'Private thePhyFileData As SourcePhyFileData44
 	Private theVtxFileData As SourceVtxFileData07
