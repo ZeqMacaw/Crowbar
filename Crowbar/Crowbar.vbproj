@@ -193,7 +193,6 @@
     <Compile Include="Core\GameModel\SourceGlobal\SourceQuaternion48bitsAssumedW.vb" />
     <Compile Include="Core\GameModel\SourceGlobal\SourceQuaternion48bitsViaBytes.vb" />
     <Compile Include="Core\GameModel\SourceGlobal\SourceQuaternion48bitsSmallest3.vb" />
-    <Compile Include="Core\GameModel\SourceGlobal\SourceVectorSingle.vb" />
     <Compile Include="Core\GameModel\SourceGlobal\SourceVector4D.vb" />
     <Compile Include="Core\GameModel\SourceModel04\SourceMdlFileData\SourceMdlBodyPart04.vb" />
     <Compile Include="Core\GameModel\SourceModel04\SourceMdlFileData\SourceMdlFaceVertexInfo04.vb" />
@@ -231,9 +230,7 @@
     <Compile Include="Core\GameModel\SourceModel06\SourceModule06.vb" />
     <Compile Include="Core\GameModel\SourceModel06\SourceQcFile06.vb" />
     <Compile Include="Core\GameModel\SourceModel06\SourceSmdFile06.vb" />
-    <Compile Include="Core\GameModel\SourceModel10\SourceMdlFileData\SourceBoneTransform10Single.vb" />
     <Compile Include="Core\GameModel\SourceModel10\SourceMdlFileData\SourceBoneTransform10.vb" />
-    <Compile Include="Core\GameModel\SourceModel10\SourceMdlFileData\SourceMdlBone10Single.vb" />
     <Compile Include="Core\GameModel\SourceModel10\SourceMdlFileData\SourceMeshTriangleStripOrFan10.vb" />
     <Compile Include="Core\GameModel\SourceModel10\SourceModule10.vb" />
     <Compile Include="Core\GameModel\SourceModel10\SourceMdlFileData\SourceMdlAnimation10.vb" />
