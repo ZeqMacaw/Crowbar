@@ -287,13 +287,11 @@ Public Class SourceSmdFile45
 		Me.theOutputFileStreamWriter.WriteLine(line)
 
 		Me.theAnimationFrameLines = New SortedList(Of Integer, AnimationFrameLine)()
-		''NOTE: MDL Decompiler uses 0 to frameCount, which is not what I would expect.
-		'For frameIndex As Integer = 0 To anAnimationDesc.frameCount
 		For frameIndex As Integer = 0 To anAnimationDesc.frameCount - 1
 			Me.theAnimationFrameLines.Clear()
-			If (anAnimationDesc.flags And SourceMdlAnimationDesc.STUDIO_ALLZEROS) = 0 Then
-				Me.CalcAnimation(aSequenceDesc, anAnimationDesc, frameIndex)
-			End If
+			'If (anAnimationDesc.flags And SourceMdlAnimationDesc.STUDIO_ALLZEROS) = 0 Then
+			Me.CalcAnimation(aSequenceDesc, anAnimationDesc, frameIndex)
+			'End If
 
 			If TheApp.Settings.DecompileStricterFormatIsChecked Then
 				line = "time "

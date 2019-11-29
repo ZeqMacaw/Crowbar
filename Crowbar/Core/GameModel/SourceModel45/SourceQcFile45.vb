@@ -401,8 +401,9 @@ Public Class SourceQcFile45
 						If anEyeball.theTextureIndex = -1 Then
 							eyeballTextureName = "[unknown_texture]"
 						Else
-							eyeballTextureName = Me.theMdlFileData.theTextures(anEyeball.theTextureIndex).thePathFileName
-							'eyeballTextureName = Path.GetFileName(theSourceEngineModel.theMdlFileHeader.theTextures(anEyeball.theTextureIndex).theName)
+							'eyeballTextureName = Me.theMdlFileData.theTextures(anEyeball.theTextureIndex).thePathFileName
+							''eyeballTextureName = Path.GetFileName(theSourceEngineModel.theMdlFileHeader.theTextures(anEyeball.theTextureIndex).theName)
+							eyeballTextureName = Me.theMdlFileData.theModifiedTextureFileNames(anEyeball.theTextureIndex)
 						End If
 
 						line = vbTab

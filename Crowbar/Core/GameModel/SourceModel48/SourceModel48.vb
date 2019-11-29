@@ -1,7 +1,7 @@
 ﻿Imports System.IO
 
 Public Class SourceModel48
-	Inherits SourceModel46
+	Inherits SourceModel45
 
 #Region "Creation and Destruction"
 
