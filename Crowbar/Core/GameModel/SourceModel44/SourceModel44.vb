@@ -387,6 +387,9 @@ Public Class SourceModel44
 
 		mdlFile.ReadMdlHeader00("MDL File Header 00")
 		mdlFile.ReadMdlHeader01("MDL File Header 01")
+		If Me.theMdlFileData.studioHeader2Offset > 0 Then
+			mdlFile.ReadMdlHeader02("MDL File Header 02")
+		End If
 
 		' Read what WriteBoneInfo() writes.
 		mdlFile.ReadBones()
@@ -445,11 +448,11 @@ Public Class SourceModel44
 		mdlFile.ReadKeyValues()
 
 		'' Read what WriteBoneTransforms() writes.
-		'mdlFile.ReadBoneTransforms()
-		'mdlFile.ReadLinearBoneTable()
+		mdlFile.ReadBoneTransforms()
+		mdlFile.ReadLinearBoneTable()
 
 		''TODO: ReadLocalIkAutoPlayLocks()
-		'mdlFile.ReadFlexControllerUis()
+		mdlFile.ReadFlexControllerUis()
 
 		'mdlFile.ReadFinalBytesAlignment()
 		'mdlFile.ReadUnknownValues(Me.theMdlFileData.theFileSeekLog)
@@ -470,6 +473,9 @@ Public Class SourceModel44
 
 		mdlFile.ReadMdlHeader00("MDL File Header 00")
 		mdlFile.ReadMdlHeader01("MDL File Header 01")
+		If Me.theMdlFileData.studioHeader2Offset > 0 Then
+			mdlFile.ReadMdlHeader02("MDL File Header 02")
+		End If
 	End Sub
 
 	Protected Overrides Sub ReadMdlFileForViewer_Internal()
@@ -482,6 +488,9 @@ Public Class SourceModel44
 
 		mdlFile.ReadMdlHeader00("MDL File Header 00")
 		mdlFile.ReadMdlHeader01("MDL File Header 01")
+		If Me.theMdlFileData.studioHeader2Offset > 0 Then
+			mdlFile.ReadMdlHeader02("MDL File Header 02")
+		End If
 
 		mdlFile.ReadTexturePaths()
 		mdlFile.ReadTextures()
@@ -563,6 +572,7 @@ Public Class SourceModel44
 			qcFile.WriteIllumPositionCommand()
 
 			qcFile.WriteEyePositionCommand()
+			qcFile.WriteMaxEyeDeflectionCommand()
 			qcFile.WriteNoForcedFadeCommand()
 			qcFile.WriteForcePhonemeCrossfadeCommand()
 
@@ -606,29 +616,29 @@ Public Class SourceModel44
 
 		'Dim smdFileName As String
 		Dim smdPathFileName As String
-		Dim aBodyPart As SourceVtxBodyPart07
-		Dim aVtxModel As SourceVtxModel07
+		Dim aVtxBodyPart As SourceVtxBodyPart07
+		Dim aVtxBodyModel As SourceVtxModel07
 		Dim aBodyModel As SourceMdlModel
 		Dim bodyPartVertexIndexStart As Integer
 
 		bodyPartVertexIndexStart = 0
 		If Me.theVtxFileData.theVtxBodyParts IsNot Nothing AndAlso Me.theMdlFileData.theBodyParts IsNot Nothing Then
 			For bodyPartIndex As Integer = 0 To Me.theVtxFileData.theVtxBodyParts.Count - 1
-				aBodyPart = Me.theVtxFileData.theVtxBodyParts(bodyPartIndex)
+				aVtxBodyPart = Me.theVtxFileData.theVtxBodyParts(bodyPartIndex)
 
-				If aBodyPart.theVtxModels IsNot Nothing Then
-					For modelIndex As Integer = 0 To aBodyPart.theVtxModels.Count - 1
-						aVtxModel = aBodyPart.theVtxModels(modelIndex)
+				If aVtxBodyPart.theVtxModels IsNot Nothing Then
+					For modelIndex As Integer = 0 To aVtxBodyPart.theVtxModels.Count - 1
+						aVtxBodyModel = aVtxBodyPart.theVtxModels(modelIndex)
 
-						If aVtxModel.theVtxModelLods IsNot Nothing Then
+						If aVtxBodyModel.theVtxModelLods IsNot Nothing Then
 							aBodyModel = Me.theMdlFileData.theBodyParts(bodyPartIndex).theModels(modelIndex)
-							If aBodyModel.name(0) = ChrW(0) AndAlso aVtxModel.theVtxModelLods(0).theVtxMeshes Is Nothing Then
+							If aBodyModel.name(0) = ChrW(0) AndAlso aVtxBodyModel.theVtxModelLods(0).theVtxMeshes Is Nothing Then
 								Continue For
 							End If
 
 							For lodIndex As Integer = lodStartIndex To lodStopIndex
 								'TODO: Why would this count be different than the file header count?
-								If lodIndex >= aVtxModel.theVtxModelLods.Count Then
+								If lodIndex >= aVtxBodyModel.theVtxModelLods.Count Then
 									Exit For
 								End If
 
@@ -645,7 +655,7 @@ Public Class SourceModel44
 									Continue For
 								End If
 
-								Me.WriteMeshSmdFile(smdPathFileName, lodIndex, aVtxModel, aBodyModel, bodyPartVertexIndexStart)
+								Me.WriteMeshSmdFile(smdPathFileName, lodIndex, aVtxBodyModel, aBodyModel, bodyPartVertexIndexStart)
 
 								Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, smdPathFileName)
 							Next

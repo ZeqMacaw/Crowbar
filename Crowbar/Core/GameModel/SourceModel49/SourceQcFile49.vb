@@ -4423,10 +4423,10 @@ Public Class SourceQcFile49
 				line += " "
 				line += aHitbox.unknown.ToString("0.######", TheApp.InternalNumberFormat)
 			End If
-			If aHitbox.nameOffset <> 0 AndAlso aHitbox.theName <> "" Then
+			If aHitbox.nameOffset <> 0 AndAlso aHitbox.theNameCopy <> "" Then
 				line += " "
 				line += """"
-				line += aHitbox.theName
+				line += aHitbox.theNameCopy
 				line += """"
 			End If
 			Me.theOutputFileStreamWriter.WriteLine(commentTag + line)

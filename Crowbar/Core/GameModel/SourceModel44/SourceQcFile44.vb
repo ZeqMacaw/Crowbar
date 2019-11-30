@@ -401,8 +401,9 @@ Public Class SourceQcFile44
 						If anEyeball.theTextureIndex = -1 Then
 							eyeballTextureName = "[unknown_texture]"
 						Else
-							eyeballTextureName = Me.theMdlFileData.theTextures(anEyeball.theTextureIndex).thePathFileName
-							'eyeballTextureName = Path.GetFileName(theSourceEngineModel.theMdlFileHeader.theTextures(anEyeball.theTextureIndex).theName)
+							'eyeballTextureName = Me.theMdlFileData.theTextures(anEyeball.theTextureIndex).thePathFileName
+							''eyeballTextureName = Path.GetFileName(theSourceEngineModel.theMdlFileHeader.theTextures(anEyeball.theTextureIndex).theName)
+							eyeballTextureName = Me.theMdlFileData.theModifiedTextureFileNames(anEyeball.theTextureIndex)
 						End If
 
 						line = vbTab
@@ -1388,7 +1389,8 @@ Public Class SourceQcFile44
 		Dim line As String = ""
 
 		'$ambientboost
-		If (Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_AMBIENT_BOOST_MDL44) > 0 Then
+		If (Me.theMdlFileData.version = 44 AndAlso ((Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_AMBIENT_BOOST_MDL44) > 0)) _
+		  OrElse (Me.theMdlFileData.version > 44 AndAlso ((Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_AMBIENT_BOOST) > 0)) Then
 			Me.theOutputFileStreamWriter.WriteLine()
 
 			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
@@ -1899,6 +1901,31 @@ Public Class SourceQcFile44
 		line += offsetY.ToString("0.######", TheApp.InternalNumberFormat)
 		line += " "
 		line += offsetZ.ToString("0.######", TheApp.InternalNumberFormat)
+		Me.theOutputFileStreamWriter.WriteLine(line)
+	End Sub
+
+	Public Sub WriteMaxEyeDeflectionCommand()
+		Dim line As String = ""
+		Dim deflection As Double
+
+		'FROM: SourceEngine2007_source\src_main\utils\studiomdl\studiomdl.cpp
+		'	g_flMaxEyeDeflection = cosf( verify_atof( token ) * M_PI / 180.0f );
+		deflection = Math.Acos(Me.theMdlFileData.maxEyeDeflection)
+		deflection = MathModule.RadiansToDegrees(deflection)
+		deflection = Math.Round(deflection, 3)
+
+		line = ""
+		Me.theOutputFileStreamWriter.WriteLine(line)
+
+		' Found in L4D2 file: "survivors\Biker\biker.qc".
+		'// Eyes can look this many degrees up/down/to the sides
+		'$maxeyedeflection 30
+		If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+			line = "$MaxEyeDeflection "
+		Else
+			line = "$maxeyedeflection "
+		End If
+		line += deflection.ToString("0.######", TheApp.InternalNumberFormat)
 		Me.theOutputFileStreamWriter.WriteLine(line)
 	End Sub
 
@@ -2425,7 +2452,7 @@ Public Class SourceQcFile44
 
 		Dim firstAnimDesc As SourceMdlAnimationDesc44
 		firstAnimDesc = Me.theMdlFileData.theAnimationDescs(aSequenceDesc.theAnimDescIndexes(0))
-		'TEST: Only write animation options if sequence has an impliedAnimDesc.
+		' Only write animation options if sequence has an impliedAnimDesc.
 		If impliedAnimDesc IsNot Nothing Then
 			Me.WriteAnimationOptions(aSequenceDesc, firstAnimDesc, impliedAnimDesc)
 		End If
@@ -4142,7 +4169,7 @@ Public Class SourceQcFile44
 			End If
 			line += " "
 			line += """"
-			line += aHitbox.theName
+			line += aHitbox.theNameCopy
 			line += """"
 			Me.theOutputFileStreamWriter.WriteLine(commentTag + line)
 

@@ -811,7 +811,6 @@ Public Class SourceMdlFileData
 	Public flexControllerUiOffset_VERSION48 As Integer
 	'	int					unused3[2];
 	Public unused3(1) As Integer
-	'	// FIXME: Remove when we up the model version. Move all fields of studiohdr2_t into studiohdr_t.
 	'	int					studiohdr2index;
 	Public studioHeader2Offset_VERSION48 As Integer
 	'	int					unused2[1];
@@ -822,7 +821,7 @@ Public Class SourceMdlFileData
 
 
 
-	' sutdiohdr2:
+	' studiohdr2:
 	Public sourceBoneTransformCount As Integer
 	Public sourceBoneTransformOffset As Integer
 	Public illumPositionAttachmentIndex As Integer

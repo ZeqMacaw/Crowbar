@@ -376,14 +376,66 @@ Public Class SourceMdlFileData44
 
 	Public rootLod As Byte
 
-	Public unused(1) As Byte
-	Public zeroframecacheindex As Integer
-	Public unused2(5) As Integer
+	' VERSION 44: 
+	'	byte				unused[2];
+	' Read into v48 and ignore for v44.
+	'Public unused(1) As Byte
+	'------------
+	' VERSION 48:
+	'	byte				numAllowedRootLODs;
+	'	byte				unused[1];
+	Public allowedRootLodCount_VERSION48 As Byte
+	Public unused As Byte
+
+	' VERSION 44 to 47: 
+	'	int					zeroframecacheindex;
+	Public zeroframecacheindex_VERSION44to47 As Integer
+	'------------
+	' VERSION 48:
+	'	int					unused4; // zero out if version < 47
+	' Read into v44to47 and ignore for v48.
+	'Public unused4 As Integer
+
+	' VERSION 44: 
+	' Although source code shows unused2[6], at least one example (HL2 dog.mdl) has the flexControllerUi and header2 fields.
+	'	int					unused2[6];		// remove as appropriate
+	'Public unused2(5) As Integer
+	'------------
+	' VERSION 44 [Vindictus]: 
+	'Public unknown01 As Integer
+	'Public unknown02 As Integer
+	'NOTE: The unknown02 = 1279345491 (ascii for "SCAL") seems to be in every MDL file in Vindictus.
+	Public Const text_SCAL_VERSION44Vindictus As Integer = 1279345491
+	'Public unknown03 As Integer
+	'Public unknown04 As Integer
+	'Public unknown05 As Integer
+	'------------
+	' VERSION 44 to 48:
+	'	int					numflexcontrollerui;
+	Public flexControllerUiCount As Integer
+	'	int					flexcontrolleruiindex;
+	Public flexControllerUiOffset As Integer
+	'	int					unused3[2];
+	Public unused3(1) As Integer
+	'	int					studiohdr2index;
+	Public studioHeader2Offset As Integer
+	'	int					unused2[1];
+	Public unused2 As Integer
+
+	' VERSION 44: 
+	' Unallocated fields.
+	'------------
+	' VERSION 45 to 48:
+	' studiohdr2:
+	Public sourceBoneTransformCount As Integer
+	Public sourceBoneTransformOffset As Integer
+	Public illumPositionAttachmentIndex As Integer
+	Public maxEyeDeflection As Double
+	Public linearBoneOffset As Integer
+	Public nameCopyOffset As Integer
+	Public reserved(57) As Integer
 
 
-
-	'Public theID As String
-	'Public theName As String
 
 	Public theAnimationDescs As List(Of SourceMdlAnimationDesc44)
 	Public theAnimBlocks As List(Of SourceMdlAnimBlock)
@@ -393,13 +445,16 @@ Public Class SourceMdlFileData44
 	Public theBoneControllers As List(Of SourceMdlBoneController)
 	Public theBones As List(Of SourceMdlBone)
 	Public theBoneTableByName As List(Of Integer)
+	Public theBoneTransforms As List(Of SourceMdlBoneTransform)
 	Public theFlexControllers As List(Of SourceMdlFlexController)
+	Public theFlexControllerUis As List(Of SourceMdlFlexControllerUi)
 	Public theFlexDescs As List(Of SourceMdlFlexDesc)
 	Public theFlexRules As List(Of SourceMdlFlexRule)
 	Public theHitboxSets As List(Of SourceMdlHitboxSet)
 	Public theIkChains As List(Of SourceMdlIkChain)
 	Public theIkLocks As List(Of SourceMdlIkLock)
 	Public theKeyValuesText As String
+	Public theLinearBoneTable As SourceMdlLinearBone
 	Public theLocalNodeNames As List(Of String)
 	Public theModelGroups As List(Of SourceMdlModelGroup)
 	Public theMouths As List(Of SourceMdlMouth)
@@ -409,6 +464,7 @@ Public Class SourceMdlFileData44
 	Public theSurfacePropName As String
 	Public theTexturePaths As List(Of String)
 	Public theTextures As List(Of SourceMdlTexture)
+	Public theVindictusTextSCAL As String
 
 	Public theSectionFrameCount As Integer
 	Public theSectionFrameMinFrameCount As Integer

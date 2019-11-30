@@ -137,7 +137,8 @@ Public Class SourceAniFile44
 						Me.ReadAniAnimation(animBlockInputFileStreamPosition + anAnimationDesc.animOffset, anAnimationDesc, anAnimationDesc.frameCount, sectionIndex, True)
 					End If
 
-					If anAnimationDesc.animBlock > 0 Then
+					'NOTE: These seem to always be stored in the MDL file for MDL44.
+					If Me.theMdlFileData.version <> 44 AndAlso anAnimationDesc.animBlock > 0 Then
 						Me.ReadMdlIkRules(animBlockInputFileStreamPosition + anAnimationDesc.animblockIkRuleOffset, anAnimationDesc)
 						Me.ReadLocalHierarchies(animBlockInputFileStreamPosition, anAnimationDesc)
 					End If
