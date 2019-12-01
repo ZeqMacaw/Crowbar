@@ -100,25 +100,20 @@ Public Class SourceAniFile44
 	'}
 	Public Sub ReadAnimationAniBlocks()
 		If Me.theRealMdlFileData.theAnimationDescs IsNot Nothing Then
-			Dim animBlockInputFileStreamPosition As Long
-			'Dim animBlockInputFileStreamEndPosition As Long
-			Dim anAnimationDesc As SourceMdlAnimationDesc44
-
-			For anAnimDescIndex As Integer = 0 To Me.theRealMdlFileData.theAnimationDescs.Count - 1
-				anAnimationDesc = Me.theRealMdlFileData.theAnimationDescs(anAnimDescIndex)
-
-				animBlockInputFileStreamPosition = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.animBlock).dataStart
-				'animBlockInputFileStreamEndPosition = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.animBlock).dataEnd
-
+			For Each anAnimationDesc As SourceMdlAnimationDesc44 In Me.theRealMdlFileData.theAnimationDescs
 				Try
+					Dim animBlockInputFileStreamPosition As Long = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.animBlock).dataStart
+					'Dim animBlockInputFileStreamEndPosition As Long = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.animBlock).dataEnd
 					Dim sectionIndex As Integer
-					If anAnimationDesc.theSections IsNot Nothing AndAlso anAnimationDesc.theSections.Count > 0 Then
-						Dim sectionFrameCount As Integer
-						Dim sectionCount As Integer
 
-						sectionCount = anAnimationDesc.theSections.Count
+					If anAnimationDesc.theSections IsNot Nothing AndAlso anAnimationDesc.theSections.Count > 0 Then
+						Dim sectionCount As Integer = anAnimationDesc.theSections.Count
+						Dim sectionFrameCount As Integer
+						Dim section As SourceMdlAnimationSection
+
 						For sectionIndex = 0 To sectionCount - 1
-							If anAnimationDesc.theSections(sectionIndex).animBlock > 0 Then
+							section = anAnimationDesc.theSections(sectionIndex)
+							If section.animBlock > 0 Then
 								If sectionIndex < sectionCount - 2 Then
 									sectionFrameCount = anAnimationDesc.sectionFrameCount
 								Else
@@ -127,14 +122,14 @@ Public Class SourceAniFile44
 									sectionFrameCount = anAnimationDesc.frameCount - ((sectionCount - 2) * anAnimationDesc.sectionFrameCount)
 								End If
 
-								animBlockInputFileStreamPosition = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.theSections(sectionIndex).animBlock).dataStart
-								'animBlockInputFileStreamEndPosition = Me.theRealMdlFileData.theAnimBlocks(anAnimationDesc.theSections(sectionIndex).animBlock).dataEnd
-								Me.ReadAniAnimation(animBlockInputFileStreamPosition + anAnimationDesc.theSections(sectionIndex).animOffset, anAnimationDesc, sectionFrameCount, sectionIndex, (sectionIndex >= sectionCount - 2) Or (anAnimationDesc.frameCount = (sectionIndex + 1) * anAnimationDesc.sectionFrameCount))
+								animBlockInputFileStreamPosition = Me.theRealMdlFileData.theAnimBlocks(section.animBlock).dataStart
+								'animBlockInputFileStreamEndPosition = Me.theRealMdlFileData.theAnimBlocks(section.animBlock).dataEnd
+								Me.ReadAnimationFrames(animBlockInputFileStreamPosition + section.animOffset, anAnimationDesc, sectionFrameCount, sectionIndex, (sectionIndex >= sectionCount - 2) Or (anAnimationDesc.frameCount = (sectionIndex + 1) * anAnimationDesc.sectionFrameCount))
 							End If
 						Next
 					ElseIf anAnimationDesc.animBlock > 0 Then
 						sectionIndex = 0
-						Me.ReadAniAnimation(animBlockInputFileStreamPosition + anAnimationDesc.animOffset, anAnimationDesc, anAnimationDesc.frameCount, sectionIndex, True)
+						Me.ReadAnimationFrames(animBlockInputFileStreamPosition + anAnimationDesc.animOffset, anAnimationDesc, anAnimationDesc.frameCount, sectionIndex, True)
 					End If
 
 					'NOTE: These seem to always be stored in the MDL file for MDL44.
@@ -152,10 +147,6 @@ Public Class SourceAniFile44
 #End Region
 
 #Region "Private Methods"
-
-	Private Sub ReadAniAnimation(ByVal aniFileInputFileStreamPosition As Long, ByVal anAnimationDesc As SourceMdlAnimationDesc44, ByVal sectionFrameCount As Integer, ByVal sectionIndex As Integer, ByVal lastSectionIsBeingRead As Boolean)
-		Me.ReadMdlAnimation(aniFileInputFileStreamPosition, anAnimationDesc, sectionFrameCount, sectionIndex, lastSectionIsBeingRead)
-	End Sub
 
 #End Region
 

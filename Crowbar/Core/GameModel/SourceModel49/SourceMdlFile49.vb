@@ -45,7 +45,7 @@ Public Class SourceMdlFile49
 
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 		If logDescription <> "" Then
-			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, logDescription + " (Actual version: " + Me.theMdlFileData.version.ToString() + "; override version: 49)")
+			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, logDescription + " (MDL version: " + Me.theMdlFileData.version.ToString() + ")")
 		End If
 	End Sub
 
@@ -929,14 +929,14 @@ Public Class SourceMdlFile49
 					Me.theInputFileReader.BaseStream.Seek(hitboxInputFileStreamPosition + aHitbox.nameOffset, SeekOrigin.Begin)
 					fileOffsetStart2 = Me.theInputFileReader.BaseStream.Position
 
-					aHitbox.theNameCopy = FileManager.ReadNullTerminatedString(Me.theInputFileReader)
+					aHitbox.theName = FileManager.ReadNullTerminatedString(Me.theInputFileReader)
 
 					fileOffsetEnd2 = Me.theInputFileReader.BaseStream.Position - 1
 					If Not Me.theMdlFileData.theFileSeekLog.ContainsKey(fileOffsetStart2) Then
-						Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart2, fileOffsetEnd2, "aHitbox.theName = " + aHitbox.theNameCopy)
+						Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart2, fileOffsetEnd2, "aHitbox.theName = " + aHitbox.theName)
 					End If
 				Else
-					aHitbox.theNameCopy = ""
+					aHitbox.theName = ""
 				End If
 
 				Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)

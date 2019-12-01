@@ -568,6 +568,7 @@ Public Class SourceSmdFile48
 
 #Region "Private Methods"
 
+	'NOTE: Testing for this is in MDL v49 code.
 	Private Sub AdjustPositionAndRotation(ByVal boneIndex As Integer, ByVal iPosition As SourceVector, ByVal iRotation As SourceVector, ByVal thisIsForFirstSequence As Boolean, ByRef oPosition As SourceVector, ByRef oRotation As SourceVector)
 		Dim aBone As SourceMdlBone
 		aBone = Me.theMdlFileData.theBones(boneIndex)
@@ -820,10 +821,12 @@ Public Class SourceSmdFile48
 
 			line += " "
 			If (Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_STATIC_PROP) > 0 Then
+				'NOTE: This does not work for L4D2 w_models\weapons\w_minigun.mdl.
 				line += aVertex.positionY.ToString("0.000000", TheApp.InternalNumberFormat)
 				line += " "
 				line += (-aVertex.positionX).ToString("0.000000", TheApp.InternalNumberFormat)
 			Else
+				'NOTE: This works for L4D2 w_models\weapons\w_minigun.mdl.
 				line += aVertex.positionX.ToString("0.000000", TheApp.InternalNumberFormat)
 				line += " "
 				line += aVertex.positionY.ToString("0.000000", TheApp.InternalNumberFormat)
@@ -1012,33 +1015,48 @@ Public Class SourceSmdFile48
 		'	aVector.z = 1 / 0.0254 * -vertex.y
 		'	aVectorTransformed = MathModule.VectorITransform(aVector, aBone.poseToBoneColumn0, aBone.poseToBoneColumn1, aBone.poseToBoneColumn2, aBone.poseToBoneColumn3)
 		'End If
-		'TEST: Untested. Copied from SourceSmdFile49.
-		If Me.thePhyFileData.theSourcePhyIsCollisionModel Then
-			If (Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_STATIC_PROP) > 0 Then
-				aVector.x = 1 / 0.0254 * vertex.z
-				aVector.y = 1 / 0.0254 * -vertex.x
-				aVector.z = 1 / 0.0254 * -vertex.y
-				aVectorTransformed = MathModule.VectorTransform(aVector, Me.worldToPoseColumn0, Me.worldToPoseColumn1, Me.worldToPoseColumn2, Me.worldToPoseColumn3)
-				aVector.x = aVectorTransformed.x
-				aVector.y = aVectorTransformed.z
-				aVector.z = -aVectorTransformed.y
-				aVectorTransformed = MathModule.VectorITransform(aVector, aBone.poseToBoneColumn0, aBone.poseToBoneColumn1, aBone.poseToBoneColumn2, aBone.poseToBoneColumn3)
+		'TODO: [TransformPhyVertex] Merge the various code blocks (separated by MDL version) into one code block.
+		If Me.theMdlFileData.version >= 44 AndAlso Me.theMdlFileData.version <= 47 Then
+			' This works for various weapons and vehicles in HL2.
+			If Me.thePhyFileData.theSourcePhyIsCollisionModel Then
+				aVectorTransformed.x = 1 / 0.0254 * vertex.z
+				aVectorTransformed.y = 1 / 0.0254 * -vertex.x
+				aVectorTransformed.z = 1 / 0.0254 * -vertex.y
 			Else
 				aVector.x = 1 / 0.0254 * vertex.x
-				aVector.y = 1 / 0.0254 * -vertex.y
-				aVector.z = 1 / 0.0254 * -vertex.z
-
-				aVectorTransformed = MathModule.VectorTransform(aVector, Me.worldToPoseColumn0, Me.worldToPoseColumn1, Me.worldToPoseColumn2, Me.worldToPoseColumn3)
-				aVector.x = aVectorTransformed.x
-				aVector.y = aVectorTransformed.y
-				aVector.z = aVectorTransformed.z
+				aVector.y = 1 / 0.0254 * vertex.z
+				aVector.z = 1 / 0.0254 * -vertex.y
 				aVectorTransformed = MathModule.VectorITransform(aVector, aBone.poseToBoneColumn0, aBone.poseToBoneColumn1, aBone.poseToBoneColumn2, aBone.poseToBoneColumn3)
 			End If
 		Else
-			aVector.x = 1 / 0.0254 * vertex.x
-			aVector.y = 1 / 0.0254 * vertex.z
-			aVector.z = 1 / 0.0254 * -vertex.y
-			aVectorTransformed = MathModule.VectorITransform(aVector, aBone.poseToBoneColumn0, aBone.poseToBoneColumn1, aBone.poseToBoneColumn2, aBone.poseToBoneColumn3)
+			'TEST: Untested. Copied from SourceSmdFile49.
+			If Me.thePhyFileData.theSourcePhyIsCollisionModel Then
+				If (Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_STATIC_PROP) > 0 Then
+					aVector.x = 1 / 0.0254 * vertex.z
+					aVector.y = 1 / 0.0254 * -vertex.x
+					aVector.z = 1 / 0.0254 * -vertex.y
+					aVectorTransformed = MathModule.VectorTransform(aVector, Me.worldToPoseColumn0, Me.worldToPoseColumn1, Me.worldToPoseColumn2, Me.worldToPoseColumn3)
+					aVector.x = aVectorTransformed.x
+					aVector.y = aVectorTransformed.z
+					aVector.z = -aVectorTransformed.y
+					aVectorTransformed = MathModule.VectorITransform(aVector, aBone.poseToBoneColumn0, aBone.poseToBoneColumn1, aBone.poseToBoneColumn2, aBone.poseToBoneColumn3)
+				Else
+					aVector.x = 1 / 0.0254 * vertex.x
+					aVector.y = 1 / 0.0254 * -vertex.y
+					aVector.z = 1 / 0.0254 * -vertex.z
+
+					aVectorTransformed = MathModule.VectorTransform(aVector, Me.worldToPoseColumn0, Me.worldToPoseColumn1, Me.worldToPoseColumn2, Me.worldToPoseColumn3)
+					aVector.x = aVectorTransformed.x
+					aVector.y = aVectorTransformed.y
+					aVector.z = aVectorTransformed.z
+					aVectorTransformed = MathModule.VectorITransform(aVector, aBone.poseToBoneColumn0, aBone.poseToBoneColumn1, aBone.poseToBoneColumn2, aBone.poseToBoneColumn3)
+				End If
+			Else
+				aVector.x = 1 / 0.0254 * vertex.x
+				aVector.y = 1 / 0.0254 * vertex.z
+				aVector.z = 1 / 0.0254 * -vertex.y
+				aVectorTransformed = MathModule.VectorITransform(aVector, aBone.poseToBoneColumn0, aBone.poseToBoneColumn1, aBone.poseToBoneColumn2, aBone.poseToBoneColumn3)
+			End If
 		End If
 
 		Return aVectorTransformed

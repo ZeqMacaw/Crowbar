@@ -1,7 +1,7 @@
 ﻿Imports System.IO
 
 Public Class SourceModel48
-	Inherits SourceModel44
+	Inherits SourceModel38
 
 #Region "Creation and Destruction"
 
@@ -12,6 +12,12 @@ Public Class SourceModel48
 #End Region
 
 #Region "Properties"
+
+	Public Overrides ReadOnly Property PhyFileIsUsed As Boolean
+		Get
+			Return Not String.IsNullOrEmpty(Me.thePhyPathFileName) AndAlso File.Exists(Me.thePhyPathFileName)
+		End Get
+	End Property
 
 	Public Overrides ReadOnly Property VtxFileIsUsed As Boolean
 		Get
@@ -182,6 +188,26 @@ Public Class SourceModel48
 		Return status
 	End Function
 
+	Public Overrides Function ReadAniFile() As AppEnums.StatusMessage
+		Dim status As AppEnums.StatusMessage = StatusMessage.Success
+
+		'If String.IsNullOrEmpty(Me.theAniPathFileName) Then
+		'	status = Me.CheckForRequiredFiles()
+		'End If
+
+		If Not String.IsNullOrEmpty(Me.theAniPathFileName) Then
+			If status = StatusMessage.Success Then
+				Try
+					Me.ReadFile(Me.theAniPathFileName, AddressOf Me.ReadAniFile_Internal)
+				Catch ex As Exception
+					status = StatusMessage.Error
+				End Try
+			End If
+		End If
+
+		Return status
+	End Function
+
 	Public Overrides Function WriteReferenceMeshFiles(ByVal modelOutputPath As String) As AppEnums.StatusMessage
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
 
@@ -241,13 +267,25 @@ Public Class SourceModel48
 		Return status
 	End Function
 
-	'Public Overrides Function WriteVrdFile(ByVal vrdPathFileName As String) As AppEnums.StatusMessage
-	'	Dim status As AppEnums.StatusMessage = StatusMessage.Success
+	Public Overrides Function WriteVrdFile(ByVal vrdPathFileName As String) As AppEnums.StatusMessage
+		Dim status As AppEnums.StatusMessage = StatusMessage.Success
 
-	'	Me.WriteTextFile(vrdPathFileName, AddressOf Me.WriteVrdFile)
+		Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, vrdPathFileName)
+		Me.WriteTextFile(vrdPathFileName, AddressOf Me.WriteVrdFile)
+		Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, vrdPathFileName)
 
-	'	Return status
-	'End Function
+		Return status
+	End Function
+
+	Public Overrides Function WriteDeclareSequenceQciFile(ByVal declareSequenceQciPathFileName As String) As AppEnums.StatusMessage
+		Dim status As AppEnums.StatusMessage = StatusMessage.Success
+
+		Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, declareSequenceQciPathFileName)
+		Me.WriteTextFile(declareSequenceQciPathFileName, AddressOf Me.WriteDeclareSequenceQciFile)
+		Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, declareSequenceQciPathFileName)
+
+		Return status
+	End Function
 
 	Public Overrides Function WriteAccessedBytesDebugFiles(ByVal debugPath As String) As AppEnums.StatusMessage
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
@@ -523,7 +561,7 @@ Public Class SourceModel48
 
 			qcFile.WriteUpAxisCommand()
 			qcFile.WriteStaticPropCommand()
-			qcFile.WriteConstDirectionalLightCommand()
+			qcFile.WriteConstantDirectionalLightCommand()
 
 			'If Me.theMdlFileData.theModelCommandIsUsed Then
 			'	qcFile.WriteModelCommand()
@@ -569,7 +607,13 @@ Public Class SourceModel48
 
 			qcFile.WriteGroup("collision", AddressOf qcFile.WriteGroupCollision, False, False)
 
-			qcFile.WriteKeyValues(Me.theMdlFileData.theKeyValuesText, "$KeyValues")
+			Dim command As String
+			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+				command = "$KeyValues"
+			Else
+				command = "$keyvalues"
+			End If
+			qcFile.WriteKeyValues(Me.theMdlFileData.theKeyValuesText, command)
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		Finally
@@ -581,29 +625,29 @@ Public Class SourceModel48
 
 		Dim smdFileName As String
 		Dim smdPathFileName As String
-		Dim aBodyPart As SourceVtxBodyPart07
-		Dim aVtxModel As SourceVtxModel07
+		Dim aVtxBodyPart As SourceVtxBodyPart07
+		Dim aVtxBodyModel As SourceVtxModel07
 		Dim aBodyModel As SourceMdlModel
 		Dim bodyPartVertexIndexStart As Integer
 
 		bodyPartVertexIndexStart = 0
 		If Me.theVtxFileData.theVtxBodyParts IsNot Nothing AndAlso Me.theMdlFileData.theBodyParts IsNot Nothing Then
 			For bodyPartIndex As Integer = 0 To Me.theVtxFileData.theVtxBodyParts.Count - 1
-				aBodyPart = Me.theVtxFileData.theVtxBodyParts(bodyPartIndex)
+				aVtxBodyPart = Me.theVtxFileData.theVtxBodyParts(bodyPartIndex)
 
-				If aBodyPart.theVtxModels IsNot Nothing Then
-					For modelIndex As Integer = 0 To aBodyPart.theVtxModels.Count - 1
-						aVtxModel = aBodyPart.theVtxModels(modelIndex)
+				If aVtxBodyPart.theVtxModels IsNot Nothing Then
+					For modelIndex As Integer = 0 To aVtxBodyPart.theVtxModels.Count - 1
+						aVtxBodyModel = aVtxBodyPart.theVtxModels(modelIndex)
 
-						If aVtxModel.theVtxModelLods IsNot Nothing Then
+						If aVtxBodyModel.theVtxModelLods IsNot Nothing Then
 							aBodyModel = Me.theMdlFileData.theBodyParts(bodyPartIndex).theModels(modelIndex)
-							If aBodyModel.name(0) = ChrW(0) AndAlso aVtxModel.theVtxModelLods(0).theVtxMeshes Is Nothing Then
+							If aBodyModel.name(0) = ChrW(0) AndAlso aVtxBodyModel.theVtxModelLods(0).theVtxMeshes Is Nothing Then
 								Continue For
 							End If
 
 							For lodIndex As Integer = lodStartIndex To lodStopIndex
 								'TODO: Why would this count be different than the file header count?
-								If lodIndex >= aVtxModel.theVtxModelLods.Count Then
+								If lodIndex >= aVtxBodyModel.theVtxModelLods.Count Then
 									Exit For
 								End If
 
@@ -620,7 +664,7 @@ Public Class SourceModel48
 									Continue For
 								End If
 
-								Me.WriteMeshSmdFile(smdPathFileName, lodIndex, aVtxModel, aBodyModel, bodyPartVertexIndexStart)
+								Me.WriteMeshSmdFile(smdPathFileName, lodIndex, aVtxBodyModel, aBodyModel, bodyPartVertexIndexStart)
 
 								Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, smdPathFileName)
 							Next

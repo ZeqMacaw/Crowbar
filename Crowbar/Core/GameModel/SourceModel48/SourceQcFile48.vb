@@ -236,7 +236,7 @@ Public Class SourceQcFile48
 		End If
 	End Sub
 
-	Public Sub WriteConstDirectionalLightCommand()
+	Public Sub WriteConstantDirectionalLightCommand()
 		Dim line As String = ""
 
 		'$constantdirectionallight
@@ -301,7 +301,7 @@ Public Class SourceQcFile48
 			aBodyModel = aBodyPart.theModels(0)
 			'referenceSmdFileName = Me.GetModelPathFileName(Me.theSourceEngineModel.theMdlFileHeader.theBodyParts(0).theModels(0))
 			'referenceSmdFileName = theSourceEngineModel.GetLodSmdFileName(0)
-			aBodyModel.theSmdFileNames(0) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(0), Me.theMdlFileData.theBodyPartIndexThatShouldUseModelCommand, 0, 0, Me.theModelName, aBodyPart.theModels(0).name)
+			aBodyModel.theSmdFileNames(0) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(0), Me.theMdlFileData.theBodyPartIndexThatShouldUseModelCommand, 0, 0, Me.theModelName, aBodyModel.name)
 
 			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
 				line = "$Model "
@@ -1476,7 +1476,8 @@ Public Class SourceQcFile48
 		Dim line As String = ""
 
 		'$ambientboost
-		If (Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_AMBIENT_BOOST) > 0 Then
+		If (Me.theMdlFileData.version = 44 AndAlso ((Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_AMBIENT_BOOST_MDL44) > 0)) _
+		  OrElse (Me.theMdlFileData.version > 44 AndAlso ((Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_AMBIENT_BOOST) > 0)) Then
 			Me.theOutputFileStreamWriter.WriteLine()
 
 			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
@@ -1998,9 +1999,9 @@ Public Class SourceQcFile48
 		Dim offsetY As Double
 		Dim offsetZ As Double
 
-		offsetX = Math.Round(Me.theMdlFileData.eyePositionY, 3)
-		offsetY = -Math.Round(Me.theMdlFileData.eyePositionX, 3)
-		offsetZ = Math.Round(Me.theMdlFileData.eyePositionZ, 3)
+		offsetX = Math.Round(Me.theMdlFileData.eyePosition.y, 3)
+		offsetY = -Math.Round(Me.theMdlFileData.eyePosition.x, 3)
+		offsetZ = Math.Round(Me.theMdlFileData.eyePosition.z, 3)
 
 		If offsetX = 0 AndAlso offsetY = 0 AndAlso offsetZ = 0 Then
 			Exit Sub
@@ -2471,7 +2472,9 @@ Public Class SourceQcFile48
 
 		If aSequenceDesc.theActivityName <> "" Then
 			If aSequenceDesc.activityWeight < 1 Then
+				line = vbTab
 				line += "// The following line is commented-out because compiling with current compilers shows this error: Activity ACT_IDLE has a zero weight (weights must be integers > 0)"
+				Me.theOutputFileStreamWriter.WriteLine(line)
 			End If
 
 			line = vbTab
@@ -2619,7 +2622,7 @@ Public Class SourceQcFile48
 
 		Dim firstAnimDesc As SourceMdlAnimationDesc48
 		firstAnimDesc = Me.theMdlFileData.theAnimationDescs(aSequenceDesc.theAnimDescIndexes(0))
-		'Me.WriteAnimationOptions(aSequenceDesc, firstAnimDesc, impliedAnimDesc)
+		' Only write animation options if sequence has an impliedAnimDesc.
 		If impliedAnimDesc IsNot Nothing Then
 			Me.WriteAnimationOptions(aSequenceDesc, firstAnimDesc, impliedAnimDesc)
 		End If
@@ -2949,7 +2952,6 @@ Public Class SourceQcFile48
 		'	Me.theOutputFileStreamWriter.WriteLine(line)
 		'End If
 
-		'TEST: [2017-12-24]
 		If anAnimationDesc.theMovements IsNot Nothing AndAlso anAnimationDesc.theMovements.Count > 0 Then
 			For Each aMovement As SourceMdlMovement In anAnimationDesc.theMovements
 				line = vbTab
@@ -3764,16 +3766,12 @@ Public Class SourceQcFile48
 				line += " "
 				line += aBone.position.z.ToString("0.######", TheApp.InternalNumberFormat)
 
-				If Me.theMdlFileData.version = 2531 Then
-					line += " 0.000000 0.000000 0.000000"
-				Else
-					line += " "
-					line += MathModule.RadiansToDegrees(aBone.rotation.y).ToString("0.######", TheApp.InternalNumberFormat)
-					line += " "
-					line += MathModule.RadiansToDegrees(aBone.rotation.z).ToString("0.######", TheApp.InternalNumberFormat)
-					line += " "
-					line += MathModule.RadiansToDegrees(aBone.rotation.x).ToString("0.######", TheApp.InternalNumberFormat)
-				End If
+				line += " "
+				line += MathModule.RadiansToDegrees(aBone.rotation.y).ToString("0.######", TheApp.InternalNumberFormat)
+				line += " "
+				line += MathModule.RadiansToDegrees(aBone.rotation.z).ToString("0.######", TheApp.InternalNumberFormat)
+				line += " "
+				line += MathModule.RadiansToDegrees(aBone.rotation.x).ToString("0.######", TheApp.InternalNumberFormat)
 
 				'TODO: These fixups are all zeroes for now.
 				'      They might be found in the srcbonetransform list.
@@ -3847,6 +3845,46 @@ Public Class SourceQcFile48
 			line += SourceFileNamesModule.GetVrdFileName(Me.theModelName)
 			line += """"
 			Me.theOutputFileStreamWriter.WriteLine(line)
+		End If
+	End Sub
+
+	Private Sub WriteLimitRotationCommand()
+		Dim line As String = ""
+
+		'$limitrotation "boneName" "sequenceName1" [["sequenceName2"] ... "sequenceNameX"]
+		If Me.theMdlFileData.theBones IsNot Nothing Then
+			Dim aBone As SourceMdlBone
+			Dim emptyLineIsAlreadyWritten As Boolean
+
+			emptyLineIsAlreadyWritten = False
+			For i As Integer = 0 To Me.theMdlFileData.theBones.Count - 1
+				aBone = Me.theMdlFileData.theBones(i)
+
+				If (aBone.flags And SourceMdlBone.BONE_FIXED_ALIGNMENT) > 0 Then
+					If Not emptyLineIsAlreadyWritten Then
+						Me.theOutputFileStreamWriter.WriteLine()
+						emptyLineIsAlreadyWritten = True
+					End If
+
+					If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+						line += "$LimitRotation "
+					Else
+						line += "$limitrotation "
+					End If
+					line += """"
+					line += aBone.theName
+					line += """"
+
+					'TODO: Finish WriteLimitRotationCommand().
+					'If aBone.qAlignment = aBone.rotation Then
+					'	line += """"
+					'	line += aBone.theName
+					'	line += """"
+					'End If
+
+					Me.theOutputFileStreamWriter.WriteLine(line)
+				End If
+			Next
 		End If
 	End Sub
 
@@ -4162,12 +4200,12 @@ Public Class SourceQcFile48
 
 		'FROM: VDC wiki: 
 		'$cbox <float|minx> <float|miny> <float|minz> <float|maxx> <float|maxy> <float|maxz> 
-		minX = Math.Round(Me.theMdlFileData.viewBoundingBoxMinPositionX, 3)
-		minY = Math.Round(Me.theMdlFileData.viewBoundingBoxMinPositionY, 3)
-		minZ = Math.Round(Me.theMdlFileData.viewBoundingBoxMinPositionZ, 3)
-		maxX = Math.Round(Me.theMdlFileData.viewBoundingBoxMaxPositionX, 3)
-		maxY = Math.Round(Me.theMdlFileData.viewBoundingBoxMaxPositionY, 3)
-		maxZ = Math.Round(Me.theMdlFileData.viewBoundingBoxMaxPositionZ, 3)
+		minX = Math.Round(Me.theMdlFileData.viewBoundingBoxMinPosition.x, 3)
+		minY = Math.Round(Me.theMdlFileData.viewBoundingBoxMinPosition.y, 3)
+		minZ = Math.Round(Me.theMdlFileData.viewBoundingBoxMinPosition.z, 3)
+		maxX = Math.Round(Me.theMdlFileData.viewBoundingBoxMaxPosition.x, 3)
+		maxY = Math.Round(Me.theMdlFileData.viewBoundingBoxMaxPosition.y, 3)
+		maxZ = Math.Round(Me.theMdlFileData.viewBoundingBoxMaxPosition.z, 3)
 		If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
 			line = "$CBox "
 		Else
@@ -4207,12 +4245,12 @@ Public Class SourceQcFile48
 		'$bbox -16.0 -16.0 -13.0 16.0 16.0 75.0
 		'FROM: VDC wiki: 
 		'$bbox (min x) (min y) (min z) (max x) (max y) (max z)
-		minX = Math.Round(Me.theMdlFileData.hullMinPositionX, 3)
-		minY = Math.Round(Me.theMdlFileData.hullMinPositionY, 3)
-		minZ = Math.Round(Me.theMdlFileData.hullMinPositionZ, 3)
-		maxX = Math.Round(Me.theMdlFileData.hullMaxPositionX, 3)
-		maxY = Math.Round(Me.theMdlFileData.hullMaxPositionY, 3)
-		maxZ = Math.Round(Me.theMdlFileData.hullMaxPositionZ, 3)
+		minX = Math.Round(Me.theMdlFileData.hullMinPosition.x, 3)
+		minY = Math.Round(Me.theMdlFileData.hullMinPosition.y, 3)
+		minZ = Math.Round(Me.theMdlFileData.hullMinPosition.z, 3)
+		maxX = Math.Round(Me.theMdlFileData.hullMaxPosition.x, 3)
+		maxY = Math.Round(Me.theMdlFileData.hullMaxPosition.y, 3)
+		maxZ = Math.Round(Me.theMdlFileData.hullMaxPosition.z, 3)
 		line = ""
 		If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
 			line += "$BBox "
@@ -4358,7 +4396,7 @@ Public Class SourceQcFile48
 			End If
 			line += " "
 			line += """"
-			line += aHitbox.theNameCopy
+			line += aHitbox.theName
 			line += """"
 			Me.theOutputFileStreamWriter.WriteLine(commentTag + line)
 
@@ -4542,6 +4580,7 @@ Public Class SourceQcFile48
 	Public Sub WriteKeyValues(ByVal keyValuesText As String, ByVal commandOrOptionText As String)
 		Dim line As String = ""
 		Dim startText As String = "mdlkeyvalue" + vbLf
+		Dim startText2 As String = """mdlkeyvalue"""
 		Dim text As String
 
 		'$keyvalues
@@ -4594,11 +4633,15 @@ Public Class SourceQcFile48
 				line = commandOrOptionText
 				Me.theOutputFileStreamWriter.WriteLine(line)
 
+				keyValuesText = keyValuesText.TrimStart()
 				If keyValuesText.StartsWith(startText) Then
 					text = keyValuesText.Remove(0, startText.Length)
+				ElseIf keyValuesText.StartsWith(startText2) Then
+					text = keyValuesText.Remove(0, startText2.Length)
 				Else
 					text = keyValuesText
 				End If
+				text = text.TrimStart()
 
 				'lengthToRemove = 0
 				'While True
@@ -4710,7 +4753,15 @@ Public Class SourceQcFile48
 				lineQuoteCount = 0
 			ElseIf textChar = """" Then
 				lineQuoteCount += 1
-				If lineQuoteCount = 4 Then
+				If lineQuoteCount = 2 Then
+					If i > startIndex Then
+						line = indentText
+						line += text.Substring(startIndex, i - startIndex + 1).Trim()
+						Me.theOutputFileStreamWriter.Write(line)
+					End If
+					startIndex = i + 1
+					'lineQuoteCount = 0
+				ElseIf lineQuoteCount = 4 Then
 					If i > startIndex Then
 						line = indentText
 						line += text.Substring(startIndex, i - startIndex + 1).Trim()
@@ -4719,9 +4770,6 @@ Public Class SourceQcFile48
 					startIndex = i + 1
 					lineQuoteCount = 0
 				End If
-				'If lineQuoteCount = 2 OrElse lineQuoteCount = 4 Then
-				'	lineWordCount += 1
-				'End If
 			ElseIf textChar = vbLf Then
 				startIndex = i + 1
 				lineQuoteCount = 0

@@ -63,20 +63,24 @@ Public MustInherit Class SourceModel
 				'NOT IMPLEMENTED YET, because can't find any models that use this version number.
 				'model = New SourceModel38(mdlPathFileName, version)
 			ElseIf version = 44 Then
-				model = New SourceModel44(mdlPathFileName, version)
+				'model = New SourceModel44(mdlPathFileName, version)
+				model = New SourceModel48(mdlPathFileName, version)
 			ElseIf version = 45 Then
 				'model = New SourceModel45(mdlPathFileName, version)
-				model = New SourceModel44(mdlPathFileName, version)
+				'model = New SourceModel44(mdlPathFileName, version)
+				model = New SourceModel48(mdlPathFileName, version)
 			ElseIf version = 46 Then
 				'model = New SourceModel46(mdlPathFileName, version)
 				'model = New SourceModel45(mdlPathFileName, version)
-				model = New SourceModel44(mdlPathFileName, version)
+				'model = New SourceModel44(mdlPathFileName, version)
+				model = New SourceModel48(mdlPathFileName, version)
 			ElseIf version = 47 Then
 				'TODO: Finish.
 				'model = New SourceModel46(mdlPathFileName, version)
 				''model = New SourceModel47(mdlPathFileName, version)
 				'model = New SourceModel45(mdlPathFileName, version)
-				model = New SourceModel44(mdlPathFileName, version)
+				'model = New SourceModel44(mdlPathFileName, version)
+				model = New SourceModel48(mdlPathFileName, version)
 			ElseIf version = 48 Then
 				model = New SourceModel48(mdlPathFileName, version)
 			ElseIf version = 49 Then

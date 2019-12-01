@@ -4169,7 +4169,7 @@ Public Class SourceQcFile44
 			End If
 			line += " "
 			line += """"
-			line += aHitbox.theNameCopy
+			line += aHitbox.theName
 			line += """"
 			Me.theOutputFileStreamWriter.WriteLine(commentTag + line)
 

@@ -412,14 +412,14 @@ Public Class SourceMdlFileData44
 	'------------
 	' VERSION 44 to 48:
 	'	int					numflexcontrollerui;
-	Public flexControllerUiCount As Integer
 	'	int					flexcontrolleruiindex;
-	Public flexControllerUiOffset As Integer
 	'	int					unused3[2];
-	Public unused3(1) As Integer
 	'	int					studiohdr2index;
-	Public studioHeader2Offset As Integer
 	'	int					unused2[1];
+	Public flexControllerUiCount As Integer
+	Public flexControllerUiOffset As Integer
+	Public unused3(1) As Integer
+	Public studioHeader2Offset As Integer
 	Public unused2 As Integer
 
 	' VERSION 44: 

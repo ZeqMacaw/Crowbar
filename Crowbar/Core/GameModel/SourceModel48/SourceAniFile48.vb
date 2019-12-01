@@ -26,8 +26,6 @@ Public Class SourceAniFile48
 	'for (i = 0; i < animcount; i++) 
 	'{
 	'	{
-	'		//ZM: This is for animations found in separate MDL files, i.e. $includemodel.
-
 	'		static int iCurAnim = 0;
 
 	'		// align all animation data to cache line boundaries
@@ -134,7 +132,8 @@ Public Class SourceAniFile48
 						Me.ReadAnimationFrames(animBlockInputFileStreamPosition + anAnimationDesc.animOffset, anAnimationDesc, anAnimationDesc.frameCount, sectionIndex, True)
 					End If
 
-					If anAnimationDesc.animBlock > 0 Then
+					'NOTE: These seem to always be stored in the MDL file for MDL44.
+					If Me.theMdlFileData.version <> 44 AndAlso anAnimationDesc.animBlock > 0 Then
 						Me.ReadMdlIkRules(animBlockInputFileStreamPosition + anAnimationDesc.animblockIkRuleOffset, anAnimationDesc)
 						Me.ReadLocalHierarchies(animBlockInputFileStreamPosition, anAnimationDesc)
 					End If

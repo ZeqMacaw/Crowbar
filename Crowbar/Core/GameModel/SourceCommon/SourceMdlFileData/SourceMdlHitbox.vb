@@ -69,6 +69,6 @@ Public Class SourceMdlHitbox
 
 
 
-	Public theNameCopy As String
+	Public theName As String
 
 End Class

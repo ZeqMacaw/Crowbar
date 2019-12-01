@@ -128,9 +128,8 @@ Public Class SourceMdlAnimationDesc44
 	''	inline char * const pszName( void ) const { return ((char *)this) + sznameindex; }
 	'Public theName As String
 
-	'Public theAnimations As List(Of SourceMdlAnimation)
 	Public theSectionsOfAnimations As List(Of List(Of SourceMdlAnimation))
-	'Public theAniFrameAnims As List(Of SourceAniFrameAnim)
+	Public theSectionsOfFrameAnim As List(Of SourceAniFrameAnim49)
 	Public theAniFrameAnim As SourceAniFrameAnim49
 	Public theIkRules As List(Of SourceMdlIkRule)
 	Public theSections As List(Of SourceMdlAnimationSection)
