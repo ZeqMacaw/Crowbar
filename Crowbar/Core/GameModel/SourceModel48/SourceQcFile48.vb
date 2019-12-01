@@ -2727,8 +2727,9 @@ Public Class SourceQcFile48
 		If anAnimationDesc.theIkRules IsNot Nothing Then
 			Dim endFrameIndex As Integer
 			Dim tempInteger As Integer
-			Dim tempCounter As Integer
-			Dim tempCountertrippedMoreThanOnce As Boolean
+			'Dim tempCounter As Integer
+			'Dim tempCountertrippedMoreThanOnce As Boolean
+			Dim valueIsWrappedAround As Boolean
 			endFrameIndex = anAnimationDesc.frameCount - 1
 
 			For Each anIkRule As SourceMdlIkRule In anAnimationDesc.theIkRules
@@ -2767,16 +2768,18 @@ Public Class SourceQcFile48
 
 				'NOTE: Writing all ikrule options because studiomdl will ignore any that are not used by a type.
 
+				valueIsWrappedAround = False
 				tempInteger = CInt(Math.Round(anIkRule.contact * endFrameIndex))
 				'NOTE: Subtract max frame from value if over max frame. 
-				tempCounter = 0
+				'tempCounter = 0
 				While tempInteger > endFrameIndex
 					tempInteger -= endFrameIndex
-					tempCounter += 1
+					'tempCounter += 1
+					valueIsWrappedAround = True
 				End While
-				If tempCounter > 1 Then
-					tempCountertrippedMoreThanOnce = True
-				End If
+				'If tempCounter > 1 Then
+				'	tempCountertrippedMoreThanOnce = True
+				'End If
 				line += " contact "
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 
@@ -2814,53 +2817,57 @@ Public Class SourceQcFile48
 				line += " range "
 				tempInteger = CInt(Math.Round(anIkRule.influenceStart * endFrameIndex))
 				'NOTE: Subtract max frame from value if over max frame. 
-				tempCounter = 0
+				'tempCounter = 0
 				While tempInteger > endFrameIndex
 					tempInteger -= endFrameIndex
-					tempCounter += 1
+					'tempCounter += 1
+					valueIsWrappedAround = True
 				End While
-				If tempCounter > 1 Then
-					tempCountertrippedMoreThanOnce = True
-				End If
+				'If tempCounter > 1 Then
+				'	tempCountertrippedMoreThanOnce = True
+				'End If
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 				line += " "
 				tempInteger = CInt(Math.Round(anIkRule.influencePeak * endFrameIndex))
 				'NOTE: Subtract max frame from value if over max frame. 
 				'      Example model that needs this: "h3_hunter.mdl" (Compiled from source files from someone on Discord.)
-				tempCounter = 0
+				'tempCounter = 0
 				While tempInteger > endFrameIndex
 					tempInteger -= endFrameIndex
-					tempCounter += 1
+					'tempCounter += 1
+					valueIsWrappedAround = True
 				End While
-				If tempCounter > 1 Then
-					tempCountertrippedMoreThanOnce = True
-				End If
+				'If tempCounter > 1 Then
+				'	tempCountertrippedMoreThanOnce = True
+				'End If
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 				line += " "
 				tempInteger = CInt(Math.Round(anIkRule.influenceTail * endFrameIndex))
 				'NOTE: Subtract max frame from value if over max frame. 
 				'      Example model that needs this: "h3_hunter.mdl" (Compiled from source files from someone on Discord.)
-				tempCounter = 0
+				'tempCounter = 0
 				While tempInteger > endFrameIndex
 					tempInteger -= endFrameIndex
-					tempCounter += 1
+					'tempCounter += 1
+					valueIsWrappedAround = True
 				End While
-				If tempCounter > 1 Then
-					tempCountertrippedMoreThanOnce = True
-				End If
+				'If tempCounter > 1 Then
+				'	tempCountertrippedMoreThanOnce = True
+				'End If
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 				line += " "
 				tempInteger = CInt(Math.Round(anIkRule.influenceEnd * endFrameIndex))
 				'NOTE: Subtract max frame from value if over max frame. 
 				'      Example model that needs this: Half-Life 2 Deathmatch > "models\combine_soldier_anims.mdl"
-				tempCounter = 0
+				'tempCounter = 0
 				While tempInteger > endFrameIndex
 					tempInteger -= endFrameIndex
-					tempCounter += 1
+					'tempCounter += 1
+					valueIsWrappedAround = True
 				End While
-				If tempCounter > 1 Then
-					tempCountertrippedMoreThanOnce = True
-				End If
+				'If tempCounter > 1 Then
+				'	tempCountertrippedMoreThanOnce = True
+				'End If
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 
 				line += " target "
@@ -2869,9 +2876,12 @@ Public Class SourceQcFile48
 				' Example model that needs this: "h3_hunter.mdl" [2019-06-19 decompile missing ikchain info] (Compiled from source files from someone on Discord.)
 				' Another example: HL2 "alyx_animations.mdl"
 				If aSequenceDesc IsNot Nothing Then
-					If anAnimationDesc.theMovements IsNot Nothing AndAlso anAnimationDesc.theMovements.Count > 0 Then
+					If valueIsWrappedAround Then
+						line += " usesequence "
+					ElseIf anAnimationDesc.theMovements IsNot Nothing AndAlso anAnimationDesc.theMovements.Count > 0 Then
 						line += " usesequence "
 					ElseIf aSequenceDesc.theAutoLayers IsNot Nothing AndAlso aSequenceDesc.theAutoLayers.Count > 0 Then
+						'NOTE: Make this check 'ElseIf' check last so that other checks have chance to add the usesequence option.
 						Dim layer As SourceMdlAutoLayer
 						Dim otherSequence As SourceMdlSequenceDesc
 						Dim otherAnimationDesc As SourceMdlAnimationDesc48
@@ -2888,8 +2898,8 @@ Public Class SourceQcFile48
 								End If
 							Next
 						Next
-					ElseIf tempCountertrippedMoreThanOnce Then
-						line += " usesequence "
+						'ElseIf tempCountertrippedMoreThanOnce Then
+						'	line += " usesequence "
 					End If
 				End If
 
@@ -3087,37 +3097,64 @@ Public Class SourceQcFile48
 					line += otherSequenceName
 					line += """"
 
-					Dim influenceStart As String
-					Dim influencePeak As String
-					Dim influenceTail As String
-					Dim influenceEnd As String
+					Dim anAnimationDesc As SourceMdlAnimationDesc48 = Me.theMdlFileData.theAnimationDescs(aSeqDesc.theAnimDescIndexes(0))
+					Dim endFrameIndex As Integer = (anAnimationDesc.frameCount - 1)
+					Dim influenceStart As Double
+					Dim influencePeak As Double
+					Dim influenceTail As Double
+					Dim influenceEnd As Double
+					Dim influenceStartText As String
+					Dim influencePeakText As String
+					Dim influenceTailText As String
+					Dim influenceEndText As String
 					If (layer.flags And SourceMdlAutoLayer.STUDIO_AL_POSE) = 0 Then
-						Dim anAnimationDesc As SourceMdlAnimationDesc48
-						anAnimationDesc = Me.theMdlFileData.theAnimationDescs(aSeqDesc.theAnimDescIndexes(0))
-						influenceStart = (layer.influenceStart * (anAnimationDesc.frameCount - 1)).ToString("0", TheApp.InternalNumberFormat)
-						influencePeak = (layer.influencePeak * (anAnimationDesc.frameCount - 1)).ToString("0", TheApp.InternalNumberFormat)
-						influenceTail = (layer.influenceTail * (anAnimationDesc.frameCount - 1)).ToString("0", TheApp.InternalNumberFormat)
-						Dim influenceEndValue As Double = layer.influenceEnd * (anAnimationDesc.frameCount - 1)
+						influenceStart = layer.influenceStart * endFrameIndex
+						''NOTE: Subtract max frame from value if over max frame. 
+						'While influenceStart > endFrameIndex
+						'	influenceStart -= endFrameIndex
+						'End While
+						influenceStartText = influenceStart.ToString("0", TheApp.InternalNumberFormat)
+
+						influencePeak = layer.influencePeak * endFrameIndex
+						''NOTE: Subtract max frame from value if over max frame. 
+						'While influencePeak > endFrameIndex
+						'	influencePeak -= endFrameIndex
+						'End While
+						influencePeakText = influencePeak.ToString("0", TheApp.InternalNumberFormat)
+
+						influenceTail = layer.influenceTail * endFrameIndex
+						''NOTE: Subtract max frame from value if over max frame. 
+						'While influenceTail > endFrameIndex
+						'	influenceTail -= endFrameIndex
+						'End While
+						influenceTailText = influenceTail.ToString("0", TheApp.InternalNumberFormat)
+
+						influenceEnd = layer.influenceEnd * endFrameIndex
 						'NOTE: Limit to max frame. 
 						'      Example model that needs this: Half-Life 2 Deathmatch > "models\combine_soldier_anims.mdl"
-						If influenceEndValue > anAnimationDesc.frameCount - 1 Then
-							influenceEndValue = anAnimationDesc.frameCount - 1
-						End If
-						influenceEnd = (influenceEndValue).ToString("0", TheApp.InternalNumberFormat)
+						'If influenceEnd > endFrameIndex Then
+						'	influenceEnd = endFrameIndex
+						'End If
+						'======
+						''NOTE: Subtract max frame from value if over max frame. 
+						'While influenceEnd > endFrameIndex
+						'	influenceEnd -= endFrameIndex
+						'End While
+						influenceEndText = influenceEnd.ToString("0", TheApp.InternalNumberFormat)
 					Else
-						influenceStart = layer.influenceStart.ToString("0.######", TheApp.InternalNumberFormat)
-						influencePeak = layer.influencePeak.ToString("0.######", TheApp.InternalNumberFormat)
-						influenceTail = layer.influenceTail.ToString("0.######", TheApp.InternalNumberFormat)
-						influenceEnd = layer.influenceEnd.ToString("0.######", TheApp.InternalNumberFormat)
+						influenceStartText = layer.influenceStart.ToString("0.######", TheApp.InternalNumberFormat)
+						influencePeakText = layer.influencePeak.ToString("0.######", TheApp.InternalNumberFormat)
+						influenceTailText = layer.influenceTail.ToString("0.######", TheApp.InternalNumberFormat)
+						influenceEndText = layer.influenceEnd.ToString("0.######", TheApp.InternalNumberFormat)
 					End If
 					line += " "
-					line += influenceStart
+					line += influenceStartText
 					line += " "
-					line += influencePeak
+					line += influencePeakText
 					line += " "
-					line += influenceTail
+					line += influenceTailText
 					line += " "
-					line += influenceEnd
+					line += influenceEndText
 
 					If (layer.flags And SourceMdlAutoLayer.STUDIO_AL_XFADE) > 0 Then
 						line += " xfade"

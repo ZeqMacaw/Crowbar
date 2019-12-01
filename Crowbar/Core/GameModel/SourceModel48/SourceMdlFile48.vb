@@ -1926,19 +1926,19 @@ Public Class SourceMdlFile48
 
 		'inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 
-		' Third, read the anim values.
-		For k As Integer = 0 To anIkRule.theCompressedIkError.scale.Length - 1
-			'compressedIkErrorInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-			' Read the mstudioanimvalue_t.
-			'int size = srcanim->ikrule[j].errorData.numanim[k] * sizeof( mstudioanimvalue_t );
-			'memmove( pData, srcanim->ikrule[j].errorData.anim[k], size );
-			'TODO: Figure out what frameCount should be.
-			If anIkRule.theCompressedIkError.offset(k) > 0 Then
-				'Dim frameCount As Integer = 1
-				anIkRule.theCompressedIkError.theAnimValues(k) = New List(Of SourceMdlAnimationValue)()
-				Me.ReadMdlAnimValues(compressedIkErrorInputFileStreamPosition + anIkRule.theCompressedIkError.offset(k), anAnimationDesc.frameCount, True, anIkRule.theCompressedIkError.theAnimValues(k), "anIkRule.theCompressedIkError.theAnimValues(" + k.ToString() + ")")
-			End If
-		Next
+		'TODO:  Third, read the anim values.
+		'For k As Integer = 0 To anIkRule.theCompressedIkError.scale.Length - 1
+		'	'compressedIkErrorInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+		'	' Read the mstudioanimvalue_t.
+		'	'int size = srcanim->ikrule[j].errorData.numanim[k] * sizeof( mstudioanimvalue_t );
+		'	'memmove( pData, srcanim->ikrule[j].errorData.anim[k], size );
+		'	'TODO: Figure out what frameCount should be.
+		'	If anIkRule.theCompressedIkError.offset(k) > 0 Then
+		'		'Dim frameCount As Integer = 1
+		'		anIkRule.theCompressedIkError.theAnimValues(k) = New List(Of SourceMdlAnimationValue)()
+		'		Me.ReadMdlAnimValues(compressedIkErrorInputFileStreamPosition + anIkRule.theCompressedIkError.offset(k), anAnimationDesc.frameCount, True, anIkRule.theCompressedIkError.theAnimValues(k), "anIkRule.theCompressedIkError.theAnimValues(" + k.ToString() + ")")
+		'	End If
+		'Next
 
 		'Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
 
@@ -2349,7 +2349,7 @@ Public Class SourceMdlFile48
 		Next
 
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "[" + aSeqDesc.theName + "] " + "aSeqDesc.theAutoLayers " + aSeqDesc.theAutoLayers.Count.ToString())
+		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aSeqDesc.theAutoLayers [" + aSeqDesc.theName + "] " + aSeqDesc.theAutoLayers.Count.ToString())
 	End Sub
 
 	Private Sub ReadMdlAnimBoneWeights(ByVal seqInputFileStreamPosition As Long, ByVal aSeqDesc As SourceMdlSequenceDesc)
