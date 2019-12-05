@@ -88,7 +88,7 @@ Public Class SourceMdlAnimationDesc49
 
 	'	int					ikrulezeroframeindex;
 	'	mstudioikrulezeroframe_t *pIKRuleZeroFrame( int i ) const { if (ikrulezeroframeindex) return (mstudioikrulezeroframe_t *)(((byte *)this) + ikrulezeroframeindex) + i; else return NULL; };
-	Public ikRuleZeroFrameOffset As Integer
+	Public ikRuleZeroFrameOffset_VERSION49 As Integer
 
 	'	int					unused1[5];			// remove as appropriate (and zero if loading older versions)	
 	Public unused1(4) As Integer

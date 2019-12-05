@@ -8,8 +8,6 @@
 		Me.theSectionFrameMinFrameCount = 2000000
 
 		'Me.theMdlFileOnlyHasAnimations = False
-		Me.theFirstAnimationDesc = Nothing
-		Me.theFirstAnimationDescFrameLines = New SortedList(Of Integer, AnimationFrameLine)()
 		Me.theWeightLists = New List(Of SourceMdlWeightList)()
 	End Sub
 
@@ -332,245 +330,195 @@
 	Public name(63) As Char
 	'Public fileSize As Integer
 
-	'50  Vector				eyeposition;	// ideal eye position
-	Public eyePositionX As Single
-	Public eyePositionY As Single
-	Public eyePositionZ As Single
-	'5C  Vector				illumposition;	// illumination center
+	Public eyePosition As New SourceVector()
 	Public illuminationPosition As New SourceVector()
-	'68  Vector				hull_min;		// ideal movement hull size
-	Public hullMinPositionX As Single
-	Public hullMinPositionY As Single
-	Public hullMinPositionZ As Single
-	'74  Vector				hull_max;			
-	Public hullMaxPositionX As Single
-	Public hullMaxPositionY As Single
-	Public hullMaxPositionZ As Single
-	'80  Vector				view_bbmin;		// clipping bounding box
-	Public viewBoundingBoxMinPositionX As Single
-	Public viewBoundingBoxMinPositionY As Single
-	Public viewBoundingBoxMinPositionZ As Single
-	'8C  Vector				view_bbmax;		
-	Public viewBoundingBoxMaxPositionX As Single
-	Public viewBoundingBoxMaxPositionY As Single
-	Public viewBoundingBoxMaxPositionZ As Single
 
-	'98  int					flags;
+	Public hullMinPosition As New SourceVector()
+	Public hullMaxPosition As New SourceVector()
+
+	Public viewBoundingBoxMinPosition As New SourceVector()
+	Public viewBoundingBoxMaxPosition As New SourceVector()
+
 	Public flags As Integer
 
-	'9C  int					numbones;			// bones
 	Public boneCount As Integer
-	'A0  int					boneindex;
 	Public boneOffset As Integer
-
-	'A4  int					numbonecontrollers;		// bone controllers
 	Public boneControllerCount As Integer
-	'A8  int					bonecontrollerindex;
 	Public boneControllerOffset As Integer
 
-	'AC  int					numhitboxsets;
-	'B0  int					hitboxsetindex;
 	Public hitboxSetCount As Integer
 	Public hitboxSetOffset As Integer
 
-	'B4 	int					numlocalanim;			// animations/poses
 	Public localAnimationCount As Integer
-	'B8 	int					localanimindex;		// animation descriptions
 	Public localAnimationOffset As Integer
-	'  	inline mstudioanimdesc_t *pLocalAnimdesc( int i ) const { if (i < 0 || i >= numlocalanim) i = 0; return (mstudioanimdesc_t *)(((byte *)this) + localanimindex) + i; };
-
-	'BC 	int					numlocalseq;				// sequences
 	Public localSequenceCount As Integer
-	'C0 	int					localseqindex;
 	Public localSequenceOffset As Integer
-	'  	inline mstudioseqdesc_t *pLocalSeqdesc( int i ) const { if (i < 0 || i >= numlocalseq) i = 0; return (mstudioseqdesc_t *)(((byte *)this) + localseqindex) + i; };
-
-	'C4 	mutable int			activitylistversion;	// initialization flag - have the sequences been indexed?
 	Public activityListVersion As Integer
-	'C8 	mutable int			eventsindexed;
 	Public eventsIndexed As Integer
 
-	'	// raw textures
-	'CC 	int					numtextures;
 	Public textureCount As Integer
-	'D0 	int					textureindex;
 	Public textureOffset As Integer
-	'	inline mstudiotexture_t *pTexture( int i ) const { Assert( i >= 0 && i < numtextures ); return (mstudiotexture_t *)(((byte *)this) + textureindex) + i; }; 
-
-	'	// raw textures search paths
-	'D4 	int					numcdtextures;
 	Public texturePathCount As Integer
-	'D8 	int					cdtextureindex;
 	Public texturePathOffset As Integer
-	'	inline char			*pCdtexture( int i ) const { return (((char *)this) + *((int *)(((byte *)this) + cdtextureindex) + i)); };
-
-	'	// replaceable textures tables
-	'DC 	int					numskinref;
 	Public skinReferenceCount As Integer
-	'E0 	int					numskinfamilies;
 	Public skinFamilyCount As Integer
-	'E4 	int					skinindex;
 	Public skinFamilyOffset As Integer
-	'	inline short		*pSkinref( int i ) const { return (short *)(((byte *)this) + skinindex) + i; };
 
-	'E8 	int					numbodyparts;		
 	Public bodyPartCount As Integer
-	'EC 	int					bodypartindex;
 	Public bodyPartOffset As Integer
-	'	inline mstudiobodyparts_t	*pBodypart( int i ) const { return (mstudiobodyparts_t *)(((byte *)this) + bodypartindex) + i; };
 
-	'F0 	int					numlocalattachments;
 	Public localAttachmentCount As Integer
-	'F4 	int					localattachmentindex;
 	Public localAttachmentOffset As Integer
 
-	'F8 	int					numlocalnodes;
 	Public localNodeCount As Integer
-	'FC 	int					localnodeindex;
 	Public localNodeOffset As Integer
-	'0100	int					localnodenameindex;
 	Public localNodeNameOffset As Integer
 
-	'0104	int					numflexdesc;
 	Public flexDescCount As Integer
-	'0108	int					flexdescindex;
 	Public flexDescOffset As Integer
-
-	'010C	int					numflexcontrollers;
 	Public flexControllerCount As Integer
-	'0110	int					flexcontrollerindex;
 	Public flexControllerOffset As Integer
-
-	'0114	int					numflexrules;
 	Public flexRuleCount As Integer
-	'0118	int					flexruleindex;
 	Public flexRuleOffset As Integer
 
-	'011C	int					numikchains;
 	Public ikChainCount As Integer
-	'0120	int					ikchainindex;
 	Public ikChainOffset As Integer
 
-	'0124	int					nummouths;
 	Public mouthCount As Integer
-	'0128	int					mouthindex;
 	Public mouthOffset As Integer
 
-	'012C	int					numlocalposeparameters;
 	Public localPoseParamaterCount As Integer
-	'0130	int					localposeparamindex;
 	Public localPoseParameterOffset As Integer
 
-	'	int					surfacepropindex;
 	Public surfacePropOffset As Integer
 
-	'	int					keyvalueindex;
 	Public keyValueOffset As Integer
-	'	int					keyvaluesize;
 	Public keyValueSize As Integer
 
-	'	int					numlocalikautoplaylocks;
 	Public localIkAutoPlayLockCount As Integer
-	'	int					localikautoplaylockindex;
 	Public localIkAutoPlayLockOffset As Integer
 
-	'	float				mass;
-	Public mass As Single
-	'	int					contents;
+	Public mass As Double
 	Public contents As Integer
 
-	'	int					numincludemodels;
 	Public includeModelCount As Integer
-	'	int					includemodelindex;
 	Public includeModelOffset As Integer
 
-	'	mutable void		*virtualModel;
 	Public virtualModelP As Integer
 
-	'	int					szanimblocknameindex;	
 	Public animBlockNameOffset As Integer
-	'	int					numanimblocks;
 	Public animBlockCount As Integer
-	'	int					animblockindex;
 	Public animBlockOffset As Integer
-	'	mutable void		*animblockModel;
 	Public animBlockModelP As Integer
 
-	'	int					bonetablebynameindex;
 	Public boneTableByNameOffset As Integer
 
-	'	void				*pVertexBase;
 	Public vertexBaseP As Integer
-	'	void				*pIndexBase;
 	Public indexBaseP As Integer
 
-	'	byte				constdirectionallightdot;
 	Public directionalLightDot As Byte
 
-	'	byte				rootLOD;
 	Public rootLod As Byte
 
+	' VERSION 44: 
+	'	byte				unused[2];
+	' Read into v48 and ignore for v44.
+	'Public unused(1) As Byte
+	'------------
+	' VERSION 48:
 	'	byte				numAllowedRootLODs;
-	Public allowedRootLodCount As Byte
-
 	'	byte				unused[1];
+	Public allowedRootLodCount_VERSION48 As Byte
 	Public unused As Byte
+
+	' VERSION 44 to 47: 
+	'	int					zeroframecacheindex;
+	Public zeroframecacheindex_VERSION44to47 As Integer
+	'------------
+	' VERSION 48:
 	'	int					unused4; // zero out if version < 47
-	Public unused4 As Integer
+	' Read into v44to47 and ignore for v48.
+	'Public unused4 As Integer
 
+	' VERSION 44: 
+	' Although source code shows unused2[6], at least one example (HL2 dog.mdl) has the flexControllerUi and header2 fields.
+	'	int					unused2[6];		// remove as appropriate
+	'Public unused2(5) As Integer
+	'------------
+	' VERSION 44 [Vindictus]: 
+	'Public unknown01 As Integer
+	'Public unknown02 As Integer
+	'NOTE: The unknown02 = 1279345491 (ascii for "SCAL") seems to be in every MDL file in Vindictus.
+	Public Const text_SCAL_VERSION44Vindictus As Integer = 1279345491
+	'Public unknown03 As Integer
+	'Public unknown04 As Integer
+	'Public unknown05 As Integer
+	'------------
+	' VERSION 44 to 48:
 	'	int					numflexcontrollerui;
-	Public flexControllerUiCount As Integer
 	'	int					flexcontrolleruiindex;
-	Public flexControllerUiOffset As Integer
-
-	'	float				flVertAnimFixedPointScale;
-	'	inline float		VertAnimFixedPointScale() const { return ( flags & STUDIOHDR_FLAGS_VERT_ANIM_FIXED_POINT_SCALE ) ? flVertAnimFixedPointScale : 1.0f / 4096.0f; }
-	Public vertAnimFixedPointScale As Double
-	'	mutable int			surfacepropLookup;	// this index must be cached by the loader, not saved in the file
-	Public surfacePropLookup As Integer
-
-	'	// FIXME: Remove when we up the model version. Move all fields of studiohdr2_t into studiohdr_t.
+	'	int					unused3[2];
 	'	int					studiohdr2index;
-	Public studioHeader2Offset As Integer
 	'	int					unused2[1];
+	'Public flexControllerUiCount As Integer
+	'Public flexControllerUiOffset As Integer
+	'Public unused3(1) As Integer
+	'Public studioHeader2Offset As Integer
+	'Public unused2 As Integer
+	'------------
+	' VERSION 49:
+	Public flexControllerUiCount As Integer
+	Public flexControllerUiOffset As Integer
+	Public vertAnimFixedPointScale As Double
+	Public surfacePropLookup As Integer
+	Public studioHeader2Offset As Integer
 	Public unused2 As Integer
 
-	' sutdiohdr2:
+	' VERSION 44: 
+	' Unallocated fields.
+	'------------
+	' VERSION 45 to 48:
+	' studiohdr2:
+	'Public sourceBoneTransformCount As Integer
+	'Public sourceBoneTransformOffset As Integer
+	'Public illumPositionAttachmentNumber As Integer
+	'Public maxEyeDeflection As Double
+	'Public linearBoneOffset As Integer
+	'Public nameCopyOffset As Integer
+	'Public reserved(57) As Integer
+	'------------
+	' VERSION 49:
+	' studiohdr2:
 	Public sourceBoneTransformCount As Integer
 	Public sourceBoneTransformOffset As Integer
-	Public illumPositionAttachmentIndex As Integer
+	Public illumPositionAttachmentNumber As Integer
 	Public maxEyeDeflection As Single
 	Public linearBoneOffset As Integer
-
 	Public nameCopyOffset As Integer
 	Public boneFlexDriverCount As Integer
 	Public boneFlexDriverOffset As Integer
-
 	Public reserved(55) As Integer
-	'======
-	'Public studiohdr2(63) As Integer
 
 
-
-	'Public theID As String
-	'Public theName As String
 
 	Public theAnimationDescs As List(Of SourceMdlAnimationDesc49)
 	Public theAnimBlocks As List(Of SourceMdlAnimBlock)
 	Public theAnimBlockRelativePathFileName As String
 	Public theAttachments As List(Of SourceMdlAttachment)
 	Public theBodyParts As List(Of SourceMdlBodyPart)
-	Public theBones As List(Of SourceMdlBone)
 	Public theBoneControllers As List(Of SourceMdlBoneController)
+	Public theBones As List(Of SourceMdlBone)
 	Public theBoneTableByName As List(Of Integer)
-	Public theFlexDescs As List(Of SourceMdlFlexDesc)
+	Public theBoneTransforms As List(Of SourceMdlBoneTransform)
 	Public theFlexControllers As List(Of SourceMdlFlexController)
 	Public theFlexControllerUis As List(Of SourceMdlFlexControllerUi)
+	Public theFlexDescs As List(Of SourceMdlFlexDesc)
 	Public theFlexRules As List(Of SourceMdlFlexRule)
 	Public theHitboxSets As List(Of SourceMdlHitboxSet)
 	Public theIkChains As List(Of SourceMdlIkChain)
 	Public theIkLocks As List(Of SourceMdlIkLock)
 	Public theKeyValuesText As String
+	Public theLinearBoneTable As SourceMdlLinearBone
 	Public theLocalNodeNames As List(Of String)
 	Public theLocalNodes As List(Of List(Of Byte))
 	Public theModelGroups As List(Of SourceMdlModelGroup)
@@ -582,28 +530,13 @@
 	Public theSurfacePropName As String
 	Public theTexturePaths As List(Of String)
 	Public theTextures As List(Of SourceMdlTexture)
-
-	Public theSectionFrameCount As Integer
-	Public theSectionFrameMinFrameCount As Integer
-
-	'Public theActualFileSize As Long
-	'Public theModelCommandIsUsed As Boolean
-	'Public theBodyPartIndexThatShouldUseModelCommand As Integer
-	'Public theFlexFrames As List(Of FlexFrame)
-	'Public theEyelidFlexFrameIndexes As List(Of Integer)
-	'Public theUpperEyelidFlexFrameIndexes As List(Of Integer)
-
-	'Public theMdlFileOnlyHasAnimations As Boolean
-	Public theProceduralBonesCommandIsUsed As Boolean
-	Public theAnimBlockSizeNoStallOptionIsUsed As Boolean
-
-	Public theFirstAnimationDesc As SourceMdlAnimationDesc49
-	Public theFirstAnimationDescFrameLines As SortedList(Of Integer, AnimationFrameLine)
 	Public theWeightLists As List(Of SourceMdlWeightList)
 
-	Public theBoneTransforms As List(Of SourceMdlBoneTransform)
-	Public theLinearBoneTable As SourceMdlLinearBone
-
+	Public theAnimBlockSizeNoStallOptionIsUsed As Boolean
+	Public theBoneNameToBoneIndexMap As New SortedList(Of String, Integer)()
 	Public theCorrectiveAnimationSmdRelativePathFileNames As List(Of String)
+	Public theProceduralBonesCommandIsUsed As Boolean
+	Public theSectionFrameCount As Integer
+	Public theSectionFrameMinFrameCount As Integer
 
 End Class

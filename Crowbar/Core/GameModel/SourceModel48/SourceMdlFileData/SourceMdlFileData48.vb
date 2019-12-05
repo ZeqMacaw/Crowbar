@@ -504,24 +504,18 @@ Public Class SourceMdlFileData48
 	Public theSurfacePropName As String
 	Public theTexturePaths As List(Of String)
 	Public theTextures As List(Of SourceMdlTexture)
-	Public theVindictusTextSCAL As String
+	Public theWeightLists As List(Of SourceMdlWeightList)
 
-	Public theSectionFrameCount As Integer
-	Public theSectionFrameMinFrameCount As Integer
-
-	Public theModelCommandIsUsed As Boolean
-	Public theBodyPartIndexThatShouldUseModelCommand As Integer
-	'Public theMdlFileOnlyHasAnimations As Boolean
-	Public theProceduralBonesCommandIsUsed As Boolean
 	Public theAnimBlockSizeNoStallOptionIsUsed As Boolean
-
+	Public theBodyPartIndexThatShouldUseModelCommand As Integer
 	Public theBoneNameToBoneIndexMap As New SortedList(Of String, Integer)()
-	'Public theEyelidFlexFrameIndexes As List(Of Integer)
-	'Public theUpperEyelidFlexFrameIndexes As List(Of Integer)
 	Public theFirstAnimationDesc As SourceMdlAnimationDesc48
 	Public theFirstAnimationDescFrameLines As SortedList(Of Integer, AnimationFrameLine)
 	Public theFlexFrames As List(Of FlexFrame)
-	Public theWeightLists As List(Of SourceMdlWeightList)
+	Public theModelCommandIsUsed As Boolean
+	Public theProceduralBonesCommandIsUsed As Boolean
+	Public theSectionFrameCount As Integer
+	Public theSectionFrameMinFrameCount As Integer
 
 
 

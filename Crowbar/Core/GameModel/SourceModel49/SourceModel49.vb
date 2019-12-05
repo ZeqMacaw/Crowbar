@@ -1,7 +1,7 @@
 ﻿Imports System.IO
 
 Public Class SourceModel49
-	Inherits SourceModel48
+	Inherits SourceModel38
 
 #Region "Creation and Destruction"
 
@@ -12,6 +12,12 @@ Public Class SourceModel49
 #End Region
 
 #Region "Properties"
+
+	Public Overrides ReadOnly Property PhyFileIsUsed As Boolean
+		Get
+			Return Not String.IsNullOrEmpty(Me.thePhyPathFileName) AndAlso File.Exists(Me.thePhyPathFileName)
+		End Get
+	End Property
 
 	Public Overrides ReadOnly Property VtxFileIsUsed As Boolean
 		Get
@@ -166,6 +172,7 @@ Public Class SourceModel49
 		'	status = Me.CheckForRequiredFiles()
 		'End If
 
+		If Not String.IsNullOrEmpty(Me.thePhyPathFileName) Then
 		If status = StatusMessage.Success Then
 			Try
 				Me.ReadFile(Me.thePhyPathFileName, AddressOf Me.ReadPhyFile_Internal)
@@ -177,6 +184,35 @@ Public Class SourceModel49
 				status = StatusMessage.Error
 			End Try
 		End If
+		End If
+
+		Return status
+	End Function
+
+	Public Overrides Function ReadAniFile() As AppEnums.StatusMessage
+		Dim status As AppEnums.StatusMessage = StatusMessage.Success
+
+		'If String.IsNullOrEmpty(Me.theAniPathFileName) Then
+		'	status = Me.CheckForRequiredFiles()
+		'End If
+
+		If Not String.IsNullOrEmpty(Me.theAniPathFileName) Then
+			If status = StatusMessage.Success Then
+				Try
+					Me.ReadFile(Me.theAniPathFileName, AddressOf Me.ReadAniFile_Internal)
+				Catch ex As Exception
+					status = StatusMessage.Error
+				End Try
+			End If
+		End If
+
+		Return status
+	End Function
+
+	Public Overrides Function WriteReferenceMeshFiles(ByVal modelOutputPath As String) As AppEnums.StatusMessage
+		Dim status As AppEnums.StatusMessage = StatusMessage.Success
+
+		status = Me.WriteMeshSmdFiles(modelOutputPath, 0, 0)
 
 		Return status
 	End Function
@@ -262,6 +298,26 @@ Public Class SourceModel49
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		End Try
+
+		Return status
+	End Function
+
+	Public Overrides Function WriteVrdFile(ByVal vrdPathFileName As String) As AppEnums.StatusMessage
+		Dim status As AppEnums.StatusMessage = StatusMessage.Success
+
+		Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, vrdPathFileName)
+		Me.WriteTextFile(vrdPathFileName, AddressOf Me.WriteVrdFile)
+		Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, vrdPathFileName)
+
+		Return status
+	End Function
+
+	Public Overrides Function WriteDeclareSequenceQciFile(ByVal declareSequenceQciPathFileName As String) As AppEnums.StatusMessage
+		Dim status As AppEnums.StatusMessage = StatusMessage.Success
+
+		Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, declareSequenceQciPathFileName)
+		Me.WriteTextFile(declareSequenceQciPathFileName, AddressOf Me.WriteDeclareSequenceQciFile)
+		Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, declareSequenceQciPathFileName)
 
 		Return status
 	End Function
@@ -560,8 +616,9 @@ Public Class SourceModel49
 
 			qcFile.WriteModelNameCommand()
 
+			qcFile.WriteUpAxisCommand()
 			qcFile.WriteStaticPropCommand()
-			qcFile.WriteConstDirectionalLightCommand()
+			qcFile.WriteConstantDirectionalLightCommand()
 
 			'If Me.theMdlFileData.theModelCommandIsUsed Then
 			'	qcFile.WriteModelCommand()
@@ -609,7 +666,13 @@ Public Class SourceModel49
 
 			qcFile.WriteGroup("collision", AddressOf qcFile.WriteGroupCollision, False, False)
 
-			qcFile.WriteKeyValues(Me.theMdlFileData.theKeyValuesText, "$KeyValues")
+			Dim command As String
+			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+				command = "$KeyValues"
+			Else
+				command = "$keyvalues"
+			End If
+			qcFile.WriteKeyValues(Me.theMdlFileData.theKeyValuesText, command)
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		Finally
@@ -659,29 +722,29 @@ Public Class SourceModel49
 
 		Dim smdFileName As String
 		Dim smdPathFileName As String
-		Dim aBodyPart As SourceVtxBodyPart07
-		Dim aVtxModel As SourceVtxModel07
+		Dim aVtxBodyPart As SourceVtxBodyPart07
+		Dim aVtxBodyModel As SourceVtxModel07
 		Dim aBodyModel As SourceMdlModel
 		Dim bodyPartVertexIndexStart As Integer
 
 		bodyPartVertexIndexStart = 0
 		If Me.theVtxFileData.theVtxBodyParts IsNot Nothing AndAlso Me.theMdlFileData.theBodyParts IsNot Nothing Then
 			For bodyPartIndex As Integer = 0 To Me.theVtxFileData.theVtxBodyParts.Count - 1
-				aBodyPart = Me.theVtxFileData.theVtxBodyParts(bodyPartIndex)
+				aVtxBodyPart = Me.theVtxFileData.theVtxBodyParts(bodyPartIndex)
 
-				If aBodyPart.theVtxModels IsNot Nothing Then
-					For modelIndex As Integer = 0 To aBodyPart.theVtxModels.Count - 1
-						aVtxModel = aBodyPart.theVtxModels(modelIndex)
+				If aVtxBodyPart.theVtxModels IsNot Nothing Then
+					For modelIndex As Integer = 0 To aVtxBodyPart.theVtxModels.Count - 1
+						aVtxBodyModel = aVtxBodyPart.theVtxModels(modelIndex)
 
-						If aVtxModel.theVtxModelLods IsNot Nothing Then
+						If aVtxBodyModel.theVtxModelLods IsNot Nothing Then
 							aBodyModel = Me.theMdlFileData.theBodyParts(bodyPartIndex).theModels(modelIndex)
-							If aBodyModel.name(0) = ChrW(0) AndAlso aVtxModel.theVtxModelLods(0).theVtxMeshes Is Nothing Then
+							If aBodyModel.name(0) = ChrW(0) AndAlso aVtxBodyModel.theVtxModelLods(0).theVtxMeshes Is Nothing Then
 								Continue For
 							End If
 
 							For lodIndex As Integer = lodStartIndex To lodStopIndex
 								'TODO: Why would this count be different than the file header count?
-								If lodIndex >= aVtxModel.theVtxModelLods.Count Then
+								If lodIndex >= aVtxBodyModel.theVtxModelLods.Count Then
 									Exit For
 								End If
 
@@ -698,7 +761,7 @@ Public Class SourceModel49
 									Continue For
 								End If
 
-								Me.WriteMeshSmdFile(smdPathFileName, lodIndex, aVtxModel, aBodyModel, bodyPartVertexIndexStart)
+								Me.WriteMeshSmdFile(smdPathFileName, lodIndex, aVtxBodyModel, aBodyModel, bodyPartVertexIndexStart)
 
 								Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, smdPathFileName)
 							Next
@@ -720,7 +783,7 @@ Public Class SourceModel49
 			smdFile.WriteHeaderComment()
 
 			smdFile.WriteHeaderSection()
-			smdFile.WriteNodesSection(lodIndex)
+			smdFile.WriteNodesSection()
 			smdFile.WriteSkeletonSection(lodIndex)
 			smdFile.WriteTrianglesSection(aVtxModel, lodIndex, aModel, bodyPartVertexIndexStart)
 		Catch ex As Exception
@@ -735,7 +798,7 @@ Public Class SourceModel49
 			physicsMeshSmdFile.WriteHeaderComment()
 
 			physicsMeshSmdFile.WriteHeaderSection()
-			physicsMeshSmdFile.WriteNodesSection(-1)
+			physicsMeshSmdFile.WriteNodesSection()
 			physicsMeshSmdFile.WriteSkeletonSection(-1)
 			physicsMeshSmdFile.WriteTrianglesSectionForPhysics()
 		Catch ex As Exception
@@ -775,14 +838,7 @@ Public Class SourceModel49
 			smdFile.WriteHeaderComment()
 
 			smdFile.WriteHeaderSection()
-			smdFile.WriteNodesSection(-2)
-			If Me.theMdlFileData.theFirstAnimationDesc IsNot Nothing AndAlso Me.theMdlFileData.theFirstAnimationDescFrameLines.Count = 0 Then
-				smdFile.CalculateFirstAnimDescFrameLinesForSubtract()
-			End If
-			'If anAnimationDesc.animBlock > 0 AndAlso Me.theSourceEngineModel.MdlFileHeader.version >= 49 AndAlso Me.theSourceEngineModel.MdlFileHeader.version <> 2531 Then
-			'	smdFile.WriteSkeletonSectionForAnimationAni_VERSION49(aSequenceDesc, anAnimationDesc)
-			'Else
-			'End If
+			smdFile.WriteNodesSection()
 			smdFile.WriteSkeletonSectionForAnimation(aSequenceDesc, anAnimationDesc)
 		Catch ex As Exception
 			Dim debug As Integer = 4242
@@ -869,7 +925,7 @@ Public Class SourceModel49
 				smdFile.WriteHeaderComment()
 
 				smdFile.WriteHeaderSection()
-				smdFile.WriteNodesSection(-2)
+				smdFile.WriteNodesSection()
 				smdFile.WriteSkeletonSectionForAnimation(aSequenceDesc, anAnimationDesc, True)
 			Catch ex As Exception
 				Dim debug As Integer = 4242

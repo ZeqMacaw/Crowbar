@@ -306,7 +306,11 @@ Public Class SourceSmdFile48
 		For frameIndex As Integer = 0 To anAnimationDesc.frameCount - 1
 			Me.theAnimationFrameLines.Clear()
 
-			Me.CalcAnimation(aSequenceDesc, anAnimationDesc, frameIndex)
+			If ((anAnimationDesc.flags And SourceMdlAnimationDesc.STUDIO_FRAMEANIM) <> 0) Then
+				Dim debug As Integer = 4242
+			Else
+				Me.CalcAnimation(aSequenceDesc, anAnimationDesc, frameIndex)
+			End If
 
 			If TheApp.Settings.DecompileStricterFormatIsChecked Then
 				line = "time "

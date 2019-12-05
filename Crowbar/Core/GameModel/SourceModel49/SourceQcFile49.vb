@@ -130,6 +130,22 @@ Public Class SourceQcFile49
 		Me.theOutputFileStreamWriter.WriteLine(line)
 	End Sub
 
+	Public Sub WriteUpAxisCommand()
+		If Me.theMdlFileData.theUpAxisYCommandWasUsed Then
+			Dim line As String = ""
+
+			Me.theOutputFileStreamWriter.WriteLine()
+
+			'$upaxis Y
+			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+				line += "$UpAxis Y"
+			Else
+				line += "$upaxis Y"
+			End If
+			Me.theOutputFileStreamWriter.WriteLine(line)
+		End If
+	End Sub
+
 	Public Sub WriteIncludeMainQcLine()
 		Dim line As String = ""
 
@@ -167,7 +183,7 @@ Public Class SourceQcFile49
 		End If
 	End Sub
 
-	Public Sub WriteConstDirectionalLightCommand()
+	Public Sub WriteConstantDirectionalLightCommand()
 		Dim line As String = ""
 
 		'$constantdirectionallight
@@ -385,7 +401,8 @@ Public Class SourceQcFile49
 					Next
 				End If
 			End If
-		Catch
+		Catch ex As Exception
+			Dim debug As Integer = 4242
 		End Try
 
 		'Me.CreateListOfEyelidFlexFrameIndexes()
@@ -444,6 +461,9 @@ Public Class SourceQcFile49
 						'If frameIndex + 3 >= Me.theMdlFileData.theEyelidFlexFrameIndexes.Count Then
 						'	frameIndex = 0
 						'End If
+						'TODO: For "Crowbar Bug Reports\2017-11-25\[...]\tfa_ow_mercy.mdl", theName is blank, but it should be "upper_right", because 3 flex rules use it (%upper_right_raiser, %upper_right_neutral, %upper_right_lowerer).
+						'      Not sure how the model was compiled without the name, but maybe it was compiled via DMX instead of SMD.
+						'      POSSIBLE FIX: If empty, then assign correct name.
 						eyelidName = Me.theMdlFileData.theFlexDescs(anEyeball.upperLidFlexDesc).theName
 
 						line = vbTab
@@ -1421,7 +1441,8 @@ Public Class SourceQcFile49
 		Dim line As String = ""
 
 		'$ambientboost
-		If (Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_AMBIENT_BOOST) > 0 Then
+		If (Me.theMdlFileData.version = 44 AndAlso ((Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_AMBIENT_BOOST_MDL44) > 0)) _
+		  OrElse (Me.theMdlFileData.version >= 45 AndAlso ((Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_AMBIENT_BOOST) > 0)) Then
 			Me.theOutputFileStreamWriter.WriteLine()
 
 			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
@@ -1615,7 +1636,7 @@ Public Class SourceQcFile49
 				Dim aTexture As SourceMdlTexture
 				aTexture = Me.theMdlFileData.theTextures(j)
 				line = "// """
-				line += aTexture.thePathFileName
+				line += FileManager.GetCleanPathFileName(aTexture.thePathFileName, False)
 				line += ".vmt"""
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
@@ -1665,16 +1686,22 @@ Public Class SourceQcFile49
 			line = ""
 			Me.theOutputFileStreamWriter.WriteLine(line)
 
-			For i As Integer = 0 To Me.theMdlFileData.theAttachments.Count - 1
+			For attachmentIndex As Integer = 0 To Me.theMdlFileData.theAttachments.Count - 1
 				Dim anAttachment As SourceMdlAttachment
-				anAttachment = Me.theMdlFileData.theAttachments(i)
+				anAttachment = Me.theMdlFileData.theAttachments(attachmentIndex)
+
+				' Do not write an attachment line for the $illumposition attachment.
+				If attachmentIndex = Me.theMdlFileData.illumPositionAttachmentNumber - 1 Then
+					Continue For
+				End If
+
 				If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
 					line = "$Attachment "
 				Else
 					line = "$attachment "
 				End If
 				If anAttachment.theName = "" Then
-					line += i.ToString(TheApp.InternalNumberFormat)
+					line += attachmentIndex.ToString(TheApp.InternalNumberFormat)
 				Else
 					line += """"
 					line += anAttachment.theName
@@ -1685,47 +1712,40 @@ Public Class SourceQcFile49
 				line += """"
 				line += " "
 
-				If Me.theMdlFileData.version = 10 Then
-					line += anAttachment.attachmentPoint.x.ToString("0.######", TheApp.InternalNumberFormat)
-					line += " "
-					line += anAttachment.attachmentPoint.y.ToString("0.######", TheApp.InternalNumberFormat)
-					line += " "
-					line += anAttachment.attachmentPoint.z.ToString("0.######", TheApp.InternalNumberFormat)
-				Else
-					'TheApp.ConvertRotationMatrixToDegrees(anAttachment.localM11, anAttachment.localM12, anAttachment.localM13, anAttachment.localM21, anAttachment.localM22, anAttachment.localM23, anAttachment.localM33, angleX, angleY, angleZ)
-					'NOTE: This one works with the strange order below.
-					MathModule.ConvertRotationMatrixToDegrees(anAttachment.localM11, anAttachment.localM21, anAttachment.localM31, anAttachment.localM12, anAttachment.localM22, anAttachment.localM32, anAttachment.localM33, angleX, angleY, angleZ)
-					offsetX = Math.Round(anAttachment.localM14, 2)
-					offsetY = Math.Round(anAttachment.localM24, 2)
-					offsetZ = Math.Round(anAttachment.localM34, 2)
-					angleX = Math.Round(angleX, 2)
-					angleY = Math.Round(angleY, 2)
-					angleZ = Math.Round(angleZ, 2)
-					line += offsetX.ToString("0.######", TheApp.InternalNumberFormat)
-					line += " "
-					line += offsetY.ToString("0.######", TheApp.InternalNumberFormat)
-					line += " "
-					line += offsetZ.ToString("0.######", TheApp.InternalNumberFormat)
-					line += " rotate "
-					''NOTE: Intentionally z,y,x order.
-					'line += angleZ.ToString()
-					'line += " "
-					'line += angleY.ToString()
-					'line += " "
-					'line += angleX.ToString()
-					'NOTE: Intentionally in strange order.
-					line += angleY.ToString("0.######", TheApp.InternalNumberFormat)
-					line += " "
-					line += (-angleZ).ToString("0.######", TheApp.InternalNumberFormat)
-					line += " "
-					line += (-angleX).ToString("0.######", TheApp.InternalNumberFormat)
-				End If
+				'TheApp.ConvertRotationMatrixToDegrees(anAttachment.localM11, anAttachment.localM12, anAttachment.localM13, anAttachment.localM21, anAttachment.localM22, anAttachment.localM23, anAttachment.localM33, angleX, angleY, angleZ)
+				'NOTE: This one works with the strange order below.
+				MathModule.ConvertRotationMatrixToDegrees(anAttachment.localM11, anAttachment.localM21, anAttachment.localM31, anAttachment.localM12, anAttachment.localM22, anAttachment.localM32, anAttachment.localM33, angleX, angleY, angleZ)
+				offsetX = Math.Round(anAttachment.localM14, 2)
+				offsetY = Math.Round(anAttachment.localM24, 2)
+				offsetZ = Math.Round(anAttachment.localM34, 2)
+				angleX = Math.Round(angleX, 2)
+				angleY = Math.Round(angleY, 2)
+				angleZ = Math.Round(angleZ, 2)
+				line += offsetX.ToString("0.######", TheApp.InternalNumberFormat)
+				line += " "
+				line += offsetY.ToString("0.######", TheApp.InternalNumberFormat)
+				line += " "
+				line += offsetZ.ToString("0.######", TheApp.InternalNumberFormat)
+				line += " rotate "
+				''NOTE: Intentionally z,y,x order.
+				'line += angleZ.ToString()
+				'line += " "
+				'line += angleY.ToString()
+				'line += " "
+				'line += angleX.ToString()
+				'NOTE: Intentionally in strange order.
+				line += angleY.ToString("0.######", TheApp.InternalNumberFormat)
+				line += " "
+				line += (-angleZ).ToString("0.######", TheApp.InternalNumberFormat)
+				line += " "
+				line += (-angleX).ToString("0.######", TheApp.InternalNumberFormat)
+
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
 		End If
 	End Sub
 
-	Public Sub WriteIncludeModelCommand()
+	Public Sub WriteIncludeModelCommands()
 		Dim line As String = ""
 
 		'$includemodel "survivors/anim_producer.mdl"
@@ -1942,9 +1962,9 @@ Public Class SourceQcFile49
 		Dim offsetY As Double
 		Dim offsetZ As Double
 
-		offsetX = Math.Round(Me.theMdlFileData.eyePositionY, 3)
-		offsetY = -Math.Round(Me.theMdlFileData.eyePositionX, 3)
-		offsetZ = Math.Round(Me.theMdlFileData.eyePositionZ, 3)
+		offsetX = Math.Round(Me.theMdlFileData.eyePosition.y, 3)
+		offsetY = -Math.Round(Me.theMdlFileData.eyePosition.x, 3)
+		offsetZ = Math.Round(Me.theMdlFileData.eyePosition.z, 3)
 
 		If offsetX = 0 AndAlso offsetY = 0 AndAlso offsetZ = 0 Then
 			Exit Sub
@@ -2007,10 +2027,31 @@ Public Class SourceQcFile49
 		Dim offsetX As Double
 		Dim offsetY As Double
 		Dim offsetZ As Double
+		Dim illumPosBoneName As String = ""
 
-		offsetX = Math.Round(Me.theMdlFileData.illuminationPosition.y, 3)
-		offsetY = -Math.Round(Me.theMdlFileData.illuminationPosition.x, 3)
-		offsetZ = Math.Round(Me.theMdlFileData.illuminationPosition.z, 3)
+		If Me.theMdlFileData.illumPositionAttachmentNumber = 0 Then
+			'FROM: [48] SourceEngine2007_source se2007_src\src_main\utils\studiomdl\studiomdl.cpp Cmd_Illumposition()
+			'		g_illumpositionattachment = 0;
+			'		float flTemp = illumposition[0];
+			'		illumposition[0] = -illumposition[1];
+			'		illumposition[1] = flTemp;
+			offsetX = Math.Round(Me.theMdlFileData.illuminationPosition.y, 3)
+			offsetY = -Math.Round(Me.theMdlFileData.illuminationPosition.x, 3)
+			offsetZ = Math.Round(Me.theMdlFileData.illuminationPosition.z, 3)
+		Else
+			'FROM: [48] SourceEngine2007_source se2007_src\src_main\utils\studiomdl\studiomdl.cpp Cmd_Illumposition()
+			'		Q_strncpy( g_attachment[g_numattachments].name, "__illumPosition", sizeof(g_attachment[g_numattachments].name) );
+			'		Q_strncpy( g_attachment[g_numattachments].bonename, token, sizeof(g_attachment[g_numattachments].bonename) );
+			'		AngleMatrix( QAngle( 0, 0, 0 ), illumposition, g_attachment[g_numattachments].local );
+			'		g_attachment[g_numattachments].type |= IS_RIGID;
+			'		g_illumpositionattachment = g_numattachments + 1;
+			Dim illumPosAttachment As SourceMdlAttachment
+			illumPosAttachment = Me.theMdlFileData.theAttachments(Me.theMdlFileData.illumPositionAttachmentNumber - 1)
+			offsetX = Math.Round(illumPosAttachment.localM14, 2)
+			offsetY = Math.Round(illumPosAttachment.localM24, 2)
+			offsetZ = Math.Round(illumPosAttachment.localM34, 2)
+			illumPosBoneName = Me.theMdlFileData.theBones(illumPosAttachment.localBoneIndex).theName
+		End If
 
 		line = ""
 		Me.theOutputFileStreamWriter.WriteLine(line)
@@ -2026,6 +2067,11 @@ Public Class SourceQcFile49
 		line += offsetY.ToString("0.######", TheApp.InternalNumberFormat)
 		line += " "
 		line += offsetZ.ToString("0.######", TheApp.InternalNumberFormat)
+		If illumPosBoneName <> "" Then
+			line += " """
+			line += illumPosBoneName
+			line += """"
+		End If
 		Me.theOutputFileStreamWriter.WriteLine(line)
 	End Sub
 
@@ -2052,7 +2098,7 @@ Public Class SourceQcFile49
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		End Try
-		Me.WriteIncludeModelCommand()
+		Me.WriteIncludeModelCommands()
 	End Sub
 
 	Private Sub WriteAnimBlockSizeCommand()
@@ -2072,7 +2118,9 @@ Public Class SourceQcFile49
 			End If
 			line += " "
 			line += "32"
-			If Me.theMdlFileData.theAnimBlockSizeNoStallOptionIsUsed Then
+			'TODO: Only use with MDL49 because HL2 zombie\classic.mdl (MDL48) recompiled nearly perfect without it. 
+			'      With the nostall, it messed up some anims and seemed to put most anim data in the MDL file instead of the ANI file.
+			If Me.theMdlFileData.theAnimBlockSizeNoStallOptionIsUsed AndAlso Me.theMdlFileData.version = 49 Then
 				line += " "
 				line += "nostall"
 			End If
@@ -2413,7 +2461,16 @@ Public Class SourceQcFile49
 		Next
 
 		If aSequenceDesc.theActivityName <> "" Then
+			If aSequenceDesc.activityWeight < 1 Then
+				line = vbTab
+				line += "// The following line is commented-out because compiling with current compilers shows this error: Activity ACT_IDLE has a zero weight (weights must be integers > 0)"
+				Me.theOutputFileStreamWriter.WriteLine(line)
+			End If
+
 			line = vbTab
+			If aSequenceDesc.activityWeight < 1 Then
+				line += "//"
+			End If
 			line += "activity "
 			line += """"
 			line += aSequenceDesc.theActivityName
@@ -2555,7 +2612,7 @@ Public Class SourceQcFile49
 
 		Dim firstAnimDesc As SourceMdlAnimationDesc49
 		firstAnimDesc = Me.theMdlFileData.theAnimationDescs(aSequenceDesc.theAnimDescIndexes(0))
-		'TEST: Only write animation options if sequence has an impliedAnimDesc.
+		' Only write animation options if sequence has an impliedAnimDesc.
 		If impliedAnimDesc IsNot Nothing Then
 			Me.WriteAnimationOptions(aSequenceDesc, firstAnimDesc, impliedAnimDesc)
 		End If
@@ -2806,6 +2863,7 @@ Public Class SourceQcFile49
 		If anAnimationDesc.theIkRules IsNot Nothing Then
 			Dim endFrameIndex As Integer
 			Dim tempInteger As Integer
+			Dim valueIsWrappedAround As Boolean
 			endFrameIndex = anAnimationDesc.frameCount - 1
 
 			For Each anIkRule As SourceMdlIkRule In anAnimationDesc.theIkRules
@@ -2844,11 +2902,15 @@ Public Class SourceQcFile49
 
 				'NOTE: Writing all ikrule options because studiomdl will ignore any that are not used by a type.
 
+				valueIsWrappedAround = False
 				tempInteger = CInt(Math.Round(anIkRule.contact * endFrameIndex))
 				'NOTE: Subtract max frame from value if over max frame. 
-				If tempInteger > endFrameIndex Then
+				While tempInteger > endFrameIndex
+
 					tempInteger -= endFrameIndex
-				End If
+					valueIsWrappedAround = True
+				End While
+
 				line += " contact "
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 
@@ -2886,38 +2948,76 @@ Public Class SourceQcFile49
 				line += " range "
 				tempInteger = CInt(Math.Round(anIkRule.influenceStart * endFrameIndex))
 				'NOTE: Subtract max frame from value if over max frame. 
-				If tempInteger > endFrameIndex Then
+				While tempInteger > endFrameIndex
+
 					tempInteger -= endFrameIndex
-				End If
+					valueIsWrappedAround = True
+				End While
+
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 				line += " "
 				tempInteger = CInt(Math.Round(anIkRule.influencePeak * endFrameIndex))
 				'NOTE: Subtract max frame from value if over max frame. 
-				If tempInteger > endFrameIndex Then
+				While tempInteger > endFrameIndex
+
 					tempInteger -= endFrameIndex
-				End If
+					valueIsWrappedAround = True
+				End While
+
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 				line += " "
 				tempInteger = CInt(Math.Round(anIkRule.influenceTail * endFrameIndex))
 				'NOTE: Subtract max frame from value if over max frame. 
-				If tempInteger > endFrameIndex Then
+				'      Example model that needs this: "h3_hunter.mdl" (Compiled from source files from someone on Discord.)
+				While tempInteger > endFrameIndex
 					tempInteger -= endFrameIndex
-				End If
+					valueIsWrappedAround = True
+				End While
+
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 				line += " "
 				tempInteger = CInt(Math.Round(anIkRule.influenceEnd * endFrameIndex))
 				'NOTE: Subtract max frame from value if over max frame. 
-				If tempInteger > endFrameIndex Then
+				'      Example model that needs this: Half-Life 2 Deathmatch > "models\combine_soldier_anims.mdl"
+				While tempInteger > endFrameIndex
 					tempInteger -= endFrameIndex
-				End If
+					valueIsWrappedAround = True
+				End While
+
 				line += tempInteger.ToString(TheApp.InternalNumberFormat)
 
 				line += " target "
 				line += anIkRule.slot.ToString(TheApp.InternalNumberFormat)
 
+				' Example model that needs this: "h3_hunter.mdl" [2019-06-19 decompile missing ikchain info] (Compiled from source files from someone on Discord.)
+				' Another example: HL2 "alyx_animations.mdl"
 				' A MDL v48 needs this, so most likely v49 does, too.
-				If aSequenceDesc IsNot Nothing AndAlso anAnimationDesc.theMovements IsNot Nothing AndAlso anAnimationDesc.theMovements.Count > 0 Then
-					line += " usesequence "
+				If aSequenceDesc IsNot Nothing Then
+					If valueIsWrappedAround Then
+						line += " usesequence "
+					ElseIf anAnimationDesc.theMovements IsNot Nothing AndAlso anAnimationDesc.theMovements.Count > 0 Then
+						line += " usesequence "
+					ElseIf aSequenceDesc.theAutoLayers IsNot Nothing AndAlso aSequenceDesc.theAutoLayers.Count > 0 Then
+						'NOTE: Make this check 'ElseIf' check last so that other checks have chance to add the usesequence option.
+						Dim layer As SourceMdlAutoLayer
+						Dim otherSequence As SourceMdlSequenceDesc
+						Dim otherAnimationDesc As SourceMdlAnimationDesc49
+						For j As Integer = 0 To aSequenceDesc.theAutoLayers.Count - 1
+							layer = aSequenceDesc.theAutoLayers(j)
+							otherSequence = Me.theMdlFileData.theSequenceDescs(layer.sequenceIndex)
+							For k As Integer = 0 To aSequenceDesc.theAnimDescIndexes.Count - 1
+								otherAnimationDesc = Me.theMdlFileData.theAnimationDescs(otherSequence.theAnimDescIndexes(k))
+								If otherAnimationDesc.frameCount > anAnimationDesc.frameCount Then
+									line += " usesequence "
+									' Set j to max so outer loop stops.
+									j = aSequenceDesc.theAutoLayers.Count
+									Exit For
+								End If
+							Next
+						Next
+						'ElseIf tempCountertrippedMoreThanOnce Then
+						'	line += " usesequence "
+					End If
 				End If
 
 				Me.theOutputFileStreamWriter.WriteLine(line)
@@ -3136,7 +3236,11 @@ Public Class SourceQcFile49
 				layer = aSeqDesc.theAutoLayers(j)
 				otherSequenceName = Me.theMdlFileData.theSequenceDescs(layer.sequenceIndex).theName
 
-				'NOTE: See SourceQcFile48 for description of why the "if" is done this way.
+				'NOTE: [WriteSequenceLayerInfo] [22-Jul-2018] Is there any reason to distinguish addlayer and blendlayer options by checking influnceStart, -Peak, -Tail, and -End?
+				'      Yes! Example: blendlayer 1 2 3 4
+				'      Instead of checking all influence* values, check instead "if influenceStart = influenceEnd" because of this line in the source code [simplify.cpp AccumulateSeqLayers() line 5365]:
+				'          if (pLayer->start != pLayer->end)
+				'If layer.flags = 0 AndAlso layer.influenceStart = 0 AndAlso layer.influencePeak = 0 AndAlso layer.influenceTail = 0 AndAlso layer.influenceEnd = 0 Then
 				If layer.flags = 0 AndAlso layer.influenceStart = layer.influenceEnd Then
 					'addlayer <string|other $sequence name>
 					line = vbTab
@@ -3154,31 +3258,64 @@ Public Class SourceQcFile49
 					line += otherSequenceName
 					line += """"
 
-					Dim influenceStart As String
-					Dim influencePeak As String
-					Dim influenceTail As String
-					Dim influenceEnd As String
+					Dim anAnimationDesc As SourceMdlAnimationDesc49 = Me.theMdlFileData.theAnimationDescs(aSeqDesc.theAnimDescIndexes(0))
+					Dim endFrameIndex As Integer = (anAnimationDesc.frameCount - 1)
+					Dim influenceStart As Double
+					Dim influencePeak As Double
+					Dim influenceTail As Double
+					Dim influenceEnd As Double
+					Dim influenceStartText As String
+					Dim influencePeakText As String
+					Dim influenceTailText As String
+					Dim influenceEndText As String
 					If (layer.flags And SourceMdlAutoLayer.STUDIO_AL_POSE) = 0 Then
-						Dim anAnimationDesc As SourceMdlAnimationDesc49
-						anAnimationDesc = Me.theMdlFileData.theAnimationDescs(aSeqDesc.theAnimDescIndexes(0))
-						influenceStart = (layer.influenceStart * (anAnimationDesc.frameCount - 1)).ToString("0", TheApp.InternalNumberFormat)
-						influencePeak = (layer.influencePeak * (anAnimationDesc.frameCount - 1)).ToString("0", TheApp.InternalNumberFormat)
-						influenceTail = (layer.influenceTail * (anAnimationDesc.frameCount - 1)).ToString("0", TheApp.InternalNumberFormat)
-						influenceEnd = (layer.influenceEnd * (anAnimationDesc.frameCount - 1)).ToString("0", TheApp.InternalNumberFormat)
+						influenceStart = layer.influenceStart * endFrameIndex
+						''NOTE: Subtract max frame from value if over max frame. 
+						'While influenceStart > endFrameIndex
+						'	influenceStart -= endFrameIndex
+						'End While
+						influenceStartText = influenceStart.ToString("0", TheApp.InternalNumberFormat)
+
+						influencePeak = layer.influencePeak * endFrameIndex
+						''NOTE: Subtract max frame from value if over max frame. 
+						'While influencePeak > endFrameIndex
+						'	influencePeak -= endFrameIndex
+						'End While
+						influencePeakText = influencePeak.ToString("0", TheApp.InternalNumberFormat)
+
+						influenceTail = layer.influenceTail * endFrameIndex
+						''NOTE: Subtract max frame from value if over max frame. 
+						'While influenceTail > endFrameIndex
+						'	influenceTail -= endFrameIndex
+						'End While
+						influenceTailText = influenceTail.ToString("0", TheApp.InternalNumberFormat)
+
+						influenceEnd = layer.influenceEnd * endFrameIndex
+						'NOTE: Limit to max frame. 
+						'      Example model that needs this: Half-Life 2 Deathmatch > "models\combine_soldier_anims.mdl"
+						'If influenceEnd > endFrameIndex Then
+						'	influenceEnd = endFrameIndex
+						'End If
+						'======
+						''NOTE: Subtract max frame from value if over max frame. 
+						'While influenceEnd > endFrameIndex
+						'	influenceEnd -= endFrameIndex
+						'End While
+						influenceEndText = influenceEnd.ToString("0", TheApp.InternalNumberFormat)
 					Else
-						influenceStart = layer.influenceStart.ToString("0.######", TheApp.InternalNumberFormat)
-						influencePeak = layer.influencePeak.ToString("0.######", TheApp.InternalNumberFormat)
-						influenceTail = layer.influenceTail.ToString("0.######", TheApp.InternalNumberFormat)
-						influenceEnd = layer.influenceEnd.ToString("0.######", TheApp.InternalNumberFormat)
+						influenceStartText = layer.influenceStart.ToString("0.######", TheApp.InternalNumberFormat)
+						influencePeakText = layer.influencePeak.ToString("0.######", TheApp.InternalNumberFormat)
+						influenceTailText = layer.influenceTail.ToString("0.######", TheApp.InternalNumberFormat)
+						influenceEndText = layer.influenceEnd.ToString("0.######", TheApp.InternalNumberFormat)
 					End If
 					line += " "
-					line += influenceStart
+					line += influenceStartText
 					line += " "
-					line += influencePeak
+					line += influencePeakText
 					line += " "
-					line += influenceTail
+					line += influenceTailText
 					line += " "
-					line += influenceEnd
+					line += influenceEndText
 
 					If (layer.flags And SourceMdlAutoLayer.STUDIO_AL_XFADE) > 0 Then
 						line += " xfade"
@@ -3259,7 +3396,7 @@ Public Class SourceQcFile49
 				Dim tailInfluence As Double
 				Dim endInfluence As Double
 
-				aLocalHierarchy = anAnimationDesc.theLocalHierarchies(0)
+				aLocalHierarchy = anAnimationDesc.theLocalHierarchies(hierarchyIndex)
 				frameCount = anAnimationDesc.frameCount
 				startInfluence = aLocalHierarchy.startInfluence * (frameCount - 1)
 				peakInfluence = aLocalHierarchy.peakInfluence * (frameCount - 1)
@@ -3776,6 +3913,7 @@ Public Class SourceQcFile49
 	Public Sub WriteGroupBone()
 		Me.WriteDefineBoneCommand()
 		Me.WriteBoneMergeCommand()
+		Me.WriteLimitRotationCommand()
 
 		Me.WriteProceduralBonesCommand()
 		Me.WriteJiggleBoneCommand()
@@ -3912,6 +4050,46 @@ Public Class SourceQcFile49
 		End If
 	End Sub
 
+	Private Sub WriteLimitRotationCommand()
+		Dim line As String = ""
+
+		'$limitrotation "boneName" "sequenceName1" [["sequenceName2"] ... "sequenceNameX"]
+		If Me.theMdlFileData.theBones IsNot Nothing Then
+			Dim aBone As SourceMdlBone
+			Dim emptyLineIsAlreadyWritten As Boolean
+
+			emptyLineIsAlreadyWritten = False
+			For i As Integer = 0 To Me.theMdlFileData.theBones.Count - 1
+				aBone = Me.theMdlFileData.theBones(i)
+
+				If (aBone.flags And SourceMdlBone.BONE_FIXED_ALIGNMENT) > 0 Then
+					If Not emptyLineIsAlreadyWritten Then
+						Me.theOutputFileStreamWriter.WriteLine()
+						emptyLineIsAlreadyWritten = True
+					End If
+
+					If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+						line += "$LimitRotation "
+					Else
+						line += "$limitrotation "
+					End If
+					line += """"
+					line += aBone.theName
+					line += """"
+
+					'TODO: Finish WriteLimitRotationCommand().
+					'If aBone.qAlignment = aBone.rotation Then
+					'	line += """"
+					'	line += aBone.theName
+					'	line += """"
+					'End If
+
+					Me.theOutputFileStreamWriter.WriteLine(line)
+				End If
+			Next
+		End If
+	End Sub
+
 	Private Sub WriteBoneMergeCommand()
 		Dim line As String = ""
 
@@ -4009,8 +4187,6 @@ Public Class SourceQcFile49
 					line += aBone.theJiggleBone.yawDamping.ToString("0.######", TheApp.InternalNumberFormat)
 					Me.theOutputFileStreamWriter.WriteLine(line)
 
-					'else if "allow_length_flex"
-					'	jiggleInfo->data.flags &= ~JIGGLE_HAS_LENGTH_CONSTRAINT;
 					If (aBone.theJiggleBone.flags And SourceMdlJiggleBone.JIGGLE_HAS_LENGTH_CONSTRAINT) = 0 Then
 						line = vbTab
 						line += vbTab
@@ -4226,12 +4402,12 @@ Public Class SourceQcFile49
 
 		'FROM: VDC wiki: 
 		'$cbox <float|minx> <float|miny> <float|minz> <float|maxx> <float|maxy> <float|maxz> 
-		minX = Math.Round(Me.theMdlFileData.viewBoundingBoxMinPositionX, 3)
-		minY = Math.Round(Me.theMdlFileData.viewBoundingBoxMinPositionY, 3)
-		minZ = Math.Round(Me.theMdlFileData.viewBoundingBoxMinPositionZ, 3)
-		maxX = Math.Round(Me.theMdlFileData.viewBoundingBoxMaxPositionX, 3)
-		maxY = Math.Round(Me.theMdlFileData.viewBoundingBoxMaxPositionY, 3)
-		maxZ = Math.Round(Me.theMdlFileData.viewBoundingBoxMaxPositionZ, 3)
+		minX = Math.Round(Me.theMdlFileData.viewBoundingBoxMinPosition.x, 3)
+		minY = Math.Round(Me.theMdlFileData.viewBoundingBoxMinPosition.y, 3)
+		minZ = Math.Round(Me.theMdlFileData.viewBoundingBoxMinPosition.z, 3)
+		maxX = Math.Round(Me.theMdlFileData.viewBoundingBoxMaxPosition.x, 3)
+		maxY = Math.Round(Me.theMdlFileData.viewBoundingBoxMaxPosition.y, 3)
+		maxZ = Math.Round(Me.theMdlFileData.viewBoundingBoxMaxPosition.z, 3)
 		If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
 			line = "$CBox "
 		Else
@@ -4271,12 +4447,12 @@ Public Class SourceQcFile49
 		'$bbox -16.0 -16.0 -13.0 16.0 16.0 75.0
 		'FROM: VDC wiki: 
 		'$bbox (min x) (min y) (min z) (max x) (max y) (max z)
-		minX = Math.Round(Me.theMdlFileData.hullMinPositionX, 3)
-		minY = Math.Round(Me.theMdlFileData.hullMinPositionY, 3)
-		minZ = Math.Round(Me.theMdlFileData.hullMinPositionZ, 3)
-		maxX = Math.Round(Me.theMdlFileData.hullMaxPositionX, 3)
-		maxY = Math.Round(Me.theMdlFileData.hullMaxPositionY, 3)
-		maxZ = Math.Round(Me.theMdlFileData.hullMaxPositionZ, 3)
+		minX = Math.Round(Me.theMdlFileData.hullMinPosition.x, 3)
+		minY = Math.Round(Me.theMdlFileData.hullMinPosition.y, 3)
+		minZ = Math.Round(Me.theMdlFileData.hullMinPosition.z, 3)
+		maxX = Math.Round(Me.theMdlFileData.hullMaxPosition.x, 3)
+		maxY = Math.Round(Me.theMdlFileData.hullMaxPosition.y, 3)
+		maxZ = Math.Round(Me.theMdlFileData.hullMaxPosition.z, 3)
 		line = ""
 		If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
 			line += "$BBox "
@@ -4410,9 +4586,10 @@ Public Class SourceQcFile49
 			'ERROR: c:\users\zeqmacaw\documents\- unpacked source\left 4 dead 2\left4dead2_dlc3\models\survivors\decompiled 0.26\survivor_teenangst\survivor_teenangst_boxes.qci(10): - bad command 0
 			'ERROR: Aborted Processing on 'survivors/survivor_TeenAngst.mdl'
 			'TODO: [WriteHboxCommands] Probably need better way to determine when to write extra values.
+			'If Me.theMdlFileData.version >= 49 AndAlso hitboxSetName = "cstrike" Then
 			'TEST: Check several models from various games to see if this check is good enough.
 			'If aHitbox.unknown = -1 Then
-			If aHitbox.unknown <> 0 Then
+			If Me.theMdlFileData.version >= 49 AndAlso aHitbox.unknown <> 0 Then
 				'NOTE: Roll (z) is first.
 				line += " "
 				line += aHitbox.boundingBoxPitchYawRoll.z.ToString("0.######", TheApp.InternalNumberFormat)
@@ -4624,6 +4801,7 @@ Public Class SourceQcFile49
 	Public Sub WriteKeyValues(ByVal keyValuesText As String, ByVal commandOrOptionText As String)
 		Dim line As String = ""
 		Dim startText As String = "mdlkeyvalue" + vbLf
+		Dim startText2 As String = """mdlkeyvalue"""
 		Dim text As String
 
 		'$keyvalues
@@ -4676,11 +4854,15 @@ Public Class SourceQcFile49
 				line = commandOrOptionText
 				Me.theOutputFileStreamWriter.WriteLine(line)
 
+				keyValuesText = keyValuesText.TrimStart()
 				If keyValuesText.StartsWith(startText) Then
 					text = keyValuesText.Remove(0, startText.Length)
+				ElseIf keyValuesText.StartsWith(startText2) Then
+					text = keyValuesText.Remove(0, startText2.Length)
 				Else
 					text = keyValuesText
 				End If
+				text = text.TrimStart()
 
 				'lengthToRemove = 0
 				'While True
@@ -4792,7 +4974,15 @@ Public Class SourceQcFile49
 				lineQuoteCount = 0
 			ElseIf textChar = """" Then
 				lineQuoteCount += 1
-				If lineQuoteCount = 4 Then
+				If lineQuoteCount = 2 Then
+					If i > startIndex Then
+						line = indentText
+						line += text.Substring(startIndex, i - startIndex + 1).Trim()
+						Me.theOutputFileStreamWriter.Write(line)
+					End If
+					startIndex = i + 1
+					'lineQuoteCount = 0
+				ElseIf lineQuoteCount = 4 Then
 					If i > startIndex Then
 						line = indentText
 						line += text.Substring(startIndex, i - startIndex + 1).Trim()
@@ -4801,9 +4991,6 @@ Public Class SourceQcFile49
 					startIndex = i + 1
 					lineQuoteCount = 0
 				End If
-				'If lineQuoteCount = 2 OrElse lineQuoteCount = 4 Then
-				'	lineWordCount += 1
-				'End If
 			ElseIf textChar = vbLf Then
 				startIndex = i + 1
 				lineQuoteCount = 0
