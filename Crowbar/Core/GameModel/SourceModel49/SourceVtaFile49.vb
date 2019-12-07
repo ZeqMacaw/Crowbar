@@ -105,9 +105,35 @@ Public Class SourceVtaFile49
 		End If
 		Me.theOutputFileStreamWriter.WriteLine(line)
 
+		Dim beginVertexIndex As Integer = 0
+		Dim endVertexIndex As Integer = 0
+		Dim bodyVertexCount As Integer = 0
+		Dim aBodyPart As SourceMdlBodyPart
+		Dim aModel As SourceMdlModel
+		For bodyPartIndex As Integer = 0 To Me.theMdlFileData.theBodyParts.Count - 1
+			aBodyPart = Me.theMdlFileData.theBodyParts(bodyPartIndex)
+
+			If Me.theBodyPart Is aBodyPart Then
+				beginVertexIndex = bodyVertexCount
+				endVertexIndex = bodyVertexCount
+			End If
+
+			If aBodyPart.theModels IsNot Nothing AndAlso aBodyPart.theModels.Count > 0 Then
+				For modelIndex As Integer = 0 To aBodyPart.theModels.Count - 1
+					aModel = aBodyPart.theModels(modelIndex)
+					bodyVertexCount += aModel.vertexCount
+				Next
+			End If
+
+			If Me.theBodyPart Is aBodyPart Then
+				endVertexIndex = bodyVertexCount - 1
+			End If
+		Next
+
 		Try
 			Dim aVertex As SourceVertex
-			For vertexIndex As Integer = 0 To Me.theVvdFileData.theVertexes.Count - 1
+			'For vertexIndex As Integer = 0 To Me.theVvdFileData.theVertexes.Count - 1
+			For vertexIndex As Integer = beginVertexIndex To endVertexIndex
 				If Me.theVvdFileData.fixupCount = 0 Then
 					aVertex = Me.theVvdFileData.theVertexes(vertexIndex)
 				Else
