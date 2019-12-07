@@ -65,7 +65,7 @@ Public NotInheritable Class EnumHelper
 		Return index
 	End Function
 
-	Public Shared Function IndexOfKeyAsCasInsensitiveString(ByVal keyText As String, ByVal list As IList) As Integer
+	Public Shared Function IndexOfKeyAsCaseInsensitiveString(ByVal keyText As String, ByVal list As IList) As Integer
 		Dim index As Integer = -1
 		For pairIndex As Integer = 0 To list.Count - 1
 			Dim pair As KeyValuePair(Of System.Enum, String) = CType(list(pairIndex), KeyValuePair(Of [Enum], String))
