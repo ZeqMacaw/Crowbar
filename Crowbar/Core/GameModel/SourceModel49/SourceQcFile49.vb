@@ -2461,9 +2461,10 @@ Public Class SourceQcFile49
 		Next
 
 		If aSequenceDesc.theActivityName <> "" Then
-			If aSequenceDesc.activityWeight < 1 Then
+			'NOTE: Models can use weight of -1. Only 0 shows the error message.
+			If aSequenceDesc.activityWeight <> 0 Then
 				line = vbTab
-				line += "// The following line is commented-out because compiling with current compilers shows this error: Activity ACT_IDLE has a zero weight (weights must be integers > 0)"
+				line += "// The following line is commented-out because compiling shows this error: Activity ACT_IDLE has a zero weight (weights must be integers > 0)"
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			End If
 
