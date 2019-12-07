@@ -842,7 +842,7 @@ Public Class UnpackUserControl
 		Dim previousSelectedInputOption As InputOptions
 
 		anEnumList = EnumHelper.ToList(GetType(InputOptions))
-		previousSelectedInputOption = TheApp.Settings.DecompileMode
+		previousSelectedInputOption = TheApp.Settings.UnpackMode
 		Me.UnpackComboBox.DataBindings.Clear()
 		Try
 			If File.Exists(TheApp.Settings.UnpackPackagePathFolderOrFileName) Then
@@ -864,9 +864,9 @@ Public Class UnpackUserControl
 			Me.UnpackComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "UnpackMode", False, DataSourceUpdateMode.OnPropertyChanged)
 
 			If EnumHelper.Contains(previousSelectedInputOption, anEnumList) Then
-				Me.UnpackComboBox.SelectedIndex = EnumHelper.IndexOf(previousSelectedInputOption, anEnumList)
+				TheApp.Settings.UnpackMode = previousSelectedInputOption
 			Else
-				Me.UnpackComboBox.SelectedIndex = 0
+				TheApp.Settings.UnpackMode = CType(EnumHelper.Key(0, anEnumList), InputOptions)
 			End If
 		Catch ex As Exception
 			Dim debug As Integer = 4242

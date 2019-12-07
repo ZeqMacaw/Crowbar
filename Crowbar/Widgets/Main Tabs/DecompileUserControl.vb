@@ -291,6 +291,7 @@ Public Class DecompileUserControl
 
 	Private Sub UseAllInCompileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UseAllInCompileButton.Click
 		TheApp.Settings.CompileQcPathFileName = TheApp.Decompiler.GetOutputPathFolderOrFileName()
+		TheApp.Settings.CompileMode = InputOptions.FolderRecursion
 	End Sub
 
 	Private Sub UseInEditButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UseInEditButton.Click
@@ -299,6 +300,7 @@ Public Class DecompileUserControl
 
 	Private Sub UseInCompileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UseInCompileButton.Click
 		TheApp.Settings.CompileQcPathFileName = TheApp.Decompiler.GetOutputPathFileName(Me.theDecompiledRelativePathFileNames(Me.DecompiledFilesComboBox.SelectedIndex))
+		TheApp.Settings.CompileMode = InputOptions.File
 	End Sub
 
 	Private Sub GotoDecompiledFileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GotoDecompiledFileButton.Click
@@ -546,9 +548,9 @@ Public Class DecompileUserControl
 			Me.DecompileComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "DecompileMode", False, DataSourceUpdateMode.OnPropertyChanged)
 
 			If EnumHelper.Contains(previousSelectedInputOption, anEnumList) Then
-				Me.DecompileComboBox.SelectedIndex = EnumHelper.IndexOf(previousSelectedInputOption, anEnumList)
+				TheApp.Settings.DecompileMode = previousSelectedInputOption
 			Else
-				Me.DecompileComboBox.SelectedIndex = 0
+				TheApp.Settings.DecompileMode = CType(EnumHelper.Key(0, anEnumList), InputOptions)
 			End If
 		Catch ex As Exception
 			Dim debug As Integer = 4242
