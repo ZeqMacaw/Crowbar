@@ -17,17 +17,18 @@ Public MustInherit Class SourceModel
 				version = CInt(EnumHelper.GetDescription(overrideVersion))
 			End If
 
-			If version = 4 Then
-				'NOT IMPLEMENTED YET.
-				'model = New SourceModel04(mdlPathFileName, version)
-			ElseIf version = 6 Then
+			'If version = 4 Then
+			'	'NOT IMPLEMENTED YET.
+			'	'model = New SourceModel04(mdlPathFileName, version)
+			'Else
+			If version = 6 Then
 				model = New SourceModel06(mdlPathFileName, version)
 			ElseIf version = 10 Then
 				model = New SourceModel10(mdlPathFileName, version)
-			ElseIf version = 11 Then
+				'ElseIf version = 11 Then
 				'NOT IMPLEMENTED YET.
 				'model = New SourceModel10(mdlPathFileName, version)
-			ElseIf version = 14 Then
+				'ElseIf version = 14 Then
 				'NOT IMPLEMENTED YET.
 				'model = New SourceModel14(mdlPathFileName, version)
 			ElseIf version = 2531 Then
@@ -59,30 +60,34 @@ Public MustInherit Class SourceModel
 			ElseIf version = 37 Then
 				'NOT FULLY IMPLEMENTED YET.
 				model = New SourceModel37(mdlPathFileName, version)
-			ElseIf version = 38 Then
+				'ElseIf version = 38 Then
 				'NOT IMPLEMENTED YET, because can't find any models that use this version number.
 				'model = New SourceModel38(mdlPathFileName, version)
 			ElseIf version = 44 Then
 				'model = New SourceModel44(mdlPathFileName, version)
-				model = New SourceModel48(mdlPathFileName, version)
+				'model = New SourceModel48(mdlPathFileName, version)
+				model = New SourceModel49(mdlPathFileName, version)
 			ElseIf version = 45 Then
 				'model = New SourceModel45(mdlPathFileName, version)
 				'model = New SourceModel44(mdlPathFileName, version)
-				model = New SourceModel48(mdlPathFileName, version)
+				'model = New SourceModel48(mdlPathFileName, version)
+				model = New SourceModel49(mdlPathFileName, version)
 			ElseIf version = 46 Then
 				'model = New SourceModel46(mdlPathFileName, version)
 				'model = New SourceModel45(mdlPathFileName, version)
 				'model = New SourceModel44(mdlPathFileName, version)
-				model = New SourceModel48(mdlPathFileName, version)
+				'model = New SourceModel48(mdlPathFileName, version)
+				model = New SourceModel49(mdlPathFileName, version)
 			ElseIf version = 47 Then
-				'TODO: Finish.
 				'model = New SourceModel46(mdlPathFileName, version)
 				''model = New SourceModel47(mdlPathFileName, version)
 				'model = New SourceModel45(mdlPathFileName, version)
 				'model = New SourceModel44(mdlPathFileName, version)
-				model = New SourceModel48(mdlPathFileName, version)
+				'model = New SourceModel48(mdlPathFileName, version)
+				model = New SourceModel49(mdlPathFileName, version)
 			ElseIf version = 48 Then
-				model = New SourceModel48(mdlPathFileName, version)
+				'model = New SourceModel48(mdlPathFileName, version)
+				model = New SourceModel49(mdlPathFileName, version)
 			ElseIf version = 49 Then
 				model = New SourceModel49(mdlPathFileName, version)
 			ElseIf version = 52 Then
