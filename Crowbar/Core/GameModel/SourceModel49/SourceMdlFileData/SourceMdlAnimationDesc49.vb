@@ -3,7 +3,8 @@ Public Class SourceMdlAnimationDesc49
 
 	Public Sub New()
 		Me.theLinkedSequences = New List(Of SourceMdlSequenceDesc)()
-		Me.theCorrectiveSubtractAnimationOptionIsUsed = False
+		'Me.theCorrectiveSubtractAnimationOptionIsUsed = False
+		Me.theCorrectiveAnimationName = ""
 	End Sub
 
 	'FROM: AlienSwarm_source\src\public\studio.h
@@ -146,7 +147,8 @@ Public Class SourceMdlAnimationDesc49
 	Public theAnimIsLinkedToSequence As Boolean
 	Public theLinkedSequences As List(Of SourceMdlSequenceDesc)
 	Public theOffsetStart As Long
-	Public theCorrectiveSubtractAnimationOptionIsUsed As Boolean
+	'Public theCorrectiveSubtractAnimationOptionIsUsed As Boolean
+	Public theCorrectiveAnimationName As String
 
 
 

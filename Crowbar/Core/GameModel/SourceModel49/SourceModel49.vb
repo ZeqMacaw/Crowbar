@@ -173,17 +173,17 @@ Public Class SourceModel49
 		'End If
 
 		If Not String.IsNullOrEmpty(Me.thePhyPathFileName) Then
-		If status = StatusMessage.Success Then
-			Try
-				Me.ReadFile(Me.thePhyPathFileName, AddressOf Me.ReadPhyFile_Internal)
-				If Me.thePhyFileDataGeneric.checksum <> Me.theMdlFileData.checksum Then
-					'status = StatusMessage.WarningPhyChecksumDoesNotMatchMdl
-					Me.NotifySourceModelProgress(ProgressOptions.WarningPhyFileChecksumDoesNotMatchMdlFileChecksum, "")
-				End If
-			Catch ex As Exception
-				status = StatusMessage.Error
-			End Try
-		End If
+			If status = StatusMessage.Success Then
+				Try
+					Me.ReadFile(Me.thePhyPathFileName, AddressOf Me.ReadPhyFile_Internal)
+					If Me.thePhyFileDataGeneric.checksum <> Me.theMdlFileData.checksum Then
+						'status = StatusMessage.WarningPhyChecksumDoesNotMatchMdl
+						Me.NotifySourceModelProgress(ProgressOptions.WarningPhyFileChecksumDoesNotMatchMdlFileChecksum, "")
+					End If
+				Catch ex As Exception
+					status = StatusMessage.Error
+				End Try
+			End If
 		End If
 
 		Return status
@@ -228,20 +228,16 @@ Public Class SourceModel49
 	Public Overrides Function WriteBoneAnimationSmdFiles(ByVal modelOutputPath As String) As AppEnums.StatusMessage
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
 
-		Dim aSequenceDesc As SourceMdlSequenceDesc
-		Dim anAnimationDesc As SourceMdlAnimationDesc49
-		Dim smdPath As String
-		'Dim smdFileName As String
 		Dim smdPathFileName As String
+		Dim smdPath As String
 		Dim writeStatus As String
 
 		Try
-			If Me.theCorrectiveSubtractSequences IsNot Nothing Then
-				For sequenceIndex As Integer = 0 To Me.theCorrectiveSubtractSequences.Count - 1
-					aSequenceDesc = Me.theCorrectiveSubtractSequences(sequenceIndex)
-
-					smdPathFileName = Path.Combine(modelOutputPath, SourceFileNamesModule.CreateCorrectiveAnimationSmdRelativePathFileName(aSequenceDesc.theName, Me.Name))
+			If Me.theMdlFileData.theCorrectiveAnimationDescs IsNot Nothing Then
+				For Each anAnimationDesc As SourceMdlAnimationDesc49 In Me.theMdlFileData.theCorrectiveAnimationDescs
+					smdPathFileName = Path.Combine(modelOutputPath, SourceFileNamesModule.CreateCorrectiveAnimationSmdRelativePathFileName(anAnimationDesc.theName, Me.Name))
 					smdPath = FileManager.GetPath(smdPathFileName)
+
 					If FileManager.PathExistsAfterTryToCreate(smdPath) Then
 						Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, smdPathFileName)
 						'NOTE: Check here in case writing is canceled in the above event.
@@ -254,12 +250,7 @@ Public Class SourceModel49
 						End If
 
 						writeStatus = "Failed"
-
-						For j As Integer = 0 To aSequenceDesc.theAnimDescIndexes.Count - 1
-							anAnimationDesc = Me.theMdlFileData.theAnimationDescs(aSequenceDesc.theAnimDescIndexes(j))
-							writeStatus = Me.WriteCorrectiveAnimationSmdFile(smdPathFileName, Nothing, anAnimationDesc)
-						Next
-
+						writeStatus = Me.WriteCorrectiveAnimationSmdFile(smdPathFileName, Nothing, anAnimationDesc)
 						If writeStatus = "Success" Then
 							Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, smdPathFileName)
 						Else
@@ -269,9 +260,7 @@ Public Class SourceModel49
 				Next
 			End If
 
-			For anAnimDescIndex As Integer = 0 To Me.theMdlFileData.theAnimationDescs.Count - 1
-				anAnimationDesc = Me.theMdlFileData.theAnimationDescs(anAnimDescIndex)
-
+			For Each anAnimationDesc As SourceMdlAnimationDesc49 In Me.theMdlFileData.theAnimationDescs
 				anAnimationDesc.theSmdRelativePathFileName = SourceFileNamesModule.CreateAnimationSmdRelativePathFileName(anAnimationDesc.theSmdRelativePathFileName, Me.Name, anAnimationDesc.theName)
 				smdPathFileName = Path.Combine(modelOutputPath, anAnimationDesc.theSmdRelativePathFileName)
 				smdPath = FileManager.GetPath(smdPathFileName)
@@ -876,35 +865,27 @@ Public Class SourceModel49
 
 	Private Sub SetUpCorrectiveSubtractAnimationBlocks()
 		If Me.theMdlFileData.theSequenceDescs IsNot Nothing Then
-			Dim line As String = ""
+			Dim anAnimationDesc As SourceMdlAnimationDesc49
+			Dim name As String
+			Me.theMdlFileData.theCorrectiveAnimationDescs = New List(Of SourceMdlAnimationDesc49)()
 
-			For i As Integer = 0 To Me.theMdlFileData.theSequenceDescs.Count - 1
-				Dim aSequenceDesc As SourceMdlSequenceDesc
-				aSequenceDesc = Me.theMdlFileData.theSequenceDescs(i)
-
+			For Each aSequenceDesc As SourceMdlSequenceDesc In Me.theMdlFileData.theSequenceDescs
 				If (aSequenceDesc.flags And SourceMdlAnimationDesc.STUDIO_DELTA) > 0 Then
-					If Me.theCorrectiveSubtractSequences Is Nothing Then
-						Me.theCorrectiveSubtractSequences = New List(Of SourceMdlSequenceDesc)()
-						Me.theMdlFileData.theCorrectiveAnimationSmdRelativePathFileNames = New List(Of String)()
-					End If
-
-					If aSequenceDesc.theAnimDescIndexes IsNot Nothing OrElse aSequenceDesc.theAnimDescIndexes.Count > 0 Then
-						Me.theCorrectiveSubtractSequences.Add(aSequenceDesc)
-						Me.theMdlFileData.theCorrectiveAnimationSmdRelativePathFileNames.Add(SourceFileNamesModule.CreateCorrectiveAnimationSmdRelativePathFileName(aSequenceDesc.theName, Me.Name))
-
-						Dim anAnimationDesc As SourceMdlAnimationDesc49
-						Dim name As String
+					If aSequenceDesc.theAnimDescIndexes IsNot Nothing AndAlso aSequenceDesc.theAnimDescIndexes.Count > 0 Then
 						For j As Integer = 0 To aSequenceDesc.theAnimDescIndexes.Count - 1
 							anAnimationDesc = Me.theMdlFileData.theAnimationDescs(aSequenceDesc.theAnimDescIndexes(j))
 							name = anAnimationDesc.theName
 
-							line = vbTab
-							line += """"
 							If name(0) = "@" Then
 								'NOTE: There should only be one implied anim desc.
-								aSequenceDesc.theCorrectiveSubtractAnimationOptionIsUsed = True
+								'aSequenceDesc.theCorrectiveSubtractAnimationOptionIsUsed = True
+								aSequenceDesc.theCorrectiveAnimationName = SourceFileNamesModule.CreateCorrectiveAnimationName(name)
 							Else
-								anAnimationDesc.theCorrectiveSubtractAnimationOptionIsUsed = True
+								'anAnimationDesc.theCorrectiveSubtractAnimationOptionIsUsed = True
+								anAnimationDesc.theCorrectiveAnimationName = SourceFileNamesModule.CreateCorrectiveAnimationName(name)
+							End If
+							If Not Me.theMdlFileData.theCorrectiveAnimationDescs.Contains(anAnimationDesc) Then
+								Me.theMdlFileData.theCorrectiveAnimationDescs.Add(anAnimationDesc)
 							End If
 						Next
 					End If
@@ -957,7 +938,7 @@ Public Class SourceModel49
 	Private theVtxFileData As SourceVtxFileData07
 	Private theVvdFileData49 As SourceVvdFileData04
 
-	Private theCorrectiveSubtractSequences As List(Of SourceMdlSequenceDesc)
+	'Private theCorrectiveAnimationDescs As List(Of SourceMdlAnimationDesc49)
 
 #End Region
 

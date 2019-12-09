@@ -534,7 +534,8 @@
 
 	Public theAnimBlockSizeNoStallOptionIsUsed As Boolean
 	Public theBoneNameToBoneIndexMap As New SortedList(Of String, Integer)()
-	Public theCorrectiveAnimationSmdRelativePathFileNames As List(Of String)
+	'Public theCorrectiveAnimationSmdRelativePathFileNames As List(Of String)
+	Public theCorrectiveAnimationDescs As List(Of SourceMdlAnimationDesc49)
 	Public theProceduralBonesCommandIsUsed As Boolean
 	Public theSectionFrameCount As Integer
 	Public theSectionFrameMinFrameCount As Integer

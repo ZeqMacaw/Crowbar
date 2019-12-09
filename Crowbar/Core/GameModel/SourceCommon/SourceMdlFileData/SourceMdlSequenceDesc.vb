@@ -3,7 +3,8 @@ Public Class SourceMdlSequenceDesc
 
 	Public Sub New()
 		Me.theWeightListIndex = -1
-		Me.theCorrectiveSubtractAnimationOptionIsUsed = False
+		'Me.theCorrectiveSubtractAnimationOptionIsUsed = False
+		Me.theCorrectiveAnimationName = Nothing
 	End Sub
 
 	'// sequence descriptions
@@ -255,6 +256,7 @@ Public Class SourceMdlSequenceDesc
 
 
 	Public theBoneWeightsAreDefault As Boolean
-	Public theCorrectiveSubtractAnimationOptionIsUsed As Boolean
+	'Public theCorrectiveSubtractAnimationOptionIsUsed As Boolean
+	Public theCorrectiveAnimationName As String
 
 End Class
