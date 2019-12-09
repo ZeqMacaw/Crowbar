@@ -1102,27 +1102,31 @@ Public Class UnpackUserControl
 	Private Function GetEntriesFromFolderEntry(ByVal resourceInfos As List(Of PackageResourceFileNameInfo), ByVal treeNode As TreeNode, ByVal archivePathFileNameToEntryIndexMap As SortedList(Of String, List(Of Integer))) As SortedList(Of String, List(Of Integer))
 		Dim folderNode As TreeNode
 		Dim folderResourceInfos As List(Of PackageResourceFileNameInfo)
-		For Each resourceInfo As PackageResourceFileNameInfo In resourceInfos
-			If resourceInfo.IsFolder Then
-				folderNode = GetNodeFromPath(Me.PackageTreeView.Nodes(0), treeNode.FullPath + "\" + resourceInfo.Name)
-				folderResourceInfos = CType(folderNode.Tag, List(Of PackageResourceFileNameInfo))
-				archivePathFileNameToEntryIndexMap = Me.GetEntriesFromFolderEntry(folderResourceInfos, folderNode, archivePathFileNameToEntryIndexMap)
-			Else
-				Dim archivePathFileName As String
-				Dim archiveEntryIndex As Integer
-				archivePathFileName = resourceInfo.ArchivePathFileName
-				archiveEntryIndex = resourceInfo.EntryIndex
-				Dim archiveEntryIndexes As List(Of Integer)
-				If archivePathFileNameToEntryIndexMap.Keys.Contains(archivePathFileName) Then
-					archiveEntryIndexes = archivePathFileNameToEntryIndexMap(archivePathFileName)
-					archiveEntryIndexes.Add(archiveEntryIndex)
+
+		If resourceInfos IsNot Nothing Then
+			For Each resourceInfo As PackageResourceFileNameInfo In resourceInfos
+				If resourceInfo.IsFolder Then
+					folderNode = GetNodeFromPath(Me.PackageTreeView.Nodes(0), treeNode.FullPath + "\" + resourceInfo.Name)
+					folderResourceInfos = CType(folderNode.Tag, List(Of PackageResourceFileNameInfo))
+					archivePathFileNameToEntryIndexMap = Me.GetEntriesFromFolderEntry(folderResourceInfos, folderNode, archivePathFileNameToEntryIndexMap)
 				Else
-					archiveEntryIndexes = New List(Of Integer)()
-					archiveEntryIndexes.Add(archiveEntryIndex)
-					archivePathFileNameToEntryIndexMap.Add(archivePathFileName, archiveEntryIndexes)
+					Dim archivePathFileName As String
+					Dim archiveEntryIndex As Integer
+					archivePathFileName = resourceInfo.ArchivePathFileName
+					archiveEntryIndex = resourceInfo.EntryIndex
+					Dim archiveEntryIndexes As List(Of Integer)
+					If archivePathFileNameToEntryIndexMap.Keys.Contains(archivePathFileName) Then
+						archiveEntryIndexes = archivePathFileNameToEntryIndexMap(archivePathFileName)
+						archiveEntryIndexes.Add(archiveEntryIndex)
+					Else
+						archiveEntryIndexes = New List(Of Integer)()
+						archiveEntryIndexes.Add(archiveEntryIndex)
+						archivePathFileNameToEntryIndexMap.Add(archivePathFileName, archiveEntryIndexes)
+					End If
 				End If
-			End If
-		Next
+			Next
+		End If
+
 		Return archivePathFileNameToEntryIndexMap
 	End Function
 
@@ -1191,6 +1195,11 @@ Public Class UnpackUserControl
 
 		If selectedResourceInfos Is Nothing Then
 			selectedResourceInfos = CType(selectedNode.Tag, List(Of PackageResourceFileNameInfo))
+
+			If selectedResourceInfos Is Nothing Then
+				' This is reached when trying to Unpack a seerch folder with 0 results.
+				Exit Sub
+			End If
 		End If
 
 		archivePathFileNameToEntryIndexMap = Me.GetEntriesFromFolderEntry(selectedResourceInfos, selectedNode, archivePathFileNameToEntryIndexMap)
