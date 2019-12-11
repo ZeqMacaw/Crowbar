@@ -376,7 +376,6 @@
     <Compile Include="Core\GameModel\SourceModel2531\SourceMdlFile2531.vb" />
     <Compile Include="Core\GameModel\SourceModel2531\SourceSmdFile2531.vb" />
     <Compile Include="Core\GameModel\CompiledFiles\VtxFile\VtxFile107\SourceVtxFile107.vb" />
-    <Compile Include="Core\GameModel\SourceModel29\SourceModel29.vb" />
     <Compile Include="Core\GameModel\SourceModel37\SourceMdlFile37.vb" />
     <Compile Include="Core\GameModel\SourceModel37\SourceMdlFileData\SourceMdlAnimation37.vb" />
     <Compile Include="Core\GameModel\SourceModel37\SourceMdlFileData\SourceMdlAnimationDesc37.vb" />

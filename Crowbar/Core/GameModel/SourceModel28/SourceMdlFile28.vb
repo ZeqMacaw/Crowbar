@@ -651,8 +651,10 @@ Public Class SourceMdlFile28
 					inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					If Me.theMdlFileData.version = 27 Then
 						Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition + 4052, SeekOrigin.Begin)
-					Else
+					ElseIf Me.theMdlFileData.version = 28 Then
 						Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition + 4044, SeekOrigin.Begin)
+					Else
+						Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition + 4056, SeekOrigin.Begin)
 					End If
 
 					Me.theMdlFileData.theSequenceDescs.Add(aSeqDesc)
