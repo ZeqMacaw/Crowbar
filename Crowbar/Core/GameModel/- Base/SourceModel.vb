@@ -35,7 +35,7 @@ Public MustInherit Class SourceModel
 				model = New SourceModel2531(mdlPathFileName, version)
 			ElseIf version = 27 Then
 				'NOT FULLY IMPLEMENTED YET.
-				model = New SourceModel27(mdlPathFileName, version)
+				model = New SourceModel28(mdlPathFileName, version)
 			ElseIf version = 28 Then
 				'NOT FULLY IMPLEMENTED YET.
 				model = New SourceModel28(mdlPathFileName, version)

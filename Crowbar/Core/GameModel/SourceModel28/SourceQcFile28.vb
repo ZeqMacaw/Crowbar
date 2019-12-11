@@ -6,11 +6,11 @@ Public Class SourceQcFile28
 
 #Region "Creation and Destruction"
 
-	Public Sub New(ByVal outputFileStream As StreamWriter, ByVal outputPathFileName As String, ByVal mdlFileData As SourceMdlFileData28, ByVal modelName As String)
+	Public Sub New(ByVal outputFileStream As StreamWriter, ByVal outputPathFileName As String, ByVal mdlFileData As SourceMdlFileData28, ByVal vtxFileData As SourceVtxFileData06, ByVal phyFileData As SourcePhyFileData, ByVal modelName As String)
 		Me.theOutputFileStreamWriter = outputFileStream
 		Me.theMdlFileData = mdlFileData
-		'Me.thePhyFileData = phyFileData
-		'Me.theVtxFileData = vtxFileData
+		Me.thePhyFileData = phyFileData
+		Me.theVtxFileData = vtxFileData
 		Me.theModelName = modelName
 
 		Me.theOutputPath = FileManager.GetPath(outputPathFileName)
@@ -200,9 +200,9 @@ Public Class SourceQcFile28
 
 	Public Sub WriteBodyGroupCommand()
 		Dim line As String = ""
-		Dim aBodyPart As SourceMdlBodyPart27
+		Dim aBodyPart As SourceMdlBodyPart28
 		Dim aVtxBodyPart As SourceVtxBodyPart06
-		Dim aBodyModel As SourceMdlModel27
+		Dim aBodyModel As SourceMdlModel28
 		Dim aVtxModel As SourceVtxModel06
 
 		'$bodygroup "belt"
@@ -541,17 +541,22 @@ Public Class SourceQcFile28
 			If Me.theVtxFileData.theVtxBodyParts(0).theVtxModels(0).theVtxModelLods Is Nothing Then
 				Return
 			End If
+			If Me.theVtxFileData.lodCount <= 1 Then
+				Return
+			End If
 
 			Dim aBodyPart As SourceVtxBodyPart06
 			Dim aVtxModel As SourceVtxModel06
-			Dim aBodyModel As SourceMdlModel27
+			Dim aBodyModel As SourceMdlModel28
 			Dim lodIndex As Integer
 			Dim aLodQcInfo As LodQcInfo
 			Dim aLodQcInfoList As List(Of LodQcInfo)
 			Dim aLodList As SortedList(Of Single, List(Of LodQcInfo))
+			Dim aLodListOfFacialFlags As SortedList(Of Single, Boolean)
 			Dim switchPoint As Single
 
 			aLodList = New SortedList(Of Single, List(Of LodQcInfo))()
+			aLodListOfFacialFlags = New SortedList(Of Single, Boolean)()
 			For bodyPartIndex As Integer = 0 To Me.theVtxFileData.theVtxBodyParts.Count - 1
 				aBodyPart = Me.theVtxFileData.theVtxBodyParts(bodyPartIndex)
 
@@ -577,6 +582,7 @@ Public Class SourceQcFile28
 								If Not aLodList.ContainsKey(switchPoint) Then
 									aLodQcInfoList = New List(Of LodQcInfo)()
 									aLodList.Add(switchPoint, aLodQcInfoList)
+									aLodListOfFacialFlags.Add(switchPoint, aVtxModel.theVtxModelLods(lodIndex).theVtxModelLodUsesFacial)
 								Else
 									aLodQcInfoList = aLodList(switchPoint)
 								End If
@@ -621,7 +627,7 @@ Public Class SourceQcFile28
 
 				line = "{"
 				Me.theOutputFileStreamWriter.WriteLine(line)
-				Me.WriteLodOptions(lodIndex, aLodQcInfoList)
+				Me.WriteLodOptions(lodIndex, aLodListOfFacialFlags.Values(lodListIndex), aLodQcInfoList)
 				line = "}"
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
@@ -641,14 +647,14 @@ Public Class SourceQcFile28
 
 				line = "{"
 				Me.theOutputFileStreamWriter.WriteLine(line)
-				Me.WriteLodOptions(lodIndex, lodQcInfoListOfShadowLod)
+				Me.WriteLodOptions(lodIndex, False, lodQcInfoListOfShadowLod)
 				line = "}"
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			End If
 		End If
 	End Sub
 
-	Private Sub WriteLodOptions(ByVal lodIndex As Integer, ByVal aLodQcInfoList As List(Of LodQcInfo))
+	Private Sub WriteLodOptions(ByVal lodIndex As Integer, ByVal lodUsesFacial As Boolean, ByVal aLodQcInfoList As List(Of LodQcInfo))
 		Dim line As String = ""
 		Dim aLodQcInfo As LodQcInfo
 
@@ -694,6 +700,22 @@ Public Class SourceQcFile28
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			End If
 		Next
+
+		line = vbTab
+		If lodUsesFacial Then
+			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+				line += "Facial"
+			Else
+				line += "facial"
+			End If
+		Else
+			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+				line += "NoFacial"
+			Else
+				line += "nofacial"
+			End If
+		End If
+		Me.theOutputFileStreamWriter.WriteLine(line)
 
 		If (Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_USE_SHADOWLOD_MATERIALS) > 0 Then
 			Me.theOutputFileStreamWriter.WriteLine()

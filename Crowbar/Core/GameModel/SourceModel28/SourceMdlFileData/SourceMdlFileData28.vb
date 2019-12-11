@@ -236,7 +236,7 @@
 	Public theAnimationDescs As List(Of SourceMdlAnimationDesc31)
 	'Public theAnimGroups As List(Of SourceMdlAnimGroup31)
 	'Public theAttachments As List(Of SourceMdlAttachment37)
-	Public theBodyParts As List(Of SourceMdlBodyPart27)
+	Public theBodyParts As List(Of SourceMdlBodyPart28)
 	'Public theBoneControllers As List(Of SourceMdlBoneController37)
 	'Public theBoneDescs As List(Of SourceMdlBoneDesc37)
 	Public theBones As List(Of SourceMdlBone31)

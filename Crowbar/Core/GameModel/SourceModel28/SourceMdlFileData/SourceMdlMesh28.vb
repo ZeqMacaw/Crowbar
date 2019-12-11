@@ -13,7 +13,11 @@
 	Public id As Integer
 	Public center As New SourceVector()
 
-	Public unused(11) As Integer
+	' MDL 27
+	Public unused_MDL27(11) As Integer
+	'------
+	' MDL 28
+	Public unused_MDL28(4) As Integer
 
 	'Public theFlexes As List(Of SourceMdlFlex37)
 

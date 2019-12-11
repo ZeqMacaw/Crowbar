@@ -241,7 +241,7 @@ Public Class SourceModel30
 		Return status
 	End Function
 
-	Public Overloads Function WriteMeshSmdFile(ByVal smdPathFileName As String, ByVal lodIndex As Integer, ByVal aVtxModel As SourceVtxModel06, ByVal aModel As SourceMdlModel27, ByVal bodyPartVertexIndexStart As Integer) As AppEnums.StatusMessage
+	Public Overloads Function WriteMeshSmdFile(ByVal smdPathFileName As String, ByVal lodIndex As Integer, ByVal aVtxModel As SourceVtxModel06, ByVal aModel As SourceMdlModel28, ByVal bodyPartVertexIndexStart As Integer) As AppEnums.StatusMessage
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
 
 		Try
@@ -418,7 +418,7 @@ Public Class SourceModel30
 	End Sub
 
 	Protected Overrides Sub WriteQcFile()
-		Dim qcFile As New SourceQcFile28(Me.theOutputFileTextWriter, Me.theQcPathFileName, Me.theMdlFileData, Me.theName)
+		Dim qcFile As New SourceQcFile28(Me.theOutputFileTextWriter, Me.theQcPathFileName, Me.theMdlFileData, Me.theVtxFileData, Me.thePhyFileData, Me.theName)
 
 		Try
 			qcFile.WriteHeaderComment()
@@ -476,7 +476,7 @@ Public Class SourceModel30
 		Dim smdPathFileName As String
 		Dim aBodyPart As SourceVtxBodyPart06
 		Dim aVtxModel As SourceVtxModel06
-		Dim aBodyModel As SourceMdlModel27
+		Dim aBodyModel As SourceMdlModel28
 		Dim bodyPartVertexIndexStart As Integer
 
 		bodyPartVertexIndexStart = 0

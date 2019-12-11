@@ -90,7 +90,7 @@ Public Class SourceSmdFile28
 		Me.theOutputFileStreamWriter.WriteLine(line)
 	End Sub
 
-	Public Sub WriteTrianglesSection(ByVal lodIndex As Integer, ByVal aVtxModel As SourceVtxModel06, ByVal aModel As SourceMdlModel27, ByVal bodyPartVertexIndexStart As Integer)
+	Public Sub WriteTrianglesSection(ByVal lodIndex As Integer, ByVal aVtxModel As SourceVtxModel06, ByVal aModel As SourceMdlModel28, ByVal bodyPartVertexIndexStart As Integer)
 		Dim line As String = ""
 		Dim materialLine As String = ""
 		Dim vertex1Line As String = ""
@@ -383,7 +383,7 @@ Public Class SourceSmdFile28
 		Dim aVtxVertex As SourceVtxVertex06
 		Dim aVertex As SourceMdlVertex31
 		Dim vertexIndex As Integer
-		Dim boneWeight As SourceMdlBoneWeight27
+		Dim boneWeight As SourceMdlBoneWeight28
 		Dim aNormal As SourceMdlVertex31
 		Dim aTexCoord As SourceMdlVertex31
 		Dim line As String
