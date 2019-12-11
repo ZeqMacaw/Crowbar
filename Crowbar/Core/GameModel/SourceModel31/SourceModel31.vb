@@ -5,7 +5,7 @@
 '          combine_spike.dx80.vtx
 '          combine_spike.mdl
 Public Class SourceModel31
-	Inherits SourceModel30
+	Inherits SourceModel28
 
 #Region "Creation and Destruction"
 
