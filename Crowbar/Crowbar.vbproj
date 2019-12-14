@@ -163,6 +163,9 @@
     <Compile Include="Core\SourcePackage\- Base\BasePackageFile.vb" />
     <Compile Include="Core\SourcePackage\- Base\BasePackageDirectoryEntry.vb" />
     <Compile Include="Core\SourcePackage\- Base\BasePackageFileData.vb" />
+    <Compile Include="Core\SourcePackage\ApkFile\ApkDirectoryEntry.vb" />
+    <Compile Include="Core\SourcePackage\ApkFile\ApkFile.vb" />
+    <Compile Include="Core\SourcePackage\ApkFile\ApkFileData.vb" />
     <Compile Include="Core\SourcePackage\HfsFormat\HfsDirectoryEntry.vb" />
     <Compile Include="Core\SourcePackage\HfsFormat\HfsFile.vb" />
     <Compile Include="Core\SourcePackage\HfsFormat\HfsFileData.vb" />

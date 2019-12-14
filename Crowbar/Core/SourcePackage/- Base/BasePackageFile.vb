@@ -12,7 +12,12 @@ Public MustInherit Class BasePackageFile
 			Dim extension As String
 			extension = Path.GetExtension(mdlPathFileName)
 
-			If extension = ".fpx" Or extension = ".vpk" Then
+			If extension = ".apk" Then
+				If packageFileData Is Nothing Then
+					packageFileData = New ApkFileData()
+				End If
+				packageFile = New ApkFile(packageDirectoryFileReader, packageFileReader, CType(packageFileData, ApkFileData))
+			ElseIf extension = ".fpx" Or extension = ".vpk" Then
 				If packageFileData Is Nothing Then
 					packageFileData = New VpkFileData()
 				End If
