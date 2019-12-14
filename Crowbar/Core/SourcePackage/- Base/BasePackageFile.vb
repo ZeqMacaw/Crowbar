@@ -44,6 +44,16 @@ Public MustInherit Class BasePackageFile
 		Return packageFile
 	End Function
 
+	Public Shared Function GetListOfPackageExtensions() As List(Of String)
+		Dim packageExtensions As New List(Of String)
+		packageExtensions.Add("*.apk")
+		packageExtensions.Add("*.fpx")
+		packageExtensions.Add("*.gma")
+		'packageExtensions.Add("*.hfs")
+		packageExtensions.Add("*.vpk")
+		Return packageExtensions
+	End Function
+
 #End Region
 
 	Public MustOverride Sub ReadHeader()

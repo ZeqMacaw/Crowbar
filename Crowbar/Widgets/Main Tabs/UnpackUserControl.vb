@@ -850,9 +850,18 @@ Public Class UnpackUserControl
 				previousSelectedInputOption = InputOptions.File
 			ElseIf Directory.Exists(TheApp.Settings.UnpackPackagePathFolderOrFileName) Then
 				'NOTE: Remove in reverse index order.
-				If Directory.GetFiles(TheApp.Settings.UnpackPackagePathFolderOrFileName, "*.vpk").Length = 0 Then
-					anEnumList.RemoveAt(InputOptions.Folder)
-				End If
+				Dim packageExtensions As List(Of String) = BasePackageFile.GetListOfPackageExtensions()
+				For Each packageExtension As String In packageExtensions
+					For Each anArchivePathFileName As String In Directory.GetFiles(TheApp.Settings.UnpackPackagePathFolderOrFileName, packageExtension)
+						If anArchivePathFileName.Length = 0 Then
+							anEnumList.RemoveAt(InputOptions.Folder)
+							Exit For
+						End If
+					Next
+					If Not anEnumList.Contains(InputOptions.Folder) Then
+						Exit For
+					End If
+				Next
 				anEnumList.RemoveAt(InputOptions.File)
 				'Else
 				'	Exit Try

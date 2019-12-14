@@ -501,11 +501,7 @@ Public Class Unpacker
 
 	Private Sub ListArchivesInFolder(ByVal archivePath As String)
 		Try
-			Dim packageExtensions As New List(Of String)
-			packageExtensions.Add("*.vpk")
-			packageExtensions.Add("*.fpx")
-			packageExtensions.Add("*.gma")
-			packageExtensions.Add("*.hfs")
+			Dim packageExtensions As List(Of String) = BasePackageFile.GetListOfPackageExtensions()
 			For Each packageExtension As String In packageExtensions
 				For Each anArchivePathFileName As String In Directory.GetFiles(archivePath, packageExtension)
 					Me.ListArchive(anArchivePathFileName, False)
