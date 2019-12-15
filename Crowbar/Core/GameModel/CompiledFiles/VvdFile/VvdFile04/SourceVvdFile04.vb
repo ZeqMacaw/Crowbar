@@ -94,7 +94,7 @@ Public Class SourceVvdFile04
 			aStudioVertex.normalZ = Me.theInputFileReader.ReadSingle()
 			aStudioVertex.texCoordX = Me.theInputFileReader.ReadSingle()
 			aStudioVertex.texCoordY = Me.theInputFileReader.ReadSingle()
-			If mdlVersion = 54 OrElse mdlVersion = 58 Then
+			If mdlVersion >= 54 OrElse mdlVersion <= 59 Then
 				Me.theInputFileReader.ReadSingle()
 				Me.theInputFileReader.ReadSingle()
 				Me.theInputFileReader.ReadSingle()
