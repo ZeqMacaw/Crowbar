@@ -311,7 +311,6 @@
     <Compile Include="Core\GameModel\SourceModel31\SourceMdlFileData\SourceMdlTexture31.vb" />
     <Compile Include="Core\GameModel\SourceModel31\SourceMdlFileData\SourceMdlVertex31.vb" />
     <Compile Include="Core\GameModel\SourceModel31\SourceModel31.vb" />
-    <Compile Include="Core\GameModel\SourceModel31\SourceModule31.vb" />
     <Compile Include="Core\GameModel\SourceModel31\SourceQcFile31.vb" />
     <Compile Include="Core\GameModel\SourceModel31\SourceSmdFile31.vb" />
     <Compile Include="Core\GameModel\SourceModel32\SourceMdlFile32.vb" />

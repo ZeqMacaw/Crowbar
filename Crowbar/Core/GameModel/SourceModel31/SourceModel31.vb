@@ -1,11 +1,7 @@
 ﻿Imports System.IO
 
-' Example: props_combine\combine_spike from HL2 leak
-'          combine_spike.dx7_2bone.vtx
-'          combine_spike.dx80.vtx
-'          combine_spike.mdl
 Public Class SourceModel31
-	Inherits SourceModel28
+	Inherits SourceModel2531
 
 #Region "Creation and Destruction"
 
@@ -80,15 +76,15 @@ Public Class SourceModel31
 
 	Public Overrides ReadOnly Property HasPhysicsMeshData As Boolean
 		Get
-			'If Me.thePhyFileData IsNot Nothing _
-			' AndAlso Me.thePhyFileData.theSourcePhyCollisionDatas IsNot Nothing _
-			' AndAlso Not Me.theMdlFileData.theMdlFileOnlyHasAnimations _
-			' AndAlso Me.theMdlFileData.theBones IsNot Nothing _
-			' AndAlso Me.theMdlFileData.theBones.Count > 0 Then
-			'	Return True
-			'Else
-			Return False
-			'End If
+			If Me.thePhyFileDataGeneric IsNot Nothing _
+			 AndAlso Me.thePhyFileDataGeneric.theSourcePhyCollisionDatas IsNot Nothing _
+			 AndAlso Not Me.theMdlFileData.theMdlFileOnlyHasAnimations _
+			 AndAlso Me.theMdlFileData.theBones IsNot Nothing _
+			 AndAlso Me.theMdlFileData.theBones.Count > 0 Then
+				Return True
+			Else
+				Return False
+			End If
 		End Get
 	End Property
 
@@ -345,7 +341,11 @@ Public Class SourceModel31
 		mdlFile.ReadBones()
 		'mdlFile.ReadBoneControllers()
 		'mdlFile.ReadAttachments()
-		mdlFile.ReadHitboxSets()
+		If Me.theMdlFileData.version >= 27 AndAlso Me.theMdlFileData.version <= 30 Then
+			mdlFile.ReadHitboxes_MDL27to30()
+		Else
+			mdlFile.ReadHitboxSets()
+		End If
 		'mdlFile.ReadBoneDescs()
 
 		'' Read what WriteSequenceInfo() writes.
@@ -385,24 +385,25 @@ Public Class SourceModel31
 		''mdlFile.BuildBoneTransforms()
 	End Sub
 
-	'Protected Overrides Sub ReadPhyFile_Internal()
-	'	If Me.thePhyFileData Is Nothing Then
-	'		Me.thePhyFileData = New SourcePhyFileData31()
-	'	End If
+	Protected Overrides Sub ReadPhyFile_Internal()
+		If Me.thePhyFileDataGeneric Is Nothing Then
+			Me.thePhyFileDataGeneric = New SourcePhyFileData()
+		End If
 
-	'	Dim phyFile As New SourcePhyFile31(Me.theInputFileReader, Me.thePhyFileData)
+		Dim phyFile As New SourcePhyFile(Me.theInputFileReader, Me.thePhyFileDataGeneric)
 
-	'	phyFile.ReadSourcePhyHeader()
-	'	If Me.thePhyFileData.solidCount > 0 Then
-	'		phyFile.ReadSourceCollisionData()
-	'		phyFile.CalculateVertexNormals()
-	'		phyFile.ReadSourcePhysCollisionModels()
-	'		phyFile.ReadSourcePhyRagdollConstraintDescs()
-	'		phyFile.ReadSourcePhyCollisionRules()
-	'		phyFile.ReadSourcePhyEditParamsSection()
-	'		phyFile.ReadCollisionTextSection()
-	'	End If
-	'End Sub
+		phyFile.ReadSourcePhyHeader()
+		If Me.thePhyFileDataGeneric.solidCount > 0 Then
+			phyFile.ReadSourceCollisionData()
+			phyFile.CalculateVertexNormals()
+			phyFile.ReadSourcePhysCollisionModels()
+			phyFile.ReadSourcePhyRagdollConstraintDescs()
+			phyFile.ReadSourcePhyCollisionRules()
+			phyFile.ReadSourcePhyEditParamsSection()
+			phyFile.ReadCollisionTextSection()
+		End If
+		phyFile.ReadUnreadBytes()
+	End Sub
 
 	Protected Overrides Sub ReadVtxFile_Internal()
 		If Me.theVtxFileData Is Nothing Then
@@ -416,11 +417,12 @@ Public Class SourceModel31
 		vtxFile.ReadSourceVtxBodyParts()
 		'End If
 		vtxFile.ReadSourceVtxMaterialReplacementLists()
+		vtxFile.ReadUnreadBytes()
 	End Sub
 
 	Protected Overrides Sub WriteQcFile()
 		'Dim qcFile As New SourceQcFile31(Me.theOutputFileTextWriter, Me.theQcPathFileName, Me.theMdlFileData, Me.thePhyFileData, Me.theVtxFileData, Me.theName)
-		Dim qcFile As New SourceQcFile31(Me.theOutputFileTextWriter, Me.theQcPathFileName, Me.theMdlFileData, Me.theName)
+		Dim qcFile As New SourceQcFile31(Me.theOutputFileTextWriter, Me.theQcPathFileName, Me.theMdlFileData, Me.theVtxFileData, Me.thePhyFileDataGeneric, Me.theName)
 
 		Try
 			qcFile.WriteHeaderComment()
@@ -429,45 +431,40 @@ Public Class SourceModel31
 
 			qcFile.WriteStaticPropCommand()
 
-			'If Me.theMdlFileData.theModelCommandIsUsed Then
-			'	qcFile.WriteModelCommand()
-			'	qcFile.WriteBodyGroupCommand(1)
-			'Else
-			'	qcFile.WriteBodyGroupCommand(0)
-			'End If
-			'qcFile.WriteGroup("lod", AddressOf qcFile.WriteGroupLod, False, False)
+			qcFile.WriteBodyGroupCommand()
+			qcFile.WriteGroup("lod", AddressOf qcFile.WriteGroupLod, False, False)
 
-			'qcFile.WriteSurfacePropCommand()
+			qcFile.WriteSurfacePropCommand()
 			'qcFile.WriteJointSurfacePropCommand()
 			'qcFile.WriteContentsCommand()
 			'qcFile.WriteJointContentsCommand()
 			qcFile.WriteIllumPositionCommand()
 
-			'qcFile.WriteEyePositionCommand()
+			qcFile.WriteEyePositionCommand()
 			'qcFile.WriteNoForcedFadeCommand()
 			'qcFile.WriteForcePhonemeCrossfadeCommand()
 
 			'qcFile.WriteAmbientBoostCommand()
 			'qcFile.WriteOpaqueCommand()
 			'qcFile.WriteObsoleteCommand()
-			'qcFile.WriteCdMaterialsCommand()
-			'qcFile.WriteTextureGroupCommand()
-			'If TheApp.Settings.DecompileDebugInfoFilesIsChecked Then
-			'	qcFile.WriteTextureFileNameComments()
-			'End If
+			qcFile.WriteCdMaterialsCommand()
+			qcFile.WriteTextureGroupCommand()
+			If TheApp.Settings.DecompileDebugInfoFilesIsChecked Then
+				qcFile.WriteTextureFileNameComments()
+			End If
 
 			'qcFile.WriteAttachmentCommand()
 
-			'qcFile.WriteGroup("box", AddressOf qcFile.WriteGroupBox, True, False)
+			qcFile.WriteGroup("box", AddressOf qcFile.WriteGroupBox, True, False)
 
 			'qcFile.WriteControllerCommand()
 			'qcFile.WriteScreenAlignCommand()
 
 			'qcFile.WriteGroup("bone", AddressOf qcFile.WriteGroupBone, False, False)
 
-			'qcFile.WriteGroup("animation", AddressOf qcFile.WriteGroupAnimation, False, False)
+			qcFile.WriteGroup("animation", AddressOf qcFile.WriteGroupAnimation, False, False)
 
-			'qcFile.WriteGroup("collision", AddressOf qcFile.WriteGroupCollision, False, False)
+			qcFile.WriteGroup("collision", AddressOf qcFile.WriteGroupCollision, False, False)
 
 			''qcFile.WriteKeyValues(Me.theMdlFileData.theKeyValuesText, "$KeyValues")
 		Catch ex As Exception
@@ -582,7 +579,6 @@ Public Class SourceModel31
 #Region "Data"
 
 	Private theMdlFileData As SourceMdlFileData31
-	'Private thePhyFileData As SourcePhyFileData31
 	Private theVtxFileData As SourceVtxFileData06
 
 #End Region

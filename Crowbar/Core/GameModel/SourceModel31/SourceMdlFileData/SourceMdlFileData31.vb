@@ -172,6 +172,11 @@
 	Public boneControllerCount As Integer
 	Public boneControllerOffset As Integer
 
+	' MDL27to29
+	Public hitboxCount_MDL27to30 As Integer
+	Public hitboxOffset_MDL27to30 As Integer
+	'------
+	' MDL31
 	Public hitboxSetCount As Integer
 	Public hitboxSetOffset As Integer
 
@@ -243,6 +248,7 @@
 	'Public theFlexControllers As List(Of SourceMdlFlexController)
 	'Public theFlexDescs As List(Of SourceMdlFlexDesc)
 	'Public theFlexRules As List(Of SourceMdlFlexRule)
+	Public theHitboxes_MDL27to30 As List(Of SourceMdlHitbox31)
 	Public theHitboxSets As List(Of SourceMdlHitboxSet31)
 	'Public theIkChains As List(Of SourceMdlIkChain37)
 	'Public theIkLocks As List(Of SourceMdlIkLock37)

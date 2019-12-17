@@ -442,6 +442,82 @@ Public Class SourceMdlFile31
 	'	End If
 	'End Sub
 
+	Public Sub ReadHitboxes_MDL27to30()
+		If Me.theMdlFileData.hitboxCount_MDL27to30 > 0 Then
+			Dim hitboxInputFileStreamPosition As Long
+			Dim inputFileStreamPosition As Long
+			Dim fileOffsetStart As Long
+			Dim fileOffsetEnd As Long
+			'Dim fileOffsetStart2 As Long
+			'Dim fileOffsetEnd2 As Long
+
+			Try
+				Me.theInputFileReader.BaseStream.Seek(Me.theMdlFileData.hitboxOffset_MDL27to30, SeekOrigin.Begin)
+				fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+
+				Me.theMdlFileData.theHitboxes_MDL27to30 = New List(Of SourceMdlHitbox31)(Me.theMdlFileData.hitboxCount_MDL27to30)
+				For j As Integer = 0 To Me.theMdlFileData.hitboxCount_MDL27to30 - 1
+					hitboxInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+					Dim aHitbox As New SourceMdlHitbox31()
+
+					'DEBUG: Unknown because these are zeroes in HL2 beta leak pipe01_lcurve01.
+					aHitbox.boneIndex = Me.theInputFileReader.ReadInt32()
+					aHitbox.groupIndex = Me.theInputFileReader.ReadInt32()
+
+					'MDL27 - Probably alignment filler.
+					If Me.theMdlFileData.version = 27 Then
+						Me.theInputFileReader.ReadInt32()
+						Me.theInputFileReader.ReadInt32()
+					End If
+
+					aHitbox.boundingBoxMin.x = Me.theInputFileReader.ReadSingle()
+					aHitbox.boundingBoxMin.y = Me.theInputFileReader.ReadSingle()
+					aHitbox.boundingBoxMin.z = Me.theInputFileReader.ReadSingle()
+
+					'MDL27 - Probably alignment filler.
+					If Me.theMdlFileData.version = 27 Then
+						Me.theInputFileReader.ReadInt32()
+					End If
+
+					aHitbox.boundingBoxMax.x = Me.theInputFileReader.ReadSingle()
+					aHitbox.boundingBoxMax.y = Me.theInputFileReader.ReadSingle()
+					aHitbox.boundingBoxMax.z = Me.theInputFileReader.ReadSingle()
+
+					'MDL27 - Probably alignment filler.
+					If Me.theMdlFileData.version = 27 Then
+						Me.theInputFileReader.ReadInt32()
+					End If
+
+					Me.theMdlFileData.theHitboxes_MDL27to30.Add(aHitbox)
+
+					inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+
+					'If aHitbox.nameOffset <> 0 Then
+					'	'NOTE: The nameOffset is absolute offset in studiomdl.
+					'	Me.theInputFileReader.BaseStream.Seek(aHitbox.nameOffset, SeekOrigin.Begin)
+					'	fileOffsetStart2 = Me.theInputFileReader.BaseStream.Position
+
+					'	aHitbox.theName = FileManager.ReadNullTerminatedString(Me.theInputFileReader)
+
+					'	fileOffsetEnd2 = Me.theInputFileReader.BaseStream.Position - 1
+					'	If Not Me.theMdlFileData.theFileSeekLog.ContainsKey(fileOffsetStart2) Then
+					'		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart2, fileOffsetEnd2, "aHitbox.theName = " + aHitbox.theName)
+					'	End If
+					'Else
+					'	aHitbox.theName = ""
+					'End If
+
+					Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
+				Next
+
+				fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
+				Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theMdlFileData.theHitboxes_MDL27to30 " + Me.theMdlFileData.theHitboxes_MDL27to30.Count.ToString())
+			Catch ex As Exception
+				Dim debug As Integer = 4242
+			End Try
+		End If
+	End Sub
+
 	Public Sub ReadHitboxSets()
 		If Me.theMdlFileData.hitboxSetCount > 0 Then
 			Dim hitboxSetInputFileStreamPosition As Long
