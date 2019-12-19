@@ -637,6 +637,9 @@ Public Class SourceSmdFile31
 			Else
 				rot.z = Me.ExtractAnimValue(frameIndex, anAnimation.theRotationAnimationZValues, aBone.rotationScale.z, 0)
 			End If
+			'rot.w = 1
+
+			'angleVector = MathModule.ToEulerAngles2531(rot)
 
 			angleVector.x = rot.x
 			angleVector.y = rot.y

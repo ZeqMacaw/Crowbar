@@ -17,7 +17,15 @@
 
 	Public vertexCount As Integer
 	Public vertexOffset As Integer
+
+	' MDL 27 to 30 
+	Public normalOffset_MDL27to30 As Integer
+
 	Public tangentOffset As Integer
+
+	' MDL 27 to 30 
+	Public texCoordOffset_MDL27to30 As Integer
+	Public boneWeightsOffset_MDL27to30 As Integer
 
 	Public attachmentCount As Integer
 	Public attachmentOffset As Integer

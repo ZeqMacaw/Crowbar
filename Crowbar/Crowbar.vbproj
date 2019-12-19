@@ -285,15 +285,6 @@
     <Compile Include="Core\GameModel\SourceModel2531\SourceModule2531.vb" />
     <Compile Include="Core\GameModel\SourceModel2531\SourceQcFile2531.vb" />
     <Compile Include="Core\GameModel\SourceModel2531\SourceVtaFile2531.vb" />
-    <Compile Include="Core\GameModel\SourceModel28\SourceMdlFile28.vb" />
-    <Compile Include="Core\GameModel\SourceModel28\SourceMdlFileData\SourceMdlBodyPart28.vb" />
-    <Compile Include="Core\GameModel\SourceModel28\SourceMdlFileData\SourceMdlBoneWeight28.vb" />
-    <Compile Include="Core\GameModel\SourceModel28\SourceMdlFileData\SourceMdlFileData28.vb" />
-    <Compile Include="Core\GameModel\SourceModel28\SourceMdlFileData\SourceMdlMesh28.vb" />
-    <Compile Include="Core\GameModel\SourceModel28\SourceMdlFileData\SourceMdlModel28.vb" />
-    <Compile Include="Core\GameModel\SourceModel28\SourceModel28.vb" />
-    <Compile Include="Core\GameModel\SourceModel28\SourceQcFile28.vb" />
-    <Compile Include="Core\GameModel\SourceModel28\SourceSmdFile28.vb" />
     <Compile Include="Core\GameModel\SourceModel31\SourceMdlFile31.vb" />
     <Compile Include="Core\GameModel\SourceModel31\SourceMdlFileData\SourceMdlAnimation31.vb" />
     <Compile Include="Core\GameModel\SourceModel31\SourceMdlFileData\SourceMdlAnimationDesc31.vb" />
