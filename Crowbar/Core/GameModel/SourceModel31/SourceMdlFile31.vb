@@ -1037,14 +1037,15 @@ Public Class SourceMdlFile31
 
 					anAnimationDesc.animOffset = Me.theInputFileReader.ReadInt32()
 
-					If Me.theMdlFileData.version = 27 OrElse Me.theMdlFileData.version = 31 Then
-						anAnimationDesc.ikRuleCount = Me.theInputFileReader.ReadInt32()
-						anAnimationDesc.ikRuleOffset = Me.theInputFileReader.ReadInt32()
-					End If
 
 					If Me.theMdlFileData.version = 27 Then
 						' Probably alignment filler.
 						Me.theInputFileReader.ReadInt32()
+						Me.theInputFileReader.ReadInt32()
+						Me.theInputFileReader.ReadInt32()
+					ElseIf Me.theMdlFileData.version = 31 Then
+						anAnimationDesc.ikRuleCount = Me.theInputFileReader.ReadInt32()
+						anAnimationDesc.ikRuleOffset = Me.theInputFileReader.ReadInt32()
 					End If
 
 					'For x As Integer = 0 To anAnimationDesc.unused.Length - 1
