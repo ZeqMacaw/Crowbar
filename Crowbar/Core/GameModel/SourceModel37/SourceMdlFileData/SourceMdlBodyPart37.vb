@@ -15,7 +15,10 @@
 	Public base As Integer
 	Public modelOffset As Integer
 
-	Public theModels As List(Of SourceMdlModel37)
 	Public theName As String
+	Public theModels As List(Of SourceMdlModel37)
+	Public theModelCommandIsUsed As Boolean
+	Public theEyeballOptionIsUsed As Boolean
+	Public theFlexFrames As List(Of FlexFrame37)
 
 End Class

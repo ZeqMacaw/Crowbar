@@ -4,7 +4,7 @@
 	Public Sub New()
 		MyBase.New()
 
-		Me.theModelCommandIsUsed = False
+		'Me.theModelCommandIsUsed = False
 		Me.theProceduralBonesCommandIsUsed = False
 	End Sub
 
@@ -251,15 +251,15 @@
 	Public theTexturePaths As List(Of String)
 	Public theTextures As List(Of SourceMdlTexture37)
 	Public theTransitions As List(Of List(Of Integer))
+	Public theWeightLists As New List(Of SourceMdlWeightList)()
 
-	Public theModelCommandIsUsed As Boolean
+	'Public theModelCommandIsUsed As Boolean
 	Public theProceduralBonesCommandIsUsed As Boolean
 
 	Public theBoneNameToBoneIndexMap As New SortedList(Of String, Integer)()
 	Public theEyelidFlexFrameIndexes As List(Of Integer)
 	Public theFirstAnimationDesc As SourceMdlAnimationDesc36
 	Public theFirstAnimationDescFrameLines As New SortedList(Of Integer, AnimationFrameLine)()
-	Public theFlexFrames As List(Of FlexFrame)
-	Public theWeightLists As New List(Of SourceMdlWeightList)()
+	'Public theFlexFrames As List(Of FlexFrame)
 
 End Class

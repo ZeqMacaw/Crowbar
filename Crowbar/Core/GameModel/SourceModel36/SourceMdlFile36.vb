@@ -41,7 +41,7 @@ Public Class SourceMdlFile36
 
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 		If logDescription <> "" Then
-			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, logDescription + " (Actual version: " + Me.theMdlFileData.version.ToString() + "; override version: 36)")
+			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, logDescription + " (MDL version: " + Me.theMdlFileData.version.ToString() + ")")
 		End If
 	End Sub
 
@@ -509,11 +509,12 @@ Public Class SourceMdlFile36
 
 			Try
 				Me.theInputFileReader.BaseStream.Seek(Me.theMdlFileData.localSequenceOffset, SeekOrigin.Begin)
-				fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+				'fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
 				Me.theMdlFileData.theSequenceDescs = New List(Of SourceMdlSequenceDesc36)(Me.theMdlFileData.localSequenceCount)
 				For i As Integer = 0 To Me.theMdlFileData.localSequenceCount - 1
 					seqInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+					fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 					Dim aSeqDesc As New SourceMdlSequenceDesc36()
 
 					aSeqDesc.nameOffset = Me.theInputFileReader.ReadInt32()
@@ -625,19 +626,26 @@ Public Class SourceMdlFile36
 						aSeqDesc.theActivityName = ""
 					End If
 
-					Me.ReadPoseKeys(seqInputFileStreamPosition, aSeqDesc)
+					'NOTE: MDL35 and MDL36 aSeqDesc.eventOffset is really "events plus weights offset", so set stream position here for weights in case there are no events.
+					Me.theInputFileReader.BaseStream.Seek(seqInputFileStreamPosition + aSeqDesc.eventOffset, SeekOrigin.Begin)
+					'Me.ReadPoseKeys(seqInputFileStreamPosition, aSeqDesc)
 					Me.ReadEvents(seqInputFileStreamPosition, aSeqDesc)
-					Me.ReadAutoLayers(seqInputFileStreamPosition, aSeqDesc)
-					Me.ReadMdlAnimBoneWeights(seqInputFileStreamPosition, aSeqDesc)
-					Me.ReadSequenceIkLocks(seqInputFileStreamPosition, aSeqDesc)
-					'Me.ReadMdlAnimIndexes(seqInputFileStreamPosition, aSeqDesc)
-					Me.ReadSequenceKeyValues(seqInputFileStreamPosition, aSeqDesc)
+					'Me.ReadAutoLayers(seqInputFileStreamPosition, aSeqDesc)
+					'Me.ReadMdlAnimBoneWeights(seqInputFileStreamPosition, aSeqDesc)
+					'Me.ReadSequenceIkLocks(seqInputFileStreamPosition, aSeqDesc)
+					''Me.ReadMdlAnimIndexes(seqInputFileStreamPosition, aSeqDesc)
+					'Me.ReadSequenceKeyValues(seqInputFileStreamPosition, aSeqDesc)
+					'NOTE: MDL35 and MDL36 only use events and weights, and the weights are always immediately after events.
+					Me.ReadMdlAnimBoneWeights(Me.theInputFileReader.BaseStream.Position, aSeqDesc)
 
 					Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
+
+					fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
+					Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aSeqDesc")
 				Next
 
-				fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-				Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theMdlFileData.theSequenceDescs " + Me.theMdlFileData.theSequenceDescs.Count.ToString())
+				'fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
+				'Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theMdlFileData.theSequenceDescs " + Me.theMdlFileData.theSequenceDescs.Count.ToString())
 			Catch ex As Exception
 				Dim debug As Integer = 4242
 			End Try
@@ -666,6 +674,12 @@ Public Class SourceMdlFile36
 					aSequenceGroup.fileNameOffset = Me.theInputFileReader.ReadInt32()
 					aSequenceGroup.cacheOffset = Me.theInputFileReader.ReadInt32()
 					aSequenceGroup.data = Me.theInputFileReader.ReadInt32()
+
+					If Me.theMdlFileData.version = 35 Then
+						For x As Integer = 0 To aSequenceGroup.unknown.Length - 1
+							aSequenceGroup.unknown(x) = Me.theInputFileReader.ReadInt32()
+						Next
+					End If
 
 					Me.theMdlFileData.theSequenceGroups.Add(aSequenceGroup)
 
@@ -800,9 +814,9 @@ Public Class SourceMdlFile36
 						fileOffsetStart2 = Me.theInputFileReader.BaseStream.Position
 
 						anAnimationDesc.theName = FileManager.ReadNullTerminatedString(Me.theInputFileReader)
-						If Me.theMdlFileData.theFirstAnimationDesc Is Nothing AndAlso anAnimationDesc.theName(0) <> "@" Then
-							Me.theMdlFileData.theFirstAnimationDesc = anAnimationDesc
-						End If
+						'If Me.theMdlFileData.theFirstAnimationDesc Is Nothing AndAlso anAnimationDesc.theName(0) <> "@" Then
+						'	Me.theMdlFileData.theFirstAnimationDesc = anAnimationDesc
+						'End If
 						If anAnimationDesc.theName(0) = "@" Then
 							anAnimationDesc.theName = anAnimationDesc.theName.Remove(0, 1)
 						End If
@@ -1011,9 +1025,9 @@ Public Class SourceMdlFile36
 					Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
 				Next
 
-				If Me.theMdlFileData.theFlexControllers.Count > 0 Then
-					Me.theMdlFileData.theModelCommandIsUsed = True
-				End If
+				'If Me.theMdlFileData.theFlexControllers.Count > 0 Then
+				'	Me.theMdlFileData.theModelCommandIsUsed = True
+				'End If
 
 				fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 				Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theMdlFileData.theFlexControllers " + theMdlFileData.theFlexControllers.Count.ToString())
@@ -1057,9 +1071,9 @@ Public Class SourceMdlFile36
 					Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
 				Next
 
-				If Me.theMdlFileData.theFlexRules.Count > 0 Then
-					Me.theMdlFileData.theModelCommandIsUsed = True
-				End If
+				'If Me.theMdlFileData.theFlexRules.Count > 0 Then
+				'	Me.theMdlFileData.theModelCommandIsUsed = True
+				'End If
 
 				fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 				Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theMdlFileData.theFlexRules " + theMdlFileData.theFlexRules.Count.ToString())
@@ -1196,7 +1210,9 @@ Public Class SourceMdlFile36
 				Next
 
 				If Me.theMdlFileData.theMouths.Count > 0 Then
-					Me.theMdlFileData.theModelCommandIsUsed = True
+					'Me.theMdlFileData.theModelCommandIsUsed = True
+					' Seems like any $model can have these lines, so simply assign them to first one.
+					Me.theMdlFileData.theBodyParts(0).theModelCommandIsUsed = True
 				End If
 
 				fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
@@ -1460,6 +1476,151 @@ Public Class SourceMdlFile36
 
 	Public Sub ReadUnreadBytes()
 		Me.theMdlFileData.theFileSeekLog.LogUnreadBytes(Me.theInputFileReader)
+	End Sub
+
+	Public Sub PostProcess()
+		If Me.theMdlFileData.theBodyParts IsNot Nothing Then
+			For Each aBodyPart As SourceMdlBodyPart37 In Me.theMdlFileData.theBodyParts
+				For Each aBodyModel As SourceMdlModel37 In aBodyPart.theModels
+					If aBodyModel.theEyeballs IsNot Nothing AndAlso aBodyModel.theEyeballs.Count > 0 Then
+						aBodyPart.theModelCommandIsUsed = True
+						aBodyPart.theEyeballOptionIsUsed = True
+						Exit For
+					End If
+
+					If aBodyModel.theMeshes IsNot Nothing Then
+						For Each aMesh As SourceMdlMesh37 In aBodyModel.theMeshes
+							If aMesh.theFlexes IsNot Nothing AndAlso aMesh.theFlexes.Count > 0 Then
+								aBodyPart.theModelCommandIsUsed = True
+								Exit For
+							End If
+						Next
+						If aBodyPart.theModelCommandIsUsed Then
+							Exit For
+						End If
+					End If
+				Next
+			Next
+		End If
+	End Sub
+
+	Public Sub CreateFlexFrameList()
+		Dim aFlexFrame As FlexFrame37
+		Dim aBodyPart As SourceMdlBodyPart37
+		Dim aModel As SourceMdlModel37
+		Dim aMesh As SourceMdlMesh37
+		Dim aFlex As SourceMdlFlex37
+		Dim searchedFlexFrame As FlexFrame37
+
+		'Me.theMdlFileData.theFlexFrames = New List(Of FlexFrame37)()
+
+		''NOTE: Create the defaultflex.
+		'aFlexFrame = New FlexFrame37()
+		'Me.theMdlFileData.theFlexFrames.Add(aFlexFrame)
+
+		If Me.theMdlFileData.theFlexDescs IsNot Nothing AndAlso Me.theMdlFileData.theFlexDescs.Count > 0 Then
+			'Dim flexDescToMeshIndexes As List(Of List(Of Integer))
+			Dim flexDescToFlexFrames As List(Of List(Of FlexFrame37))
+			Dim meshVertexIndexStart As Integer
+			Dim cumulativebodyPartVertexIndexStart As Integer
+
+			'flexDescToMeshIndexes = New List(Of List(Of Integer))(Me.theMdlFileData.theFlexDescs.Count)
+			'For x As Integer = 0 To Me.theMdlFileData.theFlexDescs.Count - 1
+			'	Dim meshIndexList As New List(Of Integer)()
+			'	flexDescToMeshIndexes.Add(meshIndexList)
+			'Next
+
+			flexDescToFlexFrames = New List(Of List(Of FlexFrame37))(Me.theMdlFileData.theFlexDescs.Count)
+			For x As Integer = 0 To Me.theMdlFileData.theFlexDescs.Count - 1
+				Dim flexFrameList As New List(Of FlexFrame37)()
+				flexDescToFlexFrames.Add(flexFrameList)
+			Next
+
+			cumulativebodyPartVertexIndexStart = 0
+			For bodyPartIndex As Integer = 0 To Me.theMdlFileData.theBodyParts.Count - 1
+				aBodyPart = Me.theMdlFileData.theBodyParts(bodyPartIndex)
+
+				aBodyPart.theFlexFrames = New List(Of FlexFrame37)()
+				'NOTE: Create the defaultflex.
+				aFlexFrame = New FlexFrame37()
+				aBodyPart.theFlexFrames.Add(aFlexFrame)
+
+				If aBodyPart.theModels IsNot Nothing AndAlso aBodyPart.theModels.Count > 0 Then
+					For modelIndex As Integer = 0 To aBodyPart.theModels.Count - 1
+						aModel = aBodyPart.theModels(modelIndex)
+
+						If aModel.theMeshes IsNot Nothing AndAlso aModel.theMeshes.Count > 0 Then
+							For meshIndex As Integer = 0 To aModel.theMeshes.Count - 1
+								aMesh = aModel.theMeshes(meshIndex)
+
+								meshVertexIndexStart = Me.theMdlFileData.theBodyParts(bodyPartIndex).theModels(modelIndex).theMeshes(meshIndex).vertexIndexStart
+
+								If aMesh.theFlexes IsNot Nothing AndAlso aMesh.theFlexes.Count > 0 Then
+									For flexIndex As Integer = 0 To aMesh.theFlexes.Count - 1
+										aFlex = aMesh.theFlexes(flexIndex)
+
+										aFlexFrame = Nothing
+										If flexDescToFlexFrames(aFlex.flexDescIndex) IsNot Nothing Then
+											For x As Integer = 0 To flexDescToFlexFrames(aFlex.flexDescIndex).Count - 1
+												searchedFlexFrame = flexDescToFlexFrames(aFlex.flexDescIndex)(x)
+												If searchedFlexFrame.flexes(0).target0 = aFlex.target0 _
+												 AndAlso searchedFlexFrame.flexes(0).target1 = aFlex.target1 _
+												 AndAlso searchedFlexFrame.flexes(0).target2 = aFlex.target2 _
+												 AndAlso searchedFlexFrame.flexes(0).target3 = aFlex.target3 Then
+													' Add to an existing flexFrame.
+													aFlexFrame = searchedFlexFrame
+													Exit For
+												End If
+											Next
+										End If
+										If aFlexFrame Is Nothing Then
+											aFlexFrame = New FlexFrame37()
+											'Me.theMdlFileData.theFlexFrames.Add(aFlexFrame)
+											aBodyPart.theFlexFrames.Add(aFlexFrame)
+											aFlexFrame.bodyAndMeshVertexIndexStarts = New List(Of Integer)()
+											aFlexFrame.flexes = New List(Of SourceMdlFlex37)()
+
+											'Dim aFlexDescPartnerIndex As Integer
+											'aFlexDescPartnerIndex = aMesh.theFlexes(flexIndex).flexDescPartnerIndex
+
+											aFlexFrame.flexName = Me.theMdlFileData.theFlexDescs(aFlex.flexDescIndex).theName
+											'If aFlexDescPartnerIndex > 0 Then
+											'	'line += "flexpair """
+											'	'aFlexFrame.flexName = aFlexFrame.flexName.Remove(aFlexFrame.flexName.Length - 1, 1)
+											'	aFlexFrame.flexDescription = aFlexFrame.flexName
+											'	aFlexFrame.flexDescription += "+"
+											'	aFlexFrame.flexDescription += Me.theMdlFileData.theFlexDescs(aFlex.flexDescPartnerIndex).theName
+											'	aFlexFrame.flexHasPartner = True
+											'	aFlexFrame.flexPartnerName = Me.theMdlFileData.theFlexDescs(aFlex.flexDescPartnerIndex).theName
+											'	aFlexFrame.flexSplit = Me.GetSplit(aFlex, meshVertexIndexStart)
+											'	Me.theMdlFileData.theFlexDescs(aFlex.flexDescPartnerIndex).theDescIsUsedByFlex = True
+											'Else
+											'	'line += "flex """
+											aFlexFrame.flexDescription = aFlexFrame.flexName
+											'	aFlexFrame.flexHasPartner = False
+											'End If
+											Me.theMdlFileData.theFlexDescs(aFlex.flexDescIndex).theDescIsUsedByFlex = True
+
+											flexDescToFlexFrames(aFlex.flexDescIndex).Add(aFlexFrame)
+										End If
+
+										aFlexFrame.bodyAndMeshVertexIndexStarts.Add(meshVertexIndexStart + cumulativebodyPartVertexIndexStart)
+										aFlexFrame.flexes.Add(aFlex)
+
+										'flexDescToMeshIndexes(aFlex.flexDescIndex).Add(meshIndex)
+									Next
+								End If
+							Next
+						End If
+						'For x As Integer = 0 To Me.theMdlFileData.theFlexDescs.Count - 1
+						'	flexDescToMeshIndexes(x).Clear()
+						'Next
+
+						cumulativebodyPartVertexIndexStart += aModel.vertexCount
+					Next
+				End If
+			Next
+		End If
 	End Sub
 
 #End Region
@@ -1756,7 +1917,8 @@ Public Class SourceMdlFile36
 	End Sub
 
 	Private Sub ReadMdlAnimBoneWeights(ByVal seqInputFileStreamPosition As Long, ByVal aSeqDesc As SourceMdlSequenceDesc36)
-		If Me.theMdlFileData.boneCount > 0 AndAlso aSeqDesc.weightOffset > 0 Then
+		'If Me.theMdlFileData.boneCount > 0 AndAlso aSeqDesc.weightOffset > 0 Then
+		If Me.theMdlFileData.boneCount > 0 Then
 			Try
 				Dim weightListInputFileStreamPosition As Long
 				'Dim inputFileStreamPosition As Long
@@ -1765,7 +1927,8 @@ Public Class SourceMdlFile36
 				'Dim fileOffsetStart2 As Long
 				'Dim fileOffsetEnd2 As Long
 
-				Me.theInputFileReader.BaseStream.Seek(seqInputFileStreamPosition + aSeqDesc.weightOffset, SeekOrigin.Begin)
+				'Me.theInputFileReader.BaseStream.Seek(seqInputFileStreamPosition + aSeqDesc.weightOffset, SeekOrigin.Begin)
+				Me.theInputFileReader.BaseStream.Seek(seqInputFileStreamPosition, SeekOrigin.Begin)
 				fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
 				aSeqDesc.theBoneWeightsAreDefault = True
@@ -2331,12 +2494,12 @@ Public Class SourceMdlFile36
 					Me.ReadMeshes(modelInputFileStreamPosition, aModel)
 
 					fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-					'NOTE: Although studiomdl source code indicates ALIGN64, it seems to align on 32.
-					Me.theMdlFileData.theFileSeekLog.LogToEndAndAlignToNextStart(Me.theInputFileReader, fileOffsetEnd, 32, "aModel.theVertexes pre-alignment (NOTE: Should end at: " + CStr(modelInputFileStreamPosition + aModel.vertexOffset - 1) + ")")
+					''NOTE: Although studiomdl source code indicates ALIGN64, it seems to align on 32.
+					'Me.theMdlFileData.theFileSeekLog.LogToEndAndAlignToNextStart(Me.theInputFileReader, fileOffsetEnd, 32, "aModel.theVertexes pre-alignment (NOTE: Should end at: " + CStr(modelInputFileStreamPosition + aModel.vertexOffset - 1) + ")")
 					Me.ReadVertexes(modelInputFileStreamPosition, aModel)
 
-					fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-					Me.theMdlFileData.theFileSeekLog.LogToEndAndAlignToNextStart(Me.theInputFileReader, fileOffsetEnd, 4, "aModel.theTangents pre-alignment (NOTE: Should end at: " + CStr(modelInputFileStreamPosition + aModel.tangentOffset - 1) + ")")
+					'fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
+					'Me.theMdlFileData.theFileSeekLog.LogToEndAndAlignToNextStart(Me.theInputFileReader, fileOffsetEnd, 4, "aModel.theTangents pre-alignment (NOTE: Should end at: " + CStr(modelInputFileStreamPosition + aModel.tangentOffset - 1) + ")")
 					Me.ReadTangents(modelInputFileStreamPosition, aModel)
 
 					Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
@@ -2436,8 +2599,26 @@ Public Class SourceMdlFile36
 					Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
 				Next
 
+				'If aModel.theEyeballs.Count > 0 Then
+				'	Me.theMdlFileData.theModelCommandIsUsed = True
+				'End If
 				If aModel.theEyeballs.Count > 0 Then
-					Me.theMdlFileData.theModelCommandIsUsed = True
+					' Detect if $upaxis Y was used.
+					'FROM: [48] SourceEngine2007_source se2007_src\src_main\utils\studiomdl\studiomdl.cpp
+					'      Option_Eyeball()
+					'	AngleMatrix( g_defaultrotation, vtmp );
+					'	VectorIRotate( Vector( 0, 0, 1 ), vtmp, tmp );
+					'	VectorIRotate( tmp, pmodel->source->boneToPose[eyeball->bone], eyeball->up );
+					Dim anEyeball As SourceMdlEyeball37
+					Dim aBone As SourceMdlBone37
+					'Dim upVec As New SourceVector(0, 0, 1)
+					Dim tmp As SourceVector
+					anEyeball = aModel.theEyeballs(0)
+					aBone = Me.theMdlFileData.theBones(anEyeball.boneIndex)
+					tmp = MathModule.VectorIRotate(aModel.theEyeballs(0).up, aBone.poseToBoneColumn0, aBone.poseToBoneColumn1, aBone.poseToBoneColumn2, aBone.poseToBoneColumn3)
+					If tmp.y > 0.99 AndAlso tmp.y < 1.01 Then
+						Me.theMdlFileData.theUpAxisYCommandWasUsed = True
+					End If
 				End If
 
 				fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1

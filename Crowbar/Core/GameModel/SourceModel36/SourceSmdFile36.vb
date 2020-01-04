@@ -142,9 +142,9 @@ Public Class SourceSmdFile36
 									'------
 									'NOTE: studiomdl.exe will complain if texture name for eyeball is not at start of line.
 									materialLine = materialName
-									vertex1Line = Me.WriteVertexLine(aStripGroup, vtxIndexIndex, lodIndex, meshVertexIndexStart, bodyPartVertexIndexStart)
-									vertex2Line = Me.WriteVertexLine(aStripGroup, vtxIndexIndex + 2, lodIndex, meshVertexIndexStart, bodyPartVertexIndexStart)
-									vertex3Line = Me.WriteVertexLine(aStripGroup, vtxIndexIndex + 1, lodIndex, meshVertexIndexStart, bodyPartVertexIndexStart)
+									vertex1Line = Me.WriteVertexLine(aStripGroup, vtxIndexIndex, lodIndex, meshVertexIndexStart, bodyPartVertexIndexStart, aModel)
+									vertex2Line = Me.WriteVertexLine(aStripGroup, vtxIndexIndex + 2, lodIndex, meshVertexIndexStart, bodyPartVertexIndexStart, aModel)
+									vertex3Line = Me.WriteVertexLine(aStripGroup, vtxIndexIndex + 1, lodIndex, meshVertexIndexStart, bodyPartVertexIndexStart, aModel)
 									If vertex1Line.StartsWith("// ") OrElse vertex2Line.StartsWith("// ") OrElse vertex3Line.StartsWith("// ") Then
 										materialLine = "// " + materialLine
 										If Not vertex1Line.StartsWith("// ") Then
@@ -263,62 +263,62 @@ Public Class SourceSmdFile36
 		Me.theOutputFileStreamWriter.WriteLine(line)
 	End Sub
 
-	'TODO: Write the firstAnimDesc's first frame's frameLines because it is used for "subtract" option.
-	Public Sub CalculateFirstAnimDescFrameLinesForSubtract()
-		Dim boneIndex As Integer
-		Dim aFrameLine As AnimationFrameLine
-		Dim frameIndex As Integer
-		Dim aSequenceDesc As SourceMdlSequenceDesc
-		Dim anAnimationDesc As SourceMdlAnimationDesc36
+	''TODO: Write the firstAnimDesc's first frame's frameLines because it is used for "subtract" option.
+	'Public Sub CalculateFirstAnimDescFrameLinesForSubtract()
+	'	Dim boneIndex As Integer
+	'	Dim aFrameLine As AnimationFrameLine
+	'	Dim frameIndex As Integer
+	'	Dim aSequenceDesc As SourceMdlSequenceDesc
+	'	Dim anAnimationDesc As SourceMdlAnimationDesc36
 
-		aSequenceDesc = Nothing
-		anAnimationDesc = Me.theMdlFileData.theFirstAnimationDesc
+	'	aSequenceDesc = Nothing
+	'	anAnimationDesc = Me.theMdlFileData.theFirstAnimationDesc
 
-		Me.theAnimationFrameLines = New SortedList(Of Integer, AnimationFrameLine)()
-		frameIndex = 0
-		Me.theAnimationFrameLines.Clear()
-		If (anAnimationDesc.flags And SourceMdlAnimationDesc.STUDIO_ALLZEROS) = 0 Then
-			Me.CalcAnimation(aSequenceDesc, anAnimationDesc, frameIndex)
-		End If
+	'	Me.theAnimationFrameLines = New SortedList(Of Integer, AnimationFrameLine)()
+	'	frameIndex = 0
+	'	Me.theAnimationFrameLines.Clear()
+	'	If (anAnimationDesc.flags And SourceMdlAnimationDesc.STUDIO_ALLZEROS) = 0 Then
+	'		Me.CalcAnimation(aSequenceDesc, anAnimationDesc, frameIndex)
+	'	End If
 
-		For i As Integer = 0 To Me.theAnimationFrameLines.Count - 1
-			boneIndex = Me.theAnimationFrameLines.Keys(i)
-			aFrameLine = Me.theAnimationFrameLines.Values(i)
+	'	For i As Integer = 0 To Me.theAnimationFrameLines.Count - 1
+	'		boneIndex = Me.theAnimationFrameLines.Keys(i)
+	'		aFrameLine = Me.theAnimationFrameLines.Values(i)
 
-			Dim aFirstAnimationDescFrameLine As New AnimationFrameLine()
-			aFirstAnimationDescFrameLine.rotation = New SourceVector()
-			aFirstAnimationDescFrameLine.position = New SourceVector()
+	'		Dim aFirstAnimationDescFrameLine As New AnimationFrameLine()
+	'		aFirstAnimationDescFrameLine.rotation = New SourceVector()
+	'		aFirstAnimationDescFrameLine.position = New SourceVector()
 
-			'NOTE: Only rotate by -90 deg if bone is a root bone.  Do not know why.
-			'If Me.theSourceEngineModel.theMdlFileHeader.theBones(boneIndex).parentBoneIndex = -1 Then
-			'TEST: Try this version, because of "sequence_blend from Game Zombie" model.
-			aFirstAnimationDescFrameLine.rotation.x = aFrameLine.rotation.x
-			aFirstAnimationDescFrameLine.rotation.y = aFrameLine.rotation.y
-			If Me.theMdlFileData.theBones(boneIndex).parentBoneIndex = -1 AndAlso (aFrameLine.rotation.debug_text.StartsWith("raw") OrElse aFrameLine.rotation.debug_text = "anim+bone") Then
-				Dim z As Double
-				z = aFrameLine.rotation.z
-				z += MathModule.DegreesToRadians(-90)
-				aFirstAnimationDescFrameLine.rotation.z = z
-			Else
-				aFirstAnimationDescFrameLine.rotation.z = aFrameLine.rotation.z
-			End If
+	'		'NOTE: Only rotate by -90 deg if bone is a root bone.  Do not know why.
+	'		'If Me.theSourceEngineModel.theMdlFileHeader.theBones(boneIndex).parentBoneIndex = -1 Then
+	'		'TEST: Try this version, because of "sequence_blend from Game Zombie" model.
+	'		aFirstAnimationDescFrameLine.rotation.x = aFrameLine.rotation.x
+	'		aFirstAnimationDescFrameLine.rotation.y = aFrameLine.rotation.y
+	'		If Me.theMdlFileData.theBones(boneIndex).parentBoneIndex = -1 AndAlso (aFrameLine.rotation.debug_text.StartsWith("raw") OrElse aFrameLine.rotation.debug_text = "anim+bone") Then
+	'			Dim z As Double
+	'			z = aFrameLine.rotation.z
+	'			z += MathModule.DegreesToRadians(-90)
+	'			aFirstAnimationDescFrameLine.rotation.z = z
+	'		Else
+	'			aFirstAnimationDescFrameLine.rotation.z = aFrameLine.rotation.z
+	'		End If
 
-			'NOTE: Only adjust position if bone is a root bone. Do not know why.
-			'If Me.theSourceEngineModel.theMdlFileHeader.theBones(boneIndex).parentBoneIndex = -1 Then
-			'TEST: Try this version, because of "sequence_blend from Game Zombie" model.
-			If Me.theMdlFileData.theBones(boneIndex).parentBoneIndex = -1 AndAlso (aFrameLine.position.debug_text.StartsWith("raw") OrElse aFrameLine.rotation.debug_text = "anim+bone") Then
-				aFirstAnimationDescFrameLine.position.x = aFrameLine.position.y
-				aFirstAnimationDescFrameLine.position.y = (-aFrameLine.position.x)
-				aFirstAnimationDescFrameLine.position.z = aFrameLine.position.z
-			Else
-				aFirstAnimationDescFrameLine.position.x = aFrameLine.position.x
-				aFirstAnimationDescFrameLine.position.y = aFrameLine.position.y
-				aFirstAnimationDescFrameLine.position.z = aFrameLine.position.z
-			End If
+	'		'NOTE: Only adjust position if bone is a root bone. Do not know why.
+	'		'If Me.theSourceEngineModel.theMdlFileHeader.theBones(boneIndex).parentBoneIndex = -1 Then
+	'		'TEST: Try this version, because of "sequence_blend from Game Zombie" model.
+	'		If Me.theMdlFileData.theBones(boneIndex).parentBoneIndex = -1 AndAlso (aFrameLine.position.debug_text.StartsWith("raw") OrElse aFrameLine.rotation.debug_text = "anim+bone") Then
+	'			aFirstAnimationDescFrameLine.position.x = aFrameLine.position.y
+	'			aFirstAnimationDescFrameLine.position.y = (-aFrameLine.position.x)
+	'			aFirstAnimationDescFrameLine.position.z = aFrameLine.position.z
+	'		Else
+	'			aFirstAnimationDescFrameLine.position.x = aFrameLine.position.x
+	'			aFirstAnimationDescFrameLine.position.y = aFrameLine.position.y
+	'			aFirstAnimationDescFrameLine.position.z = aFrameLine.position.z
+	'		End If
 
-			Me.theMdlFileData.theFirstAnimationDescFrameLines.Add(boneIndex, aFirstAnimationDescFrameLine)
-		Next
-	End Sub
+	'		Me.theMdlFileData.theFirstAnimationDescFrameLines.Add(boneIndex, aFirstAnimationDescFrameLine)
+	'	Next
+	'End Sub
 
 	Public Sub WriteSkeletonSectionForAnimation(ByVal aSequenceDescBase As SourceMdlSequenceDescBase, ByVal anAnimationDescBase As SourceMdlAnimationDescBase)
 		Dim line As String = ""
@@ -329,6 +329,7 @@ Public Class SourceSmdFile36
 		Dim tempRotation As New SourceVector()
 		Dim aSequenceDesc As SourceMdlSequenceDesc
 		Dim anAnimationDesc As SourceMdlAnimationDesc36
+		Dim tempValue As Double
 
 		aSequenceDesc = CType(aSequenceDescBase, SourceMdlSequenceDesc)
 		anAnimationDesc = CType(anAnimationDescBase, SourceMdlAnimationDesc36)
@@ -357,10 +358,66 @@ Public Class SourceSmdFile36
 				position.x = aFrameLine.position.x
 				position.y = aFrameLine.position.y
 				position.z = aFrameLine.position.z
+				If Me.theMdlFileData.theBones(boneIndex).parentBoneIndex = -1 Then
+					If anAnimationDesc.theMovements IsNot Nothing Then
+						Dim perFrameMovement As Double
+						Dim startFrameIndex As Integer = 0
+						For Each aMovement As SourceMdlMovement In anAnimationDesc.theMovements
+							If frameIndex <= aMovement.endframeIndex Then
+								If (aMovement.motionFlags And SourceMdlMovement.STUDIO_LX) > 0 Then
+									perFrameMovement = aMovement.position.x / aMovement.endframeIndex
+									position.x = position.x + (perFrameMovement * frameIndex)
+									aFrameLine.position.debug_text += " [x]"
+								End If
+								If (aMovement.motionFlags And SourceMdlMovement.STUDIO_LY) > 0 Then
+									perFrameMovement = aMovement.position.y / aMovement.endframeIndex
+									position.y = position.y + (perFrameMovement * frameIndex)
+									aFrameLine.position.debug_text += " [y]"
+								End If
+								If (aMovement.motionFlags And SourceMdlMovement.STUDIO_LZ) > 0 Then
+									perFrameMovement = aMovement.position.z / aMovement.endframeIndex
+									position.z = position.z - (perFrameMovement * frameIndex)
+									aFrameLine.position.debug_text += " [z]"
+								End If
+							End If
+						Next
+					End If
+
+					tempValue = position.x
+					position.x = position.y
+					position.y = -tempValue
+				End If
 
 				rotation.x = aFrameLine.rotation.x
 				rotation.y = aFrameLine.rotation.y
 				rotation.z = aFrameLine.rotation.z
+				If Me.theMdlFileData.theBones(boneIndex).parentBoneIndex = -1 Then
+					If anAnimationDesc.theMovements IsNot Nothing Then
+						Dim perFrameMovement As Double
+						Dim startFrameIndex As Integer = 0
+						For Each aMovement As SourceMdlMovement In anAnimationDesc.theMovements
+							If frameIndex <= aMovement.endframeIndex Then
+								If (aMovement.motionFlags And SourceMdlMovement.STUDIO_LXR) > 0 Then
+									perFrameMovement = MathModule.DegreesToRadians(aMovement.angle) / aMovement.endframeIndex
+									rotation.x = rotation.x + (perFrameMovement * frameIndex)
+									aFrameLine.rotation.debug_text += " [x]"
+								End If
+								If (aMovement.motionFlags And SourceMdlMovement.STUDIO_LYR) > 0 Then
+									perFrameMovement = MathModule.DegreesToRadians(aMovement.angle) / aMovement.endframeIndex
+									rotation.y = rotation.y + (perFrameMovement * frameIndex)
+									aFrameLine.rotation.debug_text += " [y]"
+								End If
+								If (aMovement.motionFlags And SourceMdlMovement.STUDIO_LZR) > 0 Then
+									perFrameMovement = MathModule.DegreesToRadians(aMovement.angle) / aMovement.endframeIndex
+									rotation.z = rotation.z + (perFrameMovement * frameIndex)
+									aFrameLine.rotation.debug_text += " [z]"
+								End If
+							End If
+						Next
+					End If
+
+					rotation.z = aFrameLine.rotation.z + MathModule.DegreesToRadians(-90)
+				End If
 
 				line = "    "
 				line += boneIndex.ToString(TheApp.InternalNumberFormat)
@@ -404,7 +461,7 @@ Public Class SourceSmdFile36
 
 #Region "Private Methods"
 
-	Private Function WriteVertexLine(ByVal aStripGroup As SourceVtxStripGroup06, ByVal aVtxIndexIndex As Integer, ByVal lodIndex As Integer, ByVal meshVertexIndexStart As Integer, ByVal bodyPartVertexIndexStart As Integer) As String
+	Private Function WriteVertexLine(ByVal aStripGroup As SourceVtxStripGroup06, ByVal aVtxIndexIndex As Integer, ByVal lodIndex As Integer, ByVal meshVertexIndexStart As Integer, ByVal bodyPartVertexIndexStart As Integer, ByVal aBodyModel As SourceMdlModel37) As String
 		Dim aVtxVertexIndex As UShort
 		Dim aVtxVertex As SourceVtxVertex06
 		Dim aVertex As SourceMdlVertex37
@@ -415,8 +472,13 @@ Public Class SourceSmdFile36
 		Try
 			aVtxVertexIndex = aStripGroup.theVtxIndexes(aVtxIndexIndex)
 			aVtxVertex = aStripGroup.theVtxVertexes(aVtxVertexIndex)
-			vertexIndex = aVtxVertex.originalMeshVertexIndex + bodyPartVertexIndexStart + meshVertexIndexStart
-			aVertex = Me.theMdlFileData.theBodyParts(0).theModels(0).theVertexes(vertexIndex)
+			If Me.theMdlFileData.version = 35 Then
+				vertexIndex = aVtxVertex.originalMeshVertexIndex + meshVertexIndexStart
+			Else
+				vertexIndex = aVtxVertex.originalMeshVertexIndex + bodyPartVertexIndexStart + meshVertexIndexStart
+			End If
+			'aVertex = Me.theMdlFileData.theBodyParts(0).theModels(0).theVertexes(vertexIndex)
+			aVertex = aBodyModel.theVertexes(vertexIndex)
 
 			line = "  "
 			line += aVertex.boneWeight.bone(0).ToString(TheApp.InternalNumberFormat)
