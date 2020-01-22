@@ -78,6 +78,16 @@ Public MustInherit Class SourceModel
 			ElseIf version = 53 Then
 				'TODO: Finish.
 				model = New SourceModel53(mdlPathFileName, version)
+			ElseIf version = 54 Then
+				model = New SourceModel49(mdlPathFileName, version)
+			ElseIf version = 55 Then
+				model = New SourceModel49(mdlPathFileName, version)
+			ElseIf version = 56 Then
+				model = New SourceModel49(mdlPathFileName, version)
+			ElseIf version = 58 Then
+				model = New SourceModel49(mdlPathFileName, version)
+			ElseIf version = 59 Then
+				model = New SourceModel49(mdlPathFileName, version)
 			Else
 				' Version not implemented.
 				model = Nothing

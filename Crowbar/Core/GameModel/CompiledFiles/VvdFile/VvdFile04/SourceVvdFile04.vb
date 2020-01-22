@@ -39,7 +39,7 @@ Public Class SourceVvdFile04
 		Me.theVvdFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "VVD File Header")
 	End Sub
 
-	Public Sub ReadVertexes()
+	Public Sub ReadVertexes(Optional ByVal mdlVersion As Integer = 0)
 		If Me.theVvdFileData.lodCount <= 0 Then
 			Exit Sub
 		End If
@@ -94,6 +94,12 @@ Public Class SourceVvdFile04
 			aStudioVertex.normalZ = Me.theInputFileReader.ReadSingle()
 			aStudioVertex.texCoordX = Me.theInputFileReader.ReadSingle()
 			aStudioVertex.texCoordY = Me.theInputFileReader.ReadSingle()
+			If mdlVersion >= 54 OrElse mdlVersion <= 59 Then
+				Me.theInputFileReader.ReadSingle()
+				Me.theInputFileReader.ReadSingle()
+				Me.theInputFileReader.ReadSingle()
+				Me.theInputFileReader.ReadSingle()
+			End If
 			Me.theVvdFileData.theVertexes.Add(aStudioVertex)
 		Next
 

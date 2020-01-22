@@ -591,7 +591,7 @@ Public Class SourceModel49
 		Dim vvdFile As New SourceVvdFile04(Me.theInputFileReader, Me.theVvdFileData49)
 
 		vvdFile.ReadSourceVvdHeader()
-		vvdFile.ReadVertexes()
+		vvdFile.ReadVertexes(Me.theMdlFileData.version)
 		vvdFile.ReadFixups()
 		vvdFile.ReadUnreadBytes()
 	End Sub
