@@ -269,7 +269,7 @@ Public Class PublishUserControl
 		Me.SearchItemsToolStripComboBox.ComboBox.ValueMember = "Key"
 		Me.SearchItemsToolStripComboBox.ComboBox.DataSource = EnumHelper.ToList(GetType(PublishSearchFieldOptions))
 		Me.SearchItemsToolStripComboBox.ComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "PublishSearchField", False, DataSourceUpdateMode.OnPropertyChanged)
-		Me.SearchItemsToolStripTextBox.TextBox.DataBindings.Add("Text", TheApp.Settings, "PublishSearchText", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.SearchItemsToolStripTextBox.TextBox.DataBindings.Add("Text", TheApp.Settings, "PublishSearchText", False, DataSourceUpdateMode.OnValidation)
 	End Sub
 
 	Private Sub InitItemDetailWidgets()
@@ -277,7 +277,7 @@ Public Class PublishUserControl
 		Me.ItemDescriptionTextBox.MaxLength = CInt(Steamworks.Constants.k_cchPublishedDocumentDescriptionMax)
 		Me.ItemChangeNoteTextBox.MaxLength = CInt(Steamworks.Constants.k_cchPublishedDocumentChangeDescriptionMax)
 
-		Me.ItemIDTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "ID", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.ItemIDTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "ID", False, DataSourceUpdateMode.OnValidation)
 		'TODO: Change ID textbox to combobox dropdownlist that lists most-recently accessed IDs, including those selected via list.
 		'Dim anEnumList As IList
 		'anEnumList = EnumHelper.ToList(GetType(SteamUGCPublishedFileVisibility))
@@ -286,15 +286,15 @@ Public Class PublishUserControl
 		'Me.ItemIDComboBox.DataSource = anEnumList
 		'Me.ItemIDComboBox.DataBindings.Add("SelectedValue", Me.theItemBindingSource, "ID", False, DataSourceUpdateMode.OnPropertyChanged)
 
-		Me.ItemOwnerTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "OwnerName", False, DataSourceUpdateMode.OnPropertyChanged)
-		Me.ItemPostedTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Posted", False, DataSourceUpdateMode.OnPropertyChanged)
-		Me.ItemUpdatedTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Updated", False, DataSourceUpdateMode.OnPropertyChanged)
-		Me.ItemTitleTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Title", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.ItemOwnerTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "OwnerName", False, DataSourceUpdateMode.OnValidation)
+		Me.ItemPostedTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Posted", False, DataSourceUpdateMode.OnValidation)
+		Me.ItemUpdatedTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Updated", False, DataSourceUpdateMode.OnValidation)
+		Me.ItemTitleTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Title", False, DataSourceUpdateMode.OnValidation)
 		'NOTE: For RichTextBox, set the Formatting argument to True when DataSourceUpdateMode.OnPropertyChanged is used, to prevent characters being entered in reverse order.
-		Me.ItemDescriptionTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Description", True, DataSourceUpdateMode.OnPropertyChanged)
-		Me.ItemChangeNoteTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "ChangeNote", True, DataSourceUpdateMode.OnPropertyChanged)
-		Me.ItemContentPathFileNameTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "ContentPathFolderOrFileName", False, DataSourceUpdateMode.OnPropertyChanged)
-		Me.ItemPreviewImagePathFileNameTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "PreviewImagePathFileName", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.ItemDescriptionTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Description", True, DataSourceUpdateMode.OnValidation)
+		Me.ItemChangeNoteTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "ChangeNote", True, DataSourceUpdateMode.OnValidation)
+		Me.ItemContentPathFileNameTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "ContentPathFolderOrFileName", False, DataSourceUpdateMode.OnValidation)
+		Me.ItemPreviewImagePathFileNameTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "PreviewImagePathFileName", False, DataSourceUpdateMode.OnValidation)
 
 		Me.ItemVisibilityComboBox.DisplayMember = "Value"
 		Me.ItemVisibilityComboBox.ValueMember = "Key"
@@ -1441,10 +1441,10 @@ Public Class PublishUserControl
 	Private Sub SwapBetweenOwnerNameAndID()
 		If Me.ItemOwnerTextBox.DataBindings("Text").BindingMemberInfo.BindingMember = "OwnerName" Then
 			Me.ItemOwnerTextBox.DataBindings.Remove(Me.ItemOwnerTextBox.DataBindings("Text"))
-			Me.ItemOwnerTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "OwnerID", False, DataSourceUpdateMode.OnPropertyChanged)
+			Me.ItemOwnerTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "OwnerID", False, DataSourceUpdateMode.OnValidation)
 		Else
 			Me.ItemOwnerTextBox.DataBindings.Remove(Me.ItemOwnerTextBox.DataBindings("Text"))
-			Me.ItemOwnerTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "OwnerName", False, DataSourceUpdateMode.OnPropertyChanged)
+			Me.ItemOwnerTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "OwnerName", False, DataSourceUpdateMode.OnValidation)
 		End If
 	End Sub
 
