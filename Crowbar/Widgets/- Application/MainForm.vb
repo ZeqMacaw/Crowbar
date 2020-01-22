@@ -497,9 +497,19 @@ Public Class MainForm
 			End If
 
 			If selectedTab Is Nothing AndAlso Directory.Exists(pathFileName) Then
-				If Directory.GetFiles(pathFileName, "*.vpk").Length > 0 Then
-					folderAction = ActionType.Unpack
-				Else
+				Dim packageExtensions As List(Of String) = BasePackageFile.GetListOfPackageExtensions()
+				For Each packageExtension As String In packageExtensions
+					For Each anArchivePathFileName As String In Directory.GetFiles(pathFileName, packageExtension)
+						If anArchivePathFileName.Length > 0 Then
+							folderAction = ActionType.Unpack
+							Exit For
+						End If
+					Next
+					If folderAction = ActionType.Unpack Then
+						Exit For
+					End If
+				Next
+				If folderAction <> ActionType.Unpack Then
 					If Directory.GetFiles(pathFileName, "*.mdl").Length > 0 Then
 						folderAction = ActionType.Decompile
 					Else

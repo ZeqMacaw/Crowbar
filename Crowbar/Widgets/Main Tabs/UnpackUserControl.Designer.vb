@@ -110,7 +110,6 @@ Partial Class UnpackUserControl
 		Me.Panel2.Controls.Add(Me.SplitContainer1)
 		Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.Panel2.Location = New System.Drawing.Point(0, 0)
-		Me.Panel2.Margin = New System.Windows.Forms.Padding(2)
 		Me.Panel2.Name = "Panel2"
 		Me.Panel2.Size = New System.Drawing.Size(776, 536)
 		Me.Panel2.TabIndex = 0
