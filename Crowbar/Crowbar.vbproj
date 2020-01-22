@@ -118,6 +118,9 @@
     <Compile Include="Core\Compiler\CompilerOutputInfo.vb" />
     <Compile Include="Core\Compiler\ParseMeshSmdInfo.vb" />
     <Compile Include="Core\Compiler\ParseSMD.vb" />
+    <Compile Include="Core\GamePackage\ApkFile\ApkDirectoryEntry.vb" />
+    <Compile Include="Core\GamePackage\ApkFile\ApkFile.vb" />
+    <Compile Include="Core\GamePackage\ApkFile\ApkFileData.vb" />
     <Compile Include="Core\GameSetup\GameInfoTxtFile.vb" />
     <Compile Include="Core\GameSetup\SteamLibraryPath.vb" />
     <Compile Include="Core\- Application\AppSettings.vb" />
