@@ -13,8 +13,8 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyTitle("Crowbar")> 
 <Assembly: AssemblyDescription("Source Engine Modding Tool")> 
 <Assembly: AssemblyCompany("ZeqMacaw")> 
-<Assembly: AssemblyProduct("Crowbar")> 
-<Assembly: AssemblyCopyright("Copyright 2019")> 
+<Assembly: AssemblyProduct("Crowbar")>
+<Assembly: AssemblyCopyright("Copyright 2020")>
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)> 
