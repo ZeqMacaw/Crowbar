@@ -111,10 +111,10 @@ Namespace My.Resources
         '''* Decompiler of MDL and related files.
         '''* Compiler interface to StudioMDL.exe tool.
         '''* Model viewer interface to Half-Life Model Viewer tool.
-        '''* Unpacker of Tactical Intervention FPX, Garry&apos;s Mod GMA, Vampire: The Masquerade - Bloodlines VPK files, and Source-engine VPK files.
+        '''* Unpacker of Fairy Tale Busters APK, Tactical Intervention FPX, Garry&apos;s Mod GMA, Vampire: The Masquerade - Bloodlines VPK files, and Source-engine VPK files.
         '''* Packer interface to Garry&apos;s Mod GMA and Source-engine VPK packer tools.
         '''* Downloader of Workshop items from any Steam game that allows public downloads.
-        '''* Publisher of Workshop items [rest of string was truncated]&quot;;.
+        '''* Pub [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property About_ProductDescription() As String
             Get
