@@ -87,4 +87,14 @@ Public NotInheritable Class EnumHelper
 		Return index
 	End Function
 
+	Public Shared Function Key(ByVal index As Integer, ByVal list As IList) As System.Enum
+		Dim pair As KeyValuePair(Of System.Enum, String) = CType(list(index), KeyValuePair(Of [Enum], String))
+		Return pair.Key
+	End Function
+
+	Public Shared Function Value(ByVal index As Integer, ByVal list As IList) As String
+		Dim pair As KeyValuePair(Of System.Enum, String) = CType(list(index), KeyValuePair(Of [Enum], String))
+		Return pair.Value
+	End Function
+
 End Class
