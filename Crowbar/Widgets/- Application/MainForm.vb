@@ -340,6 +340,7 @@ Public Class MainForm
 			ElseIf vpkAction = ActionType.Publish Then
 				Me.MainTabControl.SelectTab(Me.PublishTabPage)
 				Me.PublishUserControl1.ItemContentPathFileNameTextBox.Text = pathFileName
+				Me.PublishUserControl1.ItemContentPathFileNameTextBox.DataBindings("Text").WriteValue()
 			End If
 		ElseIf extension = ".gma" Then
 			Dim vpkAction As ActionType = ActionType.Unknown
@@ -363,6 +364,7 @@ Public Class MainForm
 			ElseIf vpkAction = ActionType.Publish Then
 				Me.MainTabControl.SelectTab(Me.PublishTabPage)
 				Me.PublishUserControl1.ItemContentPathFileNameTextBox.Text = pathFileName
+				Me.PublishUserControl1.ItemContentPathFileNameTextBox.DataBindings("Text").WriteValue()
 			End If
 		ElseIf extension = ".fpx" Then
 			Dim vpkAction As ActionType = ActionType.Unknown
@@ -398,6 +400,7 @@ Public Class MainForm
 		ElseIf extension = ".bmp" OrElse extension = ".gif" OrElse extension = ".jpeg" OrElse extension = ".jpg" OrElse extension = ".png" OrElse extension = ".wmf" Then
 			Me.MainTabControl.SelectTab(Me.PublishTabPage)
 			Me.PublishUserControl1.ItemPreviewImagePathFileNameTextBox.Text = pathFileName
+			Me.PublishUserControl1.ItemPreviewImagePathFileNameTextBox.DataBindings("Text").WriteValue()
 		Else
 			Me.SetFolderDrop(setViaAutoOpen, pathFileName)
 		End If
@@ -537,6 +540,7 @@ Public Class MainForm
 			Me.MainTabControl.SelectTab(Me.PackTabPage)
 		ElseIf folderAction = ActionType.Publish Then
 			Me.PublishUserControl1.ItemContentPathFileNameTextBox.Text = pathFileName
+			Me.PublishUserControl1.ItemContentPathFileNameTextBox.DataBindings("Text").WriteValue()
 			Me.MainTabControl.SelectTab(Me.PublishTabPage)
 		End If
 	End Sub
