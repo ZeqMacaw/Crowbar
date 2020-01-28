@@ -507,7 +507,8 @@ Public Class BackgroundSteamPipe
 						End Try
 
 						If outputInfo.Result <> "Failed" AndAlso File.Exists(pathFileName) Then
-							Dim setItemContentWasSuccessful As String = steamPipe.SteamUGC_SetItemContent(inputInfo.Item.ContentPathFolderOrFileName)
+							'Dim setItemContentWasSuccessful As String = steamPipe.SteamUGC_SetItemContent(inputInfo.Item.ContentPathFolderOrFileName)
+							Dim setItemContentWasSuccessful As String = steamPipe.SteamUGC_SetItemContent(pathFileName)
 							If setItemContentWasSuccessful = "success" Then
 								Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item content completed." + vbCrLf)
 							Else
