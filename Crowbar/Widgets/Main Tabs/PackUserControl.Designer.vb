@@ -42,6 +42,7 @@ Partial Class PackUserControl
 		Me.DirectPackerOptionsTextBox = New System.Windows.Forms.TextBox()
 		Me.PackerOptionsTextBox = New System.Windows.Forms.TextBox()
 		Me.Panel2 = New System.Windows.Forms.Panel()
+		Me.MultiFileVpkCheckBox = New System.Windows.Forms.CheckBox()
 		Me.PackOptionsUseDefaultsButton = New System.Windows.Forms.Button()
 		Me.LogFileCheckBox = New System.Windows.Forms.CheckBox()
 		Me.Label3 = New System.Windows.Forms.Label()
@@ -55,7 +56,6 @@ Partial Class PackUserControl
 		Me.PackedFilesComboBox = New System.Windows.Forms.ComboBox()
 		Me.GotoPackedFileButton = New System.Windows.Forms.Button()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-		Me.MultiFileVpkCheckBox = New System.Windows.Forms.CheckBox()
 		Me.Panel1.SuspendLayout()
 		CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SplitContainer2.Panel1.SuspendLayout()
@@ -296,6 +296,17 @@ Partial Class PackUserControl
 		Me.Panel2.Size = New System.Drawing.Size(764, 131)
 		Me.Panel2.TabIndex = 0
 		'
+		'MultiFileVpkCheckBox
+		'
+		Me.MultiFileVpkCheckBox.AutoSize = True
+		Me.MultiFileVpkCheckBox.Location = New System.Drawing.Point(6, 51)
+		Me.MultiFileVpkCheckBox.Name = "MultiFileVpkCheckBox"
+		Me.MultiFileVpkCheckBox.Size = New System.Drawing.Size(116, 17)
+		Me.MultiFileVpkCheckBox.TabIndex = 13
+		Me.MultiFileVpkCheckBox.Text = "Write multi-file VPK"
+		Me.MultiFileVpkCheckBox.UseVisualStyleBackColor = True
+		Me.MultiFileVpkCheckBox.Visible = False
+		'
 		'PackOptionsUseDefaultsButton
 		'
 		Me.PackOptionsUseDefaultsButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -321,9 +332,9 @@ Partial Class PackUserControl
 		Me.Label3.AutoSize = True
 		Me.Label3.Location = New System.Drawing.Point(3, 5)
 		Me.Label3.Name = "Label3"
-		Me.Label3.Size = New System.Drawing.Size(173, 13)
+		Me.Label3.Size = New System.Drawing.Size(156, 13)
 		Me.Label3.TabIndex = 0
-		Me.Label3.Text = "Game that has the archive packer:"
+		Me.Label3.Text = "Game that has the packer tool:"
 		'
 		'GameSetupComboBox
 		'
@@ -331,9 +342,9 @@ Partial Class PackUserControl
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.GameSetupComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.GameSetupComboBox.FormattingEnabled = True
-		Me.GameSetupComboBox.Location = New System.Drawing.Point(179, 1)
+		Me.GameSetupComboBox.Location = New System.Drawing.Point(165, 1)
 		Me.GameSetupComboBox.Name = "GameSetupComboBox"
-		Me.GameSetupComboBox.Size = New System.Drawing.Size(486, 21)
+		Me.GameSetupComboBox.Size = New System.Drawing.Size(500, 21)
 		Me.GameSetupComboBox.TabIndex = 1
 		'
 		'SetUpGamesButton
@@ -426,17 +437,6 @@ Partial Class PackUserControl
 		Me.GotoPackedFileButton.TabIndex = 4
 		Me.GotoPackedFileButton.Text = "Goto"
 		Me.GotoPackedFileButton.UseVisualStyleBackColor = True
-		'
-		'MultiFileVpkCheckBox
-		'
-		Me.MultiFileVpkCheckBox.AutoSize = True
-		Me.MultiFileVpkCheckBox.Location = New System.Drawing.Point(6, 51)
-		Me.MultiFileVpkCheckBox.Name = "MultiFileVpkCheckBox"
-		Me.MultiFileVpkCheckBox.Size = New System.Drawing.Size(116, 17)
-		Me.MultiFileVpkCheckBox.TabIndex = 13
-		Me.MultiFileVpkCheckBox.Text = "Write multi-file VPK"
-		Me.MultiFileVpkCheckBox.UseVisualStyleBackColor = True
-		Me.MultiFileVpkCheckBox.Visible = False
 		'
 		'PackUserControl
 		'
