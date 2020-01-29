@@ -89,7 +89,11 @@ Public Class GarrysModSteamAppInfo
 			Me.theBackgroundWorker.ReportProgress(0, "Creating GMA file." + vbCrLf)
 
 			'NOTE: File name is all lowercase in case Garry's Mod needs that on Linux.
-			gmaPathFileName = Path.Combine(Me.theTempCrowbarPath, item.ID + "_via_crowbar.gma")
+			If item.IsDraft Then
+				gmaPathFileName = Path.Combine(Me.theTempCrowbarPath, "new_item_via_crowbar.gma")
+			Else
+				gmaPathFileName = Path.Combine(Me.theTempCrowbarPath, item.ID + "_via_crowbar.gma")
+			End If
 
 			'TODO: Create GMA file without calling gmad.exe.
 			Dim appInstallPath As String = ""
