@@ -40,22 +40,25 @@ Public Class MainForm
 		End If
 
 		If File.Exists(targetPathFileName) Then
-			' Run CrowbarLauncher.exe and exit Crowbar.
-			Dim crowbarLauncherExeProcess As New Process()
+			' Run Crowbar.exe and exit CrowbarLauncher.
+			Dim crowbarExeProcess As New Process()
 			Try
-				crowbarLauncherExeProcess.StartInfo.UseShellExecute = False
+				crowbarExeProcess.StartInfo.UseShellExecute = False
 				'NOTE: From Microsoft website: 
 				'      On Windows Vista and earlier versions of the Windows operating system, 
 				'      the length of the arguments added to the length of the full path to the process must be less than 2080. 
 				'      On Windows 7 and later versions, the length must be less than 32699. 
-				crowbarLauncherExeProcess.StartInfo.FileName = targetPathFileName
-				'crowbarLauncherExeProcess.StartInfo.Arguments = ""
+				crowbarExeProcess.StartInfo.FileName = targetPathFileName
+				If commandLineValues.Count > 3 AndAlso commandLineValues(3) <> "" Then
+					'NOTE: The commandLineValues(3) does not keep the double-quotes.
+					crowbarExeProcess.StartInfo.Arguments = """" + commandLineValues(3) + """"
+				End If
 #If DEBUG Then
-				crowbarLauncherExeProcess.StartInfo.CreateNoWindow = False
+				crowbarExeProcess.StartInfo.CreateNoWindow = False
 #Else
-				crowbarLauncherExeProcess.StartInfo.CreateNoWindow = True
+				crowbarExeProcess.StartInfo.CreateNoWindow = True
 #End If
-				crowbarLauncherExeProcess.Start()
+				crowbarExeProcess.Start()
 				Application.Exit()
 			Catch ex As Exception
 				Dim debug As Integer = 4242
