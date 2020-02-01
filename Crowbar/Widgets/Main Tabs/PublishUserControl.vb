@@ -103,6 +103,7 @@ Public Class PublishUserControl
 
 		AddHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 
+		Me.theSelectedGameIsStillUpdatingInterface = False
 		Me.UpdateSteamAppWidgets()
 	End Sub
 
@@ -584,6 +585,7 @@ Public Class PublishUserControl
 		Else
 			Me.UpdateItemListWidgets(False)
 		End If
+		Me.theSelectedGameIsStillUpdatingInterface = False
 	End Sub
 
 	Private Sub GetPublishedItemDetails_ProgressChanged(ByVal sender As System.Object, ByVal e As System.ComponentModel.ProgressChangedEventArgs)
@@ -779,9 +781,10 @@ Public Class PublishUserControl
 
 	Private Sub UpdateSteamAppWidgets()
 		'NOTE: If this has not been created, then app is in not far enough in Init() and not ready for update.
-		If Me.theEntireListOfItems Is Nothing Then
+		If Me.theEntireListOfItems Is Nothing OrElse Me.theSelectedGameIsStillUpdatingInterface Then
 			Exit Sub
 		End If
+		Me.theSelectedGameIsStillUpdatingInterface = True
 
 		If Me.LogTextBox.Text <> "" Then
 			Me.LogTextBox.AppendText("------" + vbCrLf)
@@ -1782,6 +1785,7 @@ Public Class PublishUserControl
 	Private theExpectedPublishedItemCount As UInteger
 	Private theDisplayedItems As WorkshopItemBindingList
 	Private theEntireListOfItems As WorkshopItemBindingList
+	Private theSelectedGameIsStillUpdatingInterface As Boolean
 
 	Private theTagsWidget As Base_TagsUserControl
 
