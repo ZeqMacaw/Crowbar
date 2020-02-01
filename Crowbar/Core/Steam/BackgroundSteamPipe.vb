@@ -620,7 +620,7 @@ Public Class BackgroundSteamPipe
 						outputInfo.PublishedItemID = returnedPublishedItemID
 						outputInfo.SteamAgreementStatus = "NotAccepted"
 					Else
-						Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: Unable to create workshop item. Steam error message: " + resultOfCreateItem + vbCrLf)
+						Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: Unable to publish workshop item. Steam error message: " + resultOfCreateItem + vbCrLf)
 						outputInfo.Result = "Failed"
 					End If
 				End If
