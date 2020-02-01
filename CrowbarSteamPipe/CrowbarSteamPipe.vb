@@ -825,7 +825,7 @@ Public Module CrowbarSteamPipe
 				Console.WriteLine("OnPublishFileResult ItemID: " + pCallResult.m_nPublishedFileId.ToString())
 				sw.WriteLine(pCallResult.m_nPublishedFileId.ToString())
 			Else
-				sw.WriteLine("error")
+				sw.WriteLine(GetErrorMessage(pCallResult.m_eResult))
 			End If
 		Catch ex As Exception
 			Console.WriteLine("EXCEPTION: " + ex.Message)
