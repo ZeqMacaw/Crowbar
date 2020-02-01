@@ -12,32 +12,35 @@ Public Class SourceQcFile
 
 		Using inputFileStream As StreamReader = New StreamReader(qcPathFileName)
 			Dim inputLine As String
-			Dim temp As String
+			Dim modifiedLine As String
 
 			While (Not (inputFileStream.EndOfStream))
 				inputLine = inputFileStream.ReadLine()
 
-				temp = inputLine.ToLower().TrimStart()
-				If temp.StartsWith("$modelname") Then
-					temp = temp.Replace("$modelname", "")
-					temp = temp.Trim()
+				modifiedLine = inputLine.ToLower().TrimStart()
+				If modifiedLine.StartsWith("""$modelname""") Then
+					modifiedLine = modifiedLine.Replace("""$modelname""", "$modelname")
+				End If
+				If modifiedLine.StartsWith("$modelname") Then
+					modifiedLine = modifiedLine.Replace("$modelname", "")
+					modifiedLine = modifiedLine.Trim()
 
 					' Need to remove any comment after the file name token (which may or may not be double-quoted).
 					Dim pos As Integer
-					If temp.StartsWith("""") Then
-						pos = temp.IndexOf("""", 1)
+					If modifiedLine.StartsWith("""") Then
+						pos = modifiedLine.IndexOf("""", 1)
 						If pos >= 0 Then
-							temp = temp.Substring(1, pos - 1)
+							modifiedLine = modifiedLine.Substring(1, pos - 1)
 						End If
 					Else
-						pos = temp.IndexOf(" ")
+						pos = modifiedLine.IndexOf(" ")
 						If pos >= 0 Then
-							temp = temp.Substring(0, pos)
+							modifiedLine = modifiedLine.Substring(0, pos)
 						End If
 					End If
 
 					'temp = temp.Trim(Chr(34))
-					qcModelName = temp.Replace("/", "\")
+					qcModelName = modifiedLine.Replace("/", "\")
 					Exit While
 				End If
 			End While
