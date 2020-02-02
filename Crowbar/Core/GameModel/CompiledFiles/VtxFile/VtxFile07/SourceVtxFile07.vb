@@ -54,8 +54,9 @@ Public Class SourceVtxFile07
 			'NOTE: Stuff that is part of determining vtx strip group size.
 			Me.theFirstMeshWithStripGroups = Nothing
 			Me.theFirstMeshWithStripGroupsInputFileStreamPosition = -1
+			Me.theModelLodHasOnlyOneMesh = False
 			Me.theSecondMeshWithStripGroups = Nothing
-			Me.theExpectedStartOfSecondStripGroupList = -1
+			Me.theExpectedStartOfDataAfterFirstStripGroupList = -1
 			Me.theStripGroupAndStripUseExtraFields = False
 
 			Dim bodyPartInputFileStreamPosition As Long
@@ -250,22 +251,31 @@ Public Class SourceVtxFile07
 						Me.theFirstMeshWithStripGroups = aMesh
 						Me.theFirstMeshWithStripGroupsInputFileStreamPosition = meshInputFileStreamPosition
 						Me.AnalyzeVtxStripGroups(meshInputFileStreamPosition, aMesh)
-						Me.ReadSourceVtxStripGroups(meshInputFileStreamPosition, aModelLod, aMesh)
+
+						'NOTE: If there is only one mesh, then compare end offset of VtxStripGroups with start of VtxStrips.
+						If aModelLod.meshCount = 1 Then
+							If aMesh.theVtxStripGroups(0).stripCount > 0 AndAlso aMesh.theVtxStripGroups(0).stripOffset <> 0 Then
+								If Me.theExpectedStartOfDataAfterFirstStripGroupList <> (meshInputFileStreamPosition + aMesh.stripGroupOffset + aMesh.theVtxStripGroups(0).stripOffset) Then
+									Me.theStripGroupAndStripUseExtraFields = True
+								End If
+							End If
+						End If
 					ElseIf Me.theSecondMeshWithStripGroups Is Nothing Then
 						Me.theSecondMeshWithStripGroups = aMesh
-						If Me.theExpectedStartOfSecondStripGroupList <> (meshInputFileStreamPosition + aMesh.stripGroupOffset) Then
+						If Me.theExpectedStartOfDataAfterFirstStripGroupList <> (meshInputFileStreamPosition + aMesh.stripGroupOffset) Then
 							Me.theStripGroupAndStripUseExtraFields = True
 
-							If aMesh.theVtxStripGroups IsNot Nothing Then
-								aMesh.theVtxStripGroups.Clear()
-							End If
+							'If aMesh.theVtxStripGroups IsNot Nothing Then
+							'	aMesh.theVtxStripGroups.Clear()
+							'End If
+							Me.theVtxFileData.theFileSeekLog.Remove(Me.theFirstMeshWithStripGroupsInputFileStreamPosition + Me.theFirstMeshWithStripGroups.stripGroupOffset)
+							Me.theVtxFileData.theFileSeekLog.Remove(Me.theFirstMeshWithStripGroupsInputFileStreamPosition + Me.theFirstMeshWithStripGroups.stripGroupOffset + Me.theFirstMeshWithStripGroups.theVtxStripGroups(0).stripOffset)
 
 							Me.ReadSourceVtxStripGroups(Me.theFirstMeshWithStripGroupsInputFileStreamPosition, aModelLod, Me.theFirstMeshWithStripGroups)
 						End If
-						Me.ReadSourceVtxStripGroups(meshInputFileStreamPosition, aModelLod, aMesh)
-					Else
-						Me.ReadSourceVtxStripGroups(meshInputFileStreamPosition, aModelLod, aMesh)
 					End If
+
+					Me.ReadSourceVtxStripGroups(meshInputFileStreamPosition, aModelLod, aMesh)
 				End If
 
 				Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
@@ -298,9 +308,11 @@ Public Class SourceVtxFile07
 				aStripGroup.stripCount = Me.theInputFileReader.ReadInt32()
 				aStripGroup.stripOffset = Me.theInputFileReader.ReadInt32()
 				aStripGroup.flags = Me.theInputFileReader.ReadByte()
+
+				aMesh.theVtxStripGroups.Add(aStripGroup)
 			Next
 
-			Me.theExpectedStartOfSecondStripGroupList = Me.theInputFileReader.BaseStream.Position
+			Me.theExpectedStartOfDataAfterFirstStripGroupList = Me.theInputFileReader.BaseStream.Position
 		Catch ex As Exception
 			'NOTE: It can reach here if Crowbar is still trying to figure out if the extra 8 bytes are needed.
 			Dim debug As Integer = 4242
@@ -673,8 +685,9 @@ Public Class SourceVtxFile07
 
 	Private theFirstMeshWithStripGroups As SourceVtxMesh07
 	Private theFirstMeshWithStripGroupsInputFileStreamPosition As Long
+	Private theModelLodHasOnlyOneMesh As Boolean
 	Private theSecondMeshWithStripGroups As SourceVtxMesh07
-	Private theExpectedStartOfSecondStripGroupList As Long
+	Private theExpectedStartOfDataAfterFirstStripGroupList As Long
 	Private theStripGroupAndStripUseExtraFields As Boolean
 
 #End Region
