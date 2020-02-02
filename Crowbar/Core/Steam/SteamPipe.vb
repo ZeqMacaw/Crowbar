@@ -583,7 +583,34 @@ Public Class SteamPipe
 	Public Function SteamUGC_SubmitItemUpdate(ByVal changeNote As String) As String
 		Me.theStreamWriter.WriteLine("SteamUGC_SubmitItemUpdate")
 		Me.WriteTextThatMightHaveMultipleLines(Me.theStreamWriter, changeNote)
-		Dim result As String = Me.theStreamReader.ReadLine()
+
+		Dim result As String = ""
+		Dim outputInfo As New BackgroundSteamPipe.PublishItemProgressInfo()
+		Dim previousOutputInfo As New BackgroundSteamPipe.PublishItemProgressInfo()
+
+		While True
+			result = Me.theStreamReader.ReadLine()
+			If result = "OnSubmitItemUpdate" Then
+				result = Me.theStreamReader.ReadLine()
+				Exit While
+			Else
+				outputInfo.Status = result
+				outputInfo.UploadedByteCount = CULng(Me.theStreamReader.ReadLine())
+				outputInfo.TotalUploadedByteCount = CULng(Me.theStreamReader.ReadLine())
+				If outputInfo.Status <> "invalid" Then
+					If previousOutputInfo.Status <> outputInfo.Status OrElse previousOutputInfo.UploadedByteCount <> outputInfo.UploadedByteCount OrElse previousOutputInfo.TotalUploadedByteCount <> outputInfo.TotalUploadedByteCount Then
+						If outputInfo.TotalUploadedByteCount > 0 Then
+							Me.theBackgroundWorker.ReportProgress(2, outputInfo)
+
+							previousOutputInfo.Status = outputInfo.Status
+							previousOutputInfo.UploadedByteCount = outputInfo.UploadedByteCount
+							previousOutputInfo.TotalUploadedByteCount = outputInfo.TotalUploadedByteCount
+						End If
+					End If
+				End If
+			End If
+		End While
+
 		Return result
 	End Function
 

@@ -388,6 +388,12 @@ Public Class BackgroundSteamPipe
 		Public Item As WorkshopItem
 	End Class
 
+	Public Class PublishItemProgressInfo
+		Public Status As String
+		Public UploadedByteCount As ULong
+		Public TotalUploadedByteCount As ULong
+	End Class
+
 	Public Class PublishItemOutputInfo
 		Public Result As String
 		Public SteamAgreementStatus As String

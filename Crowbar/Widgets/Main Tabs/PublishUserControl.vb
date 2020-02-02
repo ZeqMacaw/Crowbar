@@ -699,6 +699,10 @@ Public Class PublishUserControl
 			Me.LogTextBox.AppendText(CStr(e.UserState))
 		ElseIf e.ProgressPercentage = 1 Then
 			Me.LogTextBox.AppendText(vbTab + CStr(e.UserState))
+		ElseIf e.ProgressPercentage = 2 Then
+			Dim outputInfo As BackgroundSteamPipe.PublishItemProgressInfo = CType(e.UserState, BackgroundSteamPipe.PublishItemProgressInfo)
+			'TODO: Change to using a progressbar.
+			Me.LogTextBox.AppendText(vbTab + outputInfo.Status + ": " + outputInfo.UploadedByteCount.ToString() + " / " + outputInfo.TotalUploadedByteCount.ToString() + vbCrLf)
 		End If
 	End Sub
 
