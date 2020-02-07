@@ -10,8 +10,8 @@ Public Class ContagionSteamAppInfo
 
 		Me.ID = New AppId_t(238430)
 		Me.Name = "Contagion"
-		Me.UsesSteamUGC = False
-		Me.CanUseContentFolderOrFile = False
+		Me.UsesSteamUGC = True
+		Me.CanUseContentFolderOrFile = True
 		Me.ContentFileExtensionsAndDescriptions.Add("vpk", "Source Engine VPK Files")
 		Me.TagsControlType = GetType(ContagionTagsUserControl)
 	End Sub
