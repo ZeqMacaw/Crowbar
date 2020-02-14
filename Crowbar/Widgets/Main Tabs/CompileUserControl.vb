@@ -377,8 +377,10 @@ Public Class CompileUserControl
 			Me.EditCompilerOptionsText("definebones", TheApp.Settings.CompileOptionDefineBonesIsChecked)
 			Me.SetCompilerOptionsText()
 			Me.UpdateCompilerOptionDefineBonesWidgets()
-			'ElseIf e.PropertyName = "CompileOptionDefineBonesCreateFileIsChecked" Then
+		ElseIf e.PropertyName = "CompileOptionDefineBonesCreateFileIsChecked" Then
+			Me.UpdateCompilerOptionDefineBonesWidgets()
 			'ElseIf e.PropertyName = "CompileOptionDefineBonesModifyQcFileIsChecked" Then
+			'	Me.UpdateCompilerOptionDefineBonesWidgets()
 		ElseIf e.PropertyName = "CompileOptionNoP4IsChecked" Then
 			Me.EditCompilerOptionsText("nop4", TheApp.Settings.CompileOptionNoP4IsChecked)
 			Me.SetCompilerOptionsText()
@@ -616,7 +618,7 @@ Public Class CompileUserControl
 		Dim previousSelectedInputOption As InputOptions
 
 		anEnumList = EnumHelper.ToList(GetType(InputOptions))
-		previousSelectedInputOption = TheApp.Settings.DecompileMode
+		previousSelectedInputOption = TheApp.Settings.CompileMode
 		Me.CompileComboBox.DataBindings.Clear()
 		Try
 			If File.Exists(TheApp.Settings.CompileQcPathFileName) Then
@@ -638,9 +640,9 @@ Public Class CompileUserControl
 			Me.CompileComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "CompileMode", False, DataSourceUpdateMode.OnPropertyChanged)
 
 			If EnumHelper.Contains(previousSelectedInputOption, anEnumList) Then
-				Me.CompileComboBox.SelectedIndex = EnumHelper.IndexOf(previousSelectedInputOption, anEnumList)
+				TheApp.Settings.CompileMode = previousSelectedInputOption
 			Else
-				Me.CompileComboBox.SelectedIndex = 0
+				TheApp.Settings.CompileMode = CType(EnumHelper.Key(0, anEnumList), InputOptions)
 			End If
 		Catch ex As Exception
 			Dim debug As Integer = 4242

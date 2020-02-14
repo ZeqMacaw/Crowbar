@@ -315,9 +315,9 @@ Partial Class PackUserControl
 		Me.Label3.AutoSize = True
 		Me.Label3.Location = New System.Drawing.Point(3, 5)
 		Me.Label3.Name = "Label3"
-		Me.Label3.Size = New System.Drawing.Size(135, 13)
+		Me.Label3.Size = New System.Drawing.Size(156, 13)
 		Me.Label3.TabIndex = 0
-		Me.Label3.Text = "Game that has the packer:"
+		Me.Label3.Text = "Game that has the packer tool:"
 		'
 		'GameSetupComboBox
 		'
@@ -325,9 +325,9 @@ Partial Class PackUserControl
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.GameSetupComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.GameSetupComboBox.FormattingEnabled = True
-		Me.GameSetupComboBox.Location = New System.Drawing.Point(144, 1)
+		Me.GameSetupComboBox.Location = New System.Drawing.Point(165, 1)
 		Me.GameSetupComboBox.Name = "GameSetupComboBox"
-		Me.GameSetupComboBox.Size = New System.Drawing.Size(521, 21)
+		Me.GameSetupComboBox.Size = New System.Drawing.Size(500, 21)
 		Me.GameSetupComboBox.TabIndex = 1
 		'
 		'SetUpGamesButton

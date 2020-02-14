@@ -308,9 +308,9 @@ Partial Class SetUpGamesUserControl
 		Me.PackerLabel.Location = New System.Drawing.Point(6, 251)
 		Me.PackerLabel.Margin = New System.Windows.Forms.Padding(3, 9, 3, 0)
 		Me.PackerLabel.Name = "PackerLabel"
-		Me.PackerLabel.Size = New System.Drawing.Size(43, 13)
+		Me.PackerLabel.Size = New System.Drawing.Size(64, 13)
 		Me.PackerLabel.TabIndex = 16
-		Me.PackerLabel.Text = "Packer:"
+		Me.PackerLabel.Text = "Packer tool:"
 		'
 		'BrowseForUnpackerPathFileNameButton
 		'
@@ -373,6 +373,7 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.GameNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.GameNameTextBox.CueBannerText = ""
 		Me.GameNameTextBox.Location = New System.Drawing.Point(55, 19)
 		Me.GameNameTextBox.Name = "GameNameTextBox"
 		Me.GameNameTextBox.Size = New System.Drawing.Size(709, 21)

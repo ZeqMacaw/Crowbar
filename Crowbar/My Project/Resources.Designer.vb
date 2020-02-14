@@ -61,6 +61,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property _26_Grey_PayPal_Pill_Button() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("_26_Grey_PayPal_Pill_Button", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to http://steamcommunity.com/id/zeqmacaw.
         '''</summary>
         Friend ReadOnly Property About_AuthorLink() As String
@@ -88,14 +98,23 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to http://paypal.me/zeqmacaw.
+        '''</summary>
+        Friend ReadOnly Property About_PayPalLink() As String
+            Get
+                Return ResourceManager.GetString("About_PayPalLink", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to GoldSource and Source Engine Modding Toolset:
         '''* Decompiler of MDL and related files.
         '''* Compiler interface to StudioMDL.exe tool.
         '''* Model viewer interface to Half-Life Model Viewer tool.
-        '''* Unpacker of Tactical Intervention FPX, Garry&apos;s Mod GMA, Vampire: The Masquerade - Bloodlines VPK files, and Source-engine VPK files.
+        '''* Unpacker of Fairy Tale Busters APK, Tactical Intervention FPX, Garry&apos;s Mod GMA, Vampire: The Masquerade - Bloodlines VPK files, and Source-engine VPK files.
         '''* Packer interface to Garry&apos;s Mod GMA and Source-engine VPK packer tools.
         '''* Downloader of Workshop items from any Steam game that allows public downloads.
-        '''* Publisher of Workshop items [rest of string was truncated]&quot;;.
+        '''* Pub [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property About_ProductDescription() As String
             Get
@@ -194,6 +213,16 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("CrowbarGuideBanner", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend ReadOnly Property CrowbarLauncher() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("CrowbarLauncher", resourceCulture)
+                Return CType(obj,Byte())
             End Get
         End Property
         
@@ -373,6 +402,16 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("Refresh", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend ReadOnly Property SevenZr() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("SevenZr", resourceCulture)
+                Return CType(obj,Byte())
             End Get
         End Property
         

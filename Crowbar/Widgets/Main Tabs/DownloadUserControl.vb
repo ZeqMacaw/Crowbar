@@ -153,7 +153,7 @@ Public Class DownloadUserControl
 		Me.CancelDownload()
 	End Sub
 
-	Private Sub DownloadedItemButton_Click(sender As Object, e As EventArgs) Handles DownloadedItemButton.Click
+	Private Sub DownloadedItemButton_Click(sender As Object, e As EventArgs) Handles GotoDownloadedItemButton.Click
 		Me.GotoDownloadedItem()
 	End Sub
 
@@ -251,13 +251,10 @@ Public Class DownloadUserControl
 
 				Dim outputFileName As String
 				outputFileName = Me.GetOutputFileName(outputInfo.ItemTitle, outputInfo.PublishedItemID, outputInfo.ContentFolderOrFileName, outputInfo.ItemUpdated_Text)
-				'NOTE: Remove colons here to prevent GetCleanPathFileName() from removing everything up to first colon.
-				outputFileName = outputFileName.Replace(":", "")
-				outputFileName = FileManager.GetCleanPathFileName(outputFileName, False)
 
 				Dim outputPathFileName As String
 				outputPathFileName = Path.Combine(outputPath, outputFileName)
-				outputPathFileName = Me.GetTestedPathFileName(outputPathFileName)
+				outputPathFileName = FileManager.GetTestedPathFileName(outputPathFileName)
 
 				File.WriteAllBytes(outputPathFileName, outputInfo.ContentFile)
 				If File.Exists(outputPathFileName) Then
@@ -273,13 +270,10 @@ Public Class DownloadUserControl
 
 				Dim outputFolder As String
 				outputFolder = Me.GetOutputFileName(outputInfo.ItemTitle, outputInfo.PublishedItemID, outputInfo.ContentFolderOrFileName, outputInfo.ItemUpdated_Text)
-				'NOTE: Remove colons here to prevent GetCleanPathFileName() from removing everything up to first colon.
-				outputFolder = outputFolder.Replace(":", "")
-				outputFolder = FileManager.GetCleanPathFileName(outputFolder, False)
 
 				Dim targetOutputPath As String
 				targetOutputPath = Path.Combine(outputPath, outputFolder)
-				targetOutputPath = Me.GetTestedPath(targetOutputPath)
+				targetOutputPath = FileManager.GetTestedPath(targetOutputPath)
 
 				If Directory.Exists(outputInfo.ContentFolderOrFileName) Then
 					FileManager.CopyFolder(outputInfo.ContentFolderOrFileName, targetOutputPath, True)
@@ -407,8 +401,11 @@ Public Class DownloadUserControl
 	End Sub
 
 	Private Sub DownloadFromLink()
-		Dim itemLink As String = ""
 		Me.LogTextBox.Text = ""
+		Me.DownloadProgressBar.Text = ""
+		Me.DownloadProgressBar.Value = 0
+
+		Dim itemLink As String = ""
 		Dim itemID As String = Me.GetItemID()
 		Dim appID As UInteger = 0
 		If itemID = "0" Then
@@ -540,7 +537,7 @@ Public Class DownloadUserControl
 			Me.theAppIdText = appID.ToString()
 			Me.theSteamAppInfo = Nothing
 			Try
-				If TheApp.Settings.PublishSteamAppUserInfos.Count > 0 Then
+				If TheApp.SteamAppInfos.Count > 0 Then
 					'NOTE: Use this temp var because appID as a ByRef var can not be used in a lambda expression used in next line.
 					Dim steamAppID As New Steamworks.AppId_t(appID)
 					Me.theSteamAppInfo = TheApp.SteamAppInfos.First(Function(info) info.ID = steamAppID)
@@ -578,13 +575,10 @@ Public Class DownloadUserControl
 
 		Dim outputFileName As String
 		outputFileName = Me.GetOutputFileName(Me.theItemTitle, Me.theItemIdText, givenFileName, Me.theItemTimeUpdatedText)
-		'NOTE: Remove colons here to prevent GetCleanPathFileName() from removing everything up to first colon.
-		outputFileName = outputFileName.Replace(":", "")
-		outputFileName = FileManager.GetCleanPathFileName(outputFileName, False)
 
 		Dim outputPathFileName As String
 		outputPathFileName = Path.Combine(outputPath, outputFileName)
-		outputPathFileName = Me.GetTestedPathFileName(outputPathFileName)
+		outputPathFileName = FileManager.GetTestedPathFileName(outputPathFileName)
 
 		Me.LogTextBox.AppendText("Downloading workshop item as: """ + outputPathFileName + """" + vbCrLf)
 
@@ -613,28 +607,6 @@ Public Class DownloadUserControl
 		inputInfo.PublishedItemID = itemID
 		Me.theBackgroundSteamPipe.UnsubscribeItem(AddressOf Me.UnsubscribeItem_ProgressChanged, AddressOf Me.UnsubscribeItem_RunWorkerCompleted, inputInfo)
 	End Sub
-
-	Private Function GetTestedPathFileName(ByVal iPathFileName As String) As String
-		Dim testedPathFileName As String = iPathFileName
-		Dim pathFileNameWithoutExtension As String = FileManager.GetPathFileNameWithoutExtension(iPathFileName)
-		Dim extension As String = Path.GetExtension(iPathFileName)
-		Dim number As Integer = 1
-		While File.Exists(testedPathFileName)
-			testedPathFileName = pathFileNameWithoutExtension + "(" + number.ToString() + ")" + extension
-			number += 1
-		End While
-		Return testedPathFileName
-	End Function
-
-	Private Function GetTestedPath(ByVal iPath As String) As String
-		Dim testedPathFileName As String = iPath
-		Dim number As Integer = 1
-		While Directory.Exists(testedPathFileName)
-			testedPathFileName = iPath + "(" + number.ToString() + ")"
-			number += 1
-		End While
-		Return testedPathFileName
-	End Function
 
 	Private Function GetOutputPath() As String
 		Dim outputPath As String = ""
@@ -687,6 +659,8 @@ Public Class DownloadUserControl
 			outputFileName = outputFileName.Replace(" ", "_")
 		End If
 
+		'NOTE: Remove colons here to prevent GetCleanPathFileName() from removing everything up to first colon.
+		outputFileName = outputFileName.Replace(":", "_")
 		outputFileName = FileManager.GetCleanPathFileName(outputFileName, False)
 		outputFileName = outputFileName.Replace("\", "_")
 

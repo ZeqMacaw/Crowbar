@@ -58,7 +58,7 @@ Public Class DecompileUserControl
 
 		Me.ReferenceMeshSmdFileCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileReferenceMeshSmdFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.RemovePathFromMaterialFileNamesCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileRemovePathFromSmdMaterialFileNamesIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
-		Me.UseUvsForDoomMusicCompilerCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileUseUvsForDoomMusicCompilerIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.UseNonValveUvConversionCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileUseNonValveUvConversionIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 
 		Me.BoneAnimationSmdFilesCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileBoneAnimationSmdFilesIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.PlaceInAnimsSubfolderCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileBoneAnimationPlaceInSubfolderIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
@@ -69,12 +69,14 @@ Public Class DecompileUserControl
 		Me.VertexAnimationVtaFileCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileVertexAnimationVtaFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.ProceduralBonesVrdFileCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileProceduralBonesVrdFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 
-		Me.DeclareSequenceQciCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileDeclareSequenceQciFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
-
 		Me.FolderForEachModelCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileFolderForEachModelIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.PrefixMeshFileNamesWithModelNameCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompilePrefixFileNamesWithModelNameIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.FormatForStricterImportersCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileStricterFormatIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
+
 		Me.LogFileCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileLogFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.DebugInfoCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileDebugInfoFilesIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
-		Me.FormatForStricterImportersCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileStricterFormatIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
+
+		Me.DeclareSequenceQciCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileDeclareSequenceQciFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 
 		Dim anEnumList As IList
 		anEnumList = EnumHelper.ToList(GetType(SupportedMdlVersion))
@@ -110,7 +112,7 @@ Public Class DecompileUserControl
 		Me.IncludeDefineBoneLinesCheckBox.DataBindings.Clear()
 		Me.ReferenceMeshSmdFileCheckBox.DataBindings.Clear()
 		Me.RemovePathFromMaterialFileNamesCheckBox.DataBindings.Clear()
-		Me.UseUvsForDoomMusicCompilerCheckBox.DataBindings.Clear()
+		Me.UseNonValveUvConversionCheckBox.DataBindings.Clear()
 		Me.BoneAnimationSmdFilesCheckBox.DataBindings.Clear()
 		Me.PlaceInAnimsSubfolderCheckBox.DataBindings.Clear()
 
@@ -120,12 +122,14 @@ Public Class DecompileUserControl
 		Me.VertexAnimationVtaFileCheckBox.DataBindings.Clear()
 		Me.ProceduralBonesVrdFileCheckBox.DataBindings.Clear()
 
-		Me.DeclareSequenceQciCheckBox.DataBindings.Clear()
-
 		Me.FolderForEachModelCheckBox.DataBindings.Clear()
+		Me.PrefixMeshFileNamesWithModelNameCheckBox.DataBindings.Clear()
+		Me.FormatForStricterImportersCheckBox.DataBindings.Clear()
+
 		Me.LogFileCheckBox.DataBindings.Clear()
 		Me.DebugInfoCheckBox.DataBindings.Clear()
-		Me.FormatForStricterImportersCheckBox.DataBindings.Clear()
+
+		Me.DeclareSequenceQciCheckBox.DataBindings.Clear()
 
 		Me.OverrideMdlVersionComboBox.DataBindings.Clear()
 	End Sub
@@ -270,7 +274,7 @@ Public Class DecompileUserControl
 	End Sub
 
 	Private Sub DecompileOptionsUseDefaultsButton_Click(sender As Object, e As EventArgs) Handles DecompileOptionsUseDefaultsButton.Click
-		TheApp.Settings.SetDefaultDecompileOptions()
+		TheApp.Settings.SetDefaultDecompileReCreateFilesOptions()
 	End Sub
 
 	Private Sub DecompileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DecompileButton.Click
@@ -287,6 +291,7 @@ Public Class DecompileUserControl
 
 	Private Sub UseAllInCompileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UseAllInCompileButton.Click
 		TheApp.Settings.CompileQcPathFileName = TheApp.Decompiler.GetOutputPathFolderOrFileName()
+		TheApp.Settings.CompileMode = InputOptions.FolderRecursion
 	End Sub
 
 	Private Sub UseInEditButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UseInEditButton.Click
@@ -295,6 +300,7 @@ Public Class DecompileUserControl
 
 	Private Sub UseInCompileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UseInCompileButton.Click
 		TheApp.Settings.CompileQcPathFileName = TheApp.Decompiler.GetOutputPathFileName(Me.theDecompiledRelativePathFileNames(Me.DecompiledFilesComboBox.SelectedIndex))
+		TheApp.Settings.CompileMode = InputOptions.File
 	End Sub
 
 	Private Sub GotoDecompiledFileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GotoDecompiledFileButton.Click
@@ -473,7 +479,7 @@ Public Class DecompileUserControl
 		Me.UseMixedCaseForKeywordsCheckBox.Enabled = TheApp.Settings.DecompileQcFileIsChecked
 
 		Me.RemovePathFromMaterialFileNamesCheckBox.Enabled = TheApp.Settings.DecompileReferenceMeshSmdFileIsChecked
-		Me.UseUvsForDoomMusicCompilerCheckBox.Enabled = TheApp.Settings.DecompileReferenceMeshSmdFileIsChecked
+		Me.UseNonValveUvConversionCheckBox.Enabled = TheApp.Settings.DecompileReferenceMeshSmdFileIsChecked
 
 		Me.PlaceInAnimsSubfolderCheckBox.Enabled = TheApp.Settings.DecompileBoneAnimationSmdFilesIsChecked
 
@@ -542,9 +548,9 @@ Public Class DecompileUserControl
 			Me.DecompileComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "DecompileMode", False, DataSourceUpdateMode.OnPropertyChanged)
 
 			If EnumHelper.Contains(previousSelectedInputOption, anEnumList) Then
-				Me.DecompileComboBox.SelectedIndex = EnumHelper.IndexOf(previousSelectedInputOption, anEnumList)
+				TheApp.Settings.DecompileMode = previousSelectedInputOption
 			Else
-				Me.DecompileComboBox.SelectedIndex = 0
+				TheApp.Settings.DecompileMode = CType(EnumHelper.Key(0, anEnumList), InputOptions)
 			End If
 		Catch ex As Exception
 			Dim debug As Integer = 4242
