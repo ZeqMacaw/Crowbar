@@ -231,6 +231,7 @@ Public Class SourceMdlSequenceDesc
 
 	'	int					unused[7];		// remove/add as appropriate (grow back to 8 ints on version change!)
 	'======
+	' Some Version 48 (such as Team Fortress 2 and Source SDK Base Multiplayer 2013, but not Garry's Mod)
 	'FROM: VERSION 49
 	'	int					activitymodifierindex;
 	'	int					numactivitymodifiers;
