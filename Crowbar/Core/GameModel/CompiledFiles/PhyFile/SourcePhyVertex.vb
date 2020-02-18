@@ -19,6 +19,12 @@ Public Class SourcePhyVertex
 		End Get
 	End Property
 
+	Public ReadOnly Property UnnormalizedNormal As SourceVector
+		Get
+			Return Me.theNormal
+		End Get
+	End Property
+
 	Private theNormal As SourceVector
 	Private theNormalIsNormalized As Boolean
 

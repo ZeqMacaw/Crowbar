@@ -2146,7 +2146,7 @@ Public Class SourceMdlFile49
 
 					aSeqDesc.activityModifierOffset = 0
 					aSeqDesc.activityModifierCount = 0
-					If Me.theMdlFileData.version = 49 Then
+					If Me.theMdlFileData.version = 48 OrElse Me.theMdlFileData.version = 49 Then
 						aSeqDesc.activityModifierOffset = Me.theInputFileReader.ReadInt32()
 						aSeqDesc.activityModifierCount = Me.theInputFileReader.ReadInt32()
 						For x As Integer = 0 To 4

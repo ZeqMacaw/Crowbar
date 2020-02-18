@@ -414,7 +414,12 @@ Public Class DownloadUserControl
 		Else
 			Me.LogTextBox.AppendText("Getting item content download link." + vbCrLf)
 			Application.DoEvents()
-			itemLink = Me.GetDownloadLink(itemID, appID)
+			Try
+				itemLink = Me.GetDownloadLink(itemID, appID)
+			Catch ex As Exception
+				Me.LogTextBox.AppendText("ERROR: " + ex.Message + vbCrLf)
+				Exit Sub
+			End Try
 		End If
 		If itemLink <> "" Then
 			Me.LogTextBox.AppendText("Item content download link found. Downloading file via web." + vbCrLf)
@@ -549,6 +554,8 @@ Public Class DownloadUserControl
 				'NOTE: Value was not found, so unable to download.
 				appID = 0
 			End If
+			'Catch ex As Exception
+			'	Dim debug As Integer = 4242
 		Finally
 			If reader IsNot Nothing Then
 				reader.Close()

@@ -29,6 +29,19 @@ Public Class FileSeekLog
 		End Try
 	End Sub
 
+	Public Sub Remove(ByVal startOffset As Long)
+		Try
+			If Me.theFileSeekList.ContainsKey(startOffset) Then
+				Me.theFileSeekList.Remove(startOffset)
+			End If
+			If Me.theFileSeekDescriptionList.ContainsKey(startOffset) Then
+				Me.theFileSeekDescriptionList.Remove(startOffset)
+			End If
+		Catch ex As Exception
+			Dim debug As Integer = 4242
+		End Try
+	End Sub
+
 	Public Sub Clear()
 		Me.theFileSeekList.Clear()
 		Me.theFileSeekDescriptionList.Clear()

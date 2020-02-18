@@ -739,9 +739,12 @@ Public Class SourcePhyFile
 			'NOTE: Instead of storing all of the normals, just store one and keep adding to it. 
 			'      Can then just do the normalize once when normal is first accessed.
 			phyVertex = faceSection.theVertices(aTriangle.vertexIndex(vertexIndex))
-			phyVertex.Normal.x += normalVector.x
-			phyVertex.Normal.y += normalVector.y
-			phyVertex.Normal.z += normalVector.z
+			'phyVertex.Normal.x += normalVector.x
+			'phyVertex.Normal.y += normalVector.y
+			'phyVertex.Normal.z += normalVector.z
+			phyVertex.UnnormalizedNormal.x += normalVector.x
+			phyVertex.UnnormalizedNormal.y += normalVector.y
+			phyVertex.UnnormalizedNormal.z += normalVector.z
 		Next
 	End Sub
 
