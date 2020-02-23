@@ -188,6 +188,7 @@ Public Module CrowbarSteamPipe
 				theItemTitle = pCallResult.m_rgchTitle
 				theItemUpdated = pCallResult.m_rtimeUpdated
 				theItemContentFileName = pCallResult.m_pchFileName
+				theAppID = pCallResult.m_nConsumerAppID
 
 				theResultMessage = "success"
 			Else
@@ -239,6 +240,7 @@ Public Module CrowbarSteamPipe
 				CrowbarSteamPipe.SetResultAndRunCallbacks(Of RemoteStorageGetPublishedFileDetailsResult_t)(AddressOf OnGetPublishedFileDetailsForInternalResults, result)
 				WriteTextThatMightHaveMultipleLines(theItemTitle)
 				sw.WriteLine(itemFolderName)
+				sw.WriteLine(theAppID.ToString())
 			Else
 				sw.WriteLine("error")
 			End If
@@ -280,6 +282,7 @@ Public Module CrowbarSteamPipe
 						CrowbarSteamPipe.SetResultAndRunCallbacks(Of RemoteStorageGetPublishedFileDetailsResult_t)(AddressOf OnGetPublishedFileDetailsForInternalResults, result)
 						WriteTextThatMightHaveMultipleLines(theItemTitle)
 						sw.WriteLine(folderName)
+						sw.WriteLine(theAppID.ToString())
 					Else
 						Console.WriteLine("Crowbar_DownloadContentFolderOrFile - GetItemInstallInfo error")
 						sw.WriteLine("error")
@@ -1654,7 +1657,7 @@ Public Module CrowbarSteamPipe
 	Private theUGCHandleForPreviewImageFile As UGCHandle_t
 	'Private theUGCPreviewImageFileSize As Integer
 
-	'Private theAppID As AppId_t
+	Private theAppID As AppId_t
 	Private theItemID As PublishedFileId_t
 	Private theItemUpdated As UInteger
 	Private theItemTitle As String

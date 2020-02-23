@@ -30,12 +30,12 @@ Partial Class DownloadUserControl
 		Me.GotoOutputPathButton = New System.Windows.Forms.Button()
 		Me.BrowseForOutputPathButton = New System.Windows.Forms.Button()
 		Me.OptionsGroupBox = New Crowbar.GroupBoxEx()
-		Me.ConvertToExpectedFileOrFolderCheckBox = New Crowbar.CheckBoxEx()
-		Me.OptionsUseDefaultsButton = New System.Windows.Forms.Button()
-		Me.ReplaceSpacesWithUnderscoresCheckBox = New Crowbar.CheckBoxEx()
-		Me.AppendDateTimeCheckBox = New Crowbar.CheckBoxEx()
-		Me.PrependTitleCheckBox = New Crowbar.CheckBoxEx()
 		Me.UseIdCheckBox = New Crowbar.CheckBoxEx()
+		Me.PrependTitleCheckBox = New Crowbar.CheckBoxEx()
+		Me.AppendDateTimeCheckBox = New Crowbar.CheckBoxEx()
+		Me.ReplaceSpacesWithUnderscoresCheckBox = New Crowbar.CheckBoxEx()
+		Me.OptionsUseDefaultsButton = New System.Windows.Forms.Button()
+		Me.ConvertToExpectedFileOrFolderCheckBox = New Crowbar.CheckBoxEx()
 		Me.ExampleOutputFileNameLabel = New System.Windows.Forms.Label()
 		Me.ExampleOutputFileNameTextBox = New Crowbar.TextBoxEx()
 		Me.CancelDownloadButton = New System.Windows.Forms.Button()
@@ -47,6 +47,7 @@ Partial Class DownloadUserControl
 		Me.GotoDownloadedItemButton = New System.Windows.Forms.Button()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
 		Me.Panel1 = New System.Windows.Forms.Panel()
+		Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
 		Me.OptionsGroupBox.SuspendLayout()
 		Me.Panel1.SuspendLayout()
 		Me.SuspendLayout()
@@ -162,48 +163,16 @@ Partial Class DownloadUserControl
 		Me.OptionsGroupBox.TabStop = False
 		Me.OptionsGroupBox.Text = "Output File Name Options"
 		'
-		'ConvertToExpectedFileOrFolderCheckBox
+		'UseIdCheckBox
 		'
-		Me.ConvertToExpectedFileOrFolderCheckBox.AutoSize = True
-		Me.ConvertToExpectedFileOrFolderCheckBox.IsReadOnly = False
-		Me.ConvertToExpectedFileOrFolderCheckBox.Location = New System.Drawing.Point(230, 20)
-		Me.ConvertToExpectedFileOrFolderCheckBox.Name = "ConvertToExpectedFileOrFolderCheckBox"
-		Me.ConvertToExpectedFileOrFolderCheckBox.Size = New System.Drawing.Size(187, 17)
-		Me.ConvertToExpectedFileOrFolderCheckBox.TabIndex = 7
-		Me.ConvertToExpectedFileOrFolderCheckBox.Text = "Convert to expected file or folder"
-		Me.ToolTip1.SetToolTip(Me.ConvertToExpectedFileOrFolderCheckBox, "Example: Garry's Mod uses compressed GMA (LZMA) instead of GMA.")
-		Me.ConvertToExpectedFileOrFolderCheckBox.UseVisualStyleBackColor = True
-		'
-		'OptionsUseDefaultsButton
-		'
-		Me.OptionsUseDefaultsButton.Location = New System.Drawing.Point(6, 112)
-		Me.OptionsUseDefaultsButton.Name = "OptionsUseDefaultsButton"
-		Me.OptionsUseDefaultsButton.Size = New System.Drawing.Size(90, 23)
-		Me.OptionsUseDefaultsButton.TabIndex = 4
-		Me.OptionsUseDefaultsButton.Text = "Use Defaults"
-		Me.OptionsUseDefaultsButton.UseVisualStyleBackColor = True
-		'
-		'ReplaceSpacesWithUnderscoresCheckBox
-		'
-		Me.ReplaceSpacesWithUnderscoresCheckBox.AutoSize = True
-		Me.ReplaceSpacesWithUnderscoresCheckBox.IsReadOnly = False
-		Me.ReplaceSpacesWithUnderscoresCheckBox.Location = New System.Drawing.Point(6, 89)
-		Me.ReplaceSpacesWithUnderscoresCheckBox.Name = "ReplaceSpacesWithUnderscoresCheckBox"
-		Me.ReplaceSpacesWithUnderscoresCheckBox.Size = New System.Drawing.Size(185, 17)
-		Me.ReplaceSpacesWithUnderscoresCheckBox.TabIndex = 3
-		Me.ReplaceSpacesWithUnderscoresCheckBox.Text = "Replace spaces with underscores"
-		Me.ReplaceSpacesWithUnderscoresCheckBox.UseVisualStyleBackColor = True
-		'
-		'AppendDateTimeCheckBox
-		'
-		Me.AppendDateTimeCheckBox.AutoSize = True
-		Me.AppendDateTimeCheckBox.IsReadOnly = False
-		Me.AppendDateTimeCheckBox.Location = New System.Drawing.Point(6, 66)
-		Me.AppendDateTimeCheckBox.Name = "AppendDateTimeCheckBox"
-		Me.AppendDateTimeCheckBox.Size = New System.Drawing.Size(191, 17)
-		Me.AppendDateTimeCheckBox.TabIndex = 2
-		Me.AppendDateTimeCheckBox.Text = "Append the item update date-time"
-		Me.AppendDateTimeCheckBox.UseVisualStyleBackColor = True
+		Me.UseIdCheckBox.AutoSize = True
+		Me.UseIdCheckBox.IsReadOnly = False
+		Me.UseIdCheckBox.Location = New System.Drawing.Point(6, 20)
+		Me.UseIdCheckBox.Name = "UseIdCheckBox"
+		Me.UseIdCheckBox.Size = New System.Drawing.Size(190, 17)
+		Me.UseIdCheckBox.TabIndex = 0
+		Me.UseIdCheckBox.Text = "Use item ID instead of given name"
+		Me.UseIdCheckBox.UseVisualStyleBackColor = True
 		'
 		'PrependTitleCheckBox
 		'
@@ -216,16 +185,48 @@ Partial Class DownloadUserControl
 		Me.PrependTitleCheckBox.Text = "Prepend item title"
 		Me.PrependTitleCheckBox.UseVisualStyleBackColor = True
 		'
-		'UseIdCheckBox
+		'AppendDateTimeCheckBox
 		'
-		Me.UseIdCheckBox.AutoSize = True
-		Me.UseIdCheckBox.IsReadOnly = False
-		Me.UseIdCheckBox.Location = New System.Drawing.Point(6, 20)
-		Me.UseIdCheckBox.Name = "UseIdCheckBox"
-		Me.UseIdCheckBox.Size = New System.Drawing.Size(190, 17)
-		Me.UseIdCheckBox.TabIndex = 0
-		Me.UseIdCheckBox.Text = "Use item ID instead of given name"
-		Me.UseIdCheckBox.UseVisualStyleBackColor = True
+		Me.AppendDateTimeCheckBox.AutoSize = True
+		Me.AppendDateTimeCheckBox.IsReadOnly = False
+		Me.AppendDateTimeCheckBox.Location = New System.Drawing.Point(6, 66)
+		Me.AppendDateTimeCheckBox.Name = "AppendDateTimeCheckBox"
+		Me.AppendDateTimeCheckBox.Size = New System.Drawing.Size(191, 17)
+		Me.AppendDateTimeCheckBox.TabIndex = 2
+		Me.AppendDateTimeCheckBox.Text = "Append the item update date-time"
+		Me.AppendDateTimeCheckBox.UseVisualStyleBackColor = True
+		'
+		'ReplaceSpacesWithUnderscoresCheckBox
+		'
+		Me.ReplaceSpacesWithUnderscoresCheckBox.AutoSize = True
+		Me.ReplaceSpacesWithUnderscoresCheckBox.IsReadOnly = False
+		Me.ReplaceSpacesWithUnderscoresCheckBox.Location = New System.Drawing.Point(6, 89)
+		Me.ReplaceSpacesWithUnderscoresCheckBox.Name = "ReplaceSpacesWithUnderscoresCheckBox"
+		Me.ReplaceSpacesWithUnderscoresCheckBox.Size = New System.Drawing.Size(185, 17)
+		Me.ReplaceSpacesWithUnderscoresCheckBox.TabIndex = 3
+		Me.ReplaceSpacesWithUnderscoresCheckBox.Text = "Replace spaces with underscores"
+		Me.ReplaceSpacesWithUnderscoresCheckBox.UseVisualStyleBackColor = True
+		'
+		'OptionsUseDefaultsButton
+		'
+		Me.OptionsUseDefaultsButton.Location = New System.Drawing.Point(6, 112)
+		Me.OptionsUseDefaultsButton.Name = "OptionsUseDefaultsButton"
+		Me.OptionsUseDefaultsButton.Size = New System.Drawing.Size(90, 23)
+		Me.OptionsUseDefaultsButton.TabIndex = 4
+		Me.OptionsUseDefaultsButton.Text = "Use Defaults"
+		Me.OptionsUseDefaultsButton.UseVisualStyleBackColor = True
+		'
+		'ConvertToExpectedFileOrFolderCheckBox
+		'
+		Me.ConvertToExpectedFileOrFolderCheckBox.AutoSize = True
+		Me.ConvertToExpectedFileOrFolderCheckBox.IsReadOnly = False
+		Me.ConvertToExpectedFileOrFolderCheckBox.Location = New System.Drawing.Point(230, 20)
+		Me.ConvertToExpectedFileOrFolderCheckBox.Name = "ConvertToExpectedFileOrFolderCheckBox"
+		Me.ConvertToExpectedFileOrFolderCheckBox.Size = New System.Drawing.Size(187, 17)
+		Me.ConvertToExpectedFileOrFolderCheckBox.TabIndex = 7
+		Me.ConvertToExpectedFileOrFolderCheckBox.Text = "Convert to expected file or folder"
+		Me.ToolTip1.SetToolTip(Me.ConvertToExpectedFileOrFolderCheckBox, "Example: Garry's Mod uses compressed GMA (LZMA) instead of GMA.")
+		Me.ConvertToExpectedFileOrFolderCheckBox.UseVisualStyleBackColor = True
 		'
 		'ExampleOutputFileNameLabel
 		'
@@ -345,6 +346,10 @@ Partial Class DownloadUserControl
 		Me.Panel1.Size = New System.Drawing.Size(784, 546)
 		Me.Panel1.TabIndex = 17
 		'
+		'Timer1
+		'
+		Me.Timer1.Interval = 1000
+		'
 		'DownloadUserControl
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -387,4 +392,5 @@ Partial Class DownloadUserControl
 	Friend WithEvents ConvertToExpectedFileOrFolderCheckBox As CheckBoxEx
 	Friend WithEvents ToolTip1 As ToolTip
 	Friend WithEvents Panel1 As Panel
+	Friend WithEvents Timer1 As Timer
 End Class

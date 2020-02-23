@@ -169,7 +169,7 @@ Public Class SteamPipe
 		Return result
 	End Function
 
-	Public Function Crowbar_DownloadContentFolderOrFile(ByVal itemID_text As String, ByRef contentFileBytes As Byte(), ByRef itemUpdated_Text As String, ByRef itemTitle As String, ByRef contentFolderOrFileName As String) As String
+	Public Function Crowbar_DownloadContentFolderOrFile(ByVal itemID_text As String, ByRef contentFileBytes As Byte(), ByRef itemUpdated_Text As String, ByRef itemTitle As String, ByRef contentFolderOrFileName As String, ByRef appID_Text As String) As String
 		Me.theStreamWriter.WriteLine("Crowbar_DownloadContentFolderOrFile")
 		Me.theStreamWriter.WriteLine(itemID_text)
 
@@ -216,6 +216,7 @@ Public Class SteamPipe
 			itemUpdated_Text = Me.theStreamReader.ReadLine()
 			itemTitle = Me.ReadMultipleLinesOfText(Me.theStreamReader)
 			contentFolderOrFileName = Me.theStreamReader.ReadLine()
+			appID_Text = Me.theStreamReader.ReadLine()
 
 			Dim debug As Integer = 4242
 		Else

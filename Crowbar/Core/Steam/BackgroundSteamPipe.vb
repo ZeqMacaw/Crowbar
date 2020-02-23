@@ -122,10 +122,12 @@ Public Class BackgroundSteamPipe
 		outputInfo.PublishedItemID = inputInfo.PublishedItemID
 		outputInfo.ContentFolderOrFileName = ""
 		Dim contentFile As Byte() = {0}
-		result = steamPipe.Crowbar_DownloadContentFolderOrFile(inputInfo.PublishedItemID, contentFile, outputInfo.ItemUpdated_Text, outputInfo.ItemTitle, outputInfo.ContentFolderOrFileName)
+		Dim returned_AppID_Text As String = "0"
+		result = steamPipe.Crowbar_DownloadContentFolderOrFile(inputInfo.PublishedItemID, contentFile, outputInfo.ItemUpdated_Text, outputInfo.ItemTitle, outputInfo.ContentFolderOrFileName, returned_AppID_Text)
 		If result = "success" Then
 			outputInfo.ContentFile = contentFile
 		ElseIf result = "success_SteamUGC" Then
+			outputInfo.AppID = UInteger.Parse(returned_AppID_Text)
 		Else
 			bw.ReportProgress(0, "ERROR: Unable to download the content file name from Steam." + vbCrLf)
 		End If
