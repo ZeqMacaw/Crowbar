@@ -649,12 +649,14 @@ Public Class SteamPipe
 
 		Dim textLineCount As Integer
 		textLineCount = CInt(sr.ReadLine())
-		'NOTE: Do not add CRLF to last line.
-		For i As Integer = 0 To textLineCount - 2
-			'NOTE: Add CRLF because TextBoxes use it for newlines.
-			text += sr.ReadLine() + vbCrLf
-		Next
-		text += sr.ReadLine()
+		If textLineCount > 0 Then
+			'NOTE: Do not add CRLF to last line.
+			For i As Integer = 0 To textLineCount - 2
+				'NOTE: Add CRLF because TextBoxes use it for newlines.
+				text += sr.ReadLine() + vbCrLf
+			Next
+			text += sr.ReadLine()
+		End If
 
 		Return text
 	End Function
