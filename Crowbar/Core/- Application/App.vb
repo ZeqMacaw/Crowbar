@@ -330,6 +330,7 @@ Public Class App
 
 		If File.Exists(appSettingsPathFileName) Then
 			Try
+				VersionModule.ConvertSettingsFile(appSettingsPathFileName)
 				Me.theSettings = CType(FileManager.ReadXml(GetType(AppSettings), appSettingsPathFileName), AppSettings)
 			Catch
 				Me.CreateAppSettings()

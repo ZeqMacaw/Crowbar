@@ -39,7 +39,7 @@ Public Class WorkshopItem
 		Me.thePreviewImagePathFileName = ""
 		Me.thePreviewImagePathFileNameIsChanged = False
 
-		Me.theVisibility = SteamUGCPublishedItemVisibility.Private
+		Me.theVisibility = SteamUGCPublishedItemVisibility.Hidden
 		Me.theVisibilityIsChanged = False
 
 		Me.theTags = New BindingListEx(Of String)()
@@ -558,7 +558,8 @@ Public Class WorkshopItem
 		'<Description("<no change>")> NoChange = -1
 		<Description("Public")> [Public] = 0
 		<Description("Friends-Only")> FriendsOnly = 1
-		<Description("Private")> [Private] = 2
+		<Description("Hidden")> Hidden = 2
+		<Description("Unlisted")> Unlisted = 3
 	End Enum
 
 #End Region
