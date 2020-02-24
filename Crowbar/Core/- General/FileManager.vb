@@ -608,7 +608,7 @@ Public Class FileManager
 			size += CULng(File.Length)
 		Next
 		For Each SubFolderInfo As DirectoryInfo In FolderInfo.GetDirectories
-			GetFolderSize(SubFolderInfo.FullName)
+			size += GetFolderSize(SubFolderInfo.FullName)
 		Next
 		Return size
 	End Function
