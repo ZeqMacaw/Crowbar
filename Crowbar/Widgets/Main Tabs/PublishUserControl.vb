@@ -1581,11 +1581,12 @@ Public Class PublishUserControl
 	Private Sub RefreshOrRevertItem()
 		If Me.theSelectedItem.IsChanged Then
 			If Me.theSelectedItem.IsTemplate Then
-				Me.theSelectedItemDetailsIsChangingViaMe = True
-				'NOTE: Change the item in the list (and not the Me.theSlectedItem) so that list and selected item stay synced.
-				Dim selectedItemIndex As Integer = Me.theItemBindingSource.IndexOf(Me.theSelectedItem)
-				Me.theDisplayedItems(selectedItemIndex) = Me.theUnchangedSelectedTemplateItem
-				Me.theSelectedItemDetailsIsChangingViaMe = False
+				'Me.theSelectedItemDetailsIsChangingViaMe = True
+				''NOTE: Change the item in the list (and not the Me.theSelectedItem) so that list and selected item stay synced.
+				'Dim selectedItemIndex As Integer = Me.theItemBindingSource.IndexOf(Me.theSelectedItem)
+				'Me.theDisplayedItems(selectedItemIndex) = Me.theUnchangedSelectedTemplateItem
+				'Me.theSelectedItemDetailsIsChangingViaMe = False
+				Me.RevertChangedTemplate()
 			ElseIf Me.theSelectedItem.IsPublished Then
 				Me.ChangeChangedItemIntoPublishedItem(Me.theSelectedItem)
 			End If
@@ -1750,6 +1751,8 @@ Public Class PublishUserControl
 		'NOTE: Change the item in the list (and not the Me.theSlectedItem) so that list and selected item stay synced.
 		Dim selectedItemIndex As Integer = Me.theItemBindingSource.IndexOf(Me.theSelectedItem)
 		Me.theDisplayedItems(selectedItemIndex) = Me.theUnchangedSelectedTemplateItem
+		Me.theSteamAppUserInfo.DraftTemplateAndChangedItems.Remove(Me.theSelectedItem)
+		Me.theSteamAppUserInfo.DraftTemplateAndChangedItems.Add(Me.theUnchangedSelectedTemplateItem)
 		RemoveHandler Me.theSelectedItem.PropertyChanged, AddressOf Me.WorkshopItem_PropertyChanged
 		Me.theSelectedItem = Me.theUnchangedSelectedTemplateItem
 		AddHandler Me.theSelectedItem.PropertyChanged, AddressOf Me.WorkshopItem_PropertyChanged
