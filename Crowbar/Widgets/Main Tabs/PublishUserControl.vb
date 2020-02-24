@@ -1231,7 +1231,7 @@ Public Class PublishUserControl
 			ElseIf File.Exists(Me.theSelectedItem.ContentPathFolderOrFileName) Then
 				Dim aFile As New FileInfo(Me.theSelectedItem.ContentPathFolderOrFileName)
 				contentFileSizeText = MathModule.ByteUnitsConversion(CULng(aFile.Length))
-			ElseIf Me.theSelectedItem.ContentSize > 0 Then
+			ElseIf Me.theSelectedItem.ContentSize > 0 AndAlso Me.theSelectedItem.IsPublished Then
 				contentFileSizeText = MathModule.ByteUnitsConversion(CULng(Me.theSelectedItem.ContentSize))
 			End If
 		ElseIf TheApp.SteamAppInfos(TheApp.Settings.PublishGameSelectedIndex).UsesSteamUGC Then
@@ -1239,7 +1239,7 @@ Public Class PublishUserControl
 			If Directory.Exists(Me.theSelectedItem.ContentPathFolderOrFileName) Then
 				Dim folderSize As ULong = FileManager.GetFolderSize(Me.theSelectedItem.ContentPathFolderOrFileName)
 				contentFileSizeText = MathModule.ByteUnitsConversion(folderSize)
-			ElseIf Me.theSelectedItem.ContentSize > 0 Then
+			ElseIf Me.theSelectedItem.ContentSize > 0 AndAlso Me.theSelectedItem.IsPublished Then
 				contentFileSizeText = MathModule.ByteUnitsConversion(CULng(Me.theSelectedItem.ContentSize))
 			End If
 		Else
@@ -1247,7 +1247,7 @@ Public Class PublishUserControl
 			If File.Exists(Me.theSelectedItem.ContentPathFolderOrFileName) Then
 				Dim aFile As New FileInfo(Me.theSelectedItem.ContentPathFolderOrFileName)
 				contentFileSizeText = MathModule.ByteUnitsConversion(CULng(aFile.Length))
-			ElseIf Me.theSelectedItem.ContentSize > 0 Then
+			ElseIf Me.theSelectedItem.ContentSize > 0 AndAlso Me.theSelectedItem.IsPublished Then
 				contentFileSizeText = MathModule.ByteUnitsConversion(CULng(Me.theSelectedItem.ContentSize))
 			End If
 		End If
@@ -1272,7 +1272,7 @@ Public Class PublishUserControl
 		If File.Exists(Me.theSelectedItem.PreviewImagePathFileName) Then
 			Dim aFile As New FileInfo(Me.theSelectedItem.PreviewImagePathFileName)
 			previewImageSizeText = MathModule.ByteUnitsConversion(CULng(aFile.Length))
-		ElseIf Me.theSelectedItem.PreviewImageSize > 0 Then
+		ElseIf Me.theSelectedItem.PreviewImageSize > 0 AndAlso Me.theSelectedItem.IsPublished Then
 			previewImageSizeText = MathModule.ByteUnitsConversion(CULng(Me.theSelectedItem.PreviewImageSize))
 		End If
 		'Dim previewImageSizeMaxText As String = "<unknown>"
