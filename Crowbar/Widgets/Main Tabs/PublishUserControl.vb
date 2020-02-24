@@ -1195,7 +1195,7 @@ Public Class PublishUserControl
 		Dim titleSize As Integer = Me.theSelectedItem.Title.Length
 		Dim titleSizeMax As Integer = CInt(Steamworks.Constants.k_cchPublishedDocumentTitleMax)
 		Dim changedMarker As String = ""
-		If Me.theSelectedItem.TitleIsChanged AndAlso Me.theSelectedItem.IsPublished Then
+		If Me.theSelectedItem.TitleIsChanged AndAlso Not Me.theSelectedItem.IsDraft Then
 			changedMarker = AppConstants.ChangedMarker
 		End If
 		Me.ItemTitleLabel.Text = "Title" + changedMarker + " (" + titleSize.ToString() + " / " + titleSizeMax.ToString() + " characters max):"
@@ -1205,7 +1205,7 @@ Public Class PublishUserControl
 		Dim descriptionSize As Integer = Me.theSelectedItem.Description.Length
 		Dim descriptionSizeMax As Integer = CInt(Steamworks.Constants.k_cchPublishedDocumentDescriptionMax)
 		Dim changedMarker As String = ""
-		If Me.theSelectedItem.DescriptionIsChanged AndAlso Me.theSelectedItem.IsPublished Then
+		If Me.theSelectedItem.DescriptionIsChanged AndAlso Not Me.theSelectedItem.IsDraft Then
 			changedMarker = AppConstants.ChangedMarker
 		End If
 		Me.ItemDescriptionLabel.Text = "Description" + changedMarker + " (" + descriptionSize.ToString() + " / " + descriptionSizeMax.ToString() + " characters max):"
@@ -1215,7 +1215,7 @@ Public Class PublishUserControl
 		Dim changeNoteSize As Integer = Me.theSelectedItem.ChangeNote.Length
 		Dim changeNoteSizeMax As Integer = CInt(Steamworks.Constants.k_cchPublishedDocumentChangeDescriptionMax)
 		Dim changedMarker As String = ""
-		If Me.theSelectedItem.ChangeNoteIsChanged AndAlso Me.theSelectedItem.IsPublished Then
+		If Me.theSelectedItem.ChangeNoteIsChanged AndAlso Not Me.theSelectedItem.IsDraft Then
 			changedMarker = AppConstants.ChangedMarker
 		End If
 		Me.ItemChangeNoteLabel.Text = "Change Note" + changedMarker + " (" + changeNoteSize.ToString() + " / " + changeNoteSizeMax.ToString() + " characters max):"
@@ -1255,7 +1255,7 @@ Public Class PublishUserControl
 		''Dim contentFileSizeMax As Integer = CInt(Steamworks.Constants.k_unMaxCloudFileChunkSize / 1048576)
 		''contentFileSizeMaxText = contentFileSizeMax.ToString()
 		Dim changedMarker As String = ""
-		If Me.theSelectedItem.ContentPathFolderOrFileNameIsChanged AndAlso Me.theSelectedItem.IsPublished Then
+		If Me.theSelectedItem.ContentPathFolderOrFileNameIsChanged AndAlso Not Me.theSelectedItem.IsDraft Then
 			changedMarker = AppConstants.ChangedMarker
 		End If
 		'NOTE: Not sure what max size is, so do not show it.
@@ -1277,7 +1277,7 @@ Public Class PublishUserControl
 		End If
 		'Dim previewImageSizeMaxText As String = "<unknown>"
 		Dim changedMarker As String = ""
-		If Me.theSelectedItem.PreviewImagePathFileNameIsChanged AndAlso Me.theSelectedItem.IsPublished Then
+		If Me.theSelectedItem.PreviewImagePathFileNameIsChanged AndAlso Not Me.theSelectedItem.IsDraft Then
 			changedMarker = AppConstants.ChangedMarker
 		End If
 		'NOTE: Not sure what max size is, so do not show it.
@@ -1389,7 +1389,7 @@ Public Class PublishUserControl
 
 	Private Sub UpdateItemVisibilityLabel()
 		Dim changedMarker As String = ""
-		If Me.theSelectedItem.VisibilityIsChanged AndAlso Me.theSelectedItem.IsPublished Then
+		If Me.theSelectedItem.VisibilityIsChanged AndAlso Not Me.theSelectedItem.IsDraft Then
 			changedMarker = AppConstants.ChangedMarker
 		End If
 		Me.ItemVisibilityLabel.Text = "Visibility" + changedMarker + ":"
@@ -1397,7 +1397,7 @@ Public Class PublishUserControl
 
 	Private Sub UpdateItemTagsLabel()
 		Dim changedMarker As String = ""
-		If Me.theSelectedItem.TagsIsChanged AndAlso Me.theSelectedItem.IsPublished Then
+		If Me.theSelectedItem.TagsIsChanged AndAlso Not Me.theSelectedItem.IsDraft Then
 			changedMarker = AppConstants.ChangedMarker
 		End If
 		Me.ItemTagsGroupBox.Text = "Tags" + changedMarker
