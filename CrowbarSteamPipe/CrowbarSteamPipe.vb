@@ -1629,21 +1629,22 @@ Public Module CrowbarSteamPipe
 
 		If steamErrorResult = EResult.k_EResultAccessDenied Then
 			'sw.WriteLine("Access denied. The AppID in the steam_api.txt file is incorrect or the steam_api.txt file is not beside the CrowbarSteamPipe.exe file.")
-			errorMessage += "Access denied. The user doesn't own a license for the provided App ID."
+			errorMessage += "Access denied. The user's Steam account does not own a license for the provided App ID."
+		ElseIf steamErrorResult = EResult.k_EResultFileNotFound Then
+			'errorMessage += "File not found. The provided content folder, content file, or preview image file is invalid."
+			errorMessage += "File not found. The provided content folder, content file, or preview image file is invalid."
+		ElseIf steamErrorResult = EResult.k_EResultInsufficientPrivilege Then
+			errorMessage += "Insufficient privilege. The user's Steam account is currently restricted from uploading content due to a hub ban, account lock, or community ban."
 		ElseIf steamErrorResult = EResult.k_EResultInvalidParam Then
 			errorMessage += "Invalid paramater. Content file too big, invalid App ID, or the preview file is smaller than 16 bytes."
-		ElseIf steamErrorResult = EResult.k_EResultInsufficientPrivilege Then
-			errorMessage += "Your Steam account is currently banned in this game's community."
-		ElseIf steamErrorResult = EResult.k_EResultFileNotFound Then
-			errorMessage += "The provided content folder, content file, or preview image file is invalid."
 		ElseIf steamErrorResult = EResult.k_EResultLimitExceeded Then
-			errorMessage += "The preview image is too large, it must be less than 1 megabyte; or there is not enough space available on the user's Steam Cloud."
+			errorMessage += "Limit exceeded. The preview image is too large, it must be less than 1 megabyte; or there is not enough space available on the user's Steam Cloud."
 		ElseIf steamErrorResult = EResult.k_EResultLockingFailed Then
-			errorMessage += "Failed to aquire UGC Lock."
+			errorMessage += "Locking failed. Failed to aquire UGC Lock."
 		ElseIf steamErrorResult = EResult.k_EResultNotLoggedOn Then
-			errorMessage += "Your account is not currently logged in."
+			errorMessage += "Not logged on. The user's Steam account is not currently logged in."
 		ElseIf steamErrorResult = EResult.k_EResultTimeout Then
-			errorMessage += "Upload timed-out and did not complete."
+			errorMessage += "Timeout. Upload timed-out and did not complete."
 		Else
 			errorMessage += steamErrorResult.ToString()
 		End If
