@@ -24,6 +24,8 @@ Public Module CrowbarSteamPipe
 		Dim command As String
 		Try
 			While pipeClient.IsConnected
+				theItemIsUploading = False
+
 				command = sr.ReadLine()
 				Console.WriteLine("Command from server: " + command)
 
@@ -85,6 +87,8 @@ Public Module CrowbarSteamPipe
 					SteamUGC_DeleteItem()
 					'ElseIf command = "SteamUGC_DownloadItem" Then
 					'	SteamUGC_DownloadItem()
+					'ElseIf command = "SteamUGC_GetItemUpdateProgress" Then
+					'	SteamUGC_GetItemUpdateProgress()
 				ElseIf command = "SteamUGC_SendQueryUGCRequest" Then
 					SteamUGC_SendQueryUGCRequest()
 				ElseIf command = "SteamUGC_SetItemContent" Then
@@ -1298,6 +1302,35 @@ Public Module CrowbarSteamPipe
 
 #End Region
 
+	Private Sub SteamUGC_GetItemUpdateProgress()
+		Dim uploadedByteCount As ULong = 0
+		Dim totalUploadedByteCount As ULong = 0
+
+		Dim status As EItemUpdateStatus = SteamUGC.GetItemUpdateProgress(theUGCUpdateHandle, uploadedByteCount, totalUploadedByteCount)
+
+		'k_EItemUpdateStatusInvalid	0	The item update handle was invalid, the job might be finished, a SubmitItemUpdateResult_t call result should have been returned for it.
+		'k_EItemUpdateStatusPreparingConfig	1	The item update is processing configuration data.
+		'k_EItemUpdateStatusPreparingContent	2	The item update is reading and processing content files.
+		'k_EItemUpdateStatusUploadingContent	3	The item update is uploading content changes to Steam.
+		'k_EItemUpdateStatusUploadingPreviewFile	4	The item update is uploading new preview file image.
+		'k_EItemUpdateStatusCommittingChanges	5	The item update is committing all changes.
+		If status = EItemUpdateStatus.k_EItemUpdateStatusPreparingConfig Then
+			sw.WriteLine("preparing config")
+		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusPreparingContent Then
+			sw.WriteLine("preparing content")
+		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusUploadingContent Then
+			sw.WriteLine("uploading content")
+		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusUploadingPreviewFile Then
+			sw.WriteLine("uploading preview")
+		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusCommittingChanges Then
+			sw.WriteLine("committing changes")
+		Else
+			sw.WriteLine("invalid")
+		End If
+		sw.WriteLine(uploadedByteCount)
+		sw.WriteLine(totalUploadedByteCount)
+	End Sub
+
 #Region "SteamUGC_StartItemUpdate"
 
 	Private Sub SteamUGC_StartItemUpdate()
@@ -1433,11 +1466,14 @@ Public Module CrowbarSteamPipe
 		Dim changeNote As String
 		changeNote = ReadMultipleLinesOfText(sr)
 
+		theItemIsUploading = True
+
 		Dim result As SteamAPICall_t = SteamUGC.SubmitItemUpdate(theUGCUpdateHandle, changeNote)
 		CrowbarSteamPipe.SetResultAndRunCallbacks(Of SubmitItemUpdateResult_t)(AddressOf OnSubmitItemUpdate, result)
 	End Sub
 
 	Private Sub OnSubmitItemUpdate(ByVal pCallResult As SubmitItemUpdateResult_t, ByVal bIOFailure As Boolean)
+		sw.WriteLine("OnSubmitItemUpdate")
 		Try
 			If pCallResult.m_eResult = EResult.k_EResultOK Then
 				If pCallResult.m_bUserNeedsToAcceptWorkshopLegalAgreement Then
@@ -1525,8 +1561,12 @@ Public Module CrowbarSteamPipe
 	Private Sub RunCallbacks()
 		theCallResultIsFinished = False
 		While Not theCallResultIsFinished
+			If theItemIsUploading Then
+				SteamUGC_GetItemUpdateProgress()
+			End If
 			SteamAPI.RunCallbacks()
 		End While
+		theItemIsUploading = False
 	End Sub
 
 	'NOTE: WriteLine only writes string until first LF or CR, so need to adjust how to send this.
@@ -1648,6 +1688,7 @@ Public Module CrowbarSteamPipe
 	Private sw As StreamWriter
 	Private sr As StreamReader
 
+	Private theItemIsUploading As Boolean
 	Private theCallResultIsFinished As Boolean
 	Private theUGCQueryHandle As UGCQueryHandle_t
 	Private theUGCUpdateHandle As UGCUpdateHandle_t
