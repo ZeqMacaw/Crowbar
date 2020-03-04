@@ -127,7 +127,7 @@ Public Module CrowbarSteamPipe
 
 #If DEBUG Then
 			'For debugging, keep console open until Enter Is pressed.
-			'Console.ReadLine()
+			Console.ReadLine()
 #End If
 		End Try
 	End Sub
@@ -1544,10 +1544,12 @@ Public Module CrowbarSteamPipe
 		Dim output As Steamworks.ERemoteStoragePublishedFileVisibility
 		If input = "Public" Then
 			output = Steamworks.ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPublic
-		ElseIf input = "Private" Then
-			output = Steamworks.ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPrivate
-		Else
+		ElseIf input = "FriendsOnly" Then
 			output = Steamworks.ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityFriendsOnly
+		ElseIf input = "Unlisted" Then
+			output = Steamworks.ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityUnlisted
+		Else
+			output = Steamworks.ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPrivate
 		End If
 		Return output
 	End Function
