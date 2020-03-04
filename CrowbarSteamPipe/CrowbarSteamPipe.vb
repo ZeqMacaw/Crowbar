@@ -1473,6 +1473,7 @@ Public Module CrowbarSteamPipe
 	End Sub
 
 	Private Sub OnSubmitItemUpdate(ByVal pCallResult As SubmitItemUpdateResult_t, ByVal bIOFailure As Boolean)
+		theItemIsUploading = False
 		sw.WriteLine("OnSubmitItemUpdate")
 		Try
 			If pCallResult.m_eResult = EResult.k_EResultOK Then
@@ -1568,7 +1569,6 @@ Public Module CrowbarSteamPipe
 			End If
 			SteamAPI.RunCallbacks()
 		End While
-		theItemIsUploading = False
 	End Sub
 
 	'NOTE: WriteLine only writes string until first LF or CR, so need to adjust how to send this.

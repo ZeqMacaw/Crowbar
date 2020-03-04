@@ -598,7 +598,9 @@ Public Class SteamPipe
 				outputInfo.Status = result
 				outputInfo.UploadedByteCount = CULng(Me.theStreamReader.ReadLine())
 				outputInfo.TotalUploadedByteCount = CULng(Me.theStreamReader.ReadLine())
-				If outputInfo.Status <> "invalid" Then
+				If outputInfo.Status = "invalid" Then
+					Dim debug As Integer = 4242
+				Else
 					If previousOutputInfo.Status <> outputInfo.Status OrElse previousOutputInfo.UploadedByteCount <> outputInfo.UploadedByteCount OrElse previousOutputInfo.TotalUploadedByteCount <> outputInfo.TotalUploadedByteCount Then
 						If outputInfo.TotalUploadedByteCount > 0 Then
 							Me.theBackgroundWorker.ReportProgress(2, outputInfo)

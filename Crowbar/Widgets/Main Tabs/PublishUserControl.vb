@@ -1014,6 +1014,7 @@ Public Class PublishUserControl
 			draftItem = New WorkshopItem()
 		Else
 			draftItem = CType(itemToCopy.Clone(), WorkshopItem)
+			draftItem.SetAllChangedForNonEmptyFields()
 		End If
 		Me.theDisplayedItems.Add(draftItem)
 		Me.theEntireListOfItems.Add(draftItem)
