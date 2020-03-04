@@ -1644,7 +1644,7 @@ Public Module CrowbarSteamPipe
 		ElseIf steamErrorResult = EResult.k_EResultNotLoggedOn Then
 			errorMessage += "Not logged on. The user's Steam account is not currently logged in."
 		ElseIf steamErrorResult = EResult.k_EResultTimeout Then
-			errorMessage += "Timeout. Upload timed-out and did not complete."
+			errorMessage += "Timeout. Action timed-out and did not complete."
 		Else
 			errorMessage += steamErrorResult.ToString()
 		End If
