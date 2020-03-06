@@ -258,10 +258,10 @@ Partial Class MainForm
 		'
 		'UpdateTabPage
 		'
+		Me.UpdateTabPage.BackColor = System.Drawing.SystemColors.Control
 		Me.UpdateTabPage.Controls.Add(Me.UpdateUserControl1)
 		resources.ApplyResources(Me.UpdateTabPage, "UpdateTabPage")
 		Me.UpdateTabPage.Name = "UpdateTabPage"
-		Me.UpdateTabPage.UseVisualStyleBackColor = True
 		'
 		'UpdateUserControl1
 		'
