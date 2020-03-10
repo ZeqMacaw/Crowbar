@@ -13,12 +13,12 @@ Public Class DecompileUserControl
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
 
-		'NOTE: Try-Catch is needed so that widget will be shown in MainForm without raising exception.
-		Try
-			Me.Init()
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		End Try
+		''NOTE: Try-Catch is needed so that widget will be shown in MainForm without raising exception.
+		'Try
+		'	Me.Init()
+		'Catch ex As Exception
+		'	Dim debug As Integer = 4242
+		'End Try
 	End Sub
 
 #End Region
@@ -143,10 +143,14 @@ Public Class DecompileUserControl
 #Region "Widget Event Handlers"
 
 	Private Sub DecompileUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
-		'NOTE: This code prevents Visual Studio often inexplicably extending the right side of these textboxes.
-		Me.MdlPathFileNameTextBox.Size = New System.Drawing.Size(Me.BrowseForMdlPathFolderOrFileNameButton.Left - Me.BrowseForMdlPathFolderOrFileNameButton.Margin.Left - Me.MdlPathFileNameTextBox.Margin.Right - Me.MdlPathFileNameTextBox.Left, 21)
-		Me.OutputPathTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputPathTextBox.Margin.Right - Me.OutputPathTextBox.Left, 21)
-		Me.OutputSubfolderTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputSubfolderTextBox.Margin.Right - Me.OutputSubfolderTextBox.Left, 21)
+		'NOTE: This code prevents Visual Studio often inexplicably extending the right side of these widgets.
+		Me.MdlPathFileNameTextBox.Size = New System.Drawing.Size(Me.BrowseForMdlPathFolderOrFileNameButton.Left - Me.BrowseForMdlPathFolderOrFileNameButton.Margin.Left - Me.MdlPathFileNameTextBox.Margin.Right - Me.MdlPathFileNameTextBox.Left, 20)
+		Me.OutputPathTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputPathTextBox.Margin.Right - Me.OutputPathTextBox.Left, 20)
+		Me.OutputSubfolderTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputSubfolderTextBox.Margin.Right - Me.OutputSubfolderTextBox.Left, 20)
+
+		If Not Me.DesignMode Then
+			Me.Init()
+		End If
 	End Sub
 
 #End Region

@@ -59,7 +59,7 @@ Partial Class DownloadUserControl
 		Me.ItemIdTextBox.CueBannerText = ""
 		Me.ItemIdTextBox.Location = New System.Drawing.Point(87, 5)
 		Me.ItemIdTextBox.Name = "ItemIdTextBox"
-		Me.ItemIdTextBox.Size = New System.Drawing.Size(645, 21)
+		Me.ItemIdTextBox.Size = New System.Drawing.Size(645, 20)
 		Me.ItemIdTextBox.TabIndex = 1
 		'
 		'DownloadButton
@@ -90,7 +90,7 @@ Partial Class DownloadUserControl
 		Me.ItemIdOrLinkLabel.AutoSize = True
 		Me.ItemIdOrLinkLabel.Location = New System.Drawing.Point(3, 8)
 		Me.ItemIdOrLinkLabel.Name = "ItemIdOrLinkLabel"
-		Me.ItemIdOrLinkLabel.Size = New System.Drawing.Size(78, 13)
+		Me.ItemIdOrLinkLabel.Size = New System.Drawing.Size(75, 13)
 		Me.ItemIdOrLinkLabel.TabIndex = 0
 		Me.ItemIdOrLinkLabel.Text = "Item ID or link:"
 		'
@@ -99,7 +99,7 @@ Partial Class DownloadUserControl
 		Me.OuputToLabel.AutoSize = True
 		Me.OuputToLabel.Location = New System.Drawing.Point(3, 37)
 		Me.OuputToLabel.Name = "OuputToLabel"
-		Me.OuputToLabel.Size = New System.Drawing.Size(58, 13)
+		Me.OuputToLabel.Size = New System.Drawing.Size(54, 13)
 		Me.OuputToLabel.TabIndex = 3
 		Me.OuputToLabel.Text = "Output to:"
 		'
@@ -119,7 +119,7 @@ Partial Class DownloadUserControl
 		Me.OutputPathTextBox.CueBannerText = ""
 		Me.OutputPathTextBox.Location = New System.Drawing.Point(233, 34)
 		Me.OutputPathTextBox.Name = "OutputPathTextBox"
-		Me.OutputPathTextBox.Size = New System.Drawing.Size(429, 21)
+		Me.OutputPathTextBox.Size = New System.Drawing.Size(429, 20)
 		Me.OutputPathTextBox.TabIndex = 5
 		'
 		'GotoOutputPathButton
@@ -169,7 +169,7 @@ Partial Class DownloadUserControl
 		Me.UseIdCheckBox.IsReadOnly = False
 		Me.UseIdCheckBox.Location = New System.Drawing.Point(6, 20)
 		Me.UseIdCheckBox.Name = "UseIdCheckBox"
-		Me.UseIdCheckBox.Size = New System.Drawing.Size(190, 17)
+		Me.UseIdCheckBox.Size = New System.Drawing.Size(188, 17)
 		Me.UseIdCheckBox.TabIndex = 0
 		Me.UseIdCheckBox.Text = "Use item ID instead of given name"
 		Me.UseIdCheckBox.UseVisualStyleBackColor = True
@@ -180,7 +180,7 @@ Partial Class DownloadUserControl
 		Me.PrependTitleCheckBox.IsReadOnly = False
 		Me.PrependTitleCheckBox.Location = New System.Drawing.Point(6, 43)
 		Me.PrependTitleCheckBox.Name = "PrependTitleCheckBox"
-		Me.PrependTitleCheckBox.Size = New System.Drawing.Size(110, 17)
+		Me.PrependTitleCheckBox.Size = New System.Drawing.Size(107, 17)
 		Me.PrependTitleCheckBox.TabIndex = 1
 		Me.PrependTitleCheckBox.Text = "Prepend item title"
 		Me.PrependTitleCheckBox.UseVisualStyleBackColor = True
@@ -191,7 +191,7 @@ Partial Class DownloadUserControl
 		Me.AppendDateTimeCheckBox.IsReadOnly = False
 		Me.AppendDateTimeCheckBox.Location = New System.Drawing.Point(6, 66)
 		Me.AppendDateTimeCheckBox.Name = "AppendDateTimeCheckBox"
-		Me.AppendDateTimeCheckBox.Size = New System.Drawing.Size(191, 17)
+		Me.AppendDateTimeCheckBox.Size = New System.Drawing.Size(185, 17)
 		Me.AppendDateTimeCheckBox.TabIndex = 2
 		Me.AppendDateTimeCheckBox.Text = "Append the item update date-time"
 		Me.AppendDateTimeCheckBox.UseVisualStyleBackColor = True
@@ -202,7 +202,7 @@ Partial Class DownloadUserControl
 		Me.ReplaceSpacesWithUnderscoresCheckBox.IsReadOnly = False
 		Me.ReplaceSpacesWithUnderscoresCheckBox.Location = New System.Drawing.Point(6, 89)
 		Me.ReplaceSpacesWithUnderscoresCheckBox.Name = "ReplaceSpacesWithUnderscoresCheckBox"
-		Me.ReplaceSpacesWithUnderscoresCheckBox.Size = New System.Drawing.Size(185, 17)
+		Me.ReplaceSpacesWithUnderscoresCheckBox.Size = New System.Drawing.Size(186, 17)
 		Me.ReplaceSpacesWithUnderscoresCheckBox.TabIndex = 3
 		Me.ReplaceSpacesWithUnderscoresCheckBox.Text = "Replace spaces with underscores"
 		Me.ReplaceSpacesWithUnderscoresCheckBox.UseVisualStyleBackColor = True
@@ -222,7 +222,7 @@ Partial Class DownloadUserControl
 		Me.ConvertToExpectedFileOrFolderCheckBox.IsReadOnly = False
 		Me.ConvertToExpectedFileOrFolderCheckBox.Location = New System.Drawing.Point(230, 20)
 		Me.ConvertToExpectedFileOrFolderCheckBox.Name = "ConvertToExpectedFileOrFolderCheckBox"
-		Me.ConvertToExpectedFileOrFolderCheckBox.Size = New System.Drawing.Size(187, 17)
+		Me.ConvertToExpectedFileOrFolderCheckBox.Size = New System.Drawing.Size(179, 17)
 		Me.ConvertToExpectedFileOrFolderCheckBox.TabIndex = 7
 		Me.ConvertToExpectedFileOrFolderCheckBox.Text = "Convert to expected file or folder"
 		Me.ToolTip1.SetToolTip(Me.ConvertToExpectedFileOrFolderCheckBox, "Example: Garry's Mod uses compressed GMA (LZMA) instead of GMA.")
@@ -234,7 +234,7 @@ Partial Class DownloadUserControl
 		Me.ExampleOutputFileNameLabel.AutoSize = True
 		Me.ExampleOutputFileNameLabel.Location = New System.Drawing.Point(6, 151)
 		Me.ExampleOutputFileNameLabel.Name = "ExampleOutputFileNameLabel"
-		Me.ExampleOutputFileNameLabel.Size = New System.Drawing.Size(132, 13)
+		Me.ExampleOutputFileNameLabel.Size = New System.Drawing.Size(128, 13)
 		Me.ExampleOutputFileNameLabel.TabIndex = 5
 		Me.ExampleOutputFileNameLabel.Text = "Example output file name:"
 		'
@@ -246,7 +246,7 @@ Partial Class DownloadUserControl
 		Me.ExampleOutputFileNameTextBox.Location = New System.Drawing.Point(6, 167)
 		Me.ExampleOutputFileNameTextBox.Name = "ExampleOutputFileNameTextBox"
 		Me.ExampleOutputFileNameTextBox.ReadOnly = True
-		Me.ExampleOutputFileNameTextBox.Size = New System.Drawing.Size(763, 21)
+		Me.ExampleOutputFileNameTextBox.Size = New System.Drawing.Size(763, 20)
 		Me.ExampleOutputFileNameTextBox.TabIndex = 6
 		'
 		'CancelDownloadButton
@@ -287,7 +287,7 @@ Partial Class DownloadUserControl
 		Me.DocumentsOutputPathTextBox.Location = New System.Drawing.Point(233, 34)
 		Me.DocumentsOutputPathTextBox.Name = "DocumentsOutputPathTextBox"
 		Me.DocumentsOutputPathTextBox.ReadOnly = True
-		Me.DocumentsOutputPathTextBox.Size = New System.Drawing.Size(429, 21)
+		Me.DocumentsOutputPathTextBox.Size = New System.Drawing.Size(429, 20)
 		Me.DocumentsOutputPathTextBox.TabIndex = 6
 		'
 		'DownloadedItemTextBox
@@ -298,7 +298,7 @@ Partial Class DownloadUserControl
 		Me.DownloadedItemTextBox.Location = New System.Drawing.Point(79, 522)
 		Me.DownloadedItemTextBox.Name = "DownloadedItemTextBox"
 		Me.DownloadedItemTextBox.ReadOnly = True
-		Me.DownloadedItemTextBox.Size = New System.Drawing.Size(653, 21)
+		Me.DownloadedItemTextBox.Size = New System.Drawing.Size(653, 20)
 		Me.DownloadedItemTextBox.TabIndex = 15
 		'
 		'DownloadedLabel

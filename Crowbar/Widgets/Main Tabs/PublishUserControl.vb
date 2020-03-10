@@ -316,6 +316,9 @@ Public Class PublishUserControl
 #Region "Widget Event Handlers"
 
 	Private Sub PublishUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
+		Me.AppIdComboBox.Size = New System.Drawing.Size(Me.RefreshGameItemsButton.Left - Me.RefreshGameItemsButton.Margin.Left - Me.AppIdComboBox.Margin.Right - Me.AppIdComboBox.Left, 20)
+
 		If Not Me.DesignMode Then
 			Me.Init()
 		End If

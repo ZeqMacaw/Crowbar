@@ -28,21 +28,21 @@ Partial Class ViewUserControl
 		Me.BrowseForMdlFileButton = New System.Windows.Forms.Button()
 		Me.Label1 = New System.Windows.Forms.Label()
 		Me.Panel2 = New System.Windows.Forms.Panel()
+		Me.OverrideMdlVersionLabel = New System.Windows.Forms.Label()
+		Me.OverrideMdlVersionComboBox = New System.Windows.Forms.ComboBox()
 		Me.GotoMdlFileButton = New System.Windows.Forms.Button()
 		Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
 		Me.GroupBox1 = New System.Windows.Forms.GroupBox()
 		Me.InfoRichTextBox = New Crowbar.RichTextBoxEx()
-		Me.OpenMappingToolButton = New System.Windows.Forms.Button()
-		Me.RunGameButton = New System.Windows.Forms.Button()
 		Me.GameLabel = New System.Windows.Forms.Label()
 		Me.GameSetupComboBox = New System.Windows.Forms.ComboBox()
 		Me.SetUpGameButton = New System.Windows.Forms.Button()
 		Me.ViewAsReplacementButton = New System.Windows.Forms.Button()
 		Me.UseInDecompileButton = New System.Windows.Forms.Button()
 		Me.OpenViewerButton = New System.Windows.Forms.Button()
+		Me.OpenMappingToolButton = New System.Windows.Forms.Button()
+		Me.RunGameButton = New System.Windows.Forms.Button()
 		Me.MessageTextBox = New Crowbar.TextBoxEx()
-		Me.OverrideMdlVersionLabel = New System.Windows.Forms.Label()
-		Me.OverrideMdlVersionComboBox = New System.Windows.Forms.ComboBox()
 		Me.Panel2.SuspendLayout()
 		CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SplitContainer1.Panel1.SuspendLayout()
@@ -68,7 +68,7 @@ Partial Class ViewUserControl
 		Me.MdlPathFileNameTextBox.CueBannerText = ""
 		Me.MdlPathFileNameTextBox.Location = New System.Drawing.Point(58, 5)
 		Me.MdlPathFileNameTextBox.Name = "MdlPathFileNameTextBox"
-		Me.MdlPathFileNameTextBox.Size = New System.Drawing.Size(596, 21)
+		Me.MdlPathFileNameTextBox.Size = New System.Drawing.Size(596, 20)
 		Me.MdlPathFileNameTextBox.TabIndex = 1
 		'
 		'BrowseForMdlFileButton
@@ -86,7 +86,7 @@ Partial Class ViewUserControl
 		Me.Label1.AutoSize = True
 		Me.Label1.Location = New System.Drawing.Point(3, 8)
 		Me.Label1.Name = "Label1"
-		Me.Label1.Size = New System.Drawing.Size(48, 13)
+		Me.Label1.Size = New System.Drawing.Size(49, 13)
 		Me.Label1.TabIndex = 0
 		Me.Label1.Text = "MDL file:"
 		'
@@ -105,6 +105,24 @@ Partial Class ViewUserControl
 		Me.Panel2.Name = "Panel2"
 		Me.Panel2.Size = New System.Drawing.Size(776, 536)
 		Me.Panel2.TabIndex = 8
+		'
+		'OverrideMdlVersionLabel
+		'
+		Me.OverrideMdlVersionLabel.AutoSize = True
+		Me.OverrideMdlVersionLabel.Location = New System.Drawing.Point(3, 35)
+		Me.OverrideMdlVersionLabel.Name = "OverrideMdlVersionLabel"
+		Me.OverrideMdlVersionLabel.Size = New System.Drawing.Size(113, 13)
+		Me.OverrideMdlVersionLabel.TabIndex = 48
+		Me.OverrideMdlVersionLabel.Text = "Override MDL version:"
+		'
+		'OverrideMdlVersionComboBox
+		'
+		Me.OverrideMdlVersionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.OverrideMdlVersionComboBox.FormattingEnabled = True
+		Me.OverrideMdlVersionComboBox.Location = New System.Drawing.Point(123, 32)
+		Me.OverrideMdlVersionComboBox.Name = "OverrideMdlVersionComboBox"
+		Me.OverrideMdlVersionComboBox.Size = New System.Drawing.Size(100, 21)
+		Me.OverrideMdlVersionComboBox.TabIndex = 47
 		'
 		'GotoMdlFileButton
 		'
@@ -162,40 +180,20 @@ Partial Class ViewUserControl
 		'
 		Me.InfoRichTextBox.CueBannerText = ""
 		Me.InfoRichTextBox.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.InfoRichTextBox.Location = New System.Drawing.Point(3, 17)
+		Me.InfoRichTextBox.Location = New System.Drawing.Point(3, 16)
 		Me.InfoRichTextBox.Name = "InfoRichTextBox"
 		Me.InfoRichTextBox.ReadOnly = True
-		Me.InfoRichTextBox.Size = New System.Drawing.Size(764, 343)
+		Me.InfoRichTextBox.Size = New System.Drawing.Size(764, 344)
 		Me.InfoRichTextBox.TabIndex = 0
 		Me.InfoRichTextBox.Text = ""
 		Me.InfoRichTextBox.WordWrap = False
-		'
-		'OpenMappingToolButton
-		'
-		Me.OpenMappingToolButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.OpenMappingToolButton.Location = New System.Drawing.Point(584, 32)
-		Me.OpenMappingToolButton.Name = "OpenMappingToolButton"
-		Me.OpenMappingToolButton.Size = New System.Drawing.Size(90, 23)
-		Me.OpenMappingToolButton.TabIndex = 14
-		Me.OpenMappingToolButton.Text = "Open Mapper"
-		Me.OpenMappingToolButton.UseVisualStyleBackColor = True
-		'
-		'RunGameButton
-		'
-		Me.RunGameButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.RunGameButton.Location = New System.Drawing.Point(680, 32)
-		Me.RunGameButton.Name = "RunGameButton"
-		Me.RunGameButton.Size = New System.Drawing.Size(90, 23)
-		Me.RunGameButton.TabIndex = 13
-		Me.RunGameButton.Text = "Run Game"
-		Me.RunGameButton.UseVisualStyleBackColor = True
 		'
 		'GameLabel
 		'
 		Me.GameLabel.AutoSize = True
 		Me.GameLabel.Location = New System.Drawing.Point(0, 8)
 		Me.GameLabel.Name = "GameLabel"
-		Me.GameLabel.Size = New System.Drawing.Size(166, 13)
+		Me.GameLabel.Size = New System.Drawing.Size(162, 13)
 		Me.GameLabel.TabIndex = 5
 		Me.GameLabel.Text = "Game that has the model viewer:"
 		'
@@ -250,6 +248,26 @@ Partial Class ViewUserControl
 		Me.OpenViewerButton.Text = "Open Viewer"
 		Me.OpenViewerButton.UseVisualStyleBackColor = True
 		'
+		'OpenMappingToolButton
+		'
+		Me.OpenMappingToolButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.OpenMappingToolButton.Location = New System.Drawing.Point(584, 32)
+		Me.OpenMappingToolButton.Name = "OpenMappingToolButton"
+		Me.OpenMappingToolButton.Size = New System.Drawing.Size(90, 23)
+		Me.OpenMappingToolButton.TabIndex = 14
+		Me.OpenMappingToolButton.Text = "Open Mapper"
+		Me.OpenMappingToolButton.UseVisualStyleBackColor = True
+		'
+		'RunGameButton
+		'
+		Me.RunGameButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.RunGameButton.Location = New System.Drawing.Point(680, 32)
+		Me.RunGameButton.Name = "RunGameButton"
+		Me.RunGameButton.Size = New System.Drawing.Size(90, 23)
+		Me.RunGameButton.TabIndex = 13
+		Me.RunGameButton.Text = "Run Game"
+		Me.RunGameButton.UseVisualStyleBackColor = True
+		'
 		'MessageTextBox
 		'
 		Me.MessageTextBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -262,24 +280,6 @@ Partial Class ViewUserControl
 		Me.MessageTextBox.ReadOnly = True
 		Me.MessageTextBox.Size = New System.Drawing.Size(770, 45)
 		Me.MessageTextBox.TabIndex = 12
-		'
-		'OverrideMdlVersionLabel
-		'
-		Me.OverrideMdlVersionLabel.AutoSize = True
-		Me.OverrideMdlVersionLabel.Location = New System.Drawing.Point(3, 35)
-		Me.OverrideMdlVersionLabel.Name = "OverrideMdlVersionLabel"
-		Me.OverrideMdlVersionLabel.Size = New System.Drawing.Size(114, 13)
-		Me.OverrideMdlVersionLabel.TabIndex = 48
-		Me.OverrideMdlVersionLabel.Text = "Override MDL version:"
-		'
-		'OverrideMdlVersionComboBox
-		'
-		Me.OverrideMdlVersionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-		Me.OverrideMdlVersionComboBox.FormattingEnabled = True
-		Me.OverrideMdlVersionComboBox.Location = New System.Drawing.Point(123, 32)
-		Me.OverrideMdlVersionComboBox.Name = "OverrideMdlVersionComboBox"
-		Me.OverrideMdlVersionComboBox.Size = New System.Drawing.Size(100, 21)
-		Me.OverrideMdlVersionComboBox.TabIndex = 47
 		'
 		'ViewUserControl
 		'

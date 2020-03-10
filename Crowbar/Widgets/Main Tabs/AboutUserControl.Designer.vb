@@ -57,11 +57,11 @@ Partial Class AboutUserControl
 		'
 		'ProductDescriptionTextBox
 		'
-		Me.ProductDescriptionTextBox.Location = New System.Drawing.Point(174, 3)
+		Me.ProductDescriptionTextBox.Location = New System.Drawing.Point(175, 3)
 		Me.ProductDescriptionTextBox.Multiline = True
 		Me.ProductDescriptionTextBox.Name = "ProductDescriptionTextBox"
 		Me.ProductDescriptionTextBox.ReadOnly = True
-		Me.ProductDescriptionTextBox.Size = New System.Drawing.Size(594, 136)
+		Me.ProductDescriptionTextBox.Size = New System.Drawing.Size(606, 136)
 		Me.ProductDescriptionTextBox.TabIndex = 5
 		Me.ProductDescriptionTextBox.TabStop = False
 		'
@@ -91,7 +91,7 @@ Partial Class AboutUserControl
 		Me.CreditsTextBox.Multiline = True
 		Me.CreditsTextBox.Name = "CreditsTextBox"
 		Me.CreditsTextBox.ReadOnly = True
-		Me.CreditsTextBox.Size = New System.Drawing.Size(190, 193)
+		Me.CreditsTextBox.Size = New System.Drawing.Size(194, 193)
 		Me.CreditsTextBox.TabIndex = 6
 		Me.CreditsTextBox.TabStop = False
 		Me.CreditsTextBox.Text = "arby26" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Artfunkel" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "atrblizzard" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Avengito" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "BANG!" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "BinaryRifle" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Cra0kalo" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "CrazyBubb" &
@@ -142,7 +142,7 @@ Partial Class AboutUserControl
 		Me.Panel1.Location = New System.Drawing.Point(0, 0)
 		Me.Panel1.Margin = New System.Windows.Forms.Padding(2)
 		Me.Panel1.Name = "Panel1"
-		Me.Panel1.Size = New System.Drawing.Size(776, 536)
+		Me.Panel1.Size = New System.Drawing.Size(784, 546)
 		Me.Panel1.TabIndex = 7
 		'
 		'PayPalPictureBox
@@ -160,20 +160,20 @@ Partial Class AboutUserControl
 		Me.GroupBox1.Controls.Add(Me.Credits3TextBox)
 		Me.GroupBox1.Controls.Add(Me.Credits2TextBox)
 		Me.GroupBox1.Controls.Add(Me.CreditsTextBox)
-		Me.GroupBox1.Location = New System.Drawing.Point(174, 145)
+		Me.GroupBox1.Location = New System.Drawing.Point(175, 145)
 		Me.GroupBox1.Name = "GroupBox1"
-		Me.GroupBox1.Size = New System.Drawing.Size(594, 219)
+		Me.GroupBox1.Size = New System.Drawing.Size(606, 219)
 		Me.GroupBox1.TabIndex = 9
 		Me.GroupBox1.TabStop = False
 		Me.GroupBox1.Text = "Special Thanks"
 		'
 		'Credits3TextBox
 		'
-		Me.Credits3TextBox.Location = New System.Drawing.Point(398, 20)
+		Me.Credits3TextBox.Location = New System.Drawing.Point(406, 19)
 		Me.Credits3TextBox.Multiline = True
 		Me.Credits3TextBox.Name = "Credits3TextBox"
 		Me.Credits3TextBox.ReadOnly = True
-		Me.Credits3TextBox.Size = New System.Drawing.Size(190, 193)
+		Me.Credits3TextBox.Size = New System.Drawing.Size(194, 193)
 		Me.Credits3TextBox.TabIndex = 8
 		Me.Credits3TextBox.TabStop = False
 		Me.Credits3TextBox.Text = "Pte Jack" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Rantis" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "RED_EYE" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Sage J. Fox" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Salad" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Seraphim" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Splinks" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Stiffy360" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Stay" &
@@ -183,11 +183,11 @@ Partial Class AboutUserControl
 		'
 		'Credits2TextBox
 		'
-		Me.Credits2TextBox.Location = New System.Drawing.Point(202, 20)
+		Me.Credits2TextBox.Location = New System.Drawing.Point(206, 19)
 		Me.Credits2TextBox.Multiline = True
 		Me.Credits2TextBox.Name = "Credits2TextBox"
 		Me.Credits2TextBox.ReadOnly = True
-		Me.Credits2TextBox.Size = New System.Drawing.Size(190, 193)
+		Me.Credits2TextBox.Size = New System.Drawing.Size(194, 193)
 		Me.Credits2TextBox.TabIndex = 7
 		Me.Credits2TextBox.TabStop = False
 		Me.Credits2TextBox.Text = "GeckoN" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "GPZ" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Kerry [Valve employee]" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "k@rt" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "K1CHWA" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Lt. Rocky" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "MARK2580" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Mayhem" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "M" &
@@ -228,7 +228,7 @@ Partial Class AboutUserControl
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.Controls.Add(Me.Panel1)
 		Me.Name = "AboutUserControl"
-		Me.Size = New System.Drawing.Size(776, 536)
+		Me.Size = New System.Drawing.Size(784, 546)
 		Me.Panel1.ResumeLayout(False)
 		Me.Panel1.PerformLayout()
 		CType(Me.PayPalPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
