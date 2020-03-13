@@ -682,7 +682,12 @@ Public Class PublishUserControl
 			Dim result As String = CType(e.Result, String)
 			If result = "success" Then
 				Me.LogTextBox.AppendText("Delete of published item succeeded." + vbCrLf)
-				Me.theExpectedPublishedItemCount -= 1UI
+				If Me.theExpectedPublishedItemCount > 0 Then
+					Me.theExpectedPublishedItemCount -= 1UI
+				Else
+					'TODO: When testing, somehow got to here.
+					Dim debug As Integer = 4242
+				End If
 				Me.UpdateAfterDeleteItem()
 			Else
 				Me.LogTextBox.AppendText("ERROR: " + result + vbCrLf)
