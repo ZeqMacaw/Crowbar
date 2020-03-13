@@ -235,7 +235,7 @@ Partial Class DecompileUserControl
 		'
 		Me.DecompileComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.DecompileComboBox.FormattingEnabled = True
-		Me.DecompileComboBox.Location = New System.Drawing.Point(73, 5)
+		Me.DecompileComboBox.Location = New System.Drawing.Point(73, 4)
 		Me.DecompileComboBox.Name = "DecompileComboBox"
 		Me.DecompileComboBox.Size = New System.Drawing.Size(140, 21)
 		Me.DecompileComboBox.TabIndex = 1
@@ -316,7 +316,7 @@ Partial Class DecompileUserControl
 		'
 		Me.OutputPathComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.OutputPathComboBox.FormattingEnabled = True
-		Me.OutputPathComboBox.Location = New System.Drawing.Point(73, 34)
+		Me.OutputPathComboBox.Location = New System.Drawing.Point(73, 33)
 		Me.OutputPathComboBox.Name = "OutputPathComboBox"
 		Me.OutputPathComboBox.Size = New System.Drawing.Size(140, 21)
 		Me.OutputPathComboBox.TabIndex = 14
@@ -451,7 +451,7 @@ Partial Class DecompileUserControl
 		Me.DecompileButton.Name = "DecompileButton"
 		Me.DecompileButton.Size = New System.Drawing.Size(120, 23)
 		Me.DecompileButton.TabIndex = 2
-		Me.DecompileButton.Text = "Decompile"
+		Me.DecompileButton.Text = "&Decompile"
 		Me.DecompileButton.UseVisualStyleBackColor = True
 		'
 		'ReCreateFilesGroupBox
