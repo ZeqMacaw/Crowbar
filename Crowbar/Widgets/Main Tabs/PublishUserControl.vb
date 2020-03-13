@@ -140,29 +140,36 @@ Public Class PublishUserControl
 
 	'NOTE: Gets the quota for the logged-in Steam user for the selected SteamApp. 
 	Private Sub GetUserSteamAppCloudQuota()
-		Dim steamPipe As New SteamPipe()
-		Dim result As String = steamPipe.Open("GetQuota", Nothing, "")
-		If result <> "success" Then
-			Me.theUserSteamID = 0
-			Exit Sub
-		End If
-		Dim availableBytes As ULong
-		Dim totalBytes As ULong
-		steamPipe.GetQuota(availableBytes, totalBytes)
-		steamPipe.Shut()
-
-		If totalBytes = 0 Then
-			Me.QuotaProgressBar.Text = "unknown"
+		If Me.theSteamAppInfo.UsesSteamUGC Then
+			Me.QuotaProgressBar.Text = ""
 			Me.QuotaProgressBar.Value = 0
-			Me.ToolTip1.SetToolTip(Me.QuotaProgressBar, "Quota (unknown)")
+			Me.ToolTip1.SetToolTip(Me.QuotaProgressBar, "")
 		Else
-			Dim usedBytes As ULong = totalBytes - availableBytes
-			Dim progressPercentage As Integer = CInt(usedBytes * Me.QuotaProgressBar.Maximum / totalBytes)
-			Dim usedBytesText As String = MathModule.ByteUnitsConversion(usedBytes)
-			Dim totalBytesText As String = MathModule.ByteUnitsConversion(totalBytes)
-			Me.QuotaProgressBar.Text = usedBytesText + " / " + totalBytesText
-			Me.QuotaProgressBar.Value = progressPercentage
-			Me.ToolTip1.SetToolTip(Me.QuotaProgressBar, "Quota (" + progressPercentage.ToString() + "% used)")
+			Dim steamPipe As New SteamPipe()
+			Dim result As String = steamPipe.Open("GetQuota", Nothing, "")
+			If result <> "success" Then
+				Me.theUserSteamID = 0
+				Exit Sub
+			End If
+			Dim availableBytes As ULong
+			Dim totalBytes As ULong
+			steamPipe.GetQuota(availableBytes, totalBytes)
+			steamPipe.Shut()
+
+			If totalBytes = 0 Then
+				Me.QuotaProgressBar.Text = "unknown"
+				Me.QuotaProgressBar.Value = 0
+				Me.ToolTip1.SetToolTip(Me.QuotaProgressBar, "Quota (unknown)")
+			Else
+				Dim usedBytes As ULong = totalBytes - availableBytes
+				Dim progressPercentage As Integer = CInt(usedBytes * Me.QuotaProgressBar.Maximum / totalBytes)
+				Dim availableBytesText As String = MathModule.ByteUnitsConversion(availableBytes)
+				Dim usedBytesText As String = MathModule.ByteUnitsConversion(usedBytes)
+				Dim totalBytesText As String = MathModule.ByteUnitsConversion(totalBytes)
+				Me.QuotaProgressBar.Text = availableBytesText + " available "
+				Me.QuotaProgressBar.Value = progressPercentage
+				Me.ToolTip1.SetToolTip(Me.QuotaProgressBar, "Quota: " + usedBytesText + " used of " + totalBytesText + " total (" + progressPercentage.ToString() + "% used)")
+			End If
 		End If
 	End Sub
 
