@@ -1677,27 +1677,28 @@ Public Class PublishUserControl
 	End Sub
 
 	Private Sub PublishItem()
-		Me.AppIdComboBox.Enabled = False
-		Me.ItemsDataGridView.Enabled = False
-		'Me.ItemGroupBox.Enabled = False
-		Me.ItemTitleTextBox.Enabled = False
-		Me.ItemDescriptionTextBox.Enabled = False
-		Me.ItemChangeNoteTextBox.Enabled = False
-		Me.ItemContentPathFileNameTextBox.Enabled = False
-		Me.ItemPreviewImagePathFileNameTextBox.Enabled = False
-		Me.SaveAsTemplateOrDraftItemButton.Enabled = False
-		Me.RefreshOrRevertItemButton.Enabled = False
-		Me.OpenWorkshopPageButton.Enabled = True
-		Me.DeleteItemButton.Enabled = False
-		Me.ItemTagsGroupBox.Enabled = False
-		Me.PublishItemButton.Enabled = False
-		If Me.LogTextBox.Text <> "" Then
-			Me.LogTextBox.AppendText("------" + vbCrLf)
-		End If
-
 		If Me.theSelectedItem.IsTemplate Then
 			Me.SaveChangedTemplateToDraft()
 			Me.SelectItemInGrid(Me.ItemsDataGridView.Rows.Count - 1)
+		End If
+
+		'NOTE: Need to do this after the template-to-draft change above.
+		Me.AppIdComboBox.Enabled = False
+		Me.ItemsDataGridView.Enabled = False
+		Me.ItemGroupBox.Enabled = False
+		'Me.ItemTitleTextBox.Enabled = False
+		'Me.ItemDescriptionTextBox.Enabled = False
+		'Me.ItemChangeNoteTextBox.Enabled = False
+		'Me.ItemContentPathFileNameTextBox.Enabled = False
+		'Me.ItemPreviewImagePathFileNameTextBox.Enabled = False
+		'Me.SaveAsTemplateOrDraftItemButton.Enabled = False
+		'Me.RefreshOrRevertItemButton.Enabled = False
+		'Me.OpenWorkshopPageButton.Enabled = True
+		'Me.DeleteItemButton.Enabled = False
+		'Me.ItemTagsGroupBox.Enabled = False
+		Me.PublishItemButton.Enabled = False
+		If Me.LogTextBox.Text <> "" Then
+			Me.LogTextBox.AppendText("------" + vbCrLf)
 		End If
 
 		Dim prePublishChecksAreSuccessful As Boolean = True
