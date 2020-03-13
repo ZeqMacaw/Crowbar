@@ -1320,12 +1320,16 @@ Public Module CrowbarSteamPipe
 			sw.WriteLine("preparing content")
 		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusUploadingContent Then
 			sw.WriteLine("uploading content")
+			If totalUploadedByteCount > 0 AndAlso uploadedByteCount = totalUploadedByteCount Then
+				theItemIsUploading = False
+			End If
 		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusUploadingPreviewFile Then
 			sw.WriteLine("uploading preview")
 		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusCommittingChanges Then
 			sw.WriteLine("committing changes")
 		Else
 			sw.WriteLine("invalid")
+			theItemIsUploading = False
 		End If
 		sw.WriteLine(uploadedByteCount)
 		sw.WriteLine(totalUploadedByteCount)
