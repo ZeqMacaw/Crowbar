@@ -775,15 +775,16 @@ Public Class PublishUserControl
 			End If
 		End If
 
-		Me.AppIdComboBox.Enabled = True
-		Me.ItemsDataGridView.Enabled = True
-		Me.ItemTitleTextBox.Enabled = True
-		Me.ItemDescriptionTextBox.Enabled = True
-		Me.ItemChangeNoteTextBox.Enabled = True
-		Me.ItemContentPathFileNameTextBox.Enabled = True
-		Me.ItemPreviewImagePathFileNameTextBox.Enabled = True
-		Me.ItemTagsGroupBox.Enabled = True
-		Me.UpdateItemDetailWidgets()
+		'Me.AppIdComboBox.Enabled = True
+		'Me.ItemsDataGridView.Enabled = True
+		'Me.ItemTitleTextBox.Enabled = True
+		'Me.ItemDescriptionTextBox.Enabled = True
+		'Me.ItemChangeNoteTextBox.Enabled = True
+		'Me.ItemContentPathFileNameTextBox.Enabled = True
+		'Me.ItemPreviewImagePathFileNameTextBox.Enabled = True
+		'Me.ItemTagsGroupBox.Enabled = True
+		'Me.UpdateItemDetailWidgets()
+		Me.UpdateWidgetsAfterPublish()
 
 		Me.GetUserSteamAppCloudQuota()
 
@@ -1739,7 +1740,8 @@ Public Class PublishUserControl
 			End If
 		End If
 		If Not prePublishChecksAreSuccessful Then
-			Me.UpdateItemDetailWidgets()
+			'Me.UpdateItemDetailWidgets()
+			Me.UpdateWidgetsAfterPublish()
 			Exit Sub
 		End If
 
@@ -1749,6 +1751,18 @@ Public Class PublishUserControl
 		inputInfo.AppInfo = Me.theSteamAppInfo
 		inputInfo.Item = Me.theSelectedItem
 		Me.theBackgroundSteamPipe.PublishItem(AddressOf Me.PublishItem_ProgressChanged, AddressOf Me.PublishItem_RunWorkerCompleted, inputInfo)
+	End Sub
+
+	Private Sub UpdateWidgetsAfterPublish()
+		Me.AppIdComboBox.Enabled = True
+		Me.ItemsDataGridView.Enabled = True
+		Me.ItemTitleTextBox.Enabled = True
+		Me.ItemDescriptionTextBox.Enabled = True
+		Me.ItemChangeNoteTextBox.Enabled = True
+		Me.ItemContentPathFileNameTextBox.Enabled = True
+		Me.ItemPreviewImagePathFileNameTextBox.Enabled = True
+		Me.ItemTagsGroupBox.Enabled = True
+		Me.UpdateItemDetailWidgets()
 	End Sub
 
 	Private Sub OpenAgreementRequiresAcceptanceWindow()
