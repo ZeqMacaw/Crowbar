@@ -514,15 +514,17 @@ Public Class BackgroundSteamPipe
 							'Return outputInfo
 						End Try
 
-						If outputInfo.Result <> "Failed" AndAlso File.Exists(pathFileName) Then
-							'Dim setItemContentWasSuccessful As String = steamPipe.SteamUGC_SetItemContent(inputInfo.Item.ContentPathFolderOrFileName)
-							Dim setItemContentWasSuccessful As String = steamPipe.SteamUGC_SetItemContent(pathFileName)
-							If setItemContentWasSuccessful = "success" Then
-								Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item content completed." + vbCrLf)
-							Else
-								Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item content failed." + vbCrLf)
-								outputInfo.Result = "Failed"
-								'Return outputInfo
+						If outputInfo.Result <> "Failed" Then
+							If Directory.Exists(pathFileName) OrElse (inputInfo.AppInfo.CanUseContentFolderOrFile AndAlso File.Exists(pathFileName)) Then
+								'Dim setItemContentWasSuccessful As String = steamPipe.SteamUGC_SetItemContent(inputInfo.Item.ContentPathFolderOrFileName)
+								Dim setItemContentWasSuccessful As String = steamPipe.SteamUGC_SetItemContent(pathFileName)
+								If setItemContentWasSuccessful = "success" Then
+									Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item content completed." + vbCrLf)
+								Else
+									Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item content failed." + vbCrLf)
+									outputInfo.Result = "Failed"
+									'Return outputInfo
+								End If
 							End If
 						End If
 					End If
