@@ -959,7 +959,9 @@ Public Class PublishUserControl
 
 		If Not itemHasBeenFound Then
 			Try
-				GetPublishedItemDetailsViaSteamRemoteStorage(itemTextToFind, "FindAll")
+				If ULong.TryParse(itemTextToFind, Nothing) Then
+					GetPublishedItemDetailsViaSteamRemoteStorage(itemTextToFind, "FindAll")
+				End If
 			Catch ex As Exception
 				Dim debug As Integer = 4242
 			End Try
