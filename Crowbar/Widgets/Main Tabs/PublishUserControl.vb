@@ -1579,8 +1579,8 @@ Public Class PublishUserControl
 
 		Me.theSelectedItemDetailsIsChangingViaMe = True
 		anItem.IsTemplate = True
-		anItem.ContentPathFolderOrFileName = ""
-		anItem.PreviewImagePathFileName = ""
+		'anItem.ContentPathFolderOrFileName = ""
+		'anItem.PreviewImagePathFileName = ""
 		anItem.IsChanged = False
 		'NOTE: Without this line, the ID field in the widgets does not change until a different item is selected.
 		Me.theItemBindingSource.ResetCurrentItem()
