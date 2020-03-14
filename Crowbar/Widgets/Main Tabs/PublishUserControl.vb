@@ -325,6 +325,9 @@ Public Class PublishUserControl
 	Private Sub PublishUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
 		Me.AppIdComboBox.Size = New System.Drawing.Size(Me.RefreshGameItemsButton.Left - Me.RefreshGameItemsButton.Margin.Left - Me.AppIdComboBox.Margin.Right - Me.AppIdComboBox.Left, 20)
+		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the bottom side of these widgets.
+		Me.Panel1.Size = New System.Drawing.Size(Me.Panel1.Width, Me.TopMiddleSplitContainer.Panel1.Height - Me.TopMiddleSplitContainer.Panel1.Padding.Bottom - Me.Panel1.Margin.Bottom - Me.Panel1.Top)
+		Me.ItemsDataGridView.Size = New System.Drawing.Size(Me.ItemsDataGridView.Width, Me.ToolStrip1.Top - Me.ToolStrip1.Margin.Top - Me.ItemsDataGridView.Margin.Bottom - Me.ItemsDataGridView.Top)
 
 		If Not Me.DesignMode Then
 			Me.Init()
