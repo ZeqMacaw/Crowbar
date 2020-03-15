@@ -602,13 +602,13 @@ Public Class SteamPipe
 					Dim debug As Integer = 4242
 				Else
 					If previousOutputInfo.Status <> outputInfo.Status OrElse previousOutputInfo.UploadedByteCount <> outputInfo.UploadedByteCount OrElse previousOutputInfo.TotalUploadedByteCount <> outputInfo.TotalUploadedByteCount Then
-						If outputInfo.TotalUploadedByteCount > 0 Then
-							Me.theBackgroundWorker.ReportProgress(2, outputInfo)
+						'If outputInfo.TotalUploadedByteCount > 0 Then
+						Me.theBackgroundWorker.ReportProgress(2, outputInfo)
 
-							previousOutputInfo.Status = outputInfo.Status
-							previousOutputInfo.UploadedByteCount = outputInfo.UploadedByteCount
-							previousOutputInfo.TotalUploadedByteCount = outputInfo.TotalUploadedByteCount
-						End If
+						previousOutputInfo.Status = outputInfo.Status
+						previousOutputInfo.UploadedByteCount = outputInfo.UploadedByteCount
+						previousOutputInfo.TotalUploadedByteCount = outputInfo.TotalUploadedByteCount
+						'End If
 					End If
 				End If
 			End If

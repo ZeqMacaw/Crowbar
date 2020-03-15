@@ -722,7 +722,12 @@ Public Class PublishUserControl
 		ElseIf e.ProgressPercentage = 2 Then
 			Dim outputInfo As BackgroundSteamPipe.PublishItemProgressInfo = CType(e.UserState, BackgroundSteamPipe.PublishItemProgressInfo)
 			'TODO: Change to using a progressbar.
-			Me.LogTextBox.AppendText(vbTab + outputInfo.Status + ": " + outputInfo.UploadedByteCount.ToString() + " / " + outputInfo.TotalUploadedByteCount.ToString() + vbCrLf)
+			If outputInfo.TotalUploadedByteCount > 0 Then
+				Dim progressPercentage As Integer = CInt(outputInfo.UploadedByteCount * 100 / outputInfo.TotalUploadedByteCount)
+				Me.LogTextBox.AppendText(vbTab + vbTab + outputInfo.Status + ": " + outputInfo.UploadedByteCount.ToString("N0") + " / " + outputInfo.TotalUploadedByteCount.ToString("N0") + "   " + progressPercentage.ToString() + " %" + vbCrLf)
+			Else
+				Me.LogTextBox.AppendText(vbTab + outputInfo.Status + "." + vbCrLf)
+			End If
 		End If
 	End Sub
 

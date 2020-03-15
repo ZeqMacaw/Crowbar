@@ -1315,18 +1315,18 @@ Public Module CrowbarSteamPipe
 		'k_EItemUpdateStatusUploadingPreviewFile	4	The item update is uploading new preview file image.
 		'k_EItemUpdateStatusCommittingChanges	5	The item update is committing all changes.
 		If status = EItemUpdateStatus.k_EItemUpdateStatusPreparingConfig Then
-			sw.WriteLine("preparing config")
+			sw.WriteLine("Preparing config")
 		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusPreparingContent Then
-			sw.WriteLine("preparing content")
+			sw.WriteLine("Preparing content")
 		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusUploadingContent Then
-			sw.WriteLine("uploading content")
+			sw.WriteLine("Uploading content")
 			If totalUploadedByteCount > 0 AndAlso uploadedByteCount = totalUploadedByteCount Then
 				theItemIsUploading = False
 			End If
 		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusUploadingPreviewFile Then
-			sw.WriteLine("uploading preview")
+			sw.WriteLine("Uploading preview")
 		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusCommittingChanges Then
-			sw.WriteLine("committing changes")
+			sw.WriteLine("Committing changes")
 		Else
 			sw.WriteLine("invalid")
 			theItemIsUploading = False
