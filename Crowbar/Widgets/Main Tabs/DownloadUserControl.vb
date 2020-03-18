@@ -302,14 +302,19 @@ Public Class DownloadUserControl
 				targetOutputPath = FileManager.GetTestedPath(targetOutputPath)
 
 				If Directory.Exists(outputInfo.ContentFolderOrFileName) Then
-					FileManager.CopyFolder(outputInfo.ContentFolderOrFileName, targetOutputPath, True)
-
-					'TODO: [DownloadItem_RunWorkerCompleted] Delete Steam's cached item after downloading SteamUGC item.
-					'NOTE: Deleting the folder makes the item un-downloadable for later attempts because Steam still thinks it is installed.
+					'FileManager.CopyFolder(outputInfo.ContentFolderOrFileName, targetOutputPath, True)
+					'' [DownloadItem_RunWorkerCompleted] Delete Steam's cached item after downloading SteamUGC item.
+					''NOTE: Deleting the folder makes the item un-downloadable for later attempts because Steam still thinks it is installed.
+					''      This only occurred because Crowbar used different Steamworks functions calls to download when EItemState.k_EItemStateInstalled was set. 
+					''TODO: [DownloadItem_RunWorkerCompleted] Delete Steam's cached item manifest file and cached acf info after downloading SteamUGC item.
 					'Directory.Delete(outputInfo.ContentFolderOrFileName, True)
+					''======
+					''NOTE: UnsubscribeItem() does not delete the folder.
+					''Me.UnsubscribeItem(outputInfo.AppID, outputInfo.PublishedItemID)
 					'======
-					'NOTE: UnsubscribeItem() does not delete the folder.
-					'Me.UnsubscribeItem(outputInfo.AppID, outputInfo.PublishedItemID)
+					'NOTE: File remains: "C:\Program Files (x86)\Steam\depotcache\<app_id>_<manifest_id>.manifest"
+					'NOTE: Data for the downloaded file remains in: "<steam_folder_on_drive_where_game_is_installed>\steamapps\workshop\appworkshop_<app_id>.acf"
+					Directory.Move(outputInfo.ContentFolderOrFileName, targetOutputPath)
 
 					If Directory.Exists(targetOutputPath) Then
 						'Me.ProcessFolderOrFileAfterDownload(targetOutputPath)
@@ -483,7 +488,20 @@ Public Class DownloadUserControl
 		Else
 			'Me.LogTextBox.AppendText("Item content download link not found. Probably an item that uses newer Steam API or a Friends-only item not downloadable via web." + vbCrLf)
 			Me.LogTextBox.AppendText("Item content download link not found. Downloading file via Steam." + vbCrLf)
-			Me.DownloadViaSteam(appID, itemID)
+
+			Dim outputPath As String
+			outputPath = Me.GetOutputPath()
+
+			'Dim outputFolder As String
+			'outputFolder = Me.GetOutputFileName(outputInfo.ItemTitle, outputInfo.PublishedItemID, outputInfo.ContentFolderOrFileName, outputInfo.ItemUpdated_Text)
+
+			Dim targetPath As String
+			'targetPath = Path.Combine(outputPath, outputFolder)
+			'targetPath = FileManager.GetTestedPath(targetPath)
+			'------
+			targetPath = outputPath
+
+			Me.DownloadViaSteam(appID, itemID, targetPath)
 		End If
 	End Sub
 
@@ -659,7 +677,7 @@ Public Class DownloadUserControl
 		Me.theWebClient.DownloadFileAsync(uri, outputPathFileName, outputPathFileName)
 	End Sub
 
-	Private Sub DownloadViaSteam(ByVal appID As UInteger, ByVal itemID As String)
+	Private Sub DownloadViaSteam(ByVal appID As UInteger, ByVal itemID As String, ByVal targetPath As String)
 		'Me.theDownloadBytesReceived = 0
 		'Me.DownloadedItemTextBox.Text = ""
 		'Me.DownloadButton.Enabled = False
@@ -668,6 +686,7 @@ Public Class DownloadUserControl
 		Dim inputInfo As New BackgroundSteamPipe.DownloadItemInputInfo()
 		inputInfo.AppID = appID
 		inputInfo.PublishedItemID = itemID
+		inputInfo.TargetPath = targetPath
 		Me.theBackgroundSteamPipe.DownloadItem(AddressOf Me.DownloadItem_ProgressChanged, AddressOf Me.DownloadItem_RunWorkerCompleted, inputInfo)
 	End Sub
 

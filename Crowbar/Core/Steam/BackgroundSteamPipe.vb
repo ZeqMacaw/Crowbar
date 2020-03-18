@@ -29,6 +29,7 @@ Public Class BackgroundSteamPipe
 	Public Class DownloadItemInputInfo
 		Public AppID As UInteger
 		Public PublishedItemID As String
+		Public TargetPath As String
 	End Class
 
 	Public Class DownloadItemOutputInfo
@@ -123,7 +124,7 @@ Public Class BackgroundSteamPipe
 		outputInfo.ContentFolderOrFileName = ""
 		Dim contentFile As Byte() = {0}
 		Dim returned_AppID_Text As String = "0"
-		result = steamPipe.Crowbar_DownloadContentFolderOrFile(inputInfo.PublishedItemID, contentFile, outputInfo.ItemUpdated_Text, outputInfo.ItemTitle, outputInfo.ContentFolderOrFileName, returned_AppID_Text)
+		result = steamPipe.Crowbar_DownloadContentFolderOrFile(inputInfo.PublishedItemID, inputInfo.TargetPath, contentFile, outputInfo.ItemUpdated_Text, outputInfo.ItemTitle, outputInfo.ContentFolderOrFileName, returned_AppID_Text)
 		If result = "success" Then
 			outputInfo.ContentFile = contentFile
 		ElseIf result = "success_SteamUGC" Then
