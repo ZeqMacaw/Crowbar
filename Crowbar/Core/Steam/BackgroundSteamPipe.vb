@@ -416,6 +416,40 @@ Public Class BackgroundSteamPipe
 		Me.theActiveBackgroundWorkers.Add(bw)
 		Dim inputInfo As PublishItemInputInfo = CType(e.Argument, PublishItemInputInfo)
 
+		'TODO: Process content folder or file before accessing Steam.
+		Dim processedContentPathFolderOrFileName As String = ""
+		If inputInfo.Item.ContentPathFolderOrFileNameIsChanged AndAlso inputInfo.Item.ContentPathFolderOrFileName <> "" Then
+			Dim processedFileCheckIsSuccessful As Boolean = True
+			Try
+				Me.thePublishItemBackgroundWorker.ReportProgress(0, "Processing content for upload." + vbCrLf)
+				processedContentPathFolderOrFileName = inputInfo.AppInfo.ProcessFileBeforeUpload(inputInfo.Item, bw)
+
+				If inputInfo.AppInfo.CanUseContentFolderOrFile Then
+					If Not Directory.Exists(processedContentPathFolderOrFileName) AndAlso Not File.Exists(processedContentPathFolderOrFileName) Then
+						processedFileCheckIsSuccessful = False
+					End If
+				ElseIf inputInfo.AppInfo.UsesSteamUGC Then
+					If Not Directory.Exists(processedContentPathFolderOrFileName) Then
+						processedFileCheckIsSuccessful = False
+					End If
+				Else
+					If Not File.Exists(processedContentPathFolderOrFileName) Then
+						processedFileCheckIsSuccessful = False
+					End If
+				End If
+			Catch ex As Exception
+				Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: " + ex.Message + vbCrLf)
+				processedFileCheckIsSuccessful = False
+			End Try
+
+			If Not processedFileCheckIsSuccessful Then
+				Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: Processing content failed. Review log messages above for reason." + vbCrLf)
+				e.Cancel = True
+				Me.theActiveBackgroundWorkers.Remove(bw)
+				Exit Sub
+			End If
+		End If
+
 		If inputInfo.Item.CreatorAppID = "0" Then
 			TheApp.WriteSteamAppIdFile(inputInfo.AppInfo.ID.m_AppId)
 		Else
@@ -434,9 +468,9 @@ Public Class BackgroundSteamPipe
 
 		Dim outputInfo As BackgroundSteamPipe.PublishItemOutputInfo
 		If inputInfo.AppInfo.UsesSteamUGC Then
-			outputInfo = Me.PublishViaSteamUGC(steamPipe, inputInfo)
+			outputInfo = Me.PublishViaSteamUGC(steamPipe, inputInfo, processedContentPathFolderOrFileName)
 		Else
-			outputInfo = Me.PublishViaRemoteStorage(steamPipe, inputInfo)
+			outputInfo = Me.PublishViaRemoteStorage(steamPipe, inputInfo, processedContentPathFolderOrFileName)
 		End If
 
 		If outputInfo.PublishedItemID <> "0" Then
@@ -457,7 +491,7 @@ Public Class BackgroundSteamPipe
 	End Sub
 
 	'NOTE: This is run in a background thread.
-	Private Function PublishViaSteamUGC(ByVal steamPipe As SteamPipe, ByVal inputInfo As PublishItemInputInfo) As BackgroundSteamPipe.PublishItemOutputInfo
+	Private Function PublishViaSteamUGC(ByVal steamPipe As SteamPipe, ByVal inputInfo As PublishItemInputInfo, ByVal processedContentPathFolderOrFileName As String) As BackgroundSteamPipe.PublishItemOutputInfo
 		Dim changeNote As String
 		Dim appID_text As String = inputInfo.AppInfo.ID.ToString()
 		Dim itemID_text As String = "0"
@@ -503,21 +537,10 @@ Public Class BackgroundSteamPipe
 					outputInfo.Result = "Failed"
 					'Return outputInfo
 				Else
-					Dim pathFileName As String = ""
 					If inputInfo.Item.ContentPathFolderOrFileNameIsChanged AndAlso inputInfo.Item.ContentPathFolderOrFileName <> "" Then
-						Try
-							Me.thePublishItemBackgroundWorker.ReportProgress(0, "Processing content for upload." + vbCrLf)
-							pathFileName = inputInfo.AppInfo.ProcessFileBeforeUpload(inputInfo.Item, Me.thePublishItemBackgroundWorker)
-						Catch ex As Exception
-							Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: " + ex.Message + vbCrLf)
-							outputInfo.Result = "Failed"
-							'Return outputInfo
-						End Try
-
 						If outputInfo.Result <> "Failed" Then
-							If Directory.Exists(pathFileName) OrElse (inputInfo.AppInfo.CanUseContentFolderOrFile AndAlso File.Exists(pathFileName)) Then
-								'Dim setItemContentWasSuccessful As String = steamPipe.SteamUGC_SetItemContent(inputInfo.Item.ContentPathFolderOrFileName)
-								Dim setItemContentWasSuccessful As String = steamPipe.SteamUGC_SetItemContent(pathFileName)
+							If Directory.Exists(processedContentPathFolderOrFileName) OrElse (inputInfo.AppInfo.CanUseContentFolderOrFile AndAlso File.Exists(processedContentPathFolderOrFileName)) Then
+								Dim setItemContentWasSuccessful As String = steamPipe.SteamUGC_SetItemContent(processedContentPathFolderOrFileName)
 								If setItemContentWasSuccessful = "success" Then
 									Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item content completed." + vbCrLf)
 								Else
@@ -569,13 +592,13 @@ Public Class BackgroundSteamPipe
 	End Function
 
 	'NOTE: This is run in a background thread.
-	Private Function PublishViaRemoteStorage(ByVal steamPipe As SteamPipe, ByVal inputInfo As PublishItemInputInfo) As BackgroundSteamPipe.PublishItemOutputInfo
+	Private Function PublishViaRemoteStorage(ByVal steamPipe As SteamPipe, ByVal inputInfo As PublishItemInputInfo, ByVal processedContentPathFolderOrFileName As String) As BackgroundSteamPipe.PublishItemOutputInfo
 		Dim outputInfo As BackgroundSteamPipe.PublishItemOutputInfo
 
 		If inputInfo.Item.IsDraft Then
-			outputInfo = Me.CreateViaRemoteStorage(steamPipe, inputInfo)
+			outputInfo = Me.CreateViaRemoteStorage(steamPipe, inputInfo, processedContentPathFolderOrFileName)
 		Else
-			outputInfo = Me.UpdateViaRemoteStorage(steamPipe, inputInfo)
+			outputInfo = Me.UpdateViaRemoteStorage(steamPipe, inputInfo, processedContentPathFolderOrFileName)
 		End If
 
 		Return outputInfo
@@ -583,7 +606,7 @@ Public Class BackgroundSteamPipe
 
 	'NOTE: SteamRemoteStorage_PublishWorkshopFile requires Item to have a Title, a Description, a Content File, and a Preview Image.
 	'NOTE: This is run in a background thread.
-	Private Function CreateViaRemoteStorage(ByVal steamPipe As SteamPipe, ByVal inputInfo As PublishItemInputInfo) As BackgroundSteamPipe.PublishItemOutputInfo
+	Private Function CreateViaRemoteStorage(ByVal steamPipe As SteamPipe, ByVal inputInfo As PublishItemInputInfo, ByVal processedContentPathFolderOrFileName As String) As BackgroundSteamPipe.PublishItemOutputInfo
 		Dim outputInfo As New BackgroundSteamPipe.PublishItemOutputInfo()
 		outputInfo.PublishedItemID = "0"
 		outputInfo.SteamAgreementStatus = "Accepted"
@@ -597,18 +620,9 @@ Public Class BackgroundSteamPipe
 		End If
 
 		If outputInfo.Result <> "Failed" Then
-			Dim pathFileName As String = ""
-			Try
-				Me.thePublishItemBackgroundWorker.ReportProgress(0, "Processing content for upload." + vbCrLf)
-				pathFileName = inputInfo.AppInfo.ProcessFileBeforeUpload(inputInfo.Item, Me.thePublishItemBackgroundWorker)
-			Catch ex As Exception
-				Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: " + ex.Message + vbCrLf)
-				outputInfo.Result = "Failed"
-				'Return outputInfo
-			End Try
-			If outputInfo.Result <> "Failed" AndAlso File.Exists(pathFileName) Then
-				Dim fileName As String = Path.GetFileName(pathFileName)
-				Dim resultForContent_SteamRemoteStorage_FileWrite As String = steamPipe.SteamRemoteStorage_FileWrite(pathFileName, fileName)
+			If outputInfo.Result <> "Failed" AndAlso File.Exists(processedContentPathFolderOrFileName) Then
+				Dim fileName As String = Path.GetFileName(processedContentPathFolderOrFileName)
+				Dim resultForContent_SteamRemoteStorage_FileWrite As String = steamPipe.SteamRemoteStorage_FileWrite(processedContentPathFolderOrFileName, fileName)
 				If resultForContent_SteamRemoteStorage_FileWrite <> "success" Then
 					Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: " + resultForContent_SteamRemoteStorage_FileWrite + vbCrLf)
 					outputInfo.Result = "Failed"
@@ -643,7 +657,7 @@ Public Class BackgroundSteamPipe
 	End Function
 
 	'NOTE: This is run in a background thread.
-	Private Function UpdateViaRemoteStorage(ByVal steamPipe As SteamPipe, ByVal inputInfo As PublishItemInputInfo) As BackgroundSteamPipe.PublishItemOutputInfo
+	Private Function UpdateViaRemoteStorage(ByVal steamPipe As SteamPipe, ByVal inputInfo As PublishItemInputInfo, ByVal processedContentPathFolderOrFileName As String) As BackgroundSteamPipe.PublishItemOutputInfo
 		Dim outputInfo As New BackgroundSteamPipe.PublishItemOutputInfo()
 		outputInfo.PublishedItemID = "0"
 		outputInfo.SteamAgreementStatus = "Accepted"
@@ -687,21 +701,10 @@ Public Class BackgroundSteamPipe
 					'End If
 					Dim result_Crowbar_DeleteContentFile_BeforeWrite As String = steamPipe.Crowbar_DeleteContentFile(inputInfo.Item.ID)
 
-					' Write new content file for use in the following update functions.
-					Dim pathFileName As String = ""
-					Try
-						Me.thePublishItemBackgroundWorker.ReportProgress(0, "Processing content for upload." + vbCrLf)
-						pathFileName = inputInfo.AppInfo.ProcessFileBeforeUpload(inputInfo.Item, Me.thePublishItemBackgroundWorker)
-					Catch ex As Exception
-						Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: " + ex.Message + vbCrLf)
-						outputInfo.Result = "Failed"
-						'Return outputInfo
-					End Try
-
-					If outputInfo.Result <> "Failed" AndAlso File.Exists(pathFileName) Then
+					If outputInfo.Result <> "Failed" AndAlso File.Exists(processedContentPathFolderOrFileName) Then
 						' Write/upload content file to RemoteStorage (Steam Cloud).
-						Dim fileName As String = Path.GetFileName(pathFileName)
-						Dim result_SteamRemoteStorage_FileWrite As String = steamPipe.SteamRemoteStorage_FileWrite(pathFileName, fileName)
+						Dim fileName As String = Path.GetFileName(processedContentPathFolderOrFileName)
+						Dim result_SteamRemoteStorage_FileWrite As String = steamPipe.SteamRemoteStorage_FileWrite(processedContentPathFolderOrFileName, fileName)
 						If result_SteamRemoteStorage_FileWrite <> "success" Then
 							'TODO: This error seems to occur when content file is bigger than available space for app's Steam Cloud.
 							Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: Not enough space on this game's Steam Cloud for content file." + result_SteamRemoteStorage_FileWrite + vbCrLf)

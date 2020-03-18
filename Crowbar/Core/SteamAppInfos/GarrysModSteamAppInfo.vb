@@ -164,15 +164,15 @@ Public Class GarrysModSteamAppInfo
 							RemoveHandler gmadExeProcess.OutputDataReceived, AddressOf Me.myProcess_OutputDataReceived
 							RemoveHandler gmadExeProcess.ErrorDataReceived, AddressOf Me.myProcess_ErrorDataReceived
 
-							If Not File.Exists(gmaPathFileName) Then
-								Throw New System.Exception("Crowbar tried to create the file """ + gmaPathFileName + """ with Garry's Mod gmad.exe, but the file was not created.")
-							End If
+							'If Not File.Exists(gmaPathFileName) Then
+							'	Throw New System.Exception("Crowbar tried to create the file """ + gmaPathFileName + """ with Garry's Mod gmad.exe, but the file was not created.")
+							'End If
 						End Try
 					Else
 						Throw New System.Exception("Crowbar tried to create the file """ + addonJsonPathFileName + """, but the file was not created.")
 					End If
 				Else
-					Throw New System.Exception("Crowbar tried to run """ + garrysModPathGmadExe + """, but the file was not found. Note that Garry's Mod must be installed for this work.")
+					Throw New System.Exception("Crowbar tried to run """ + garrysModPathGmadExe + """, but the file was not found. Note that Garry's Mod must be installed for this to work.")
 				End If
 			End If
 		Else
