@@ -369,14 +369,19 @@ Public Class FileManager
 		Dim fromAttr As Integer = GetPathAttribute(fromPathAbsolute)
 		Dim toAttr As Integer = GetPathAttribute(toPathAbsolute)
 
-		' MAX_PATH = 260
-		Dim newPathFileName As New StringBuilder(260)
-		If PathRelativePathTo(newPathFileName, fromPathAbsolute, fromAttr, toPathAbsolute, toAttr) = 0 Then
-			'Throw New ArgumentException("Paths must have a common prefix")
-			Return toPathAbsolute
-		End If
+        ' MAX_PATH = 260
+        'Dim newPathFileName As New StringBuilder(260)
+        'If PathRelativePathTo(newPathFileName, fromPathAbsolute, fromAttr, toPathAbsolute, toAttr) = 0 Then
+        '	'Throw New ArgumentException("Paths must have a common prefix")
+        '	Return toPathAbsolute
+        'End If
+        Dim path1 As Uri = New Uri(fromPathAbsolute)
+        Dim path2 As Uri = New Uri(toPathAbsolute)
+        Dim diff As Uri = path1.MakeRelativeUri(path2)
+        ' Convert Uri escaped characters and convert Uri forward slash to default directory separator.
+        Dim newPathFileName As String = Uri.UnescapeDataString(diff.OriginalString).Replace("/", Path.DirectorySeparatorChar)
 
-		Dim cleanedPath As String
+        Dim cleanedPath As String
 		cleanedPath = newPathFileName.ToString()
 		If cleanedPath.StartsWith(".\") Then
 			cleanedPath = cleanedPath.Remove(0, 2)
