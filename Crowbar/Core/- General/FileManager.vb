@@ -369,6 +369,8 @@ Public Class FileManager
 		Dim fromAttr As Integer = GetPathAttribute(fromPathAbsolute)
 		Dim toAttr As Integer = GetPathAttribute(toPathAbsolute)
 
+        'IMPORTANT: Use Uri.MakeRelativeUri() instead of PathRelativePathTo(), 
+        '      because PathRelativePathTo() does not handle unicode characters properly.
         ' MAX_PATH = 260
         'Dim newPathFileName As New StringBuilder(260)
         'If PathRelativePathTo(newPathFileName, fromPathAbsolute, fromAttr, toPathAbsolute, toAttr) = 0 Then
