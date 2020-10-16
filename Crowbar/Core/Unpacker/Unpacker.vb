@@ -12,7 +12,7 @@ Public Class Unpacker
 		Me.theUnpackedMdlFiles = New List(Of String)()
 		Me.theLogFiles = New List(Of String)()
 		Me.theUnpackedPaths = New List(Of String)()
-		Me.theUnpackedRelativePathFileNames = New List(Of String)()
+		Me.theUnpackedRelativePathsAndFileNames = New List(Of String)()
 		Me.theUnpackedTempPathsAndPathFileNames = New List(Of String)()
 
 		Me.WorkerReportsProgress = True
@@ -73,15 +73,30 @@ Public Class Unpacker
 	'		tempPathFileNames.Add(Path.Combine(Me.theTempUnpackPaths(0), packInternalPathFileName))
 	'	Next
 	'End Sub
-	Public Function GetTempPathsAndPathFileNames(ByVal packInternalPathFileNames As List(Of String)) As List(Of String)
-		Dim tempPathFileNames As List(Of String)
+	'Public Function GetTempPathsAndPathFileNames(ByVal packInternalPathFileNames As List(Of String)) As List(Of String)
+	'	Dim tempPathFileNames As List(Of String)
 
-		tempPathFileNames = New List(Of String)()
-		For Each packInternalPathFileName As String In packInternalPathFileNames
-			tempPathFileNames.Add(Path.Combine(Me.theOutputPath, packInternalPathFileName))
+	'	tempPathFileNames = New List(Of String)()
+	'	For Each packInternalPathFileName As String In packInternalPathFileNames
+	'		tempPathFileNames.Add(Path.Combine(Me.theOutputPath, packInternalPathFileName))
+	'	Next
+
+	'	Return tempPathFileNames
+	'End Function
+	Public Function GetTempRelativePathsAndFileNames() As List(Of String)
+		Dim tempRelativePathsAndFileNames As New List(Of String)()
+
+		Dim topRelativePath As String
+		For Each relativePathOrFileName As String In Me.theUnpackedRelativePathsAndFileNames
+			topRelativePath = FileManager.GetTopFolderPath(relativePathOrFileName)
+			If topRelativePath = "" Then
+				tempRelativePathsAndFileNames.Add(Path.Combine(Me.theOutputPath, relativePathOrFileName))
+			Else
+				tempRelativePathsAndFileNames.Add(Path.Combine(Me.theOutputPath, topRelativePath))
+			End If
 		Next
 
-		Return tempPathFileNames
+		Return tempRelativePathsAndFileNames
 	End Function
 
 	Public Sub SkipCurrentPackage()
@@ -150,7 +165,7 @@ Public Class Unpacker
 				ElseIf info.theArchiveAction = ArchiveAction.ExtractAndOpen Then
 					status = Me.ExtractWithoutLogging(info.theArchivePathFileNameToEntryIndexesMap)
 					If status = StatusMessage.Success Then
-						Me.StartFile(Path.Combine(Me.theOutputPath, Me.theUnpackedRelativePathFileNames(0)))
+						Me.StartFile(Path.Combine(Me.theOutputPath, Me.theUnpackedRelativePathsAndFileNames(0)))
 					End If
 				ElseIf info.theArchiveAction = ArchiveAction.ExtractToTemp Then
 					status = Me.ExtractWithoutLogging(info.theArchivePathFileNameToEntryIndexesMap)
@@ -210,8 +225,8 @@ Public Class Unpacker
 
 		If Me.theUnpackedMdlFiles.Count > 0 Then
 			unpackResultInfo.theUnpackedRelativePathFileNames = Me.theUnpackedMdlFiles
-		ElseIf Me.theUnpackedRelativePathFileNames.Count > 0 Then
-			unpackResultInfo.theUnpackedRelativePathFileNames = Me.theUnpackedRelativePathFileNames
+		ElseIf Me.theUnpackedRelativePathsAndFileNames.Count > 0 Then
+			unpackResultInfo.theUnpackedRelativePathFileNames = Me.theUnpackedRelativePathsAndFileNames
 		ElseIf TheApp.Settings.UnpackLogFileIsChecked Then
 			unpackResultInfo.theUnpackedRelativePathFileNames = Me.theLogFiles
 		Else
@@ -649,7 +664,7 @@ Public Class Unpacker
 		Me.theSkipCurrentPackIsActive = False
 
 		Me.theUnpackedPaths.Clear()
-		Me.theUnpackedRelativePathFileNames.Clear()
+		Me.theUnpackedRelativePathsAndFileNames.Clear()
 		Me.theUnpackedMdlFiles.Clear()
 		Me.theLogFiles.Clear()
 
@@ -749,7 +764,7 @@ Public Class Unpacker
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
 
 		Me.theUnpackedPaths.Clear()
-		Me.theUnpackedRelativePathFileNames.Clear()
+		Me.theUnpackedRelativePathsAndFileNames.Clear()
 		Me.theUnpackedTempPathsAndPathFileNames.Clear()
 
 		' Create and add a folder to the Temp path, to prevent potential file collisions and to provide user more obvious folder name.
@@ -1120,7 +1135,7 @@ Public Class Unpacker
 			If Not Me.theUnpackedPaths.Contains(Me.theOutputPath) Then
 				Me.theUnpackedPaths.Add(Me.theOutputPath)
 			End If
-			Me.theUnpackedRelativePathFileNames.Add(FileManager.GetRelativePathFileName(Me.theOutputPath, outputPathFileName))
+			Me.theUnpackedRelativePathsAndFileNames.Add(FileManager.GetRelativePathFileName(Me.theOutputPath, outputPathFileName))
 			'If Not Me.theUnpackedTempPathsAndPathFileNames.Contains(entry.thePathFileName) Then
 			'	Me.theUnpackedTempPathsAndPathFileNames.Add(entry.thePathFileName)
 			'End If
@@ -1187,7 +1202,7 @@ Public Class Unpacker
 	'NOTE: Extra guard against deleting non-temp paths from accidental bad coding.
 	Private theUnpackedPathsAreInTempPath As Boolean
 	' Used for listing unpacked files in combobox.
-	Private theUnpackedRelativePathFileNames As List(Of String)
+	Private theUnpackedRelativePathsAndFileNames As List(Of String)
 	'TODO: Not currently used for anything.
 	Private theUnpackedTempPathsAndPathFileNames As List(Of String)
 	Private theUnpackedMdlFiles As List(Of String)
