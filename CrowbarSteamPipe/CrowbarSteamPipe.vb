@@ -129,7 +129,7 @@ Public Module CrowbarSteamPipe
 			'For debugging, keep console open until Enter Is pressed.
 			Console.ReadLine()
 #End If
-		End Try
+        End Try
 	End Sub
 
 #Region "Init and Free"
@@ -1337,22 +1337,28 @@ Public Module CrowbarSteamPipe
 		'k_EItemUpdateStatusUploadingPreviewFile	4	The item update is uploading new preview file image.
 		'k_EItemUpdateStatusCommittingChanges	5	The item update is committing all changes.
 		If status = EItemUpdateStatus.k_EItemUpdateStatusPreparingConfig Then
+			'           Console.WriteLine("Preparing config")
 			sw.WriteLine("Preparing config")
-		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusPreparingContent Then
+        ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusPreparingContent Then
+			'           Console.WriteLine("Preparing content")
 			sw.WriteLine("Preparing content")
-		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusUploadingContent Then
+        ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusUploadingContent Then
+			'           Console.WriteLine("Uploading content")
 			sw.WriteLine("Uploading content")
-			If totalUploadedByteCount > 0 AndAlso uploadedByteCount = totalUploadedByteCount Then
-				theItemIsUploading = False
-			End If
-		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusUploadingPreviewFile Then
+            If totalUploadedByteCount > 0 AndAlso uploadedByteCount = totalUploadedByteCount Then
+                theItemIsUploading = False
+            End If
+        ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusUploadingPreviewFile Then
+			'           Console.WriteLine("Uploading preview")
 			sw.WriteLine("Uploading preview")
-		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusCommittingChanges Then
+        ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusCommittingChanges Then
+			'           Console.WriteLine("Committing changes")
 			sw.WriteLine("Committing changes")
-		Else
+        Else
+			'           Console.WriteLine("invalid")
 			sw.WriteLine("invalid")
-			theItemIsUploading = False
-		End If
+            theItemIsUploading = False
+        End If
 		sw.WriteLine(uploadedByteCount)
 		sw.WriteLine(totalUploadedByteCount)
 	End Sub
@@ -1500,20 +1506,23 @@ Public Module CrowbarSteamPipe
 
 	Private Sub OnSubmitItemUpdate(ByVal pCallResult As SubmitItemUpdateResult_t, ByVal bIOFailure As Boolean)
 		theItemIsUploading = False
+		'Console.WriteLine("OnSubmitItemUpdate")
 		sw.WriteLine("OnSubmitItemUpdate")
 		Try
 			If pCallResult.m_eResult = EResult.k_EResultOK Then
 				If pCallResult.m_bUserNeedsToAcceptWorkshopLegalAgreement Then
 					sw.WriteLine("success_agreement")
 				Else
+					'Console.WriteLine("OnSubmitItemUpdate success")
 					sw.WriteLine("success")
 				End If
 			Else
+				'Console.WriteLine("OnSubmitItemUpdate " + GetErrorMessage(pCallResult.m_eResult))
 				sw.WriteLine(GetErrorMessage(pCallResult.m_eResult))
 			End If
-			Console.WriteLine("OnSubmitItemUpdate result: " + pCallResult.m_eResult.ToString())
+			'Console.WriteLine("OnSubmitItemUpdate result: " + pCallResult.m_eResult.ToString())
 		Catch ex As Exception
-			Console.WriteLine("OnSubmitItemUpdate EXCEPTION: " + ex.Message)
+			'Console.WriteLine("OnSubmitItemUpdate EXCEPTION: " + ex.Message)
 			sw.WriteLine("EXCEPTION: " + ex.Message)
 		End Try
 

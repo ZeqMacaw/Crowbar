@@ -592,20 +592,28 @@ Public Class SteamPipe
 
 		While True
 			result = Me.theStreamReader.ReadLine()
+			'NOTE: The Sleep() is needed to prevent Crowbar Publish locking up when publishing to a workshop via SteamUGC.
+			'      Unfortunately, I do not understand how this prevents lock up considering that each ReadLine() waits for available input.
+			Threading.Thread.Sleep(1)
 			If result = "OnSubmitItemUpdate" Then
 				result = Me.theStreamReader.ReadLine()
 				Exit While
 			Else
+				'Threading.Thread.Sleep(1)
 				outputInfo.Status = result
 				outputInfo.UploadedByteCount = CULng(Me.theStreamReader.ReadLine())
 				outputInfo.TotalUploadedByteCount = CULng(Me.theStreamReader.ReadLine())
+				'Threading.Thread.Sleep(1)
 				If outputInfo.Status = "invalid" Then
 					Dim debug As Integer = 4242
 				Else
+					'Threading.Thread.Sleep(1)
 					If previousOutputInfo.Status <> outputInfo.Status OrElse previousOutputInfo.UploadedByteCount <> outputInfo.UploadedByteCount OrElse previousOutputInfo.TotalUploadedByteCount <> outputInfo.TotalUploadedByteCount Then
+						'Threading.Thread.Sleep(1)
 						'If outputInfo.TotalUploadedByteCount > 0 Then
 						Me.theBackgroundWorker.ReportProgress(2, outputInfo)
 
+						'Threading.Thread.Sleep(1)
 						previousOutputInfo.Status = outputInfo.Status
 						previousOutputInfo.UploadedByteCount = outputInfo.UploadedByteCount
 						previousOutputInfo.TotalUploadedByteCount = outputInfo.TotalUploadedByteCount

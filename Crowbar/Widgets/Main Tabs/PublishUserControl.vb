@@ -1378,16 +1378,26 @@ Public Class PublishUserControl
 
 	' Copy the image into memory, so the image file can be deleted.
 	Private Sub DeleteInUseTempPreviewImageFile(ByVal itemPreviewImagePathFileName As String, ByVal itemID As String)
-		Dim img As Image = Image.FromFile(itemPreviewImagePathFileName)
+        Dim img As Image = Nothing
 
-		If Me.ItemPreviewImagePictureBox.Image IsNot Nothing Then
-			Me.ItemPreviewImagePictureBox.Image.Dispose()
-		End If
-		Me.ItemPreviewImagePictureBox.Image = New Bitmap(img)
-		img.Dispose()
+        Try
+            If File.Exists(itemPreviewImagePathFileName) Then
+                img = Image.FromFile(itemPreviewImagePathFileName)
+                If Me.ItemPreviewImagePictureBox.Image IsNot Nothing Then
+                    Me.ItemPreviewImagePictureBox.Image.Dispose()
+                End If
+                Me.ItemPreviewImagePictureBox.Image = New Bitmap(img)
+                img.Dispose()
+            End If
+        Catch ex As Exception
+            If img IsNot Nothing Then
+                img.Dispose()
+                img = Nothing
+            End If
+        End Try
 
-		Me.DeleteTempPreviewImageFile(itemPreviewImagePathFileName, itemID)
-	End Sub
+        Me.DeleteTempPreviewImageFile(itemPreviewImagePathFileName, itemID)
+    End Sub
 
 	Private Sub DeleteTempPreviewImageFile(ByVal itemPreviewImagePathFileName As String, ByVal itemID As String)
 		Dim previewImagePathFileName As String = Me.GetPreviewImagePathFileName(itemPreviewImagePathFileName, itemID, 0)
