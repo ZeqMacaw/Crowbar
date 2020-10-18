@@ -30,7 +30,7 @@ Public Class DecompileUserControl
 
 		Me.OutputPathTextBox.DataBindings.Add("Text", TheApp.Settings, "DecompileOutputFullPath", False, DataSourceUpdateMode.OnValidation)
 		Me.OutputSubfolderTextBox.DataBindings.Add("Text", TheApp.Settings, "DecompileOutputSubfolderName", False, DataSourceUpdateMode.OnValidation)
-		Me.UpdateOutputPathComboBox()
+		Me.InitOutputPathComboBox()
 		Me.UpdateOutputPathWidgets()
 
 		Me.InitDecompilerOptions()
@@ -372,7 +372,7 @@ Public Class DecompileUserControl
 	'	End If
 	'End Sub
 
-	Private Sub UpdateOutputPathComboBox()
+	Private Sub InitOutputPathComboBox()
 		Dim anEnumList As IList
 
 		anEnumList = EnumHelper.ToList(GetType(DecompileOutputPathOptions))
@@ -383,7 +383,8 @@ Public Class DecompileUserControl
 			Me.OutputPathComboBox.DataSource = anEnumList
 			Me.OutputPathComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "DecompileOutputFolderOption", False, DataSourceUpdateMode.OnPropertyChanged)
 
-			Me.OutputPathComboBox.SelectedIndex = 0
+			' Do not use this line because it will override the value automatically assigned by the data bindings above.
+			'Me.OutputPathComboBox.SelectedIndex = 0
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		End Try
