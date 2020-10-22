@@ -816,7 +816,9 @@ Public Class UnpackUserControl
 
 		Me.OptionsGroupBox.Enabled = Not unpackerIsRunning
 
-		Me.UnpackButton.Enabled = (Not unpackerIsRunning) AndAlso (Me.PackageTreeView.Nodes(0).Nodes.Count > 0)
+		'Me.UnpackButton.Enabled = (Not unpackerIsRunning) AndAlso (Me.PackageTreeView.Nodes(0).Nodes.Count > 0)
+		Dim folderResourceInfos As List(Of PackageResourceFileNameInfo) = CType(Me.PackageTreeView.Nodes(0).Tag, List(Of PackageResourceFileNameInfo))
+		Me.UnpackButton.Enabled = (Not unpackerIsRunning) AndAlso (folderResourceInfos IsNot Nothing) AndAlso (folderResourceInfos.Count > 0)
 		Me.SkipCurrentPackageButton.Enabled = unpackerIsRunning
 		Me.CancelUnpackButton.Enabled = unpackerIsRunning
 		Me.UseAllInDecompileButton.Enabled = Not unpackerIsRunning AndAlso Me.theOutputPathOrOutputFileName <> "" AndAlso Me.theUnpackedRelativePathFileNames.Count > 0
