@@ -1410,6 +1410,7 @@ Public Module CrowbarSteamPipe
 	Private Sub SteamUGC_SetItemTitle()
 		Dim titleText As String
 		titleText = ReadMultipleLinesOfText(sr)
+		'Console.WriteLine("    Title: " + titleText + " END")
 
 		Dim resultIsSuccess As Boolean = SteamUGC.SetItemTitle(theUGCUpdateHandle, titleText)
 
@@ -1649,10 +1650,18 @@ Public Module CrowbarSteamPipe
 
 		Dim textLineCount As Integer
 		textLineCount = CInt(sr.ReadLine())
-		For i As Integer = 0 To textLineCount - 1
-			'NOTE: Add LF because web page needs them for newlines.
-			text += sr.ReadLine() + vbLf
-		Next
+		'For i As Integer = 0 To textLineCount - 1
+		'	'NOTE: Add LF because web page needs them for newlines.
+		'	text += sr.ReadLine() + vbLf
+		'Next
+		If textLineCount > 0 Then
+			'NOTE: Do not add LF to last line.
+			For i As Integer = 0 To textLineCount - 2
+				'NOTE: Add CRLF because TextBoxes use it for newlines.
+				text += sr.ReadLine() + vbLf
+			Next
+			text += sr.ReadLine()
+		End If
 		'Console.WriteLine("ReadMultipleLinesOfText: " + text)
 
 		Return text
