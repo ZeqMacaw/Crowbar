@@ -1187,9 +1187,11 @@ Public Module CrowbarSteamPipe
 			'ISteamUGC: SetReturnAdditionalPreviews -Sets whether to return any additional images/videos attached to the items on a pending UGC Query.
 			'Console.WriteLine("SteamUGC_CreateQueryUserUGCRequest - Disable some fields.")
 			SteamUGC.SetReturnKeyValueTags(theUGCQueryHandle, False)
+			'SteamUGC.SetReturnKeyValueTags(theUGCQueryHandle, True)
 			SteamUGC.SetReturnLongDescription(theUGCQueryHandle, False)
 			'SteamUGC.SetReturnLongDescription(theUGCQueryHandle, True)
 			SteamUGC.SetReturnMetadata(theUGCQueryHandle, False)
+			'SteamUGC.SetReturnMetadata(theUGCQueryHandle, True)
 			SteamUGC.SetReturnChildren(theUGCQueryHandle, False)
 			SteamUGC.SetReturnAdditionalPreviews(theUGCQueryHandle, False)
 		Else
@@ -1258,7 +1260,11 @@ Public Module CrowbarSteamPipe
 
 						'queryResult = SteamUGC.GetQueryUGCPreviewURL(theUGCQueryHandle, resultItemIndex, itemDetails)
 
-						' Test use of meta data. Need to change SteamUGC.SetReturnMetadata() second param from False to True.
+						'Dim keyValueTagCount As UInteger
+						'keyValueTagCount = SteamUGC.GetQueryUGCNumKeyValueTags(theUGCQueryHandle, resultItemIndex)
+						'Console.WriteLine("    keyValueTagCount: " + keyValueTagCount.ToString() + " END")
+
+						'' Test use of meta data. Need to change SteamUGC.SetReturnMetadata() second param from False to True.
 						'Dim metaData As String = ""
 						'Dim metaDataSize As UInteger
 						'queryResult = SteamUGC.GetQueryUGCMetadata(theUGCQueryHandle, resultItemIndex, metaData, metaDataSize)
