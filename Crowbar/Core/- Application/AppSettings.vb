@@ -1543,6 +1543,16 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	'<XmlElement(Type:=GetType(XmlColor))>
+	'Public Property AboutTabBackgroundColor() As Color
+	'	Get
+	'		Return Me.theAboutTabBackgroundColor
+	'	End Get
+	'	Set(ByVal value As Color)
+	'		Me.theAboutTabBackgroundColor = value
+	'	End Set
+	'End Property
+
 	Public Property UpdateDownloadPath() As String
 		Get
 			Return Me.theUpdateDownloadPath
@@ -1743,6 +1753,7 @@ Public Class AppSettings
 	Private theWindowLocation As Point
 	Private theWindowSize As Size
 	Private theWindowState As FormWindowState
+	Private theAboutTabBackgroundColor As Color
 	Private theMainWindowSelectedTabIndex As Integer
 
 	' Set Up Games tab

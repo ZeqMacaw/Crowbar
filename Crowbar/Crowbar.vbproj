@@ -113,6 +113,7 @@
     <Compile Include="Core\- General\Bitmap\BitmapFileHeader.vb" />
     <Compile Include="Core\- General\Bitmap\BitmapInfoHeader.vb" />
     <Compile Include="Core\- General\Bitmap\BitmapRgbQuad.vb" />
+    <Compile Include="Core\- General\XmlColor.vb" />
     <Compile Include="Core\- General\DuplicateKeyComparer.vb" />
     <Compile Include="Core\- General\EnumHelper.vb" />
     <Compile Include="Core\- General\GenericsModule.vb" />

@@ -38,6 +38,8 @@ Public Class AboutUserControl
 		Me.GotoSteamProfileLinkLabel.Links.Add(0, My.Resources.About_GotoSteamProfileText.Length(), My.Resources.About_AuthorLink)
 
 		Me.ProductDescriptionTextBox.Text = My.Resources.About_ProductDescription
+
+		'Me.Panel1.DataBindings.Add("BackColor", TheApp.Settings, "AboutTabBackgroundColor", False, DataSourceUpdateMode.OnPropertyChanged)
 	End Sub
 
 	'Private Sub Free()
