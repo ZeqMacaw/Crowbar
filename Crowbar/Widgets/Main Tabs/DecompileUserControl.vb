@@ -7,18 +7,8 @@ Public Class DecompileUserControl
 
 	Public Sub New()
 		MyBase.New()
-
-		'Me.Font = New Font(SystemFonts.MessageBoxFont.Name, 8.25)
-
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
-
-		''NOTE: Try-Catch is needed so that widget will be shown in MainForm without raising exception.
-		'Try
-		'	Me.Init()
-		'Catch ex As Exception
-		'	Dim debug As Integer = 4242
-		'End Try
 	End Sub
 
 #End Region
@@ -143,10 +133,10 @@ Public Class DecompileUserControl
 #Region "Widget Event Handlers"
 
 	Private Sub DecompileUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
-		'NOTE: This code prevents Visual Studio often inexplicably extending the right side of these widgets.
-		Me.MdlPathFileNameTextBox.Size = New System.Drawing.Size(Me.BrowseForMdlPathFolderOrFileNameButton.Left - Me.BrowseForMdlPathFolderOrFileNameButton.Margin.Left - Me.MdlPathFileNameTextBox.Margin.Right - Me.MdlPathFileNameTextBox.Left, 20)
-		Me.OutputPathTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputPathTextBox.Margin.Right - Me.OutputPathTextBox.Left, 20)
-		Me.OutputSubfolderTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputSubfolderTextBox.Margin.Right - Me.OutputSubfolderTextBox.Left, 20)
+		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.MdlPathFileNameTextBox, Me.BrowseForMdlPathFolderOrFileNameButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputPathTextBox, Me.BrowseForOutputPathButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputSubfolderTextBox, Me.BrowseForOutputPathButton)
 
 		If Not Me.DesignMode Then
 			Me.Init()

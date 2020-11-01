@@ -117,12 +117,10 @@ Public Class DownloadUserControl
 
 	Private Sub DownloadUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
-		Me.ItemIdTextBox.Size = New System.Drawing.Size(Me.OpenWorkshopPageButton.Left - Me.OpenWorkshopPageButton.Margin.Left - Me.ItemIdTextBox.Margin.Right - Me.ItemIdTextBox.Left, 20)
-		Me.OutputPathTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputPathTextBox.Margin.Right - Me.OutputPathTextBox.Left, 20)
-		Me.DocumentsOutputPathTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.DocumentsOutputPathTextBox.Margin.Right - Me.DocumentsOutputPathTextBox.Left, 20)
-		Me.DownloadProgressBar.Size = New System.Drawing.Size(Me.Panel1.Width - Me.OptionsGroupBox.Padding.Right - Me.DownloadProgressBar.Left, 23)
-		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the bottom side of these widgets.
-		Me.LogTextBox.Size = New System.Drawing.Size(Me.LogTextBox.Width, Me.GotoDownloadedItemButton.Top - Me.GotoDownloadedItemButton.Margin.Top - Me.LogTextBox.Margin.Bottom - Me.LogTextBox.Top)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.ItemIdTextBox, Me.OpenWorkshopPageButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputPathTextBox, Me.BrowseForOutputPathButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DocumentsOutputPathTextBox, Me.BrowseForOutputPathButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DownloadProgressBar, Me.DownloadProgressBar.Parent, True)
 
 		If Not Me.DesignMode Then
 			Me.Init()

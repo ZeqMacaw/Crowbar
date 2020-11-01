@@ -7,15 +7,8 @@ Public Class CompileUserControl
 
 	Public Sub New()
 		MyBase.New()
-
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
-
-		'NOTE: Try-Catch is needed so that widget will be shown in MainForm without raising exception.
-		Try
-			Me.Init()
-		Catch
-		End Try
 	End Sub
 
 #End Region
@@ -142,11 +135,15 @@ Public Class CompileUserControl
 #Region "Widget Event Handlers"
 
 	Private Sub CompileUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
-		'NOTE: This code prevents Visual Studio often inexplicably extending the right side of these textboxes.
-		Me.QcPathFileNameTextBox.Size = New System.Drawing.Size(Me.BrowseForQcPathFolderOrFileNameButton.Left - Me.BrowseForQcPathFolderOrFileNameButton.Margin.Left - Me.QcPathFileNameTextBox.Margin.Right - Me.QcPathFileNameTextBox.Left, 21)
-		Me.OutputPathTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputPathTextBox.Margin.Right - Me.OutputPathTextBox.Left, 21)
-		Me.OutputSubfolderTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputSubfolderTextBox.Margin.Right - Me.OutputSubfolderTextBox.Left, 21)
-		Me.GameModelsOutputPathTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.GameModelsOutputPathTextBox.Margin.Right - Me.GameModelsOutputPathTextBox.Left, 21)
+		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.QcPathFileNameTextBox, Me.BrowseForQcPathFolderOrFileNameButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputPathTextBox, Me.BrowseForOutputPathButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputSubfolderTextBox, Me.BrowseForOutputPathButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.GameModelsOutputPathTextBox, Me.BrowseForOutputPathButton)
+
+		If Not Me.DesignMode Then
+			Me.Init()
+		End If
 	End Sub
 
 #End Region
