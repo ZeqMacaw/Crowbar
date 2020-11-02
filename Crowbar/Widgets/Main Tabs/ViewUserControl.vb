@@ -50,16 +50,20 @@ Public Class ViewUserControl
 		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 
 		'RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
-		RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		If Me.MdlPathFileNameTextBox.DataBindings("Text") IsNot Nothing Then
+			RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		End If
 		Me.MdlPathFileNameTextBox.DataBindings.Clear()
 
 		Me.OverrideMdlVersionComboBox.DataBindings.Clear()
 
 		Me.FreeDataViewer()
 		Me.FreeModelViewerWithModel()
-		For Each aModelViewer As Viewer In Me.theModelViewers
-			Me.FreeModelViewer(aModelViewer)
-		Next
+		If Me.theModelViewers IsNot Nothing Then
+			For Each aModelViewer As Viewer In Me.theModelViewers
+				Me.FreeModelViewer(aModelViewer)
+			Next
+		End If
 	End Sub
 
 #End Region
