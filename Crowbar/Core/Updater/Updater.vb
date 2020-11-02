@@ -41,7 +41,9 @@ Public Class Updater
 	Private Sub CheckForUpdate_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs)
 		Dim bw As BackgroundWorkerEx = CType(sender, BackgroundWorkerEx)
 
+		Me.theAppVersion = Nothing
 		Dim fileSize As ULong = 0
+		Dim securityProtocolIsSupported As Boolean = True
 
 		'FROM: https://www.codeproject.com/Questions/1255767/Could-not-create-SSL-TLS-secure-channel
 		'FROM: https://blogs.perficient.com/2016/04/28/tsl-1-2-and-net-support/
@@ -49,79 +51,95 @@ Public Class Updater
 		'      To use in .NET 4.0, use the number: CType(3072, SecurityProtocolType)
 		'      [Not sure] Need .NET 4.5 (or above) installed.
 		'NOTE: GitHub API requires this.
-		ServicePointManager.SecurityProtocol = CType(3072, SecurityProtocolType)
-
-		' Get data from latest release page via GitHub API.
-		'FROM: https://developer.github.com/v3/repos/releases
-		'      All API access is over HTTPS, and accessed from https://api.github.com. All data is sent and received as JSON.
-		'FROM: https://developer.github.com/v3/repos/releases/#get-the-latest-release
-		'      Get the latest release: https://api.github.com/repos/ZeqMacaw/Crowbar/releases/latest
-		Dim request As HttpWebRequest = CType(WebRequest.Create("https://api.github.com/repos/ZeqMacaw/Crowbar/releases/latest"), HttpWebRequest)
-		request.Method = "GET"
-		'NOTE: GitHub API suggests using something like this.
-		request.UserAgent = "ZeqMacaw_Crowbar"
-		Dim response As HttpWebResponse = Nothing
-		Dim dataStream As Stream
-		Dim reader As StreamReader = Nothing
-		Dim remoteFileLink As String = ""
-		Dim localFileName As String = ""
 		Try
-			response = CType(request.GetResponse(), HttpWebResponse)
-			dataStream = response.GetResponseStream()
-			reader = New StreamReader(dataStream)
-			Dim responseFromServer As String = reader.ReadToEnd()
-
-			Dim jss As JavaScriptSerializer = New JavaScriptSerializer()
-			Dim root As Dictionary(Of String, Object) = jss.Deserialize(Of Dictionary(Of String, Object))(responseFromServer)
-
-			Dim appNameVersion As String = CType(root("name"), String)
-			'NOTE: Must append ".0.0" to version so that Version comparisons are correct.
-			Dim appVersionText As String = appNameVersion.Replace("Crowbar ", "") + ".0.0"
-			Me.theAppVersion = New Version(appVersionText)
-
-			'Dim appVersionIsNewer As Boolean = appVersion > My.Application.Info.Version
-			'Dim appVersionIsOlder As Boolean = appVersion < My.Application.Info.Version
-			'Dim appVersionIsEqual As Boolean = appVersion = My.Application.Info.Version
-
-			bw.ReportProgress(0, appNameVersion + vbCrLf + CType(root("body"), String))
-
-			Dim assets As ArrayList = CType(root("assets"), ArrayList)
-			Dim asset As Dictionary(Of String, Object) = CType(assets(0), Dictionary(Of String, Object))
-			Me.theRemoteFileLink = CType(asset("browser_download_url"), String)
-			Me.theLocalFileName = CType(asset("name"), String)
-			fileSize = CType(asset("size"), ULong)
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		Finally
-			If reader IsNot Nothing Then
-				reader.Close()
-			End If
-			If response IsNot Nothing Then
-				response.Close()
-			End If
-
-			Dim outputInfo As New Updater.StatusOutputInfo()
-			outputInfo.UpdateIsAvailable = False
-			Dim updateCheckStatusMessage As String
-			If Me.theAppVersion Is Nothing Then
-				updateCheckStatusMessage = "Unable to get update info. Please try again later.   "
-			ElseIf Me.theAppVersion = My.Application.Info.Version Then
-				updateCheckStatusMessage = "Crowbar is up to date.   "
-			ElseIf Me.theAppVersion > My.Application.Info.Version Then
-				updateCheckStatusMessage = "Update to version " + Me.theAppVersion.ToString(2) + " available.   Size: " + MathModule.ByteUnitsConversion(fileSize) + "   "
-				outputInfo.UpdateIsAvailable = True
-			Else
-				'NOTE: Should not get here if versioning is done correctly.
-				updateCheckStatusMessage = "Crowbar is up to date.   "
-			End If
-			Dim now As DateTime = DateTime.Now()
-			Dim lastCheckedMessage As String = "Last checked: " + now.ToLongDateString() + " " + now.ToShortTimeString()
-
-			outputInfo.StatusMessage = updateCheckStatusMessage + lastCheckedMessage
-			outputInfo.DownloadIsEnabled = Me.theDownloadTaskIsEnabled
-			outputInfo.UpdateIsEnabled = Me.theUpdateTaskIsEnabled
-			e.Result = outputInfo
+			ServicePointManager.SecurityProtocol = CType(3072, SecurityProtocolType)
+		Catch ex As NotSupportedException
+			securityProtocolIsSupported = False
 		End Try
+
+		If securityProtocolIsSupported Then
+			Dim request As HttpWebRequest = Nothing
+			Try
+				' Get data from latest release page via GitHub API.
+				'FROM: https://developer.github.com/v3/repos/releases
+				'      All API access is over HTTPS, and accessed from https://api.github.com. All data is sent and received as JSON.
+				'FROM: https://developer.github.com/v3/repos/releases/#get-the-latest-release
+				'      Get the latest release: https://api.github.com/repos/ZeqMacaw/Crowbar/releases/latest
+				request = CType(WebRequest.Create("https://api.github.com/repos/ZeqMacaw/Crowbar/releases/latest"), HttpWebRequest)
+				request.Method = "GET"
+				'NOTE: GitHub API suggests using something like this.
+				request.UserAgent = "ZeqMacaw_Crowbar"
+			Catch ex As Exception
+				request = Nothing
+			End Try
+
+			If request IsNot Nothing Then
+				Dim response As HttpWebResponse = Nothing
+				Dim dataStream As Stream
+				Dim reader As StreamReader = Nothing
+				Dim remoteFileLink As String = ""
+				Dim localFileName As String = ""
+				Try
+					response = CType(request.GetResponse(), HttpWebResponse)
+					dataStream = response.GetResponseStream()
+					reader = New StreamReader(dataStream)
+					Dim responseFromServer As String = reader.ReadToEnd()
+
+					Dim jss As JavaScriptSerializer = New JavaScriptSerializer()
+					Dim root As Dictionary(Of String, Object) = jss.Deserialize(Of Dictionary(Of String, Object))(responseFromServer)
+
+					Dim appNameVersion As String = CType(root("name"), String)
+					'NOTE: Must append ".0.0" to version so that Version comparisons are correct.
+					Dim appVersionText As String = appNameVersion.Replace("Crowbar ", "") + ".0.0"
+					Me.theAppVersion = New Version(appVersionText)
+
+					'Dim appVersionIsNewer As Boolean = appVersion > My.Application.Info.Version
+					'Dim appVersionIsOlder As Boolean = appVersion < My.Application.Info.Version
+					'Dim appVersionIsEqual As Boolean = appVersion = My.Application.Info.Version
+
+					bw.ReportProgress(0, appNameVersion + vbCrLf + CType(root("body"), String))
+
+					Dim assets As ArrayList = CType(root("assets"), ArrayList)
+					Dim asset As Dictionary(Of String, Object) = CType(assets(0), Dictionary(Of String, Object))
+					Me.theRemoteFileLink = CType(asset("browser_download_url"), String)
+					Me.theLocalFileName = CType(asset("name"), String)
+					fileSize = CType(asset("size"), ULong)
+				Catch ex As Exception
+					Me.theAppVersion = Nothing
+				Finally
+					If reader IsNot Nothing Then
+						reader.Close()
+					End If
+					If response IsNot Nothing Then
+						response.Close()
+					End If
+				End Try
+			End If
+		End If
+
+		Dim outputInfo As New Updater.StatusOutputInfo()
+		outputInfo.UpdateIsAvailable = False
+		Dim updateCheckStatusMessage As String
+		If Not securityProtocolIsSupported Then
+			updateCheckStatusMessage = "Unable to get update info because ""TLS 1.2"" protocol unavailable."
+		ElseIf Me.theAppVersion Is Nothing Then
+			updateCheckStatusMessage = "Unable to get update info. Please try again later."
+		ElseIf Me.theAppVersion = My.Application.Info.Version Then
+			updateCheckStatusMessage = "Crowbar is up to date."
+		ElseIf Me.theAppVersion > My.Application.Info.Version Then
+			updateCheckStatusMessage = "Update to version " + Me.theAppVersion.ToString(2) + " available.   Size: " + MathModule.ByteUnitsConversion(fileSize)
+			outputInfo.UpdateIsAvailable = True
+		Else
+			'NOTE: Should not get here if versioning is done correctly.
+			updateCheckStatusMessage = "Crowbar is up to date."
+		End If
+		Dim now As DateTime = DateTime.Now()
+		Dim lastCheckedMessage As String = "   Last checked: " + now.ToLongDateString() + " " + now.ToShortTimeString()
+
+		outputInfo.StatusMessage = updateCheckStatusMessage + lastCheckedMessage
+		outputInfo.DownloadIsEnabled = Me.theDownloadTaskIsEnabled
+		outputInfo.UpdateIsEnabled = Me.theUpdateTaskIsEnabled
+		e.Result = outputInfo
 	End Sub
 
 #End Region

@@ -221,9 +221,6 @@
   <data name="lzma" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\lzma.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="Steamworks_NET" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Steamworks.NET.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="steam_api" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\steam_api.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -247,5 +244,8 @@
   </data>
   <data name="CrowbarLauncher" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CrowbarLauncher.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Steamworks_NET" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Steamworks.NET.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

@@ -816,7 +816,9 @@ Public Class UnpackUserControl
 
 		Me.OptionsGroupBox.Enabled = Not unpackerIsRunning
 
-		Me.UnpackButton.Enabled = (Not unpackerIsRunning) AndAlso (Me.PackageTreeView.Nodes(0).Nodes.Count > 0)
+		'Me.UnpackButton.Enabled = (Not unpackerIsRunning) AndAlso (Me.PackageTreeView.Nodes(0).Nodes.Count > 0)
+		Dim folderResourceInfos As List(Of PackageResourceFileNameInfo) = CType(Me.PackageTreeView.Nodes(0).Tag, List(Of PackageResourceFileNameInfo))
+		Me.UnpackButton.Enabled = (Not unpackerIsRunning) AndAlso (folderResourceInfos IsNot Nothing) AndAlso (folderResourceInfos.Count > 0)
 		Me.SkipCurrentPackageButton.Enabled = unpackerIsRunning
 		Me.CancelUnpackButton.Enabled = unpackerIsRunning
 		Me.UseAllInDecompileButton.Enabled = Not unpackerIsRunning AndAlso Me.theOutputPathOrOutputFileName <> "" AndAlso Me.theUnpackedRelativePathFileNames.Count > 0
@@ -1193,7 +1195,6 @@ Public Class UnpackUserControl
 	End Sub
 
 	Private Sub RunUnpackerToExtractFilesInternal(ByVal unpackerAction As ArchiveAction, ByVal selectedResourceInfos As List(Of PackageResourceFileNameInfo))
-		Dim selectedPackageInternalPathFileNames As New List(Of String)()
 		Dim archivePathFileNameToEntryIndexMap As New SortedList(Of String, List(Of Integer))()
 		Dim selectedNode As TreeNode
 
@@ -1217,35 +1218,33 @@ Public Class UnpackUserControl
 		AddHandler TheApp.Unpacker.RunWorkerCompleted, AddressOf Me.UnpackerBackgroundWorker_RunWorkerCompleted
 
 		If unpackerAction = ArchiveAction.ExtractToTemp Then
-			For Each resourceInfo As PackageResourceFileNameInfo In selectedResourceInfos
-				selectedPackageInternalPathFileNames.Add(resourceInfo.PathFileName)
-			Next
-
 			Dim message As String = TheApp.Unpacker.RunSynchronous(unpackerAction, archivePathFileNameToEntryIndexMap)
 			If message <> "" Then
 				Me.UnpackerLogTextBox.AppendText(message + vbCr)
 			End If
 
-			Dim tempPathFileNames As List(Of String) = Nothing
-			tempPathFileNames = TheApp.Unpacker.GetTempPathsAndPathFileNames(selectedPackageInternalPathFileNames)
+			Dim tempRelativePathsAndFileNames As List(Of String) = Nothing
+			tempRelativePathsAndFileNames = TheApp.Unpacker.GetTempRelativePathsAndFileNames()
 
-			Me.DoDragAndDrop(tempPathFileNames)
+			Me.DoDragAndDrop(tempRelativePathsAndFileNames)
 		Else
 			TheApp.Unpacker.Run(unpackerAction, archivePathFileNameToEntryIndexMap)
 		End If
 	End Sub
 
-	Private Sub DoDragAndDrop(ByVal iUnpackedRelativePathFileNames As List(Of String))
-		If iUnpackedRelativePathFileNames.Count > 0 Then
-			Dim pathFileNameCollection As New StringCollection()
-			For Each pathFileName As String In iUnpackedRelativePathFileNames
-				pathFileNameCollection.Add(pathFileName)
+	Private Sub DoDragAndDrop(ByVal iUnpackedRelativePathsAndFileNames As List(Of String))
+		If iUnpackedRelativePathsAndFileNames.Count > 0 Then
+			Dim pathAndFileNameCollection As New StringCollection()
+			For Each pathOrFileName As String In iUnpackedRelativePathsAndFileNames
+				If Not pathAndFileNameCollection.Contains(pathOrFileName) Then
+					pathAndFileNameCollection.Add(pathOrFileName)
+				End If
 			Next
 
 			Dim dragDropDataObject As DataObject
 			dragDropDataObject = New DataObject()
 
-			dragDropDataObject.SetFileDropList(pathFileNameCollection)
+			dragDropDataObject.SetFileDropList(pathAndFileNameCollection)
 
 			Dim result As DragDropEffects
 			result = Me.PackageListView.DoDragDrop(dragDropDataObject, DragDropEffects.Move)

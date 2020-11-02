@@ -33,6 +33,21 @@ Public Class MainForm
 			Me.Size = TheApp.Settings.WindowSize
 			Me.WindowState = TheApp.Settings.WindowState
 
+			' Ensure minimum size of window. 
+			'     Usually MinimumSize Handles this, but MinimumSize changes when Windows Theme Message Box Font Is something weird Like "SimSun-ExtB" 8pt.
+			'     Thus, set the minimum size manually here.
+			Dim minimumWidth As Integer = 800
+			Dim minimumHeight As Integer = 600
+			If Me.MinimumSize.Width < minimumWidth OrElse Me.MinimumSize.Height < minimumHeight Then
+				Me.MinimumSize = New Size(minimumWidth, minimumHeight)
+			End If
+			If Me.Width < Me.MinimumSize.Width Then
+				Me.Width = Me.MinimumSize.Width
+			End If
+			If Me.Height < Me.MinimumSize.Height Then
+				Me.Height = Me.MinimumSize.Height
+			End If
+
 			If TheApp.CommandLineOption_Settings_IsEnabled Then
 				TheApp.Settings.MainWindowSelectedTabIndex = Me.MainTabControl.TabPages.IndexOf(Me.UpdateTabPage)
 			End If

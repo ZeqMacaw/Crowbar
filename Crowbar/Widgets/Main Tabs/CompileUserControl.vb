@@ -7,15 +7,8 @@ Public Class CompileUserControl
 
 	Public Sub New()
 		MyBase.New()
-
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
-
-		'NOTE: Try-Catch is needed so that widget will be shown in MainForm without raising exception.
-		Try
-			Me.Init()
-		Catch
-		End Try
 	End Sub
 
 #End Region
@@ -84,11 +77,13 @@ Public Class CompileUserControl
 		' Source
 
 		Me.CompilerOptionDefineBonesCheckBox.DataBindings.Add("Checked", TheApp.Settings, "CompileOptionDefineBonesIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.DataBindings.Add("Checked", TheApp.Settings, "CompileOptionDefineBonesCreateFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.DataBindings.Add("Checked", TheApp.Settings, "CompileOptionDefineBonesCreateFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.CompilerOptionDefineBonesFileNameTextBox.DataBindings.Add("Text", TheApp.Settings, "CompileOptionDefineBonesQciFileName", False, DataSourceUpdateMode.OnValidation)
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.DataBindings.Add("Checked", TheApp.Settings, "CompileOptionDefineBonesOverwriteQciFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.DataBindings.Add("Checked", TheApp.Settings, "CompileOptionDefineBonesModifyQcFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.CompilerOptionNoP4CheckBox.DataBindings.Add("Checked", TheApp.Settings, "CompileOptionNoP4IsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.CompilerOptionVerboseCheckBox.DataBindings.Add("Checked", TheApp.Settings, "CompileOptionVerboseIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.UpdateCompilerOptionDefineBonesWidgets()
 	End Sub
 
 	Private Sub Free()
@@ -142,11 +137,15 @@ Public Class CompileUserControl
 #Region "Widget Event Handlers"
 
 	Private Sub CompileUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
-		'NOTE: This code prevents Visual Studio often inexplicably extending the right side of these textboxes.
-		Me.QcPathFileNameTextBox.Size = New System.Drawing.Size(Me.BrowseForQcPathFolderOrFileNameButton.Left - Me.BrowseForQcPathFolderOrFileNameButton.Margin.Left - Me.QcPathFileNameTextBox.Margin.Right - Me.QcPathFileNameTextBox.Left, 21)
-		Me.OutputPathTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputPathTextBox.Margin.Right - Me.OutputPathTextBox.Left, 21)
-		Me.OutputSubfolderTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputSubfolderTextBox.Margin.Right - Me.OutputSubfolderTextBox.Left, 21)
-		Me.GameModelsOutputPathTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.GameModelsOutputPathTextBox.Margin.Right - Me.GameModelsOutputPathTextBox.Left, 21)
+		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.QcPathFileNameTextBox, Me.BrowseForQcPathFolderOrFileNameButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputPathTextBox, Me.BrowseForOutputPathButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputSubfolderTextBox, Me.BrowseForOutputPathButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.GameModelsOutputPathTextBox, Me.BrowseForOutputPathButton)
+
+		If Not Me.DesignMode Then
+			Me.Init()
+		End If
 	End Sub
 
 #End Region
@@ -558,10 +557,10 @@ Public Class CompileUserControl
 	End Sub
 
 	Private Sub UpdateCompilerOptionDefineBonesWidgets()
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.Enabled = Me.CompilerOptionDefineBonesCheckBox.Checked
-		Me.CompilerOptionDefineBonesFileNameLabel.Enabled = Me.CompilerOptionDefineBonesCreateFileCheckBox.Enabled AndAlso Me.CompilerOptionDefineBonesCreateFileCheckBox.Checked
-		Me.CompilerOptionDefineBonesFileNameTextBox.Enabled = Me.CompilerOptionDefineBonesCreateFileCheckBox.Enabled AndAlso Me.CompilerOptionDefineBonesCreateFileCheckBox.Checked
-		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Enabled = Me.CompilerOptionDefineBonesCreateFileCheckBox.Enabled AndAlso Me.CompilerOptionDefineBonesCreateFileCheckBox.Checked
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Enabled = Me.CompilerOptionDefineBonesCheckBox.Checked
+		Me.CompilerOptionDefineBonesFileNameTextBox.Enabled = Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Enabled AndAlso Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Checked
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.Enabled = Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Enabled AndAlso Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Checked
+		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Enabled = Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Enabled AndAlso Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Checked
 	End Sub
 
 	Private Sub UpdateWidgets(ByVal compilerIsRunning As Boolean)

@@ -1,9 +1,9 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class CompileUserControl
 	Inherits BaseUserControl
 
 	'UserControl overrides dispose to clean up the component list.
-	<System.Diagnostics.DebuggerNonUserCode()> _
+	<System.Diagnostics.DebuggerNonUserCode()>
 	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
 		Try
 			If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class CompileUserControl
 	'NOTE: The following procedure is required by the Windows Form Designer
 	'It can be modified using the Windows Form Designer.  
 	'Do not modify it using the code editor.
-	<System.Diagnostics.DebuggerStepThrough()> _
+	<System.Diagnostics.DebuggerStepThrough()>
 	Private Sub InitializeComponent()
 		Me.components = New System.ComponentModel.Container()
 		Me.CompilerOptionsTextBox = New System.Windows.Forms.TextBox()
@@ -31,20 +31,19 @@ Partial Class CompileUserControl
 		Me.CompilerOptionNoP4CheckBox = New System.Windows.Forms.CheckBox()
 		Me.CompilerOptionVerboseCheckBox = New System.Windows.Forms.CheckBox()
 		Me.CompilerOptionDefineBonesModifyQcFileCheckBox = New System.Windows.Forms.CheckBox()
-		Me.CompilerOptionDefineBonesCreateFileCheckBox = New System.Windows.Forms.CheckBox()
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox = New System.Windows.Forms.CheckBox()
 		Me.CompilerOptionDefineBonesFileNameTextBox = New System.Windows.Forms.TextBox()
-		Me.CompilerOptionDefineBonesFileNameLabel = New System.Windows.Forms.Label()
-		Me.Label4 = New System.Windows.Forms.Label()
+		Me.DirectCompilerOptionsLabel = New System.Windows.Forms.Label()
 		Me.DirectCompilerOptionsTextBox = New System.Windows.Forms.TextBox()
 		Me.BrowseForQcPathFolderOrFileNameButton = New System.Windows.Forms.Button()
 		Me.Label6 = New System.Windows.Forms.Label()
 		Me.EditGameSetupButton = New System.Windows.Forms.Button()
-		Me.Label3 = New System.Windows.Forms.Label()
+		Me.GameSetupLabel = New System.Windows.Forms.Label()
 		Me.CompileButton = New System.Windows.Forms.Button()
 		Me.Panel1 = New System.Windows.Forms.Panel()
 		Me.QcPathFileNameTextBox = New Crowbar.TextBoxEx()
-		Me.GameModelsOutputPathTextBox = New Crowbar.TextBoxEx()
 		Me.OutputPathTextBox = New Crowbar.TextBoxEx()
+		Me.GameModelsOutputPathTextBox = New Crowbar.TextBoxEx()
 		Me.OutputSubfolderTextBox = New Crowbar.TextBoxEx()
 		Me.GotoOutputPathButton = New System.Windows.Forms.Button()
 		Me.BrowseForOutputPathButton = New System.Windows.Forms.Button()
@@ -52,35 +51,44 @@ Partial Class CompileUserControl
 		Me.CompileComboBox = New System.Windows.Forms.ComboBox()
 		Me.Label1 = New System.Windows.Forms.Label()
 		Me.GotoQcButton = New System.Windows.Forms.Button()
-		Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+		Me.Options_LogSplitContainer = New System.Windows.Forms.SplitContainer()
 		Me.OptionsGroupBox = New System.Windows.Forms.GroupBox()
-		Me.Panel2 = New System.Windows.Forms.Panel()
+		Me.OptionsGroupBoxFillPanel = New System.Windows.Forms.Panel()
+		Me.GameSetupPanel = New System.Windows.Forms.Panel()
+		Me.CompilerOptionsSourceEnginePanel = New System.Windows.Forms.Panel()
+		Me.DefineBonesGroupBox = New System.Windows.Forms.GroupBox()
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox = New System.Windows.Forms.CheckBox()
+		Me.CompileOptionsSourceEngineUseDefaultsButton = New System.Windows.Forms.Button()
 		Me.CompilerOptionsGoldSourceEnginePanel = New System.Windows.Forms.Panel()
 		Me.GoldSourceEngineLogFileCheckBox = New System.Windows.Forms.CheckBox()
 		Me.CompileOptionsGoldSourceEngineUseDefaultsButton = New System.Windows.Forms.Button()
-		Me.CompilerOptionsSourceEnginePanel = New System.Windows.Forms.Panel()
-		Me.CompileOptionsSourceEngineUseDefaultsButton = New System.Windows.Forms.Button()
-		Me.CompileOptionsSizerLabel = New System.Windows.Forms.Label()
+		Me.CompilerOptionsTextBoxMinScrollPanel = New System.Windows.Forms.Panel()
+		Me.CompileLogRichTextBox = New Crowbar.RichTextBoxEx()
+		Me.CompileButtonsPanel = New System.Windows.Forms.Panel()
 		Me.SkipCurrentModelButton = New System.Windows.Forms.Button()
 		Me.CancelCompileButton = New System.Windows.Forms.Button()
 		Me.UseAllInPackButton = New System.Windows.Forms.Button()
-		Me.UseInViewButton = New System.Windows.Forms.Button()
-		Me.CompileLogRichTextBox = New Crowbar.RichTextBoxEx()
+		Me.PostCompilePanel = New System.Windows.Forms.Panel()
 		Me.CompiledFilesComboBox = New System.Windows.Forms.ComboBox()
-		Me.GotoCompiledMdlButton = New System.Windows.Forms.Button()
+		Me.UseInViewButton = New System.Windows.Forms.Button()
 		Me.RecompileButton = New System.Windows.Forms.Button()
 		Me.UseInPackButton = New System.Windows.Forms.Button()
+		Me.GotoCompiledMdlButton = New System.Windows.Forms.Button()
 		Me.UseDefaultOutputSubfolderButton = New System.Windows.Forms.Button()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
 		Me.Panel1.SuspendLayout()
-		CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
-		Me.SplitContainer1.Panel1.SuspendLayout()
-		Me.SplitContainer1.Panel2.SuspendLayout()
-		Me.SplitContainer1.SuspendLayout()
+		CType(Me.Options_LogSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
+		Me.Options_LogSplitContainer.Panel1.SuspendLayout()
+		Me.Options_LogSplitContainer.Panel2.SuspendLayout()
+		Me.Options_LogSplitContainer.SuspendLayout()
 		Me.OptionsGroupBox.SuspendLayout()
-		Me.Panel2.SuspendLayout()
-		Me.CompilerOptionsGoldSourceEnginePanel.SuspendLayout()
+		Me.OptionsGroupBoxFillPanel.SuspendLayout()
+		Me.GameSetupPanel.SuspendLayout()
 		Me.CompilerOptionsSourceEnginePanel.SuspendLayout()
+		Me.DefineBonesGroupBox.SuspendLayout()
+		Me.CompilerOptionsGoldSourceEnginePanel.SuspendLayout()
+		Me.CompileButtonsPanel.SuspendLayout()
+		Me.PostCompilePanel.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'CompilerOptionsTextBox
@@ -88,11 +96,11 @@ Partial Class CompileUserControl
 		Me.CompilerOptionsTextBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.CompilerOptionsTextBox.Location = New System.Drawing.Point(3, 176)
+		Me.CompilerOptionsTextBox.Location = New System.Drawing.Point(0, 169)
 		Me.CompilerOptionsTextBox.Multiline = True
 		Me.CompilerOptionsTextBox.Name = "CompilerOptionsTextBox"
 		Me.CompilerOptionsTextBox.ReadOnly = True
-		Me.CompilerOptionsTextBox.Size = New System.Drawing.Size(758, 44)
+		Me.CompilerOptionsTextBox.Size = New System.Drawing.Size(764, 37)
 		Me.CompilerOptionsTextBox.TabIndex = 15
 		'
 		'GameSetupComboBox
@@ -101,9 +109,9 @@ Partial Class CompileUserControl
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.GameSetupComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.GameSetupComboBox.FormattingEnabled = True
-		Me.GameSetupComboBox.Location = New System.Drawing.Point(195, 1)
+		Me.GameSetupComboBox.Location = New System.Drawing.Point(192, 1)
 		Me.GameSetupComboBox.Name = "GameSetupComboBox"
-		Me.GameSetupComboBox.Size = New System.Drawing.Size(470, 21)
+		Me.GameSetupComboBox.Size = New System.Drawing.Size(476, 21)
 		Me.GameSetupComboBox.TabIndex = 1
 		'
 		'FolderForEachModelCheckBox
@@ -111,7 +119,7 @@ Partial Class CompileUserControl
 		Me.FolderForEachModelCheckBox.AutoSize = True
 		Me.FolderForEachModelCheckBox.Location = New System.Drawing.Point(502, 74)
 		Me.FolderForEachModelCheckBox.Name = "FolderForEachModelCheckBox"
-		Me.FolderForEachModelCheckBox.Size = New System.Drawing.Size(130, 17)
+		Me.FolderForEachModelCheckBox.Size = New System.Drawing.Size(139, 17)
 		Me.FolderForEachModelCheckBox.TabIndex = 3
 		Me.FolderForEachModelCheckBox.Text = "Folder for each model"
 		Me.FolderForEachModelCheckBox.UseVisualStyleBackColor = True
@@ -122,7 +130,7 @@ Partial Class CompileUserControl
 		Me.SourceEngineLogFileCheckBox.AutoSize = True
 		Me.SourceEngineLogFileCheckBox.Location = New System.Drawing.Point(6, 3)
 		Me.SourceEngineLogFileCheckBox.Name = "SourceEngineLogFileCheckBox"
-		Me.SourceEngineLogFileCheckBox.Size = New System.Drawing.Size(108, 17)
+		Me.SourceEngineLogFileCheckBox.Size = New System.Drawing.Size(116, 17)
 		Me.SourceEngineLogFileCheckBox.TabIndex = 4
 		Me.SourceEngineLogFileCheckBox.Text = "Write log to a file"
 		Me.ToolTip1.SetToolTip(Me.SourceEngineLogFileCheckBox, "Write compile log to a file (in same folder as QC file).")
@@ -131,9 +139,9 @@ Partial Class CompileUserControl
 		'CompilerOptionDefineBonesCheckBox
 		'
 		Me.CompilerOptionDefineBonesCheckBox.AutoSize = True
-		Me.CompilerOptionDefineBonesCheckBox.Location = New System.Drawing.Point(179, 3)
+		Me.CompilerOptionDefineBonesCheckBox.Location = New System.Drawing.Point(179, 4)
 		Me.CompilerOptionDefineBonesCheckBox.Name = "CompilerOptionDefineBonesCheckBox"
-		Me.CompilerOptionDefineBonesCheckBox.Size = New System.Drawing.Size(89, 17)
+		Me.CompilerOptionDefineBonesCheckBox.Size = New System.Drawing.Size(94, 17)
 		Me.CompilerOptionDefineBonesCheckBox.TabIndex = 7
 		Me.CompilerOptionDefineBonesCheckBox.Text = "Define Bones"
 		Me.CompilerOptionDefineBonesCheckBox.UseVisualStyleBackColor = True
@@ -143,7 +151,7 @@ Partial Class CompileUserControl
 		Me.CompilerOptionNoP4CheckBox.AutoSize = True
 		Me.CompilerOptionNoP4CheckBox.Location = New System.Drawing.Point(6, 26)
 		Me.CompilerOptionNoP4CheckBox.Name = "CompilerOptionNoP4CheckBox"
-		Me.CompilerOptionNoP4CheckBox.Size = New System.Drawing.Size(54, 17)
+		Me.CompilerOptionNoP4CheckBox.Size = New System.Drawing.Size(56, 17)
 		Me.CompilerOptionNoP4CheckBox.TabIndex = 5
 		Me.CompilerOptionNoP4CheckBox.Text = "No P4"
 		Me.ToolTip1.SetToolTip(Me.CompilerOptionNoP4CheckBox, "No Perforce integration (modders do not usually have Perforce software).")
@@ -154,7 +162,7 @@ Partial Class CompileUserControl
 		Me.CompilerOptionVerboseCheckBox.AutoSize = True
 		Me.CompilerOptionVerboseCheckBox.Location = New System.Drawing.Point(6, 49)
 		Me.CompilerOptionVerboseCheckBox.Name = "CompilerOptionVerboseCheckBox"
-		Me.CompilerOptionVerboseCheckBox.Size = New System.Drawing.Size(65, 17)
+		Me.CompilerOptionVerboseCheckBox.Size = New System.Drawing.Size(67, 17)
 		Me.CompilerOptionVerboseCheckBox.TabIndex = 6
 		Me.CompilerOptionVerboseCheckBox.Text = "Verbose"
 		Me.ToolTip1.SetToolTip(Me.CompilerOptionVerboseCheckBox, "Write more info in compile log.")
@@ -164,57 +172,47 @@ Partial Class CompileUserControl
 		'
 		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.AutoSize = True
 		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Enabled = False
-		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Location = New System.Drawing.Point(213, 72)
+		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Location = New System.Drawing.Point(19, 65)
 		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Name = "CompilerOptionDefineBonesModifyQcFileCheckBox"
-		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Size = New System.Drawing.Size(226, 17)
+		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Size = New System.Drawing.Size(238, 17)
 		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.TabIndex = 11
 		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Text = "Put in QC file: $include ""<QCI file name>"""
 		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.UseVisualStyleBackColor = True
 		'
-		'CompilerOptionDefineBonesCreateFileCheckBox
+		'CompilerOptionDefineBonesWriteQciFileCheckBox
 		'
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.AutoSize = True
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.Enabled = False
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.Location = New System.Drawing.Point(196, 26)
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.Name = "CompilerOptionDefineBonesCreateFileCheckBox"
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.Size = New System.Drawing.Size(225, 17)
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.TabIndex = 8
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.Text = "Create QCI file (in same folder as QC file)"
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.UseVisualStyleBackColor = True
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.AutoSize = True
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Enabled = False
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Location = New System.Drawing.Point(6, 22)
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Name = "CompilerOptionDefineBonesWriteQciFileCheckBox"
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Size = New System.Drawing.Size(97, 17)
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.TabIndex = 8
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Text = "Write QCI file:"
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.UseVisualStyleBackColor = True
 		'
 		'CompilerOptionDefineBonesFileNameTextBox
 		'
 		Me.CompilerOptionDefineBonesFileNameTextBox.Enabled = False
-		Me.CompilerOptionDefineBonesFileNameTextBox.Location = New System.Drawing.Point(292, 47)
+		Me.CompilerOptionDefineBonesFileNameTextBox.Location = New System.Drawing.Point(109, 18)
 		Me.CompilerOptionDefineBonesFileNameTextBox.Name = "CompilerOptionDefineBonesFileNameTextBox"
-		Me.CompilerOptionDefineBonesFileNameTextBox.Size = New System.Drawing.Size(139, 21)
+		Me.CompilerOptionDefineBonesFileNameTextBox.Size = New System.Drawing.Size(140, 22)
 		Me.CompilerOptionDefineBonesFileNameTextBox.TabIndex = 10
 		'
-		'CompilerOptionDefineBonesFileNameLabel
+		'DirectCompilerOptionsLabel
 		'
-		Me.CompilerOptionDefineBonesFileNameLabel.AutoSize = True
-		Me.CompilerOptionDefineBonesFileNameLabel.Enabled = False
-		Me.CompilerOptionDefineBonesFileNameLabel.Location = New System.Drawing.Point(213, 50)
-		Me.CompilerOptionDefineBonesFileNameLabel.Name = "CompilerOptionDefineBonesFileNameLabel"
-		Me.CompilerOptionDefineBonesFileNameLabel.Size = New System.Drawing.Size(76, 13)
-		Me.CompilerOptionDefineBonesFileNameLabel.TabIndex = 9
-		Me.CompilerOptionDefineBonesFileNameLabel.Text = "QCI file name:"
-		'
-		'Label4
-		'
-		Me.Label4.Location = New System.Drawing.Point(3, 133)
-		Me.Label4.Name = "Label4"
-		Me.Label4.Size = New System.Drawing.Size(393, 13)
-		Me.Label4.TabIndex = 13
-		Me.Label4.Text = "Direct entry of command-line options (in case they are not included above):"
+		Me.DirectCompilerOptionsLabel.Location = New System.Drawing.Point(0, 125)
+		Me.DirectCompilerOptionsLabel.Name = "DirectCompilerOptionsLabel"
+		Me.DirectCompilerOptionsLabel.Size = New System.Drawing.Size(764, 13)
+		Me.DirectCompilerOptionsLabel.TabIndex = 13
+		Me.DirectCompilerOptionsLabel.Text = "Direct entry of command-line options (in case they are not included above):"
 		'
 		'DirectCompilerOptionsTextBox
 		'
 		Me.DirectCompilerOptionsTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.DirectCompilerOptionsTextBox.Location = New System.Drawing.Point(3, 149)
+		Me.DirectCompilerOptionsTextBox.Location = New System.Drawing.Point(0, 141)
 		Me.DirectCompilerOptionsTextBox.Name = "DirectCompilerOptionsTextBox"
-		Me.DirectCompilerOptionsTextBox.Size = New System.Drawing.Size(758, 21)
+		Me.DirectCompilerOptionsTextBox.Size = New System.Drawing.Size(764, 22)
 		Me.DirectCompilerOptionsTextBox.TabIndex = 14
 		'
 		'BrowseForQcPathFolderOrFileNameButton
@@ -238,36 +236,35 @@ Partial Class CompileUserControl
 		'EditGameSetupButton
 		'
 		Me.EditGameSetupButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.EditGameSetupButton.Location = New System.Drawing.Point(671, 0)
+		Me.EditGameSetupButton.Location = New System.Drawing.Point(674, 0)
 		Me.EditGameSetupButton.Name = "EditGameSetupButton"
 		Me.EditGameSetupButton.Size = New System.Drawing.Size(90, 23)
 		Me.EditGameSetupButton.TabIndex = 2
 		Me.EditGameSetupButton.Text = "Set Up Games"
 		Me.EditGameSetupButton.UseVisualStyleBackColor = True
 		'
-		'Label3
+		'GameSetupLabel
 		'
-		Me.Label3.Location = New System.Drawing.Point(3, 5)
-		Me.Label3.Name = "Label3"
-		Me.Label3.Size = New System.Drawing.Size(186, 13)
-		Me.Label3.TabIndex = 0
-		Me.Label3.Text = "Game that has the model compiler:"
+		Me.GameSetupLabel.Location = New System.Drawing.Point(0, 5)
+		Me.GameSetupLabel.Name = "GameSetupLabel"
+		Me.GameSetupLabel.Size = New System.Drawing.Size(186, 13)
+		Me.GameSetupLabel.TabIndex = 0
+		Me.GameSetupLabel.Text = "Game that has the model compiler:"
 		'
 		'CompileButton
 		'
-		Me.CompileButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.CompileButton.Location = New System.Drawing.Point(0, 249)
+		Me.CompileButton.Location = New System.Drawing.Point(0, 0)
 		Me.CompileButton.Name = "CompileButton"
 		Me.CompileButton.Size = New System.Drawing.Size(120, 23)
 		Me.CompileButton.TabIndex = 1
-		Me.CompileButton.Text = "Compile"
+		Me.CompileButton.Text = "&Compile"
 		Me.CompileButton.UseVisualStyleBackColor = True
 		'
 		'Panel1
 		'
 		Me.Panel1.Controls.Add(Me.QcPathFileNameTextBox)
-		Me.Panel1.Controls.Add(Me.GameModelsOutputPathTextBox)
 		Me.Panel1.Controls.Add(Me.OutputPathTextBox)
+		Me.Panel1.Controls.Add(Me.GameModelsOutputPathTextBox)
 		Me.Panel1.Controls.Add(Me.OutputSubfolderTextBox)
 		Me.Panel1.Controls.Add(Me.GotoOutputPathButton)
 		Me.Panel1.Controls.Add(Me.BrowseForOutputPathButton)
@@ -277,7 +274,7 @@ Partial Class CompileUserControl
 		Me.Panel1.Controls.Add(Me.GotoQcButton)
 		Me.Panel1.Controls.Add(Me.Label6)
 		Me.Panel1.Controls.Add(Me.BrowseForQcPathFolderOrFileNameButton)
-		Me.Panel1.Controls.Add(Me.SplitContainer1)
+		Me.Panel1.Controls.Add(Me.Options_LogSplitContainer)
 		Me.Panel1.Controls.Add(Me.UseDefaultOutputSubfolderButton)
 		Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.Panel1.Location = New System.Drawing.Point(0, 0)
@@ -291,40 +288,40 @@ Partial Class CompileUserControl
 		Me.QcPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.QcPathFileNameTextBox.CueBannerText = ""
-		Me.QcPathFileNameTextBox.Location = New System.Drawing.Point(209, 7)
+		Me.QcPathFileNameTextBox.Location = New System.Drawing.Point(209, 3)
 		Me.QcPathFileNameTextBox.Name = "QcPathFileNameTextBox"
-		Me.QcPathFileNameTextBox.Size = New System.Drawing.Size(445, 21)
+		Me.QcPathFileNameTextBox.Size = New System.Drawing.Size(445, 22)
 		Me.QcPathFileNameTextBox.TabIndex = 22
-		'
-		'GameModelsOutputPathTextBox
-		'
-		Me.GameModelsOutputPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.GameModelsOutputPathTextBox.CueBannerText = ""
-		Me.GameModelsOutputPathTextBox.Location = New System.Drawing.Point(209, 34)
-		Me.GameModelsOutputPathTextBox.Name = "GameModelsOutputPathTextBox"
-		Me.GameModelsOutputPathTextBox.ReadOnly = True
-		Me.GameModelsOutputPathTextBox.Size = New System.Drawing.Size(445, 21)
-		Me.GameModelsOutputPathTextBox.TabIndex = 8
 		'
 		'OutputPathTextBox
 		'
 		Me.OutputPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.OutputPathTextBox.CueBannerText = ""
-		Me.OutputPathTextBox.Location = New System.Drawing.Point(209, 34)
+		Me.OutputPathTextBox.Location = New System.Drawing.Point(209, 32)
 		Me.OutputPathTextBox.Name = "OutputPathTextBox"
-		Me.OutputPathTextBox.Size = New System.Drawing.Size(445, 21)
+		Me.OutputPathTextBox.Size = New System.Drawing.Size(445, 22)
 		Me.OutputPathTextBox.TabIndex = 9
+		'
+		'GameModelsOutputPathTextBox
+		'
+		Me.GameModelsOutputPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.GameModelsOutputPathTextBox.CueBannerText = ""
+		Me.GameModelsOutputPathTextBox.Location = New System.Drawing.Point(209, 32)
+		Me.GameModelsOutputPathTextBox.Name = "GameModelsOutputPathTextBox"
+		Me.GameModelsOutputPathTextBox.ReadOnly = True
+		Me.GameModelsOutputPathTextBox.Size = New System.Drawing.Size(445, 22)
+		Me.GameModelsOutputPathTextBox.TabIndex = 8
 		'
 		'OutputSubfolderTextBox
 		'
 		Me.OutputSubfolderTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.OutputSubfolderTextBox.CueBannerText = ""
-		Me.OutputSubfolderTextBox.Location = New System.Drawing.Point(209, 34)
+		Me.OutputSubfolderTextBox.Location = New System.Drawing.Point(209, 32)
 		Me.OutputSubfolderTextBox.Name = "OutputSubfolderTextBox"
-		Me.OutputSubfolderTextBox.Size = New System.Drawing.Size(445, 21)
+		Me.OutputSubfolderTextBox.Size = New System.Drawing.Size(445, 22)
 		Me.OutputSubfolderTextBox.TabIndex = 21
 		Me.OutputSubfolderTextBox.Visible = False
 		'
@@ -385,68 +382,118 @@ Partial Class CompileUserControl
 		Me.GotoQcButton.Text = "Goto"
 		Me.GotoQcButton.UseVisualStyleBackColor = True
 		'
-		'SplitContainer1
+		'Options_LogSplitContainer
 		'
-		Me.SplitContainer1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+		Me.Options_LogSplitContainer.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.SplitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1
-		Me.SplitContainer1.Location = New System.Drawing.Point(3, 61)
-		Me.SplitContainer1.Name = "SplitContainer1"
-		Me.SplitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal
+		Me.Options_LogSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1
+		Me.Options_LogSplitContainer.Location = New System.Drawing.Point(3, 61)
+		Me.Options_LogSplitContainer.Name = "Options_LogSplitContainer"
+		Me.Options_LogSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal
 		'
-		'SplitContainer1.Panel1
+		'Options_LogSplitContainer.Panel1
 		'
-		Me.SplitContainer1.Panel1.Controls.Add(Me.OptionsGroupBox)
-		Me.SplitContainer1.Panel1.Controls.Add(Me.CompileButton)
-		Me.SplitContainer1.Panel1.Controls.Add(Me.SkipCurrentModelButton)
-		Me.SplitContainer1.Panel1.Controls.Add(Me.CancelCompileButton)
-		Me.SplitContainer1.Panel1.Controls.Add(Me.UseAllInPackButton)
-		Me.SplitContainer1.Panel1MinSize = 90
+		Me.Options_LogSplitContainer.Panel1.Controls.Add(Me.OptionsGroupBox)
+		Me.Options_LogSplitContainer.Panel1MinSize = 45
 		'
-		'SplitContainer1.Panel2
+		'Options_LogSplitContainer.Panel2
 		'
-		Me.SplitContainer1.Panel2.Controls.Add(Me.UseInViewButton)
-		Me.SplitContainer1.Panel2.Controls.Add(Me.CompileLogRichTextBox)
-		Me.SplitContainer1.Panel2.Controls.Add(Me.CompiledFilesComboBox)
-		Me.SplitContainer1.Panel2.Controls.Add(Me.GotoCompiledMdlButton)
-		Me.SplitContainer1.Panel2.Controls.Add(Me.RecompileButton)
-		Me.SplitContainer1.Panel2.Controls.Add(Me.UseInPackButton)
-		Me.SplitContainer1.Panel2MinSize = 90
-		Me.SplitContainer1.Size = New System.Drawing.Size(770, 472)
-		Me.SplitContainer1.SplitterDistance = 275
-		Me.SplitContainer1.TabIndex = 16
+		Me.Options_LogSplitContainer.Panel2.Controls.Add(Me.CompileLogRichTextBox)
+		Me.Options_LogSplitContainer.Panel2.Controls.Add(Me.CompileButtonsPanel)
+		Me.Options_LogSplitContainer.Panel2.Controls.Add(Me.PostCompilePanel)
+		Me.Options_LogSplitContainer.Panel2MinSize = 45
+		Me.Options_LogSplitContainer.Size = New System.Drawing.Size(770, 472)
+		Me.Options_LogSplitContainer.SplitterDistance = 230
+		Me.Options_LogSplitContainer.TabIndex = 16
 		'
 		'OptionsGroupBox
 		'
-		Me.OptionsGroupBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-			Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.OptionsGroupBox.Controls.Add(Me.Panel2)
+		Me.OptionsGroupBox.Controls.Add(Me.OptionsGroupBoxFillPanel)
+		Me.OptionsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.OptionsGroupBox.Location = New System.Drawing.Point(0, 0)
 		Me.OptionsGroupBox.Name = "OptionsGroupBox"
-		Me.OptionsGroupBox.Size = New System.Drawing.Size(770, 243)
+		Me.OptionsGroupBox.Size = New System.Drawing.Size(770, 230)
 		Me.OptionsGroupBox.TabIndex = 0
 		Me.OptionsGroupBox.TabStop = False
 		Me.OptionsGroupBox.Text = "Options"
 		'
-		'Panel2
+		'OptionsGroupBoxFillPanel
 		'
-		Me.Panel2.AutoScroll = True
-		Me.Panel2.Controls.Add(Me.CompilerOptionsGoldSourceEnginePanel)
-		Me.Panel2.Controls.Add(Me.CompilerOptionsSourceEnginePanel)
-		Me.Panel2.Controls.Add(Me.Label4)
-		Me.Panel2.Controls.Add(Me.DirectCompilerOptionsTextBox)
-		Me.Panel2.Controls.Add(Me.Label3)
-		Me.Panel2.Controls.Add(Me.GameSetupComboBox)
-		Me.Panel2.Controls.Add(Me.EditGameSetupButton)
-		Me.Panel2.Controls.Add(Me.CompilerOptionsTextBox)
-		Me.Panel2.Controls.Add(Me.CompileOptionsSizerLabel)
-		Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.Panel2.Location = New System.Drawing.Point(3, 17)
-		Me.Panel2.Name = "Panel2"
-		Me.Panel2.Size = New System.Drawing.Size(764, 223)
-		Me.Panel2.TabIndex = 0
+		Me.OptionsGroupBoxFillPanel.AutoScroll = True
+		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.GameSetupPanel)
+		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.CompilerOptionsSourceEnginePanel)
+		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.CompilerOptionsGoldSourceEnginePanel)
+		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.DirectCompilerOptionsLabel)
+		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.DirectCompilerOptionsTextBox)
+		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.CompilerOptionsTextBox)
+		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.CompilerOptionsTextBoxMinScrollPanel)
+		Me.OptionsGroupBoxFillPanel.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.OptionsGroupBoxFillPanel.Location = New System.Drawing.Point(3, 18)
+		Me.OptionsGroupBoxFillPanel.Name = "OptionsGroupBoxFillPanel"
+		Me.OptionsGroupBoxFillPanel.Size = New System.Drawing.Size(764, 209)
+		Me.OptionsGroupBoxFillPanel.TabIndex = 0
+		'
+		'GameSetupPanel
+		'
+		Me.GameSetupPanel.Controls.Add(Me.GameSetupLabel)
+		Me.GameSetupPanel.Controls.Add(Me.GameSetupComboBox)
+		Me.GameSetupPanel.Controls.Add(Me.EditGameSetupButton)
+		Me.GameSetupPanel.Dock = System.Windows.Forms.DockStyle.Top
+		Me.GameSetupPanel.Location = New System.Drawing.Point(0, 0)
+		Me.GameSetupPanel.Name = "GameSetupPanel"
+		Me.GameSetupPanel.Size = New System.Drawing.Size(764, 26)
+		Me.GameSetupPanel.TabIndex = 40
+		'
+		'CompilerOptionsSourceEnginePanel
+		'
+		Me.CompilerOptionsSourceEnginePanel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompilerOptionDefineBonesCheckBox)
+		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.DefineBonesGroupBox)
+		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.SourceEngineLogFileCheckBox)
+		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompilerOptionVerboseCheckBox)
+		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompilerOptionNoP4CheckBox)
+		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.FolderForEachModelCheckBox)
+		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompileOptionsSourceEngineUseDefaultsButton)
+		Me.CompilerOptionsSourceEnginePanel.Location = New System.Drawing.Point(0, 24)
+		Me.CompilerOptionsSourceEnginePanel.Name = "CompilerOptionsSourceEnginePanel"
+		Me.CompilerOptionsSourceEnginePanel.Size = New System.Drawing.Size(764, 100)
+		Me.CompilerOptionsSourceEnginePanel.TabIndex = 38
+		'
+		'DefineBonesGroupBox
+		'
+		Me.DefineBonesGroupBox.Controls.Add(Me.CompilerOptionDefineBonesFileNameTextBox)
+		Me.DefineBonesGroupBox.Controls.Add(Me.CompilerOptionDefineBonesModifyQcFileCheckBox)
+		Me.DefineBonesGroupBox.Controls.Add(Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox)
+		Me.DefineBonesGroupBox.Controls.Add(Me.CompilerOptionDefineBonesWriteQciFileCheckBox)
+		Me.DefineBonesGroupBox.Location = New System.Drawing.Point(173, 3)
+		Me.DefineBonesGroupBox.Name = "DefineBonesGroupBox"
+		Me.DefineBonesGroupBox.Size = New System.Drawing.Size(259, 95)
+		Me.DefineBonesGroupBox.TabIndex = 14
+		Me.DefineBonesGroupBox.TabStop = False
+		'
+		'CompilerOptionDefineBonesOverwriteQciFileCheckBox
+		'
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.AutoSize = True
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.Enabled = False
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.Location = New System.Drawing.Point(19, 45)
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.Name = "CompilerOptionDefineBonesOverwriteQciFileCheckBox"
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.Size = New System.Drawing.Size(116, 17)
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.TabIndex = 13
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.Text = "Overwrite QCI file"
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.UseVisualStyleBackColor = True
+		'
+		'CompileOptionsSourceEngineUseDefaultsButton
+		'
+		Me.CompileOptionsSourceEngineUseDefaultsButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.CompileOptionsSourceEngineUseDefaultsButton.Location = New System.Drawing.Point(674, 68)
+		Me.CompileOptionsSourceEngineUseDefaultsButton.Name = "CompileOptionsSourceEngineUseDefaultsButton"
+		Me.CompileOptionsSourceEngineUseDefaultsButton.Size = New System.Drawing.Size(90, 23)
+		Me.CompileOptionsSourceEngineUseDefaultsButton.TabIndex = 12
+		Me.CompileOptionsSourceEngineUseDefaultsButton.Text = "Use Defaults"
+		Me.ToolTip1.SetToolTip(Me.CompileOptionsSourceEngineUseDefaultsButton, "Set the compiler options back to default settings")
+		Me.CompileOptionsSourceEngineUseDefaultsButton.UseVisualStyleBackColor = True
 		'
 		'CompilerOptionsGoldSourceEnginePanel
 		'
@@ -454,16 +501,17 @@ Partial Class CompileUserControl
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.CompilerOptionsGoldSourceEnginePanel.Controls.Add(Me.GoldSourceEngineLogFileCheckBox)
 		Me.CompilerOptionsGoldSourceEnginePanel.Controls.Add(Me.CompileOptionsGoldSourceEngineUseDefaultsButton)
-		Me.CompilerOptionsGoldSourceEnginePanel.Location = New System.Drawing.Point(0, 22)
+		Me.CompilerOptionsGoldSourceEnginePanel.Location = New System.Drawing.Point(0, 24)
 		Me.CompilerOptionsGoldSourceEnginePanel.Name = "CompilerOptionsGoldSourceEnginePanel"
-		Me.CompilerOptionsGoldSourceEnginePanel.Size = New System.Drawing.Size(764, 108)
+		Me.CompilerOptionsGoldSourceEnginePanel.Size = New System.Drawing.Size(764, 100)
 		Me.CompilerOptionsGoldSourceEnginePanel.TabIndex = 13
 		'
 		'GoldSourceEngineLogFileCheckBox
 		'
+		Me.GoldSourceEngineLogFileCheckBox.AutoSize = True
 		Me.GoldSourceEngineLogFileCheckBox.Location = New System.Drawing.Point(6, 3)
 		Me.GoldSourceEngineLogFileCheckBox.Name = "GoldSourceEngineLogFileCheckBox"
-		Me.GoldSourceEngineLogFileCheckBox.Size = New System.Drawing.Size(108, 17)
+		Me.GoldSourceEngineLogFileCheckBox.Size = New System.Drawing.Size(116, 17)
 		Me.GoldSourceEngineLogFileCheckBox.TabIndex = 14
 		Me.GoldSourceEngineLogFileCheckBox.Text = "Write log to a file"
 		Me.ToolTip1.SetToolTip(Me.GoldSourceEngineLogFileCheckBox, "Write compile log to a file (in same folder as QC file).")
@@ -472,7 +520,7 @@ Partial Class CompileUserControl
 		'CompileOptionsGoldSourceEngineUseDefaultsButton
 		'
 		Me.CompileOptionsGoldSourceEngineUseDefaultsButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.CompileOptionsGoldSourceEngineUseDefaultsButton.Location = New System.Drawing.Point(671, 68)
+		Me.CompileOptionsGoldSourceEngineUseDefaultsButton.Location = New System.Drawing.Point(674, 68)
 		Me.CompileOptionsGoldSourceEngineUseDefaultsButton.Name = "CompileOptionsGoldSourceEngineUseDefaultsButton"
 		Me.CompileOptionsGoldSourceEngineUseDefaultsButton.Size = New System.Drawing.Size(90, 23)
 		Me.CompileOptionsGoldSourceEngineUseDefaultsButton.TabIndex = 13
@@ -480,51 +528,43 @@ Partial Class CompileUserControl
 		Me.ToolTip1.SetToolTip(Me.CompileOptionsGoldSourceEngineUseDefaultsButton, "Set the compiler options back to default settings")
 		Me.CompileOptionsGoldSourceEngineUseDefaultsButton.UseVisualStyleBackColor = True
 		'
-		'CompilerOptionsSourceEnginePanel
+		'CompilerOptionsTextBoxMinScrollPanel
 		'
-		Me.CompilerOptionsSourceEnginePanel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.SourceEngineLogFileCheckBox)
-		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompilerOptionDefineBonesModifyQcFileCheckBox)
-		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompilerOptionDefineBonesCheckBox)
-		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompilerOptionVerboseCheckBox)
-		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompilerOptionDefineBonesFileNameTextBox)
-		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompilerOptionNoP4CheckBox)
-		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompilerOptionDefineBonesFileNameLabel)
-		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.FolderForEachModelCheckBox)
-		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompilerOptionDefineBonesCreateFileCheckBox)
-		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompileOptionsSourceEngineUseDefaultsButton)
-		Me.CompilerOptionsSourceEnginePanel.Location = New System.Drawing.Point(0, 22)
-		Me.CompilerOptionsSourceEnginePanel.Name = "CompilerOptionsSourceEnginePanel"
-		Me.CompilerOptionsSourceEnginePanel.Size = New System.Drawing.Size(764, 108)
-		Me.CompilerOptionsSourceEnginePanel.TabIndex = 38
+		Me.CompilerOptionsTextBoxMinScrollPanel.Location = New System.Drawing.Point(0, 169)
+		Me.CompilerOptionsTextBoxMinScrollPanel.Name = "CompilerOptionsTextBoxMinScrollPanel"
+		Me.CompilerOptionsTextBoxMinScrollPanel.Size = New System.Drawing.Size(764, 37)
+		Me.CompilerOptionsTextBoxMinScrollPanel.TabIndex = 41
 		'
-		'CompileOptionsSourceEngineUseDefaultsButton
+		'CompileLogRichTextBox
 		'
-		Me.CompileOptionsSourceEngineUseDefaultsButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.CompileOptionsSourceEngineUseDefaultsButton.Location = New System.Drawing.Point(671, 68)
-		Me.CompileOptionsSourceEngineUseDefaultsButton.Name = "CompileOptionsSourceEngineUseDefaultsButton"
-		Me.CompileOptionsSourceEngineUseDefaultsButton.Size = New System.Drawing.Size(90, 23)
-		Me.CompileOptionsSourceEngineUseDefaultsButton.TabIndex = 12
-		Me.CompileOptionsSourceEngineUseDefaultsButton.Text = "Use Defaults"
-		Me.ToolTip1.SetToolTip(Me.CompileOptionsSourceEngineUseDefaultsButton, "Set the compiler options back to default settings")
-		Me.CompileOptionsSourceEngineUseDefaultsButton.UseVisualStyleBackColor = True
+		Me.CompileLogRichTextBox.CueBannerText = ""
+		Me.CompileLogRichTextBox.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.CompileLogRichTextBox.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.CompileLogRichTextBox.HideSelection = False
+		Me.CompileLogRichTextBox.Location = New System.Drawing.Point(0, 26)
+		Me.CompileLogRichTextBox.Name = "CompileLogRichTextBox"
+		Me.CompileLogRichTextBox.ReadOnly = True
+		Me.CompileLogRichTextBox.Size = New System.Drawing.Size(770, 186)
+		Me.CompileLogRichTextBox.TabIndex = 0
+		Me.CompileLogRichTextBox.Text = ""
+		Me.CompileLogRichTextBox.WordWrap = False
 		'
-		'CompileOptionsSizerLabel
+		'CompileButtonsPanel
 		'
-		Me.CompileOptionsSizerLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.CompileOptionsSizerLabel.Enabled = False
-		Me.CompileOptionsSizerLabel.Location = New System.Drawing.Point(3, 176)
-		Me.CompileOptionsSizerLabel.Name = "CompileOptionsSizerLabel"
-		Me.CompileOptionsSizerLabel.Size = New System.Drawing.Size(758, 44)
-		Me.CompileOptionsSizerLabel.TabIndex = 37
+		Me.CompileButtonsPanel.Controls.Add(Me.CompileButton)
+		Me.CompileButtonsPanel.Controls.Add(Me.SkipCurrentModelButton)
+		Me.CompileButtonsPanel.Controls.Add(Me.CancelCompileButton)
+		Me.CompileButtonsPanel.Controls.Add(Me.UseAllInPackButton)
+		Me.CompileButtonsPanel.Dock = System.Windows.Forms.DockStyle.Top
+		Me.CompileButtonsPanel.Location = New System.Drawing.Point(0, 0)
+		Me.CompileButtonsPanel.Name = "CompileButtonsPanel"
+		Me.CompileButtonsPanel.Size = New System.Drawing.Size(770, 26)
+		Me.CompileButtonsPanel.TabIndex = 39
 		'
 		'SkipCurrentModelButton
 		'
-		Me.SkipCurrentModelButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.SkipCurrentModelButton.Enabled = False
-		Me.SkipCurrentModelButton.Location = New System.Drawing.Point(126, 249)
+		Me.SkipCurrentModelButton.Location = New System.Drawing.Point(126, 0)
 		Me.SkipCurrentModelButton.Name = "SkipCurrentModelButton"
 		Me.SkipCurrentModelButton.Size = New System.Drawing.Size(120, 23)
 		Me.SkipCurrentModelButton.TabIndex = 2
@@ -533,9 +573,8 @@ Partial Class CompileUserControl
 		'
 		'CancelCompileButton
 		'
-		Me.CancelCompileButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.CancelCompileButton.Enabled = False
-		Me.CancelCompileButton.Location = New System.Drawing.Point(252, 249)
+		Me.CancelCompileButton.Location = New System.Drawing.Point(252, 0)
 		Me.CancelCompileButton.Name = "CancelCompileButton"
 		Me.CancelCompileButton.Size = New System.Drawing.Size(120, 23)
 		Me.CancelCompileButton.TabIndex = 3
@@ -544,9 +583,8 @@ Partial Class CompileUserControl
 		'
 		'UseAllInPackButton
 		'
-		Me.UseAllInPackButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.UseAllInPackButton.Enabled = False
-		Me.UseAllInPackButton.Location = New System.Drawing.Point(378, 249)
+		Me.UseAllInPackButton.Location = New System.Drawing.Point(378, 0)
 		Me.UseAllInPackButton.Name = "UseAllInPackButton"
 		Me.UseAllInPackButton.Size = New System.Drawing.Size(120, 23)
 		Me.UseAllInPackButton.TabIndex = 4
@@ -554,59 +592,46 @@ Partial Class CompileUserControl
 		Me.UseAllInPackButton.UseVisualStyleBackColor = True
 		Me.UseAllInPackButton.Visible = False
 		'
+		'PostCompilePanel
+		'
+		Me.PostCompilePanel.Controls.Add(Me.CompiledFilesComboBox)
+		Me.PostCompilePanel.Controls.Add(Me.UseInViewButton)
+		Me.PostCompilePanel.Controls.Add(Me.RecompileButton)
+		Me.PostCompilePanel.Controls.Add(Me.UseInPackButton)
+		Me.PostCompilePanel.Controls.Add(Me.GotoCompiledMdlButton)
+		Me.PostCompilePanel.Dock = System.Windows.Forms.DockStyle.Bottom
+		Me.PostCompilePanel.Location = New System.Drawing.Point(0, 212)
+		Me.PostCompilePanel.Name = "PostCompilePanel"
+		Me.PostCompilePanel.Size = New System.Drawing.Size(770, 26)
+		Me.PostCompilePanel.TabIndex = 40
+		'
+		'CompiledFilesComboBox
+		'
+		Me.CompiledFilesComboBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.CompiledFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.CompiledFilesComboBox.FormattingEnabled = True
+		Me.CompiledFilesComboBox.Location = New System.Drawing.Point(0, 4)
+		Me.CompiledFilesComboBox.Name = "CompiledFilesComboBox"
+		Me.CompiledFilesComboBox.Size = New System.Drawing.Size(559, 21)
+		Me.CompiledFilesComboBox.TabIndex = 1
+		'
 		'UseInViewButton
 		'
-		Me.UseInViewButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.UseInViewButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.UseInViewButton.Enabled = False
-		Me.UseInViewButton.Location = New System.Drawing.Point(565, 170)
+		Me.UseInViewButton.Location = New System.Drawing.Point(565, 3)
 		Me.UseInViewButton.Name = "UseInViewButton"
 		Me.UseInViewButton.Size = New System.Drawing.Size(75, 23)
 		Me.UseInViewButton.TabIndex = 2
 		Me.UseInViewButton.Text = "Use in View"
 		Me.UseInViewButton.UseVisualStyleBackColor = True
 		'
-		'CompileLogRichTextBox
-		'
-		Me.CompileLogRichTextBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-			Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.CompileLogRichTextBox.CueBannerText = ""
-		Me.CompileLogRichTextBox.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.CompileLogRichTextBox.HideSelection = False
-		Me.CompileLogRichTextBox.Location = New System.Drawing.Point(0, 0)
-		Me.CompileLogRichTextBox.Name = "CompileLogRichTextBox"
-		Me.CompileLogRichTextBox.ReadOnly = True
-		Me.CompileLogRichTextBox.Size = New System.Drawing.Size(770, 164)
-		Me.CompileLogRichTextBox.TabIndex = 0
-		Me.CompileLogRichTextBox.Text = ""
-		Me.CompileLogRichTextBox.WordWrap = False
-		'
-		'CompiledFilesComboBox
-		'
-		Me.CompiledFilesComboBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.CompiledFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-		Me.CompiledFilesComboBox.FormattingEnabled = True
-		Me.CompiledFilesComboBox.Location = New System.Drawing.Point(0, 171)
-		Me.CompiledFilesComboBox.Name = "CompiledFilesComboBox"
-		Me.CompiledFilesComboBox.Size = New System.Drawing.Size(559, 21)
-		Me.CompiledFilesComboBox.TabIndex = 1
-		'
-		'GotoCompiledMdlButton
-		'
-		Me.GotoCompiledMdlButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.GotoCompiledMdlButton.Location = New System.Drawing.Point(727, 170)
-		Me.GotoCompiledMdlButton.Name = "GotoCompiledMdlButton"
-		Me.GotoCompiledMdlButton.Size = New System.Drawing.Size(43, 23)
-		Me.GotoCompiledMdlButton.TabIndex = 4
-		Me.GotoCompiledMdlButton.Text = "Goto"
-		Me.GotoCompiledMdlButton.UseVisualStyleBackColor = True
-		'
 		'RecompileButton
 		'
-		Me.RecompileButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.RecompileButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.RecompileButton.Enabled = False
-		Me.RecompileButton.Location = New System.Drawing.Point(646, 170)
+		Me.RecompileButton.Location = New System.Drawing.Point(646, 3)
 		Me.RecompileButton.Name = "RecompileButton"
 		Me.RecompileButton.Size = New System.Drawing.Size(75, 23)
 		Me.RecompileButton.TabIndex = 5
@@ -615,15 +640,25 @@ Partial Class CompileUserControl
 		'
 		'UseInPackButton
 		'
-		Me.UseInPackButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.UseInPackButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.UseInPackButton.Enabled = False
-		Me.UseInPackButton.Location = New System.Drawing.Point(646, 170)
+		Me.UseInPackButton.Location = New System.Drawing.Point(646, 3)
 		Me.UseInPackButton.Name = "UseInPackButton"
 		Me.UseInPackButton.Size = New System.Drawing.Size(75, 23)
 		Me.UseInPackButton.TabIndex = 3
 		Me.UseInPackButton.Text = "Use in Pack"
 		Me.UseInPackButton.UseVisualStyleBackColor = True
 		Me.UseInPackButton.Visible = False
+		'
+		'GotoCompiledMdlButton
+		'
+		Me.GotoCompiledMdlButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.GotoCompiledMdlButton.Location = New System.Drawing.Point(727, 3)
+		Me.GotoCompiledMdlButton.Name = "GotoCompiledMdlButton"
+		Me.GotoCompiledMdlButton.Size = New System.Drawing.Size(43, 23)
+		Me.GotoCompiledMdlButton.TabIndex = 4
+		Me.GotoCompiledMdlButton.Text = "Goto"
+		Me.GotoCompiledMdlButton.UseVisualStyleBackColor = True
 		'
 		'UseDefaultOutputSubfolderButton
 		'
@@ -643,16 +678,22 @@ Partial Class CompileUserControl
 		Me.Size = New System.Drawing.Size(776, 536)
 		Me.Panel1.ResumeLayout(False)
 		Me.Panel1.PerformLayout()
-		Me.SplitContainer1.Panel1.ResumeLayout(False)
-		Me.SplitContainer1.Panel2.ResumeLayout(False)
-		CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
-		Me.SplitContainer1.ResumeLayout(False)
+		Me.Options_LogSplitContainer.Panel1.ResumeLayout(False)
+		Me.Options_LogSplitContainer.Panel2.ResumeLayout(False)
+		CType(Me.Options_LogSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
+		Me.Options_LogSplitContainer.ResumeLayout(False)
 		Me.OptionsGroupBox.ResumeLayout(False)
-		Me.Panel2.ResumeLayout(False)
-		Me.Panel2.PerformLayout()
-		Me.CompilerOptionsGoldSourceEnginePanel.ResumeLayout(False)
+		Me.OptionsGroupBoxFillPanel.ResumeLayout(False)
+		Me.OptionsGroupBoxFillPanel.PerformLayout()
+		Me.GameSetupPanel.ResumeLayout(False)
 		Me.CompilerOptionsSourceEnginePanel.ResumeLayout(False)
 		Me.CompilerOptionsSourceEnginePanel.PerformLayout()
+		Me.DefineBonesGroupBox.ResumeLayout(False)
+		Me.DefineBonesGroupBox.PerformLayout()
+		Me.CompilerOptionsGoldSourceEnginePanel.ResumeLayout(False)
+		Me.CompilerOptionsGoldSourceEnginePanel.PerformLayout()
+		Me.CompileButtonsPanel.ResumeLayout(False)
+		Me.PostCompilePanel.ResumeLayout(False)
 		Me.ResumeLayout(False)
 
 	End Sub
@@ -661,13 +702,13 @@ Partial Class CompileUserControl
 	Friend WithEvents BrowseForQcPathFolderOrFileNameButton As System.Windows.Forms.Button
 	Friend WithEvents Label6 As System.Windows.Forms.Label
 	Friend WithEvents EditGameSetupButton As System.Windows.Forms.Button
-	Friend WithEvents Label3 As System.Windows.Forms.Label
+	Friend WithEvents GameSetupLabel As System.Windows.Forms.Label
 	Friend WithEvents CompileButton As System.Windows.Forms.Button
 	Friend WithEvents CompilerOptionNoP4CheckBox As System.Windows.Forms.CheckBox
 	Friend WithEvents CompilerOptionVerboseCheckBox As System.Windows.Forms.CheckBox
-	Friend WithEvents Label4 As System.Windows.Forms.Label
+	Friend WithEvents DirectCompilerOptionsLabel As System.Windows.Forms.Label
 	Friend WithEvents DirectCompilerOptionsTextBox As System.Windows.Forms.TextBox
-	Friend WithEvents SplitContainer1 As System.Windows.Forms.SplitContainer
+	Friend WithEvents Options_LogSplitContainer As System.Windows.Forms.SplitContainer
 	Friend WithEvents CompileLogRichTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents CancelCompileButton As System.Windows.Forms.Button
 	Friend WithEvents SkipCurrentModelButton As System.Windows.Forms.Button
@@ -679,15 +720,14 @@ Partial Class CompileUserControl
 	Friend WithEvents Panel1 As System.Windows.Forms.Panel
 	Friend WithEvents SourceEngineLogFileCheckBox As System.Windows.Forms.CheckBox
 	Friend WithEvents OptionsGroupBox As System.Windows.Forms.GroupBox
-	Friend WithEvents Panel2 As System.Windows.Forms.Panel
+	Friend WithEvents OptionsGroupBoxFillPanel As System.Windows.Forms.Panel
 	Friend WithEvents UseInViewButton As System.Windows.Forms.Button
 	Friend WithEvents UseInPackButton As System.Windows.Forms.Button
 	Friend WithEvents UseAllInPackButton As System.Windows.Forms.Button
 	Friend WithEvents FolderForEachModelCheckBox As System.Windows.Forms.CheckBox
-	Friend WithEvents CompilerOptionDefineBonesFileNameLabel As System.Windows.Forms.Label
 	Friend WithEvents CompilerOptionDefineBonesFileNameTextBox As System.Windows.Forms.TextBox
 	Friend WithEvents CompilerOptionDefineBonesCheckBox As System.Windows.Forms.CheckBox
-	Friend WithEvents CompilerOptionDefineBonesCreateFileCheckBox As System.Windows.Forms.CheckBox
+	Friend WithEvents CompilerOptionDefineBonesWriteQciFileCheckBox As System.Windows.Forms.CheckBox
 	Friend WithEvents CompilerOptionDefineBonesModifyQcFileCheckBox As System.Windows.Forms.CheckBox
 	Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
 	Friend WithEvents CompileOptionsSourceEngineUseDefaultsButton As System.Windows.Forms.Button
@@ -697,7 +737,6 @@ Partial Class CompileUserControl
 	Friend WithEvents OutputPathTextBox As Crowbar.TextBoxEx
 	Friend WithEvents OutputPathComboBox As System.Windows.Forms.ComboBox
 	Friend WithEvents Label1 As System.Windows.Forms.Label
-	Friend WithEvents CompileOptionsSizerLabel As System.Windows.Forms.Label
 	Friend WithEvents GameModelsOutputPathTextBox As Crowbar.TextBoxEx
 	Friend WithEvents CompilerOptionsSourceEnginePanel As System.Windows.Forms.Panel
 	Friend WithEvents CompilerOptionsGoldSourceEnginePanel As System.Windows.Forms.Panel
@@ -705,5 +744,10 @@ Partial Class CompileUserControl
 	Friend WithEvents CompileOptionsGoldSourceEngineUseDefaultsButton As System.Windows.Forms.Button
 	Friend WithEvents OutputSubfolderTextBox As Crowbar.TextBoxEx
 	Friend WithEvents QcPathFileNameTextBox As Crowbar.TextBoxEx
-
+	Friend WithEvents GameSetupPanel As Panel
+	Friend WithEvents CompileButtonsPanel As Panel
+	Friend WithEvents CompilerOptionsTextBoxMinScrollPanel As Panel
+	Friend WithEvents PostCompilePanel As Panel
+	Friend WithEvents DefineBonesGroupBox As GroupBox
+	Friend WithEvents CompilerOptionDefineBonesOverwriteQciFileCheckBox As CheckBox
 End Class

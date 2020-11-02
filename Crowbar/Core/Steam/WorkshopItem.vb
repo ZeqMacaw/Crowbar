@@ -39,7 +39,7 @@ Public Class WorkshopItem
 		Me.thePreviewImagePathFileName = ""
 		Me.thePreviewImagePathFileNameIsChanged = False
 
-		Me.theVisibility = SteamUGCPublishedItemVisibility.Private
+		Me.theVisibility = SteamUGCPublishedItemVisibility.Hidden
 		Me.theVisibilityIsChanged = False
 
 		Me.theTags = New BindingListEx(Of String)()
@@ -521,6 +521,31 @@ Public Class WorkshopItem
 
 #Region "Methods"
 
+	Public Sub SetAllChangedForNonEmptyFields()
+		If Me.theTitle <> "" Then
+			Me.theTitleIsChanged = True
+		End If
+		If Me.theDescription <> "" Then
+			Me.theDescriptionIsChanged = True
+		End If
+		If Me.theChangeNote <> "" Then
+			Me.theChangeNoteIsChanged = True
+		End If
+		If Me.theContentPathFolderOrFileName <> "" Then
+			Me.theContentPathFolderOrFileNameIsChanged = True
+		End If
+		If Me.thePreviewImagePathFileName <> "" Then
+			Me.thePreviewImagePathFileNameIsChanged = True
+		End If
+
+		'NOTE: Always set IsChanged for Visibility and Tags.
+		Me.theVisibilityIsChanged = True
+		Me.theTagsIsChanged = True
+
+		'NOTE: Always set IsChanged for item.
+		Me.theItemIsChanged = True
+	End Sub
+
 #End Region
 
 #Region "Event Handlers"
@@ -558,7 +583,8 @@ Public Class WorkshopItem
 		'<Description("<no change>")> NoChange = -1
 		<Description("Public")> [Public] = 0
 		<Description("Friends-Only")> FriendsOnly = 1
-		<Description("Private")> [Private] = 2
+		<Description("Hidden")> Hidden = 2
+		<Description("Unlisted")> Unlisted = 3
 	End Enum
 
 #End Region

@@ -214,7 +214,7 @@ Partial Class PatchUserControl
 		'
 		Me.SplitContainer1.Panel1.Controls.Add(Me.PatchableValuesForSingleMDLGroupBox)
 		Me.SplitContainer1.Panel1.Controls.Add(Me.PatchableValuesForMultipleMDLsGroupBox)
-		Me.SplitContainer1.Panel1MinSize = 90
+		Me.SplitContainer1.Panel1MinSize = 45
 		'
 		'SplitContainer1.Panel2
 		'
@@ -223,7 +223,7 @@ Partial Class PatchUserControl
 		Me.SplitContainer1.Panel2.Controls.Add(Me.SkipCurrentModelButton)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.ViewButton)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.MessageTextBox)
-		Me.SplitContainer1.Panel2MinSize = 90
+		Me.SplitContainer1.Panel2MinSize = 45
 		Me.SplitContainer1.Size = New System.Drawing.Size(770, 501)
 		Me.SplitContainer1.SplitterDistance = 384
 		Me.SplitContainer1.TabIndex = 13

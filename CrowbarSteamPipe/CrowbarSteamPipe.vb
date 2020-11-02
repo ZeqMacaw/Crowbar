@@ -24,6 +24,8 @@ Public Module CrowbarSteamPipe
 		Dim command As String
 		Try
 			While pipeClient.IsConnected
+				theItemIsUploading = False
+
 				command = sr.ReadLine()
 				Console.WriteLine("Command from server: " + command)
 
@@ -85,6 +87,8 @@ Public Module CrowbarSteamPipe
 					SteamUGC_DeleteItem()
 					'ElseIf command = "SteamUGC_DownloadItem" Then
 					'	SteamUGC_DownloadItem()
+					'ElseIf command = "SteamUGC_GetItemUpdateProgress" Then
+					'	SteamUGC_GetItemUpdateProgress()
 				ElseIf command = "SteamUGC_SendQueryUGCRequest" Then
 					SteamUGC_SendQueryUGCRequest()
 				ElseIf command = "SteamUGC_SetItemContent" Then
@@ -123,9 +127,9 @@ Public Module CrowbarSteamPipe
 
 #If DEBUG Then
 			'For debugging, keep console open until Enter Is pressed.
-			'Console.ReadLine()
+			Console.ReadLine()
 #End If
-		End Try
+        End Try
 	End Sub
 
 #Region "Init and Free"
@@ -188,6 +192,7 @@ Public Module CrowbarSteamPipe
 				theItemTitle = pCallResult.m_rgchTitle
 				theItemUpdated = pCallResult.m_rtimeUpdated
 				theItemContentFileName = pCallResult.m_pchFileName
+				theAppID = pCallResult.m_nConsumerAppID
 
 				theResultMessage = "success"
 			Else
@@ -210,6 +215,8 @@ Public Module CrowbarSteamPipe
 		Dim itemID_text As String
 		itemID_text = sr.ReadLine()
 		theItemID.m_PublishedFileId = ULong.Parse(itemID_text)
+		Dim targetPath As String
+		targetPath = sr.ReadLine()
 
 		Dim itemState As Steamworks.EItemState = CType(SteamUGC.GetItemState(theItemID), EItemState)
 		Console.WriteLine("Crowbar_DownloadContentFolderOrFile - GetItemState " + GetItemStateText(itemState))
@@ -223,27 +230,44 @@ Public Module CrowbarSteamPipe
 
 			result = SteamRemoteStorage.UGCDownload(theUGCHandleForContentFile, 0)
 			CrowbarSteamPipe.SetResultAndRunCallbacks(Of RemoteStorageDownloadUGCResult_t)(AddressOf OnDownloadUGC_ContentFile, result)
-		ElseIf (itemState And Steamworks.EItemState.k_EItemStateInstalled) <> 0 Then
-			'NOTE: Must init these 4 vars with values; otherwise only zeroes and an empty string are returned in them from GetItemInstallInfo().
-			'NOTE: The value for itemFolderNameLength must be greater than 0, presumably to tell Steam how many characters itemFolderName can hold.
-			Dim itemSize As ULong = 0
-			Dim itemFolderName As String = ""
-			Dim itemFolderNameLength As UInteger = 1024
-			Dim itemUpdated As UInteger = 0
-			Dim resultOfGetItemInstallInfoIsSuccess As Boolean = SteamUGC.GetItemInstallInfo(theItemID, itemSize, itemFolderName, itemFolderNameLength, itemUpdated)
-			Console.WriteLine("Crowbar_DownloadContentFolderOrFile - GetItemInstallInfo: " + theItemID.ToString() + " " + itemSize.ToString() + " """ + itemFolderName + """ " + itemUpdated.ToString())
-			If resultOfGetItemInstallInfoIsSuccess Then
-				sw.WriteLine("success_SteamUGC")
-				sw.WriteLine(itemUpdated)
-				Dim result As SteamAPICall_t = SteamRemoteStorage.GetPublishedFileDetails(theItemID, 0)
-				CrowbarSteamPipe.SetResultAndRunCallbacks(Of RemoteStorageGetPublishedFileDetailsResult_t)(AddressOf OnGetPublishedFileDetailsForInternalResults, result)
-				WriteTextThatMightHaveMultipleLines(theItemTitle)
-				sw.WriteLine(itemFolderName)
-			Else
-				sw.WriteLine("error")
-			End If
-		ElseIf (itemState And Steamworks.EItemState.k_EItemStateNeedsUpdate) <> 0 OrElse itemState = EItemState.k_EItemStateNone Then
+			'ElseIf (itemState And Steamworks.EItemState.k_EItemStateInstalled) <> 0 Then
+			'	'NOTE: Must init these 4 vars with values; otherwise only zeroes and an empty string are returned in them from GetItemInstallInfo().
+			'	'NOTE: The value for itemFolderNameLength must be greater than 0, presumably to tell Steam how many characters itemFolderName can hold.
+			'	Dim itemSize As ULong = 0
+			'	Dim itemFolderName As String = ""
+			'	Dim itemFolderNameLength As UInteger = 1024
+			'	Dim itemUpdated As UInteger = 0
+			'	Dim resultOfGetItemInstallInfoIsSuccess As Boolean = SteamUGC.GetItemInstallInfo(theItemID, itemSize, itemFolderName, itemFolderNameLength, itemUpdated)
+			'	Console.WriteLine("Crowbar_DownloadContentFolderOrFile - GetItemInstallInfo: " + theItemID.ToString() + " " + itemSize.ToString() + " """ + itemFolderName + """ " + itemUpdated.ToString())
+			'	If resultOfGetItemInstallInfoIsSuccess Then
+			'		sw.WriteLine("success_SteamUGC")
+			'		sw.WriteLine(itemUpdated)
+			'		Dim result As SteamAPICall_t = SteamRemoteStorage.GetPublishedFileDetails(theItemID, 0)
+			'		CrowbarSteamPipe.SetResultAndRunCallbacks(Of RemoteStorageGetPublishedFileDetailsResult_t)(AddressOf OnGetPublishedFileDetailsForInternalResults, result)
+			'		WriteTextThatMightHaveMultipleLines(theItemTitle)
+			'		sw.WriteLine(itemFolderName)
+			'		sw.WriteLine(theAppID.ToString())
+			'	Else
+			'		sw.WriteLine("error")
+			'	End If
+
+		ElseIf (itemState And Steamworks.EItemState.k_EItemStateInstalled) <> 0 OrElse (itemState And Steamworks.EItemState.k_EItemStateNeedsUpdate) <> 0 OrElse itemState = EItemState.k_EItemStateNone Then
+			'NOTE: Even if Steam thinks the item is installed, download it anyway.
 			Console.WriteLine("Crowbar_DownloadContentFolderOrFile - Download via SteamUGC")
+
+			Dim result As SteamAPICall_t = SteamRemoteStorage.GetPublishedFileDetails(theItemID, 0)
+			CrowbarSteamPipe.SetResultAndRunCallbacks(Of RemoteStorageGetPublishedFileDetailsResult_t)(AddressOf OnGetPublishedFileDetailsForInternalResults, result)
+
+			'NOTE: Using SteamUGC.BInitWorkshopForGameServer made extra folders in the target path 
+			'      and also copied entire content folder that includes subscribed and other installed workshop items.
+			'Console.WriteLine("Crowbar_DownloadContentFolderOrFile - BInitWorkshopForGameServer: """ + targetPath + """")
+			'Dim depotID As DepotId_t
+			'depotID.m_DepotId = theAppID.m_AppId
+			'Dim resultOfInitIsSuccess As Boolean = SteamUGC.BInitWorkshopForGameServer(depotID, targetPath)
+
+			'If resultOfInitIsSuccess Then
+			'	Console.WriteLine("Crowbar_DownloadContentFolderOrFile - BInitWorkshopForGameServer success")
+
 			Console.WriteLine("Crowbar_DownloadContentFolderOrFile - itemID: " + theItemID.ToString())
 			Dim resultIsSuccess As Boolean = SteamUGC.DownloadItem(theItemID, True)
 
@@ -276,10 +300,11 @@ Public Module CrowbarSteamPipe
 						Console.WriteLine("Crowbar_DownloadContentFolderOrFile - GetItemInstallInfo success")
 						sw.WriteLine("success_SteamUGC")
 						sw.WriteLine(updated)
-						Dim result As SteamAPICall_t = SteamRemoteStorage.GetPublishedFileDetails(theItemID, 0)
-						CrowbarSteamPipe.SetResultAndRunCallbacks(Of RemoteStorageGetPublishedFileDetailsResult_t)(AddressOf OnGetPublishedFileDetailsForInternalResults, result)
+						'Dim result As SteamAPICall_t = SteamRemoteStorage.GetPublishedFileDetails(theItemID, 0)
+						'CrowbarSteamPipe.SetResultAndRunCallbacks(Of RemoteStorageGetPublishedFileDetailsResult_t)(AddressOf OnGetPublishedFileDetailsForInternalResults, result)
 						WriteTextThatMightHaveMultipleLines(theItemTitle)
 						sw.WriteLine(folderName)
+						sw.WriteLine(theAppID.ToString())
 					Else
 						Console.WriteLine("Crowbar_DownloadContentFolderOrFile - GetItemInstallInfo error")
 						sw.WriteLine("error")
@@ -292,6 +317,10 @@ Public Module CrowbarSteamPipe
 				Console.WriteLine("Crowbar_DownloadContentFolderOrFile - DownloadItem error")
 				sw.WriteLine("error")
 			End If
+			'Else
+			'	Console.WriteLine("Crowbar_DownloadContentFolderOrFile - BInitWorkshopForGameServer error")
+			'	sw.WriteLine("error")
+			'End If
 		End If
 		Console.WriteLine("Crowbar_DownloadContentFolderOrFile - End Sub")
 	End Sub
@@ -1295,6 +1324,45 @@ Public Module CrowbarSteamPipe
 
 #End Region
 
+	Private Sub SteamUGC_GetItemUpdateProgress()
+		Dim uploadedByteCount As ULong = 0
+		Dim totalUploadedByteCount As ULong = 0
+
+		Dim status As EItemUpdateStatus = SteamUGC.GetItemUpdateProgress(theUGCUpdateHandle, uploadedByteCount, totalUploadedByteCount)
+
+		'k_EItemUpdateStatusInvalid	0	The item update handle was invalid, the job might be finished, a SubmitItemUpdateResult_t call result should have been returned for it.
+		'k_EItemUpdateStatusPreparingConfig	1	The item update is processing configuration data.
+		'k_EItemUpdateStatusPreparingContent	2	The item update is reading and processing content files.
+		'k_EItemUpdateStatusUploadingContent	3	The item update is uploading content changes to Steam.
+		'k_EItemUpdateStatusUploadingPreviewFile	4	The item update is uploading new preview file image.
+		'k_EItemUpdateStatusCommittingChanges	5	The item update is committing all changes.
+		If status = EItemUpdateStatus.k_EItemUpdateStatusPreparingConfig Then
+			'           Console.WriteLine("Preparing config")
+			sw.WriteLine("Preparing config")
+        ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusPreparingContent Then
+			'           Console.WriteLine("Preparing content")
+			sw.WriteLine("Preparing content")
+        ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusUploadingContent Then
+			'           Console.WriteLine("Uploading content")
+			sw.WriteLine("Uploading content")
+            If totalUploadedByteCount > 0 AndAlso uploadedByteCount = totalUploadedByteCount Then
+                theItemIsUploading = False
+            End If
+        ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusUploadingPreviewFile Then
+			'           Console.WriteLine("Uploading preview")
+			sw.WriteLine("Uploading preview")
+        ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusCommittingChanges Then
+			'           Console.WriteLine("Committing changes")
+			sw.WriteLine("Committing changes")
+        Else
+			'           Console.WriteLine("invalid")
+			sw.WriteLine("invalid")
+            theItemIsUploading = False
+        End If
+		sw.WriteLine(uploadedByteCount)
+		sw.WriteLine(totalUploadedByteCount)
+	End Sub
+
 #Region "SteamUGC_StartItemUpdate"
 
 	Private Sub SteamUGC_StartItemUpdate()
@@ -1430,24 +1498,31 @@ Public Module CrowbarSteamPipe
 		Dim changeNote As String
 		changeNote = ReadMultipleLinesOfText(sr)
 
+		theItemIsUploading = True
+
 		Dim result As SteamAPICall_t = SteamUGC.SubmitItemUpdate(theUGCUpdateHandle, changeNote)
 		CrowbarSteamPipe.SetResultAndRunCallbacks(Of SubmitItemUpdateResult_t)(AddressOf OnSubmitItemUpdate, result)
 	End Sub
 
 	Private Sub OnSubmitItemUpdate(ByVal pCallResult As SubmitItemUpdateResult_t, ByVal bIOFailure As Boolean)
+		theItemIsUploading = False
+		'Console.WriteLine("OnSubmitItemUpdate")
+		sw.WriteLine("OnSubmitItemUpdate")
 		Try
 			If pCallResult.m_eResult = EResult.k_EResultOK Then
 				If pCallResult.m_bUserNeedsToAcceptWorkshopLegalAgreement Then
 					sw.WriteLine("success_agreement")
 				Else
+					'Console.WriteLine("OnSubmitItemUpdate success")
 					sw.WriteLine("success")
 				End If
 			Else
+				'Console.WriteLine("OnSubmitItemUpdate " + GetErrorMessage(pCallResult.m_eResult))
 				sw.WriteLine(GetErrorMessage(pCallResult.m_eResult))
 			End If
-			Console.WriteLine("OnSubmitItemUpdate result: " + pCallResult.m_eResult.ToString())
+			'Console.WriteLine("OnSubmitItemUpdate result: " + pCallResult.m_eResult.ToString())
 		Catch ex As Exception
-			Console.WriteLine("OnSubmitItemUpdate EXCEPTION: " + ex.Message)
+			'Console.WriteLine("OnSubmitItemUpdate EXCEPTION: " + ex.Message)
 			sw.WriteLine("EXCEPTION: " + ex.Message)
 		End Try
 
@@ -1505,10 +1580,12 @@ Public Module CrowbarSteamPipe
 		Dim output As Steamworks.ERemoteStoragePublishedFileVisibility
 		If input = "Public" Then
 			output = Steamworks.ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPublic
-		ElseIf input = "Private" Then
-			output = Steamworks.ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPrivate
-		Else
+		ElseIf input = "FriendsOnly" Then
 			output = Steamworks.ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityFriendsOnly
+		ElseIf input = "Unlisted" Then
+			output = Steamworks.ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityUnlisted
+		Else
+			output = Steamworks.ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPrivate
 		End If
 		Return output
 	End Function
@@ -1522,6 +1599,9 @@ Public Module CrowbarSteamPipe
 	Private Sub RunCallbacks()
 		theCallResultIsFinished = False
 		While Not theCallResultIsFinished
+			If theItemIsUploading Then
+				SteamUGC_GetItemUpdateProgress()
+			End If
 			SteamAPI.RunCallbacks()
 		End While
 	End Sub
@@ -1586,21 +1666,22 @@ Public Module CrowbarSteamPipe
 
 		If steamErrorResult = EResult.k_EResultAccessDenied Then
 			'sw.WriteLine("Access denied. The AppID in the steam_api.txt file is incorrect or the steam_api.txt file is not beside the CrowbarSteamPipe.exe file.")
-			errorMessage += "Access denied. The user doesn't own a license for the provided App ID."
+			errorMessage += "Access denied. The user's Steam account does not own a license for the provided App ID."
+		ElseIf steamErrorResult = EResult.k_EResultFileNotFound Then
+			'errorMessage += "File not found. The provided content folder, content file, or preview image file is invalid."
+			errorMessage += "File not found. The provided content folder, content file, or preview image file is invalid."
+		ElseIf steamErrorResult = EResult.k_EResultInsufficientPrivilege Then
+			errorMessage += "Insufficient privilege. The user's Steam account is currently restricted from uploading content due to a hub ban, account lock, or community ban."
 		ElseIf steamErrorResult = EResult.k_EResultInvalidParam Then
 			errorMessage += "Invalid paramater. Content file too big, invalid App ID, or the preview file is smaller than 16 bytes."
-		ElseIf steamErrorResult = EResult.k_EResultInsufficientPrivilege Then
-			errorMessage += "Your Steam account is currently banned in this game's community."
-		ElseIf steamErrorResult = EResult.k_EResultFileNotFound Then
-			errorMessage += "The provided content folder, content file, or preview image file is invalid."
 		ElseIf steamErrorResult = EResult.k_EResultLimitExceeded Then
-			errorMessage += "The preview image is too large, it must be less than 1 megabyte; or there is not enough space available on the user's Steam Cloud."
+			errorMessage += "Limit exceeded. The preview image is too large, it must be less than 1 megabyte; or there is not enough space available on the user's Steam Cloud."
 		ElseIf steamErrorResult = EResult.k_EResultLockingFailed Then
-			errorMessage += "Failed to aquire UGC Lock."
+			errorMessage += "Locking failed. Failed to aquire UGC Lock."
 		ElseIf steamErrorResult = EResult.k_EResultNotLoggedOn Then
-			errorMessage += "Your account is not currently logged in."
+			errorMessage += "Not logged on. The user's Steam account is not currently logged in."
 		ElseIf steamErrorResult = EResult.k_EResultTimeout Then
-			errorMessage += "Upload timed-out and did not complete."
+			errorMessage += "Timeout. Action timed-out and did not complete."
 		Else
 			errorMessage += steamErrorResult.ToString()
 		End If
@@ -1645,6 +1726,7 @@ Public Module CrowbarSteamPipe
 	Private sw As StreamWriter
 	Private sr As StreamReader
 
+	Private theItemIsUploading As Boolean
 	Private theCallResultIsFinished As Boolean
 	Private theUGCQueryHandle As UGCQueryHandle_t
 	Private theUGCUpdateHandle As UGCUpdateHandle_t
@@ -1654,7 +1736,7 @@ Public Module CrowbarSteamPipe
 	Private theUGCHandleForPreviewImageFile As UGCHandle_t
 	'Private theUGCPreviewImageFileSize As Integer
 
-	'Private theAppID As AppId_t
+	Private theAppID As AppId_t
 	Private theItemID As PublishedFileId_t
 	Private theItemUpdated As UInteger
 	Private theItemTitle As String
