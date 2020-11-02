@@ -9,11 +9,11 @@ Public Class SourceSmdFile31
 		Me.theMdlFileData = mdlFileData
 	End Sub
 
-	'Public Sub New(ByVal outputFileStream As StreamWriter, ByVal mdlFileData As SourceMdlFileData37, ByVal phyFileData As SourcePhyFileData37)
-	'	Me.theOutputFileStreamWriter = outputFileStream
-	'	Me.theMdlFileData = mdlFileData
-	'	Me.thePhyFileData = phyFileData
-	'End Sub
+	Public Sub New(ByVal outputFileStream As StreamWriter, ByVal mdlFileData As SourceMdlFileData31, ByVal phyFileData As SourcePhyFileData)
+		Me.theOutputFileStreamWriter = outputFileStream
+		Me.theMdlFileData = mdlFileData
+		Me.thePhyFileData = phyFileData
+	End Sub
 
 #End Region
 
@@ -175,83 +175,96 @@ Public Class SourceSmdFile31
 		Me.theOutputFileStreamWriter.WriteLine(line)
 	End Sub
 
-	'Public Sub WriteTrianglesSectionForPhysics()
-	'	Dim line As String = ""
+	Public Sub WriteTrianglesSectionForPhysics()
+		Dim line As String = ""
 
-	'	'triangles
-	'	line = "triangles"
-	'	Me.theOutputFileStreamWriter.WriteLine(line)
+		'triangles
+		line = "triangles"
+		Me.theOutputFileStreamWriter.WriteLine(line)
 
-	'	Dim collisionData As SourcePhyCollisionData
-	'	Dim aBone As SourceMdlBone37
-	'	Dim aTriangle As SourcePhyFace
-	'	Dim faceSection As SourcePhyFaceSection
-	'	Dim phyVertex As SourcePhyVertex
-	'	Dim aVectorTransformed As SourceVector
+		Dim collisionData As SourcePhyCollisionData
+		Dim aBone As SourceMdlBone31
+		Dim boneIndex As Integer
+		Dim aTriangle As SourcePhyFace
+		Dim faceSection As SourcePhyFaceSection
+		Dim phyVertex As SourcePhyVertex
+		Dim aVectorTransformed As SourceVector
+		Dim aSourcePhysCollisionModel As SourcePhyPhysCollisionModel
 
-	'	Try
-	'		If Me.thePhyFileData.theSourcePhyCollisionDatas IsNot Nothing Then
-	'			For collisionDataIndex As Integer = 0 To Me.thePhyFileData.theSourcePhyCollisionDatas.Count - 1
-	'				collisionData = Me.thePhyFileData.theSourcePhyCollisionDatas(collisionDataIndex)
+		Try
+			If Me.thePhyFileData.theSourcePhyCollisionDatas IsNot Nothing Then
+				For collisionDataIndex As Integer = 0 To Me.thePhyFileData.theSourcePhyCollisionDatas.Count - 1
+					collisionData = Me.thePhyFileData.theSourcePhyCollisionDatas(collisionDataIndex)
 
-	'				For faceSectionIndex As Integer = 0 To collisionData.theFaceSections.Count - 1
-	'					faceSection = collisionData.theFaceSections(faceSectionIndex)
+					If collisionDataIndex < Me.thePhyFileData.theSourcePhyPhysCollisionModels.Count Then
+						aSourcePhysCollisionModel = Me.thePhyFileData.theSourcePhyPhysCollisionModels(collisionDataIndex)
+					Else
+						aSourcePhysCollisionModel = Nothing
+					End If
 
-	'					If faceSection.theBoneIndex >= Me.theMdlFileData.theBones.Count Then
-	'						Continue For
-	'					End If
-	'					aBone = Me.theMdlFileData.theBones(faceSection.theBoneIndex)
+					For faceSectionIndex As Integer = 0 To collisionData.theFaceSections.Count - 1
+						faceSection = collisionData.theFaceSections(faceSectionIndex)
 
-	'					For triangleIndex As Integer = 0 To faceSection.theFaces.Count - 1
-	'						aTriangle = faceSection.theFaces(triangleIndex)
+						If faceSection.theBoneIndex >= Me.theMdlFileData.theBones.Count Then
+							Continue For
+						End If
+						If aSourcePhysCollisionModel IsNot Nothing AndAlso Me.theMdlFileData.theBoneNameToBoneIndexMap.ContainsKey(aSourcePhysCollisionModel.theName) Then
+							boneIndex = Me.theMdlFileData.theBoneNameToBoneIndexMap(aSourcePhysCollisionModel.theName)
+						Else
+							boneIndex = faceSection.theBoneIndex
+						End If
+						aBone = Me.theMdlFileData.theBones(faceSection.theBoneIndex)
 
-	'						line = "  phy"
-	'						Me.theOutputFileStreamWriter.WriteLine(line)
+						For triangleIndex As Integer = 0 To faceSection.theFaces.Count - 1
+							aTriangle = faceSection.theFaces(triangleIndex)
 
-	'						'  19 -0.000009 0.000001 0.999953 0.0 0.0 0.0 1 0
-	'						'  19 -0.000005 1.000002 -0.000043 0.0 0.0 0.0 1 0
-	'						'  19 -0.008333 0.997005 1.003710 0.0 0.0 0.0 1 0
-	'						'NOTE: MDL Decompiler 0.4.1 lists the vertices in reverse order than they are stored, and this seems to match closely with the teenangst source file.
-	'						'For vertexIndex As Integer = aTriangle.vertexIndex.Length - 1 To 0 Step -1
-	'						For vertexIndex As Integer = 0 To aTriangle.vertexIndex.Length - 1
-	'							phyVertex = collisionData.theVertices(aTriangle.vertexIndex(vertexIndex))
+							line = "  phy"
+							Me.theOutputFileStreamWriter.WriteLine(line)
 
-	'							aVectorTransformed = Me.TransformPhyVertex(aBone, phyVertex.vertex)
+							'  19 -0.000009 0.000001 0.999953 0.0 0.0 0.0 1 0
+							'  19 -0.000005 1.000002 -0.000043 0.0 0.0 0.0 1 0
+							'  19 -0.008333 0.997005 1.003710 0.0 0.0 0.0 1 0
+							'NOTE: MDL Decompiler 0.4.1 lists the vertices in reverse order than they are stored, and this seems to match closely with the teenangst source file.
+							'For vertexIndex As Integer = aTriangle.vertexIndex.Length - 1 To 0 Step -1
+							For vertexIndex As Integer = 0 To aTriangle.vertexIndex.Length - 1
+								phyVertex = faceSection.theVertices(aTriangle.vertexIndex(vertexIndex))
 
-	'							line = "    "
-	'							line += faceSection.theBoneIndex.ToString(TheApp.InternalNumberFormat)
-	'							line += " "
-	'							line += aVectorTransformed.x.ToString("0.000000", TheApp.InternalNumberFormat)
-	'							line += " "
-	'							line += aVectorTransformed.y.ToString("0.000000", TheApp.InternalNumberFormat)
-	'							line += " "
-	'							line += aVectorTransformed.z.ToString("0.000000", TheApp.InternalNumberFormat)
+								aVectorTransformed = Me.TransformPhyVertex(aBone, phyVertex.vertex, aSourcePhysCollisionModel)
 
-	'							'line += " 0 0 0"
-	'							'------
-	'							line += " "
-	'							line += phyVertex.normal.x.ToString("0.000000", TheApp.InternalNumberFormat)
-	'							line += " "
-	'							line += phyVertex.normal.y.ToString("0.000000", TheApp.InternalNumberFormat)
-	'							line += " "
-	'							line += phyVertex.normal.z.ToString("0.000000", TheApp.InternalNumberFormat)
+								line = "    "
+								line += boneIndex.ToString(TheApp.InternalNumberFormat)
+								line += " "
+								line += aVectorTransformed.x.ToString("0.000000", TheApp.InternalNumberFormat)
+								line += " "
+								line += aVectorTransformed.y.ToString("0.000000", TheApp.InternalNumberFormat)
+								line += " "
+								line += aVectorTransformed.z.ToString("0.000000", TheApp.InternalNumberFormat)
 
-	'							line += " 0 0"
-	'							'NOTE: The studiomdl.exe doesn't need the integer values at end.
-	'							'line += " 1 0"
-	'							Me.theOutputFileStreamWriter.WriteLine(line)
-	'						Next
-	'					Next
-	'				Next
-	'			Next
-	'		End If
-	'	Catch
+								'line += " 0 0 0"
+								'------
+								line += " "
+								line += phyVertex.Normal.x.ToString("0.000000", TheApp.InternalNumberFormat)
+								line += " "
+								line += phyVertex.Normal.y.ToString("0.000000", TheApp.InternalNumberFormat)
+								line += " "
+								line += phyVertex.Normal.z.ToString("0.000000", TheApp.InternalNumberFormat)
 
-	'	End Try
+								line += " 0 0"
+								'NOTE: The studiomdl.exe doesn't need the integer values at end.
+								'line += " 1 0"
+								Me.theOutputFileStreamWriter.WriteLine(line)
+							Next
+						Next
+					Next
+				Next
+			End If
+		Catch ex As Exception
+			Dim debug As Integer = 4242
+		End Try
 
-	'	line = "end"
-	'	Me.theOutputFileStreamWriter.WriteLine(line)
-	'End Sub
+		line = "end"
+		Me.theOutputFileStreamWriter.WriteLine(line)
+	End Sub
 
 	''TODO: Write the firstAnimDesc's first frame's frameLines because it is used for "subtract" option.
 	'Public Sub CalculateFirstAnimDescFrameLinesForSubtract()
@@ -551,23 +564,37 @@ Public Class SourceSmdFile31
 		Return line
 	End Function
 
-	'Private Function TransformPhyVertex(ByVal aBone As SourceMdlBone37, ByVal vertex As SourceVector) As SourceVector
-	'	Dim aVectorTransformed As New SourceVector
-	'	Dim aVector As New SourceVector()
+	Private Function TransformPhyVertex(ByVal aBone As SourceMdlBone31, ByVal vertex As SourceVector, ByVal aSourcePhysCollisionModel As SourcePhyPhysCollisionModel) As SourceVector
+		Dim aVectorTransformed As New SourceVector
+		Dim aVector As New SourceVector()
 
-	'	If Me.thePhyFileData.theSourcePhyIsCollisionModel Then
-	'		aVectorTransformed.x = 1 / 0.0254 * vertex.z
-	'		aVectorTransformed.y = 1 / 0.0254 * -vertex.x
-	'		aVectorTransformed.z = 1 / 0.0254 * -vertex.y
-	'	Else
-	'		aVector.x = 1 / 0.0254 * vertex.x
-	'		aVector.y = 1 / 0.0254 * vertex.z
-	'		aVector.z = 1 / 0.0254 * -vertex.y
-	'		aVectorTransformed = MathModule.VectorITransform(aVector, aBone.poseToBoneColumn0, aBone.poseToBoneColumn1, aBone.poseToBoneColumn2, aBone.poseToBoneColumn3)
-	'	End If
+		'If Me.thePhyFileData.theSourcePhyIsCollisionModel Then
+		'	aVectorTransformed.x = 1 / 0.0254 * vertex.z
+		'	aVectorTransformed.y = 1 / 0.0254 * -vertex.x
+		'	aVectorTransformed.z = 1 / 0.0254 * -vertex.y
+		'Else
+		'	aVector.x = 1 / 0.0254 * vertex.x
+		'	aVector.y = 1 / 0.0254 * vertex.z
+		'	aVector.z = 1 / 0.0254 * -vertex.y
+		'	aVectorTransformed = MathModule.VectorITransform(aVector, aBone.poseToBoneColumn0, aBone.poseToBoneColumn1, aBone.poseToBoneColumn2, aBone.poseToBoneColumn3)
+		'End If
+		aVector.x = 1 / 0.0254 * vertex.x
+		aVector.y = 1 / 0.0254 * vertex.z
+		aVector.z = 1 / 0.0254 * -vertex.y
+		If aSourcePhysCollisionModel IsNot Nothing Then
+			If Me.theMdlFileData.theBoneNameToBoneIndexMap.ContainsKey(aSourcePhysCollisionModel.theName) Then
+				aBone = Me.theMdlFileData.theBones(Me.theMdlFileData.theBoneNameToBoneIndexMap(aSourcePhysCollisionModel.theName))
+			Else
+				aVectorTransformed.x = 1 / 0.0254 * vertex.z
+				aVectorTransformed.y = 1 / 0.0254 * -vertex.x
+				aVectorTransformed.z = 1 / 0.0254 * -vertex.y
+				Return aVectorTransformed
+			End If
+		End If
+		aVectorTransformed = MathModule.VectorITransform(aVector, aBone.poseToBoneColumn0, aBone.poseToBoneColumn1, aBone.poseToBoneColumn2, aBone.poseToBoneColumn3)
 
-	'	Return aVectorTransformed
-	'End Function
+		Return aVectorTransformed
+	End Function
 
 	Private Sub CalcAnimation(ByVal aSequenceDesc As SourceMdlSequenceDesc31, ByVal anAnimationDesc As SourceMdlAnimationDesc31, ByVal frameIndex As Integer)
 		Dim s As Double
@@ -725,7 +752,7 @@ Public Class SourceSmdFile31
 	Private theOutputFileStreamWriter As StreamWriter
 	'Private theAniFileData As SourceAniFileData44
 	Private theMdlFileData As SourceMdlFileData31
-	'Private thePhyFileData As SourcePhyFileData37
+	Private thePhyFileData As SourcePhyFileData
 	'Private theVtxFileData As SourceVtxFileData44
 	'Private theVvdFileData As SourceVvdFileData37
 	'Private theModelName As String
