@@ -31,9 +31,8 @@ Partial Class CompileUserControl
 		Me.CompilerOptionNoP4CheckBox = New System.Windows.Forms.CheckBox()
 		Me.CompilerOptionVerboseCheckBox = New System.Windows.Forms.CheckBox()
 		Me.CompilerOptionDefineBonesModifyQcFileCheckBox = New System.Windows.Forms.CheckBox()
-		Me.CompilerOptionDefineBonesCreateFileCheckBox = New System.Windows.Forms.CheckBox()
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox = New System.Windows.Forms.CheckBox()
 		Me.CompilerOptionDefineBonesFileNameTextBox = New System.Windows.Forms.TextBox()
-		Me.CompilerOptionDefineBonesFileNameLabel = New System.Windows.Forms.Label()
 		Me.DirectCompilerOptionsLabel = New System.Windows.Forms.Label()
 		Me.DirectCompilerOptionsTextBox = New System.Windows.Forms.TextBox()
 		Me.BrowseForQcPathFolderOrFileNameButton = New System.Windows.Forms.Button()
@@ -57,6 +56,8 @@ Partial Class CompileUserControl
 		Me.OptionsGroupBoxFillPanel = New System.Windows.Forms.Panel()
 		Me.GameSetupPanel = New System.Windows.Forms.Panel()
 		Me.CompilerOptionsSourceEnginePanel = New System.Windows.Forms.Panel()
+		Me.DefineBonesGroupBox = New System.Windows.Forms.GroupBox()
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox = New System.Windows.Forms.CheckBox()
 		Me.CompileOptionsSourceEngineUseDefaultsButton = New System.Windows.Forms.Button()
 		Me.CompilerOptionsGoldSourceEnginePanel = New System.Windows.Forms.Panel()
 		Me.GoldSourceEngineLogFileCheckBox = New System.Windows.Forms.CheckBox()
@@ -84,6 +85,7 @@ Partial Class CompileUserControl
 		Me.OptionsGroupBoxFillPanel.SuspendLayout()
 		Me.GameSetupPanel.SuspendLayout()
 		Me.CompilerOptionsSourceEnginePanel.SuspendLayout()
+		Me.DefineBonesGroupBox.SuspendLayout()
 		Me.CompilerOptionsGoldSourceEnginePanel.SuspendLayout()
 		Me.CompileButtonsPanel.SuspendLayout()
 		Me.PostCompilePanel.SuspendLayout()
@@ -137,7 +139,7 @@ Partial Class CompileUserControl
 		'CompilerOptionDefineBonesCheckBox
 		'
 		Me.CompilerOptionDefineBonesCheckBox.AutoSize = True
-		Me.CompilerOptionDefineBonesCheckBox.Location = New System.Drawing.Point(179, 3)
+		Me.CompilerOptionDefineBonesCheckBox.Location = New System.Drawing.Point(179, 4)
 		Me.CompilerOptionDefineBonesCheckBox.Name = "CompilerOptionDefineBonesCheckBox"
 		Me.CompilerOptionDefineBonesCheckBox.Size = New System.Drawing.Size(94, 17)
 		Me.CompilerOptionDefineBonesCheckBox.TabIndex = 7
@@ -170,41 +172,31 @@ Partial Class CompileUserControl
 		'
 		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.AutoSize = True
 		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Enabled = False
-		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Location = New System.Drawing.Point(213, 72)
+		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Location = New System.Drawing.Point(19, 65)
 		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Name = "CompilerOptionDefineBonesModifyQcFileCheckBox"
 		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Size = New System.Drawing.Size(238, 17)
 		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.TabIndex = 11
 		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Text = "Put in QC file: $include ""<QCI file name>"""
 		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.UseVisualStyleBackColor = True
 		'
-		'CompilerOptionDefineBonesCreateFileCheckBox
+		'CompilerOptionDefineBonesWriteQciFileCheckBox
 		'
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.AutoSize = True
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.Enabled = False
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.Location = New System.Drawing.Point(196, 26)
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.Name = "CompilerOptionDefineBonesCreateFileCheckBox"
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.Size = New System.Drawing.Size(232, 17)
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.TabIndex = 8
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.Text = "Create QCI file (in same folder as QC file)"
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.UseVisualStyleBackColor = True
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.AutoSize = True
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Enabled = False
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Location = New System.Drawing.Point(6, 22)
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Name = "CompilerOptionDefineBonesWriteQciFileCheckBox"
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Size = New System.Drawing.Size(97, 17)
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.TabIndex = 8
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Text = "Write QCI file:"
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.UseVisualStyleBackColor = True
 		'
 		'CompilerOptionDefineBonesFileNameTextBox
 		'
 		Me.CompilerOptionDefineBonesFileNameTextBox.Enabled = False
-		Me.CompilerOptionDefineBonesFileNameTextBox.Location = New System.Drawing.Point(292, 47)
+		Me.CompilerOptionDefineBonesFileNameTextBox.Location = New System.Drawing.Point(109, 18)
 		Me.CompilerOptionDefineBonesFileNameTextBox.Name = "CompilerOptionDefineBonesFileNameTextBox"
-		Me.CompilerOptionDefineBonesFileNameTextBox.Size = New System.Drawing.Size(139, 22)
+		Me.CompilerOptionDefineBonesFileNameTextBox.Size = New System.Drawing.Size(140, 22)
 		Me.CompilerOptionDefineBonesFileNameTextBox.TabIndex = 10
-		'
-		'CompilerOptionDefineBonesFileNameLabel
-		'
-		Me.CompilerOptionDefineBonesFileNameLabel.AutoSize = True
-		Me.CompilerOptionDefineBonesFileNameLabel.Enabled = False
-		Me.CompilerOptionDefineBonesFileNameLabel.Location = New System.Drawing.Point(213, 50)
-		Me.CompilerOptionDefineBonesFileNameLabel.Name = "CompilerOptionDefineBonesFileNameLabel"
-		Me.CompilerOptionDefineBonesFileNameLabel.Size = New System.Drawing.Size(78, 13)
-		Me.CompilerOptionDefineBonesFileNameLabel.TabIndex = 9
-		Me.CompilerOptionDefineBonesFileNameLabel.Text = "QCI file name:"
 		'
 		'DirectCompilerOptionsLabel
 		'
@@ -430,8 +422,8 @@ Partial Class CompileUserControl
 		'
 		Me.OptionsGroupBoxFillPanel.AutoScroll = True
 		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.GameSetupPanel)
-		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.CompilerOptionsGoldSourceEnginePanel)
 		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.CompilerOptionsSourceEnginePanel)
+		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.CompilerOptionsGoldSourceEnginePanel)
 		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.DirectCompilerOptionsLabel)
 		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.DirectCompilerOptionsTextBox)
 		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.CompilerOptionsTextBox)
@@ -457,20 +449,40 @@ Partial Class CompileUserControl
 		'
 		Me.CompilerOptionsSourceEnginePanel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.SourceEngineLogFileCheckBox)
-		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompilerOptionDefineBonesModifyQcFileCheckBox)
 		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompilerOptionDefineBonesCheckBox)
+		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.DefineBonesGroupBox)
+		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.SourceEngineLogFileCheckBox)
 		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompilerOptionVerboseCheckBox)
-		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompilerOptionDefineBonesFileNameTextBox)
 		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompilerOptionNoP4CheckBox)
-		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompilerOptionDefineBonesFileNameLabel)
 		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.FolderForEachModelCheckBox)
-		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompilerOptionDefineBonesCreateFileCheckBox)
 		Me.CompilerOptionsSourceEnginePanel.Controls.Add(Me.CompileOptionsSourceEngineUseDefaultsButton)
 		Me.CompilerOptionsSourceEnginePanel.Location = New System.Drawing.Point(0, 24)
 		Me.CompilerOptionsSourceEnginePanel.Name = "CompilerOptionsSourceEnginePanel"
 		Me.CompilerOptionsSourceEnginePanel.Size = New System.Drawing.Size(764, 100)
 		Me.CompilerOptionsSourceEnginePanel.TabIndex = 38
+		'
+		'DefineBonesGroupBox
+		'
+		Me.DefineBonesGroupBox.Controls.Add(Me.CompilerOptionDefineBonesFileNameTextBox)
+		Me.DefineBonesGroupBox.Controls.Add(Me.CompilerOptionDefineBonesModifyQcFileCheckBox)
+		Me.DefineBonesGroupBox.Controls.Add(Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox)
+		Me.DefineBonesGroupBox.Controls.Add(Me.CompilerOptionDefineBonesWriteQciFileCheckBox)
+		Me.DefineBonesGroupBox.Location = New System.Drawing.Point(173, 3)
+		Me.DefineBonesGroupBox.Name = "DefineBonesGroupBox"
+		Me.DefineBonesGroupBox.Size = New System.Drawing.Size(259, 95)
+		Me.DefineBonesGroupBox.TabIndex = 14
+		Me.DefineBonesGroupBox.TabStop = False
+		'
+		'CompilerOptionDefineBonesOverwriteQciFileCheckBox
+		'
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.AutoSize = True
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.Enabled = False
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.Location = New System.Drawing.Point(19, 45)
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.Name = "CompilerOptionDefineBonesOverwriteQciFileCheckBox"
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.Size = New System.Drawing.Size(116, 17)
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.TabIndex = 13
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.Text = "Overwrite QCI file"
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.UseVisualStyleBackColor = True
 		'
 		'CompileOptionsSourceEngineUseDefaultsButton
 		'
@@ -676,6 +688,8 @@ Partial Class CompileUserControl
 		Me.GameSetupPanel.ResumeLayout(False)
 		Me.CompilerOptionsSourceEnginePanel.ResumeLayout(False)
 		Me.CompilerOptionsSourceEnginePanel.PerformLayout()
+		Me.DefineBonesGroupBox.ResumeLayout(False)
+		Me.DefineBonesGroupBox.PerformLayout()
 		Me.CompilerOptionsGoldSourceEnginePanel.ResumeLayout(False)
 		Me.CompilerOptionsGoldSourceEnginePanel.PerformLayout()
 		Me.CompileButtonsPanel.ResumeLayout(False)
@@ -711,10 +725,9 @@ Partial Class CompileUserControl
 	Friend WithEvents UseInPackButton As System.Windows.Forms.Button
 	Friend WithEvents UseAllInPackButton As System.Windows.Forms.Button
 	Friend WithEvents FolderForEachModelCheckBox As System.Windows.Forms.CheckBox
-	Friend WithEvents CompilerOptionDefineBonesFileNameLabel As System.Windows.Forms.Label
 	Friend WithEvents CompilerOptionDefineBonesFileNameTextBox As System.Windows.Forms.TextBox
 	Friend WithEvents CompilerOptionDefineBonesCheckBox As System.Windows.Forms.CheckBox
-	Friend WithEvents CompilerOptionDefineBonesCreateFileCheckBox As System.Windows.Forms.CheckBox
+	Friend WithEvents CompilerOptionDefineBonesWriteQciFileCheckBox As System.Windows.Forms.CheckBox
 	Friend WithEvents CompilerOptionDefineBonesModifyQcFileCheckBox As System.Windows.Forms.CheckBox
 	Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
 	Friend WithEvents CompileOptionsSourceEngineUseDefaultsButton As System.Windows.Forms.Button
@@ -735,4 +748,6 @@ Partial Class CompileUserControl
 	Friend WithEvents CompileButtonsPanel As Panel
 	Friend WithEvents CompilerOptionsTextBoxMinScrollPanel As Panel
 	Friend WithEvents PostCompilePanel As Panel
+	Friend WithEvents DefineBonesGroupBox As GroupBox
+	Friend WithEvents CompilerOptionDefineBonesOverwriteQciFileCheckBox As CheckBox
 End Class

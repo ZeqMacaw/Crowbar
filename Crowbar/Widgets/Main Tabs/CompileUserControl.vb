@@ -77,11 +77,13 @@ Public Class CompileUserControl
 		' Source
 
 		Me.CompilerOptionDefineBonesCheckBox.DataBindings.Add("Checked", TheApp.Settings, "CompileOptionDefineBonesIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.DataBindings.Add("Checked", TheApp.Settings, "CompileOptionDefineBonesCreateFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.DataBindings.Add("Checked", TheApp.Settings, "CompileOptionDefineBonesCreateFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.CompilerOptionDefineBonesFileNameTextBox.DataBindings.Add("Text", TheApp.Settings, "CompileOptionDefineBonesQciFileName", False, DataSourceUpdateMode.OnValidation)
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.DataBindings.Add("Checked", TheApp.Settings, "CompileOptionDefineBonesOverwriteQciFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.DataBindings.Add("Checked", TheApp.Settings, "CompileOptionDefineBonesModifyQcFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.CompilerOptionNoP4CheckBox.DataBindings.Add("Checked", TheApp.Settings, "CompileOptionNoP4IsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.CompilerOptionVerboseCheckBox.DataBindings.Add("Checked", TheApp.Settings, "CompileOptionVerboseIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.UpdateCompilerOptionDefineBonesWidgets()
 	End Sub
 
 	Private Sub Free()
@@ -555,10 +557,10 @@ Public Class CompileUserControl
 	End Sub
 
 	Private Sub UpdateCompilerOptionDefineBonesWidgets()
-		Me.CompilerOptionDefineBonesCreateFileCheckBox.Enabled = Me.CompilerOptionDefineBonesCheckBox.Checked
-		Me.CompilerOptionDefineBonesFileNameLabel.Enabled = Me.CompilerOptionDefineBonesCreateFileCheckBox.Enabled AndAlso Me.CompilerOptionDefineBonesCreateFileCheckBox.Checked
-		Me.CompilerOptionDefineBonesFileNameTextBox.Enabled = Me.CompilerOptionDefineBonesCreateFileCheckBox.Enabled AndAlso Me.CompilerOptionDefineBonesCreateFileCheckBox.Checked
-		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Enabled = Me.CompilerOptionDefineBonesCreateFileCheckBox.Enabled AndAlso Me.CompilerOptionDefineBonesCreateFileCheckBox.Checked
+		Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Enabled = Me.CompilerOptionDefineBonesCheckBox.Checked
+		Me.CompilerOptionDefineBonesFileNameTextBox.Enabled = Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Enabled AndAlso Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Checked
+		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.Enabled = Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Enabled AndAlso Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Checked
+		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Enabled = Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Enabled AndAlso Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Checked
 	End Sub
 
 	Private Sub UpdateWidgets(ByVal compilerIsRunning As Boolean)

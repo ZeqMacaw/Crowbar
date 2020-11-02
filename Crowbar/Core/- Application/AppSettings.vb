@@ -928,6 +928,16 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	Public Property CompileOptionDefineBonesOverwriteQciFileIsChecked() As Boolean
+		Get
+			Return Me.theCompileOptionDefineBonesOverwriteQciFileIsChecked
+		End Get
+		Set(ByVal value As Boolean)
+			Me.theCompileOptionDefineBonesOverwriteQciFileIsChecked = value
+			NotifyPropertyChanged("CompileOptionDefineBonesOverwriteQciFileIsChecked")
+		End Set
+	End Property
+
 	Public Property CompileOptionDefineBonesModifyQcFileIsChecked() As Boolean
 		Get
 			Return Me.theCompileOptionDefineBonesModifyQcFileIsChecked
@@ -1666,6 +1676,7 @@ Public Class AppSettings
 		Me.CompileOptionDefineBonesIsChecked = False
 		Me.CompileOptionDefineBonesCreateFileIsChecked = False
 		Me.CompileOptionDefineBonesQciFileName = "DefineBones"
+		Me.CompileOptionDefineBonesOverwriteQciFileIsChecked = False
 		Me.CompileOptionDefineBonesModifyQcFileIsChecked = False
 
 		Me.CompileOptionsText = ""
@@ -1865,6 +1876,7 @@ Public Class AppSettings
 	Private theCompileOptionDefineBonesIsChecked As Boolean
 	Private theCompileOptionDefineBonesCreateFileIsChecked As Boolean
 	Private theCompileOptionDefineBonesQciFileName As String
+	Private theCompileOptionDefineBonesOverwriteQciFileIsChecked As Boolean
 	Private theCompileOptionDefineBonesModifyQcFileIsChecked As Boolean
 	Private theCompileOptionNoP4IsChecked As Boolean
 	Private theCompileOptionVerboseIsChecked As Boolean
