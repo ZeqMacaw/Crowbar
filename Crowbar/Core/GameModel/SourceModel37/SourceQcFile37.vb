@@ -266,6 +266,7 @@ Public Class SourceQcFile37
 		Dim aModel As SourceMdlModel37
 		Dim anEyeball As SourceMdlEyeball37
 		Dim eyeballTextureName As String
+		Dim irisTextureName As String
 		Dim diameter As Double
 		Dim angle As Double
 		Dim irisScale As Double
@@ -346,6 +347,12 @@ Public Class SourceQcFile37
 							'eyeballTextureName = Path.GetFileName(theSourceEngineModel.theMdlFileHeader.theTextures(anEyeball.theTextureIndex).theName)
 						End If
 
+						If anEyeball.irisMaterial = -1 Then
+							irisTextureName = "[unknown_texture]"
+						Else
+							irisTextureName = Me.theMdlFileData.theTextures(anEyeball.irisMaterial).theFileName
+						End If
+
 						line = vbTab
 						line += "eyeball """
 						line += eyeballNames(eyeballIndex)
@@ -363,10 +370,9 @@ Public Class SourceQcFile37
 						line += diameter.ToString("0.######", TheApp.InternalNumberFormat)
 						line += " "
 						line += angle.ToString("0.######", TheApp.InternalNumberFormat)
-						line += " "
-						'Unused in later Source Engine versions.
-						line += """iris_unused"""
-						line += " "
+						line += " """
+						line += irisTextureName
+						line += """ "
 						line += Math.Round(irisScale, 6).ToString("0.######", TheApp.InternalNumberFormat)
 						Me.theOutputFileStreamWriter.WriteLine(line)
 
