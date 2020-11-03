@@ -121,7 +121,7 @@ Partial Class ViewUserControl
 		Me.OverrideMdlVersionComboBox.FormattingEnabled = True
 		Me.OverrideMdlVersionComboBox.Location = New System.Drawing.Point(123, 32)
 		Me.OverrideMdlVersionComboBox.Name = "OverrideMdlVersionComboBox"
-		Me.OverrideMdlVersionComboBox.Size = New System.Drawing.Size(100, 21)
+		Me.OverrideMdlVersionComboBox.Size = New System.Drawing.Size(110, 21)
 		Me.OverrideMdlVersionComboBox.TabIndex = 47
 		'
 		'GotoMdlFileButton
