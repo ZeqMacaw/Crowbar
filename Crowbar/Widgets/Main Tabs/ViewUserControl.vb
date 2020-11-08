@@ -10,26 +10,14 @@ Public Class ViewUserControl
 		InitializeComponent()
 	End Sub
 
-	'UserControl overrides dispose to clean up the component list.
-	<System.Diagnostics.DebuggerNonUserCode()>
-	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
-		Try
-			If disposing Then
-				Me.Free()
-				If components IsNot Nothing Then
-					components.Dispose()
-				End If
-			End If
-		Finally
-			MyBase.Dispose(disposing)
-		End Try
-	End Sub
-
 #End Region
 
 #Region "Init and Free"
 
 	Private Sub Init()
+		Me.theTwoModelViewers = New List(Of Viewer)(2)
+		Me.theTwoModelViewers.Add(Nothing)
+		Me.theTwoModelViewers.Add(Nothing)
 		Me.theModelViewers = New List(Of Viewer)()
 
 		Dim anEnumList As IList
@@ -44,10 +32,14 @@ Public Class ViewUserControl
 		Me.UpdateWidgets(False)
 
 		AddHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
+		AddHandler Me.ParentForm.ResizeEnd, AddressOf Me.ParentForm_ResizeEnd
 	End Sub
 
 	Private Sub Free()
 		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
+		If Me.ParentForm IsNot Nothing Then
+			RemoveHandler Me.ParentForm.ResizeEnd, AddressOf Me.ParentForm_ResizeEnd
+		End If
 
 		'RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
 		If Me.MdlPathFileNameTextBox.DataBindings("Text") IsNot Nothing Then
@@ -59,6 +51,12 @@ Public Class ViewUserControl
 
 		Me.FreeDataViewer()
 		Me.FreeModelViewerWithModel()
+		If Me.theTwoModelViewers IsNot Nothing Then
+			For Each aModelViewer As Viewer In Me.theTwoModelViewers
+				Me.FreeModelViewer(aModelViewer)
+			Next
+			Me.theTwoModelViewers.Clear()
+		End If
 		If Me.theModelViewers IsNot Nothing Then
 			For Each aModelViewer As Viewer In Me.theModelViewers
 				Me.FreeModelViewer(aModelViewer)
@@ -105,12 +103,48 @@ Public Class ViewUserControl
 
 #Region "Widget Event Handlers"
 
-	Private Sub UpdateUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+	Private Sub ViewUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.MdlPathFileNameTextBox, Me.BrowseForMdlFileButton)
 
 		If Not Me.DesignMode Then
 			Me.Init()
+		End If
+	End Sub
+
+	Private Sub ViewUserControl_HandleDestroyed(sender As Object, e As EventArgs) Handles MyBase.HandleDestroyed
+		If Not Me.DesignMode Then
+			Me.Free()
+		End If
+	End Sub
+
+	Private Sub ViewUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
+		If ParentForm IsNot Nothing AndAlso Me.Visible Then
+			If Me.ParentForm.Bounds.Equals(Me.ParentForm.RestoreBounds) OrElse ParentForm.WindowState = FormWindowState.Maximized Then
+				If Me.theHlmvAppWindowHandle <> IntPtr.Zero Then
+					Me.ResizeHlmvWidgets()
+				End If
+				If Me.theFirstHlmvAppWindowHandle <> IntPtr.Zero Then
+					Me.ResizeFirstHlmvWidgets()
+				End If
+				If Me.theSecondHlmvAppWindowHandle <> IntPtr.Zero Then
+					Me.ResizeSecondHlmvWidgets()
+				End If
+			End If
+		End If
+	End Sub
+
+	Private Sub ParentForm_ResizeEnd(sender As Object, e As EventArgs)
+		If Me.Visible Then
+			If Me.theHlmvAppWindowHandle <> IntPtr.Zero Then
+				Me.ResizeHlmvWidgets()
+			End If
+			If Me.theFirstHlmvAppWindowHandle <> IntPtr.Zero Then
+				Me.ResizeFirstHlmvWidgets()
+			End If
+			If Me.theSecondHlmvAppWindowHandle <> IntPtr.Zero Then
+				Me.ResizeSecondHlmvWidgets()
+			End If
 		End If
 	End Sub
 
@@ -155,6 +189,116 @@ Public Class ViewUserControl
 	Private Sub GotoMdlFileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GotoMdlFileButton.Click
 		FileManager.OpenWindowsExplorer(Me.AppSettingMdlPathFileName)
 	End Sub
+
+	Private Sub OpenTwoViewersButton_Click(sender As Object, e As EventArgs) Handles OpenTwoViewersButton.Click
+		Me.OpenTwoViewers()
+	End Sub
+
+	Private Sub CloseTwoViewersButton_Click(sender As Object, e As EventArgs) Handles CloseTwoViewersButton.Click
+		If Me.theTwoModelViewers IsNot Nothing Then
+			For Each aModelViewer As Viewer In Me.theTwoModelViewers
+				Me.FreeModelViewer(aModelViewer)
+			Next
+			Me.theTwoModelViewers(0) = Nothing
+			Me.theTwoModelViewers(1) = Nothing
+		End If
+	End Sub
+
+	'Private Sub HlmvSplitContainer_SplitterMoved(sender As Object, e As EventArgs) Handles HlmvSplitContainer.SplitterMoved
+	'	If Me.theHlmvAppWindowHandle <> IntPtr.Zero Then
+	'		Win32Api.MoveWindow(Me.theHlmvAppWindowHandle, 0, 0, Me.HlmvSplitContainer.Panel1.Width, Me.HlmvSplitContainer.Panel1.Height, True)
+	'		'TODO: Need to call this only after Splitter has finished moving (i.e. MouseUp occurs).
+	'		'Win32Api.SetForegroundWindow(Me.theHlmvAppWindowHandle)
+	'	End If
+	'End Sub
+
+	Private Sub FirstHlmvSplitContainer_MouseDown(sender As Object, e As EventArgs) Handles FirstHlmvSplitContainer.MouseDown
+		If Me.theFirstHlmvAppWindowHandle <> IntPtr.Zero Then
+			Me.theMouseDownIsActiveOnHlmvSplitContainer = True
+		End If
+	End Sub
+
+	Private Sub FirstHlmvSplitContainer_MouseUp(sender As Object, e As EventArgs) Handles FirstHlmvSplitContainer.MouseUp
+		If Me.theFirstHlmvAppWindowHandle <> IntPtr.Zero AndAlso Me.theMouseDownIsActiveOnHlmvSplitContainer Then
+			Me.theMouseDownIsActiveOnHlmvSplitContainer = False
+			Win32Api.SetForegroundWindow(Me.theFirstHlmvAppWindowHandle)
+			'Threading.Thread.Sleep(1500)
+			Me.FirstHlmvMainPanel.Refresh()
+			Me.FirstHlmvModelPanel.Refresh()
+		End If
+	End Sub
+
+	Private Sub FirstHlmvSplitContainer_SplitterMoved(sender As Object, e As EventArgs) Handles FirstHlmvSplitContainer.SplitterMoved
+		If Me.theFirstHlmvAppWindowHandle <> IntPtr.Zero AndAlso Not Me.theMouseDownIsActiveOnHlmvSplitContainer Then
+			Me.ResizeFirstHlmvWidgets()
+		End If
+	End Sub
+
+	Private Sub SecondHlmvSplitContainer_MouseDown(sender As Object, e As EventArgs) Handles SecondHlmvSplitContainer.MouseDown
+		If Me.theSecondHlmvAppWindowHandle <> IntPtr.Zero Then
+			Me.theMouseDownIsActiveOnHlmvSplitContainer = True
+		End If
+	End Sub
+
+	Private Sub SecondHlmvSplitContainer_MouseUp(sender As Object, e As EventArgs) Handles SecondHlmvSplitContainer.MouseUp
+		If Me.theSecondHlmvAppWindowHandle <> IntPtr.Zero AndAlso Me.theMouseDownIsActiveOnHlmvSplitContainer Then
+			Me.theMouseDownIsActiveOnHlmvSplitContainer = False
+			Win32Api.SetForegroundWindow(Me.theSecondHlmvAppWindowHandle)
+			'Threading.Thread.Sleep(1500)
+			Me.SecondHlmvMainPanel.Refresh()
+			Me.SecondHlmvModelPanel.Refresh()
+		End If
+	End Sub
+
+	Private Sub SecondHlmvSplitContainer_SplitterMoved(sender As Object, e As EventArgs) Handles SecondHlmvSplitContainer.SplitterMoved
+		If Me.theSecondHlmvAppWindowHandle <> IntPtr.Zero AndAlso Not Me.theMouseDownIsActiveOnHlmvSplitContainer Then
+			Me.ResizeSecondHlmvWidgets()
+		End If
+	End Sub
+
+	Private Sub HlmvSplitContainer_MouseDown(sender As Object, e As EventArgs) Handles HlmvSplitContainer.MouseDown
+		If Me.theHlmvAppWindowHandle <> IntPtr.Zero OrElse Me.theFirstHlmvAppWindowHandle <> IntPtr.Zero OrElse Me.theSecondHlmvAppWindowHandle <> IntPtr.Zero Then
+			Me.theMouseDownIsActiveOnHlmvSplitContainer = True
+		End If
+	End Sub
+
+	Private Sub HlmvSplitContainer_MouseUp(sender As Object, e As EventArgs) Handles HlmvSplitContainer.MouseUp
+		If (Me.theHlmvAppWindowHandle <> IntPtr.Zero OrElse Me.theFirstHlmvAppWindowHandle <> IntPtr.Zero OrElse Me.theSecondHlmvAppWindowHandle <> IntPtr.Zero) AndAlso Me.theMouseDownIsActiveOnHlmvSplitContainer Then
+			Me.theMouseDownIsActiveOnHlmvSplitContainer = False
+			'Win32Api.SetForegroundWindow(Me.theHlmvAppWindowHandle)
+			'Threading.Thread.Sleep(1500)
+		End If
+	End Sub
+
+	Private Sub HlmvSplitContainer_SplitterMoved(sender As Object, e As EventArgs) Handles HlmvSplitContainer.SplitterMoved
+		If (Me.theHlmvAppWindowHandle <> IntPtr.Zero OrElse Me.theFirstHlmvAppWindowHandle <> IntPtr.Zero OrElse Me.theSecondHlmvAppWindowHandle <> IntPtr.Zero) AndAlso Not Me.theMouseDownIsActiveOnHlmvSplitContainer Then
+			Me.ResizeHlmvWidgets()
+		End If
+	End Sub
+
+	'Private Sub SplitContainer2_MouseDown(sender As Object, e As EventArgs) Handles SplitContainer2.MouseDown
+	'	If Me.theHlmvAppWindowHandle <> IntPtr.Zero Then
+	'		Me.theMouseDownIsActiveOnSplitContainer2 = True
+	'	End If
+	'End Sub
+
+	'Private Sub SplitContainer2_MouseUp(sender As Object, e As EventArgs) Handles SplitContainer2.MouseUp
+	'	If Me.theHlmvAppWindowHandle <> IntPtr.Zero Then
+	'		Me.theMouseDownIsActiveOnSplitContainer2 = False
+	'	End If
+	'End Sub
+
+	'Private Sub SplitContainer2_SplitterMoved(sender As Object, e As EventArgs) Handles SplitContainer2.SplitterMoved
+	'	If Me.theHlmvAppWindowHandle <> IntPtr.Zero AndAlso Not Me.theMouseDownIsActiveOnSplitContainer2 Then
+	'		'Me.SplitContainer3.SplitterDistance = Me.SplitContainer2.SplitterDistance
+	'		'Win32Api.MoveWindow(Me.theHlmvAppWindowHandle, 0, 0, Me.HlmvSplitContainer.Panel1.Width, Me.HlmvSplitContainer.Panel1.Height, True)
+	'		Win32Api.MoveWindow(Me.theModelPanelHandle, 0, 0, Me.HlmvModelPanel.Width, Me.HlmvModelPanel.Height, True)
+	'		'Win32Api.MoveWindow(Me.theModelPanelSiblingHandle, 0, 0, Me.HlmvModelPanel.Width, Me.HlmvModelPanel.Height, True)
+	'		' Need to call this only after Splitter has finished moving (i.e. MouseUp occurs).
+	'		Win32Api.SetForegroundWindow(Me.theHlmvAppWindowHandle)
+	'		'Win32Api.PostMessage(Me.theHlmvAppWindowHandle, Win32Api.WndMsg.WM_SIZE, CType(0, IntPtr), CType(0, IntPtr))
+	'	End If
+	'End Sub
 
 	'Private Sub FromDecompileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
 	'	Me.AppSettingMdlPathFileName = TheApp.Settings.DecompileMdlPathFileName
@@ -242,11 +386,61 @@ Public Class ViewUserControl
 	End Sub
 
 	Private Sub ViewerBackgroundWorker_ProgressChanged(ByVal sender As System.Object, ByVal e As System.ComponentModel.ProgressChangedEventArgs)
-		Dim line As String
-		line = CStr(e.UserState)
+		If e.ProgressPercentage = 50 Then
+			Dim viewer As Viewer = CType(sender, Viewer)
+
+			If Me.theTwoModelViewers.Contains(viewer) Then
+				If viewer Is Me.theTwoModelViewers(0) Then
+					Me.theFirstHlmvAppWindowHandle = CType(e.UserState, IntPtr)
+					Me.InitFirstViewerWidgets()
+
+					If Me.theTwoModelViewers(1) Is Nothing Then
+						Dim aModelViewer As Viewer
+						aModelViewer = New Viewer()
+						AddHandler aModelViewer.ProgressChanged, AddressOf Me.ViewerBackgroundWorker_ProgressChanged
+						AddHandler aModelViewer.RunWorkerCompleted, AddressOf Me.ViewerBackgroundWorker_RunWorkerCompleted
+						aModelViewer.Run(Me.AppSettingGameSetupSelectedIndex)
+
+						Me.theTwoModelViewers(1) = aModelViewer
+
+						'TODO: If viewer is not running, give user indication of what prevents viewing.
+					End If
+				Else
+					Me.theSecondHlmvAppWindowHandle = CType(e.UserState, IntPtr)
+					Me.InitSecondViewerWidgets()
+				End If
+			Else
+				Me.theHlmvAppWindowHandle = CType(e.UserState, IntPtr)
+				Me.InitViewerWidgets()
+			End If
+			Exit Sub
+		ElseIf e.ProgressPercentage = 51 Then
+			Dim viewer As Viewer = CType(sender, Viewer)
+
+			If Me.theTwoModelViewers.Contains(viewer) Then
+				If viewer Is Me.theTwoModelViewers(0) Then
+					Win32Api.SetParent(Me.theFirstHlmvAppWindowHandle, IntPtr.Zero)
+					Win32Api.SetParent(Me.theFirstModelPanelHandle, Me.theFirstHlmvAppWindowHandle)
+					Win32Api.SetParent(Me.theFirstOptionsPanelHandle, Me.theFirstHlmvAppWindowHandle)
+					Me.theTwoModelViewers(0) = Nothing
+				Else
+					Win32Api.SetParent(Me.theSecondHlmvAppWindowHandle, IntPtr.Zero)
+					Win32Api.SetParent(Me.theSecondModelPanelHandle, Me.theSecondHlmvAppWindowHandle)
+					Win32Api.SetParent(Me.theSecondOptionsPanelHandle, Me.theSecondHlmvAppWindowHandle)
+					Me.theTwoModelViewers(1) = Nothing
+				End If
+			Else
+				Win32Api.SetParent(Me.theHlmvAppWindowHandle, IntPtr.Zero)
+				Win32Api.SetParent(Me.theModelPanelHandle, Me.theHlmvAppWindowHandle)
+				Win32Api.SetParent(Me.theOptionsPanelHandle, Me.theHlmvAppWindowHandle)
+			End If
+			Exit Sub
+		End If
+
+		Dim line As String = CStr(e.UserState)
 
 		If e.ProgressPercentage = 0 Then
-			Me.MessageTextBox.Text = ""
+			'Me.MessageTextBox.Text = ""
 			Me.MessageTextBox.AppendText(line + vbCrLf)
 
 			Dim modelViewer As Viewer = CType(sender, Viewer)
@@ -432,6 +626,122 @@ Public Class ViewUserControl
 
 #Region "Private Methods"
 
+	Private Sub InitFirstViewerWidgets()
+		Win32Api.SetWindowLong(Me.theFirstHlmvAppWindowHandle, Win32Api.WindowLongFlags.GWL_STYLE, CInt(Win32Api.WindowStyles.WS_VISIBLE))
+		Win32Api.SetParent(Me.theFirstHlmvAppWindowHandle, Me.FirstHlmvMainPanel.Handle)
+		'Win32Api.SetWindowPos(Me.theFirstHlmvAppWindowHandle, Win32Api.HWND_TOP, 0, 0, 0, 0, Win32Api.SetWindowPosFlags.IgnoreMove Or Win32Api.SetWindowPosFlags.IgnoreResize)
+		Win32Api.MoveWindow(Me.theFirstHlmvAppWindowHandle, 0, 0, Me.FirstHlmvMainPanel.Width, Me.FirstHlmvMainPanel.Height, True)
+
+		' This is the model panel.
+		Me.theFirstModelPanelHandle = Win32Api.FindWindowEx(Me.theFirstHlmvAppWindowHandle, IntPtr.Zero, "mx_class", "")
+		If Me.theFirstModelPanelHandle <> IntPtr.Zero Then
+			Win32Api.SetParent(Me.theFirstModelPanelHandle, Me.FirstHlmvModelPanel.Handle)
+			Win32Api.MoveWindow(Me.theFirstModelPanelHandle, 0, 0, Me.FirstHlmvModelPanel.Width, Me.FirstHlmvModelPanel.Height, True)
+		End If
+
+		Win32Api.SetForegroundWindow(Me.theFirstHlmvAppWindowHandle)
+		'Threading.Thread.Sleep(1500)
+		Me.FirstHlmvMainPanel.Refresh()
+		Me.FirstHlmvModelPanel.Refresh()
+		'Threading.Thread.Sleep(500)
+	End Sub
+
+	Private Sub InitSecondViewerWidgets()
+		Win32Api.SetWindowLong(Me.theSecondHlmvAppWindowHandle, Win32Api.WindowLongFlags.GWL_STYLE, CInt(Win32Api.WindowStyles.WS_VISIBLE))
+		Win32Api.SetParent(Me.theSecondHlmvAppWindowHandle, Me.SecondHlmvMainPanel.Handle)
+		Win32Api.MoveWindow(Me.theSecondHlmvAppWindowHandle, 0, 0, Me.SecondHlmvMainPanel.Width, Me.SecondHlmvMainPanel.Height, True)
+
+		' This is the model panel.
+		Me.theSecondModelPanelHandle = Win32Api.FindWindowEx(Me.theSecondHlmvAppWindowHandle, IntPtr.Zero, "mx_class", "")
+		If Me.theSecondModelPanelHandle <> IntPtr.Zero Then
+			Win32Api.SetParent(Me.theSecondModelPanelHandle, Me.SecondHlmvModelPanel.Handle)
+			Win32Api.MoveWindow(Me.theSecondModelPanelHandle, 0, 0, Me.SecondHlmvModelPanel.Width, Me.SecondHlmvModelPanel.Height, True)
+		End If
+
+		Win32Api.SetForegroundWindow(Me.theSecondHlmvAppWindowHandle)
+		'Threading.Thread.Sleep(1500)
+		Me.SecondHlmvMainPanel.Refresh()
+		Me.SecondHlmvModelPanel.Refresh()
+	End Sub
+
+	Private Sub InitViewerWidgets()
+		'Dim hlmvThread As UInt32 = Win32Api.GetWindowThreadProcessId(Me.theHlmvAppWindowHandle, IntPtr.Zero)
+
+		' Using WS_CHILD prevents menu from showing.
+		'Win32Api.SetWindowLong(Me.theHlmvAppWindowHandle, Win32Api.WindowLongFlags.GWL_STYLE, CInt(Win32Api.WindowStyles.WS_VISIBLE Or Win32Api.WindowStyles.WS_CHILD))
+		Win32Api.SetWindowLong(Me.theHlmvAppWindowHandle, Win32Api.WindowLongFlags.GWL_STYLE, CInt(Win32Api.WindowStyles.WS_VISIBLE))
+		Win32Api.SetParent(Me.theHlmvAppWindowHandle, Me.HlmvMainPanel.Handle)
+		'Win32Api.SetWindowLong(Me.theHlmvAppWindowHandle, Win32Api.WindowLongFlags.GWL_STYLE, CInt(Win32Api.WindowStyles.WS_VISIBLE))
+		''Win32Api.SetWindowLong(Me.theHlmvAppWindowHandle, Win32Api.WindowLongFlags.GWL_EXSTYLE, CInt(Win32Api.WindowStylesEx.WS_EX_TOOLWINDOW))
+		'' Move the window to a widget within the ViewUserControl.
+		Win32Api.MoveWindow(Me.theHlmvAppWindowHandle, 0, 0, Me.HlmvMainPanel.Width, Me.HlmvMainPanel.Height, True)
+		'Dim mainThread As UInt32 = Win32Api.GetWindowThreadProcessId(Me.Handle, IntPtr.Zero)
+		'Dim resultIsSuccess As Boolean = Win32Api.AttachThreadInput(mainThread, hlmvThread, True)
+		'Dim resultIsSuccess As Boolean = Win32Api.AttachThreadInput(hlmvThread, mainThread, True)
+		'Dim resultIsSuccess As Boolean = Win32Api.AttachThreadInput(mainThread, hlmvThread, False)
+		'Dim resultIsSuccess As Boolean = Win32Api.AttachThreadInput(hlmvThread, mainThread, False)
+
+		'' This is a sibling control of the model panel.
+		'Me.theModelPanelSiblingHandle = Win32Api.FindWindowEx(Me.theHlmvAppWindowHandle, IntPtr.Zero, "shaderdx8", "shaderdx8")
+		'If Me.theModelPanelSiblingHandle <> IntPtr.Zero Then
+		'	Win32Api.SetParent(Me.theModelPanelSiblingHandle, Me.HlmvModelPanel.Handle)
+		'	Win32Api.MoveWindow(Me.theModelPanelSiblingHandle, 0, 0, Me.HlmvModelPanel.Width, Me.HlmvModelPanel.Height, True)
+		'End If
+
+		' This is the model panel.
+		Me.theModelPanelHandle = Win32Api.FindWindowEx(Me.theHlmvAppWindowHandle, IntPtr.Zero, "mx_class", "")
+		If Me.theModelPanelHandle <> IntPtr.Zero Then
+			'Win32Api.SetWindowLong(Me.theModelPanelHandle, Win32Api.WindowLongFlags.GWL_STYLE, CInt(Win32Api.WindowStyles.WS_VISIBLE Or Win32Api.WindowStyles.WS_CHILD))
+			Win32Api.SetParent(Me.theModelPanelHandle, Me.HlmvModelPanel.Handle)
+			Win32Api.MoveWindow(Me.theModelPanelHandle, 0, 0, Me.HlmvModelPanel.Width, Me.HlmvModelPanel.Height, True)
+		End If
+
+		'' This is the options panel below the model panel.
+		'Me.theOptionsPanelHandle = Win32Api.FindWindowEx(Me.theHlmvAppWindowHandle, IntPtr.Zero, "mx_class", "Control Panel")
+		'If Me.theOptionsPanelHandle <> IntPtr.Zero Then
+		'	Win32Api.SetParent(Me.theOptionsPanelHandle, Me.HlmvOptionsPanel.Handle)
+		'	Win32Api.MoveWindow(Me.theOptionsPanelHandle, 0, 0, Me.HlmvOptionsPanel.Width, Me.HlmvOptionsPanel.Height, True)
+		'End If
+
+		Win32Api.SetForegroundWindow(Me.theHlmvAppWindowHandle)
+		'Threading.Thread.Sleep(1500)
+	End Sub
+
+	Private Sub ResizeFirstHlmvWidgets()
+		Win32Api.MoveWindow(Me.theFirstHlmvAppWindowHandle, 0, 0, Me.FirstHlmvMainPanel.Width, Me.FirstHlmvMainPanel.Height, True)
+		Win32Api.MoveWindow(Me.theFirstModelPanelHandle, 0, 0, Me.FirstHlmvModelPanel.Width, Me.FirstHlmvModelPanel.Height, True)
+		Win32Api.SetForegroundWindow(Me.theFirstHlmvAppWindowHandle)
+		'Win32Api.ShowWindow(Me.theFirstHlmvAppWindowHandle, Win32Api.ShowWindowCommands.Show)
+		'Threading.Thread.Sleep(1500)
+		Me.FirstHlmvMainPanel.Refresh()
+		Me.FirstHlmvModelPanel.Refresh()
+	End Sub
+
+	Private Sub ResizeSecondHlmvWidgets()
+		Win32Api.MoveWindow(Me.theSecondHlmvAppWindowHandle, 0, 0, Me.SecondHlmvMainPanel.Width, Me.SecondHlmvMainPanel.Height, True)
+		Win32Api.MoveWindow(Me.theSecondModelPanelHandle, 0, 0, Me.SecondHlmvModelPanel.Width, Me.SecondHlmvModelPanel.Height, True)
+		Win32Api.SetForegroundWindow(Me.theSecondHlmvAppWindowHandle)
+		'Win32Api.ShowWindow(Me.theSecondHlmvAppWindowHandle, Win32Api.ShowWindowCommands.Show)
+		'Threading.Thread.Sleep(1500)
+		Me.SecondHlmvMainPanel.Refresh()
+		Me.SecondHlmvModelPanel.Refresh()
+	End Sub
+
+	Private Sub ResizeHlmvWidgets()
+		Win32Api.MoveWindow(Me.theHlmvAppWindowHandle, 0, 0, Me.HlmvMainPanel.Width, Me.HlmvMainPanel.Height, True)
+		Win32Api.MoveWindow(Me.theModelPanelHandle, 0, 0, Me.HlmvModelPanel.Width, Me.HlmvModelPanel.Height, True)
+		'Win32Api.MoveWindow(Me.theOptionsPanelHandle, 0, 0, Me.HlmvOptionsPanel.Width, Me.HlmvOptionsPanel.Height, True)
+		Win32Api.SetForegroundWindow(Me.theHlmvAppWindowHandle)
+		'Threading.Thread.Sleep(1500)
+
+		'Me.ParentForm.Activate()
+		'Me.Select()
+		'Win32Api.SetForegroundWindow(Me.ParentForm.Handle)
+
+		Me.ResizeFirstHlmvWidgets()
+		Me.ResizeSecondHlmvWidgets()
+	End Sub
+
 	Private Sub UpdateDataBindings()
 		Me.MdlPathFileNameTextBox.DataBindings.Add("Text", TheApp.Settings, Me.NameOfAppSettingMdlPathFileName, False, DataSourceUpdateMode.OnValidation)
 		'AddHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
@@ -467,6 +777,36 @@ Public Class ViewUserControl
 		Me.theModelViewerWithModel.Run(Me.AppSettingGameSetupSelectedIndex, Me.AppSettingMdlPathFileName, viewAsReplacement, ViewAsReplacementSubfolderName)
 
 		'TODO: If viewer is not running, give user indication of what prevents viewing.
+	End Sub
+
+	Private Sub OpenTwoViewers()
+		Dim aModelViewer As Viewer
+
+		' Open first viewer, only if there are no viewers open.
+		If Me.theTwoModelViewers(0) Is Nothing AndAlso Me.theTwoModelViewers(1) Is Nothing Then
+			aModelViewer = New Viewer()
+			AddHandler aModelViewer.ProgressChanged, AddressOf Me.ViewerBackgroundWorker_ProgressChanged
+			AddHandler aModelViewer.RunWorkerCompleted, AddressOf Me.ViewerBackgroundWorker_RunWorkerCompleted
+			aModelViewer.Run(Me.AppSettingGameSetupSelectedIndex)
+
+			Me.theTwoModelViewers(0) = aModelViewer
+
+			'TODO: If viewer is not running, give user indication of what prevents viewing.
+		End If
+
+		'Threading.Thread.Sleep(50)
+
+		' Open second viewer after the background process starts the first viewer.
+		'If Me.theTwoModelViewers(1) Is Nothing Then
+		'	aModelViewer = New Viewer()
+		'	AddHandler aModelViewer.ProgressChanged, AddressOf Me.ViewerBackgroundWorker_ProgressChanged
+		'	AddHandler aModelViewer.RunWorkerCompleted, AddressOf Me.ViewerBackgroundWorker_RunWorkerCompleted
+		'	aModelViewer.Run(Me.AppSettingGameSetupSelectedIndex)
+
+		'	Me.theTwoModelViewers(1) = aModelViewer
+
+		'	'TODO: If viewer is not running, give user indication of what prevents viewing.
+		'End If
 	End Sub
 
 	Private Sub OpenViewer()
@@ -523,10 +863,8 @@ Public Class ViewUserControl
 		If aModelViewer IsNot Nothing Then
 			RemoveHandler aModelViewer.ProgressChanged, AddressOf Me.ViewerBackgroundWorker_ProgressChanged
 			RemoveHandler aModelViewer.RunWorkerCompleted, AddressOf Me.ViewerBackgroundWorker_RunWorkerCompleted
-			aModelViewer.Dispose()
+			aModelViewer.Halt()
 			aModelViewer = Nothing
-
-			Me.theModelViewers.Remove(aModelViewer)
 		End If
 	End Sub
 
@@ -534,11 +872,27 @@ Public Class ViewUserControl
 
 #Region "Data"
 
-	Dim theViewerType As ViewerType
+	Private theViewerType As ViewerType
 
-	Dim theDataViewer As Viewer
-	Dim theModelViewerWithModel As Viewer
-	Dim theModelViewers As List(Of Viewer)
+	Private theDataViewer As Viewer
+	Private theModelViewerWithModel As Viewer
+	Private theModelViewers As List(Of Viewer)
+	Private theTwoModelViewers As List(Of Viewer)
+
+	Private theMouseDownIsActiveOnHlmvSplitContainer As Boolean = False
+
+	' First viewer
+	Private theFirstHlmvAppWindowHandle As IntPtr
+	Private theFirstModelPanelHandle As IntPtr
+	Private theFirstOptionsPanelHandle As IntPtr
+	' Second viewer
+	Private theSecondHlmvAppWindowHandle As IntPtr
+	Private theSecondModelPanelHandle As IntPtr
+	Private theSecondOptionsPanelHandle As IntPtr
+
+	Private theHlmvAppWindowHandle As IntPtr
+	Private theModelPanelHandle As IntPtr
+	Private theOptionsPanelHandle As IntPtr
 
 #End Region
 

@@ -2,17 +2,17 @@
 Partial Class ViewUserControl
 	Inherits BaseUserControl
 
-	''UserControl overrides dispose to clean up the component list.
-	'<System.Diagnostics.DebuggerNonUserCode()> _
-	'Protected Overrides Sub Dispose(ByVal disposing As Boolean)
-	'	Try
-	'		If disposing AndAlso components IsNot Nothing Then
-	'			components.Dispose()
-	'		End If
-	'	Finally
-	'		MyBase.Dispose(disposing)
-	'	End Try
-	'End Sub
+	'UserControl overrides dispose to clean up the component list.
+	<System.Diagnostics.DebuggerNonUserCode()>
+	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
+		Try
+			If disposing AndAlso components IsNot Nothing Then
+				components.Dispose()
+			End If
+		Finally
+			MyBase.Dispose(disposing)
+		End Try
+	End Sub
 
 	'Required by the Windows Form Designer
 	Private components As System.ComponentModel.IContainer
@@ -32,8 +32,19 @@ Partial Class ViewUserControl
 		Me.OverrideMdlVersionComboBox = New System.Windows.Forms.ComboBox()
 		Me.GotoMdlFileButton = New System.Windows.Forms.Button()
 		Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+		Me.HlmvModelPanel = New System.Windows.Forms.Panel()
+		Me.HlmvMainPanel = New System.Windows.Forms.Panel()
+		Me.HlmvSplitContainer = New System.Windows.Forms.SplitContainer()
+		Me.FirstHlmvSplitContainer = New System.Windows.Forms.SplitContainer()
+		Me.FirstHlmvMainPanel = New System.Windows.Forms.Panel()
+		Me.FirstHlmvModelPanel = New System.Windows.Forms.Panel()
+		Me.HlmvOptionsPanel = New System.Windows.Forms.Panel()
+		Me.SecondHlmvSplitContainer = New System.Windows.Forms.SplitContainer()
+		Me.SecondHlmvMainPanel = New System.Windows.Forms.Panel()
+		Me.SecondHlmvModelPanel = New System.Windows.Forms.Panel()
 		Me.GroupBox1 = New System.Windows.Forms.GroupBox()
 		Me.InfoRichTextBox = New Crowbar.RichTextBoxEx()
+		Me.OpenTwoViewersButton = New System.Windows.Forms.Button()
 		Me.GameLabel = New System.Windows.Forms.Label()
 		Me.GameSetupComboBox = New System.Windows.Forms.ComboBox()
 		Me.SetUpGameButton = New System.Windows.Forms.Button()
@@ -43,11 +54,24 @@ Partial Class ViewUserControl
 		Me.OpenMappingToolButton = New System.Windows.Forms.Button()
 		Me.RunGameButton = New System.Windows.Forms.Button()
 		Me.MessageTextBox = New Crowbar.TextBoxEx()
+		Me.CloseTwoViewersButton = New System.Windows.Forms.Button()
 		Me.Panel2.SuspendLayout()
 		CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SplitContainer1.Panel1.SuspendLayout()
 		Me.SplitContainer1.Panel2.SuspendLayout()
 		Me.SplitContainer1.SuspendLayout()
+		CType(Me.HlmvSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
+		Me.HlmvSplitContainer.Panel1.SuspendLayout()
+		Me.HlmvSplitContainer.Panel2.SuspendLayout()
+		Me.HlmvSplitContainer.SuspendLayout()
+		CType(Me.FirstHlmvSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
+		Me.FirstHlmvSplitContainer.Panel1.SuspendLayout()
+		Me.FirstHlmvSplitContainer.Panel2.SuspendLayout()
+		Me.FirstHlmvSplitContainer.SuspendLayout()
+		CType(Me.SecondHlmvSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
+		Me.SecondHlmvSplitContainer.Panel1.SuspendLayout()
+		Me.SecondHlmvSplitContainer.Panel2.SuspendLayout()
+		Me.SecondHlmvSplitContainer.SuspendLayout()
 		Me.GroupBox1.SuspendLayout()
 		Me.SuspendLayout()
 		'
@@ -92,6 +116,8 @@ Partial Class ViewUserControl
 		'
 		'Panel2
 		'
+		Me.Panel2.Controls.Add(Me.CloseTwoViewersButton)
+		Me.Panel2.Controls.Add(Me.OpenTwoViewersButton)
 		Me.Panel2.Controls.Add(Me.OverrideMdlVersionLabel)
 		Me.Panel2.Controls.Add(Me.Label1)
 		Me.Panel2.Controls.Add(Me.MdlPathFileNameTextBox)
@@ -121,7 +147,7 @@ Partial Class ViewUserControl
 		Me.OverrideMdlVersionComboBox.FormattingEnabled = True
 		Me.OverrideMdlVersionComboBox.Location = New System.Drawing.Point(123, 32)
 		Me.OverrideMdlVersionComboBox.Name = "OverrideMdlVersionComboBox"
-		Me.OverrideMdlVersionComboBox.Size = New System.Drawing.Size(100, 21)
+		Me.OverrideMdlVersionComboBox.Size = New System.Drawing.Size(110, 21)
 		Me.OverrideMdlVersionComboBox.TabIndex = 47
 		'
 		'GotoMdlFileButton
@@ -145,6 +171,9 @@ Partial Class ViewUserControl
 		'
 		'SplitContainer1.Panel1
 		'
+		Me.SplitContainer1.Panel1.Controls.Add(Me.HlmvModelPanel)
+		Me.SplitContainer1.Panel1.Controls.Add(Me.HlmvMainPanel)
+		Me.SplitContainer1.Panel1.Controls.Add(Me.HlmvSplitContainer)
 		Me.SplitContainer1.Panel1.Controls.Add(Me.GroupBox1)
 		Me.SplitContainer1.Panel1MinSize = 45
 		'
@@ -165,6 +194,127 @@ Partial Class ViewUserControl
 		Me.SplitContainer1.SplitterDistance = 363
 		Me.SplitContainer1.TabIndex = 13
 		'
+		'HlmvModelPanel
+		'
+		Me.HlmvModelPanel.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.HlmvModelPanel.Location = New System.Drawing.Point(0, 0)
+		Me.HlmvModelPanel.Name = "HlmvModelPanel"
+		Me.HlmvModelPanel.Size = New System.Drawing.Size(770, 363)
+		Me.HlmvModelPanel.TabIndex = 0
+		Me.HlmvModelPanel.Visible = False
+		'
+		'HlmvMainPanel
+		'
+		Me.HlmvMainPanel.Location = New System.Drawing.Point(0, 0)
+		Me.HlmvMainPanel.MaximumSize = New System.Drawing.Size(1224, 260)
+		Me.HlmvMainPanel.MinimumSize = New System.Drawing.Size(1224, 260)
+		Me.HlmvMainPanel.Name = "HlmvMainPanel"
+		Me.HlmvMainPanel.Size = New System.Drawing.Size(1224, 260)
+		Me.HlmvMainPanel.TabIndex = 0
+		Me.HlmvMainPanel.Visible = False
+		'
+		'HlmvSplitContainer
+		'
+		Me.HlmvSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.HlmvSplitContainer.Location = New System.Drawing.Point(0, 0)
+		Me.HlmvSplitContainer.Name = "HlmvSplitContainer"
+		'
+		'HlmvSplitContainer.Panel1
+		'
+		Me.HlmvSplitContainer.Panel1.AutoScroll = True
+		Me.HlmvSplitContainer.Panel1.Controls.Add(Me.FirstHlmvSplitContainer)
+		Me.HlmvSplitContainer.Panel1.Controls.Add(Me.HlmvOptionsPanel)
+		'
+		'HlmvSplitContainer.Panel2
+		'
+		Me.HlmvSplitContainer.Panel2.Controls.Add(Me.SecondHlmvSplitContainer)
+		Me.HlmvSplitContainer.Size = New System.Drawing.Size(770, 363)
+		Me.HlmvSplitContainer.SplitterDistance = 385
+		Me.HlmvSplitContainer.TabIndex = 5
+		'
+		'FirstHlmvSplitContainer
+		'
+		Me.FirstHlmvSplitContainer.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+		Me.FirstHlmvSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.FirstHlmvSplitContainer.Location = New System.Drawing.Point(0, 0)
+		Me.FirstHlmvSplitContainer.Name = "FirstHlmvSplitContainer"
+		Me.FirstHlmvSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal
+		'
+		'FirstHlmvSplitContainer.Panel1
+		'
+		Me.FirstHlmvSplitContainer.Panel1.AutoScroll = True
+		Me.FirstHlmvSplitContainer.Panel1.Controls.Add(Me.FirstHlmvMainPanel)
+		'
+		'FirstHlmvSplitContainer.Panel2
+		'
+		Me.FirstHlmvSplitContainer.Panel2.Controls.Add(Me.FirstHlmvModelPanel)
+		Me.FirstHlmvSplitContainer.Size = New System.Drawing.Size(385, 363)
+		Me.FirstHlmvSplitContainer.SplitterDistance = 125
+		Me.FirstHlmvSplitContainer.TabIndex = 0
+		'
+		'FirstHlmvMainPanel
+		'
+		Me.FirstHlmvMainPanel.Location = New System.Drawing.Point(0, 0)
+		Me.FirstHlmvMainPanel.MaximumSize = New System.Drawing.Size(1224, 260)
+		Me.FirstHlmvMainPanel.MinimumSize = New System.Drawing.Size(1224, 260)
+		Me.FirstHlmvMainPanel.Name = "FirstHlmvMainPanel"
+		Me.FirstHlmvMainPanel.Size = New System.Drawing.Size(1224, 260)
+		Me.FirstHlmvMainPanel.TabIndex = 1
+		'
+		'FirstHlmvModelPanel
+		'
+		Me.FirstHlmvModelPanel.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.FirstHlmvModelPanel.Location = New System.Drawing.Point(0, 0)
+		Me.FirstHlmvModelPanel.Name = "FirstHlmvModelPanel"
+		Me.FirstHlmvModelPanel.Size = New System.Drawing.Size(381, 230)
+		Me.FirstHlmvModelPanel.TabIndex = 2
+		'
+		'HlmvOptionsPanel
+		'
+		Me.HlmvOptionsPanel.AutoScroll = True
+		Me.HlmvOptionsPanel.Location = New System.Drawing.Point(0, 339)
+		Me.HlmvOptionsPanel.Name = "HlmvOptionsPanel"
+		Me.HlmvOptionsPanel.Size = New System.Drawing.Size(385, 24)
+		Me.HlmvOptionsPanel.TabIndex = 0
+		Me.HlmvOptionsPanel.Visible = False
+		'
+		'SecondHlmvSplitContainer
+		'
+		Me.SecondHlmvSplitContainer.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+		Me.SecondHlmvSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.SecondHlmvSplitContainer.Location = New System.Drawing.Point(0, 0)
+		Me.SecondHlmvSplitContainer.Name = "SecondHlmvSplitContainer"
+		Me.SecondHlmvSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal
+		'
+		'SecondHlmvSplitContainer.Panel1
+		'
+		Me.SecondHlmvSplitContainer.Panel1.AutoScroll = True
+		Me.SecondHlmvSplitContainer.Panel1.Controls.Add(Me.SecondHlmvMainPanel)
+		'
+		'SecondHlmvSplitContainer.Panel2
+		'
+		Me.SecondHlmvSplitContainer.Panel2.Controls.Add(Me.SecondHlmvModelPanel)
+		Me.SecondHlmvSplitContainer.Size = New System.Drawing.Size(381, 363)
+		Me.SecondHlmvSplitContainer.SplitterDistance = 125
+		Me.SecondHlmvSplitContainer.TabIndex = 1
+		'
+		'SecondHlmvMainPanel
+		'
+		Me.SecondHlmvMainPanel.Location = New System.Drawing.Point(0, 0)
+		Me.SecondHlmvMainPanel.MaximumSize = New System.Drawing.Size(1224, 260)
+		Me.SecondHlmvMainPanel.MinimumSize = New System.Drawing.Size(1224, 260)
+		Me.SecondHlmvMainPanel.Name = "SecondHlmvMainPanel"
+		Me.SecondHlmvMainPanel.Size = New System.Drawing.Size(1224, 260)
+		Me.SecondHlmvMainPanel.TabIndex = 1
+		'
+		'SecondHlmvModelPanel
+		'
+		Me.SecondHlmvModelPanel.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.SecondHlmvModelPanel.Location = New System.Drawing.Point(0, 0)
+		Me.SecondHlmvModelPanel.Name = "SecondHlmvModelPanel"
+		Me.SecondHlmvModelPanel.Size = New System.Drawing.Size(377, 230)
+		Me.SecondHlmvModelPanel.TabIndex = 1
+		'
 		'GroupBox1
 		'
 		Me.GroupBox1.Controls.Add(Me.InfoRichTextBox)
@@ -175,6 +325,7 @@ Partial Class ViewUserControl
 		Me.GroupBox1.TabIndex = 4
 		Me.GroupBox1.TabStop = False
 		Me.GroupBox1.Text = "Info"
+		Me.GroupBox1.Visible = False
 		'
 		'InfoRichTextBox
 		'
@@ -187,6 +338,16 @@ Partial Class ViewUserControl
 		Me.InfoRichTextBox.TabIndex = 0
 		Me.InfoRichTextBox.Text = ""
 		Me.InfoRichTextBox.WordWrap = False
+		'
+		'OpenTwoViewersButton
+		'
+		Me.OpenTwoViewersButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.OpenTwoViewersButton.Location = New System.Drawing.Point(567, 31)
+		Me.OpenTwoViewersButton.Name = "OpenTwoViewersButton"
+		Me.OpenTwoViewersButton.Size = New System.Drawing.Size(100, 23)
+		Me.OpenTwoViewersButton.TabIndex = 15
+		Me.OpenTwoViewersButton.Text = "Open 2 Viewers"
+		Me.OpenTwoViewersButton.UseVisualStyleBackColor = True
 		'
 		'GameLabel
 		'
@@ -278,8 +439,19 @@ Partial Class ViewUserControl
 		Me.MessageTextBox.Multiline = True
 		Me.MessageTextBox.Name = "MessageTextBox"
 		Me.MessageTextBox.ReadOnly = True
+		Me.MessageTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
 		Me.MessageTextBox.Size = New System.Drawing.Size(770, 45)
 		Me.MessageTextBox.TabIndex = 12
+		'
+		'CloseTwoViewersButton
+		'
+		Me.CloseTwoViewersButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.CloseTwoViewersButton.Location = New System.Drawing.Point(673, 32)
+		Me.CloseTwoViewersButton.Name = "CloseTwoViewersButton"
+		Me.CloseTwoViewersButton.Size = New System.Drawing.Size(100, 23)
+		Me.CloseTwoViewersButton.TabIndex = 49
+		Me.CloseTwoViewersButton.Text = "Close 2 Viewers"
+		Me.CloseTwoViewersButton.UseVisualStyleBackColor = True
 		'
 		'ViewUserControl
 		'
@@ -295,6 +467,18 @@ Partial Class ViewUserControl
 		Me.SplitContainer1.Panel2.PerformLayout()
 		CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.SplitContainer1.ResumeLayout(False)
+		Me.HlmvSplitContainer.Panel1.ResumeLayout(False)
+		Me.HlmvSplitContainer.Panel2.ResumeLayout(False)
+		CType(Me.HlmvSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
+		Me.HlmvSplitContainer.ResumeLayout(False)
+		Me.FirstHlmvSplitContainer.Panel1.ResumeLayout(False)
+		Me.FirstHlmvSplitContainer.Panel2.ResumeLayout(False)
+		CType(Me.FirstHlmvSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
+		Me.FirstHlmvSplitContainer.ResumeLayout(False)
+		Me.SecondHlmvSplitContainer.Panel1.ResumeLayout(False)
+		Me.SecondHlmvSplitContainer.Panel2.ResumeLayout(False)
+		CType(Me.SecondHlmvSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
+		Me.SecondHlmvSplitContainer.ResumeLayout(False)
 		Me.GroupBox1.ResumeLayout(False)
 		Me.ResumeLayout(False)
 
@@ -303,7 +487,6 @@ Partial Class ViewUserControl
 	Friend WithEvents MdlPathFileNameTextBox As TextBoxEx
 	Friend WithEvents BrowseForMdlFileButton As System.Windows.Forms.Button
 	Friend WithEvents Label1 As System.Windows.Forms.Label
-	Friend WithEvents Panel2 As System.Windows.Forms.Panel
 	Friend WithEvents GameLabel As System.Windows.Forms.Label
 	Friend WithEvents SetUpGameButton As System.Windows.Forms.Button
 	Friend WithEvents GameSetupComboBox As System.Windows.Forms.ComboBox
@@ -319,4 +502,17 @@ Partial Class ViewUserControl
 	Friend WithEvents OpenMappingToolButton As System.Windows.Forms.Button
 	Friend WithEvents OverrideMdlVersionLabel As Label
 	Friend WithEvents OverrideMdlVersionComboBox As ComboBox
+	Friend WithEvents HlmvSplitContainer As SplitContainer
+	Friend WithEvents HlmvModelPanel As Panel
+	Friend WithEvents HlmvMainPanel As Panel
+	Friend WithEvents HlmvOptionsPanel As Panel
+	Friend WithEvents Panel2 As Panel
+	Friend WithEvents OpenTwoViewersButton As Button
+	Friend WithEvents FirstHlmvSplitContainer As SplitContainer
+	Friend WithEvents FirstHlmvMainPanel As Panel
+	Friend WithEvents FirstHlmvModelPanel As Panel
+	Friend WithEvents SecondHlmvSplitContainer As SplitContainer
+	Friend WithEvents SecondHlmvMainPanel As Panel
+	Friend WithEvents SecondHlmvModelPanel As Panel
+	Friend WithEvents CloseTwoViewersButton As Button
 End Class

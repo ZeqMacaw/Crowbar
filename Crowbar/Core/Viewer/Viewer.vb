@@ -16,33 +16,33 @@ Public Class Viewer
 		AddHandler Me.DoWork, AddressOf Me.ModelViewer_DoWork
 	End Sub
 
-#Region "IDisposable Support"
+	'#Region "IDisposable Support"
 
-	Public Overloads Sub Dispose()
-		' Do not change this code.  Put cleanup code in Dispose(ByVal disposing As Boolean) below.
-		Dispose(True)
-		GC.SuppressFinalize(Me)
-	End Sub
+	'	Public Overloads Sub Dispose()
+	'		' Do not change this code.  Put cleanup code in Dispose(ByVal disposing As Boolean) below.
+	'		Dispose(True)
+	'		GC.SuppressFinalize(Me)
+	'	End Sub
 
-	Protected Overloads Sub Dispose(ByVal disposing As Boolean)
-		If Not Me.IsDisposed Then
-			'Me.Halt(False)
-			If disposing Then
-				Me.Free()
-			End If
-			'NOTE: free shared unmanaged resources
-		End If
-		Me.IsDisposed = True
-		MyBase.Dispose(disposing)
-	End Sub
+	'	Protected Overloads Sub Dispose(ByVal disposing As Boolean)
+	'		If Not Me.IsDisposed Then
+	'			'Me.Halt(False)
+	'			If disposing Then
+	'				Me.Free()
+	'			End If
+	'			'NOTE: free shared unmanaged resources
+	'		End If
+	'		Me.IsDisposed = True
+	'		MyBase.Dispose(disposing)
+	'	End Sub
 
-	'Protected Overrides Sub Finalize()
-	'	' Do not change this code.  Put cleanup code in Dispose(ByVal disposing As Boolean) above.
-	'	Dispose(False)
-	'	MyBase.Finalize()
-	'End Sub
+	'	'Protected Overrides Sub Finalize()
+	'	'	' Do not change this code.  Put cleanup code in Dispose(ByVal disposing As Boolean) above.
+	'	'	Dispose(False)
+	'	'	MyBase.Finalize()
+	'	'End Sub
 
-#End Region
+	'#End Region
 
 #End Region
 
@@ -51,10 +51,10 @@ Public Class Viewer
 	'Private Sub Init()
 	'End Sub
 
-	Private Sub Free()
-		Me.Halt(False)
-		Me.FreeViewModel()
-	End Sub
+	'Private Sub Free()
+	'	Me.Halt(False)
+	'	Me.FreeViewModel()
+	'End Sub
 
 #End Region
 
@@ -85,9 +85,10 @@ Public Class Viewer
 		Me.RunWorkerAsync(info)
 	End Sub
 
-	'Public Sub Halt()
-	'	Me.Halt(False)
-	'End Sub
+	Public Sub Halt()
+		Me.Halt(False)
+		Me.FreeViewModel()
+	End Sub
 
 #End Region
 
@@ -103,8 +104,6 @@ Public Class Viewer
 
 	Private Sub Halt(ByVal calledFromBackgroundThread As Boolean)
 		If Me.theHlmvAppProcess IsNot Nothing Then
-			'RemoveHandler Me.theHlmvAppProcess.Exited, AddressOf HlmvApp_Exited
-
 			Try
 				If Not Me.theHlmvAppProcess.HasExited AndAlso Not Me.theHlmvAppProcess.CloseMainWindow() Then
 					Me.theHlmvAppProcess.Kill()
@@ -116,9 +115,9 @@ Public Class Viewer
 				If Me.theHlmvAppProcess IsNot Nothing Then
 					Me.theHlmvAppProcess.Close()
 					'NOTE: This raises an exception when the background thread has already completed its work.
-					'If calledFromBackgroundThread Then
-					'	Me.UpdateProgressStop("Model viewer closed.")
-					'End If
+					If calledFromBackgroundThread Then
+						Me.UpdateProgress(0, "Model viewer closed.")
+					End If
 					Me.theHlmvAppProcess = Nothing
 				End If
 			End Try
@@ -130,7 +129,7 @@ Public Class Viewer
 #Region "Private Methods that are called in the background thread"
 
 	Private Sub ModelViewer_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs)
-		Me.ReportProgress(0, "")
+		'Me.ReportProgress(0, "")
 
 		Dim info As ViewerInfo
 
@@ -145,12 +144,12 @@ Public Class Viewer
 				Me.ViewData(info.mdlVersionOverride)
 			ElseIf info.viewerAction = ViewerInfo.ViewerActionType.ViewModel Then
 				'Me.UpdateProgress(1, "Model viewer opening ...")
-				Me.UpdateProgress(1, "Model viewer opened.")
+				Me.UpdateProgress(0, "Model viewer opened.")
 				Me.ViewModel()
 				'Me.UpdateProgress(1, "Model viewer opened.")
 			ElseIf info.viewerAction = ViewerInfo.ViewerActionType.OpenViewer Then
 				'Me.UpdateProgress(1, "Model viewer opening ...")
-				Me.UpdateProgress(1, "Model viewer opened.")
+				Me.UpdateProgress(0, "Model viewer opened.")
 				Me.OpenViewer()
 				'Me.UpdateProgress(1, "Model viewer opened.")
 			End If
@@ -287,12 +286,24 @@ Public Class Viewer
 			arguments += """"
 		End If
 
-		Me.theHlmvAppProcess = New Process()
 		Dim hlmvAppProcessStartInfo As New ProcessStartInfo(modelViewerPathFileName, arguments)
+		Me.RunHlmvProcess(hlmvAppProcessStartInfo)
+		Me.Halt(True)
+
+		'TODO: Test if this code works if placed immediately after starting process, to prevent a second view from setting current folder to what the first view was using as a temp current folder.
+		If currentFolder <> "" Then
+			Directory.SetCurrentDirectory(currentFolder)
+		End If
+	End Sub
+
+	Private Sub RunHlmvProcess(ByVal hlmvAppProcessStartInfo As ProcessStartInfo)
+		Me.theHlmvAppProcess = New Process()
 		hlmvAppProcessStartInfo.CreateNoWindow = True
+		'hlmvAppProcessStartInfo.CreateNoWindow = False
 		hlmvAppProcessStartInfo.RedirectStandardError = True
 		hlmvAppProcessStartInfo.RedirectStandardOutput = True
 		hlmvAppProcessStartInfo.UseShellExecute = False
+		'hlmvAppProcessStartInfo.WindowStyle = ProcessWindowStyle.Hidden
 		'NOTE: Instead of using asynchronous running, use synchronous and wait for process to exit, 
 		'      so this background thread won't complete until model viewer is closed.
 		'      This allows background thread to announce to main thread when model viewer process exits.
@@ -300,13 +311,28 @@ Public Class Viewer
 		Me.theHlmvAppProcess.StartInfo = hlmvAppProcessStartInfo
 
 		Me.theHlmvAppProcess.Start()
-		Me.theHlmvAppProcess.WaitForExit()
-		Me.Halt(True)
 
-		'TODO: Test if this code works if placed immediately after starting process, to prevent a second view from setting current folder to what the first view was using as a temp current folder.
-		If currentFolder <> "" Then
-			Directory.SetCurrentDirectory(currentFolder)
-		End If
+		Me.theHlmvAppProcess.WaitForInputIdle()
+		Dim hlmvAppWindowHandle As IntPtr = Me.theHlmvAppProcess.MainWindowHandle
+		While hlmvAppWindowHandle = CType(0, IntPtr)
+			Threading.Thread.Sleep(10)
+			hlmvAppWindowHandle = Me.theHlmvAppProcess.MainWindowHandle
+		End While
+		Me.ReportProgress(50, hlmvAppWindowHandle)
+
+		'Dim bRet As Boolean
+		'While ((bRet = Win32Api.GetMessage( & msg, hWnd, 0, 0))!= 0)
+		'	If (bRet == -1) Then
+		'		'// handle the error And possibly exit
+		'	Else
+		'		TranslateMessage(& msg)
+		'		DispatchMessage(& msg)
+		'	End If
+		'End While
+		Me.theHlmvAppProcess.WaitForExit()
+
+		Me.ReportProgress(51, hlmvAppWindowHandle)
+		hlmvAppWindowHandle = Nothing
 	End Sub
 
 	Private Sub InitViewModel()
