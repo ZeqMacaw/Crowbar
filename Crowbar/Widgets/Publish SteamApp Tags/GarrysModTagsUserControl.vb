@@ -47,6 +47,7 @@ Public Class GarrysModTagsUserControl
 		End Set
 	End Property
 
+	<Browsable(False), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
 	Public Overrides Property ItemTags As BindingListEx(Of String)
 		Get
 			'Dim tags As BindingListEx(Of String) = MyBase.ItemTags

@@ -74,6 +74,11 @@ Public Class PackUserControl
 	Private Sub InitPackerOptions()
 		Me.theSelectedPackerOptions = New List(Of String)()
 		Me.MultiFileVpkCheckBox.DataBindings.Add("Checked", TheApp.Settings, "PackOptionMultiFileVpkIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
+
+		Me.GmaTitleTextBox.DataBindings.Add("Text", TheApp.Settings, "PackGmaTitle", False, DataSourceUpdateMode.OnValidation)
+		'NOTE: There is no automatic data-binding with TagsWidget, so manually bind from object to widget here.
+		Me.GmaGarrysModTagsUserControl.ItemTags = TheApp.Settings.PackGmaItemTags
+		AddHandler Me.GmaGarrysModTagsUserControl.TagsPropertyChanged, AddressOf Me.GmaGarrysModTagsUserControl_TagsPropertyChanged
 	End Sub
 
 	Private Sub Free()
@@ -104,7 +109,12 @@ Public Class PackUserControl
 	End Sub
 
 	Private Sub FreePackerOptions()
-		'Me.CompilerOptionDefineBonesCheckBox.DataBindings.Clear()
+		Me.MultiFileVpkCheckBox.DataBindings.Clear()
+
+		Me.GmaTitleTextBox.DataBindings.Clear()
+		If Me.GmaGarrysModTagsUserControl IsNot Nothing Then
+			RemoveHandler Me.GmaGarrysModTagsUserControl.TagsPropertyChanged, AddressOf Me.GmaGarrysModTagsUserControl_TagsPropertyChanged
+		End If
 	End Sub
 
 #End Region
@@ -170,6 +180,11 @@ Public Class PackUserControl
 
 	Private Sub GotoOutputPathButton_Click(sender As Object, e As EventArgs) Handles GotoOutputPathButton.Click
 		Me.GotoFolder()
+	End Sub
+
+	'NOTE: There is no automatic data-binding with TagsWidget, so manually bind from widget to object here.
+	Private Sub GmaGarrysModTagsUserControl_TagsPropertyChanged(sender As Object, e As EventArgs)
+		TheApp.Settings.PackGmaItemTags = Me.GmaGarrysModTagsUserControl.ItemTags
 	End Sub
 
 	Private Sub DirectPackerOptionsTextBox_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DirectPackerOptionsTextBox.TextChanged
@@ -334,16 +349,12 @@ Public Class PackUserControl
 			Me.MultiFileVpkCheckBox.Visible = False
 			Me.EditPackerOptionsText("M", False)
 
-			Me.GmaTitleLabel.Visible = True
-			Me.GmaTitleTextBox.Visible = True
-			Me.GarrysModTagsUserControl1.Visible = True
+			Me.GmaPanel.Visible = True
 		Else
 			'Me.MultiFileVpkCheckBox.Visible = True
 			'Me.EditPackerOptionsText("M", TheApp.Settings.PackOptionMultiFileVpkIsChecked)
 
-			Me.GmaTitleLabel.Visible = False
-			Me.GmaTitleTextBox.Visible = False
-			Me.GarrysModTagsUserControl1.Visible = False
+			Me.GmaPanel.Visible = False
 		End If
 
 		Me.SetPackerOptionsText()

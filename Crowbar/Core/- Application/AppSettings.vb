@@ -1160,6 +1160,26 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	Public Property PackGmaTitle() As String
+		Get
+			Return Me.thePackGmaTitle
+		End Get
+		Set(ByVal value As String)
+			Me.thePackGmaTitle = value
+			NotifyPropertyChanged("PackGmaTitle")
+		End Set
+	End Property
+
+	Public Property PackGmaItemTags() As BindingListEx(Of String)
+		Get
+			Return Me.thePackGmaItemTags
+		End Get
+		Set(ByVal value As BindingListEx(Of String))
+			Me.thePackGmaItemTags = value
+			NotifyPropertyChanged("PackGmaItemTags")
+		End Set
+	End Property
+
 	<XmlIgnore()>
 	Public Property PackOptionsText() As String
 		Get
@@ -1688,6 +1708,9 @@ Public Class AppSettings
 
 		Me.PackOptionMultiFileVpkIsChecked = False
 
+		Me.PackGmaTitle = ""
+		Me.PackGmaItemTags = New BindingListEx(Of String)()
+
 		Me.PackOptionsText = ""
 	End Sub
 
@@ -1912,6 +1935,9 @@ Public Class AppSettings
 
 	Private thePackLogFileIsChecked As Boolean
 	Private thePackOptionMultiFileVpkIsChecked As Boolean
+
+	Private thePackGmaTitle As String
+	Private thePackGmaItemTags As BindingListEx(Of String)
 
 	Private thePackOptionsText As String
 

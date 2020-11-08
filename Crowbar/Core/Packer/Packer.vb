@@ -356,7 +356,7 @@ Public Class Packer
 		anEnumList = EnumHelper.ToList(GetType(GarrysModSteamAppInfo.GarrysModTypeTags))
 		Dim index As Integer
 		For Each tag As String In tags
-			index = EnumHelper.IndexOfKeyAsCasInsensitiveString(tag, anEnumList)
+			index = EnumHelper.IndexOfKeyAsCaseInsensitiveString(tag, anEnumList)
 			If index <> -1 Then
 				tags.Remove(tag)
 				tags.Insert(0, tag)

@@ -39,6 +39,9 @@ Partial Class PackUserControl
 		Me.OptionsGroupBox = New System.Windows.Forms.GroupBox()
 		Me.OptionsGroupBoxFillPanel = New System.Windows.Forms.Panel()
 		Me.PackerOptionsPanel = New System.Windows.Forms.Panel()
+		Me.GmaGarrysModTagsUserControl = New Crowbar.GarrysModTagsUserControl()
+		Me.GmaTitleTextBox = New Crowbar.TextBoxEx()
+		Me.GmaTitleLabel = New System.Windows.Forms.Label()
 		Me.MultiFileVpkCheckBox = New System.Windows.Forms.CheckBox()
 		Me.PackOptionsUseDefaultsButton = New System.Windows.Forms.Button()
 		Me.LogFileCheckBox = New System.Windows.Forms.CheckBox()
@@ -60,6 +63,7 @@ Partial Class PackUserControl
 		Me.UseInReleaseButton = New System.Windows.Forms.Button()
 		Me.GotoPackedFileButton = New System.Windows.Forms.Button()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+		Me.GmaPanel = New System.Windows.Forms.Panel()
 		Me.Panel1.SuspendLayout()
 		CType(Me.Options_LogSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.Options_LogSplitContainer.Panel1.SuspendLayout()
@@ -70,6 +74,7 @@ Partial Class PackUserControl
 		Me.PackerOptionsPanel.SuspendLayout()
 		Me.PackButtonsPanel.SuspendLayout()
 		Me.PostPackPanel.SuspendLayout()
+		Me.GmaPanel.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'Panel1
@@ -222,7 +227,7 @@ Partial Class PackUserControl
 		Me.Options_LogSplitContainer.Panel2.Controls.Add(Me.PostPackPanel)
 		Me.Options_LogSplitContainer.Panel2MinSize = 45
 		Me.Options_LogSplitContainer.Size = New System.Drawing.Size(770, 472)
-		Me.Options_LogSplitContainer.SplitterDistance = 230
+		Me.Options_LogSplitContainer.SplitterDistance = 260
 		Me.Options_LogSplitContainer.TabIndex = 29
 		'
 		'OptionsGroupBox
@@ -231,7 +236,7 @@ Partial Class PackUserControl
 		Me.OptionsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.OptionsGroupBox.Location = New System.Drawing.Point(0, 0)
 		Me.OptionsGroupBox.Name = "OptionsGroupBox"
-		Me.OptionsGroupBox.Size = New System.Drawing.Size(770, 230)
+		Me.OptionsGroupBox.Size = New System.Drawing.Size(770, 260)
 		Me.OptionsGroupBox.TabIndex = 0
 		Me.OptionsGroupBox.TabStop = False
 		Me.OptionsGroupBox.Text = "Options"
@@ -247,7 +252,7 @@ Partial Class PackUserControl
 		Me.OptionsGroupBoxFillPanel.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.OptionsGroupBoxFillPanel.Location = New System.Drawing.Point(3, 18)
 		Me.OptionsGroupBoxFillPanel.Name = "OptionsGroupBoxFillPanel"
-		Me.OptionsGroupBoxFillPanel.Size = New System.Drawing.Size(764, 209)
+		Me.OptionsGroupBoxFillPanel.Size = New System.Drawing.Size(764, 239)
 		Me.OptionsGroupBoxFillPanel.TabIndex = 19
 		'
 		'PackerOptionsPanel
@@ -259,11 +264,38 @@ Partial Class PackUserControl
 		Me.PackerOptionsPanel.Controls.Add(Me.Label3)
 		Me.PackerOptionsPanel.Controls.Add(Me.GameSetupComboBox)
 		Me.PackerOptionsPanel.Controls.Add(Me.SetUpGamesButton)
+		Me.PackerOptionsPanel.Controls.Add(Me.GmaPanel)
 		Me.PackerOptionsPanel.Dock = System.Windows.Forms.DockStyle.Top
 		Me.PackerOptionsPanel.Location = New System.Drawing.Point(0, 0)
 		Me.PackerOptionsPanel.Name = "PackerOptionsPanel"
-		Me.PackerOptionsPanel.Size = New System.Drawing.Size(764, 123)
+		Me.PackerOptionsPanel.Size = New System.Drawing.Size(764, 153)
 		Me.PackerOptionsPanel.TabIndex = 0
+		'
+		'GmaGarrysModTagsUserControl
+		'
+		Me.GmaGarrysModTagsUserControl.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.GmaGarrysModTagsUserControl.Location = New System.Drawing.Point(0, 28)
+		Me.GmaGarrysModTagsUserControl.Name = "GmaGarrysModTagsUserControl"
+		Me.GmaGarrysModTagsUserControl.Orientation = Crowbar.AppEnums.OrientationType.Horizontal
+		Me.GmaGarrysModTagsUserControl.Size = New System.Drawing.Size(362, 94)
+		Me.GmaGarrysModTagsUserControl.TabIndex = 15
+		'
+		'GmaTitleTextBox
+		'
+		Me.GmaTitleTextBox.CueBannerText = ""
+		Me.GmaTitleTextBox.Location = New System.Drawing.Point(42, 1)
+		Me.GmaTitleTextBox.Name = "GmaTitleTextBox"
+		Me.GmaTitleTextBox.Size = New System.Drawing.Size(317, 22)
+		Me.GmaTitleTextBox.TabIndex = 14
+		'
+		'GmaTitleLabel
+		'
+		Me.GmaTitleLabel.AutoSize = True
+		Me.GmaTitleLabel.Location = New System.Drawing.Point(3, 6)
+		Me.GmaTitleLabel.Name = "GmaTitleLabel"
+		Me.GmaTitleLabel.Size = New System.Drawing.Size(32, 13)
+		Me.GmaTitleLabel.TabIndex = 4
+		Me.GmaTitleLabel.Text = "Title:"
 		'
 		'MultiFileVpkCheckBox
 		'
@@ -279,7 +311,7 @@ Partial Class PackUserControl
 		'PackOptionsUseDefaultsButton
 		'
 		Me.PackOptionsUseDefaultsButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.PackOptionsUseDefaultsButton.Location = New System.Drawing.Point(674, 92)
+		Me.PackOptionsUseDefaultsButton.Location = New System.Drawing.Point(674, 127)
 		Me.PackOptionsUseDefaultsButton.Name = "PackOptionsUseDefaultsButton"
 		Me.PackOptionsUseDefaultsButton.Size = New System.Drawing.Size(90, 23)
 		Me.PackOptionsUseDefaultsButton.TabIndex = 12
@@ -328,7 +360,7 @@ Partial Class PackUserControl
 		'
 		'DirectPackerOptionsLabel
 		'
-		Me.DirectPackerOptionsLabel.Location = New System.Drawing.Point(0, 124)
+		Me.DirectPackerOptionsLabel.Location = New System.Drawing.Point(0, 154)
 		Me.DirectPackerOptionsLabel.Name = "DirectPackerOptionsLabel"
 		Me.DirectPackerOptionsLabel.Size = New System.Drawing.Size(764, 13)
 		Me.DirectPackerOptionsLabel.TabIndex = 16
@@ -338,7 +370,7 @@ Partial Class PackUserControl
 		'
 		Me.DirectPackerOptionsTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.DirectPackerOptionsTextBox.Location = New System.Drawing.Point(0, 140)
+		Me.DirectPackerOptionsTextBox.Location = New System.Drawing.Point(0, 170)
 		Me.DirectPackerOptionsTextBox.Name = "DirectPackerOptionsTextBox"
 		Me.DirectPackerOptionsTextBox.Size = New System.Drawing.Size(764, 22)
 		Me.DirectPackerOptionsTextBox.TabIndex = 17
@@ -348,7 +380,7 @@ Partial Class PackUserControl
 		Me.PackerOptionsTextBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.PackerOptionsTextBox.Location = New System.Drawing.Point(0, 168)
+		Me.PackerOptionsTextBox.Location = New System.Drawing.Point(0, 198)
 		Me.PackerOptionsTextBox.Multiline = True
 		Me.PackerOptionsTextBox.Name = "PackerOptionsTextBox"
 		Me.PackerOptionsTextBox.ReadOnly = True
@@ -357,7 +389,7 @@ Partial Class PackUserControl
 		'
 		'PackerOptionsTextBoxMinScrollPanel
 		'
-		Me.PackerOptionsTextBoxMinScrollPanel.Location = New System.Drawing.Point(0, 168)
+		Me.PackerOptionsTextBoxMinScrollPanel.Location = New System.Drawing.Point(0, 198)
 		Me.PackerOptionsTextBoxMinScrollPanel.Name = "PackerOptionsTextBoxMinScrollPanel"
 		Me.PackerOptionsTextBoxMinScrollPanel.Size = New System.Drawing.Size(764, 37)
 		Me.PackerOptionsTextBoxMinScrollPanel.TabIndex = 42
@@ -371,7 +403,7 @@ Partial Class PackUserControl
 		Me.LogRichTextBox.Location = New System.Drawing.Point(0, 26)
 		Me.LogRichTextBox.Name = "LogRichTextBox"
 		Me.LogRichTextBox.ReadOnly = True
-		Me.LogRichTextBox.Size = New System.Drawing.Size(770, 186)
+		Me.LogRichTextBox.Size = New System.Drawing.Size(770, 156)
 		Me.LogRichTextBox.TabIndex = 0
 		Me.LogRichTextBox.Text = ""
 		Me.LogRichTextBox.WordWrap = False
@@ -434,7 +466,7 @@ Partial Class PackUserControl
 		Me.PostPackPanel.Controls.Add(Me.UseInReleaseButton)
 		Me.PostPackPanel.Controls.Add(Me.GotoPackedFileButton)
 		Me.PostPackPanel.Dock = System.Windows.Forms.DockStyle.Bottom
-		Me.PostPackPanel.Location = New System.Drawing.Point(0, 212)
+		Me.PostPackPanel.Location = New System.Drawing.Point(0, 182)
 		Me.PostPackPanel.Name = "PostPackPanel"
 		Me.PostPackPanel.Size = New System.Drawing.Size(770, 26)
 		Me.PostPackPanel.TabIndex = 6
@@ -471,6 +503,16 @@ Partial Class PackUserControl
 		Me.GotoPackedFileButton.Text = "Goto"
 		Me.GotoPackedFileButton.UseVisualStyleBackColor = True
 		'
+		'GmaPanel
+		'
+		Me.GmaPanel.Controls.Add(Me.GmaTitleTextBox)
+		Me.GmaPanel.Controls.Add(Me.GmaTitleLabel)
+		Me.GmaPanel.Controls.Add(Me.GmaGarrysModTagsUserControl)
+		Me.GmaPanel.Location = New System.Drawing.Point(217, 29)
+		Me.GmaPanel.Name = "GmaPanel"
+		Me.GmaPanel.Size = New System.Drawing.Size(423, 122)
+		Me.GmaPanel.TabIndex = 0
+		'
 		'PackUserControl
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -491,6 +533,8 @@ Partial Class PackUserControl
 		Me.PackerOptionsPanel.PerformLayout()
 		Me.PackButtonsPanel.ResumeLayout(False)
 		Me.PostPackPanel.ResumeLayout(False)
+		Me.GmaPanel.ResumeLayout(False)
+		Me.GmaPanel.PerformLayout()
 		Me.ResumeLayout(False)
 
 	End Sub
@@ -531,4 +575,8 @@ Partial Class PackUserControl
 	Friend WithEvents PostPackPanel As Panel
 	Friend WithEvents OptionsGroupBoxFillPanel As Panel
 	Friend WithEvents PackerOptionsTextBoxMinScrollPanel As Panel
+	Friend WithEvents GmaTitleLabel As Label
+	Friend WithEvents GmaTitleTextBox As TextBoxEx
+	Friend WithEvents GmaGarrysModTagsUserControl As GarrysModTagsUserControl
+	Friend WithEvents GmaPanel As Panel
 End Class
