@@ -540,6 +540,9 @@ Public Class BackgroundSteamPipe
 				Else
 					If inputInfo.Item.ContentPathFolderOrFileNameIsChanged AndAlso inputInfo.Item.ContentPathFolderOrFileName <> "" Then
 						If outputInfo.Result <> "Failed" Then
+							'TODO: Call ProcessFileNameWithItemIdBeforeUpload() in case game needs the item ID in the file name.
+							processedContentPathFolderOrFileName = inputInfo.AppInfo.ProcessFileNameWithItemIdBeforeUpload(inputInfo.Item, itemID_text, Me.thePublishItemBackgroundWorker)
+
 							If Directory.Exists(processedContentPathFolderOrFileName) OrElse (inputInfo.AppInfo.CanUseContentFolderOrFile AndAlso File.Exists(processedContentPathFolderOrFileName)) Then
 								Dim setItemContentWasSuccessful As String = steamPipe.SteamUGC_SetItemContent(processedContentPathFolderOrFileName)
 								If setItemContentWasSuccessful = "success" Then
@@ -583,7 +586,7 @@ Public Class BackgroundSteamPipe
 					End If
 
 					If inputInfo.Item.ContentPathFolderOrFileNameIsChanged AndAlso inputInfo.Item.ContentPathFolderOrFileName <> "" Then
-						inputInfo.AppInfo.CleanUpAfterUpload()
+						inputInfo.AppInfo.CleanUpAfterUpload(Me.thePublishItemBackgroundWorker)
 					End If
 				End If
 			End If
@@ -651,7 +654,7 @@ Public Class BackgroundSteamPipe
 				End If
 			End If
 
-			inputInfo.AppInfo.CleanUpAfterUpload()
+			inputInfo.AppInfo.CleanUpAfterUpload(Me.thePublishItemBackgroundWorker)
 		End If
 
 		Return outputInfo
@@ -765,7 +768,7 @@ Public Class BackgroundSteamPipe
 			End If
 		End If
 
-		inputInfo.AppInfo.CleanUpAfterUpload()
+		inputInfo.AppInfo.CleanUpAfterUpload(Me.thePublishItemBackgroundWorker)
 
 		Return outputInfo
 	End Function

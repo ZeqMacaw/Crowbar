@@ -257,7 +257,7 @@ Public Class GarrysModSteamAppInfo
 		Return processedPathFileName
 	End Function
 
-	Public Overrides Sub CleanUpAfterUpload()
+	Public Overrides Sub CleanUpAfterUpload(ByVal bw As BackgroundWorkerEx)
 		If Directory.Exists(Me.theTempCrowbarPath) Then
 			Try
 				Directory.Delete(Me.theTempCrowbarPath, True)

@@ -59,6 +59,8 @@ Public Class SteamAppInfoBase
 		steamAppInfos.Add(anAppInfo)
 		'anAppInfo = New SteamAppInfo("Source Filmmaker")
 		'steamAppInfos.Add(anAppInfo)
+		anAppInfo = New SynergySteamAppInfo()
+		steamAppInfos.Add(anAppInfo)
 		'anAppInfo = New SteamAppInfo("Team Fortress 2")
 		'steamAppInfos.Add(anAppInfo)
 		anAppInfo = New ZombiePanicSourceSteamAppInfo()
@@ -83,7 +85,12 @@ Public Class SteamAppInfoBase
 		Return processedPathFileName
 	End Function
 
-	Public Overridable Sub CleanUpAfterUpload()
+	Public Overridable Function ProcessFileNameWithItemIdBeforeUpload(ByVal item As WorkshopItem, ByVal itemID As String, ByVal bw As BackgroundWorkerEx) As String
+		Dim processedPathFileName As String = item.ContentPathFolderOrFileName
+		Return processedPathFileName
+	End Function
+
+	Public Overridable Sub CleanUpAfterUpload(ByVal bw As BackgroundWorkerEx)
 	End Sub
 
 #Region "Delegates"
