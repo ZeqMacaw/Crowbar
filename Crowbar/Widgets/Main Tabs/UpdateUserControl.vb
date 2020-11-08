@@ -71,10 +71,10 @@ Public Class UpdateUserControl
 
 	Private Sub UpdateUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
-		Me.UpdateFolderTextBox.Size = New System.Drawing.Size(Me.BrowseForUpdateFolderButton.Left - Me.BrowseForUpdateFolderButton.Margin.Left - Me.UpdateFolderTextBox.Margin.Right - Me.UpdateFolderTextBox.Left, 20)
-		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the bottom side of these widgets.
-		Me.ChangelogTextBox.Size = New System.Drawing.Size(Me.ChangelogTextBox.Width, Me.GroupBoxEx3.Height - Me.GroupBoxEx3.Padding.Bottom - Me.ChangelogTextBox.Margin.Bottom - Me.ChangelogTextBox.Top)
-		Me.GroupBoxEx3.Size = New System.Drawing.Size(Me.GroupBoxEx3.Width, Me.GroupBoxEx2.Top - Me.GroupBoxEx2.Margin.Top - Me.GroupBoxEx3.Margin.Bottom - Me.GroupBoxEx3.Top)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DownloadFolderTextBox, Me.BrowseForDownloadFolderButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DownloadProgressBarEx, Me.CancelDownloadButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.UpdateFolderTextBox, Me.BrowseForUpdateFolderButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.UpdateProgressBarEx, Me.CancelUpdateButton)
 
 		If Not Me.DesignMode Then
 			Me.Init()

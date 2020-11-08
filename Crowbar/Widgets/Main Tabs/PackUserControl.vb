@@ -6,15 +6,8 @@ Public Class PackUserControl
 
 	Public Sub New()
 		MyBase.New()
-
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
-
-		'NOTE: Try-Catch is needed so that widget will be shown in MainForm without raising exception.
-		Try
-			Me.Init()
-		Catch
-		End Try
 	End Sub
 
 #End Region
@@ -123,10 +116,14 @@ Public Class PackUserControl
 #Region "Widget Event Handlers"
 
 	Private Sub PackUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
-		'NOTE: This code prevents Visual Studio often inexplicably extending the right side of these textboxes.
-		Me.InputPathFileNameTextBox.Size = New System.Drawing.Size(Me.BrowseForInputFolderOrFileNameButton.Left - Me.BrowseForInputFolderOrFileNameButton.Margin.Left - Me.InputPathFileNameTextBox.Margin.Right - Me.InputPathFileNameTextBox.Left, 21)
-		Me.OutputPathTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputPathTextBox.Margin.Right - Me.OutputPathTextBox.Left, 21)
-		Me.OutputParentPathTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputParentPathTextBox.Margin.Right - Me.OutputParentPathTextBox.Left, 21)
+		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.InputPathFileNameTextBox, Me.BrowseForInputFolderOrFileNameButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputPathTextBox, Me.BrowseForOutputPathButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputParentPathTextBox, Me.BrowseForOutputPathButton)
+
+		If Not Me.DesignMode Then
+			Me.Init()
+		End If
 	End Sub
 
 #End Region

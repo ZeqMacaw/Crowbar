@@ -66,9 +66,9 @@ Partial Class ViewUserControl
 		Me.MdlPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.MdlPathFileNameTextBox.CueBannerText = ""
-		Me.MdlPathFileNameTextBox.Location = New System.Drawing.Point(58, 5)
+		Me.MdlPathFileNameTextBox.Location = New System.Drawing.Point(58, 3)
 		Me.MdlPathFileNameTextBox.Name = "MdlPathFileNameTextBox"
-		Me.MdlPathFileNameTextBox.Size = New System.Drawing.Size(596, 20)
+		Me.MdlPathFileNameTextBox.Size = New System.Drawing.Size(596, 22)
 		Me.MdlPathFileNameTextBox.TabIndex = 1
 		'
 		'BrowseForMdlFileButton
@@ -86,7 +86,7 @@ Partial Class ViewUserControl
 		Me.Label1.AutoSize = True
 		Me.Label1.Location = New System.Drawing.Point(3, 8)
 		Me.Label1.Name = "Label1"
-		Me.Label1.Size = New System.Drawing.Size(49, 13)
+		Me.Label1.Size = New System.Drawing.Size(52, 13)
 		Me.Label1.TabIndex = 0
 		Me.Label1.Text = "MDL file:"
 		'
@@ -109,9 +109,9 @@ Partial Class ViewUserControl
 		'OverrideMdlVersionLabel
 		'
 		Me.OverrideMdlVersionLabel.AutoSize = True
-		Me.OverrideMdlVersionLabel.Location = New System.Drawing.Point(3, 35)
+		Me.OverrideMdlVersionLabel.Location = New System.Drawing.Point(3, 36)
 		Me.OverrideMdlVersionLabel.Name = "OverrideMdlVersionLabel"
-		Me.OverrideMdlVersionLabel.Size = New System.Drawing.Size(113, 13)
+		Me.OverrideMdlVersionLabel.Size = New System.Drawing.Size(120, 13)
 		Me.OverrideMdlVersionLabel.TabIndex = 48
 		Me.OverrideMdlVersionLabel.Text = "Override MDL version:"
 		'
@@ -121,7 +121,7 @@ Partial Class ViewUserControl
 		Me.OverrideMdlVersionComboBox.FormattingEnabled = True
 		Me.OverrideMdlVersionComboBox.Location = New System.Drawing.Point(123, 32)
 		Me.OverrideMdlVersionComboBox.Name = "OverrideMdlVersionComboBox"
-		Me.OverrideMdlVersionComboBox.Size = New System.Drawing.Size(100, 21)
+		Me.OverrideMdlVersionComboBox.Size = New System.Drawing.Size(110, 21)
 		Me.OverrideMdlVersionComboBox.TabIndex = 47
 		'
 		'GotoMdlFileButton
@@ -146,7 +146,7 @@ Partial Class ViewUserControl
 		'SplitContainer1.Panel1
 		'
 		Me.SplitContainer1.Panel1.Controls.Add(Me.GroupBox1)
-		Me.SplitContainer1.Panel1MinSize = 90
+		Me.SplitContainer1.Panel1MinSize = 45
 		'
 		'SplitContainer1.Panel2
 		'
@@ -160,7 +160,7 @@ Partial Class ViewUserControl
 		Me.SplitContainer1.Panel2.Controls.Add(Me.OpenMappingToolButton)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.RunGameButton)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.MessageTextBox)
-		Me.SplitContainer1.Panel2MinSize = 90
+		Me.SplitContainer1.Panel2MinSize = 45
 		Me.SplitContainer1.Size = New System.Drawing.Size(770, 474)
 		Me.SplitContainer1.SplitterDistance = 363
 		Me.SplitContainer1.TabIndex = 13
@@ -180,10 +180,10 @@ Partial Class ViewUserControl
 		'
 		Me.InfoRichTextBox.CueBannerText = ""
 		Me.InfoRichTextBox.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.InfoRichTextBox.Location = New System.Drawing.Point(3, 16)
+		Me.InfoRichTextBox.Location = New System.Drawing.Point(3, 18)
 		Me.InfoRichTextBox.Name = "InfoRichTextBox"
 		Me.InfoRichTextBox.ReadOnly = True
-		Me.InfoRichTextBox.Size = New System.Drawing.Size(764, 344)
+		Me.InfoRichTextBox.Size = New System.Drawing.Size(764, 342)
 		Me.InfoRichTextBox.TabIndex = 0
 		Me.InfoRichTextBox.Text = ""
 		Me.InfoRichTextBox.WordWrap = False
@@ -193,7 +193,7 @@ Partial Class ViewUserControl
 		Me.GameLabel.AutoSize = True
 		Me.GameLabel.Location = New System.Drawing.Point(0, 8)
 		Me.GameLabel.Name = "GameLabel"
-		Me.GameLabel.Size = New System.Drawing.Size(162, 13)
+		Me.GameLabel.Size = New System.Drawing.Size(175, 13)
 		Me.GameLabel.TabIndex = 5
 		Me.GameLabel.Text = "Game that has the model viewer:"
 		'
@@ -203,7 +203,7 @@ Partial Class ViewUserControl
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.GameSetupComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.GameSetupComboBox.FormattingEnabled = True
-		Me.GameSetupComboBox.Location = New System.Drawing.Point(181, 5)
+		Me.GameSetupComboBox.Location = New System.Drawing.Point(181, 4)
 		Me.GameSetupComboBox.Name = "GameSetupComboBox"
 		Me.GameSetupComboBox.Size = New System.Drawing.Size(493, 21)
 		Me.GameSetupComboBox.TabIndex = 6

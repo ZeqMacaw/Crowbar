@@ -928,6 +928,16 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	Public Property CompileOptionDefineBonesOverwriteQciFileIsChecked() As Boolean
+		Get
+			Return Me.theCompileOptionDefineBonesOverwriteQciFileIsChecked
+		End Get
+		Set(ByVal value As Boolean)
+			Me.theCompileOptionDefineBonesOverwriteQciFileIsChecked = value
+			NotifyPropertyChanged("CompileOptionDefineBonesOverwriteQciFileIsChecked")
+		End Set
+	End Property
+
 	Public Property CompileOptionDefineBonesModifyQcFileIsChecked() As Boolean
 		Get
 			Return Me.theCompileOptionDefineBonesModifyQcFileIsChecked
@@ -1543,6 +1553,16 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	'<XmlElement(Type:=GetType(XmlColor))>
+	'Public Property AboutTabBackgroundColor() As Color
+	'	Get
+	'		Return Me.theAboutTabBackgroundColor
+	'	End Get
+	'	Set(ByVal value As Color)
+	'		Me.theAboutTabBackgroundColor = value
+	'	End Set
+	'End Property
+
 	Public Property UpdateDownloadPath() As String
 		Get
 			Return Me.theUpdateDownloadPath
@@ -1656,6 +1676,7 @@ Public Class AppSettings
 		Me.CompileOptionDefineBonesIsChecked = False
 		Me.CompileOptionDefineBonesCreateFileIsChecked = False
 		Me.CompileOptionDefineBonesQciFileName = "DefineBones"
+		Me.CompileOptionDefineBonesOverwriteQciFileIsChecked = False
 		Me.CompileOptionDefineBonesModifyQcFileIsChecked = False
 
 		Me.CompileOptionsText = ""
@@ -1743,6 +1764,7 @@ Public Class AppSettings
 	Private theWindowLocation As Point
 	Private theWindowSize As Size
 	Private theWindowState As FormWindowState
+	Private theAboutTabBackgroundColor As Color
 	Private theMainWindowSelectedTabIndex As Integer
 
 	' Set Up Games tab
@@ -1854,6 +1876,7 @@ Public Class AppSettings
 	Private theCompileOptionDefineBonesIsChecked As Boolean
 	Private theCompileOptionDefineBonesCreateFileIsChecked As Boolean
 	Private theCompileOptionDefineBonesQciFileName As String
+	Private theCompileOptionDefineBonesOverwriteQciFileIsChecked As Boolean
 	Private theCompileOptionDefineBonesModifyQcFileIsChecked As Boolean
 	Private theCompileOptionNoP4IsChecked As Boolean
 	Private theCompileOptionVerboseIsChecked As Boolean
