@@ -1,27 +1,27 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class AboutUserControl
 	Inherits BaseUserControl
 
-    'UserControl overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
-    Protected Overrides Sub Dispose(ByVal disposing As Boolean)
-        Try
-            If disposing AndAlso components IsNot Nothing Then
-                components.Dispose()
-            End If
-        Finally
-            MyBase.Dispose(disposing)
-        End Try
-    End Sub
+	'UserControl overrides dispose to clean up the component list.
+	<System.Diagnostics.DebuggerNonUserCode()>
+	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
+		Try
+			If disposing AndAlso components IsNot Nothing Then
+				components.Dispose()
+			End If
+		Finally
+			MyBase.Dispose(disposing)
+		End Try
+	End Sub
 
-    'Required by the Windows Form Designer
-    Private components As System.ComponentModel.IContainer
+	'Required by the Windows Form Designer
+	Private components As System.ComponentModel.IContainer
 
-    'NOTE: The following procedure is required by the Windows Form Designer
-    'It can be modified using the Windows Form Designer.  
-    'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
-    Private Sub InitializeComponent()
+	'NOTE: The following procedure is required by the Windows Form Designer
+	'It can be modified using the Windows Form Designer.  
+	'Do not modify it using the code editor.
+	<System.Diagnostics.DebuggerStepThrough()>
+	Private Sub InitializeComponent()
 		Me.ProductInfoTextBox = New System.Windows.Forms.TextBox()
 		Me.ProductDescriptionTextBox = New System.Windows.Forms.TextBox()
 		Me.ProductLogoButton = New System.Windows.Forms.Button()
@@ -30,13 +30,15 @@ Partial Class AboutUserControl
 		Me.AuthorLinkLabel = New System.Windows.Forms.LinkLabel()
 		Me.ProductNameLinkLabel = New System.Windows.Forms.LinkLabel()
 		Me.Panel1 = New System.Windows.Forms.Panel()
-		Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+		Me.GotoSteamGroupLinkLabel = New System.Windows.Forms.LinkLabel()
+		Me.GotoSteamProfileLinkLabel = New System.Windows.Forms.LinkLabel()
+		Me.PayPalPictureBox = New System.Windows.Forms.PictureBox()
+		Me.SpecialThanksGroupBox = New System.Windows.Forms.GroupBox()
 		Me.Credits3TextBox = New System.Windows.Forms.TextBox()
 		Me.Credits2TextBox = New System.Windows.Forms.TextBox()
-		Me.GotoSteamProfileLinkLabel = New System.Windows.Forms.LinkLabel()
-		Me.GotoSteamGroupLinkLabel = New System.Windows.Forms.LinkLabel()
 		Me.Panel1.SuspendLayout()
-		Me.GroupBox1.SuspendLayout()
+		CType(Me.PayPalPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
+		Me.SpecialThanksGroupBox.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'ProductInfoTextBox
@@ -48,19 +50,19 @@ Partial Class AboutUserControl
 		Me.ProductInfoTextBox.Name = "ProductInfoTextBox"
 		Me.ProductInfoTextBox.ReadOnly = True
 		Me.ProductInfoTextBox.Size = New System.Drawing.Size(165, 48)
-		Me.ProductInfoTextBox.TabIndex = 2
+		Me.ProductInfoTextBox.TabIndex = 3
 		Me.ProductInfoTextBox.Text = "Version" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Copyright" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Company Name"
 		Me.ProductInfoTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
 		Me.ProductInfoTextBox.WordWrap = False
 		'
 		'ProductDescriptionTextBox
 		'
-		Me.ProductDescriptionTextBox.Location = New System.Drawing.Point(174, 3)
+		Me.ProductDescriptionTextBox.Location = New System.Drawing.Point(175, 3)
 		Me.ProductDescriptionTextBox.Multiline = True
 		Me.ProductDescriptionTextBox.Name = "ProductDescriptionTextBox"
 		Me.ProductDescriptionTextBox.ReadOnly = True
-		Me.ProductDescriptionTextBox.Size = New System.Drawing.Size(594, 136)
-		Me.ProductDescriptionTextBox.TabIndex = 5
+		Me.ProductDescriptionTextBox.Size = New System.Drawing.Size(598, 136)
+		Me.ProductDescriptionTextBox.TabIndex = 7
 		Me.ProductDescriptionTextBox.TabStop = False
 		'
 		'ProductLogoButton
@@ -80,21 +82,8 @@ Partial Class AboutUserControl
 		Me.AuthorIconButton.Location = New System.Drawing.Point(21, 236)
 		Me.AuthorIconButton.Name = "AuthorIconButton"
 		Me.AuthorIconButton.Size = New System.Drawing.Size(128, 128)
-		Me.AuthorIconButton.TabIndex = 3
+		Me.AuthorIconButton.TabIndex = 4
 		Me.AuthorIconButton.UseVisualStyleBackColor = True
-		'
-		'CreditsTextBox
-		'
-		Me.CreditsTextBox.Location = New System.Drawing.Point(6, 20)
-		Me.CreditsTextBox.Multiline = True
-		Me.CreditsTextBox.Name = "CreditsTextBox"
-		Me.CreditsTextBox.ReadOnly = True
-		Me.CreditsTextBox.Size = New System.Drawing.Size(190, 193)
-		Me.CreditsTextBox.TabIndex = 6
-		Me.CreditsTextBox.TabStop = False
-		Me.CreditsTextBox.Text = "arby26" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Artfunkel" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "atrblizzard" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Avengito" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "BANG!" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "BinaryRifle" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Cra0kalo" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "CrazyBubb" &
-	"a" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "da1barker" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Doktor haus" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Drsalvador" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "E7ajamy" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Funreal" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Game Zombie"
-		Me.CreditsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
 		'
 		'AuthorLinkLabel
 		'
@@ -104,7 +93,7 @@ Partial Class AboutUserControl
 		Me.AuthorLinkLabel.Location = New System.Drawing.Point(3, 367)
 		Me.AuthorLinkLabel.Name = "AuthorLinkLabel"
 		Me.AuthorLinkLabel.Size = New System.Drawing.Size(165, 20)
-		Me.AuthorLinkLabel.TabIndex = 4
+		Me.AuthorLinkLabel.TabIndex = 5
 		Me.AuthorLinkLabel.TabStop = True
 		Me.AuthorLinkLabel.Text = "Author"
 		Me.AuthorLinkLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter
@@ -126,73 +115,22 @@ Partial Class AboutUserControl
 		'
 		'Panel1
 		'
-		Me.Panel1.Controls.Add(Me.GroupBox1)
-		Me.Panel1.Controls.Add(Me.GotoSteamProfileLinkLabel)
-		Me.Panel1.Controls.Add(Me.GotoSteamGroupLinkLabel)
-		Me.Panel1.Controls.Add(Me.ProductDescriptionTextBox)
 		Me.Panel1.Controls.Add(Me.ProductLogoButton)
-		Me.Panel1.Controls.Add(Me.AuthorIconButton)
-		Me.Panel1.Controls.Add(Me.AuthorLinkLabel)
 		Me.Panel1.Controls.Add(Me.ProductNameLinkLabel)
 		Me.Panel1.Controls.Add(Me.ProductInfoTextBox)
+		Me.Panel1.Controls.Add(Me.GotoSteamGroupLinkLabel)
+		Me.Panel1.Controls.Add(Me.AuthorIconButton)
+		Me.Panel1.Controls.Add(Me.AuthorLinkLabel)
+		Me.Panel1.Controls.Add(Me.GotoSteamProfileLinkLabel)
+		Me.Panel1.Controls.Add(Me.PayPalPictureBox)
+		Me.Panel1.Controls.Add(Me.ProductDescriptionTextBox)
+		Me.Panel1.Controls.Add(Me.SpecialThanksGroupBox)
 		Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.Panel1.Location = New System.Drawing.Point(0, 0)
 		Me.Panel1.Margin = New System.Windows.Forms.Padding(2)
 		Me.Panel1.Name = "Panel1"
 		Me.Panel1.Size = New System.Drawing.Size(776, 536)
-		Me.Panel1.TabIndex = 7
-		'
-		'GroupBox1
-		'
-		Me.GroupBox1.Controls.Add(Me.Credits3TextBox)
-		Me.GroupBox1.Controls.Add(Me.Credits2TextBox)
-		Me.GroupBox1.Controls.Add(Me.CreditsTextBox)
-		Me.GroupBox1.Location = New System.Drawing.Point(174, 145)
-		Me.GroupBox1.Name = "GroupBox1"
-		Me.GroupBox1.Size = New System.Drawing.Size(594, 219)
-		Me.GroupBox1.TabIndex = 9
-		Me.GroupBox1.TabStop = False
-		Me.GroupBox1.Text = "Special Thanks"
-		'
-		'Credits3TextBox
-		'
-		Me.Credits3TextBox.Location = New System.Drawing.Point(398, 20)
-		Me.Credits3TextBox.Multiline = True
-		Me.Credits3TextBox.Name = "Credits3TextBox"
-		Me.Credits3TextBox.ReadOnly = True
-		Me.Credits3TextBox.Size = New System.Drawing.Size(190, 193)
-		Me.Credits3TextBox.TabIndex = 8
-		Me.Credits3TextBox.TabStop = False
-		Me.Credits3TextBox.Text = "Rantis" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "RED_EYE" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Sage J. Fox" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Salad" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Seraphim" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Splinks" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Stiffy360" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Stay Puft" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "The" &
-	" Freakin' Scout's A Spy!" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "The303" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "»»»VanderAGSN«««" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Vincentor" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "YuRaNnNzZZ"
-		Me.Credits3TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-		'
-		'Credits2TextBox
-		'
-		Me.Credits2TextBox.Location = New System.Drawing.Point(202, 20)
-		Me.Credits2TextBox.Multiline = True
-		Me.Credits2TextBox.Name = "Credits2TextBox"
-		Me.Credits2TextBox.ReadOnly = True
-		Me.Credits2TextBox.Size = New System.Drawing.Size(190, 193)
-		Me.Credits2TextBox.TabIndex = 7
-		Me.Credits2TextBox.TabStop = False
-		Me.Credits2TextBox.Text = "GeckoN" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "GPZ" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Kerry [Valve employee]" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "k@rt" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "K1CHWA" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Lt. Rocky" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "MARK2580" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Mr. Brigh" &
-	"tside" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "mrlanky" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Nicknine" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Pacagma" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Pajama" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "pappaskurtz" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Pte Jack"
-		Me.Credits2TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-		'
-		'GotoSteamProfileLinkLabel
-		'
-		Me.GotoSteamProfileLinkLabel.ActiveLinkColor = System.Drawing.Color.LimeGreen
-		Me.GotoSteamProfileLinkLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.GotoSteamProfileLinkLabel.LinkColor = System.Drawing.Color.Green
-		Me.GotoSteamProfileLinkLabel.Location = New System.Drawing.Point(3, 389)
-		Me.GotoSteamProfileLinkLabel.Name = "GotoSteamProfileLinkLabel"
-		Me.GotoSteamProfileLinkLabel.Size = New System.Drawing.Size(165, 20)
-		Me.GotoSteamProfileLinkLabel.TabIndex = 8
-		Me.GotoSteamProfileLinkLabel.TabStop = True
-		Me.GotoSteamProfileLinkLabel.Text = "Goto Steam Profile"
-		Me.GotoSteamProfileLinkLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter
-		Me.GotoSteamProfileLinkLabel.VisitedLinkColor = System.Drawing.Color.Green
+		Me.Panel1.TabIndex = 0
 		'
 		'GotoSteamGroupLinkLabel
 		'
@@ -202,11 +140,86 @@ Partial Class AboutUserControl
 		Me.GotoSteamGroupLinkLabel.Location = New System.Drawing.Point(3, 160)
 		Me.GotoSteamGroupLinkLabel.Name = "GotoSteamGroupLinkLabel"
 		Me.GotoSteamGroupLinkLabel.Size = New System.Drawing.Size(165, 21)
-		Me.GotoSteamGroupLinkLabel.TabIndex = 7
+		Me.GotoSteamGroupLinkLabel.TabIndex = 2
 		Me.GotoSteamGroupLinkLabel.TabStop = True
 		Me.GotoSteamGroupLinkLabel.Text = "Goto Steam Group"
 		Me.GotoSteamGroupLinkLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter
 		Me.GotoSteamGroupLinkLabel.VisitedLinkColor = System.Drawing.Color.Green
+		'
+		'GotoSteamProfileLinkLabel
+		'
+		Me.GotoSteamProfileLinkLabel.ActiveLinkColor = System.Drawing.Color.LimeGreen
+		Me.GotoSteamProfileLinkLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.GotoSteamProfileLinkLabel.LinkColor = System.Drawing.Color.Green
+		Me.GotoSteamProfileLinkLabel.Location = New System.Drawing.Point(3, 389)
+		Me.GotoSteamProfileLinkLabel.Name = "GotoSteamProfileLinkLabel"
+		Me.GotoSteamProfileLinkLabel.Size = New System.Drawing.Size(165, 20)
+		Me.GotoSteamProfileLinkLabel.TabIndex = 6
+		Me.GotoSteamProfileLinkLabel.TabStop = True
+		Me.GotoSteamProfileLinkLabel.Text = "Goto Steam Profile"
+		Me.GotoSteamProfileLinkLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter
+		Me.GotoSteamProfileLinkLabel.VisitedLinkColor = System.Drawing.Color.Green
+		'
+		'PayPalPictureBox
+		'
+		Me.PayPalPictureBox.Cursor = System.Windows.Forms.Cursors.Hand
+		Me.PayPalPictureBox.Image = Global.Crowbar.My.Resources.Resources._26_Grey_PayPal_Pill_Button
+		Me.PayPalPictureBox.Location = New System.Drawing.Point(43, 412)
+		Me.PayPalPictureBox.Name = "PayPalPictureBox"
+		Me.PayPalPictureBox.Size = New System.Drawing.Size(84, 26)
+		Me.PayPalPictureBox.TabIndex = 11
+		Me.PayPalPictureBox.TabStop = False
+		'
+		'SpecialThanksGroupBox
+		'
+		Me.SpecialThanksGroupBox.Controls.Add(Me.CreditsTextBox)
+		Me.SpecialThanksGroupBox.Controls.Add(Me.Credits2TextBox)
+		Me.SpecialThanksGroupBox.Controls.Add(Me.Credits3TextBox)
+		Me.SpecialThanksGroupBox.Location = New System.Drawing.Point(175, 145)
+		Me.SpecialThanksGroupBox.Name = "SpecialThanksGroupBox"
+		Me.SpecialThanksGroupBox.Size = New System.Drawing.Size(598, 232)
+		Me.SpecialThanksGroupBox.TabIndex = 8
+		Me.SpecialThanksGroupBox.TabStop = False
+		Me.SpecialThanksGroupBox.Text = "Special Thanks"
+		'
+		'CreditsTextBox
+		'
+		Me.CreditsTextBox.Location = New System.Drawing.Point(6, 20)
+		Me.CreditsTextBox.Multiline = True
+		Me.CreditsTextBox.Name = "CreditsTextBox"
+		Me.CreditsTextBox.ReadOnly = True
+		Me.CreditsTextBox.Size = New System.Drawing.Size(191, 206)
+		Me.CreditsTextBox.TabIndex = 0
+		Me.CreditsTextBox.TabStop = False
+		Me.CreditsTextBox.Text = "arby26" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Artfunkel" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "atrblizzard" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Avengito" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "BANG!" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "BinaryRifle" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Cra0kalo" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "CrazyBubb" &
+	"a" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "da1barker" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Doktor haus" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Drsalvador" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "E7ajamy" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Funreal" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Game Zombie" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "GeckoN"
+		Me.CreditsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+		'
+		'Credits2TextBox
+		'
+		Me.Credits2TextBox.Location = New System.Drawing.Point(203, 20)
+		Me.Credits2TextBox.Multiline = True
+		Me.Credits2TextBox.Name = "Credits2TextBox"
+		Me.Credits2TextBox.ReadOnly = True
+		Me.Credits2TextBox.Size = New System.Drawing.Size(191, 206)
+		Me.Credits2TextBox.TabIndex = 1
+		Me.Credits2TextBox.TabStop = False
+		Me.Credits2TextBox.Text = "GPZ" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Kerry [Valve employee]" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "k@rt" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "K1CHWA" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Lt. Rocky" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "MARK2580" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Mayhem" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Mr. Brigh" &
+	"tside" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "mrlanky" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Nicknine" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Pacagma" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Pajama" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "pappaskurtz" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Pte Jack"
+		Me.Credits2TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+		'
+		'Credits3TextBox
+		'
+		Me.Credits3TextBox.Location = New System.Drawing.Point(400, 20)
+		Me.Credits3TextBox.Multiline = True
+		Me.Credits3TextBox.Name = "Credits3TextBox"
+		Me.Credits3TextBox.ReadOnly = True
+		Me.Credits3TextBox.Size = New System.Drawing.Size(191, 206)
+		Me.Credits3TextBox.TabIndex = 2
+		Me.Credits3TextBox.TabStop = False
+		Me.Credits3TextBox.Text = "Rantis" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "RED_EYE" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Sage J. Fox" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Salad" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Seraphim" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "SherlockHolmes9™" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Splinks" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Stiffy360" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Stay Puft" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "The" &
+	" Freakin' Scout's A Spy!" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "The303" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "»»»VanderAGSN«««" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Vincentor" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "YuRaNnNzZZ"
+		Me.Credits3TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
 		'
 		'AboutUserControl
 		'
@@ -217,8 +230,9 @@ Partial Class AboutUserControl
 		Me.Size = New System.Drawing.Size(776, 536)
 		Me.Panel1.ResumeLayout(False)
 		Me.Panel1.PerformLayout()
-		Me.GroupBox1.ResumeLayout(False)
-		Me.GroupBox1.PerformLayout()
+		CType(Me.PayPalPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
+		Me.SpecialThanksGroupBox.ResumeLayout(False)
+		Me.SpecialThanksGroupBox.PerformLayout()
 		Me.ResumeLayout(False)
 
 	End Sub
@@ -232,8 +246,8 @@ Partial Class AboutUserControl
 	Friend WithEvents Panel1 As System.Windows.Forms.Panel
 	Friend WithEvents GotoSteamProfileLinkLabel As System.Windows.Forms.LinkLabel
 	Friend WithEvents GotoSteamGroupLinkLabel As System.Windows.Forms.LinkLabel
-	Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+	Friend WithEvents SpecialThanksGroupBox As System.Windows.Forms.GroupBox
 	Friend WithEvents Credits3TextBox As System.Windows.Forms.TextBox
 	Friend WithEvents Credits2TextBox As System.Windows.Forms.TextBox
-
+	Friend WithEvents PayPalPictureBox As PictureBox
 End Class

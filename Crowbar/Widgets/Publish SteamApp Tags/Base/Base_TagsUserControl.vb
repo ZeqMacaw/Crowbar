@@ -7,8 +7,8 @@ Public Class Base_TagsUserControl
 	Public Sub New()
 		MyBase.New()
 
-		' This should allow Forms that inherit from this class and their widgets to use the system font instead of Visual Studio's default of Microsoft Sans Serif.
 		'TEST: See if this prevents the overlapping or larger text on Chinese Windows.
+		' This should allow Forms that inherit from this class and their widgets to use the system font instead of Visual Studio's default of Microsoft Sans Serif.
 		Me.Font = New Font(SystemFonts.MessageBoxFont.Name, 8.25)
 
 		' This call is required by the designer.
@@ -59,7 +59,7 @@ Public Class Base_TagsUserControl
 						Me.theWidgets.Add(widget)
 					End If
 				End If
-			ElseIf TypeOf widget Is GroupBox Then
+			ElseIf TypeOf widget Is GroupBox OrElse TypeOf widget Is Panel Then
 				Me.GetAllWidgets(widget.Controls)
 			End If
 		Next
@@ -185,7 +185,7 @@ Public Class Base_TagsUserControl
 								aComboBox = CType(widget, ComboBox)
 								If aComboBox.DataSource IsNot Nothing Then
 									anEnumList = CType(aComboBox.DataSource, IList)
-									Dim index As Integer = EnumHelper.IndexOfKeyAsCasInsensitiveString(tag, anEnumList)
+									Dim index As Integer = EnumHelper.IndexOfKeyAsCaseInsensitiveString(tag, anEnumList)
 									If index <> -1 Then
 										aComboBox.SelectedIndex = index
 										tagHasBeenAssigned = True
@@ -263,6 +263,10 @@ Public Class Base_TagsUserControl
 		If Not Me.theCheckBoxesAreChangingViaMe Then
 			RaiseEvent TagsPropertyChanged(Me, New EventArgs())
 		End If
+	End Sub
+
+	Protected Sub RaiseTagsPropertyChanged()
+		RaiseEvent TagsPropertyChanged(Me, New EventArgs())
 	End Sub
 
 #End Region

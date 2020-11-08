@@ -96,4 +96,49 @@ Public Class BackgroundWorkerEx
 
 #End Region
 
+#Region "Example Usage Class Template"
+
+	'Public Sub New()
+	'	MyBase.New()
+
+	'	Me.isRunning = False
+	'End Sub
+
+	'Public Sub Run()
+	'	If Not Me.isRunning Then
+	'		Me.isRunning = True
+
+	'		Dim worker As BackgroundWorkerEx = Nothing
+	'		Dim inputInfo As String = ""
+	'		worker = BackgroundWorkerEx.RunBackgroundWorker(worker, AddressOf Me.Worker_DoWork, AddressOf Me.Worker_ProgressChanged, AddressOf Me.Worker_RunWorkerCompleted, inputInfo)
+
+	'	End If
+	'End Sub
+
+	''NOTE: This is run in a background thread.
+	'Private Sub Worker_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs)
+	'	Dim bw As BackgroundWorkerEx = CType(sender, BackgroundWorkerEx)
+	'	Dim outputInfo As String = ""
+
+	'	e.Result = outputInfo
+	'End Sub
+
+	'Private Sub Worker_ProgressChanged(ByVal sender As System.Object, ByVal e As System.ComponentModel.ProgressChangedEventArgs)
+	'	If e.ProgressPercentage = 0 Then
+	'	ElseIf e.ProgressPercentage = 1 Then
+	'	End If
+	'End Sub
+
+	'Private Sub Worker_RunWorkerCompleted(ByVal sender As System.Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs)
+	'	If e.Cancelled Then
+	'	Else
+	'	End If
+
+	'	Me.isRunning = False
+	'End Sub
+
+	'Private isRunning As Boolean
+
+#End Region
+
 End Class

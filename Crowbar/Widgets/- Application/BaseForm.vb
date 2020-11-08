@@ -2,8 +2,8 @@
 
 	Public Sub New()
 
-		' This should allow Forms that inherit from this class and their widgets to use the system font instead of Visual Studio's default of Microsoft Sans Serif.
 		'TEST: See if this prevents the overlapping or larger text on Chinese Windows.
+		' This should allow Forms that inherit from this class and their widgets to use the system font instead of Visual Studio's default of Microsoft Sans Serif.
 		Me.Font = New Font(SystemFonts.MessageBoxFont.Name, 8.25)
 		'Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0F, 13.0F)
 
@@ -28,14 +28,15 @@
 		Me.Validate()
 	End Sub
 
-	' Reduce flicker and/or speed of redraw when resizing main window. partiularly in Win7 Aero mode.
-	Protected Overrides ReadOnly Property CreateParams() As CreateParams
-		Get
-			Dim cp As CreateParams = MyBase.CreateParams
-			cp.ExStyle = cp.ExStyle Or &H2000000
-			Return cp
-		End Get
-	End Property 'CreateParams
+	'' Reduce flicker and/or speed of redraw when resizing main window, partiularly in Win7 Aero mode.
+	''NOTE: This has side-effect of not updating Unpack listview splitcontainer panel and does not show dragging of any splitcontainer splitter bars.
+	'Protected Overrides ReadOnly Property CreateParams() As CreateParams
+	'	Get
+	'		Dim cp As CreateParams = MyBase.CreateParams
+	'		cp.ExStyle = cp.ExStyle Or &H2000000
+	'		Return cp
+	'	End Get
+	'End Property 'CreateParams
 
 	'Protected Overrides Sub OnResizeBegin(ByVal e As EventArgs)
 	'	SuspendLayout()

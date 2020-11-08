@@ -129,6 +129,10 @@ Public Class UnpackUserControl
 			End While
 		End If
 
+		If TheApp.Settings.UnpackerIsRunning Then
+			Exit Sub
+		End If
+
 		Me.UpdateWidgets(True)
 		Me.PackageTreeView.Nodes(0).Text = "<refreshing>"
 		Me.PackageTreeView.Nodes(0).Nodes.Clear()
@@ -140,6 +144,7 @@ Public Class UnpackUserControl
 		'Me.CancelUnpackButton.Text = "Cancel Listing"
 		Me.CancelUnpackButton.Enabled = False
 		Me.UnpackerLogTextBox.Text = ""
+		Me.thePackageCount = 0
 
 		AddHandler TheApp.Unpacker.ProgressChanged, AddressOf Me.ListerBackgroundWorker_ProgressChanged
 		AddHandler TheApp.Unpacker.RunWorkerCompleted, AddressOf Me.ListerBackgroundWorker_RunWorkerCompleted
@@ -189,7 +194,7 @@ Public Class UnpackUserControl
 			End If
 		End If
 		openFileWdw.FileName = "[Folder Selection]"
-		openFileWdw.Filter = "Source Engine Package Files (*.vpk;*.fpx;*.gma)|*.vpk;*.fpx;*.gma|Source Engine VPK Files (*.vpk)|*.vpk|Tactical Intervention FPX Files (*.fpx)|*.fpx|Garry's Mod GMA Files (*.gma)|*.gma"
+		openFileWdw.Filter = "Source Engine Package Files (*.apk;*.fpx;*.gma;*.vpk)|*.apk;*.fpx;*.gma;*.vpk|Fairy Tale Busters APK Files (*.apk)|*.apk|Tactical Intervention FPX Files (*.fpx)|*.fpx|Garry's Mod GMA Files (*.gma)|*.gma|Source Engine VPK Files (*.vpk)|*.vpk"
 		'openFileWdw.Filter = "Source Engine Package Files (*.vpk;*.fpx;*.gma;*.hfs)|*.vpk;*.fpx;*.gma;*.hfs|Source Engine VPK Files (*.vpk)|*.vpk|Tactical Intervention FPX Files (*.fpx)|*.fpx|Garry's Mod GMA Files (*.gma)|*.gma|Vindictus HFS Files (*.hfs)|*.hfs"
 		openFileWdw.AddExtension = True
 		openFileWdw.CheckFileExists = False
@@ -239,10 +244,10 @@ Public Class UnpackUserControl
 	'	Me.FindTextInPackageFiles(FindDirection.Next)
 	'End Sub
 
-	'Private Sub PackageTreeView_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles PackageTreeView.AfterSelect
-	'	Me.UpdateSelectionPathText()
-	'	Me.ShowFilesInSelectedFolder()
-	'End Sub
+	Private Sub PackageTreeView_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles PackageTreeView.AfterSelect
+		Me.UpdateSelectionPathText()
+		Me.ShowFilesInSelectedFolder()
+	End Sub
 
 	Private Sub PackageTreeView_ItemDrag(sender As Object, e As ItemDragEventArgs) Handles PackageTreeView.ItemDrag
 		If Me.PackageTreeView.SelectedNode IsNot Nothing Then
@@ -268,8 +273,9 @@ Public Class UnpackUserControl
 		'NOTE: This selects the node before dragging starts; otherwise dragging would use whatever was selected before the mousedown.
 		treeView.SelectedNode = clickedNode
 
-		Me.UpdateSelectionPathText()
-		Me.ShowFilesInSelectedFolder()
+		'Me.UpdateSelectionPathText()
+		'Me.ShowFilesInSelectedFolder()
+		Me.PackageListView.SelectedItems.Clear()
 	End Sub
 
 	''NOTE: Need this because listview item stays selected when selecting its parent folder.
@@ -436,6 +442,8 @@ Public Class UnpackUserControl
 			''Me.theEntryIndex = -1
 		ElseIf e.ProgressPercentage = 1 Then
 			Me.theEntryIndex = -1
+			Me.thePackageCount += 1
+			Me.UpdateContentsGroupBox()
 		ElseIf e.ProgressPercentage = 2 Then
 			Me.theArchivePathFileName = line
 		ElseIf e.ProgressPercentage = 3 Then
@@ -782,6 +790,14 @@ Public Class UnpackUserControl
 		End If
 	End Sub
 
+	Private Sub UpdateContentsGroupBox()
+		If Me.thePackageCount > 1 Then
+			Me.ContentsGroupBox.Text = "Contents of " + Me.thePackageCount.ToString("N0") + " packages"
+		Else
+			Me.ContentsGroupBox.Text = "Contents of package"
+		End If
+	End Sub
+
 	Private Sub UpdateWidgets(ByVal unpackerIsRunning As Boolean)
 		TheApp.Settings.UnpackerIsRunning = unpackerIsRunning
 
@@ -800,7 +816,9 @@ Public Class UnpackUserControl
 
 		Me.OptionsGroupBox.Enabled = Not unpackerIsRunning
 
-		Me.UnpackButton.Enabled = (Not unpackerIsRunning) AndAlso (Me.PackageTreeView.Nodes(0).Nodes.Count > 0)
+		'Me.UnpackButton.Enabled = (Not unpackerIsRunning) AndAlso (Me.PackageTreeView.Nodes(0).Nodes.Count > 0)
+		Dim folderResourceInfos As List(Of PackageResourceFileNameInfo) = CType(Me.PackageTreeView.Nodes(0).Tag, List(Of PackageResourceFileNameInfo))
+		Me.UnpackButton.Enabled = (Not unpackerIsRunning) AndAlso (folderResourceInfos IsNot Nothing) AndAlso (folderResourceInfos.Count > 0)
 		Me.SkipCurrentPackageButton.Enabled = unpackerIsRunning
 		Me.CancelUnpackButton.Enabled = unpackerIsRunning
 		Me.UseAllInDecompileButton.Enabled = Not unpackerIsRunning AndAlso Me.theOutputPathOrOutputFileName <> "" AndAlso Me.theUnpackedRelativePathFileNames.Count > 0
@@ -826,7 +844,7 @@ Public Class UnpackUserControl
 		Dim previousSelectedInputOption As InputOptions
 
 		anEnumList = EnumHelper.ToList(GetType(InputOptions))
-		previousSelectedInputOption = TheApp.Settings.DecompileMode
+		previousSelectedInputOption = TheApp.Settings.UnpackMode
 		Me.UnpackComboBox.DataBindings.Clear()
 		Try
 			If File.Exists(TheApp.Settings.UnpackPackagePathFolderOrFileName) Then
@@ -834,9 +852,18 @@ Public Class UnpackUserControl
 				previousSelectedInputOption = InputOptions.File
 			ElseIf Directory.Exists(TheApp.Settings.UnpackPackagePathFolderOrFileName) Then
 				'NOTE: Remove in reverse index order.
-				If Directory.GetFiles(TheApp.Settings.UnpackPackagePathFolderOrFileName, "*.vpk").Length = 0 Then
-					anEnumList.RemoveAt(InputOptions.Folder)
-				End If
+				Dim packageExtensions As List(Of String) = BasePackageFile.GetListOfPackageExtensions()
+				For Each packageExtension As String In packageExtensions
+					For Each anArchivePathFileName As String In Directory.GetFiles(TheApp.Settings.UnpackPackagePathFolderOrFileName, packageExtension)
+						If anArchivePathFileName.Length = 0 Then
+							anEnumList.RemoveAt(InputOptions.Folder)
+							Exit For
+						End If
+					Next
+					If Not anEnumList.Contains(InputOptions.Folder) Then
+						Exit For
+					End If
+				Next
 				anEnumList.RemoveAt(InputOptions.File)
 				'Else
 				'	Exit Try
@@ -848,9 +875,9 @@ Public Class UnpackUserControl
 			Me.UnpackComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "UnpackMode", False, DataSourceUpdateMode.OnPropertyChanged)
 
 			If EnumHelper.Contains(previousSelectedInputOption, anEnumList) Then
-				Me.UnpackComboBox.SelectedIndex = EnumHelper.IndexOf(previousSelectedInputOption, anEnumList)
+				TheApp.Settings.UnpackMode = previousSelectedInputOption
 			Else
-				Me.UnpackComboBox.SelectedIndex = 0
+				TheApp.Settings.UnpackMode = CType(EnumHelper.Key(0, anEnumList), InputOptions)
 			End If
 		Catch ex As Exception
 			Dim debug As Integer = 4242
@@ -1086,27 +1113,31 @@ Public Class UnpackUserControl
 	Private Function GetEntriesFromFolderEntry(ByVal resourceInfos As List(Of PackageResourceFileNameInfo), ByVal treeNode As TreeNode, ByVal archivePathFileNameToEntryIndexMap As SortedList(Of String, List(Of Integer))) As SortedList(Of String, List(Of Integer))
 		Dim folderNode As TreeNode
 		Dim folderResourceInfos As List(Of PackageResourceFileNameInfo)
-		For Each resourceInfo As PackageResourceFileNameInfo In resourceInfos
-			If resourceInfo.IsFolder Then
-				folderNode = GetNodeFromPath(Me.PackageTreeView.Nodes(0), treeNode.FullPath + "\" + resourceInfo.Name)
-				folderResourceInfos = CType(folderNode.Tag, List(Of PackageResourceFileNameInfo))
-				archivePathFileNameToEntryIndexMap = Me.GetEntriesFromFolderEntry(folderResourceInfos, folderNode, archivePathFileNameToEntryIndexMap)
-			Else
-				Dim archivePathFileName As String
-				Dim archiveEntryIndex As Integer
-				archivePathFileName = resourceInfo.ArchivePathFileName
-				archiveEntryIndex = resourceInfo.EntryIndex
-				Dim archiveEntryIndexes As List(Of Integer)
-				If archivePathFileNameToEntryIndexMap.Keys.Contains(archivePathFileName) Then
-					archiveEntryIndexes = archivePathFileNameToEntryIndexMap(archivePathFileName)
-					archiveEntryIndexes.Add(archiveEntryIndex)
+
+		If resourceInfos IsNot Nothing Then
+			For Each resourceInfo As PackageResourceFileNameInfo In resourceInfos
+				If resourceInfo.IsFolder Then
+					folderNode = GetNodeFromPath(Me.PackageTreeView.Nodes(0), treeNode.FullPath + "\" + resourceInfo.Name)
+					folderResourceInfos = CType(folderNode.Tag, List(Of PackageResourceFileNameInfo))
+					archivePathFileNameToEntryIndexMap = Me.GetEntriesFromFolderEntry(folderResourceInfos, folderNode, archivePathFileNameToEntryIndexMap)
 				Else
-					archiveEntryIndexes = New List(Of Integer)()
-					archiveEntryIndexes.Add(archiveEntryIndex)
-					archivePathFileNameToEntryIndexMap.Add(archivePathFileName, archiveEntryIndexes)
+					Dim archivePathFileName As String
+					Dim archiveEntryIndex As Integer
+					archivePathFileName = resourceInfo.ArchivePathFileName
+					archiveEntryIndex = resourceInfo.EntryIndex
+					Dim archiveEntryIndexes As List(Of Integer)
+					If archivePathFileNameToEntryIndexMap.Keys.Contains(archivePathFileName) Then
+						archiveEntryIndexes = archivePathFileNameToEntryIndexMap(archivePathFileName)
+						archiveEntryIndexes.Add(archiveEntryIndex)
+					Else
+						archiveEntryIndexes = New List(Of Integer)()
+						archiveEntryIndexes.Add(archiveEntryIndex)
+						archivePathFileNameToEntryIndexMap.Add(archivePathFileName, archiveEntryIndexes)
+					End If
 				End If
-			End If
-		Next
+			Next
+		End If
+
 		Return archivePathFileNameToEntryIndexMap
 	End Function
 
@@ -1138,6 +1169,9 @@ Public Class UnpackUserControl
 		If resourceInfo.IsFolder Then
 			Dim selectedTreeNode As TreeNode
 			selectedTreeNode = Me.PackageTreeView.SelectedNode
+			If selectedTreeNode Is Nothing Then
+				selectedTreeNode = Me.PackageTreeView.Nodes(0)
+			End If
 			Me.PackageTreeView.SelectedNode = selectedTreeNode.Nodes(resourceInfo.Name)
 		Else
 			' Extract the file to the user's temp folder and open it as if it were opened in File Explorer.
@@ -1161,7 +1195,6 @@ Public Class UnpackUserControl
 	End Sub
 
 	Private Sub RunUnpackerToExtractFilesInternal(ByVal unpackerAction As ArchiveAction, ByVal selectedResourceInfos As List(Of PackageResourceFileNameInfo))
-		Dim selectedPackageInternalPathFileNames As New List(Of String)()
 		Dim archivePathFileNameToEntryIndexMap As New SortedList(Of String, List(Of Integer))()
 		Dim selectedNode As TreeNode
 
@@ -1172,6 +1205,11 @@ Public Class UnpackUserControl
 
 		If selectedResourceInfos Is Nothing Then
 			selectedResourceInfos = CType(selectedNode.Tag, List(Of PackageResourceFileNameInfo))
+
+			If selectedResourceInfos Is Nothing Then
+				' This is reached when trying to Unpack a seerch folder with 0 results.
+				Exit Sub
+			End If
 		End If
 
 		archivePathFileNameToEntryIndexMap = Me.GetEntriesFromFolderEntry(selectedResourceInfos, selectedNode, archivePathFileNameToEntryIndexMap)
@@ -1180,35 +1218,33 @@ Public Class UnpackUserControl
 		AddHandler TheApp.Unpacker.RunWorkerCompleted, AddressOf Me.UnpackerBackgroundWorker_RunWorkerCompleted
 
 		If unpackerAction = ArchiveAction.ExtractToTemp Then
-			For Each resourceInfo As PackageResourceFileNameInfo In selectedResourceInfos
-				selectedPackageInternalPathFileNames.Add(resourceInfo.PathFileName)
-			Next
-
 			Dim message As String = TheApp.Unpacker.RunSynchronous(unpackerAction, archivePathFileNameToEntryIndexMap)
 			If message <> "" Then
 				Me.UnpackerLogTextBox.AppendText(message + vbCr)
 			End If
 
-			Dim tempPathFileNames As List(Of String) = Nothing
-			tempPathFileNames = TheApp.Unpacker.GetTempPathsAndPathFileNames(selectedPackageInternalPathFileNames)
+			Dim tempRelativePathsAndFileNames As List(Of String) = Nothing
+			tempRelativePathsAndFileNames = TheApp.Unpacker.GetTempRelativePathsAndFileNames()
 
-			Me.DoDragAndDrop(tempPathFileNames)
+			Me.DoDragAndDrop(tempRelativePathsAndFileNames)
 		Else
 			TheApp.Unpacker.Run(unpackerAction, archivePathFileNameToEntryIndexMap)
 		End If
 	End Sub
 
-	Private Sub DoDragAndDrop(ByVal iUnpackedRelativePathFileNames As List(Of String))
-		If iUnpackedRelativePathFileNames.Count > 0 Then
-			Dim pathFileNameCollection As New StringCollection()
-			For Each pathFileName As String In iUnpackedRelativePathFileNames
-				pathFileNameCollection.Add(pathFileName)
+	Private Sub DoDragAndDrop(ByVal iUnpackedRelativePathsAndFileNames As List(Of String))
+		If iUnpackedRelativePathsAndFileNames.Count > 0 Then
+			Dim pathAndFileNameCollection As New StringCollection()
+			For Each pathOrFileName As String In iUnpackedRelativePathsAndFileNames
+				If Not pathAndFileNameCollection.Contains(pathOrFileName) Then
+					pathAndFileNameCollection.Add(pathOrFileName)
+				End If
 			Next
 
 			Dim dragDropDataObject As DataObject
 			dragDropDataObject = New DataObject()
 
-			dragDropDataObject.SetFileDropList(pathFileNameCollection)
+			dragDropDataObject.SetFileDropList(pathAndFileNameCollection)
 
 			Dim result As DragDropEffects
 			result = Me.PackageListView.DoDragDrop(dragDropDataObject, DragDropEffects.Move)
@@ -1262,6 +1298,7 @@ Public Class UnpackUserControl
 	Private thePackEntries As List(Of Integer)
 	Private theGivenHardLinkFileName As String
 
+	Private thePackageCount As Integer
 	Private theArchivePathFileName As String
 	Private theEntryIndex As Integer
 

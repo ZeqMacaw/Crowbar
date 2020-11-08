@@ -18,20 +18,20 @@ Public Class DownloadUserControl
 		InitializeComponent()
 	End Sub
 
-	'UserControl overrides dispose to clean up the component list.
-	<System.Diagnostics.DebuggerNonUserCode()>
-	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
-		Try
-			If disposing Then
-				Me.Free()
-				If components IsNot Nothing Then
-					components.Dispose()
-				End If
-			End If
-		Finally
-			MyBase.Dispose(disposing)
-		End Try
-	End Sub
+	''UserControl overrides dispose to clean up the component list.
+	'<System.Diagnostics.DebuggerNonUserCode()>
+	'Protected Overrides Sub Dispose(ByVal disposing As Boolean)
+	'	Try
+	'		If disposing Then
+	'			Me.Free()
+	'			If components IsNot Nothing Then
+	'				components.Dispose()
+	'			End If
+	'		End If
+	'	Finally
+	'		MyBase.Dispose(disposing)
+	'	End Try
+	'End Sub
 
 #End Region
 
@@ -66,15 +66,15 @@ Public Class DownloadUserControl
 			Me.theBackgroundSteamPipe.Kill()
 		End If
 
-		'RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
 
 		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 
-		'Me.FreeDownloadOptions()
+		Me.FreeDownloadOptions()
 
-		'Me.FreeOutputPathComboBox()
+		Me.FreeOutputPathComboBox()
 
-		'Me.ItemIdTextBox.DataBindings.Clear()
+		Me.ItemIdTextBox.DataBindings.Clear()
 	End Sub
 
 	Private Sub InitOutputPathComboBox()
@@ -100,6 +100,7 @@ Public Class DownloadUserControl
 		Me.PrependTitleCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DownloadPrependItemTitleIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.AppendDateTimeCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DownloadAppendItemUpdateDateTimeIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.ReplaceSpacesWithUnderscoresCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DownloadReplaceSpacesWithUnderscoresIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.ConvertToExpectedFileOrFolderCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DownloadConvertToExpectedFileOrFolderCheckBoxIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 	End Sub
 
 	Private Sub FreeDownloadOptions()
@@ -107,6 +108,7 @@ Public Class DownloadUserControl
 		Me.PrependTitleCheckBox.DataBindings.Clear()
 		Me.AppendDateTimeCheckBox.DataBindings.Clear()
 		Me.ReplaceSpacesWithUnderscoresCheckBox.DataBindings.Clear()
+		Me.ConvertToExpectedFileOrFolderCheckBox.DataBindings.Clear()
 	End Sub
 
 #End Region
@@ -114,6 +116,12 @@ Public Class DownloadUserControl
 #Region "Widget Event Handlers"
 
 	Private Sub DownloadUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.ItemIdTextBox, Me.OpenWorkshopPageButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputPathTextBox, Me.BrowseForOutputPathButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DocumentsOutputPathTextBox, Me.BrowseForOutputPathButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DownloadProgressBar, Me.DownloadProgressBar.Parent, True)
+
 		If Not Me.DesignMode Then
 			Me.Init()
 		End If
@@ -151,8 +159,12 @@ Public Class DownloadUserControl
 		Me.CancelDownload()
 	End Sub
 
-	Private Sub DownloadedItemButton_Click(sender As Object, e As EventArgs) Handles DownloadedItemButton.Click
+	Private Sub DownloadedItemButton_Click(sender As Object, e As EventArgs) Handles GotoDownloadedItemButton.Click
 		Me.GotoDownloadedItem()
+	End Sub
+
+	Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+		Me.LogTextBox.AppendText(".")
 	End Sub
 
 #End Region
@@ -173,6 +185,14 @@ Public Class DownloadUserControl
 		End If
 	End Sub
 
+	Private Sub GetRequestStreamCallback(ByVal asynchronousResult As IAsyncResult)
+
+	End Sub
+
+	Private Sub GetResponseCallback(ByVal asynchronousResult As IAsyncResult)
+
+	End Sub
+
 	Private Sub WebClient_DownloadProgressChanged(ByVal sender As Object, ByVal e As DownloadProgressChangedEventArgs)
 		'Me.DownloadProgressBar.Text = e.BytesReceived.ToString("N0") + " / " + e.TotalBytesToReceive.ToString("N0") + " bytes   " + e.ProgressPercentage.ToString() + " %"
 		'Me.DownloadProgressBar.Value = CInt(e.BytesReceived * Me.DownloadProgressBar.Maximum / e.TotalBytesToReceive)
@@ -180,12 +200,13 @@ Public Class DownloadUserControl
 	End Sub
 
 	Private Sub WebClient_DownloadFileCompleted(ByVal sender As Object, ByVal e As AsyncCompletedEventArgs)
+		Dim pathFileName As String = CType(e.UserState, String)
+
 		If e.Cancelled Then
 			Me.LogTextBox.AppendText("Download cancelled." + vbCrLf)
 			Me.DownloadProgressBar.Text = ""
 			Me.DownloadProgressBar.Value = 0
 
-			Dim pathFileName As String = CType(e.UserState, String)
 			If File.Exists(pathFileName) Then
 				Try
 					File.Delete(pathFileName)
@@ -194,15 +215,9 @@ Public Class DownloadUserControl
 				End Try
 			End If
 		Else
-			Dim pathFileName As String = CType(e.UserState, String)
 			If File.Exists(pathFileName) Then
-				Me.ProcessFileAfterDownload(pathFileName)
-				If File.Exists(pathFileName) Then
-					Me.LogTextBox.AppendText("Download complete." + vbCrLf + "Downloaded file: """ + pathFileName + """" + vbCrLf)
-					Me.DownloadedItemTextBox.Text = pathFileName
-				Else
-					Me.LogTextBox.AppendText("Download failed." + vbCrLf)
-				End If
+				Me.LogTextBox.AppendText("Download complete." + vbCrLf + "Downloaded file: """ + pathFileName + """" + vbCrLf)
+				Me.DownloadedItemTextBox.Text = pathFileName
 			Else
 				Me.LogTextBox.AppendText("Download failed." + vbCrLf)
 			End If
@@ -211,6 +226,13 @@ Public Class DownloadUserControl
 		RemoveHandler Me.theWebClient.DownloadProgressChanged, AddressOf Me.WebClient_DownloadProgressChanged
 		RemoveHandler Me.theWebClient.DownloadFileCompleted, AddressOf Me.WebClient_DownloadFileCompleted
 		Me.theWebClient = Nothing
+
+		'Me.DownloadButton.Enabled = True
+		'Me.CancelDownloadButton.Enabled = False
+
+		If Not e.Cancelled AndAlso File.Exists(pathFileName) Then
+			Me.ProcessFolderOrFileAfterDownload(pathFileName)
+		End If
 
 		Me.DownloadButton.Enabled = True
 		Me.CancelDownloadButton.Enabled = False
@@ -235,34 +257,35 @@ Public Class DownloadUserControl
 	End Sub
 
 	Private Sub DownloadItem_RunWorkerCompleted(ByVal sender As System.Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs)
+		Dim outputPathFileName As String = Nothing
+		Dim targetOutputPath As String = Nothing
+		Dim outputInfo As BackgroundSteamPipe.DownloadItemOutputInfo = Nothing
+
 		If e.Cancelled Then
 			Me.LogTextBox.AppendText("Download cancelled." + vbCrLf)
 			Me.DownloadProgressBar.Text = ""
 			Me.DownloadProgressBar.Value = 0
 		Else
-			Dim outputInfo As BackgroundSteamPipe.DownloadItemOutputInfo = CType(e.Result, BackgroundSteamPipe.DownloadItemOutputInfo)
+			outputInfo = CType(e.Result, BackgroundSteamPipe.DownloadItemOutputInfo)
 			If outputInfo.Result = "success" Then
-				Me.UpdateProgressBar(Me.theDownloadBytesReceived, outputInfo.TotalBytesToReceive)
-				Me.LogTextBox.AppendText("Download complete." + vbCrLf)
+				' Me.theDownloadBytesReceived does not have the full byte count and outputInfo.TotalBytesToReceive = 0.
+				'Me.UpdateProgressBar(Me.theDownloadBytesReceived, outputInfo.TotalBytesToReceive)
+				Me.UpdateProgressBar(outputInfo.ContentFile.Length, outputInfo.ContentFile.Length)
 
 				Dim outputPath As String
 				outputPath = Me.GetOutputPath()
 
 				Dim outputFileName As String
 				outputFileName = Me.GetOutputFileName(outputInfo.ItemTitle, outputInfo.PublishedItemID, outputInfo.ContentFolderOrFileName, outputInfo.ItemUpdated_Text)
-				'NOTE: Remove colons here to prevent GetCleanPathFileName() from removing everything up to first colon.
-				outputFileName = outputFileName.Replace(":", "")
-				outputFileName = FileManager.GetCleanPathFileName(outputFileName, False)
 
-				Dim outputPathFileName As String
 				outputPathFileName = Path.Combine(outputPath, outputFileName)
-				outputPathFileName = Me.GetTestedPathFileName(outputPathFileName)
+				outputPathFileName = FileManager.GetTestedPathFileName(outputPathFileName)
 
 				File.WriteAllBytes(outputPathFileName, outputInfo.ContentFile)
 				If File.Exists(outputPathFileName) Then
-					Me.ProcessFileAfterDownload(outputPathFileName)
 					Me.LogTextBox.AppendText("Download complete." + vbCrLf + "Downloaded file: """ + outputPathFileName + """" + vbCrLf)
 					Me.DownloadedItemTextBox.Text = outputPathFileName
+					'Me.ProcessFolderOrFileAfterDownload(outputPathFileName)
 				Else
 					Me.LogTextBox.AppendText("Download failed." + vbCrLf)
 				End If
@@ -272,26 +295,27 @@ Public Class DownloadUserControl
 
 				Dim outputFolder As String
 				outputFolder = Me.GetOutputFileName(outputInfo.ItemTitle, outputInfo.PublishedItemID, outputInfo.ContentFolderOrFileName, outputInfo.ItemUpdated_Text)
-				'NOTE: Remove colons here to prevent GetCleanPathFileName() from removing everything up to first colon.
-				outputFolder = outputFolder.Replace(":", "")
-				outputFolder = FileManager.GetCleanPathFileName(outputFolder, False)
 
-				Dim targetOutputPath As String
 				targetOutputPath = Path.Combine(outputPath, outputFolder)
-				targetOutputPath = Me.GetTestedPath(targetOutputPath)
+				targetOutputPath = FileManager.GetTestedPath(targetOutputPath)
 
 				If Directory.Exists(outputInfo.ContentFolderOrFileName) Then
-					FileManager.CopyFolder(outputInfo.ContentFolderOrFileName, targetOutputPath, True)
-
-					'TODO: [DownloadItem_RunWorkerCompleted] Delete Steam's cached item after downloading SteamUGC item.
-					'NOTE: Deleting the folder makes the item un-downloadable for later attempts because Steam still thinks it is installed.
+					'FileManager.CopyFolder(outputInfo.ContentFolderOrFileName, targetOutputPath, True)
+					'' [DownloadItem_RunWorkerCompleted] Delete Steam's cached item after downloading SteamUGC item.
+					''NOTE: Deleting the folder makes the item un-downloadable for later attempts because Steam still thinks it is installed.
+					''      This only occurred because Crowbar used different Steamworks functions calls to download when EItemState.k_EItemStateInstalled was set. 
+					''TODO: [DownloadItem_RunWorkerCompleted] Delete Steam's cached item manifest file and cached acf info after downloading SteamUGC item.
 					'Directory.Delete(outputInfo.ContentFolderOrFileName, True)
+					''======
+					''NOTE: UnsubscribeItem() does not delete the folder.
+					''Me.UnsubscribeItem(outputInfo.AppID, outputInfo.PublishedItemID)
 					'======
-					'NOTE: UnsubscribeItem() does not delete the folder.
-					'Me.UnsubscribeItem(outputInfo.AppID, outputInfo.PublishedItemID)
+					'NOTE: File remains: "C:\Program Files (x86)\Steam\depotcache\<app_id>_<manifest_id>.manifest"
+					'NOTE: Data for the downloaded file remains in: "<steam_folder_on_drive_where_game_is_installed>\steamapps\workshop\appworkshop_<app_id>.acf"
+					Directory.Move(outputInfo.ContentFolderOrFileName, targetOutputPath)
 
 					If Directory.Exists(targetOutputPath) Then
-						'Me.ProcessFileAfterDownload(targetOutputPath)
+						'Me.ProcessFolderOrFileAfterDownload(targetOutputPath)
 						Me.LogTextBox.AppendText("Download complete." + vbCrLf + "Downloaded folder: """ + targetOutputPath + """" + vbCrLf)
 						Me.DownloadedItemTextBox.Text = targetOutputPath
 					Else
@@ -302,6 +326,33 @@ Public Class DownloadUserControl
 				End If
 			End If
 		End If
+
+		'Me.DownloadButton.Enabled = True
+		'Me.CancelDownloadButton.Enabled = False
+
+		If Not e.Cancelled AndAlso outputInfo IsNot Nothing Then
+			If outputInfo.Result = "success" Then
+				If File.Exists(outputPathFileName) Then
+					Me.ProcessFolderOrFileAfterDownload(outputPathFileName)
+				End If
+			ElseIf outputInfo.Result = "success_SteamUGC" Then
+				If Directory.Exists(targetOutputPath) Then
+					Try
+						If TheApp.SteamAppInfos.Count > 0 Then
+							'NOTE: Use this temp var because appID as a ByRef var can not be used in a lambda expression used in next line.
+							Dim steamAppID As New Steamworks.AppId_t(outputInfo.AppID)
+							Me.theSteamAppInfo = TheApp.SteamAppInfos.First(Function(info) info.ID = steamAppID)
+							Me.ProcessFolderOrFileAfterDownload(targetOutputPath)
+						End If
+					Catch ex As Exception
+						Dim debug As Integer = 4242
+					End Try
+				End If
+			End If
+		End If
+
+		Me.DownloadButton.Enabled = True
+		Me.CancelDownloadButton.Enabled = False
 	End Sub
 
 	Private Sub UnsubscribeItem_ProgressChanged(ByVal sender As System.Object, ByVal e As System.ComponentModel.ProgressChangedEventArgs)
@@ -406,25 +457,49 @@ Public Class DownloadUserControl
 	End Sub
 
 	Private Sub DownloadFromLink()
-		Dim itemLink As String = ""
 		Me.LogTextBox.Text = ""
+		Me.DownloadProgressBar.Text = ""
+		Me.DownloadProgressBar.Value = 0
+		Me.theDownloadBytesReceived = 0
+		Me.DownloadedItemTextBox.Text = ""
+		Me.DownloadButton.Enabled = False
+		Me.CancelDownloadButton.Enabled = True
+
+		Dim itemLink As String = ""
 		Dim itemID As String = Me.GetItemID()
 		Dim appID As UInteger = 0
 		If itemID = "0" Then
 			Me.LogTextBox.AppendText("ERROR: Item ID is invalid." + vbCrLf)
 			Exit Sub
 		Else
-			Me.LogTextBox.AppendText("Getting item content download link." + vbCrLf)
+			'Me.LogTextBox.AppendText("Getting item content download link." + vbCrLf)
+			Me.LogTextBox.AppendText("Getting item content download link...")
 			Application.DoEvents()
+			Me.Timer1.Interval = 1000
+			Me.Timer1.Start()
 			itemLink = Me.GetDownloadLink(itemID, appID)
+			Me.Timer1.Stop()
 		End If
 		If itemLink <> "" Then
 			Me.LogTextBox.AppendText("Item content download link found. Downloading file via web." + vbCrLf)
 			Me.DownloadViaWeb(itemLink, Me.theItemContentPathFileName)
 		Else
-			Me.LogTextBox.AppendText("Item content download link not found. Probably an item that uses newer Steam API or a Friends-only item not downloadable via web." + vbCrLf)
-			'Me.LogTextBox.AppendText("Item content download link not found. Downloading file via Steam." + vbCrLf)
-			'Me.DownloadViaSteam(appID, itemID)
+			'Me.LogTextBox.AppendText("Item content download link not found. Probably an item that uses newer Steam API or a Friends-only item not downloadable via web." + vbCrLf)
+			Me.LogTextBox.AppendText("Item content download link not found. Downloading file via Steam." + vbCrLf)
+
+			Dim outputPath As String
+			outputPath = Me.GetOutputPath()
+
+			'Dim outputFolder As String
+			'outputFolder = Me.GetOutputFileName(outputInfo.ItemTitle, outputInfo.PublishedItemID, outputInfo.ContentFolderOrFileName, outputInfo.ItemUpdated_Text)
+
+			Dim targetPath As String
+			'targetPath = Path.Combine(outputPath, outputFolder)
+			'targetPath = FileManager.GetTestedPath(targetPath)
+			'------
+			targetPath = outputPath
+
+			Me.DownloadViaSteam(appID, itemID, targetPath)
 		End If
 	End Sub
 
@@ -502,7 +577,10 @@ Public Class DownloadUserControl
 		data = "itemcount=1&publishedfileids[0]=" + itemID
 		byteData = UTF8Encoding.UTF8.GetBytes(data.ToString())
 		request.ContentLength = byteData.Length
+		'request.Timeout = 5000
 
+		'TODO: request.BeginGetRequestStream(AddressOf GetRequestStreamCallback, request)
+		'      https://docs.microsoft.com/en-us/dotnet/api/system.net.httpwebrequest.begingetrequeststream?view=netframework-4.0
 		Dim postStream As Stream = Nothing
 		Try
 			postStream = request.GetRequestStream()
@@ -525,27 +603,8 @@ Public Class DownloadUserControl
 			Dim jss As JavaScriptSerializer = New JavaScriptSerializer()
 			Dim root As SteamRemoteStorage_PublishedFileDetails_Json = jss.Deserialize(Of SteamRemoteStorage_PublishedFileDetails_Json)(responseFromServer)
 			Dim file_url As String = root.response.publishedfiledetails(0).file_url
-			If file_url Is Nothing OrElse file_url = "" Then
-				appID = CUInt(root.response.publishedfiledetails(0).consumer_app_id)
-			Else
+			If file_url IsNot Nothing AndAlso file_url <> "" Then
 				itemLink = file_url
-
-				appID = CUInt(root.response.publishedfiledetails(0).consumer_app_id)
-				Me.theAppIdText = appID.ToString()
-				Me.theSteamAppInfo = Nothing
-				Try
-					If TheApp.Settings.PublishSteamAppUserInfos.Count > 0 Then
-						'NOTE: Use this temp var because appID as a ByRef var can not be used in a lambda expression used in next line.
-						Dim steamAppID As New Steamworks.AppId_t(appID)
-						Me.theSteamAppInfo = TheApp.SteamAppInfos.First(Function(info) info.ID = steamAppID)
-					End If
-				Catch ex As Exception
-					Dim debug As Integer = 4242
-				End Try
-				If Me.theSteamAppInfo Is Nothing Then
-					'NOTE: Value was not found, so unable to download.
-					appID = 0
-				End If
 
 				Me.theItemTitle = root.response.publishedfiledetails(0).title
 				Dim fileName As String = root.response.publishedfiledetails(0).filename
@@ -553,6 +612,25 @@ Public Class DownloadUserControl
 				Me.theItemIdText = root.response.publishedfiledetails(0).publishedfileid
 				Me.theItemTimeUpdatedText = root.response.publishedfiledetails(0).time_updated.ToString()
 			End If
+
+			appID = CUInt(root.response.publishedfiledetails(0).consumer_app_id)
+			Me.theAppIdText = appID.ToString()
+			Me.theSteamAppInfo = Nothing
+			Try
+				If TheApp.SteamAppInfos.Count > 0 Then
+					'NOTE: Use this temp var because appID as a ByRef var can not be used in a lambda expression used in next line.
+					Dim steamAppID As New Steamworks.AppId_t(appID)
+					Me.theSteamAppInfo = TheApp.SteamAppInfos.First(Function(info) info.ID = steamAppID)
+				End If
+			Catch ex As Exception
+				Dim debug As Integer = 4242
+			End Try
+			If Me.theSteamAppInfo Is Nothing Then
+				'NOTE: Value was not found, so unable to download.
+				appID = 0
+			End If
+		Catch ex As Exception
+			Dim debug As Integer = 4242
 		Finally
 			If reader IsNot Nothing Then
 				reader.Close()
@@ -560,6 +638,8 @@ Public Class DownloadUserControl
 			If response IsNot Nothing Then
 				response.Close()
 			End If
+
+			Me.LogTextBox.AppendText(vbCrLf)
 		End Try
 
 		Return itemLink
@@ -579,18 +659,15 @@ Public Class DownloadUserControl
 
 		Dim outputFileName As String
 		outputFileName = Me.GetOutputFileName(Me.theItemTitle, Me.theItemIdText, givenFileName, Me.theItemTimeUpdatedText)
-		'NOTE: Remove colons here to prevent GetCleanPathFileName() from removing everything up to first colon.
-		outputFileName = outputFileName.Replace(":", "")
-		outputFileName = FileManager.GetCleanPathFileName(outputFileName, False)
 
 		Dim outputPathFileName As String
 		outputPathFileName = Path.Combine(outputPath, outputFileName)
-		outputPathFileName = Me.GetTestedPathFileName(outputPathFileName)
+		outputPathFileName = FileManager.GetTestedPathFileName(outputPathFileName)
 
 		Me.LogTextBox.AppendText("Downloading workshop item as: """ + outputPathFileName + """" + vbCrLf)
 
-		Me.DownloadButton.Enabled = False
-		Me.CancelDownloadButton.Enabled = True
+		'Me.DownloadButton.Enabled = False
+		'Me.CancelDownloadButton.Enabled = True
 
 		Me.theWebClient = New WebClient()
 		AddHandler Me.theWebClient.DownloadProgressChanged, AddressOf WebClient_DownloadProgressChanged
@@ -598,13 +675,16 @@ Public Class DownloadUserControl
 		Me.theWebClient.DownloadFileAsync(uri, outputPathFileName, outputPathFileName)
 	End Sub
 
-	Private Sub DownloadViaSteam(ByVal appID As UInteger, ByVal itemID As String)
-		Me.theDownloadBytesReceived = 0
-		Me.DownloadedItemTextBox.Text = ""
+	Private Sub DownloadViaSteam(ByVal appID As UInteger, ByVal itemID As String, ByVal targetPath As String)
+		'Me.theDownloadBytesReceived = 0
+		'Me.DownloadedItemTextBox.Text = ""
+		'Me.DownloadButton.Enabled = False
+		'Me.CancelDownloadButton.Enabled = True
 
 		Dim inputInfo As New BackgroundSteamPipe.DownloadItemInputInfo()
 		inputInfo.AppID = appID
 		inputInfo.PublishedItemID = itemID
+		inputInfo.TargetPath = targetPath
 		Me.theBackgroundSteamPipe.DownloadItem(AddressOf Me.DownloadItem_ProgressChanged, AddressOf Me.DownloadItem_RunWorkerCompleted, inputInfo)
 	End Sub
 
@@ -614,28 +694,6 @@ Public Class DownloadUserControl
 		inputInfo.PublishedItemID = itemID
 		Me.theBackgroundSteamPipe.UnsubscribeItem(AddressOf Me.UnsubscribeItem_ProgressChanged, AddressOf Me.UnsubscribeItem_RunWorkerCompleted, inputInfo)
 	End Sub
-
-	Private Function GetTestedPathFileName(ByVal iPathFileName As String) As String
-		Dim testedPathFileName As String = iPathFileName
-		Dim pathFileNameWithoutExtension As String = FileManager.GetPathFileNameWithoutExtension(iPathFileName)
-		Dim extension As String = Path.GetExtension(iPathFileName)
-		Dim number As Integer = 1
-		While File.Exists(testedPathFileName)
-			testedPathFileName = pathFileNameWithoutExtension + "(" + number.ToString() + ")" + extension
-			number += 1
-		End While
-		Return testedPathFileName
-	End Function
-
-	Private Function GetTestedPath(ByVal iPath As String) As String
-		Dim testedPathFileName As String = iPath
-		Dim number As Integer = 1
-		While Directory.Exists(testedPathFileName)
-			testedPathFileName = iPath + "(" + number.ToString() + ")"
-			number += 1
-		End While
-		Return testedPathFileName
-	End Function
 
 	Private Function GetOutputPath() As String
 		Dim outputPath As String = ""
@@ -688,6 +746,8 @@ Public Class DownloadUserControl
 			outputFileName = outputFileName.Replace(" ", "_")
 		End If
 
+		'NOTE: Remove colons here to prevent GetCleanPathFileName() from removing everything up to first colon.
+		outputFileName = outputFileName.Replace(":", "_")
 		outputFileName = FileManager.GetCleanPathFileName(outputFileName, False)
 		outputFileName = outputFileName.Replace("\", "_")
 
@@ -695,19 +755,70 @@ Public Class DownloadUserControl
 	End Function
 
 	Private Sub UpdateProgressBar(ByVal bytesReceived As Long, ByVal totalBytesToReceive As Long)
-		Dim progressPercentage As Integer = CInt(bytesReceived * Me.DownloadProgressBar.Maximum / totalBytesToReceive)
-		Me.DownloadProgressBar.Text = bytesReceived.ToString("N0") + " / " + totalBytesToReceive.ToString("N0") + " bytes   " + progressPercentage.ToString() + " %"
-		Me.DownloadProgressBar.Value = progressPercentage
+		Try
+			Dim progressPercentage As Integer = CInt(bytesReceived * Me.DownloadProgressBar.Maximum / totalBytesToReceive)
+			Me.DownloadProgressBar.Text = bytesReceived.ToString("N0") + " / " + totalBytesToReceive.ToString("N0") + " bytes   " + progressPercentage.ToString() + " %"
+			Me.DownloadProgressBar.Value = progressPercentage
+		Catch ex As Exception
+			Dim debug As Integer = 4242
+		End Try
 	End Sub
 
-	Private Sub ProcessFileAfterDownload(ByRef pathFileName As String)
-		If Me.theSteamAppInfo IsNot Nothing Then
+	Private Sub ProcessFolderOrFileAfterDownload(ByRef pathFileName As String)
+		If Me.theSteamAppInfo IsNot Nothing AndAlso TheApp.Settings.DownloadConvertToExpectedFileOrFolderCheckBoxIsChecked Then
 			Try
-				pathFileName = Me.theSteamAppInfo.ProcessFileAfterDownload(pathFileName)
+				'Me.DownloadButton.Enabled = False
+				'Me.CancelDownloadButton.Enabled = True
+
+				Me.theProcessAfterDownloadWorker = New BackgroundWorkerEx()
+				Me.theProcessAfterDownloadWorker.WorkerSupportsCancellation = True
+				Me.theProcessAfterDownloadWorker.WorkerReportsProgress = True
+				AddHandler Me.theProcessAfterDownloadWorker.DoWork, AddressOf ProcessAfterDownloadWorker_DoWork
+				AddHandler Me.theProcessAfterDownloadWorker.ProgressChanged, AddressOf ProcessAfterDownloadWorker_ProgressChanged
+				AddHandler Me.theProcessAfterDownloadWorker.RunWorkerCompleted, AddressOf ProcessAfterDownloadWorker_RunWorkerCompleted
+				Me.theProcessAfterDownloadWorker.RunWorkerAsync(pathFileName)
 			Catch ex As Exception
 				Me.LogTextBox.AppendText("ERROR: " + ex.Message + vbCrLf)
 			End Try
 		End If
+	End Sub
+
+	'NOTE: This is run in a background thread.
+	Private Sub ProcessAfterDownloadWorker_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs)
+		Dim givenPathFileName As String = CType(e.Argument, String)
+		Dim convertedPathFileName As String = Me.theSteamAppInfo.ProcessFileAfterDownload(givenPathFileName, Me.theProcessAfterDownloadWorker)
+		If convertedPathFileName = givenPathFileName Then
+			e.Result = ""
+		Else
+			e.Result = convertedPathFileName
+		End If
+	End Sub
+
+	Private Sub ProcessAfterDownloadWorker_ProgressChanged(ByVal sender As System.Object, ByVal e As System.ComponentModel.ProgressChangedEventArgs)
+		If e.ProgressPercentage = 0 Then
+			Me.LogTextBox.AppendText(CStr(e.UserState))
+			'ElseIf e.ProgressPercentage = 1 Then
+			'	Me.LogTextBox.AppendText(vbTab + CStr(e.UserState))
+		End If
+	End Sub
+
+	Private Sub ProcessAfterDownloadWorker_RunWorkerCompleted(ByVal sender As System.Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs)
+		If e.Cancelled Then
+		Else
+			Dim pathFileName As String = CType(e.Result, String)
+			If pathFileName <> "" Then
+				Me.LogTextBox.AppendText("Converted to file: """ + pathFileName + """" + vbCrLf)
+				'Me.DownloadedItemTextBox.Text = pathFileName
+			End If
+		End If
+
+		RemoveHandler Me.theProcessAfterDownloadWorker.DoWork, AddressOf ProcessAfterDownloadWorker_DoWork
+		RemoveHandler Me.theProcessAfterDownloadWorker.ProgressChanged, AddressOf ProcessAfterDownloadWorker_ProgressChanged
+		RemoveHandler Me.theProcessAfterDownloadWorker.RunWorkerCompleted, AddressOf ProcessAfterDownloadWorker_RunWorkerCompleted
+		Me.theProcessAfterDownloadWorker = Nothing
+
+		'Me.DownloadButton.Enabled = True
+		'Me.CancelDownloadButton.Enabled = False
 	End Sub
 
 #End Region
@@ -715,6 +826,7 @@ Public Class DownloadUserControl
 #Region "Data"
 
 	Private theWebClient As WebClient
+	Private theProcessAfterDownloadWorker As BackgroundWorkerEx
 	Private theAppIdText As String
 	Private theSteamAppInfo As SteamAppInfoBase
 

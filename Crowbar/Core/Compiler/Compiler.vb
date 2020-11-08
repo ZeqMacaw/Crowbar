@@ -195,7 +195,7 @@ Public Class Compiler
 			If TheApp.Settings.CompileOptionDefineBonesCreateFileIsChecked Then
 				Dim defineBonesPathFileName As String
 				defineBonesPathFileName = Me.GetDefineBonesPathFileName()
-				If File.Exists(defineBonesPathFileName) Then
+				If File.Exists(defineBonesPathFileName) AndAlso Not TheApp.Settings.CompileOptionDefineBonesOverwriteQciFileIsChecked Then
 					inputsAreValid = False
 					Me.WriteErrorMessage(1, "The DefineBones file, """ + defineBonesPathFileName + """, already exists.")
 				End If
@@ -258,8 +258,13 @@ Public Class Compiler
 		'info.customModelFolder = TheApp.Settings.CompileOutputSubfolderName
 		'info.theCompileMode = TheApp.Settings.CompileMode
 
+		Dim defineBonesText As String = ""
+		If TheApp.Settings.CompileOptionDefineBonesIsChecked Then
+			defineBonesText = "Define Bones "
+		End If
+
 		Dim progressDescriptionText As String
-		progressDescriptionText = "Compiling with " + TheApp.GetProductNameAndVersion() + ": "
+		progressDescriptionText = "Compiling " + defineBonesText + "with " + TheApp.GetProductNameAndVersion() + ": "
 
 		Try
 			If TheApp.Settings.CompileMode = InputOptions.FolderRecursion Then
@@ -425,8 +430,13 @@ Public Class Compiler
 				'End If
 			End If
 
+			Dim defineBonesText As String = ""
+			If TheApp.Settings.CompileOptionDefineBonesIsChecked Then
+				defineBonesText = "Define Bones of "
+			End If
+
 			Me.UpdateProgress()
-			Me.UpdateProgress(1, "Compiling """ + qcRelativePathFileName + """ ...")
+			Me.UpdateProgress(1, "Compiling " + defineBonesText + """" + qcRelativePathFileName + """ ...")
 
 			Dim result As String
 			result = Me.CheckFiles()
@@ -442,13 +452,34 @@ Public Class Compiler
 					Me.UpdateProgress(2, "ERROR: The compiler did not return any status messages.")
 					Me.UpdateProgress(2, "CAUSE: The compiler is not the correct one for the selected game.")
 					Me.UpdateProgress(2, "SOLUTION: Verify integrity of game files via Steam so that the correct compiler is installed.")
-				ElseIf TheApp.Settings.CompileOptionDefineBonesIsChecked Then
+				ElseIf gameSetup.GameEngine = GameEngine.Source AndAlso TheApp.Settings.CompileOptionDefineBonesIsChecked Then
 					If Me.theDefineBonesFileStream IsNot Nothing Then
-						If TheApp.Settings.CompileOptionDefineBonesModifyQcFileIsChecked Then
-							Me.InsertAnIncludeDefineBonesFileCommandIntoQcFile()
-						End If
+						Dim qciPathFileName As String = CType(Me.theDefineBonesFileStream.BaseStream, FileStream).Name
 
 						Me.CloseDefineBonesFile()
+
+						'NOTE: Must do this after closing define bones file.
+						If File.Exists(qciPathFileName) Then
+							Dim qciFileInfo As New FileInfo(qciPathFileName)
+							If qciFileInfo.Length = 0 Then
+								Me.UpdateProgress(2, "CROWBAR WARNING: No define bones were written to QCI file.")
+
+								Try
+									File.Delete(qciPathFileName)
+								Catch ex As Exception
+									Me.UpdateProgress(2, "CROWBAR WARNING: Failed to delete empty QCI file: """ + qciPathFileName + """")
+								End Try
+							Else
+								Me.UpdateProgress(2, "CROWBAR: Wrote define bones into QCI file: """ + qciPathFileName + """")
+
+								If TheApp.Settings.CompileOptionDefineBonesModifyQcFileIsChecked Then
+									Dim line As String = Me.InsertAnIncludeDefineBonesFileCommandIntoQcFile(qciPathFileName)
+									Me.UpdateProgress(2, "CROWBAR: Wrote in the QC file this line: " + line)
+								End If
+							End If
+						Else
+							Me.UpdateProgress(2, "CROWBAR WARNING: Failed to write QCI file: """ + qciPathFileName + """")
+						End If
 					End If
 				Else
 					If File.Exists(compiledMdlPathFileName) Then
@@ -474,7 +505,7 @@ Public Class Compiler
 				End If
 			End If
 
-			Me.UpdateProgress(1, "... Compiling """ + qcRelativePathFileName + """ finished. Check above for any errors.")
+			Me.UpdateProgress(1, "... Compiling " + defineBonesText + """" + qcRelativePathFileName + """ finished. Check above for any errors.")
 		Catch ex As Exception
 			'TODO: [CompileOneModel] Should at least give an error message to let user know something prevented the compile.
 			Dim debug As Integer = 4242
@@ -861,13 +892,11 @@ Public Class Compiler
 		Me.theDefineBonesFileStream = Nothing
 	End Sub
 
-	Private Sub InsertAnIncludeDefineBonesFileCommandIntoQcFile()
-		Dim qciPathFileName As String
+	Private Function InsertAnIncludeDefineBonesFileCommandIntoQcFile(ByVal qciPathFileName As String) As String
 		Dim qcFile As SourceQcFile
 		qcFile = New SourceQcFile()
-		qciPathFileName = CType(Me.theDefineBonesFileStream.BaseStream, FileStream).Name
-		qcFile.InsertAnIncludeFileCommand(TheApp.Settings.CompileQcPathFileName, qciPathFileName)
-	End Sub
+		Return qcFile.InsertAnIncludeFileCommand(TheApp.Settings.CompileQcPathFileName, qciPathFileName)
+	End Function
 
 	Private Sub UpdateProgressInternal(ByVal progressValue As Integer, ByVal line As String)
 		If progressValue = 1 AndAlso Me.theLogFileStream IsNot Nothing Then

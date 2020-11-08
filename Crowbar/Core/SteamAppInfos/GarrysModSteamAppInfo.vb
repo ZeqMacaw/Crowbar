@@ -1,5 +1,6 @@
 ﻿Imports System.ComponentModel
 Imports System.IO
+Imports System.Web.Script.Serialization
 Imports Steamworks
 
 Public Class GarrysModSteamAppInfo
@@ -10,11 +11,82 @@ Public Class GarrysModSteamAppInfo
 
 		Me.ID = New AppId_t(4000)
 		Me.Name = "Garry's Mod"
-		Me.UsesSteamUGC = False
+		Me.UsesSteamUGC = True
 		Me.CanUseContentFolderOrFile = True
 		Me.ContentFileExtensionsAndDescriptions.Add("gma", "Garry's Mod GMA Files")
 		Me.TagsControlType = GetType(GarrysModTagsUserControl)
 	End Sub
+
+	Public Overrides Function ProcessFileAfterDownload(ByVal givenPathFileName As String, ByVal bw As BackgroundWorkerEx) As String
+		Dim processedPathFileName As String = ""
+
+		If Directory.Exists(givenPathFileName) Then
+			' If the folder contains only one GMA file, then move+rename GMA file from folder and delete the folder.
+			Dim sourcePathFileNames As String() = Directory.GetFiles(givenPathFileName, "*.gma")
+			If sourcePathFileNames.Length = 1 Then
+				Dim sourcePathFileName As String = sourcePathFileNames(0)
+				If File.Exists(sourcePathFileName) Then
+					Dim givenPath As String = Path.GetDirectoryName(givenPathFileName)
+					Dim givenFolder As String = Path.GetFileName(givenPathFileName)
+					Dim fileName As String = givenFolder + ".gma"
+					processedPathFileName = Path.Combine(givenPath, fileName)
+					processedPathFileName = FileManager.GetTestedPathFileName(processedPathFileName)
+					File.Move(sourcePathFileName, processedPathFileName)
+					Directory.Delete(givenPathFileName)
+				End If
+			Else
+				processedPathFileName = givenPathFileName
+			End If
+		Else
+			Dim processedGivenPathFileName As String = Path.ChangeExtension(givenPathFileName, ".lzma")
+			Try
+				If File.Exists(givenPathFileName) Then
+					File.Move(givenPathFileName, processedGivenPathFileName)
+					bw.ReportProgress(0, "Renamed """ + Path.GetFileName(givenPathFileName) + """ to """ + Path.GetFileName(processedGivenPathFileName) + """" + vbCrLf)
+				End If
+			Catch ex As Exception
+				bw.ReportProgress(0, "Crowbar tried to rename the file """ + Path.GetFileName(givenPathFileName) + """ to """ + Path.GetFileName(processedGivenPathFileName) + """ but Windows gave this message: " + ex.Message)
+			End Try
+
+			processedPathFileName = Path.ChangeExtension(processedGivenPathFileName, ".gma")
+
+			bw.ReportProgress(0, "Decompressing downloaded Garry's Mod workshop file into a GMA file." + vbCrLf)
+			Dim lzmaExeProcess As New Process()
+			Try
+				lzmaExeProcess.StartInfo.UseShellExecute = False
+				'NOTE: From Microsoft website: 
+				'      On Windows Vista and earlier versions of the Windows operating system, 
+				'      the length of the arguments added to the length of the full path to the process must be less than 2080. 
+				'      On Windows 7 and later versions, the length must be less than 32699. 
+				'FROM BAT file: lzma.exe d %1 "%~n1.gma"
+				lzmaExeProcess.StartInfo.FileName = TheApp.LzmaExePathFileName
+				lzmaExeProcess.StartInfo.Arguments = "d """ + processedGivenPathFileName + """ """ + processedPathFileName + """"
+#If DEBUG Then
+				lzmaExeProcess.StartInfo.CreateNoWindow = False
+#Else
+				lzmaExeProcess.StartInfo.CreateNoWindow = True
+#End If
+				lzmaExeProcess.Start()
+				lzmaExeProcess.WaitForExit()
+			Catch ex As Exception
+				Throw New System.Exception("Crowbar tried to decompress the file """ + processedGivenPathFileName + """ to """ + processedPathFileName + """ but Windows gave this message: " + ex.Message)
+			Finally
+				lzmaExeProcess.Close()
+				bw.ReportProgress(0, "Decompress done." + vbCrLf)
+			End Try
+
+			Try
+				If File.Exists(processedGivenPathFileName) Then
+					File.Delete(processedGivenPathFileName)
+					bw.ReportProgress(0, "Deleted: """ + processedGivenPathFileName + """" + vbCrLf)
+				End If
+			Catch ex As Exception
+				bw.ReportProgress(0, "Crowbar tried to delete the file """ + processedGivenPathFileName + """ but Windows gave this message: " + ex.Message)
+			End Try
+		End If
+
+		Return processedPathFileName
+	End Function
 
 	Public Overrides Function ProcessFileBeforeUpload(ByVal item As WorkshopItem, ByVal bw As BackgroundWorkerEx) As String
 		Dim processedPathFileName As String = item.ContentPathFolderOrFileName
@@ -37,7 +109,12 @@ Public Class GarrysModSteamAppInfo
 		If Directory.Exists(item.ContentPathFolderOrFileName) Then
 			Me.theBackgroundWorker.ReportProgress(0, "Creating GMA file." + vbCrLf)
 
-			gmaPathFileName = Path.Combine(Me.theTempCrowbarPath, "temp.gma")
+			'NOTE: File name is all lowercase in case Garry's Mod needs that on Linux.
+			If item.IsDraft Then
+				gmaPathFileName = Path.Combine(Me.theTempCrowbarPath, "new_item_via_crowbar.gma")
+			Else
+				gmaPathFileName = Path.Combine(Me.theTempCrowbarPath, item.ID + "_via_crowbar.gma")
+			End If
 
 			'TODO: Create GMA file without calling gmad.exe.
 			Dim appInstallPath As String = ""
@@ -87,62 +164,96 @@ Public Class GarrysModSteamAppInfo
 							RemoveHandler gmadExeProcess.OutputDataReceived, AddressOf Me.myProcess_OutputDataReceived
 							RemoveHandler gmadExeProcess.ErrorDataReceived, AddressOf Me.myProcess_ErrorDataReceived
 
-							If Not File.Exists(gmaPathFileName) Then
-								Throw New System.Exception("Crowbar tried to create the file """ + gmaPathFileName + """ with Garry's Mod gmad.exe, but the file was not created.")
-							End If
+							'If Not File.Exists(gmaPathFileName) Then
+							'	Throw New System.Exception("Crowbar tried to create the file """ + gmaPathFileName + """ with Garry's Mod gmad.exe, but the file was not created.")
+							'End If
 						End Try
 					Else
 						Throw New System.Exception("Crowbar tried to create the file """ + addonJsonPathFileName + """, but the file was not created.")
 					End If
 				Else
-					Throw New System.Exception("Crowbar tried to run """ + garrysModPathGmadExe + """, but the file was not found. Note that Garry's Mod must be installed for this work.")
+					Throw New System.Exception("Crowbar tried to run """ + garrysModPathGmadExe + """, but the file was not found. Note that Garry's Mod must be installed for this to work.")
 				End If
 			End If
 		Else
 			gmaPathFileName = item.ContentPathFolderOrFileName
 		End If
 
-		'NOTE: Compress GMA file for Garry's Mod before uploading it.
-		'      Calling lzma.exe (outside of Crowbar) works (i.e. subscribed item can be used within Garry's Mod), but does not compress to same bytes as Garry's Mod gmpublish.exe. 
-		'      In tests, files were smaller, possibly because lzma.exe has newer compression code than what Garry's Mod gmpublish.exe has.
+		'		Dim gmaFileInfo As New FileInfo(gmaPathFileName)
+		'		Dim uncompressedFileSize As UInt32 = CUInt(gmaFileInfo.Length)
 
-		Dim givenFileNameWithoutExtension As String
-		givenFileNameWithoutExtension = Path.GetFileNameWithoutExtension(gmaPathFileName)
-		processedPathFileName = Path.Combine(Me.theTempCrowbarPath, givenFileNameWithoutExtension + ".lzma")
+		'		'NOTE: Compress GMA file for Garry's Mod before uploading it.
+		'		'      Calling lzma.exe (outside of Crowbar) works (i.e. subscribed item can be used within Garry's Mod), but does not compress to same bytes as Garry's Mod gmpublish.exe. 
+		'		'      In tests, files were smaller, possibly because lzma.exe has newer compression code than what Garry's Mod gmpublish.exe has.
 
-		Try
-			If File.Exists(processedPathFileName) Then
-				File.Delete(processedPathFileName)
-			End If
-		Catch ex As Exception
-			Throw New System.Exception("Crowbar tried to delete an old temp file """ + processedPathFileName + """ but Windows gave this message: " + ex.Message)
-		End Try
+		'		Dim givenFileNameWithoutExtension As String
+		'		givenFileNameWithoutExtension = Path.GetFileNameWithoutExtension(gmaPathFileName)
+		'		processedPathFileName = Path.Combine(Me.theTempCrowbarPath, givenFileNameWithoutExtension + ".lzma")
 
-		Me.theBackgroundWorker.ReportProgress(0, "Compressing GMA file." + vbCrLf)
-		Dim lzmaExeProcess As New Process()
-		Try
-			lzmaExeProcess.StartInfo.UseShellExecute = False
-			'NOTE: From Microsoft website: 
-			'      On Windows Vista and earlier versions of the Windows operating system, 
-			'      the length of the arguments added to the length of the full path to the process must be less than 2080. 
-			'      On Windows 7 and later versions, the length must be less than 32699. 
-			lzmaExeProcess.StartInfo.FileName = TheApp.LzmaExePathFileName
-			lzmaExeProcess.StartInfo.Arguments = "e """ + gmaPathFileName + """ """ + processedPathFileName + """ -d25 -fb256"
-			'lzmaExeProcess.StartInfo.Arguments = "e """ + givenPathFileName + """ """ + processedPathFileName + """ -d25"
-#If DEBUG Then
-			lzmaExeProcess.StartInfo.CreateNoWindow = False
-#Else
-				lzmaExeProcess.StartInfo.CreateNoWindow = True
-#End If
-			lzmaExeProcess.Start()
-			lzmaExeProcess.WaitForExit()
-			lzmaExeProcess.Close()
-		Catch ex As Exception
-			Throw New System.Exception("Crowbar tried to compress the file """ + gmaPathFileName + """ to """ + processedPathFileName + """ but Windows gave this message: " + ex.Message)
-		Finally
-			lzmaExeProcess.Close()
-		End Try
+		'		Try
+		'			If File.Exists(processedPathFileName) Then
+		'				File.Delete(processedPathFileName)
+		'			End If
+		'		Catch ex As Exception
+		'			Throw New System.Exception("Crowbar tried to delete an old temp file """ + processedPathFileName + """ but Windows gave this message: " + ex.Message)
+		'		End Try
 
+		'		Me.theBackgroundWorker.ReportProgress(0, "Compressing GMA file." + vbCrLf)
+		'		Dim lzmaExeProcess As New Process()
+		'		Try
+		'			lzmaExeProcess.StartInfo.UseShellExecute = False
+		'			'NOTE: From Microsoft website: 
+		'			'      On Windows Vista and earlier versions of the Windows operating system, 
+		'			'      the length of the arguments added to the length of the full path to the process must be less than 2080. 
+		'			'      On Windows 7 and later versions, the length must be less than 32699. 
+		'			lzmaExeProcess.StartInfo.FileName = TheApp.LzmaExePathFileName
+		'			'lzmaExeProcess.StartInfo.Arguments = "e """ + gmaPathFileName + """ """ + processedPathFileName + """ -d25 -fb256"
+		'			'lzmaExeProcess.StartInfo.Arguments = "e """ + givenPathFileName + """ """ + processedPathFileName + """ -d25"
+		'			lzmaExeProcess.StartInfo.Arguments = "e """ + gmaPathFileName + """ """ + processedPathFileName + """ -d25 -fb32"
+		'#If DEBUG Then
+		'			lzmaExeProcess.StartInfo.CreateNoWindow = False
+		'#Else
+		'				lzmaExeProcess.StartInfo.CreateNoWindow = True
+		'#End If
+		'			lzmaExeProcess.Start()
+		'			lzmaExeProcess.WaitForExit()
+		'			lzmaExeProcess.Close()
+		'		Catch ex As Exception
+		'			Throw New System.Exception("Crowbar tried to compress the file """ + gmaPathFileName + """ to """ + processedPathFileName + """ but Windows gave this message: " + ex.Message)
+		'		Finally
+		'			lzmaExeProcess.Close()
+		'		End Try
+
+		'		' Write 8 extra bytes after the lzma compressed data: 4 bytes for uncompressed file size and 4 magic bytes (BEEFCACE), both values in little-endian order.
+		'		Dim outputFileStream As FileStream = Nothing
+		'		Try
+		'			If File.Exists(processedPathFileName) Then
+		'				outputFileStream = New FileStream(processedPathFileName, FileMode.Open)
+		'				If outputFileStream IsNot Nothing Then
+		'					Dim inputFileWriter As BinaryWriter = Nothing
+		'					Try
+		'						inputFileWriter = New BinaryWriter(outputFileStream)
+
+		'						inputFileWriter.Seek(0, SeekOrigin.End)
+		'						inputFileWriter.Write(uncompressedFileSize)
+		'						'-1091581234   BEEFCACE in little endian order: CE CA EF BE
+		'						inputFileWriter.Write(-1091581234)
+		'					Catch
+		'					Finally
+		'						If inputFileWriter IsNot Nothing Then
+		'							inputFileWriter.Close()
+		'						End If
+		'					End Try
+		'				End If
+		'			End If
+		'		Catch
+		'		Finally
+		'			If outputFileStream IsNot Nothing Then
+		'				outputFileStream.Close()
+		'			End If
+		'		End Try
+
+		processedPathFileName = gmaPathFileName
 		Return processedPathFileName
 	End Function
 
@@ -193,28 +304,30 @@ Public Class GarrysModSteamAppInfo
 			Throw New System.Exception("Crowbar tried to delete an old temp file """ + addonJsonPathFileName + """ but Windows gave this message: " + ex.Message)
 		End Try
 
+		' Remove the "Addon" tag because it should not go into the json file.
 		itemTags.Remove("Addon")
 
 		Dim fileStream As StreamWriter
 		fileStream = File.CreateText(addonJsonPathFileName)
 		fileStream.AutoFlush = True
 		Try
+			Dim jss As JavaScriptSerializer = New JavaScriptSerializer()
 			If File.Exists(addonJsonPathFileName) Then
 				fileStream.WriteLine("{")
-				fileStream.WriteLine(vbTab + """title"": """ + itemTitle + """,")
+				fileStream.WriteLine(vbTab + """title"": " + jss.Serialize(itemTitle) + ",")
 				If itemTags.Count > 1 Then
-					fileStream.WriteLine(vbTab + """type"": """ + itemTags(0) + """,")
+					fileStream.WriteLine(vbTab + """type"": " + jss.Serialize(itemTags(0)) + ",")
 					fileStream.WriteLine(vbTab + """tags"": ")
 					fileStream.WriteLine(vbTab + "[")
 					If itemTags.Count > 2 Then
-						fileStream.WriteLine(vbTab + vbTab + """" + itemTags(1) + """,")
-						fileStream.WriteLine(vbTab + vbTab + """" + itemTags(2) + """")
+						fileStream.WriteLine(vbTab + vbTab + jss.Serialize(itemTags(1)) + ",")
+						fileStream.WriteLine(vbTab + vbTab + jss.Serialize(itemTags(2)))
 					Else
-						fileStream.WriteLine(vbTab + vbTab + """" + itemTags(1) + """")
+						fileStream.WriteLine(vbTab + vbTab + jss.Serialize(itemTags(1)))
 					End If
 					fileStream.WriteLine(vbTab + "]")
 				Else
-					fileStream.WriteLine(vbTab + """type"": """ + itemTags(0) + """")
+					fileStream.WriteLine(vbTab + """type"": " + jss.Serialize(itemTags(0)))
 				End If
 				fileStream.WriteLine("}")
 				fileStream.Flush()
@@ -228,6 +341,9 @@ Public Class GarrysModSteamAppInfo
 				fileStream.Close()
 				fileStream = Nothing
 			End If
+
+			'NOTE: Add the "Addon" tag back because itemTags is an object used throughout app and is not a local copy.
+			itemTags.Add("Addon")
 		End Try
 
 		Return addonJsonPathFileName
@@ -238,7 +354,7 @@ Public Class GarrysModSteamAppInfo
 		anEnumList = EnumHelper.ToList(GetType(GarrysModTypeTags))
 		Dim index As Integer
 		For Each tag As String In tags
-			index = EnumHelper.IndexOfKeyAsCasInsensitiveString(tag, anEnumList)
+			index = EnumHelper.IndexOfKeyAsCaseInsensitiveString(tag, anEnumList)
 			If index <> -1 Then
 				tags.Remove(tag)
 				tags.Insert(0, tag)

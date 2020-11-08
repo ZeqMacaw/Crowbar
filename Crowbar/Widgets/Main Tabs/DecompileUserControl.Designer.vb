@@ -30,9 +30,10 @@ Partial Class DecompileUserControl
 		Me.FormatForStricterImportersCheckBox = New System.Windows.Forms.CheckBox()
 		Me.UseMixedCaseForKeywordsCheckBox = New System.Windows.Forms.CheckBox()
 		Me.RemovePathFromMaterialFileNamesCheckBox = New System.Windows.Forms.CheckBox()
-		Me.UseUvsForDoomMusicCompilerCheckBox = New System.Windows.Forms.CheckBox()
+		Me.UseNonValveUvConversionCheckBox = New System.Windows.Forms.CheckBox()
 		Me.OverrideMdlVersionLabel = New System.Windows.Forms.Label()
 		Me.OverrideMdlVersionComboBox = New System.Windows.Forms.ComboBox()
+		Me.PrefixMeshFileNamesWithModelNameCheckBox = New System.Windows.Forms.CheckBox()
 		Me.Panel2 = New System.Windows.Forms.Panel()
 		Me.Label1 = New System.Windows.Forms.Label()
 		Me.DecompileComboBox = New System.Windows.Forms.ComboBox()
@@ -46,14 +47,8 @@ Partial Class DecompileUserControl
 		Me.OutputPathComboBox = New System.Windows.Forms.ComboBox()
 		Me.Label3 = New System.Windows.Forms.Label()
 		Me.UseDefaultOutputSubfolderButton = New System.Windows.Forms.Button()
-		Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
-		Me.OptionsGroupBox = New System.Windows.Forms.GroupBox()
-		Me.Panel3 = New System.Windows.Forms.Panel()
-		Me.FolderForEachModelCheckBox = New System.Windows.Forms.CheckBox()
-		Me.UseAllInCompileButton = New System.Windows.Forms.Button()
-		Me.CancelDecompileButton = New System.Windows.Forms.Button()
-		Me.SkipCurrentModelButton = New System.Windows.Forms.Button()
-		Me.DecompileButton = New System.Windows.Forms.Button()
+		Me.Options_LogSplitContainer = New System.Windows.Forms.SplitContainer()
+		Me.DecompileOptionsPanel = New System.Windows.Forms.Panel()
 		Me.ReCreateFilesGroupBox = New System.Windows.Forms.GroupBox()
 		Me.Panel1 = New System.Windows.Forms.Panel()
 		Me.OnlyChangedMaterialsInTextureGroupLinesCheckBox = New System.Windows.Forms.CheckBox()
@@ -72,26 +67,38 @@ Partial Class DecompileUserControl
 		Me.PhysicsMeshSmdFileCheckBox = New System.Windows.Forms.CheckBox()
 		Me.ReferenceMeshSmdFileCheckBox = New System.Windows.Forms.CheckBox()
 		Me.QcFileCheckBox = New System.Windows.Forms.CheckBox()
+		Me.OptionsGroupBox = New System.Windows.Forms.GroupBox()
+		Me.Panel3 = New System.Windows.Forms.Panel()
+		Me.FolderForEachModelCheckBox = New System.Windows.Forms.CheckBox()
 		Me.DecompilerLogTextBox = New Crowbar.RichTextBoxEx()
+		Me.DecompileButtonsPanel = New System.Windows.Forms.Panel()
+		Me.DecompileButton = New System.Windows.Forms.Button()
+		Me.SkipCurrentModelButton = New System.Windows.Forms.Button()
+		Me.CancelDecompileButton = New System.Windows.Forms.Button()
+		Me.UseAllInCompileButton = New System.Windows.Forms.Button()
+		Me.Panel4 = New System.Windows.Forms.Panel()
 		Me.DecompiledFilesComboBox = New System.Windows.Forms.ComboBox()
+		Me.UseInEditButton = New System.Windows.Forms.Button()
 		Me.UseInCompileButton = New System.Windows.Forms.Button()
 		Me.GotoDecompiledFileButton = New System.Windows.Forms.Button()
-		Me.UseInEditButton = New System.Windows.Forms.Button()
 		Me.Panel2.SuspendLayout()
-		CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
-		Me.SplitContainer1.Panel1.SuspendLayout()
-		Me.SplitContainer1.Panel2.SuspendLayout()
-		Me.SplitContainer1.SuspendLayout()
-		Me.OptionsGroupBox.SuspendLayout()
-		Me.Panel3.SuspendLayout()
+		CType(Me.Options_LogSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
+		Me.Options_LogSplitContainer.Panel1.SuspendLayout()
+		Me.Options_LogSplitContainer.Panel2.SuspendLayout()
+		Me.Options_LogSplitContainer.SuspendLayout()
+		Me.DecompileOptionsPanel.SuspendLayout()
 		Me.ReCreateFilesGroupBox.SuspendLayout()
 		Me.Panel1.SuspendLayout()
+		Me.OptionsGroupBox.SuspendLayout()
+		Me.Panel3.SuspendLayout()
+		Me.DecompileButtonsPanel.SuspendLayout()
+		Me.Panel4.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'DebugInfoCheckBox
 		'
 		Me.DebugInfoCheckBox.AutoSize = True
-		Me.DebugInfoCheckBox.Location = New System.Drawing.Point(3, 95)
+		Me.DebugInfoCheckBox.Location = New System.Drawing.Point(3, 118)
 		Me.DebugInfoCheckBox.Name = "DebugInfoCheckBox"
 		Me.DebugInfoCheckBox.Size = New System.Drawing.Size(207, 17)
 		Me.DebugInfoCheckBox.TabIndex = 14
@@ -102,7 +109,7 @@ Partial Class DecompileUserControl
 		'LogFileCheckBox
 		'
 		Me.LogFileCheckBox.AutoSize = True
-		Me.LogFileCheckBox.Location = New System.Drawing.Point(3, 72)
+		Me.LogFileCheckBox.Location = New System.Drawing.Point(3, 95)
 		Me.LogFileCheckBox.Name = "LogFileCheckBox"
 		Me.LogFileCheckBox.Size = New System.Drawing.Size(116, 17)
 		Me.LogFileCheckBox.TabIndex = 13
@@ -113,9 +120,9 @@ Partial Class DecompileUserControl
 		'DeclareSequenceQciCheckBox
 		'
 		Me.DeclareSequenceQciCheckBox.AutoSize = True
-		Me.DeclareSequenceQciCheckBox.Location = New System.Drawing.Point(3, 141)
+		Me.DeclareSequenceQciCheckBox.Location = New System.Drawing.Point(3, 164)
 		Me.DeclareSequenceQciCheckBox.Name = "DeclareSequenceQciCheckBox"
-		Me.DeclareSequenceQciCheckBox.Size = New System.Drawing.Size(161, 17)
+		Me.DeclareSequenceQciCheckBox.Size = New System.Drawing.Size(160, 17)
 		Me.DeclareSequenceQciCheckBox.TabIndex = 40
 		Me.DeclareSequenceQciCheckBox.Text = "$DeclareSequence QCI file"
 		Me.ToolTip1.SetToolTip(Me.DeclareSequenceQciCheckBox, "Write a QCI file with a $DeclareSequence line for each sequence in the MDL file. " &
@@ -125,7 +132,7 @@ Partial Class DecompileUserControl
 		'FormatForStricterImportersCheckBox
 		'
 		Me.FormatForStricterImportersCheckBox.AutoSize = True
-		Me.FormatForStricterImportersCheckBox.Location = New System.Drawing.Point(3, 26)
+		Me.FormatForStricterImportersCheckBox.Location = New System.Drawing.Point(3, 49)
 		Me.FormatForStricterImportersCheckBox.Name = "FormatForStricterImportersCheckBox"
 		Me.FormatForStricterImportersCheckBox.Size = New System.Drawing.Size(170, 17)
 		Me.FormatForStricterImportersCheckBox.TabIndex = 12
@@ -157,22 +164,22 @@ Partial Class DecompileUserControl
 		"problem with $CDMaterials in QC file.")
 		Me.RemovePathFromMaterialFileNamesCheckBox.UseVisualStyleBackColor = True
 		'
-		'UseUvsForDoomMusicCompilerCheckBox
+		'UseNonValveUvConversionCheckBox
 		'
-		Me.UseUvsForDoomMusicCompilerCheckBox.AutoSize = True
-		Me.UseUvsForDoomMusicCompilerCheckBox.Location = New System.Drawing.Point(20, 164)
-		Me.UseUvsForDoomMusicCompilerCheckBox.Name = "UseUvsForDoomMusicCompilerCheckBox"
-		Me.UseUvsForDoomMusicCompilerCheckBox.Size = New System.Drawing.Size(309, 17)
-		Me.UseUvsForDoomMusicCompilerCheckBox.TabIndex = 44
-		Me.UseUvsForDoomMusicCompilerCheckBox.Text = "Use UVs for DoomMusic's model compiler (GoldSource)"
-		Me.ToolTip1.SetToolTip(Me.UseUvsForDoomMusicCompilerCheckBox, "For DoomMusic's compiler, UV calculation is slightly different, so tick this for " &
-		"better results.")
-		Me.UseUvsForDoomMusicCompilerCheckBox.UseVisualStyleBackColor = True
+		Me.UseNonValveUvConversionCheckBox.AutoSize = True
+		Me.UseNonValveUvConversionCheckBox.Location = New System.Drawing.Point(20, 164)
+		Me.UseNonValveUvConversionCheckBox.Name = "UseNonValveUvConversionCheckBox"
+		Me.UseNonValveUvConversionCheckBox.Size = New System.Drawing.Size(245, 17)
+		Me.UseNonValveUvConversionCheckBox.TabIndex = 44
+		Me.UseNonValveUvConversionCheckBox.Text = "Use non-Valve UV conversion (GoldSource)"
+		Me.ToolTip1.SetToolTip(Me.UseNonValveUvConversionCheckBox, "[ u=s/width ] and [ v=1-(t/height) ] instead of Valve's [ u=s/(width-1) ] and [ v" &
+		"=1-(t/(height-1)) ]")
+		Me.UseNonValveUvConversionCheckBox.UseVisualStyleBackColor = True
 		'
 		'OverrideMdlVersionLabel
 		'
 		Me.OverrideMdlVersionLabel.AutoSize = True
-		Me.OverrideMdlVersionLabel.Location = New System.Drawing.Point(3, 188)
+		Me.OverrideMdlVersionLabel.Location = New System.Drawing.Point(3, 202)
 		Me.OverrideMdlVersionLabel.Name = "OverrideMdlVersionLabel"
 		Me.OverrideMdlVersionLabel.Size = New System.Drawing.Size(120, 13)
 		Me.OverrideMdlVersionLabel.TabIndex = 46
@@ -183,11 +190,22 @@ Partial Class DecompileUserControl
 		'
 		Me.OverrideMdlVersionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.OverrideMdlVersionComboBox.FormattingEnabled = True
-		Me.OverrideMdlVersionComboBox.Location = New System.Drawing.Point(123, 185)
+		Me.OverrideMdlVersionComboBox.Location = New System.Drawing.Point(123, 199)
 		Me.OverrideMdlVersionComboBox.Name = "OverrideMdlVersionComboBox"
-		Me.OverrideMdlVersionComboBox.Size = New System.Drawing.Size(100, 21)
+		Me.OverrideMdlVersionComboBox.Size = New System.Drawing.Size(110, 21)
 		Me.OverrideMdlVersionComboBox.TabIndex = 45
 		Me.ToolTip1.SetToolTip(Me.OverrideMdlVersionComboBox, "Decompile based on this selected version instead of what is stored in MDL file.")
+		'
+		'PrefixMeshFileNamesWithModelNameCheckBox
+		'
+		Me.PrefixMeshFileNamesWithModelNameCheckBox.AutoSize = True
+		Me.PrefixMeshFileNamesWithModelNameCheckBox.Location = New System.Drawing.Point(3, 26)
+		Me.PrefixMeshFileNamesWithModelNameCheckBox.Name = "PrefixMeshFileNamesWithModelNameCheckBox"
+		Me.PrefixMeshFileNamesWithModelNameCheckBox.Size = New System.Drawing.Size(231, 17)
+		Me.PrefixMeshFileNamesWithModelNameCheckBox.TabIndex = 47
+		Me.PrefixMeshFileNamesWithModelNameCheckBox.Text = "Prefix mesh file names with model name"
+		Me.ToolTip1.SetToolTip(Me.PrefixMeshFileNamesWithModelNameCheckBox, "Avoid file name conflicts.")
+		Me.PrefixMeshFileNamesWithModelNameCheckBox.UseVisualStyleBackColor = True
 		'
 		'Panel2
 		'
@@ -203,7 +221,7 @@ Partial Class DecompileUserControl
 		Me.Panel2.Controls.Add(Me.OutputPathComboBox)
 		Me.Panel2.Controls.Add(Me.Label3)
 		Me.Panel2.Controls.Add(Me.UseDefaultOutputSubfolderButton)
-		Me.Panel2.Controls.Add(Me.SplitContainer1)
+		Me.Panel2.Controls.Add(Me.Options_LogSplitContainer)
 		Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.Panel2.Location = New System.Drawing.Point(0, 0)
 		Me.Panel2.Margin = New System.Windows.Forms.Padding(2)
@@ -223,7 +241,7 @@ Partial Class DecompileUserControl
 		'
 		Me.DecompileComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.DecompileComboBox.FormattingEnabled = True
-		Me.DecompileComboBox.Location = New System.Drawing.Point(73, 5)
+		Me.DecompileComboBox.Location = New System.Drawing.Point(73, 4)
 		Me.DecompileComboBox.Name = "DecompileComboBox"
 		Me.DecompileComboBox.Size = New System.Drawing.Size(140, 21)
 		Me.DecompileComboBox.TabIndex = 1
@@ -233,7 +251,7 @@ Partial Class DecompileUserControl
 		Me.MdlPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.MdlPathFileNameTextBox.CueBannerText = ""
-		Me.MdlPathFileNameTextBox.Location = New System.Drawing.Point(219, 5)
+		Me.MdlPathFileNameTextBox.Location = New System.Drawing.Point(219, 3)
 		Me.MdlPathFileNameTextBox.Name = "MdlPathFileNameTextBox"
 		Me.MdlPathFileNameTextBox.Size = New System.Drawing.Size(435, 22)
 		Me.MdlPathFileNameTextBox.TabIndex = 1
@@ -284,7 +302,7 @@ Partial Class DecompileUserControl
 		Me.OutputPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.OutputPathTextBox.CueBannerText = ""
-		Me.OutputPathTextBox.Location = New System.Drawing.Point(219, 34)
+		Me.OutputPathTextBox.Location = New System.Drawing.Point(219, 32)
 		Me.OutputPathTextBox.Name = "OutputPathTextBox"
 		Me.OutputPathTextBox.Size = New System.Drawing.Size(435, 22)
 		Me.OutputPathTextBox.TabIndex = 16
@@ -294,9 +312,9 @@ Partial Class DecompileUserControl
 		Me.OutputSubfolderTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.OutputSubfolderTextBox.CueBannerText = ""
-		Me.OutputSubfolderTextBox.Location = New System.Drawing.Point(209, 34)
+		Me.OutputSubfolderTextBox.Location = New System.Drawing.Point(219, 32)
 		Me.OutputSubfolderTextBox.Name = "OutputSubfolderTextBox"
-		Me.OutputSubfolderTextBox.Size = New System.Drawing.Size(445, 22)
+		Me.OutputSubfolderTextBox.Size = New System.Drawing.Size(435, 22)
 		Me.OutputSubfolderTextBox.TabIndex = 20
 		Me.OutputSubfolderTextBox.Visible = False
 		'
@@ -304,7 +322,7 @@ Partial Class DecompileUserControl
 		'
 		Me.OutputPathComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.OutputPathComboBox.FormattingEnabled = True
-		Me.OutputPathComboBox.Location = New System.Drawing.Point(73, 34)
+		Me.OutputPathComboBox.Location = New System.Drawing.Point(73, 33)
 		Me.OutputPathComboBox.Name = "OutputPathComboBox"
 		Me.OutputPathComboBox.Size = New System.Drawing.Size(140, 21)
 		Me.OutputPathComboBox.TabIndex = 14
@@ -327,119 +345,40 @@ Partial Class DecompileUserControl
 		Me.UseDefaultOutputSubfolderButton.Text = "Use Default"
 		Me.UseDefaultOutputSubfolderButton.UseVisualStyleBackColor = True
 		'
-		'SplitContainer1
+		'Options_LogSplitContainer
 		'
-		Me.SplitContainer1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+		Me.Options_LogSplitContainer.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.SplitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1
-		Me.SplitContainer1.Location = New System.Drawing.Point(3, 61)
-		Me.SplitContainer1.Name = "SplitContainer1"
-		Me.SplitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal
+		Me.Options_LogSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1
+		Me.Options_LogSplitContainer.Location = New System.Drawing.Point(3, 61)
+		Me.Options_LogSplitContainer.Name = "Options_LogSplitContainer"
+		Me.Options_LogSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal
 		'
-		'SplitContainer1.Panel1
+		'Options_LogSplitContainer.Panel1
 		'
-		Me.SplitContainer1.Panel1.Controls.Add(Me.OptionsGroupBox)
-		Me.SplitContainer1.Panel1.Controls.Add(Me.UseAllInCompileButton)
-		Me.SplitContainer1.Panel1.Controls.Add(Me.CancelDecompileButton)
-		Me.SplitContainer1.Panel1.Controls.Add(Me.SkipCurrentModelButton)
-		Me.SplitContainer1.Panel1.Controls.Add(Me.DecompileButton)
-		Me.SplitContainer1.Panel1.Controls.Add(Me.ReCreateFilesGroupBox)
-		Me.SplitContainer1.Panel1MinSize = 90
+		Me.Options_LogSplitContainer.Panel1.Controls.Add(Me.DecompileOptionsPanel)
+		Me.Options_LogSplitContainer.Panel1MinSize = 45
 		'
-		'SplitContainer1.Panel2
+		'Options_LogSplitContainer.Panel2
 		'
-		Me.SplitContainer1.Panel2.Controls.Add(Me.DecompilerLogTextBox)
-		Me.SplitContainer1.Panel2.Controls.Add(Me.DecompiledFilesComboBox)
-		Me.SplitContainer1.Panel2.Controls.Add(Me.UseInCompileButton)
-		Me.SplitContainer1.Panel2.Controls.Add(Me.GotoDecompiledFileButton)
-		Me.SplitContainer1.Panel2.Controls.Add(Me.UseInEditButton)
-		Me.SplitContainer1.Panel2MinSize = 90
-		Me.SplitContainer1.Size = New System.Drawing.Size(770, 472)
-		Me.SplitContainer1.SplitterDistance = 275
-		Me.SplitContainer1.TabIndex = 12
+		Me.Options_LogSplitContainer.Panel2.Controls.Add(Me.DecompilerLogTextBox)
+		Me.Options_LogSplitContainer.Panel2.Controls.Add(Me.DecompileButtonsPanel)
+		Me.Options_LogSplitContainer.Panel2.Controls.Add(Me.Panel4)
+		Me.Options_LogSplitContainer.Panel2MinSize = 45
+		Me.Options_LogSplitContainer.Size = New System.Drawing.Size(770, 472)
+		Me.Options_LogSplitContainer.SplitterDistance = 250
+		Me.Options_LogSplitContainer.TabIndex = 12
 		'
-		'OptionsGroupBox
+		'DecompileOptionsPanel
 		'
-		Me.OptionsGroupBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-			Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.OptionsGroupBox.Controls.Add(Me.Panel3)
-		Me.OptionsGroupBox.Location = New System.Drawing.Point(528, 0)
-		Me.OptionsGroupBox.Name = "OptionsGroupBox"
-		Me.OptionsGroupBox.Size = New System.Drawing.Size(242, 243)
-		Me.OptionsGroupBox.TabIndex = 6
-		Me.OptionsGroupBox.TabStop = False
-		Me.OptionsGroupBox.Text = "Options"
-		'
-		'Panel3
-		'
-		Me.Panel3.AutoScroll = True
-		Me.Panel3.Controls.Add(Me.OverrideMdlVersionLabel)
-		Me.Panel3.Controls.Add(Me.OverrideMdlVersionComboBox)
-		Me.Panel3.Controls.Add(Me.FolderForEachModelCheckBox)
-		Me.Panel3.Controls.Add(Me.DebugInfoCheckBox)
-		Me.Panel3.Controls.Add(Me.LogFileCheckBox)
-		Me.Panel3.Controls.Add(Me.DeclareSequenceQciCheckBox)
-		Me.Panel3.Controls.Add(Me.FormatForStricterImportersCheckBox)
-		Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.Panel3.Location = New System.Drawing.Point(3, 18)
-		Me.Panel3.Name = "Panel3"
-		Me.Panel3.Size = New System.Drawing.Size(236, 222)
-		Me.Panel3.TabIndex = 0
-		'
-		'FolderForEachModelCheckBox
-		'
-		Me.FolderForEachModelCheckBox.AutoSize = True
-		Me.FolderForEachModelCheckBox.Location = New System.Drawing.Point(3, 3)
-		Me.FolderForEachModelCheckBox.Name = "FolderForEachModelCheckBox"
-		Me.FolderForEachModelCheckBox.Size = New System.Drawing.Size(139, 17)
-		Me.FolderForEachModelCheckBox.TabIndex = 11
-		Me.FolderForEachModelCheckBox.Text = "Folder for each model"
-		Me.FolderForEachModelCheckBox.UseVisualStyleBackColor = True
-		'
-		'UseAllInCompileButton
-		'
-		Me.UseAllInCompileButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.UseAllInCompileButton.Enabled = False
-		Me.UseAllInCompileButton.Location = New System.Drawing.Point(378, 249)
-		Me.UseAllInCompileButton.Name = "UseAllInCompileButton"
-		Me.UseAllInCompileButton.Size = New System.Drawing.Size(120, 23)
-		Me.UseAllInCompileButton.TabIndex = 5
-		Me.UseAllInCompileButton.Text = "Use All in Compile"
-		Me.UseAllInCompileButton.UseVisualStyleBackColor = True
-		'
-		'CancelDecompileButton
-		'
-		Me.CancelDecompileButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.CancelDecompileButton.Enabled = False
-		Me.CancelDecompileButton.Location = New System.Drawing.Point(252, 249)
-		Me.CancelDecompileButton.Name = "CancelDecompileButton"
-		Me.CancelDecompileButton.Size = New System.Drawing.Size(120, 23)
-		Me.CancelDecompileButton.TabIndex = 4
-		Me.CancelDecompileButton.Text = "Cancel Decompile"
-		Me.CancelDecompileButton.UseVisualStyleBackColor = True
-		'
-		'SkipCurrentModelButton
-		'
-		Me.SkipCurrentModelButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.SkipCurrentModelButton.Enabled = False
-		Me.SkipCurrentModelButton.Location = New System.Drawing.Point(126, 249)
-		Me.SkipCurrentModelButton.Name = "SkipCurrentModelButton"
-		Me.SkipCurrentModelButton.Size = New System.Drawing.Size(120, 23)
-		Me.SkipCurrentModelButton.TabIndex = 3
-		Me.SkipCurrentModelButton.Text = "Skip Current Model"
-		Me.SkipCurrentModelButton.UseVisualStyleBackColor = True
-		'
-		'DecompileButton
-		'
-		Me.DecompileButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.DecompileButton.Location = New System.Drawing.Point(0, 249)
-		Me.DecompileButton.Name = "DecompileButton"
-		Me.DecompileButton.Size = New System.Drawing.Size(120, 23)
-		Me.DecompileButton.TabIndex = 2
-		Me.DecompileButton.Text = "Decompile"
-		Me.DecompileButton.UseVisualStyleBackColor = True
+		Me.DecompileOptionsPanel.Controls.Add(Me.ReCreateFilesGroupBox)
+		Me.DecompileOptionsPanel.Controls.Add(Me.OptionsGroupBox)
+		Me.DecompileOptionsPanel.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.DecompileOptionsPanel.Location = New System.Drawing.Point(0, 0)
+		Me.DecompileOptionsPanel.Name = "DecompileOptionsPanel"
+		Me.DecompileOptionsPanel.Size = New System.Drawing.Size(770, 250)
+		Me.DecompileOptionsPanel.TabIndex = 8
 		'
 		'ReCreateFilesGroupBox
 		'
@@ -448,7 +387,7 @@ Partial Class DecompileUserControl
 		Me.ReCreateFilesGroupBox.Controls.Add(Me.Panel1)
 		Me.ReCreateFilesGroupBox.Location = New System.Drawing.Point(0, 0)
 		Me.ReCreateFilesGroupBox.Name = "ReCreateFilesGroupBox"
-		Me.ReCreateFilesGroupBox.Size = New System.Drawing.Size(522, 243)
+		Me.ReCreateFilesGroupBox.Size = New System.Drawing.Size(522, 247)
 		Me.ReCreateFilesGroupBox.TabIndex = 0
 		Me.ReCreateFilesGroupBox.TabStop = False
 		Me.ReCreateFilesGroupBox.Text = "Re-Create Files"
@@ -456,7 +395,7 @@ Partial Class DecompileUserControl
 		'Panel1
 		'
 		Me.Panel1.AutoScroll = True
-		Me.Panel1.Controls.Add(Me.UseUvsForDoomMusicCompilerCheckBox)
+		Me.Panel1.Controls.Add(Me.UseNonValveUvConversionCheckBox)
 		Me.Panel1.Controls.Add(Me.OnlyChangedMaterialsInTextureGroupLinesCheckBox)
 		Me.Panel1.Controls.Add(Me.UseMixedCaseForKeywordsCheckBox)
 		Me.Panel1.Controls.Add(Me.RemovePathFromMaterialFileNamesCheckBox)
@@ -478,7 +417,7 @@ Partial Class DecompileUserControl
 		Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.Panel1.Location = New System.Drawing.Point(3, 18)
 		Me.Panel1.Name = "Panel1"
-		Me.Panel1.Size = New System.Drawing.Size(516, 222)
+		Me.Panel1.Size = New System.Drawing.Size(516, 226)
 		Me.Panel1.TabIndex = 11
 		'
 		'OnlyChangedMaterialsInTextureGroupLinesCheckBox
@@ -506,7 +445,7 @@ Partial Class DecompileUserControl
 		Me.TextureBmpFilesCheckBox.AutoSize = True
 		Me.TextureBmpFilesCheckBox.Location = New System.Drawing.Point(318, 3)
 		Me.TextureBmpFilesCheckBox.Name = "TextureBmpFilesCheckBox"
-		Me.TextureBmpFilesCheckBox.Size = New System.Drawing.Size(182, 17)
+		Me.TextureBmpFilesCheckBox.Size = New System.Drawing.Size(181, 17)
 		Me.TextureBmpFilesCheckBox.TabIndex = 38
 		Me.TextureBmpFilesCheckBox.Text = "Texture BMP files (GoldSource)"
 		Me.TextureBmpFilesCheckBox.UseVisualStyleBackColor = True
@@ -554,7 +493,7 @@ Partial Class DecompileUserControl
 		Me.GroupIntoQciFilesCheckBox.AutoSize = True
 		Me.GroupIntoQciFilesCheckBox.Location = New System.Drawing.Point(80, 3)
 		Me.GroupIntoQciFilesCheckBox.Name = "GroupIntoQciFilesCheckBox"
-		Me.GroupIntoQciFilesCheckBox.Size = New System.Drawing.Size(129, 17)
+		Me.GroupIntoQciFilesCheckBox.Size = New System.Drawing.Size(128, 17)
 		Me.GroupIntoQciFilesCheckBox.TabIndex = 1
 		Me.GroupIntoQciFilesCheckBox.Text = "Group into QCI files"
 		Me.GroupIntoQciFilesCheckBox.UseVisualStyleBackColor = True
@@ -594,7 +533,7 @@ Partial Class DecompileUserControl
 		Me.BoneAnimationSmdFilesCheckBox.AutoSize = True
 		Me.BoneAnimationSmdFilesCheckBox.Location = New System.Drawing.Point(318, 118)
 		Me.BoneAnimationSmdFilesCheckBox.Name = "BoneAnimationSmdFilesCheckBox"
-		Me.BoneAnimationSmdFilesCheckBox.Size = New System.Drawing.Size(159, 17)
+		Me.BoneAnimationSmdFilesCheckBox.Size = New System.Drawing.Size(158, 17)
 		Me.BoneAnimationSmdFilesCheckBox.TabIndex = 8
 		Me.BoneAnimationSmdFilesCheckBox.Text = "Bone animation SMD files"
 		Me.BoneAnimationSmdFilesCheckBox.UseVisualStyleBackColor = True
@@ -604,7 +543,7 @@ Partial Class DecompileUserControl
 		Me.VertexAnimationVtaFileCheckBox.AutoSize = True
 		Me.VertexAnimationVtaFileCheckBox.Location = New System.Drawing.Point(318, 72)
 		Me.VertexAnimationVtaFileCheckBox.Name = "VertexAnimationVtaFileCheckBox"
-		Me.VertexAnimationVtaFileCheckBox.Size = New System.Drawing.Size(192, 17)
+		Me.VertexAnimationVtaFileCheckBox.Size = New System.Drawing.Size(191, 17)
 		Me.VertexAnimationVtaFileCheckBox.TabIndex = 7
 		Me.VertexAnimationVtaFileCheckBox.Text = "Vertex animation VTA file (flexes)"
 		Me.VertexAnimationVtaFileCheckBox.UseVisualStyleBackColor = True
@@ -634,43 +573,156 @@ Partial Class DecompileUserControl
 		Me.QcFileCheckBox.AutoSize = True
 		Me.QcFileCheckBox.Location = New System.Drawing.Point(3, 3)
 		Me.QcFileCheckBox.Name = "QcFileCheckBox"
-		Me.QcFileCheckBox.Size = New System.Drawing.Size(61, 17)
+		Me.QcFileCheckBox.Size = New System.Drawing.Size(60, 17)
 		Me.QcFileCheckBox.TabIndex = 0
 		Me.QcFileCheckBox.Text = "QC file"
 		Me.QcFileCheckBox.UseVisualStyleBackColor = True
 		'
-		'DecompilerLogTextBox
+		'OptionsGroupBox
 		'
-		Me.DecompilerLogTextBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+		Me.OptionsGroupBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.OptionsGroupBox.Controls.Add(Me.Panel3)
+		Me.OptionsGroupBox.Location = New System.Drawing.Point(528, 0)
+		Me.OptionsGroupBox.Name = "OptionsGroupBox"
+		Me.OptionsGroupBox.Size = New System.Drawing.Size(242, 247)
+		Me.OptionsGroupBox.TabIndex = 6
+		Me.OptionsGroupBox.TabStop = False
+		Me.OptionsGroupBox.Text = "Options"
+		'
+		'Panel3
+		'
+		Me.Panel3.AutoScroll = True
+		Me.Panel3.Controls.Add(Me.PrefixMeshFileNamesWithModelNameCheckBox)
+		Me.Panel3.Controls.Add(Me.OverrideMdlVersionLabel)
+		Me.Panel3.Controls.Add(Me.OverrideMdlVersionComboBox)
+		Me.Panel3.Controls.Add(Me.FolderForEachModelCheckBox)
+		Me.Panel3.Controls.Add(Me.DebugInfoCheckBox)
+		Me.Panel3.Controls.Add(Me.LogFileCheckBox)
+		Me.Panel3.Controls.Add(Me.DeclareSequenceQciCheckBox)
+		Me.Panel3.Controls.Add(Me.FormatForStricterImportersCheckBox)
+		Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.Panel3.Location = New System.Drawing.Point(3, 18)
+		Me.Panel3.Name = "Panel3"
+		Me.Panel3.Size = New System.Drawing.Size(236, 226)
+		Me.Panel3.TabIndex = 0
+		'
+		'FolderForEachModelCheckBox
+		'
+		Me.FolderForEachModelCheckBox.AutoSize = True
+		Me.FolderForEachModelCheckBox.Location = New System.Drawing.Point(3, 3)
+		Me.FolderForEachModelCheckBox.Name = "FolderForEachModelCheckBox"
+		Me.FolderForEachModelCheckBox.Size = New System.Drawing.Size(139, 17)
+		Me.FolderForEachModelCheckBox.TabIndex = 11
+		Me.FolderForEachModelCheckBox.Text = "Folder for each model"
+		Me.FolderForEachModelCheckBox.UseVisualStyleBackColor = True
+		'
+		'DecompilerLogTextBox
+		'
 		Me.DecompilerLogTextBox.CueBannerText = ""
+		Me.DecompilerLogTextBox.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.DecompilerLogTextBox.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.DecompilerLogTextBox.HideSelection = False
-		Me.DecompilerLogTextBox.Location = New System.Drawing.Point(0, 0)
+		Me.DecompilerLogTextBox.Location = New System.Drawing.Point(0, 26)
 		Me.DecompilerLogTextBox.Name = "DecompilerLogTextBox"
 		Me.DecompilerLogTextBox.ReadOnly = True
-		Me.DecompilerLogTextBox.Size = New System.Drawing.Size(770, 164)
+		Me.DecompilerLogTextBox.Size = New System.Drawing.Size(770, 166)
 		Me.DecompilerLogTextBox.TabIndex = 0
 		Me.DecompilerLogTextBox.Text = ""
 		Me.DecompilerLogTextBox.WordWrap = False
 		'
+		'DecompileButtonsPanel
+		'
+		Me.DecompileButtonsPanel.Controls.Add(Me.DecompileButton)
+		Me.DecompileButtonsPanel.Controls.Add(Me.SkipCurrentModelButton)
+		Me.DecompileButtonsPanel.Controls.Add(Me.CancelDecompileButton)
+		Me.DecompileButtonsPanel.Controls.Add(Me.UseAllInCompileButton)
+		Me.DecompileButtonsPanel.Dock = System.Windows.Forms.DockStyle.Top
+		Me.DecompileButtonsPanel.Location = New System.Drawing.Point(0, 0)
+		Me.DecompileButtonsPanel.Name = "DecompileButtonsPanel"
+		Me.DecompileButtonsPanel.Size = New System.Drawing.Size(770, 26)
+		Me.DecompileButtonsPanel.TabIndex = 7
+		'
+		'DecompileButton
+		'
+		Me.DecompileButton.Location = New System.Drawing.Point(0, 0)
+		Me.DecompileButton.Name = "DecompileButton"
+		Me.DecompileButton.Size = New System.Drawing.Size(120, 23)
+		Me.DecompileButton.TabIndex = 2
+		Me.DecompileButton.Text = "&Decompile"
+		Me.DecompileButton.UseVisualStyleBackColor = True
+		'
+		'SkipCurrentModelButton
+		'
+		Me.SkipCurrentModelButton.Enabled = False
+		Me.SkipCurrentModelButton.Location = New System.Drawing.Point(126, 0)
+		Me.SkipCurrentModelButton.Name = "SkipCurrentModelButton"
+		Me.SkipCurrentModelButton.Size = New System.Drawing.Size(120, 23)
+		Me.SkipCurrentModelButton.TabIndex = 3
+		Me.SkipCurrentModelButton.Text = "Skip Current Model"
+		Me.SkipCurrentModelButton.UseVisualStyleBackColor = True
+		'
+		'CancelDecompileButton
+		'
+		Me.CancelDecompileButton.Enabled = False
+		Me.CancelDecompileButton.Location = New System.Drawing.Point(252, 0)
+		Me.CancelDecompileButton.Name = "CancelDecompileButton"
+		Me.CancelDecompileButton.Size = New System.Drawing.Size(120, 23)
+		Me.CancelDecompileButton.TabIndex = 4
+		Me.CancelDecompileButton.Text = "Cancel Decompile"
+		Me.CancelDecompileButton.UseVisualStyleBackColor = True
+		'
+		'UseAllInCompileButton
+		'
+		Me.UseAllInCompileButton.Enabled = False
+		Me.UseAllInCompileButton.Location = New System.Drawing.Point(378, 0)
+		Me.UseAllInCompileButton.Name = "UseAllInCompileButton"
+		Me.UseAllInCompileButton.Size = New System.Drawing.Size(120, 23)
+		Me.UseAllInCompileButton.TabIndex = 5
+		Me.UseAllInCompileButton.Text = "Use All in Compile"
+		Me.UseAllInCompileButton.UseVisualStyleBackColor = True
+		'
+		'Panel4
+		'
+		Me.Panel4.Controls.Add(Me.DecompiledFilesComboBox)
+		Me.Panel4.Controls.Add(Me.UseInEditButton)
+		Me.Panel4.Controls.Add(Me.UseInCompileButton)
+		Me.Panel4.Controls.Add(Me.GotoDecompiledFileButton)
+		Me.Panel4.Dock = System.Windows.Forms.DockStyle.Bottom
+		Me.Panel4.Location = New System.Drawing.Point(0, 192)
+		Me.Panel4.Name = "Panel4"
+		Me.Panel4.Size = New System.Drawing.Size(770, 26)
+		Me.Panel4.TabIndex = 8
+		'
 		'DecompiledFilesComboBox
 		'
-		Me.DecompiledFilesComboBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+		Me.DecompiledFilesComboBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.DecompiledFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.DecompiledFilesComboBox.FormattingEnabled = True
-		Me.DecompiledFilesComboBox.Location = New System.Drawing.Point(0, 171)
+		Me.DecompiledFilesComboBox.Location = New System.Drawing.Point(0, 4)
 		Me.DecompiledFilesComboBox.Name = "DecompiledFilesComboBox"
 		Me.DecompiledFilesComboBox.Size = New System.Drawing.Size(621, 21)
 		Me.DecompiledFilesComboBox.TabIndex = 1
 		'
+		'UseInEditButton
+		'
+		Me.UseInEditButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.UseInEditButton.Enabled = False
+		Me.UseInEditButton.Location = New System.Drawing.Point(551, 3)
+		Me.UseInEditButton.Name = "UseInEditButton"
+		Me.UseInEditButton.Size = New System.Drawing.Size(72, 23)
+		Me.UseInEditButton.TabIndex = 2
+		Me.UseInEditButton.Text = "Use in Edit"
+		Me.UseInEditButton.UseVisualStyleBackColor = True
+		Me.UseInEditButton.Visible = False
+		'
 		'UseInCompileButton
 		'
-		Me.UseInCompileButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.UseInCompileButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.UseInCompileButton.Enabled = False
-		Me.UseInCompileButton.Location = New System.Drawing.Point(627, 170)
+		Me.UseInCompileButton.Location = New System.Drawing.Point(627, 3)
 		Me.UseInCompileButton.Name = "UseInCompileButton"
 		Me.UseInCompileButton.Size = New System.Drawing.Size(94, 23)
 		Me.UseInCompileButton.TabIndex = 3
@@ -679,25 +731,13 @@ Partial Class DecompileUserControl
 		'
 		'GotoDecompiledFileButton
 		'
-		Me.GotoDecompiledFileButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.GotoDecompiledFileButton.Location = New System.Drawing.Point(727, 170)
+		Me.GotoDecompiledFileButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.GotoDecompiledFileButton.Location = New System.Drawing.Point(727, 3)
 		Me.GotoDecompiledFileButton.Name = "GotoDecompiledFileButton"
 		Me.GotoDecompiledFileButton.Size = New System.Drawing.Size(43, 23)
 		Me.GotoDecompiledFileButton.TabIndex = 4
 		Me.GotoDecompiledFileButton.Text = "Goto"
 		Me.GotoDecompiledFileButton.UseVisualStyleBackColor = True
-		'
-		'UseInEditButton
-		'
-		Me.UseInEditButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.UseInEditButton.Enabled = False
-		Me.UseInEditButton.Location = New System.Drawing.Point(553, 171)
-		Me.UseInEditButton.Name = "UseInEditButton"
-		Me.UseInEditButton.Size = New System.Drawing.Size(72, 23)
-		Me.UseInEditButton.TabIndex = 2
-		Me.UseInEditButton.Text = "Use in Edit"
-		Me.UseInEditButton.UseVisualStyleBackColor = True
-		Me.UseInEditButton.Visible = False
 		'
 		'DecompileUserControl
 		'
@@ -708,16 +748,19 @@ Partial Class DecompileUserControl
 		Me.Size = New System.Drawing.Size(776, 536)
 		Me.Panel2.ResumeLayout(False)
 		Me.Panel2.PerformLayout()
-		Me.SplitContainer1.Panel1.ResumeLayout(False)
-		Me.SplitContainer1.Panel2.ResumeLayout(False)
-		CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
-		Me.SplitContainer1.ResumeLayout(False)
-		Me.OptionsGroupBox.ResumeLayout(False)
-		Me.Panel3.ResumeLayout(False)
-		Me.Panel3.PerformLayout()
+		Me.Options_LogSplitContainer.Panel1.ResumeLayout(False)
+		Me.Options_LogSplitContainer.Panel2.ResumeLayout(False)
+		CType(Me.Options_LogSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
+		Me.Options_LogSplitContainer.ResumeLayout(False)
+		Me.DecompileOptionsPanel.ResumeLayout(False)
 		Me.ReCreateFilesGroupBox.ResumeLayout(False)
 		Me.Panel1.ResumeLayout(False)
 		Me.Panel1.PerformLayout()
+		Me.OptionsGroupBox.ResumeLayout(False)
+		Me.Panel3.ResumeLayout(False)
+		Me.Panel3.PerformLayout()
+		Me.DecompileButtonsPanel.ResumeLayout(False)
+		Me.Panel4.ResumeLayout(False)
 		Me.ResumeLayout(False)
 
 	End Sub
@@ -740,7 +783,7 @@ Partial Class DecompileUserControl
 	Friend WithEvents CancelDecompileButton As System.Windows.Forms.Button
 	Friend WithEvents SkipCurrentModelButton As System.Windows.Forms.Button
 	Friend WithEvents DecompileComboBox As System.Windows.Forms.ComboBox
-	Friend WithEvents SplitContainer1 As System.Windows.Forms.SplitContainer
+	Friend WithEvents Options_LogSplitContainer As System.Windows.Forms.SplitContainer
 	Friend WithEvents Label2 As System.Windows.Forms.Label
 	Friend WithEvents ComboBox2 As System.Windows.Forms.ComboBox
 	Friend WithEvents FormatForStricterImportersCheckBox As System.Windows.Forms.CheckBox
@@ -772,7 +815,11 @@ Partial Class DecompileUserControl
 	Friend WithEvents Panel3 As System.Windows.Forms.Panel
 	Friend WithEvents OnlyChangedMaterialsInTextureGroupLinesCheckBox As System.Windows.Forms.CheckBox
 	Friend WithEvents OutputSubfolderTextBox As Crowbar.TextBoxEx
-	Friend WithEvents UseUvsForDoomMusicCompilerCheckBox As System.Windows.Forms.CheckBox
+	Friend WithEvents UseNonValveUvConversionCheckBox As System.Windows.Forms.CheckBox
 	Friend WithEvents OverrideMdlVersionLabel As System.Windows.Forms.Label
 	Friend WithEvents OverrideMdlVersionComboBox As System.Windows.Forms.ComboBox
+	Friend WithEvents PrefixMeshFileNamesWithModelNameCheckBox As CheckBox
+	Friend WithEvents DecompileButtonsPanel As Panel
+	Friend WithEvents DecompileOptionsPanel As Panel
+	Friend WithEvents Panel4 As Panel
 End Class

@@ -5,12 +5,6 @@ Public Class AboutUserControl
 	Public Sub New()
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
-
-		'NOTE: Try-Catch is needed so that widget will be shown in MainForm without raising exception.
-		Try
-			Me.Init()
-		Catch
-		End Try
 	End Sub
 
 #End Region
@@ -38,6 +32,8 @@ Public Class AboutUserControl
 		Me.GotoSteamProfileLinkLabel.Links.Add(0, My.Resources.About_GotoSteamProfileText.Length(), My.Resources.About_AuthorLink)
 
 		Me.ProductDescriptionTextBox.Text = My.Resources.About_ProductDescription
+
+		'Me.Panel1.DataBindings.Add("BackColor", TheApp.Settings, "AboutTabBackgroundColor", False, DataSourceUpdateMode.OnPropertyChanged)
 	End Sub
 
 	'Private Sub Free()
@@ -51,6 +47,12 @@ Public Class AboutUserControl
 #End Region
 
 #Region "Widget Event Handlers"
+
+	Private Sub AboutUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
+		If Not Me.DesignMode Then
+			Me.Init()
+		End If
+	End Sub
 
 #End Region
 
@@ -75,6 +77,10 @@ Public Class AboutUserControl
 		ElseIf e.Button = Windows.Forms.MouseButtons.Right Then
 			'TODO: Show context menu with: Copy Link, Copy Text
 		End If
+	End Sub
+
+	Private Sub PayPalPictureBox_Click(sender As Object, e As EventArgs) Handles PayPalPictureBox.Click
+		System.Diagnostics.Process.Start(My.Resources.About_PayPalLink)
 	End Sub
 
 #End Region

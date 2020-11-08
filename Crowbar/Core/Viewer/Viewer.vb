@@ -70,10 +70,11 @@ Public Class Viewer
 		Me.RunWorkerAsync(info)
 	End Sub
 
-	Public Sub Run(ByVal inputMdlPathFileName As String)
+	Public Sub Run(ByVal inputMdlPathFileName As String, ByVal mdlVersionOverride As SupportedMdlVersion)
 		Dim info As New ViewerInfo()
 		info.viewerAction = ViewerInfo.ViewerActionType.GetData
 		info.mdlPathFileName = inputMdlPathFileName
+		info.mdlVersionOverride = mdlVersionOverride
 		Me.RunWorkerAsync(info)
 	End Sub
 
@@ -141,7 +142,7 @@ Public Class Viewer
 
 		If ViewerInputsAreOkay(info.viewerAction) Then
 			If info.viewerAction = ViewerInfo.ViewerActionType.GetData Then
-				Me.ViewData()
+				Me.ViewData(info.mdlVersionOverride)
 			ElseIf info.viewerAction = ViewerInfo.ViewerActionType.ViewModel Then
 				'Me.UpdateProgress(1, "Model viewer opening ...")
 				Me.UpdateProgress(1, "Model viewer opened.")
@@ -194,33 +195,34 @@ Public Class Viewer
 		Return inputsAreValid
 	End Function
 
-	Private Sub ViewData()
+	Private Sub ViewData(ByVal mdlVersionOverride As SupportedMdlVersion)
 		Dim progressDescriptionText As String
 		progressDescriptionText = "Getting model data for "
 		progressDescriptionText += """" + Path.GetFileName(Me.theInputMdlPathFileName) + """"
 
 		Me.UpdateProgressStart(progressDescriptionText + " ...")
 
-		Me.ShowDataFromMdlFile()
+		Me.ShowDataFromMdlFile(mdlVersionOverride)
 
 		Me.UpdateProgressStop("... " + progressDescriptionText + " finished.")
 	End Sub
 
-	Private Sub ShowDataFromMdlFile()
+	Private Sub ShowDataFromMdlFile(ByVal mdlVersionOverride As SupportedMdlVersion)
 		Dim model As SourceModel = Nothing
 		Dim version As Integer
 		Try
 			If File.Exists(Me.theInputMdlPathFileName) Then
-				model = SourceModel.Create(Me.theInputMdlPathFileName, SupportedMdlVersion.DoNotOverride, version)
+				model = SourceModel.Create(Me.theInputMdlPathFileName, mdlVersionOverride, version)
 				If model IsNot Nothing Then
 					Dim textLines As List(Of String)
-					textLines = model.GetOverviewTextLines(Me.theInputMdlPathFileName)
+					textLines = model.GetOverviewTextLines(Me.theInputMdlPathFileName, mdlVersionOverride)
 					Me.UpdateProgress()
 					For Each aTextLine As String In textLines
 						Me.UpdateProgress(1, aTextLine)
 					Next
 				Else
 					Me.UpdateProgress(1, "ERROR: Model version not currently supported: " + CStr(version))
+					Me.UpdateProgress(1, "       Try changing 'Override MDL version' option.")
 				End If
 			Else
 				Me.UpdateProgress(1, "ERROR: Model file not found: " + """" + Me.theInputMdlPathFileName + """")

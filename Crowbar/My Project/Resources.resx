@@ -132,7 +132,7 @@
 * Decompiler of MDL and related files.
 * Compiler interface to StudioMDL.exe tool.
 * Model viewer interface to Half-Life Model Viewer tool.
-* Unpacker of Tactical Intervention FPX, Garry's Mod GMA, Vampire: The Masquerade - Bloodlines VPK files, and Source-engine VPK files.
+* Unpacker of Fairy Tale Busters APK, Tactical Intervention FPX, Garry's Mod GMA, Vampire: The Masquerade - Bloodlines VPK files, and Source-engine VPK files.
 * Packer interface to Garry's Mod GMA and Source-engine VPK packer tools.
 * Downloader of Workshop items from any Steam game that allows public downloads.
 * Publisher of Workshop items for several Source-engine games.</value>
@@ -221,13 +221,31 @@
   <data name="lzma" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\lzma.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="Steamworks_NET" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Steamworks.NET.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="steam_api" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\steam_api.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="Crowbar_Settings" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Crowbar Settings.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="WordWrap" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WordWrap.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="WordWrapOff" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WordWrapOff.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="About_PayPalLink" xml:space="preserve">
+    <value>http://paypal.me/zeqmacaw</value>
+  </data>
+  <data name="_26_Grey_PayPal_Pill_Button" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\26_Grey_PayPal_Pill_Button.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SevenZr" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\7zr.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="CrowbarLauncher" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CrowbarLauncher.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Steamworks_NET" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Steamworks.NET.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

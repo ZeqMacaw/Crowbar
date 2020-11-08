@@ -136,17 +136,19 @@ Public Class BitmapFile
 					'	biTrueWidth = ((width + 3) & ~3);
 					'	cbBmpBits = biTrueWidth * height;
 					'	cbPalBytes = 256 * sizeof( RGBQUAD );
-					Dim trueWidth As UInt32
+					Dim alignedWidthUsedInFile As UInt32
 					Dim fileHeaderSize As UInt32
 					Dim infoHeaderSize As UInt32
 					Dim paletteSize As UInt32
 					Dim dataSize As UInt32
-					trueWidth = CUInt(MathModule.AlignLong(Me.theWidth, 3))
+					'paddedWidthUsedInFile = CUInt(MathModule.AlignLong(Me.theWidth, 3))
+					'NOTE: Align to 4 byte boundary.
+					alignedWidthUsedInFile = CUInt(MathModule.AlignLong(Me.theWidth, 4))
 					fileHeaderSize = 14
 					infoHeaderSize = 40
 					' 256 * size of BitmapRgbQuad = 256 * 4 = 1024
 					paletteSize = 1024
-					dataSize = trueWidth * Me.theHeight
+					dataSize = alignedWidthUsedInFile * Me.theHeight
 
 					'	// Write file header
 					outputFileWriter.Write("B"c)
@@ -158,7 +160,7 @@ Public Class BitmapFile
 
 					'	// Write info header
 					outputFileWriter.Write(infoHeaderSize)
-					outputFileWriter.Write(trueWidth)
+					outputFileWriter.Write(alignedWidthUsedInFile)
 					outputFileWriter.Write(Me.theHeight)
 					outputFileWriter.Write(CType(1, UInt16))
 					outputFileWriter.Write(CType(8, UInt16))
@@ -178,16 +180,19 @@ Public Class BitmapFile
 					Next
 
 					'	// Write bitmap bits (remainder of file)
-					' Reverse the order of the rows.
+					' Write the rows in reverse order.
 					Dim startOfLastRowOffset As Integer
 					startOfLastRowOffset = CInt(Me.theData.Count - 768 - Me.theWidth)
-					For dataStoredIndex As Integer = startOfLastRowOffset To 0 Step CInt(-Me.theWidth)
+					'For dataStoredIndex As Integer = startOfLastRowOffset To 0 Step CInt(-Me.theWidth)
+					Dim dataStoredIndex As Integer = startOfLastRowOffset
+					For rowIndex As UInteger = 0 To Me.theHeight - 1UI
 						For dataIndex As Integer = dataStoredIndex To CInt(dataStoredIndex + Me.theWidth - 1)
 							outputFileWriter.Write(Me.theData(dataIndex))
 						Next
-						For paddingIndex As Integer = CInt(dataStoredIndex + Me.theWidth) To CInt(dataStoredIndex + trueWidth - 1)
+						For paddingIndex As Integer = CInt(dataStoredIndex + Me.theWidth) To CInt(dataStoredIndex + alignedWidthUsedInFile - 1)
 							outputFileWriter.Write(CType(0, Byte))
 						Next
+						dataStoredIndex -= CInt(Me.theWidth)
 					Next
 				Catch ex As Exception
 					Dim debug As Integer = 4242

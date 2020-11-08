@@ -8,16 +8,10 @@ Public Class ViewUserControl
 	Public Sub New()
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
-
-		''NOTE: Try-Catch is needed so that widget will be shown in MainForm without raising exception.
-		'Try
-		'	Me.Init()
-		'Catch
-		'End Try
 	End Sub
 
 	'UserControl overrides dispose to clean up the component list.
-	<System.Diagnostics.DebuggerNonUserCode()> _
+	<System.Diagnostics.DebuggerNonUserCode()>
 	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
 		Try
 			If disposing Then
@@ -38,6 +32,13 @@ Public Class ViewUserControl
 	Private Sub Init()
 		Me.theModelViewers = New List(Of Viewer)()
 
+		Dim anEnumList As IList
+		anEnumList = EnumHelper.ToList(GetType(SupportedMdlVersion))
+		Me.OverrideMdlVersionComboBox.DisplayMember = "Value"
+		Me.OverrideMdlVersionComboBox.ValueMember = "Key"
+		Me.OverrideMdlVersionComboBox.DataSource = anEnumList
+		Me.OverrideMdlVersionComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, Me.NameOfAppSettingOverrideMdlVersionName, False, DataSourceUpdateMode.OnPropertyChanged)
+
 		Me.UpdateDataBindings()
 
 		Me.UpdateWidgets(False)
@@ -49,14 +50,20 @@ Public Class ViewUserControl
 		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 
 		'RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
-		RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		If Me.MdlPathFileNameTextBox.DataBindings("Text") IsNot Nothing Then
+			RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		End If
 		Me.MdlPathFileNameTextBox.DataBindings.Clear()
+
+		Me.OverrideMdlVersionComboBox.DataBindings.Clear()
 
 		Me.FreeDataViewer()
 		Me.FreeModelViewerWithModel()
-		For Each aModelViewer As Viewer In Me.theModelViewers
-			Me.FreeModelViewer(aModelViewer)
-		Next
+		If Me.theModelViewers IsNot Nothing Then
+			For Each aModelViewer As Viewer In Me.theModelViewers
+				Me.FreeModelViewer(aModelViewer)
+			Next
+		End If
 	End Sub
 
 #End Region
@@ -69,11 +76,6 @@ Public Class ViewUserControl
 		End Get
 		Set(value As ViewerType)
 			Me.theViewerType = value
-			'NOTE: Try-Catch is needed so that widget will be shown in MainForm Designer without raising exception.
-			Try
-				Me.Init()
-			Catch
-			End Try
 		End Set
 	End Property
 
@@ -82,18 +84,35 @@ Public Class ViewUserControl
 #Region "Methods"
 
 	Public Sub RunDataViewer()
-		theDataViewer = New Viewer()
-		AddHandler theDataViewer.ProgressChanged, AddressOf Me.DataViewerBackgroundWorker_ProgressChanged
-		AddHandler theDataViewer.RunWorkerCompleted, AddressOf Me.DataViewerBackgroundWorker_RunWorkerCompleted
-		Me.AppSettingDataViewerIsRunning = True
-		theDataViewer.Run(Me.AppSettingMdlPathFileName)
+		If Not Me.AppSettingDataViewerIsRunning Then
+			Me.theDataViewer = New Viewer()
+			AddHandler Me.theDataViewer.ProgressChanged, AddressOf Me.DataViewerBackgroundWorker_ProgressChanged
+			AddHandler Me.theDataViewer.RunWorkerCompleted, AddressOf Me.DataViewerBackgroundWorker_RunWorkerCompleted
+			Me.AppSettingDataViewerIsRunning = True
+			Dim mdlVersionOverride As SupportedMdlVersion
+			If Me.theViewerType = AppEnums.ViewerType.Preview Then
+				mdlVersionOverride = TheApp.Settings.PreviewOverrideMdlVersion
+			Else
+				mdlVersionOverride = TheApp.Settings.ViewOverrideMdlVersion
+			End If
+			Me.theDataViewer.Run(Me.AppSettingMdlPathFileName, mdlVersionOverride)
 
-		'TODO: If viewer is not running, give user indication of what prevents viewing.
+			'TODO: If viewer is not running, give user indication of what prevents viewing.
+		End If
 	End Sub
 
 #End Region
 
 #Region "Widget Event Handlers"
+
+	Private Sub UpdateUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.MdlPathFileNameTextBox, Me.BrowseForMdlFileButton)
+
+		If Not Me.DesignMode Then
+			Me.Init()
+		End If
+	End Sub
 
 #End Region
 
@@ -191,9 +210,11 @@ Public Class ViewUserControl
 #Region "Core Event Handlers"
 
 	Private Sub AppSettings_PropertyChanged(ByVal sender As System.Object, ByVal e As System.ComponentModel.PropertyChangedEventArgs)
-		If e.PropertyName = Me.NameOfAppSettingMdlPathFileName AndAlso Not Me.AppSettingDataViewerIsRunning Then
-			Me.UpdateWidgets(Me.AppSettingViewerIsRunning)
-			Me.RunDataViewer()
+		If Not Me.AppSettingDataViewerIsRunning Then
+			If e.PropertyName = Me.NameOfAppSettingMdlPathFileName OrElse e.PropertyName = Me.NameOfAppSettingOverrideMdlVersionName Then
+				Me.UpdateWidgets(Me.AppSettingViewerIsRunning)
+				Me.RunDataViewer()
+			End If
 		End If
 	End Sub
 
@@ -203,12 +224,15 @@ Public Class ViewUserControl
 
 		If e.ProgressPercentage = 0 Then
 			Me.InfoRichTextBox.Text = ""
-			Me.InfoRichTextBox.AppendText(line + vbCr)
+			'Me.InfoRichTextBox.AppendText(line + vbCr)
 			'Me.AppSettingDataViewerIsRunning = True
+			Me.MessageTextBox.Text = ""
+			Me.MessageTextBox.AppendText(line + vbCrLf)
 		ElseIf e.ProgressPercentage = 1 Then
 			Me.InfoRichTextBox.AppendText(line + vbCr)
 		ElseIf e.ProgressPercentage = 100 Then
-			Me.InfoRichTextBox.AppendText(line + vbCr)
+			'Me.InfoRichTextBox.AppendText(line + vbCr)
+			Me.MessageTextBox.AppendText(line + vbCrLf)
 		End If
 	End Sub
 
@@ -223,16 +247,16 @@ Public Class ViewUserControl
 
 		If e.ProgressPercentage = 0 Then
 			Me.MessageTextBox.Text = ""
-			Me.MessageTextBox.AppendText(line + vbCr)
+			Me.MessageTextBox.AppendText(line + vbCrLf)
 
 			Dim modelViewer As Viewer = CType(sender, Viewer)
 			If modelViewer Is Me.theModelViewerWithModel Then
 				Me.UpdateWidgets(True)
 			End If
 		ElseIf e.ProgressPercentage = 1 Then
-			Me.MessageTextBox.AppendText(line + vbCr)
+			Me.MessageTextBox.AppendText(line + vbCrLf)
 		ElseIf e.ProgressPercentage = 100 Then
-			Me.MessageTextBox.AppendText(line + vbCr)
+			Me.MessageTextBox.AppendText(line + vbCrLf)
 		End If
 	End Sub
 
@@ -302,6 +326,16 @@ Public Class ViewUserControl
 				Return "PreviewMdlPathFileName"
 			Else
 				Return "ViewMdlPathFileName"
+			End If
+		End Get
+	End Property
+
+	Private ReadOnly Property NameOfAppSettingOverrideMdlVersionName() As String
+		Get
+			If Me.theViewerType = AppEnums.ViewerType.Preview Then
+				Return "PreviewOverrideMdlVersion"
+			Else
+				Return "ViewOverrideMdlVersion"
 			End If
 		End Get
 	End Property
