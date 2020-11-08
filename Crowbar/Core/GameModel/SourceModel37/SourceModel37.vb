@@ -65,15 +65,15 @@ Public Class SourceModel37
 
 	Public Overrides ReadOnly Property HasLodMeshData As Boolean
 		Get
-			'If Not Me.theMdlFileData.theMdlFileOnlyHasAnimations _
-			'		 AndAlso Me.theMdlFileData.theBones IsNot Nothing _
-			'		 AndAlso Me.theMdlFileData.theBones.Count > 0 _
-			'		 AndAlso Me.theVtxFileData IsNot Nothing _
-			'		 AndAlso Me.theVtxFileData.lodCount > 0 Then
-			'	Return True
-			'Else
-			Return False
-			'End If
+			If Not Me.theMdlFileData.theMdlFileOnlyHasAnimations _
+					 AndAlso Me.theMdlFileData.theBones IsNot Nothing _
+					 AndAlso Me.theMdlFileData.theBones.Count > 0 _
+					 AndAlso Me.theVtxFileData IsNot Nothing _
+					 AndAlso Me.theVtxFileData.lodCount > 0 Then
+				Return True
+			Else
+				Return False
+			End If
 		End Get
 	End Property
 

@@ -95,7 +95,7 @@ Partial Class SetUpGamesUserControl
 		Me.Label11.Location = New System.Drawing.Point(3, 396)
 		Me.Label11.Margin = New System.Windows.Forms.Padding(3, 9, 3, 0)
 		Me.Label11.Name = "Label11"
-		Me.Label11.Size = New System.Drawing.Size(520, 13)
+		Me.Label11.Size = New System.Drawing.Size(573, 13)
 		Me.Label11.TabIndex = 48
 		Me.Label11.Text = "Steam Library folders (<library#> macros for placing at start of fields above; ri" &
 	"ght-click a macro for commands):"
@@ -106,14 +106,14 @@ Partial Class SetUpGamesUserControl
 		Me.Label10.Location = New System.Drawing.Point(3, 348)
 		Me.Label10.Margin = New System.Windows.Forms.Padding(3, 9, 3, 0)
 		Me.Label10.Name = "Label10"
-		Me.Label10.Size = New System.Drawing.Size(298, 13)
+		Me.Label10.Size = New System.Drawing.Size(314, 13)
 		Me.Label10.TabIndex = 45
 		Me.Label10.Text = "Steam executable (steam.exe) [Used for ""Run Game"" button]:"
 		'
 		'BrowseForSteamAppPathFileNameButton
 		'
 		Me.BrowseForSteamAppPathFileNameButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.BrowseForSteamAppPathFileNameButton.Location = New System.Drawing.Point(613, 362)
+		Me.BrowseForSteamAppPathFileNameButton.Location = New System.Drawing.Point(613, 364)
 		Me.BrowseForSteamAppPathFileNameButton.Name = "BrowseForSteamAppPathFileNameButton"
 		Me.BrowseForSteamAppPathFileNameButton.Size = New System.Drawing.Size(75, 23)
 		Me.BrowseForSteamAppPathFileNameButton.TabIndex = 47
@@ -126,7 +126,7 @@ Partial Class SetUpGamesUserControl
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.SteamAppPathFileNameTextBox.Location = New System.Drawing.Point(3, 364)
 		Me.SteamAppPathFileNameTextBox.Name = "SteamAppPathFileNameTextBox"
-		Me.SteamAppPathFileNameTextBox.Size = New System.Drawing.Size(604, 20)
+		Me.SteamAppPathFileNameTextBox.Size = New System.Drawing.Size(604, 22)
 		Me.SteamAppPathFileNameTextBox.TabIndex = 46
 		'
 		'AddGameSetupButton
@@ -145,7 +145,7 @@ Partial Class SetUpGamesUserControl
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.GameSetupComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.GameSetupComboBox.FormattingEnabled = True
-		Me.GameSetupComboBox.Location = New System.Drawing.Point(3, 5)
+		Me.GameSetupComboBox.Location = New System.Drawing.Point(3, 4)
 		Me.GameSetupComboBox.Name = "GameSetupComboBox"
 		Me.GameSetupComboBox.Size = New System.Drawing.Size(697, 21)
 		Me.GameSetupComboBox.TabIndex = 42
@@ -192,9 +192,9 @@ Partial Class SetUpGamesUserControl
 		'EngineLabel
 		'
 		Me.EngineLabel.AutoSize = True
-		Me.EngineLabel.Location = New System.Drawing.Point(6, 48)
+		Me.EngineLabel.Location = New System.Drawing.Point(6, 49)
 		Me.EngineLabel.Name = "EngineLabel"
-		Me.EngineLabel.Size = New System.Drawing.Size(43, 13)
+		Me.EngineLabel.Size = New System.Drawing.Size(46, 13)
 		Me.EngineLabel.TabIndex = 43
 		Me.EngineLabel.Text = "Engine:"
 		'
@@ -232,9 +232,9 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.MappingToolPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.MappingToolPathFileNameTextBox.Location = New System.Drawing.Point(93, 219)
+		Me.MappingToolPathFileNameTextBox.Location = New System.Drawing.Point(93, 217)
 		Me.MappingToolPathFileNameTextBox.Name = "MappingToolPathFileNameTextBox"
-		Me.MappingToolPathFileNameTextBox.Size = New System.Drawing.Size(598, 20)
+		Me.MappingToolPathFileNameTextBox.Size = New System.Drawing.Size(598, 22)
 		Me.MappingToolPathFileNameTextBox.TabIndex = 38
 		'
 		'MappingToolLabel
@@ -243,7 +243,7 @@ Partial Class SetUpGamesUserControl
 		Me.MappingToolLabel.Location = New System.Drawing.Point(6, 222)
 		Me.MappingToolLabel.Margin = New System.Windows.Forms.Padding(3, 9, 3, 0)
 		Me.MappingToolLabel.Name = "MappingToolLabel"
-		Me.MappingToolLabel.Size = New System.Drawing.Size(71, 13)
+		Me.MappingToolLabel.Size = New System.Drawing.Size(81, 13)
 		Me.MappingToolLabel.TabIndex = 37
 		Me.MappingToolLabel.Text = "Mapping tool:"
 		'
@@ -251,9 +251,9 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.GameAppOptionsTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.GameAppOptionsTextBox.Location = New System.Drawing.Point(112, 103)
+		Me.GameAppOptionsTextBox.Location = New System.Drawing.Point(112, 101)
 		Me.GameAppOptionsTextBox.Name = "GameAppOptionsTextBox"
-		Me.GameAppOptionsTextBox.Size = New System.Drawing.Size(579, 20)
+		Me.GameAppOptionsTextBox.Size = New System.Drawing.Size(579, 22)
 		Me.GameAppOptionsTextBox.TabIndex = 32
 		'
 		'ExecutableOptionsLabel
@@ -261,7 +261,7 @@ Partial Class SetUpGamesUserControl
 		Me.ExecutableOptionsLabel.AutoSize = True
 		Me.ExecutableOptionsLabel.Location = New System.Drawing.Point(6, 106)
 		Me.ExecutableOptionsLabel.Name = "ExecutableOptionsLabel"
-		Me.ExecutableOptionsLabel.Size = New System.Drawing.Size(100, 13)
+		Me.ExecutableOptionsLabel.Size = New System.Drawing.Size(108, 13)
 		Me.ExecutableOptionsLabel.TabIndex = 31
 		Me.ExecutableOptionsLabel.Text = "Executable options:"
 		'
@@ -289,9 +289,9 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.GameAppPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.GameAppPathFileNameTextBox.Location = New System.Drawing.Point(112, 74)
+		Me.GameAppPathFileNameTextBox.Location = New System.Drawing.Point(112, 72)
 		Me.GameAppPathFileNameTextBox.Name = "GameAppPathFileNameTextBox"
-		Me.GameAppPathFileNameTextBox.Size = New System.Drawing.Size(579, 20)
+		Me.GameAppPathFileNameTextBox.Size = New System.Drawing.Size(579, 22)
 		Me.GameAppPathFileNameTextBox.TabIndex = 29
 		'
 		'ExecutableLabel
@@ -300,7 +300,7 @@ Partial Class SetUpGamesUserControl
 		Me.ExecutableLabel.Location = New System.Drawing.Point(6, 77)
 		Me.ExecutableLabel.Margin = New System.Windows.Forms.Padding(3, 9, 3, 0)
 		Me.ExecutableLabel.Name = "ExecutableLabel"
-		Me.ExecutableLabel.Size = New System.Drawing.Size(96, 13)
+		Me.ExecutableLabel.Size = New System.Drawing.Size(99, 13)
 		Me.ExecutableLabel.TabIndex = 28
 		Me.ExecutableLabel.Text = "Executable (*.exe):"
 		'
@@ -310,7 +310,7 @@ Partial Class SetUpGamesUserControl
 		Me.PackerLabel.Location = New System.Drawing.Point(6, 251)
 		Me.PackerLabel.Margin = New System.Windows.Forms.Padding(3, 9, 3, 0)
 		Me.PackerLabel.Name = "PackerLabel"
-		Me.PackerLabel.Size = New System.Drawing.Size(64, 13)
+		Me.PackerLabel.Size = New System.Drawing.Size(67, 13)
 		Me.PackerLabel.TabIndex = 16
 		Me.PackerLabel.Text = "Packer tool:"
 		'
@@ -328,9 +328,9 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.PackerPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.PackerPathFileNameTextBox.Location = New System.Drawing.Point(93, 248)
+		Me.PackerPathFileNameTextBox.Location = New System.Drawing.Point(93, 246)
 		Me.PackerPathFileNameTextBox.Name = "PackerPathFileNameTextBox"
-		Me.PackerPathFileNameTextBox.Size = New System.Drawing.Size(598, 20)
+		Me.PackerPathFileNameTextBox.Size = New System.Drawing.Size(598, 22)
 		Me.PackerPathFileNameTextBox.TabIndex = 17
 		'
 		'ModelViewerLabel
@@ -339,7 +339,7 @@ Partial Class SetUpGamesUserControl
 		Me.ModelViewerLabel.Location = New System.Drawing.Point(6, 193)
 		Me.ModelViewerLabel.Margin = New System.Windows.Forms.Padding(3, 9, 3, 0)
 		Me.ModelViewerLabel.Name = "ModelViewerLabel"
-		Me.ModelViewerLabel.Size = New System.Drawing.Size(73, 13)
+		Me.ModelViewerLabel.Size = New System.Drawing.Size(79, 13)
 		Me.ModelViewerLabel.TabIndex = 13
 		Me.ModelViewerLabel.Text = "Model viewer:"
 		'
@@ -357,9 +357,9 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.ViewerPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ViewerPathFileNameTextBox.Location = New System.Drawing.Point(93, 190)
+		Me.ViewerPathFileNameTextBox.Location = New System.Drawing.Point(93, 188)
 		Me.ViewerPathFileNameTextBox.Name = "ViewerPathFileNameTextBox"
-		Me.ViewerPathFileNameTextBox.Size = New System.Drawing.Size(598, 20)
+		Me.ViewerPathFileNameTextBox.Size = New System.Drawing.Size(598, 22)
 		Me.ViewerPathFileNameTextBox.TabIndex = 14
 		'
 		'CloneGameSetupButton
@@ -378,15 +378,15 @@ Partial Class SetUpGamesUserControl
 		Me.GameNameTextBox.CueBannerText = ""
 		Me.GameNameTextBox.Location = New System.Drawing.Point(55, 19)
 		Me.GameNameTextBox.Name = "GameNameTextBox"
-		Me.GameNameTextBox.Size = New System.Drawing.Size(717, 20)
+		Me.GameNameTextBox.Size = New System.Drawing.Size(717, 22)
 		Me.GameNameTextBox.TabIndex = 1
 		'
 		'NameLabel
 		'
 		Me.NameLabel.AutoSize = True
-		Me.NameLabel.Location = New System.Drawing.Point(6, 22)
+		Me.NameLabel.Location = New System.Drawing.Point(6, 24)
 		Me.NameLabel.Name = "NameLabel"
-		Me.NameLabel.Size = New System.Drawing.Size(38, 13)
+		Me.NameLabel.Size = New System.Drawing.Size(39, 13)
 		Me.NameLabel.TabIndex = 0
 		Me.NameLabel.Text = "Name:"
 		'
@@ -413,9 +413,9 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.GamePathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.GamePathFileNameTextBox.Location = New System.Drawing.Point(93, 132)
+		Me.GamePathFileNameTextBox.Location = New System.Drawing.Point(93, 130)
 		Me.GamePathFileNameTextBox.Name = "GamePathFileNameTextBox"
-		Me.GamePathFileNameTextBox.Size = New System.Drawing.Size(598, 20)
+		Me.GamePathFileNameTextBox.Size = New System.Drawing.Size(598, 22)
 		Me.GamePathFileNameTextBox.TabIndex = 3
 		'
 		'ModelCompilerLabel
@@ -424,7 +424,7 @@ Partial Class SetUpGamesUserControl
 		Me.ModelCompilerLabel.Location = New System.Drawing.Point(6, 164)
 		Me.ModelCompilerLabel.Margin = New System.Windows.Forms.Padding(3, 9, 3, 0)
 		Me.ModelCompilerLabel.Name = "ModelCompilerLabel"
-		Me.ModelCompilerLabel.Size = New System.Drawing.Size(81, 13)
+		Me.ModelCompilerLabel.Size = New System.Drawing.Size(90, 13)
 		Me.ModelCompilerLabel.TabIndex = 5
 		Me.ModelCompilerLabel.Text = "Model compiler:"
 		'
@@ -442,9 +442,9 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.CompilerPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.CompilerPathFileNameTextBox.Location = New System.Drawing.Point(93, 161)
+		Me.CompilerPathFileNameTextBox.Location = New System.Drawing.Point(93, 159)
 		Me.CompilerPathFileNameTextBox.Name = "CompilerPathFileNameTextBox"
-		Me.CompilerPathFileNameTextBox.Size = New System.Drawing.Size(598, 20)
+		Me.CompilerPathFileNameTextBox.Size = New System.Drawing.Size(598, 22)
 		Me.CompilerPathFileNameTextBox.TabIndex = 6
 		'
 		'GamePathLabel
@@ -452,7 +452,7 @@ Partial Class SetUpGamesUserControl
 		Me.GamePathLabel.AutoSize = True
 		Me.GamePathLabel.Location = New System.Drawing.Point(6, 135)
 		Me.GamePathLabel.Name = "GamePathLabel"
-		Me.GamePathLabel.Size = New System.Drawing.Size(70, 13)
+		Me.GamePathLabel.Size = New System.Drawing.Size(76, 13)
 		Me.GamePathLabel.TabIndex = 2
 		Me.GamePathLabel.Text = "GameInfo.txt:"
 		'
@@ -520,7 +520,6 @@ Partial Class SetUpGamesUserControl
 		Me.Panel1.ResumeLayout(False)
 		Me.Panel1.PerformLayout()
 		Me.ResumeLayout(False)
-		Me.PerformLayout()
 
 	End Sub
 	Friend WithEvents AddLibraryPathButton As System.Windows.Forms.Button

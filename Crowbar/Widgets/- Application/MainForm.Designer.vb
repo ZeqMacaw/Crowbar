@@ -76,18 +76,21 @@ Partial Class MainForm
 		'AboutCrowbarToolStripMenuItem
 		'
 		Me.AboutCrowbarToolStripMenuItem.Name = "AboutCrowbarToolStripMenuItem"
-		resources.ApplyResources(Me.AboutCrowbarToolStripMenuItem, "AboutCrowbarToolStripMenuItem")
+		Me.AboutCrowbarToolStripMenuItem.Size = New System.Drawing.Size(147, 22)
+		Me.AboutCrowbarToolStripMenuItem.Text = "About Crowbar"
 		'
 		'ToolStripMenuItem1
 		'
 		Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutCrowbarToolStripMenuItem1})
 		Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-		resources.ApplyResources(Me.ToolStripMenuItem1, "ToolStripMenuItem1")
+		Me.ToolStripMenuItem1.Size = New System.Drawing.Size(40, 20)
+		Me.ToolStripMenuItem1.Text = "Help"
 		'
 		'AboutCrowbarToolStripMenuItem1
 		'
 		Me.AboutCrowbarToolStripMenuItem1.Name = "AboutCrowbarToolStripMenuItem1"
-		resources.ApplyResources(Me.AboutCrowbarToolStripMenuItem1, "AboutCrowbarToolStripMenuItem1")
+		Me.AboutCrowbarToolStripMenuItem1.Size = New System.Drawing.Size(155, 22)
+		Me.AboutCrowbarToolStripMenuItem1.Text = "About Crowbar"
 		'
 		'MainTabControl
 		'
@@ -104,187 +107,274 @@ Partial Class MainForm
 		Me.MainTabControl.Controls.Add(Me.HelpTabPage)
 		Me.MainTabControl.Controls.Add(Me.AboutTabPage)
 		Me.MainTabControl.Controls.Add(Me.UpdateTabPage)
-		resources.ApplyResources(Me.MainTabControl, "MainTabControl")
+		Me.MainTabControl.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.MainTabControl.Location = New System.Drawing.Point(0, 0)
 		Me.MainTabControl.Name = "MainTabControl"
 		Me.MainTabControl.SelectedIndex = 0
+		Me.MainTabControl.Size = New System.Drawing.Size(792, 572)
+		Me.MainTabControl.TabIndex = 12
 		'
 		'SetUpGamesTabPage
 		'
 		Me.SetUpGamesTabPage.BackColor = System.Drawing.SystemColors.Control
 		Me.SetUpGamesTabPage.Controls.Add(Me.SetUpGamesUserControl1)
-		resources.ApplyResources(Me.SetUpGamesTabPage, "SetUpGamesTabPage")
+		Me.SetUpGamesTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.SetUpGamesTabPage.Name = "SetUpGamesTabPage"
+		Me.SetUpGamesTabPage.Size = New System.Drawing.Size(784, 546)
+		Me.SetUpGamesTabPage.TabIndex = 15
+		Me.SetUpGamesTabPage.Text = "Set Up Games"
 		'
 		'SetUpGamesUserControl1
 		'
-		resources.ApplyResources(Me.SetUpGamesUserControl1, "SetUpGamesUserControl1")
+		Me.SetUpGamesUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.SetUpGamesUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.SetUpGamesUserControl1.Name = "SetUpGamesUserControl1"
+		Me.SetUpGamesUserControl1.Size = New System.Drawing.Size(784, 546)
+		Me.SetUpGamesUserControl1.TabIndex = 0
 		'
 		'DownloadTabPage
 		'
 		Me.DownloadTabPage.BackColor = System.Drawing.SystemColors.Control
 		Me.DownloadTabPage.Controls.Add(Me.DownloadUserControl1)
-		resources.ApplyResources(Me.DownloadTabPage, "DownloadTabPage")
+		Me.DownloadTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.DownloadTabPage.Name = "DownloadTabPage"
+		Me.DownloadTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.DownloadTabPage.TabIndex = 0
+		Me.DownloadTabPage.Text = "Download"
 		'
 		'DownloadUserControl1
 		'
-		resources.ApplyResources(Me.DownloadUserControl1, "DownloadUserControl1")
+		Me.DownloadUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.DownloadUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.DownloadUserControl1.Name = "DownloadUserControl1"
+		Me.DownloadUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.DownloadUserControl1.TabIndex = 0
 		'
 		'UnpackTabPage
 		'
 		Me.UnpackTabPage.BackColor = System.Drawing.SystemColors.Control
 		Me.UnpackTabPage.Controls.Add(Me.UnpackUserControl1)
-		resources.ApplyResources(Me.UnpackTabPage, "UnpackTabPage")
+		Me.UnpackTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.UnpackTabPage.Name = "UnpackTabPage"
+		Me.UnpackTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.UnpackTabPage.TabIndex = 13
+		Me.UnpackTabPage.Text = "Unpack"
 		'
 		'UnpackUserControl1
 		'
-		resources.ApplyResources(Me.UnpackUserControl1, "UnpackUserControl1")
+		Me.UnpackUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.UnpackUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.UnpackUserControl1.Name = "UnpackUserControl1"
+		Me.UnpackUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.UnpackUserControl1.TabIndex = 0
 		'
 		'PreviewTabPage
 		'
 		Me.PreviewTabPage.BackColor = System.Drawing.SystemColors.Control
 		Me.PreviewTabPage.Controls.Add(Me.PreviewViewUserControl)
-		resources.ApplyResources(Me.PreviewTabPage, "PreviewTabPage")
+		Me.PreviewTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.PreviewTabPage.Name = "PreviewTabPage"
+		Me.PreviewTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.PreviewTabPage.TabIndex = 12
+		Me.PreviewTabPage.Text = "Preview"
 		'
 		'PreviewViewUserControl
 		'
 		Me.PreviewViewUserControl.BackColor = System.Drawing.SystemColors.Control
-		resources.ApplyResources(Me.PreviewViewUserControl, "PreviewViewUserControl")
+		Me.PreviewViewUserControl.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.PreviewViewUserControl.Location = New System.Drawing.Point(0, 0)
 		Me.PreviewViewUserControl.Name = "PreviewViewUserControl"
+		Me.PreviewViewUserControl.Size = New System.Drawing.Size(192, 74)
+		Me.PreviewViewUserControl.TabIndex = 1
 		Me.PreviewViewUserControl.ViewerType = Crowbar.AppEnums.ViewerType.Preview
 		'
 		'DecompileTabPage
 		'
 		Me.DecompileTabPage.BackColor = System.Drawing.SystemColors.Control
 		Me.DecompileTabPage.Controls.Add(Me.DecompilerUserControl1)
-		resources.ApplyResources(Me.DecompileTabPage, "DecompileTabPage")
+		Me.DecompileTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.DecompileTabPage.Name = "DecompileTabPage"
+		Me.DecompileTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.DecompileTabPage.TabIndex = 0
+		Me.DecompileTabPage.Text = "Decompile"
 		'
 		'DecompilerUserControl1
 		'
-		resources.ApplyResources(Me.DecompilerUserControl1, "DecompilerUserControl1")
+		Me.DecompilerUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.DecompilerUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.DecompilerUserControl1.Name = "DecompilerUserControl1"
+		Me.DecompilerUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.DecompilerUserControl1.TabIndex = 0
 		'
 		'CompileTabPage
 		'
 		Me.CompileTabPage.BackColor = System.Drawing.SystemColors.Control
 		Me.CompileTabPage.Controls.Add(Me.CompilerUserControl1)
-		resources.ApplyResources(Me.CompileTabPage, "CompileTabPage")
+		Me.CompileTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.CompileTabPage.Name = "CompileTabPage"
+		Me.CompileTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.CompileTabPage.TabIndex = 1
+		Me.CompileTabPage.Text = "Compile"
 		'
 		'CompilerUserControl1
 		'
-		resources.ApplyResources(Me.CompilerUserControl1, "CompilerUserControl1")
+		Me.CompilerUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.CompilerUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.CompilerUserControl1.Name = "CompilerUserControl1"
+		Me.CompilerUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.CompilerUserControl1.TabIndex = 0
 		'
 		'ViewTabPage
 		'
 		Me.ViewTabPage.BackColor = System.Drawing.SystemColors.Control
 		Me.ViewTabPage.Controls.Add(Me.ViewViewUserControl)
-		resources.ApplyResources(Me.ViewTabPage, "ViewTabPage")
+		Me.ViewTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.ViewTabPage.Name = "ViewTabPage"
+		Me.ViewTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.ViewTabPage.TabIndex = 5
+		Me.ViewTabPage.Text = "View"
 		'
 		'ViewViewUserControl
 		'
 		Me.ViewViewUserControl.BackColor = System.Drawing.SystemColors.Control
-		resources.ApplyResources(Me.ViewViewUserControl, "ViewViewUserControl")
+		Me.ViewViewUserControl.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.ViewViewUserControl.Location = New System.Drawing.Point(0, 0)
 		Me.ViewViewUserControl.Name = "ViewViewUserControl"
+		Me.ViewViewUserControl.Size = New System.Drawing.Size(192, 74)
+		Me.ViewViewUserControl.TabIndex = 0
 		Me.ViewViewUserControl.ViewerType = Crowbar.AppEnums.ViewerType.View
 		'
 		'PackTabPage
 		'
 		Me.PackTabPage.BackColor = System.Drawing.SystemColors.Control
 		Me.PackTabPage.Controls.Add(Me.PackUserControl1)
-		resources.ApplyResources(Me.PackTabPage, "PackTabPage")
+		Me.PackTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.PackTabPage.Name = "PackTabPage"
+		Me.PackTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.PackTabPage.TabIndex = 16
+		Me.PackTabPage.Text = "Pack"
 		'
 		'PackUserControl1
 		'
-		resources.ApplyResources(Me.PackUserControl1, "PackUserControl1")
+		Me.PackUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.PackUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.PackUserControl1.Name = "PackUserControl1"
+		Me.PackUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.PackUserControl1.TabIndex = 0
 		'
 		'PublishTabPage
 		'
 		Me.PublishTabPage.BackColor = System.Drawing.SystemColors.Control
 		Me.PublishTabPage.Controls.Add(Me.PublishUserControl1)
-		resources.ApplyResources(Me.PublishTabPage, "PublishTabPage")
+		Me.PublishTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.PublishTabPage.Name = "PublishTabPage"
+		Me.PublishTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.PublishTabPage.TabIndex = 1
+		Me.PublishTabPage.Text = "Publish"
 		'
 		'PublishUserControl1
 		'
-		resources.ApplyResources(Me.PublishUserControl1, "PublishUserControl1")
+		Me.PublishUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.PublishUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.PublishUserControl1.Name = "PublishUserControl1"
+		Me.PublishUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.PublishUserControl1.TabIndex = 0
 		'
 		'OptionsTabPage
 		'
 		Me.OptionsTabPage.BackColor = System.Drawing.SystemColors.Control
 		Me.OptionsTabPage.Controls.Add(Me.OptionsUserControl1)
-		resources.ApplyResources(Me.OptionsTabPage, "OptionsTabPage")
+		Me.OptionsTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.OptionsTabPage.Name = "OptionsTabPage"
+		Me.OptionsTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.OptionsTabPage.TabIndex = 10
+		Me.OptionsTabPage.Text = "Options"
 		'
 		'OptionsUserControl1
 		'
-		resources.ApplyResources(Me.OptionsUserControl1, "OptionsUserControl1")
+		Me.OptionsUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.OptionsUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.OptionsUserControl1.Name = "OptionsUserControl1"
+		Me.OptionsUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.OptionsUserControl1.TabIndex = 0
 		'
 		'HelpTabPage
 		'
 		Me.HelpTabPage.BackColor = System.Drawing.SystemColors.Control
 		Me.HelpTabPage.Controls.Add(Me.HelpUserControl1)
-		resources.ApplyResources(Me.HelpTabPage, "HelpTabPage")
+		Me.HelpTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.HelpTabPage.Name = "HelpTabPage"
+		Me.HelpTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.HelpTabPage.TabIndex = 14
+		Me.HelpTabPage.Text = "Help"
 		'
 		'HelpUserControl1
 		'
-		resources.ApplyResources(Me.HelpUserControl1, "HelpUserControl1")
+		Me.HelpUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.HelpUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.HelpUserControl1.Name = "HelpUserControl1"
+		Me.HelpUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.HelpUserControl1.TabIndex = 0
 		'
 		'AboutTabPage
 		'
 		Me.AboutTabPage.BackColor = System.Drawing.SystemColors.Control
 		Me.AboutTabPage.Controls.Add(Me.AboutUserControl1)
-		resources.ApplyResources(Me.AboutTabPage, "AboutTabPage")
+		Me.AboutTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.AboutTabPage.Name = "AboutTabPage"
+		Me.AboutTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.AboutTabPage.TabIndex = 11
+		Me.AboutTabPage.Text = "About"
 		'
 		'AboutUserControl1
 		'
-		resources.ApplyResources(Me.AboutUserControl1, "AboutUserControl1")
+		Me.AboutUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.AboutUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.AboutUserControl1.Name = "AboutUserControl1"
+		Me.AboutUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.AboutUserControl1.TabIndex = 1
 		'
 		'UpdateTabPage
 		'
 		Me.UpdateTabPage.BackColor = System.Drawing.SystemColors.Control
 		Me.UpdateTabPage.Controls.Add(Me.UpdateUserControl1)
-		resources.ApplyResources(Me.UpdateTabPage, "UpdateTabPage")
+		Me.UpdateTabPage.Location = New System.Drawing.Point(4, 22)
 		Me.UpdateTabPage.Name = "UpdateTabPage"
+		Me.UpdateTabPage.Size = New System.Drawing.Size(192, 74)
+		Me.UpdateTabPage.TabIndex = 19
+		Me.UpdateTabPage.Text = "Update"
 		'
 		'UpdateUserControl1
 		'
-		resources.ApplyResources(Me.UpdateUserControl1, "UpdateUserControl1")
+		Me.UpdateUserControl1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.UpdateUserControl1.Location = New System.Drawing.Point(0, 0)
 		Me.UpdateUserControl1.Name = "UpdateUserControl1"
+		Me.UpdateUserControl1.Size = New System.Drawing.Size(192, 74)
+		Me.UpdateUserControl1.TabIndex = 0
 		'
 		'ToolStripMenuItem2
 		'
 		Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
-		resources.ApplyResources(Me.ToolStripMenuItem2, "ToolStripMenuItem2")
+		Me.ToolStripMenuItem2.Size = New System.Drawing.Size(40, 20)
+		Me.ToolStripMenuItem2.Text = "Help"
 		'
 		'AboutCrowbarToolStripMenuItem2
 		'
 		Me.AboutCrowbarToolStripMenuItem2.Name = "AboutCrowbarToolStripMenuItem2"
-		resources.ApplyResources(Me.AboutCrowbarToolStripMenuItem2, "AboutCrowbarToolStripMenuItem2")
+		Me.AboutCrowbarToolStripMenuItem2.Size = New System.Drawing.Size(152, 22)
+		Me.AboutCrowbarToolStripMenuItem2.Text = "About Crowbar"
 		'
 		'MainForm
 		'
 		Me.AllowDrop = True
-		resources.ApplyResources(Me, "$this")
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+		Me.ClientSize = New System.Drawing.Size(792, 572)
 		Me.Controls.Add(Me.MainTabControl)
+		Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+		Me.MinimumSize = New System.Drawing.Size(800, 600)
 		Me.Name = "MainForm"
+		Me.Text = "Crowbar"
 		Me.MainTabControl.ResumeLayout(False)
 		Me.SetUpGamesTabPage.ResumeLayout(False)
 		Me.DownloadTabPage.ResumeLayout(False)

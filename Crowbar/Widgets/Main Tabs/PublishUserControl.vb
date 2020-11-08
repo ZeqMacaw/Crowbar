@@ -15,6 +15,13 @@ Public Class PublishUserControl
 		' This call is required by the designer.
 		InitializeComponent()
 
+		' Set the ToolStrip and its child controls to use same default FontSize as the other controls. 
+		'    Inexplicably, the default FontSize for them is 9 instead of 8.25 like all other controls.
+		Me.ToolStrip1.Font = Me.Font
+		For Each widget As Control In Me.ToolStrip1.Controls
+			widget.Font = Me.Font
+		Next
+
 		Me.UseInDownloadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.UseInDownloadToolStripMenuItem.Name = "ItemsDataGridViewUseInDownloadToolStripMenuItem"
 		Me.UseInDownloadToolStripMenuItem.Size = New System.Drawing.Size(176, 22)
@@ -324,10 +331,7 @@ Public Class PublishUserControl
 
 	Private Sub PublishUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
-		Me.AppIdComboBox.Size = New System.Drawing.Size(Me.RefreshGameItemsButton.Left - Me.RefreshGameItemsButton.Margin.Left - Me.AppIdComboBox.Margin.Right - Me.AppIdComboBox.Left, 20)
-		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the bottom side of these widgets.
-		Me.Panel1.Size = New System.Drawing.Size(Me.Panel1.Width, Me.TopMiddleSplitContainer.Panel1.Height - Me.TopMiddleSplitContainer.Panel1.Padding.Bottom - Me.Panel1.Margin.Bottom - Me.Panel1.Top)
-		Me.ItemsDataGridView.Size = New System.Drawing.Size(Me.ItemsDataGridView.Width, Me.ToolStrip1.Top - Me.ToolStrip1.Margin.Top - Me.ItemsDataGridView.Margin.Bottom - Me.ItemsDataGridView.Top)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.AppIdComboBox, Me.RefreshGameItemsButton)
 
 		If Not Me.DesignMode Then
 			Me.Init()
@@ -889,7 +893,6 @@ Public Class PublishUserControl
 		Me.ItemTagsGroupBox.Controls.Add(Me.theTagsWidget)
 		Me.theTagsWidget.AutoScroll = True
 		Me.theTagsWidget.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.theTagsWidget.Font = New System.Drawing.Font("Tahoma", 8.25!)
 		'Me.theTagsWidget.ItemTags = CType(Resources.GetObject("ContagionTagsUserControl1.ItemTags"), System.Collections.Generic.List(Of String))
 		Me.theTagsWidget.Location = New System.Drawing.Point(3, 17)
 		Me.theTagsWidget.Name = "TagsUserControl"
@@ -1857,6 +1860,16 @@ Public Class PublishUserControl
 	Private theUnchangedSelectedTemplateItem As WorkshopItem
 
 	Private theBackgroundSteamPipe As BackgroundSteamPipe
+
+	Private Sub ItemPreviewImagePictureBox_Resize(sender As Object, e As EventArgs) Handles ItemPreviewImagePictureBox.Resize
+		' Make sure size stays a square even when theme font changes it.
+		Dim width As Integer = Me.ItemPreviewImagePictureBox.Width
+		Dim height As Integer = Me.ItemPreviewImagePictureBox.Height
+		If width <> height Then
+			Dim length As Integer = Math.Min(width, height)
+			Me.ItemPreviewImagePictureBox.Size = New System.Drawing.Size(length, length)
+		End If
+	End Sub
 
 #End Region
 

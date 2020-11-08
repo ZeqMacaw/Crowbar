@@ -2615,10 +2615,10 @@ Public Class SourceMdlFile37
 
 					aModel.theMeshes.Add(aMesh)
 
-					'' Fill-in eyeball texture index info.
-					'If aMesh.materialType = 1 Then
-					'	aModel.theEyeballs(aMesh.materialParam).theTextureIndex = aMesh.materialIndex
-					'End If
+					' Fill-in eyeball texture index info.
+					If aMesh.materialType = 1 Then
+						aModel.theEyeballs(aMesh.materialParam).theTextureIndex = aMesh.materialIndex
+					End If
 
 					inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 
