@@ -427,6 +427,7 @@
     <Compile Include="Core\GamePackage\HfsFile\HfsMainDirectoryEntry.vb" />
     <Compile Include="Core\GamePackage\SourcePackageEventArgs.vb" />
     <Compile Include="Core\SteamAppInfos\AnarchyArcadeSteamAppInfo.vb" />
+    <Compile Include="Core\SteamAppInfos\ObsidianConflictSteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\BlackMesaSteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\ContagionSteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\GarrysModSteamAppInfo.vb" />
@@ -757,6 +758,12 @@
     <Compile Include="Widgets\Publish SteamApp Tags\SourceFilmmakerTagsUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Widgets\Publish SteamApp Tags\ObsidianConflictTagsUserControl.Designer.vb">
+      <DependentUpon>ObsidianConflictTagsUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Widgets\Publish SteamApp Tags\ObsidianConflictTagsUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Widgets\Publish SteamApp Tags\ZombiePanicSourceTagsUserControl.Designer.vb">
       <DependentUpon>ZombiePanicSourceTagsUserControl.vb</DependentUpon>
     </Compile>
@@ -774,11 +781,13 @@
     <EmbeddedResource Include="Widgets\- Application\DeleteItemForm.resx">
       <DependentUpon>DeleteItemForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Widgets\- Application\MainForm.de-DE.resx">
-      <DependentUpon>MainForm.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Widgets\- Application\MacroDataGridView.resx">
       <DependentUpon>MacroDataGridView.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\- Application\MainForm.resx">
+      <DependentUpon>MainForm.vb</DependentUpon>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\Main Tabs\AboutUserControl.resx">
       <SubType>Designer</SubType>
@@ -836,10 +845,6 @@
       <SubType>Designer</SubType>
       <DependentUpon>HelpUserControl.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Widgets\- Application\MainForm.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>MainForm.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
@@ -867,6 +872,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\Publish SteamApp Tags\SourceFilmmakerTagsUserControl.resx">
       <DependentUpon>SourceFilmmakerTagsUserControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\Publish SteamApp Tags\ObsidianConflictTagsUserControl.resx">
+      <DependentUpon>ObsidianConflictTagsUserControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\Publish SteamApp Tags\ZombiePanicSourceTagsUserControl.resx">
       <DependentUpon>ZombiePanicSourceTagsUserControl.vb</DependentUpon>

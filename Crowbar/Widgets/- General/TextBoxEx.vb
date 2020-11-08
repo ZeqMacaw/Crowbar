@@ -21,6 +21,15 @@ Public Class TextBoxEx
 		End Set
 	End Property
 
+	Protected Overrides Sub OnHandleCreated(e As EventArgs)
+		MyBase.OnHandleCreated(e)
+
+		' Always use UserPaint, so set it here when widget is created.
+		SetStyle(ControlStyles.AllPaintingInWmPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+		SetStyle(ControlStyles.DoubleBuffer, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+		SetStyle(ControlStyles.UserPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+	End Sub
+
 	Protected Overrides Sub OnKeyDown(ByVal e As System.Windows.Forms.KeyEventArgs)
 		If e.Control AndAlso e.KeyCode = Keys.A Then
 			Me.SelectAll()
@@ -108,9 +117,9 @@ Public Class TextBoxEx
 		End If
 
 		If GetStyle(ControlStyles.UserPaint) <> (Me.theCueBannerText <> "" AndAlso Me.Text = "") Then
-			SetStyle(ControlStyles.AllPaintingInWmPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
-			SetStyle(ControlStyles.DoubleBuffer, Me.theCueBannerText <> "" AndAlso Me.Text = "")
-			SetStyle(ControlStyles.UserPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+			'SetStyle(ControlStyles.AllPaintingInWmPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+			'SetStyle(ControlStyles.DoubleBuffer, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+			'SetStyle(ControlStyles.UserPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
 			If Me.theOriginalFont IsNot Nothing Then
 				Me.Font = New System.Drawing.Font(Me.theOriginalFont.FontFamily, Me.theOriginalFont.Size, Me.theOriginalFont.Style, Me.theOriginalFont.Unit)
 			End If
@@ -126,11 +135,11 @@ Public Class TextBoxEx
 			'      so save the Font after widget is visible for first time, but before changing style within the widget.
 			Me.theOriginalFont = New System.Drawing.Font(Me.Font.FontFamily, Me.Font.Size, Me.Font.Style, Me.Font.Unit)
 
-			'SetStyle(ControlStyles.UserPaint, Me.theCueBannerText <> "")
-			SetStyle(ControlStyles.AllPaintingInWmPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
-			SetStyle(ControlStyles.DoubleBuffer, Me.theCueBannerText <> "" AndAlso Me.Text = "")
-			SetStyle(ControlStyles.UserPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
-			'Me.Invalidate()
+			''SetStyle(ControlStyles.UserPaint, Me.theCueBannerText <> "")
+			'SetStyle(ControlStyles.AllPaintingInWmPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+			'SetStyle(ControlStyles.DoubleBuffer, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+			'SetStyle(ControlStyles.UserPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+			''Me.Invalidate()
 		End If
 	End Sub
 

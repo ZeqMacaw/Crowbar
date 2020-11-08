@@ -248,4 +248,7 @@
   <data name="Steamworks_NET" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Steamworks.NET.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="Link_SemanticVersioning" xml:space="preserve">
+    <value>https://semver.org/</value>
+  </data>
 </root>

@@ -367,6 +367,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to https://semver.org/.
+        '''</summary>
+        Friend ReadOnly Property Link_SemanticVersioning() As String
+            Get
+                Return ResourceManager.GetString("Link_SemanticVersioning", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to https://steamcommunity.com/sharedfiles/workshoplegalagreement.
         '''</summary>
         Friend ReadOnly Property Link_SteamSubscriberAgreement() As String
