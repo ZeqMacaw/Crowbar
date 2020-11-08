@@ -652,6 +652,17 @@ Public Class SourceMdlFile49
 		aBone.theJiggleBone.baseMaxForward = Me.theInputFileReader.ReadSingle()
 		aBone.theJiggleBone.baseForwardFriction = Me.theInputFileReader.ReadSingle()
 
+		'TODO: How to determine when to read in these bytes that probably are only compiled with Source SDK Base 2013 MP and SP?
+		'      Maybe only read these bytes if aBone.theJiggleBone.flags has "is_boing" set.
+		'      The only disadvantage is decompile-MDL log would show unread bytes, but those often show up for alignment bytes anyway.
+		'If Me.theMdlFileData.version = 48 OrElse Me.theMdlFileData.version = 49 Then
+		'	aBone.theJiggleBone.baseMass = Me.theInputFileReader.ReadSingle()
+		'	aBone.theJiggleBone.baseStiffness = Me.theInputFileReader.ReadSingle()
+		'	aBone.theJiggleBone.baseDamping = Me.theInputFileReader.ReadSingle()
+		'	aBone.theJiggleBone.baseMinLeft = Me.theInputFileReader.ReadSingle()
+		'	aBone.theJiggleBone.baseMaxLeft = Me.theInputFileReader.ReadSingle()
+		'End If
+
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aBone.theJiggleBone")
 	End Sub
