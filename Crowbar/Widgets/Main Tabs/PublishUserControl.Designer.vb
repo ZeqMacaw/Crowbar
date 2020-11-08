@@ -95,6 +95,7 @@ Partial Class PublishUserControl
 		'
 		Me.TopMiddleSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.TopMiddleSplitContainer.Location = New System.Drawing.Point(0, 0)
+		Me.TopMiddleSplitContainer.Margin = New System.Windows.Forms.Padding(2)
 		Me.TopMiddleSplitContainer.Name = "TopMiddleSplitContainer"
 		Me.TopMiddleSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal
 		'
@@ -122,7 +123,7 @@ Partial Class PublishUserControl
 		Me.RefreshGameItemsButton.BackgroundImage = Global.Crowbar.My.Resources.Resources.Refresh
 		Me.RefreshGameItemsButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
 		Me.RefreshGameItemsButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-		Me.RefreshGameItemsButton.Location = New System.Drawing.Point(399, 0)
+		Me.RefreshGameItemsButton.Location = New System.Drawing.Point(396, 3)
 		Me.RefreshGameItemsButton.Name = "RefreshGameItemsButton"
 		Me.RefreshGameItemsButton.Size = New System.Drawing.Size(23, 23)
 		Me.RefreshGameItemsButton.TabIndex = 36
@@ -133,7 +134,7 @@ Partial Class PublishUserControl
 		'
 		Me.TextBox1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.TextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-		Me.TextBox1.Location = New System.Drawing.Point(428, 0)
+		Me.TextBox1.Location = New System.Drawing.Point(425, 3)
 		Me.TextBox1.Name = "TextBox1"
 		Me.TextBox1.Size = New System.Drawing.Size(136, 23)
 		Me.TextBox1.TabIndex = 1
@@ -143,7 +144,7 @@ Partial Class PublishUserControl
 		'OpenSteamSubscriberAgreementButton
 		'
 		Me.OpenSteamSubscriberAgreementButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.OpenSteamSubscriberAgreementButton.Location = New System.Drawing.Point(570, 0)
+		Me.OpenSteamSubscriberAgreementButton.Location = New System.Drawing.Point(567, 3)
 		Me.OpenSteamSubscriberAgreementButton.Name = "OpenSteamSubscriberAgreementButton"
 		Me.OpenSteamSubscriberAgreementButton.Size = New System.Drawing.Size(200, 23)
 		Me.OpenSteamSubscriberAgreementButton.TabIndex = 2
@@ -156,14 +157,14 @@ Partial Class PublishUserControl
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.AppIdComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.AppIdComboBox.FormattingEnabled = True
-		Me.AppIdComboBox.Location = New System.Drawing.Point(44, 2)
+		Me.AppIdComboBox.Location = New System.Drawing.Point(47, 4)
 		Me.AppIdComboBox.Name = "AppIdComboBox"
-		Me.AppIdComboBox.Size = New System.Drawing.Size(349, 21)
+		Me.AppIdComboBox.Size = New System.Drawing.Size(346, 21)
 		Me.AppIdComboBox.TabIndex = 0
 		'
 		'Label8
 		'
-		Me.Label8.Location = New System.Drawing.Point(0, 5)
+		Me.Label8.Location = New System.Drawing.Point(3, 8)
 		Me.Label8.Name = "Label8"
 		Me.Label8.Size = New System.Drawing.Size(38, 13)
 		Me.Label8.TabIndex = 22
@@ -177,9 +178,9 @@ Partial Class PublishUserControl
 		Me.Panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
 		Me.Panel1.Controls.Add(Me.ItemsDataGridView)
 		Me.Panel1.Controls.Add(Me.ToolStrip1)
-		Me.Panel1.Location = New System.Drawing.Point(0, 29)
+		Me.Panel1.Location = New System.Drawing.Point(3, 32)
 		Me.Panel1.Name = "Panel1"
-		Me.Panel1.Size = New System.Drawing.Size(770, 114)
+		Me.Panel1.Size = New System.Drawing.Size(764, 111)
 		Me.Panel1.TabIndex = 31
 		'
 		'ItemsDataGridView
@@ -201,7 +202,7 @@ Partial Class PublishUserControl
 		Me.ItemsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
 		Me.ItemsDataGridView.ShowCellErrors = False
 		Me.ItemsDataGridView.ShowRowErrors = False
-		Me.ItemsDataGridView.Size = New System.Drawing.Size(765, 85)
+		Me.ItemsDataGridView.Size = New System.Drawing.Size(759, 82)
 		Me.ItemsDataGridView.TabIndex = 3
 		'
 		'ToolStrip1
@@ -210,9 +211,9 @@ Partial Class PublishUserControl
 		Me.ToolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom
 		Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
 		Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddItemToolStripButton, Me.ToolStripSeparator1, Me.SearchItemsToolStripComboBox, Me.SearchItemsToolStripTextBox, Me.SearchItemsToolStripButton, Me.ToolStripSeparator2, Me.ItemCountsToolStripLabel, Me.FindItemToolStripTextBox})
-		Me.ToolStrip1.Location = New System.Drawing.Point(0, 85)
+		Me.ToolStrip1.Location = New System.Drawing.Point(0, 82)
 		Me.ToolStrip1.Name = "ToolStrip1"
-		Me.ToolStrip1.Size = New System.Drawing.Size(766, 25)
+		Me.ToolStrip1.Size = New System.Drawing.Size(760, 25)
 		Me.ToolStrip1.Stretch = True
 		Me.ToolStrip1.TabIndex = 30
 		Me.ToolStrip1.Text = "ToolStrip1"
@@ -284,6 +285,7 @@ Partial Class PublishUserControl
 		'MiddleBottomSplitContainer.Panel1
 		'
 		Me.MiddleBottomSplitContainer.Panel1.Controls.Add(Me.ItemGroupBox)
+		Me.MiddleBottomSplitContainer.Panel1.Padding = New System.Windows.Forms.Padding(3)
 		'
 		'MiddleBottomSplitContainer.Panel2
 		'
@@ -302,10 +304,10 @@ Partial Class PublishUserControl
 		Me.ItemGroupBox.Controls.Add(Me.ItemTagsSplitContainer)
 		Me.ItemGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.ItemGroupBox.IsReadOnly = False
-		Me.ItemGroupBox.Location = New System.Drawing.Point(0, 0)
+		Me.ItemGroupBox.Location = New System.Drawing.Point(3, 3)
 		Me.ItemGroupBox.Name = "ItemGroupBox"
 		Me.ItemGroupBox.SelectedValue = Nothing
-		Me.ItemGroupBox.Size = New System.Drawing.Size(770, 326)
+		Me.ItemGroupBox.Size = New System.Drawing.Size(764, 320)
 		Me.ItemGroupBox.TabIndex = 31
 		Me.ItemGroupBox.TabStop = False
 		Me.ItemGroupBox.Text = "Item"
@@ -319,6 +321,7 @@ Partial Class PublishUserControl
 		'ItemTagsSplitContainer.Panel1
 		'
 		Me.ItemTagsSplitContainer.Panel1.AutoScroll = True
+		Me.ItemTagsSplitContainer.Panel1.Controls.Add(Me.ItemIDLabel)
 		Me.ItemTagsSplitContainer.Panel1.Controls.Add(Me.SaveTemplateButton)
 		Me.ItemTagsSplitContainer.Panel1.Controls.Add(Me.ItemOwnerTextBox)
 		Me.ItemTagsSplitContainer.Panel1.Controls.Add(Me.ItemOwnerLabel)
@@ -341,21 +344,21 @@ Partial Class PublishUserControl
 		Me.ItemTagsSplitContainer.Panel1.Controls.Add(Me.ItemContentFolderOrFileLabel)
 		Me.ItemTagsSplitContainer.Panel1.Controls.Add(Me.DescriptionChangeNoteSplitContainer)
 		Me.ItemTagsSplitContainer.Panel1.Controls.Add(Me.ItemPreviewImagePictureBox)
-		Me.ItemTagsSplitContainer.Panel1.Controls.Add(Me.ItemIDLabel)
 		Me.ItemTagsSplitContainer.Panel1.Controls.Add(Me.MinSizeLabel)
 		'
 		'ItemTagsSplitContainer.Panel2
 		'
 		Me.ItemTagsSplitContainer.Panel2.Controls.Add(Me.ItemTagsGroupBox)
-		Me.ItemTagsSplitContainer.Size = New System.Drawing.Size(764, 306)
-		Me.ItemTagsSplitContainer.SplitterDistance = 585
+		Me.ItemTagsSplitContainer.Panel2.Padding = New System.Windows.Forms.Padding(0, 0, 3, 3)
+		Me.ItemTagsSplitContainer.Size = New System.Drawing.Size(758, 300)
+		Me.ItemTagsSplitContainer.SplitterDistance = 580
 		Me.ItemTagsSplitContainer.SplitterWidth = 3
 		Me.ItemTagsSplitContainer.TabIndex = 25
 		'
 		'SaveTemplateButton
 		'
 		Me.SaveTemplateButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.SaveTemplateButton.Location = New System.Drawing.Point(363, 278)
+		Me.SaveTemplateButton.Location = New System.Drawing.Point(364, 272)
 		Me.SaveTemplateButton.Name = "SaveTemplateButton"
 		Me.SaveTemplateButton.Size = New System.Drawing.Size(75, 23)
 		Me.SaveTemplateButton.TabIndex = 14
@@ -365,7 +368,7 @@ Partial Class PublishUserControl
 		'ItemOwnerTextBox
 		'
 		Me.ItemOwnerTextBox.CueBannerText = ""
-		Me.ItemOwnerTextBox.Location = New System.Drawing.Point(192, 3)
+		Me.ItemOwnerTextBox.Location = New System.Drawing.Point(199, 0)
 		Me.ItemOwnerTextBox.Name = "ItemOwnerTextBox"
 		Me.ItemOwnerTextBox.ReadOnly = True
 		Me.ItemOwnerTextBox.Size = New System.Drawing.Size(120, 21)
@@ -373,7 +376,7 @@ Partial Class PublishUserControl
 		'
 		'ItemOwnerLabel
 		'
-		Me.ItemOwnerLabel.Location = New System.Drawing.Point(143, 6)
+		Me.ItemOwnerLabel.Location = New System.Drawing.Point(150, 3)
 		Me.ItemOwnerLabel.Name = "ItemOwnerLabel"
 		Me.ItemOwnerLabel.Size = New System.Drawing.Size(43, 13)
 		Me.ItemOwnerLabel.TabIndex = 35
@@ -383,7 +386,7 @@ Partial Class PublishUserControl
 		'SaveAsTemplateOrDraftItemButton
 		'
 		Me.SaveAsTemplateOrDraftItemButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.SaveAsTemplateOrDraftItemButton.Location = New System.Drawing.Point(165, 278)
+		Me.SaveAsTemplateOrDraftItemButton.Location = New System.Drawing.Point(166, 272)
 		Me.SaveAsTemplateOrDraftItemButton.Name = "SaveAsTemplateOrDraftItemButton"
 		Me.SaveAsTemplateOrDraftItemButton.Size = New System.Drawing.Size(111, 23)
 		Me.SaveAsTemplateOrDraftItemButton.TabIndex = 12
@@ -393,7 +396,7 @@ Partial Class PublishUserControl
 		'RefreshOrRevertItemButton
 		'
 		Me.RefreshOrRevertItemButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.RefreshOrRevertItemButton.Location = New System.Drawing.Point(282, 278)
+		Me.RefreshOrRevertItemButton.Location = New System.Drawing.Point(283, 272)
 		Me.RefreshOrRevertItemButton.Name = "RefreshOrRevertItemButton"
 		Me.RefreshOrRevertItemButton.Size = New System.Drawing.Size(75, 23)
 		Me.RefreshOrRevertItemButton.TabIndex = 13
@@ -404,7 +407,7 @@ Partial Class PublishUserControl
 		'
 		Me.OpenWorkshopPageButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.OpenWorkshopPageButton.Enabled = False
-		Me.OpenWorkshopPageButton.Location = New System.Drawing.Point(363, 278)
+		Me.OpenWorkshopPageButton.Location = New System.Drawing.Point(364, 272)
 		Me.OpenWorkshopPageButton.Name = "OpenWorkshopPageButton"
 		Me.OpenWorkshopPageButton.Size = New System.Drawing.Size(137, 23)
 		Me.OpenWorkshopPageButton.TabIndex = 15
@@ -415,16 +418,16 @@ Partial Class PublishUserControl
 		'
 		Me.ItemTitleLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ItemTitleLabel.Location = New System.Drawing.Point(0, 28)
+		Me.ItemTitleLabel.Location = New System.Drawing.Point(3, 28)
 		Me.ItemTitleLabel.Name = "ItemTitleLabel"
-		Me.ItemTitleLabel.Size = New System.Drawing.Size(585, 13)
+		Me.ItemTitleLabel.Size = New System.Drawing.Size(580, 13)
 		Me.ItemTitleLabel.TabIndex = 8
 		Me.ItemTitleLabel.Text = "Title (### / ### characters max):"
 		'
 		'DeleteItemButton
 		'
 		Me.DeleteItemButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.DeleteItemButton.Location = New System.Drawing.Point(506, 278)
+		Me.DeleteItemButton.Location = New System.Drawing.Point(505, 273)
 		Me.DeleteItemButton.Name = "DeleteItemButton"
 		Me.DeleteItemButton.Size = New System.Drawing.Size(75, 23)
 		Me.DeleteItemButton.TabIndex = 16
@@ -435,7 +438,7 @@ Partial Class PublishUserControl
 		'
 		Me.ItemVisibilityComboBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.ItemVisibilityComboBox.FormattingEnabled = True
-		Me.ItemVisibilityComboBox.Location = New System.Drawing.Point(59, 280)
+		Me.ItemVisibilityComboBox.Location = New System.Drawing.Point(60, 273)
 		Me.ItemVisibilityComboBox.Name = "ItemVisibilityComboBox"
 		Me.ItemVisibilityComboBox.Size = New System.Drawing.Size(100, 21)
 		Me.ItemVisibilityComboBox.TabIndex = 11
@@ -443,7 +446,7 @@ Partial Class PublishUserControl
 		'BrowseItemPreviewImagePathFileNameButton
 		'
 		Me.BrowseItemPreviewImagePathFileNameButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.BrowseItemPreviewImagePathFileNameButton.Location = New System.Drawing.Point(425, 249)
+		Me.BrowseItemPreviewImagePathFileNameButton.Location = New System.Drawing.Point(424, 243)
 		Me.BrowseItemPreviewImagePathFileNameButton.Name = "BrowseItemPreviewImagePathFileNameButton"
 		Me.BrowseItemPreviewImagePathFileNameButton.Size = New System.Drawing.Size(75, 23)
 		Me.BrowseItemPreviewImagePathFileNameButton.TabIndex = 10
@@ -457,14 +460,14 @@ Partial Class PublishUserControl
 		Me.ItemTitleTextBox.CueBannerText = "required"
 		Me.ItemTitleTextBox.Location = New System.Drawing.Point(3, 44)
 		Me.ItemTitleTextBox.Name = "ItemTitleTextBox"
-		Me.ItemTitleTextBox.Size = New System.Drawing.Size(578, 21)
+		Me.ItemTitleTextBox.Size = New System.Drawing.Size(577, 21)
 		Me.ItemTitleTextBox.TabIndex = 4
 		Me.ItemTitleTextBox.WordWrap = False
 		'
 		'ItemPreviewImageLabel
 		'
 		Me.ItemPreviewImageLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.ItemPreviewImageLabel.Location = New System.Drawing.Point(-1, 235)
+		Me.ItemPreviewImageLabel.Location = New System.Drawing.Point(3, 229)
 		Me.ItemPreviewImageLabel.Name = "ItemPreviewImageLabel"
 		Me.ItemPreviewImageLabel.Size = New System.Drawing.Size(408, 13)
 		Me.ItemPreviewImageLabel.TabIndex = 13
@@ -473,7 +476,7 @@ Partial Class PublishUserControl
 		'ItemIDTextBox
 		'
 		Me.ItemIDTextBox.CueBannerText = ""
-		Me.ItemIDTextBox.Location = New System.Drawing.Point(27, 3)
+		Me.ItemIDTextBox.Location = New System.Drawing.Point(34, 0)
 		Me.ItemIDTextBox.Name = "ItemIDTextBox"
 		Me.ItemIDTextBox.ReadOnly = True
 		Me.ItemIDTextBox.Size = New System.Drawing.Size(110, 21)
@@ -484,16 +487,16 @@ Partial Class PublishUserControl
 		Me.ItemPreviewImagePathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ItemPreviewImagePathFileNameTextBox.CueBannerText = "required"
-		Me.ItemPreviewImagePathFileNameTextBox.Location = New System.Drawing.Point(2, 251)
+		Me.ItemPreviewImagePathFileNameTextBox.Location = New System.Drawing.Point(3, 245)
 		Me.ItemPreviewImagePathFileNameTextBox.Name = "ItemPreviewImagePathFileNameTextBox"
-		Me.ItemPreviewImagePathFileNameTextBox.Size = New System.Drawing.Size(417, 21)
+		Me.ItemPreviewImagePathFileNameTextBox.Size = New System.Drawing.Size(415, 21)
 		Me.ItemPreviewImagePathFileNameTextBox.TabIndex = 9
 		Me.ItemPreviewImagePathFileNameTextBox.WordWrap = False
 		'
 		'ItemVisibilityLabel
 		'
 		Me.ItemVisibilityLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.ItemVisibilityLabel.Location = New System.Drawing.Point(-1, 283)
+		Me.ItemVisibilityLabel.Location = New System.Drawing.Point(0, 277)
 		Me.ItemVisibilityLabel.Name = "ItemVisibilityLabel"
 		Me.ItemVisibilityLabel.Size = New System.Drawing.Size(54, 13)
 		Me.ItemVisibilityLabel.TabIndex = 10
@@ -502,7 +505,7 @@ Partial Class PublishUserControl
 		'ItemPostedTextBox
 		'
 		Me.ItemPostedTextBox.CueBannerText = ""
-		Me.ItemPostedTextBox.Location = New System.Drawing.Point(335, 3)
+		Me.ItemPostedTextBox.Location = New System.Drawing.Point(334, 0)
 		Me.ItemPostedTextBox.Name = "ItemPostedTextBox"
 		Me.ItemPostedTextBox.ReadOnly = True
 		Me.ItemPostedTextBox.Size = New System.Drawing.Size(120, 21)
@@ -512,7 +515,7 @@ Partial Class PublishUserControl
 		'BrowseItemContentPathFileNameButton
 		'
 		Me.BrowseItemContentPathFileNameButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.BrowseItemContentPathFileNameButton.Location = New System.Drawing.Point(425, 208)
+		Me.BrowseItemContentPathFileNameButton.Location = New System.Drawing.Point(424, 202)
 		Me.BrowseItemContentPathFileNameButton.Name = "BrowseItemContentPathFileNameButton"
 		Me.BrowseItemContentPathFileNameButton.Size = New System.Drawing.Size(75, 23)
 		Me.BrowseItemContentPathFileNameButton.TabIndex = 8
@@ -522,7 +525,7 @@ Partial Class PublishUserControl
 		'ItemUpdatedTextBox
 		'
 		Me.ItemUpdatedTextBox.CueBannerText = ""
-		Me.ItemUpdatedTextBox.Location = New System.Drawing.Point(461, 3)
+		Me.ItemUpdatedTextBox.Location = New System.Drawing.Point(460, 0)
 		Me.ItemUpdatedTextBox.Name = "ItemUpdatedTextBox"
 		Me.ItemUpdatedTextBox.ReadOnly = True
 		Me.ItemUpdatedTextBox.Size = New System.Drawing.Size(120, 21)
@@ -534,16 +537,16 @@ Partial Class PublishUserControl
 		Me.ItemContentPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ItemContentPathFileNameTextBox.CueBannerText = "required"
-		Me.ItemContentPathFileNameTextBox.Location = New System.Drawing.Point(2, 210)
+		Me.ItemContentPathFileNameTextBox.Location = New System.Drawing.Point(3, 204)
 		Me.ItemContentPathFileNameTextBox.Name = "ItemContentPathFileNameTextBox"
-		Me.ItemContentPathFileNameTextBox.Size = New System.Drawing.Size(417, 21)
+		Me.ItemContentPathFileNameTextBox.Size = New System.Drawing.Size(415, 21)
 		Me.ItemContentPathFileNameTextBox.TabIndex = 7
 		Me.ItemContentPathFileNameTextBox.WordWrap = False
 		'
 		'ItemContentFolderOrFileLabel
 		'
 		Me.ItemContentFolderOrFileLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.ItemContentFolderOrFileLabel.Location = New System.Drawing.Point(-1, 194)
+		Me.ItemContentFolderOrFileLabel.Location = New System.Drawing.Point(3, 188)
 		Me.ItemContentFolderOrFileLabel.Name = "ItemContentFolderOrFileLabel"
 		Me.ItemContentFolderOrFileLabel.Size = New System.Drawing.Size(408, 13)
 		Me.ItemContentFolderOrFileLabel.TabIndex = 18
@@ -568,8 +571,8 @@ Partial Class PublishUserControl
 		Me.DescriptionChangeNoteSplitContainer.Panel2.Controls.Add(Me.ToggleWordWrapForChangeNoteCheckBox)
 		Me.DescriptionChangeNoteSplitContainer.Panel2.Controls.Add(Me.ItemChangeNoteLabel)
 		Me.DescriptionChangeNoteSplitContainer.Panel2.Controls.Add(Me.ItemChangeNoteTextBox)
-		Me.DescriptionChangeNoteSplitContainer.Size = New System.Drawing.Size(578, 121)
-		Me.DescriptionChangeNoteSplitContainer.SplitterDistance = 295
+		Me.DescriptionChangeNoteSplitContainer.Size = New System.Drawing.Size(577, 115)
+		Me.DescriptionChangeNoteSplitContainer.SplitterDistance = 294
 		Me.DescriptionChangeNoteSplitContainer.TabIndex = 5
 		'
 		'ToggleWordWrapForDescriptionCheckBox
@@ -579,7 +582,7 @@ Partial Class PublishUserControl
 		Me.ToggleWordWrapForDescriptionCheckBox.BackgroundImage = Global.Crowbar.My.Resources.Resources.WordWrapOff
 		Me.ToggleWordWrapForDescriptionCheckBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
 		Me.ToggleWordWrapForDescriptionCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-		Me.ToggleWordWrapForDescriptionCheckBox.Location = New System.Drawing.Point(280, 3)
+		Me.ToggleWordWrapForDescriptionCheckBox.Location = New System.Drawing.Point(279, 3)
 		Me.ToggleWordWrapForDescriptionCheckBox.Name = "ToggleWordWrapForDescriptionCheckBox"
 		Me.ToggleWordWrapForDescriptionCheckBox.Size = New System.Drawing.Size(13, 13)
 		Me.ToggleWordWrapForDescriptionCheckBox.TabIndex = 16
@@ -589,9 +592,9 @@ Partial Class PublishUserControl
 		'
 		Me.ItemDescriptionLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ItemDescriptionLabel.Location = New System.Drawing.Point(-3, 3)
+		Me.ItemDescriptionLabel.Location = New System.Drawing.Point(0, 3)
 		Me.ItemDescriptionLabel.Name = "ItemDescriptionLabel"
-		Me.ItemDescriptionLabel.Size = New System.Drawing.Size(277, 13)
+		Me.ItemDescriptionLabel.Size = New System.Drawing.Size(276, 13)
 		Me.ItemDescriptionLabel.TabIndex = 9
 		Me.ItemDescriptionLabel.Text = "Description (### / ### characters max):"
 		'
@@ -604,7 +607,7 @@ Partial Class PublishUserControl
 		Me.ItemDescriptionTextBox.CueBannerText = "required"
 		Me.ItemDescriptionTextBox.Location = New System.Drawing.Point(0, 19)
 		Me.ItemDescriptionTextBox.Name = "ItemDescriptionTextBox"
-		Me.ItemDescriptionTextBox.Size = New System.Drawing.Size(293, 102)
+		Me.ItemDescriptionTextBox.Size = New System.Drawing.Size(292, 96)
 		Me.ItemDescriptionTextBox.TabIndex = 5
 		Me.ItemDescriptionTextBox.Text = ""
 		Me.ItemDescriptionTextBox.WordWrap = False
@@ -626,7 +629,7 @@ Partial Class PublishUserControl
 		'
 		Me.ItemChangeNoteLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ItemChangeNoteLabel.Location = New System.Drawing.Point(-3, 3)
+		Me.ItemChangeNoteLabel.Location = New System.Drawing.Point(0, 3)
 		Me.ItemChangeNoteLabel.Name = "ItemChangeNoteLabel"
 		Me.ItemChangeNoteLabel.Size = New System.Drawing.Size(263, 13)
 		Me.ItemChangeNoteLabel.TabIndex = 11
@@ -641,7 +644,7 @@ Partial Class PublishUserControl
 		Me.ItemChangeNoteTextBox.CueBannerText = ""
 		Me.ItemChangeNoteTextBox.Location = New System.Drawing.Point(0, 19)
 		Me.ItemChangeNoteTextBox.Name = "ItemChangeNoteTextBox"
-		Me.ItemChangeNoteTextBox.Size = New System.Drawing.Size(279, 102)
+		Me.ItemChangeNoteTextBox.Size = New System.Drawing.Size(279, 96)
 		Me.ItemChangeNoteTextBox.TabIndex = 6
 		Me.ItemChangeNoteTextBox.Text = ""
 		Me.ItemChangeNoteTextBox.WordWrap = False
@@ -650,7 +653,7 @@ Partial Class PublishUserControl
 		'
 		Me.ItemPreviewImagePictureBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ItemPreviewImagePictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-		Me.ItemPreviewImagePictureBox.Location = New System.Drawing.Point(506, 197)
+		Me.ItemPreviewImagePictureBox.Location = New System.Drawing.Point(505, 191)
 		Me.ItemPreviewImagePictureBox.Name = "ItemPreviewImagePictureBox"
 		Me.ItemPreviewImagePictureBox.Size = New System.Drawing.Size(75, 75)
 		Me.ItemPreviewImagePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
@@ -659,7 +662,7 @@ Partial Class PublishUserControl
 		'
 		'ItemIDLabel
 		'
-		Me.ItemIDLabel.Location = New System.Drawing.Point(0, 6)
+		Me.ItemIDLabel.Location = New System.Drawing.Point(3, 3)
 		Me.ItemIDLabel.Name = "ItemIDLabel"
 		Me.ItemIDLabel.Size = New System.Drawing.Size(25, 13)
 		Me.ItemIDLabel.TabIndex = 4
@@ -670,7 +673,7 @@ Partial Class PublishUserControl
 		Me.MinSizeLabel.Enabled = False
 		Me.MinSizeLabel.Location = New System.Drawing.Point(0, 0)
 		Me.MinSizeLabel.Name = "MinSizeLabel"
-		Me.MinSizeLabel.Size = New System.Drawing.Size(585, 300)
+		Me.MinSizeLabel.Size = New System.Drawing.Size(580, 297)
 		Me.MinSizeLabel.TabIndex = 30
 		'
 		'ItemTagsGroupBox
@@ -681,7 +684,7 @@ Partial Class PublishUserControl
 		Me.ItemTagsGroupBox.Margin = New System.Windows.Forms.Padding(0)
 		Me.ItemTagsGroupBox.Name = "ItemTagsGroupBox"
 		Me.ItemTagsGroupBox.SelectedValue = Nothing
-		Me.ItemTagsGroupBox.Size = New System.Drawing.Size(176, 306)
+		Me.ItemTagsGroupBox.Size = New System.Drawing.Size(172, 297)
 		Me.ItemTagsGroupBox.TabIndex = 17
 		Me.ItemTagsGroupBox.TabStop = False
 		Me.ItemTagsGroupBox.Text = "Tags"
@@ -689,7 +692,7 @@ Partial Class PublishUserControl
 		'QuotaProgressBar
 		'
 		Me.QuotaProgressBar.ForeColor = System.Drawing.SystemColors.ControlText
-		Me.QuotaProgressBar.Location = New System.Drawing.Point(0, 31)
+		Me.QuotaProgressBar.Location = New System.Drawing.Point(3, 31)
 		Me.QuotaProgressBar.Name = "QuotaProgressBar"
 		Me.QuotaProgressBar.Size = New System.Drawing.Size(125, 23)
 		Me.QuotaProgressBar.TabIndex = 37
@@ -697,7 +700,7 @@ Partial Class PublishUserControl
 		'
 		'PublishItemButton
 		'
-		Me.PublishItemButton.Location = New System.Drawing.Point(0, 0)
+		Me.PublishItemButton.Location = New System.Drawing.Point(3, 0)
 		Me.PublishItemButton.Name = "PublishItemButton"
 		Me.PublishItemButton.Size = New System.Drawing.Size(125, 23)
 		Me.PublishItemButton.TabIndex = 18
@@ -710,7 +713,7 @@ Partial Class PublishUserControl
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.QueueListView.Location = New System.Drawing.Point(568, 0)
 		Me.QueueListView.Name = "QueueListView"
-		Me.QueueListView.Size = New System.Drawing.Size(202, 62)
+		Me.QueueListView.Size = New System.Drawing.Size(199, 59)
 		Me.QueueListView.TabIndex = 20
 		Me.QueueListView.UseCompatibleStateImageBehavior = False
 		'
@@ -721,10 +724,10 @@ Partial Class PublishUserControl
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.LogTextBox.CueBannerText = ""
 		Me.LogTextBox.HideSelection = False
-		Me.LogTextBox.Location = New System.Drawing.Point(131, 0)
+		Me.LogTextBox.Location = New System.Drawing.Point(134, 0)
 		Me.LogTextBox.Name = "LogTextBox"
 		Me.LogTextBox.ReadOnly = True
-		Me.LogTextBox.Size = New System.Drawing.Size(434, 62)
+		Me.LogTextBox.Size = New System.Drawing.Size(431, 59)
 		Me.LogTextBox.TabIndex = 19
 		Me.LogTextBox.Text = ""
 		Me.LogTextBox.WordWrap = False

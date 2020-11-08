@@ -95,6 +95,7 @@ Public Class SetUpGamesUserControl
 	Protected Sub Free()
 		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf Me.AppSettings_PropertyChanged
 		RemoveHandler TheApp.Settings.GameSetups.ListChanged, AddressOf Me.GameSetups_ListChanged
+		RemoveHandler Me.GamePathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
 		RemoveHandler Me.SteamLibraryPathsDataGridView.SetMacroInSelectedGameSetupToolStripMenuItem.Click, AddressOf Me.SetMacroInSelectedGameSetupToolStripMenuItem_Click
 		RemoveHandler Me.SteamLibraryPathsDataGridView.SetMacroInAllGameSetupsToolStripMenuItem.Click, AddressOf Me.SetMacroInAllGameSetupsToolStripMenuItem_Click
 		RemoveHandler Me.SteamLibraryPathsDataGridView.ClearMacroInSelectedGameSetupToolStripMenuItem.Click, AddressOf Me.ClearMacroInSelectedGameSetupToolStripMenuItem_Click
@@ -438,6 +439,20 @@ Public Class SetUpGamesUserControl
 		End If
 	End Sub
 
+	Private Sub ParsePathFileName(ByVal sender As Object, ByVal e As ConvertEventArgs)
+		e.Value = Me.ParsePathFileName(CType(e.Value, String))
+	End Sub
+
+	Private Function ParsePathFileName(ByVal iPathFileName As String) As String
+		Dim originalText As String = iPathFileName
+		iPathFileName = TheApp.GetProcessedPathFileName(iPathFileName)
+		If iPathFileName <> "" Then
+			iPathFileName = FileManager.GetCleanPathFileName(iPathFileName, True)
+		End If
+		SetPathFileNameField(iPathFileName, originalText)
+		Return originalText
+	End Function
+
 #End Region
 
 #Region "Private Methods"
@@ -480,23 +495,39 @@ Public Class SetUpGamesUserControl
 
 		Me.GamePathFileNameTextBox.DataBindings.Clear()
 		Me.GamePathFileNameTextBox.DataBindings.Add("Text", Me.theSelectedGameSetup, "GamePathFileNameUnprocessed", False, DataSourceUpdateMode.OnValidation)
+		RemoveHandler Me.GamePathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
+		AddHandler Me.GamePathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
+		'TEST: Was testing these lines for converting bad text found in Settings file. Problem is that Me.theSelectedGameSetup.GamePathFileNameUnprocessed
+		'      always raises events when changed and ends up back here to do it again, thus leading to stack overflow.
+		'Me.GamePathFileNameTextBox.Text = Me.ParsePathFileName(Me.theSelectedGameSetup.GamePathFileNameUnprocessed)
+		'Me.GamePathFileNameTextBox.DataBindings("Text").WriteValue()
 
 		Me.GameAppPathFileNameTextBox.DataBindings.Clear()
 		Me.GameAppPathFileNameTextBox.DataBindings.Add("Text", Me.theSelectedGameSetup, "GameAppPathFileNameUnprocessed", False, DataSourceUpdateMode.OnValidation)
+		RemoveHandler Me.GameAppPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
+		AddHandler Me.GameAppPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
 		Me.GameAppOptionsTextBox.DataBindings.Clear()
 		Me.GameAppOptionsTextBox.DataBindings.Add("Text", Me.theSelectedGameSetup, "GameAppOptions", False, DataSourceUpdateMode.OnValidation)
 
 		Me.CompilerPathFileNameTextBox.DataBindings.Clear()
 		Me.CompilerPathFileNameTextBox.DataBindings.Add("Text", Me.theSelectedGameSetup, "CompilerPathFileNameUnprocessed", False, DataSourceUpdateMode.OnValidation)
+		RemoveHandler Me.CompilerPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
+		AddHandler Me.CompilerPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
 
 		Me.ViewerPathFileNameTextBox.DataBindings.Clear()
 		Me.ViewerPathFileNameTextBox.DataBindings.Add("Text", Me.theSelectedGameSetup, "ViewerPathFileNameUnprocessed", False, DataSourceUpdateMode.OnValidation)
+		RemoveHandler Me.ViewerPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
+		AddHandler Me.ViewerPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
 
 		Me.MappingToolPathFileNameTextBox.DataBindings.Clear()
 		Me.MappingToolPathFileNameTextBox.DataBindings.Add("Text", Me.theSelectedGameSetup, "MappingToolPathFileNameUnprocessed", False, DataSourceUpdateMode.OnValidation)
+		RemoveHandler Me.MappingToolPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
+		AddHandler Me.MappingToolPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
 
 		Me.PackerPathFileNameTextBox.DataBindings.Clear()
 		Me.PackerPathFileNameTextBox.DataBindings.Add("Text", Me.theSelectedGameSetup, "PackerPathFileNameUnprocessed", False, DataSourceUpdateMode.OnValidation)
+		RemoveHandler Me.PackerPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
+		AddHandler Me.PackerPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
 	End Sub
 
 	Private Sub UpdateGameEngineComboBox()

@@ -315,6 +315,7 @@ Public Class Decompiler
 					End If
 				Else
 					Me.UpdateProgress(2, "ERROR: Model version " + CStr(version) + " not currently supported.")
+					Me.UpdateProgress(2, "       If the model works in-game or HLMV, try changing 'Override MDL version' option.")
 					Me.UpdateProgress(1, "... Decompiling """ + mdlRelativePathFileName + """ FAILED.")
 					status = StatusMessage.Error
 					Return status

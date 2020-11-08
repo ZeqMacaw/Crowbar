@@ -185,7 +185,7 @@ Public Class Base_TagsUserControl
 								aComboBox = CType(widget, ComboBox)
 								If aComboBox.DataSource IsNot Nothing Then
 									anEnumList = CType(aComboBox.DataSource, IList)
-									Dim index As Integer = EnumHelper.IndexOfKeyAsCasInsensitiveString(tag, anEnumList)
+									Dim index As Integer = EnumHelper.IndexOfKeyAsCaseInsensitiveString(tag, anEnumList)
 									If index <> -1 Then
 										aComboBox.SelectedIndex = index
 										tagHasBeenAssigned = True

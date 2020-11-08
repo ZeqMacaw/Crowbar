@@ -50,7 +50,7 @@ Partial Class BlackMesaTagsUserControl
 		'
 		Me.MapTagsGroupBox.Controls.Add(Me.MultiplayerTagCheckBox)
 		Me.MapTagsGroupBox.Controls.Add(Me.SingleplayerTagCheckBox)
-		Me.MapTagsGroupBox.Location = New System.Drawing.Point(0, 0)
+		Me.MapTagsGroupBox.Location = New System.Drawing.Point(3, 0)
 		Me.MapTagsGroupBox.Name = "MapTagsGroupBox"
 		Me.MapTagsGroupBox.Size = New System.Drawing.Size(114, 77)
 		Me.MapTagsGroupBox.TabIndex = 0
@@ -87,7 +87,7 @@ Partial Class BlackMesaTagsUserControl
 		Me.ModelTagsGroupBox.Controls.Add(Me.NPCTagCheckBox)
 		Me.ModelTagsGroupBox.Controls.Add(Me.EnvironmentTagCheckBox)
 		Me.ModelTagsGroupBox.Controls.Add(Me.CreatureTagCheckBox)
-		Me.ModelTagsGroupBox.Location = New System.Drawing.Point(0, 83)
+		Me.ModelTagsGroupBox.Location = New System.Drawing.Point(3, 83)
 		Me.ModelTagsGroupBox.Name = "ModelTagsGroupBox"
 		Me.ModelTagsGroupBox.Size = New System.Drawing.Size(114, 123)
 		Me.ModelTagsGroupBox.TabIndex = 1
@@ -154,9 +154,9 @@ Partial Class BlackMesaTagsUserControl
 		Me.GroupBox1.Controls.Add(Me.Label3)
 		Me.GroupBox1.Controls.Add(Me.Label2)
 		Me.GroupBox1.Controls.Add(Me.Label1)
-		Me.GroupBox1.Location = New System.Drawing.Point(120, 0)
+		Me.GroupBox1.Location = New System.Drawing.Point(123, 0)
 		Me.GroupBox1.Name = "GroupBox1"
-		Me.GroupBox1.Size = New System.Drawing.Size(191, 206)
+		Me.GroupBox1.Size = New System.Drawing.Size(167, 206)
 		Me.GroupBox1.TabIndex = 1
 		Me.GroupBox1.TabStop = False
 		Me.GroupBox1.Text = "Extras"

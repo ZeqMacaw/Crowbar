@@ -40,7 +40,7 @@ Partial Class UnpackUserControl
 		Me.GotoPackageButton = New System.Windows.Forms.Button()
 		Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
 		Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
-		Me.SelectionGroupBox = New System.Windows.Forms.GroupBox()
+		Me.ContentsGroupBox = New System.Windows.Forms.GroupBox()
 		Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
 		Me.FindToolStripTextBox = New Crowbar.ToolStripSpringTextBox()
 		Me.FindToolStripButton = New System.Windows.Forms.ToolStripButton()
@@ -81,7 +81,7 @@ Partial Class UnpackUserControl
 		Me.SplitContainer2.Panel1.SuspendLayout()
 		Me.SplitContainer2.Panel2.SuspendLayout()
 		Me.SplitContainer2.SuspendLayout()
-		Me.SelectionGroupBox.SuspendLayout()
+		Me.ContentsGroupBox.SuspendLayout()
 		Me.ToolStrip1.SuspendLayout()
 		CType(Me.SplitContainer3, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SplitContainer3.Panel1.SuspendLayout()
@@ -110,7 +110,6 @@ Partial Class UnpackUserControl
 		Me.Panel2.Controls.Add(Me.SplitContainer1)
 		Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.Panel2.Location = New System.Drawing.Point(0, 0)
-		Me.Panel2.Margin = New System.Windows.Forms.Padding(2)
 		Me.Panel2.Name = "Panel2"
 		Me.Panel2.Size = New System.Drawing.Size(776, 536)
 		Me.Panel2.TabIndex = 0
@@ -296,28 +295,28 @@ Partial Class UnpackUserControl
 		'
 		'SplitContainer2.Panel1
 		'
-		Me.SplitContainer2.Panel1.Controls.Add(Me.SelectionGroupBox)
+		Me.SplitContainer2.Panel1.Controls.Add(Me.ContentsGroupBox)
 		'
 		'SplitContainer2.Panel2
 		'
 		Me.SplitContainer2.Panel2.Controls.Add(Me.OptionsGroupBox)
 		Me.SplitContainer2.Size = New System.Drawing.Size(770, 335)
-		Me.SplitContainer2.SplitterDistance = 572
+		Me.SplitContainer2.SplitterDistance = 570
 		Me.SplitContainer2.SplitterWidth = 6
 		Me.SplitContainer2.TabIndex = 0
 		'
-		'SelectionGroupBox
+		'ContentsGroupBox
 		'
-		Me.SelectionGroupBox.Controls.Add(Me.ToolStrip1)
-		Me.SelectionGroupBox.Controls.Add(Me.SelectionPathTextBox)
-		Me.SelectionGroupBox.Controls.Add(Me.SplitContainer3)
-		Me.SelectionGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.SelectionGroupBox.Location = New System.Drawing.Point(0, 0)
-		Me.SelectionGroupBox.Name = "SelectionGroupBox"
-		Me.SelectionGroupBox.Size = New System.Drawing.Size(572, 335)
-		Me.SelectionGroupBox.TabIndex = 0
-		Me.SelectionGroupBox.TabStop = False
-		Me.SelectionGroupBox.Text = "Selection in package files"
+		Me.ContentsGroupBox.Controls.Add(Me.ToolStrip1)
+		Me.ContentsGroupBox.Controls.Add(Me.SelectionPathTextBox)
+		Me.ContentsGroupBox.Controls.Add(Me.SplitContainer3)
+		Me.ContentsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.ContentsGroupBox.Location = New System.Drawing.Point(0, 0)
+		Me.ContentsGroupBox.Name = "ContentsGroupBox"
+		Me.ContentsGroupBox.Size = New System.Drawing.Size(570, 335)
+		Me.ContentsGroupBox.TabIndex = 0
+		Me.ContentsGroupBox.TabStop = False
+		Me.ContentsGroupBox.Text = "Contents of package"
 		'
 		'ToolStrip1
 		'
@@ -327,7 +326,7 @@ Partial Class UnpackUserControl
 		Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FindToolStripTextBox, Me.FindToolStripButton, Me.ToolStripSeparator1, Me.FilesSelectedCountToolStripLabel, Me.SizeSelectedTotalToolStripLabel, Me.RefreshListingToolStripButton})
 		Me.ToolStrip1.Location = New System.Drawing.Point(3, 307)
 		Me.ToolStrip1.Name = "ToolStrip1"
-		Me.ToolStrip1.Size = New System.Drawing.Size(566, 25)
+		Me.ToolStrip1.Size = New System.Drawing.Size(564, 25)
 		Me.ToolStrip1.Stretch = True
 		Me.ToolStrip1.TabIndex = 10
 		Me.ToolStrip1.Text = "ToolStrip1"
@@ -336,7 +335,7 @@ Partial Class UnpackUserControl
 		'
 		Me.FindToolStripTextBox.Font = New System.Drawing.Font("Segoe UI", 9.0!)
 		Me.FindToolStripTextBox.Name = "FindToolStripTextBox"
-		Me.FindToolStripTextBox.Size = New System.Drawing.Size(444, 25)
+		Me.FindToolStripTextBox.Size = New System.Drawing.Size(442, 25)
 		Me.FindToolStripTextBox.ToolTipText = "Text to find"
 		'
 		'FindToolStripButton
@@ -385,7 +384,7 @@ Partial Class UnpackUserControl
 		Me.SelectionPathTextBox.Location = New System.Drawing.Point(6, 19)
 		Me.SelectionPathTextBox.Name = "SelectionPathTextBox"
 		Me.SelectionPathTextBox.ReadOnly = True
-		Me.SelectionPathTextBox.Size = New System.Drawing.Size(560, 21)
+		Me.SelectionPathTextBox.Size = New System.Drawing.Size(558, 21)
 		Me.SelectionPathTextBox.TabIndex = 1
 		'
 		'SplitContainer3
@@ -404,7 +403,7 @@ Partial Class UnpackUserControl
 		'SplitContainer3.Panel2
 		'
 		Me.SplitContainer3.Panel2.Controls.Add(Me.PackageListView)
-		Me.SplitContainer3.Size = New System.Drawing.Size(560, 258)
+		Me.SplitContainer3.Size = New System.Drawing.Size(558, 258)
 		Me.SplitContainer3.SplitterDistance = 250
 		Me.SplitContainer3.TabIndex = 6
 		'
@@ -436,7 +435,7 @@ Partial Class UnpackUserControl
 		Me.PackageListView.Location = New System.Drawing.Point(0, 0)
 		Me.PackageListView.Name = "PackageListView"
 		Me.PackageListView.ShowGroups = False
-		Me.PackageListView.Size = New System.Drawing.Size(306, 258)
+		Me.PackageListView.Size = New System.Drawing.Size(304, 258)
 		Me.PackageListView.SmallImageList = Me.ImageList1
 		Me.PackageListView.Sorting = System.Windows.Forms.SortOrder.Ascending
 		Me.PackageListView.TabIndex = 1
@@ -449,7 +448,7 @@ Partial Class UnpackUserControl
 		Me.OptionsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.OptionsGroupBox.Location = New System.Drawing.Point(0, 0)
 		Me.OptionsGroupBox.Name = "OptionsGroupBox"
-		Me.OptionsGroupBox.Size = New System.Drawing.Size(192, 335)
+		Me.OptionsGroupBox.Size = New System.Drawing.Size(194, 335)
 		Me.OptionsGroupBox.TabIndex = 0
 		Me.OptionsGroupBox.TabStop = False
 		Me.OptionsGroupBox.Text = "Options"
@@ -467,7 +466,7 @@ Partial Class UnpackUserControl
 		Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.Panel1.Location = New System.Drawing.Point(3, 17)
 		Me.Panel1.Name = "Panel1"
-		Me.Panel1.Size = New System.Drawing.Size(186, 315)
+		Me.Panel1.Size = New System.Drawing.Size(188, 315)
 		Me.Panel1.TabIndex = 0
 		'
 		'FolderForEachPackageCheckBox
@@ -493,7 +492,7 @@ Partial Class UnpackUserControl
 		'EditGameSetupButton
 		'
 		Me.EditGameSetupButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.EditGameSetupButton.Location = New System.Drawing.Point(4935, 229)
+		Me.EditGameSetupButton.Location = New System.Drawing.Point(5005, 229)
 		Me.EditGameSetupButton.Name = "EditGameSetupButton"
 		Me.EditGameSetupButton.Size = New System.Drawing.Size(90, 23)
 		Me.EditGameSetupButton.TabIndex = 1
@@ -509,7 +508,7 @@ Partial Class UnpackUserControl
 		Me.GameSetupComboBox.FormattingEnabled = True
 		Me.GameSetupComboBox.Location = New System.Drawing.Point(3, 255)
 		Me.GameSetupComboBox.Name = "GameSetupComboBox"
-		Me.GameSetupComboBox.Size = New System.Drawing.Size(5022, 21)
+		Me.GameSetupComboBox.Size = New System.Drawing.Size(5092, 21)
 		Me.GameSetupComboBox.TabIndex = 2
 		Me.GameSetupComboBox.Visible = False
 		'
@@ -665,8 +664,8 @@ Partial Class UnpackUserControl
 		Me.SplitContainer2.Panel2.ResumeLayout(False)
 		CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.SplitContainer2.ResumeLayout(False)
-		Me.SelectionGroupBox.ResumeLayout(False)
-		Me.SelectionGroupBox.PerformLayout()
+		Me.ContentsGroupBox.ResumeLayout(False)
+		Me.ContentsGroupBox.PerformLayout()
 		Me.ToolStrip1.ResumeLayout(False)
 		Me.ToolStrip1.PerformLayout()
 		Me.SplitContainer3.Panel1.ResumeLayout(False)
@@ -696,7 +695,7 @@ Partial Class UnpackUserControl
 	Friend WithEvents UnpackerLogTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents UnpackedFilesComboBox As System.Windows.Forms.ComboBox
 	Friend WithEvents GotoUnpackedFileButton As System.Windows.Forms.Button
-	Friend WithEvents SelectionGroupBox As System.Windows.Forms.GroupBox
+	Friend WithEvents ContentsGroupBox As System.Windows.Forms.GroupBox
 	Friend WithEvents PackageTreeView As System.Windows.Forms.TreeView
 	Friend WithEvents SplitContainer2 As System.Windows.Forms.SplitContainer
 	Friend WithEvents SplitContainer3 As System.Windows.Forms.SplitContainer

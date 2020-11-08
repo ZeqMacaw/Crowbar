@@ -103,6 +103,7 @@ Public Class PublishUserControl
 
 		AddHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 
+		Me.theSelectedGameIsStillUpdatingInterface = False
 		Me.UpdateSteamAppWidgets()
 	End Sub
 
@@ -269,7 +270,7 @@ Public Class PublishUserControl
 		Me.SearchItemsToolStripComboBox.ComboBox.ValueMember = "Key"
 		Me.SearchItemsToolStripComboBox.ComboBox.DataSource = EnumHelper.ToList(GetType(PublishSearchFieldOptions))
 		Me.SearchItemsToolStripComboBox.ComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "PublishSearchField", False, DataSourceUpdateMode.OnPropertyChanged)
-		Me.SearchItemsToolStripTextBox.TextBox.DataBindings.Add("Text", TheApp.Settings, "PublishSearchText", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.SearchItemsToolStripTextBox.TextBox.DataBindings.Add("Text", TheApp.Settings, "PublishSearchText", False, DataSourceUpdateMode.OnValidation)
 	End Sub
 
 	Private Sub InitItemDetailWidgets()
@@ -277,7 +278,7 @@ Public Class PublishUserControl
 		Me.ItemDescriptionTextBox.MaxLength = CInt(Steamworks.Constants.k_cchPublishedDocumentDescriptionMax)
 		Me.ItemChangeNoteTextBox.MaxLength = CInt(Steamworks.Constants.k_cchPublishedDocumentChangeDescriptionMax)
 
-		Me.ItemIDTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "ID", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.ItemIDTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "ID", False, DataSourceUpdateMode.OnValidation)
 		'TODO: Change ID textbox to combobox dropdownlist that lists most-recently accessed IDs, including those selected via list.
 		'Dim anEnumList As IList
 		'anEnumList = EnumHelper.ToList(GetType(SteamUGCPublishedFileVisibility))
@@ -286,15 +287,15 @@ Public Class PublishUserControl
 		'Me.ItemIDComboBox.DataSource = anEnumList
 		'Me.ItemIDComboBox.DataBindings.Add("SelectedValue", Me.theItemBindingSource, "ID", False, DataSourceUpdateMode.OnPropertyChanged)
 
-		Me.ItemOwnerTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "OwnerName", False, DataSourceUpdateMode.OnPropertyChanged)
-		Me.ItemPostedTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Posted", False, DataSourceUpdateMode.OnPropertyChanged)
-		Me.ItemUpdatedTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Updated", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.ItemOwnerTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "OwnerName", False, DataSourceUpdateMode.OnValidation)
+		Me.ItemPostedTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Posted", False, DataSourceUpdateMode.OnValidation)
+		Me.ItemUpdatedTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Updated", False, DataSourceUpdateMode.OnValidation)
 		Me.ItemTitleTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Title", False, DataSourceUpdateMode.OnPropertyChanged)
 		'NOTE: For RichTextBox, set the Formatting argument to True when DataSourceUpdateMode.OnPropertyChanged is used, to prevent characters being entered in reverse order.
 		Me.ItemDescriptionTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Description", True, DataSourceUpdateMode.OnPropertyChanged)
 		Me.ItemChangeNoteTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "ChangeNote", True, DataSourceUpdateMode.OnPropertyChanged)
-		Me.ItemContentPathFileNameTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "ContentPathFolderOrFileName", False, DataSourceUpdateMode.OnPropertyChanged)
-		Me.ItemPreviewImagePathFileNameTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "PreviewImagePathFileName", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.ItemContentPathFileNameTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "ContentPathFolderOrFileName", False, DataSourceUpdateMode.OnValidation)
+		Me.ItemPreviewImagePathFileNameTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "PreviewImagePathFileName", False, DataSourceUpdateMode.OnValidation)
 
 		Me.ItemVisibilityComboBox.DisplayMember = "Value"
 		Me.ItemVisibilityComboBox.ValueMember = "Key"
@@ -584,6 +585,7 @@ Public Class PublishUserControl
 		Else
 			Me.UpdateItemListWidgets(False)
 		End If
+		Me.theSelectedGameIsStillUpdatingInterface = False
 	End Sub
 
 	Private Sub GetPublishedItemDetails_ProgressChanged(ByVal sender As System.Object, ByVal e As System.ComponentModel.ProgressChangedEventArgs)
@@ -699,6 +701,10 @@ Public Class PublishUserControl
 			Me.LogTextBox.AppendText(CStr(e.UserState))
 		ElseIf e.ProgressPercentage = 1 Then
 			Me.LogTextBox.AppendText(vbTab + CStr(e.UserState))
+		ElseIf e.ProgressPercentage = 2 Then
+			Dim outputInfo As BackgroundSteamPipe.PublishItemProgressInfo = CType(e.UserState, BackgroundSteamPipe.PublishItemProgressInfo)
+			'TODO: Change to using a progressbar.
+			Me.LogTextBox.AppendText(vbTab + outputInfo.Status + ": " + outputInfo.UploadedByteCount.ToString() + " / " + outputInfo.TotalUploadedByteCount.ToString() + vbCrLf)
 		End If
 	End Sub
 
@@ -779,9 +785,10 @@ Public Class PublishUserControl
 
 	Private Sub UpdateSteamAppWidgets()
 		'NOTE: If this has not been created, then app is in not far enough in Init() and not ready for update.
-		If Me.theEntireListOfItems Is Nothing Then
+		If Me.theEntireListOfItems Is Nothing OrElse Me.theSelectedGameIsStillUpdatingInterface Then
 			Exit Sub
 		End If
+		Me.theSelectedGameIsStillUpdatingInterface = True
 
 		If Me.LogTextBox.Text <> "" Then
 			Me.LogTextBox.AppendText("------" + vbCrLf)
@@ -1007,6 +1014,7 @@ Public Class PublishUserControl
 			draftItem = New WorkshopItem()
 		Else
 			draftItem = CType(itemToCopy.Clone(), WorkshopItem)
+			draftItem.SetAllChangedForNonEmptyFields()
 		End If
 		Me.theDisplayedItems.Add(draftItem)
 		Me.theEntireListOfItems.Add(draftItem)
@@ -1192,7 +1200,7 @@ Public Class PublishUserControl
 		Dim titleSize As Integer = Me.theSelectedItem.Title.Length
 		Dim titleSizeMax As Integer = CInt(Steamworks.Constants.k_cchPublishedDocumentTitleMax)
 		Dim changedMarker As String = ""
-		If Me.theSelectedItem.TitleIsChanged AndAlso Me.theSelectedItem.IsPublished Then
+		If Me.theSelectedItem.TitleIsChanged AndAlso Not Me.theSelectedItem.IsDraft Then
 			changedMarker = AppConstants.ChangedMarker
 		End If
 		Me.ItemTitleLabel.Text = "Title" + changedMarker + " (" + titleSize.ToString() + " / " + titleSizeMax.ToString() + " characters max):"
@@ -1202,7 +1210,7 @@ Public Class PublishUserControl
 		Dim descriptionSize As Integer = Me.theSelectedItem.Description.Length
 		Dim descriptionSizeMax As Integer = CInt(Steamworks.Constants.k_cchPublishedDocumentDescriptionMax)
 		Dim changedMarker As String = ""
-		If Me.theSelectedItem.DescriptionIsChanged AndAlso Me.theSelectedItem.IsPublished Then
+		If Me.theSelectedItem.DescriptionIsChanged AndAlso Not Me.theSelectedItem.IsDraft Then
 			changedMarker = AppConstants.ChangedMarker
 		End If
 		Me.ItemDescriptionLabel.Text = "Description" + changedMarker + " (" + descriptionSize.ToString() + " / " + descriptionSizeMax.ToString() + " characters max):"
@@ -1212,7 +1220,7 @@ Public Class PublishUserControl
 		Dim changeNoteSize As Integer = Me.theSelectedItem.ChangeNote.Length
 		Dim changeNoteSizeMax As Integer = CInt(Steamworks.Constants.k_cchPublishedDocumentChangeDescriptionMax)
 		Dim changedMarker As String = ""
-		If Me.theSelectedItem.ChangeNoteIsChanged AndAlso Me.theSelectedItem.IsPublished Then
+		If Me.theSelectedItem.ChangeNoteIsChanged AndAlso Not Me.theSelectedItem.IsDraft Then
 			changedMarker = AppConstants.ChangedMarker
 		End If
 		Me.ItemChangeNoteLabel.Text = "Change Note" + changedMarker + " (" + changeNoteSize.ToString() + " / " + changeNoteSizeMax.ToString() + " characters max):"
@@ -1228,7 +1236,7 @@ Public Class PublishUserControl
 			ElseIf File.Exists(Me.theSelectedItem.ContentPathFolderOrFileName) Then
 				Dim aFile As New FileInfo(Me.theSelectedItem.ContentPathFolderOrFileName)
 				contentFileSizeText = MathModule.ByteUnitsConversion(CULng(aFile.Length))
-			ElseIf Me.theSelectedItem.ContentSize > 0 Then
+			ElseIf Me.theSelectedItem.ContentSize > 0 AndAlso Me.theSelectedItem.IsPublished Then
 				contentFileSizeText = MathModule.ByteUnitsConversion(CULng(Me.theSelectedItem.ContentSize))
 			End If
 		ElseIf TheApp.SteamAppInfos(TheApp.Settings.PublishGameSelectedIndex).UsesSteamUGC Then
@@ -1236,7 +1244,7 @@ Public Class PublishUserControl
 			If Directory.Exists(Me.theSelectedItem.ContentPathFolderOrFileName) Then
 				Dim folderSize As ULong = FileManager.GetFolderSize(Me.theSelectedItem.ContentPathFolderOrFileName)
 				contentFileSizeText = MathModule.ByteUnitsConversion(folderSize)
-			ElseIf Me.theSelectedItem.ContentSize > 0 Then
+			ElseIf Me.theSelectedItem.ContentSize > 0 AndAlso Me.theSelectedItem.IsPublished Then
 				contentFileSizeText = MathModule.ByteUnitsConversion(CULng(Me.theSelectedItem.ContentSize))
 			End If
 		Else
@@ -1244,7 +1252,7 @@ Public Class PublishUserControl
 			If File.Exists(Me.theSelectedItem.ContentPathFolderOrFileName) Then
 				Dim aFile As New FileInfo(Me.theSelectedItem.ContentPathFolderOrFileName)
 				contentFileSizeText = MathModule.ByteUnitsConversion(CULng(aFile.Length))
-			ElseIf Me.theSelectedItem.ContentSize > 0 Then
+			ElseIf Me.theSelectedItem.ContentSize > 0 AndAlso Me.theSelectedItem.IsPublished Then
 				contentFileSizeText = MathModule.ByteUnitsConversion(CULng(Me.theSelectedItem.ContentSize))
 			End If
 		End If
@@ -1252,7 +1260,7 @@ Public Class PublishUserControl
 		''Dim contentFileSizeMax As Integer = CInt(Steamworks.Constants.k_unMaxCloudFileChunkSize / 1048576)
 		''contentFileSizeMaxText = contentFileSizeMax.ToString()
 		Dim changedMarker As String = ""
-		If Me.theSelectedItem.ContentPathFolderOrFileNameIsChanged AndAlso Me.theSelectedItem.IsPublished Then
+		If Me.theSelectedItem.ContentPathFolderOrFileNameIsChanged AndAlso Not Me.theSelectedItem.IsDraft Then
 			changedMarker = AppConstants.ChangedMarker
 		End If
 		'NOTE: Not sure what max size is, so do not show it.
@@ -1269,12 +1277,12 @@ Public Class PublishUserControl
 		If File.Exists(Me.theSelectedItem.PreviewImagePathFileName) Then
 			Dim aFile As New FileInfo(Me.theSelectedItem.PreviewImagePathFileName)
 			previewImageSizeText = MathModule.ByteUnitsConversion(CULng(aFile.Length))
-		ElseIf Me.theSelectedItem.PreviewImageSize > 0 Then
+		ElseIf Me.theSelectedItem.PreviewImageSize > 0 AndAlso Me.theSelectedItem.IsPublished Then
 			previewImageSizeText = MathModule.ByteUnitsConversion(CULng(Me.theSelectedItem.PreviewImageSize))
 		End If
 		'Dim previewImageSizeMaxText As String = "<unknown>"
 		Dim changedMarker As String = ""
-		If Me.theSelectedItem.PreviewImagePathFileNameIsChanged AndAlso Me.theSelectedItem.IsPublished Then
+		If Me.theSelectedItem.PreviewImagePathFileNameIsChanged AndAlso Not Me.theSelectedItem.IsDraft Then
 			changedMarker = AppConstants.ChangedMarker
 		End If
 		'NOTE: Not sure what max size is, so do not show it.
@@ -1386,7 +1394,7 @@ Public Class PublishUserControl
 
 	Private Sub UpdateItemVisibilityLabel()
 		Dim changedMarker As String = ""
-		If Me.theSelectedItem.VisibilityIsChanged AndAlso Me.theSelectedItem.IsPublished Then
+		If Me.theSelectedItem.VisibilityIsChanged AndAlso Not Me.theSelectedItem.IsDraft Then
 			changedMarker = AppConstants.ChangedMarker
 		End If
 		Me.ItemVisibilityLabel.Text = "Visibility" + changedMarker + ":"
@@ -1394,7 +1402,7 @@ Public Class PublishUserControl
 
 	Private Sub UpdateItemTagsLabel()
 		Dim changedMarker As String = ""
-		If Me.theSelectedItem.TagsIsChanged AndAlso Me.theSelectedItem.IsPublished Then
+		If Me.theSelectedItem.TagsIsChanged AndAlso Not Me.theSelectedItem.IsDraft Then
 			changedMarker = AppConstants.ChangedMarker
 		End If
 		Me.ItemTagsGroupBox.Text = "Tags" + changedMarker
@@ -1441,10 +1449,10 @@ Public Class PublishUserControl
 	Private Sub SwapBetweenOwnerNameAndID()
 		If Me.ItemOwnerTextBox.DataBindings("Text").BindingMemberInfo.BindingMember = "OwnerName" Then
 			Me.ItemOwnerTextBox.DataBindings.Remove(Me.ItemOwnerTextBox.DataBindings("Text"))
-			Me.ItemOwnerTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "OwnerID", False, DataSourceUpdateMode.OnPropertyChanged)
+			Me.ItemOwnerTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "OwnerID", False, DataSourceUpdateMode.OnValidation)
 		Else
 			Me.ItemOwnerTextBox.DataBindings.Remove(Me.ItemOwnerTextBox.DataBindings("Text"))
-			Me.ItemOwnerTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "OwnerName", False, DataSourceUpdateMode.OnPropertyChanged)
+			Me.ItemOwnerTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "OwnerName", False, DataSourceUpdateMode.OnValidation)
 		End If
 	End Sub
 
@@ -1578,11 +1586,12 @@ Public Class PublishUserControl
 	Private Sub RefreshOrRevertItem()
 		If Me.theSelectedItem.IsChanged Then
 			If Me.theSelectedItem.IsTemplate Then
-				Me.theSelectedItemDetailsIsChangingViaMe = True
-				'NOTE: Change the item in the list (and not the Me.theSlectedItem) so that list and selected item stay synced.
-				Dim selectedItemIndex As Integer = Me.theItemBindingSource.IndexOf(Me.theSelectedItem)
-				Me.theDisplayedItems(selectedItemIndex) = Me.theUnchangedSelectedTemplateItem
-				Me.theSelectedItemDetailsIsChangingViaMe = False
+				'Me.theSelectedItemDetailsIsChangingViaMe = True
+				''NOTE: Change the item in the list (and not the Me.theSelectedItem) so that list and selected item stay synced.
+				'Dim selectedItemIndex As Integer = Me.theItemBindingSource.IndexOf(Me.theSelectedItem)
+				'Me.theDisplayedItems(selectedItemIndex) = Me.theUnchangedSelectedTemplateItem
+				'Me.theSelectedItemDetailsIsChangingViaMe = False
+				Me.RevertChangedTemplate()
 			ElseIf Me.theSelectedItem.IsPublished Then
 				Me.ChangeChangedItemIntoPublishedItem(Me.theSelectedItem)
 			End If
@@ -1747,6 +1756,8 @@ Public Class PublishUserControl
 		'NOTE: Change the item in the list (and not the Me.theSlectedItem) so that list and selected item stay synced.
 		Dim selectedItemIndex As Integer = Me.theItemBindingSource.IndexOf(Me.theSelectedItem)
 		Me.theDisplayedItems(selectedItemIndex) = Me.theUnchangedSelectedTemplateItem
+		Me.theSteamAppUserInfo.DraftTemplateAndChangedItems.Remove(Me.theSelectedItem)
+		Me.theSteamAppUserInfo.DraftTemplateAndChangedItems.Add(Me.theUnchangedSelectedTemplateItem)
 		RemoveHandler Me.theSelectedItem.PropertyChanged, AddressOf Me.WorkshopItem_PropertyChanged
 		Me.theSelectedItem = Me.theUnchangedSelectedTemplateItem
 		AddHandler Me.theSelectedItem.PropertyChanged, AddressOf Me.WorkshopItem_PropertyChanged
@@ -1782,6 +1793,7 @@ Public Class PublishUserControl
 	Private theExpectedPublishedItemCount As UInteger
 	Private theDisplayedItems As WorkshopItemBindingList
 	Private theEntireListOfItems As WorkshopItemBindingList
+	Private theSelectedGameIsStillUpdatingInterface As Boolean
 
 	Private theTagsWidget As Base_TagsUserControl
 

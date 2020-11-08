@@ -29,6 +29,19 @@ Public Class FileSeekLog
 		End Try
 	End Sub
 
+	Public Sub Remove(ByVal startOffset As Long)
+		Try
+			If Me.theFileSeekList.ContainsKey(startOffset) Then
+				Me.theFileSeekList.Remove(startOffset)
+			End If
+			If Me.theFileSeekDescriptionList.ContainsKey(startOffset) Then
+				Me.theFileSeekDescriptionList.Remove(startOffset)
+			End If
+		Catch ex As Exception
+			Dim debug As Integer = 4242
+		End Try
+	End Sub
+
 	Public Sub Clear()
 		Me.theFileSeekList.Clear()
 		Me.theFileSeekDescriptionList.Clear()
@@ -128,11 +141,31 @@ Public Class FileSeekLog
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		End Try
+
+		Me.LogErrors()
 	End Sub
 
 	Public theFileSize As Long
 	Public theFileSeekList As SortedList(Of Long, Long)
 	Public theFileSeekDescriptionList As SortedList(Of Long, String)
+
+	Private Sub LogErrors()
+		Dim offsetStart As Long
+		Dim offsetEnd As Long
+
+		Try
+			For i As Integer = 0 To Me.theFileSeekList.Count - 1
+				offsetStart = Me.theFileSeekList.Keys(i)
+				offsetEnd = Me.theFileSeekList.Values(i)
+
+				If (i < Me.theFileSeekList.Count - 1) AndAlso (offsetEnd + 1 <> Me.theFileSeekList.Keys(i + 1)) Then
+					Me.theFileSeekDescriptionList(offsetStart) = "[ERROR] [End offset is incorrect] " + Me.theFileSeekDescriptionList(offsetStart)
+				End If
+			Next
+		Catch ex As Exception
+			Dim debug As Integer = 4242
+		End Try
+	End Sub
 
 	Private Function GetByteValues(ByVal inputFileReader As BinaryReader, ByVal fileOffsetStart2 As Long, ByVal fileOffsetEnd2 As Long, ByRef allZeroesWereFound As Boolean) As String
 		Dim byteValues As String

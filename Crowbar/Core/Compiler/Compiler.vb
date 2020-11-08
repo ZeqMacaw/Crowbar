@@ -442,7 +442,7 @@ Public Class Compiler
 					Me.UpdateProgress(2, "ERROR: The compiler did not return any status messages.")
 					Me.UpdateProgress(2, "CAUSE: The compiler is not the correct one for the selected game.")
 					Me.UpdateProgress(2, "SOLUTION: Verify integrity of game files via Steam so that the correct compiler is installed.")
-				ElseIf TheApp.Settings.CompileOptionDefineBonesIsChecked Then
+				ElseIf gameSetup.GameEngine = GameEngine.Source AndAlso TheApp.Settings.CompileOptionDefineBonesIsChecked Then
 					If Me.theDefineBonesFileStream IsNot Nothing Then
 						If TheApp.Settings.CompileOptionDefineBonesModifyQcFileIsChecked Then
 							Me.InsertAnIncludeDefineBonesFileCommandIntoQcFile()

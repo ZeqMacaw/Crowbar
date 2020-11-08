@@ -24,6 +24,8 @@ Public Module CrowbarSteamPipe
 		Dim command As String
 		Try
 			While pipeClient.IsConnected
+				theItemIsUploading = False
+
 				command = sr.ReadLine()
 				Console.WriteLine("Command from server: " + command)
 
@@ -85,6 +87,8 @@ Public Module CrowbarSteamPipe
 					SteamUGC_DeleteItem()
 					'ElseIf command = "SteamUGC_DownloadItem" Then
 					'	SteamUGC_DownloadItem()
+					'ElseIf command = "SteamUGC_GetItemUpdateProgress" Then
+					'	SteamUGC_GetItemUpdateProgress()
 				ElseIf command = "SteamUGC_SendQueryUGCRequest" Then
 					SteamUGC_SendQueryUGCRequest()
 				ElseIf command = "SteamUGC_SetItemContent" Then
@@ -123,7 +127,7 @@ Public Module CrowbarSteamPipe
 
 #If DEBUG Then
 			'For debugging, keep console open until Enter Is pressed.
-			'Console.ReadLine()
+			Console.ReadLine()
 #End If
 		End Try
 	End Sub
@@ -188,6 +192,7 @@ Public Module CrowbarSteamPipe
 				theItemTitle = pCallResult.m_rgchTitle
 				theItemUpdated = pCallResult.m_rtimeUpdated
 				theItemContentFileName = pCallResult.m_pchFileName
+				theAppID = pCallResult.m_nConsumerAppID
 
 				theResultMessage = "success"
 			Else
@@ -239,6 +244,7 @@ Public Module CrowbarSteamPipe
 				CrowbarSteamPipe.SetResultAndRunCallbacks(Of RemoteStorageGetPublishedFileDetailsResult_t)(AddressOf OnGetPublishedFileDetailsForInternalResults, result)
 				WriteTextThatMightHaveMultipleLines(theItemTitle)
 				sw.WriteLine(itemFolderName)
+				sw.WriteLine(theAppID.ToString())
 			Else
 				sw.WriteLine("error")
 			End If
@@ -280,6 +286,7 @@ Public Module CrowbarSteamPipe
 						CrowbarSteamPipe.SetResultAndRunCallbacks(Of RemoteStorageGetPublishedFileDetailsResult_t)(AddressOf OnGetPublishedFileDetailsForInternalResults, result)
 						WriteTextThatMightHaveMultipleLines(theItemTitle)
 						sw.WriteLine(folderName)
+						sw.WriteLine(theAppID.ToString())
 					Else
 						Console.WriteLine("Crowbar_DownloadContentFolderOrFile - GetItemInstallInfo error")
 						sw.WriteLine("error")
@@ -825,7 +832,7 @@ Public Module CrowbarSteamPipe
 				Console.WriteLine("OnPublishFileResult ItemID: " + pCallResult.m_nPublishedFileId.ToString())
 				sw.WriteLine(pCallResult.m_nPublishedFileId.ToString())
 			Else
-				sw.WriteLine("error")
+				sw.WriteLine(GetErrorMessage(pCallResult.m_eResult))
 			End If
 		Catch ex As Exception
 			Console.WriteLine("EXCEPTION: " + ex.Message)
@@ -1295,6 +1302,35 @@ Public Module CrowbarSteamPipe
 
 #End Region
 
+	Private Sub SteamUGC_GetItemUpdateProgress()
+		Dim uploadedByteCount As ULong = 0
+		Dim totalUploadedByteCount As ULong = 0
+
+		Dim status As EItemUpdateStatus = SteamUGC.GetItemUpdateProgress(theUGCUpdateHandle, uploadedByteCount, totalUploadedByteCount)
+
+		'k_EItemUpdateStatusInvalid	0	The item update handle was invalid, the job might be finished, a SubmitItemUpdateResult_t call result should have been returned for it.
+		'k_EItemUpdateStatusPreparingConfig	1	The item update is processing configuration data.
+		'k_EItemUpdateStatusPreparingContent	2	The item update is reading and processing content files.
+		'k_EItemUpdateStatusUploadingContent	3	The item update is uploading content changes to Steam.
+		'k_EItemUpdateStatusUploadingPreviewFile	4	The item update is uploading new preview file image.
+		'k_EItemUpdateStatusCommittingChanges	5	The item update is committing all changes.
+		If status = EItemUpdateStatus.k_EItemUpdateStatusPreparingConfig Then
+			sw.WriteLine("preparing config")
+		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusPreparingContent Then
+			sw.WriteLine("preparing content")
+		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusUploadingContent Then
+			sw.WriteLine("uploading content")
+		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusUploadingPreviewFile Then
+			sw.WriteLine("uploading preview")
+		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusCommittingChanges Then
+			sw.WriteLine("committing changes")
+		Else
+			sw.WriteLine("invalid")
+		End If
+		sw.WriteLine(uploadedByteCount)
+		sw.WriteLine(totalUploadedByteCount)
+	End Sub
+
 #Region "SteamUGC_StartItemUpdate"
 
 	Private Sub SteamUGC_StartItemUpdate()
@@ -1430,11 +1466,15 @@ Public Module CrowbarSteamPipe
 		Dim changeNote As String
 		changeNote = ReadMultipleLinesOfText(sr)
 
+		theItemIsUploading = True
+
 		Dim result As SteamAPICall_t = SteamUGC.SubmitItemUpdate(theUGCUpdateHandle, changeNote)
 		CrowbarSteamPipe.SetResultAndRunCallbacks(Of SubmitItemUpdateResult_t)(AddressOf OnSubmitItemUpdate, result)
 	End Sub
 
 	Private Sub OnSubmitItemUpdate(ByVal pCallResult As SubmitItemUpdateResult_t, ByVal bIOFailure As Boolean)
+		theItemIsUploading = False
+		sw.WriteLine("OnSubmitItemUpdate")
 		Try
 			If pCallResult.m_eResult = EResult.k_EResultOK Then
 				If pCallResult.m_bUserNeedsToAcceptWorkshopLegalAgreement Then
@@ -1505,10 +1545,12 @@ Public Module CrowbarSteamPipe
 		Dim output As Steamworks.ERemoteStoragePublishedFileVisibility
 		If input = "Public" Then
 			output = Steamworks.ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPublic
-		ElseIf input = "Private" Then
-			output = Steamworks.ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPrivate
-		Else
+		ElseIf input = "FriendsOnly" Then
 			output = Steamworks.ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityFriendsOnly
+		ElseIf input = "Unlisted" Then
+			output = Steamworks.ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityUnlisted
+		Else
+			output = Steamworks.ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPrivate
 		End If
 		Return output
 	End Function
@@ -1522,6 +1564,9 @@ Public Module CrowbarSteamPipe
 	Private Sub RunCallbacks()
 		theCallResultIsFinished = False
 		While Not theCallResultIsFinished
+			If theItemIsUploading Then
+				SteamUGC_GetItemUpdateProgress()
+			End If
 			SteamAPI.RunCallbacks()
 		End While
 	End Sub
@@ -1586,21 +1631,22 @@ Public Module CrowbarSteamPipe
 
 		If steamErrorResult = EResult.k_EResultAccessDenied Then
 			'sw.WriteLine("Access denied. The AppID in the steam_api.txt file is incorrect or the steam_api.txt file is not beside the CrowbarSteamPipe.exe file.")
-			errorMessage += "Access denied. The user doesn't own a license for the provided App ID."
+			errorMessage += "Access denied. The user's Steam account does not own a license for the provided App ID."
+		ElseIf steamErrorResult = EResult.k_EResultFileNotFound Then
+			'errorMessage += "File not found. The provided content folder, content file, or preview image file is invalid."
+			errorMessage += "File not found. The provided content folder, content file, or preview image file is invalid."
+		ElseIf steamErrorResult = EResult.k_EResultInsufficientPrivilege Then
+			errorMessage += "Insufficient privilege. The user's Steam account is currently restricted from uploading content due to a hub ban, account lock, or community ban."
 		ElseIf steamErrorResult = EResult.k_EResultInvalidParam Then
 			errorMessage += "Invalid paramater. Content file too big, invalid App ID, or the preview file is smaller than 16 bytes."
-		ElseIf steamErrorResult = EResult.k_EResultInsufficientPrivilege Then
-			errorMessage += "Your Steam account is currently banned in this game's community."
-		ElseIf steamErrorResult = EResult.k_EResultFileNotFound Then
-			errorMessage += "The provided content folder, content file, or preview image file is invalid."
 		ElseIf steamErrorResult = EResult.k_EResultLimitExceeded Then
-			errorMessage += "The preview image is too large, it must be less than 1 megabyte; or there is not enough space available on the user's Steam Cloud."
+			errorMessage += "Limit exceeded. The preview image is too large, it must be less than 1 megabyte; or there is not enough space available on the user's Steam Cloud."
 		ElseIf steamErrorResult = EResult.k_EResultLockingFailed Then
-			errorMessage += "Failed to aquire UGC Lock."
+			errorMessage += "Locking failed. Failed to aquire UGC Lock."
 		ElseIf steamErrorResult = EResult.k_EResultNotLoggedOn Then
-			errorMessage += "Your account is not currently logged in."
+			errorMessage += "Not logged on. The user's Steam account is not currently logged in."
 		ElseIf steamErrorResult = EResult.k_EResultTimeout Then
-			errorMessage += "Upload timed-out and did not complete."
+			errorMessage += "Timeout. Action timed-out and did not complete."
 		Else
 			errorMessage += steamErrorResult.ToString()
 		End If
@@ -1645,6 +1691,7 @@ Public Module CrowbarSteamPipe
 	Private sw As StreamWriter
 	Private sr As StreamReader
 
+	Private theItemIsUploading As Boolean
 	Private theCallResultIsFinished As Boolean
 	Private theUGCQueryHandle As UGCQueryHandle_t
 	Private theUGCUpdateHandle As UGCUpdateHandle_t
@@ -1654,7 +1701,7 @@ Public Module CrowbarSteamPipe
 	Private theUGCHandleForPreviewImageFile As UGCHandle_t
 	'Private theUGCPreviewImageFileSize As Integer
 
-	'Private theAppID As AppId_t
+	Private theAppID As AppId_t
 	Private theItemID As PublishedFileId_t
 	Private theItemUpdated As UInteger
 	Private theItemTitle As String

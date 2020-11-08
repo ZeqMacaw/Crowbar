@@ -30,12 +30,12 @@ Partial Class DownloadUserControl
 		Me.GotoOutputPathButton = New System.Windows.Forms.Button()
 		Me.BrowseForOutputPathButton = New System.Windows.Forms.Button()
 		Me.OptionsGroupBox = New Crowbar.GroupBoxEx()
-		Me.ConvertToExpectedFileOrFolderCheckBox = New Crowbar.CheckBoxEx()
-		Me.OptionsUseDefaultsButton = New System.Windows.Forms.Button()
-		Me.ReplaceSpacesWithUnderscoresCheckBox = New Crowbar.CheckBoxEx()
-		Me.AppendDateTimeCheckBox = New Crowbar.CheckBoxEx()
-		Me.PrependTitleCheckBox = New Crowbar.CheckBoxEx()
 		Me.UseIdCheckBox = New Crowbar.CheckBoxEx()
+		Me.PrependTitleCheckBox = New Crowbar.CheckBoxEx()
+		Me.AppendDateTimeCheckBox = New Crowbar.CheckBoxEx()
+		Me.ReplaceSpacesWithUnderscoresCheckBox = New Crowbar.CheckBoxEx()
+		Me.OptionsUseDefaultsButton = New System.Windows.Forms.Button()
+		Me.ConvertToExpectedFileOrFolderCheckBox = New Crowbar.CheckBoxEx()
 		Me.ExampleOutputFileNameLabel = New System.Windows.Forms.Label()
 		Me.ExampleOutputFileNameTextBox = New Crowbar.TextBoxEx()
 		Me.CancelDownloadButton = New System.Windows.Forms.Button()
@@ -43,10 +43,13 @@ Partial Class DownloadUserControl
 		Me.OpenWorkshopPageButton = New System.Windows.Forms.Button()
 		Me.DocumentsOutputPathTextBox = New Crowbar.TextBoxEx()
 		Me.DownloadedItemTextBox = New Crowbar.TextBoxEx()
-		Me.Label1 = New System.Windows.Forms.Label()
-		Me.DownloadedItemButton = New System.Windows.Forms.Button()
+		Me.DownloadedLabel = New System.Windows.Forms.Label()
+		Me.GotoDownloadedItemButton = New System.Windows.Forms.Button()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+		Me.Panel1 = New System.Windows.Forms.Panel()
+		Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
 		Me.OptionsGroupBox.SuspendLayout()
+		Me.Panel1.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'ItemIdTextBox
@@ -54,9 +57,9 @@ Partial Class DownloadUserControl
 		Me.ItemIdTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ItemIdTextBox.CueBannerText = ""
-		Me.ItemIdTextBox.Location = New System.Drawing.Point(87, 3)
+		Me.ItemIdTextBox.Location = New System.Drawing.Point(87, 5)
 		Me.ItemIdTextBox.Name = "ItemIdTextBox"
-		Me.ItemIdTextBox.Size = New System.Drawing.Size(643, 21)
+		Me.ItemIdTextBox.Size = New System.Drawing.Size(645, 21)
 		Me.ItemIdTextBox.TabIndex = 1
 		'
 		'DownloadButton
@@ -78,14 +81,14 @@ Partial Class DownloadUserControl
 		Me.LogTextBox.Location = New System.Drawing.Point(3, 290)
 		Me.LogTextBox.Name = "LogTextBox"
 		Me.LogTextBox.ReadOnly = True
-		Me.LogTextBox.Size = New System.Drawing.Size(776, 229)
+		Me.LogTextBox.Size = New System.Drawing.Size(778, 224)
 		Me.LogTextBox.TabIndex = 13
 		Me.LogTextBox.Text = ""
 		'
 		'ItemIdOrLinkLabel
 		'
 		Me.ItemIdOrLinkLabel.AutoSize = True
-		Me.ItemIdOrLinkLabel.Location = New System.Drawing.Point(3, 6)
+		Me.ItemIdOrLinkLabel.Location = New System.Drawing.Point(3, 8)
 		Me.ItemIdOrLinkLabel.Name = "ItemIdOrLinkLabel"
 		Me.ItemIdOrLinkLabel.Size = New System.Drawing.Size(78, 13)
 		Me.ItemIdOrLinkLabel.TabIndex = 0
@@ -94,7 +97,7 @@ Partial Class DownloadUserControl
 		'OuputToLabel
 		'
 		Me.OuputToLabel.AutoSize = True
-		Me.OuputToLabel.Location = New System.Drawing.Point(3, 33)
+		Me.OuputToLabel.Location = New System.Drawing.Point(3, 37)
 		Me.OuputToLabel.Name = "OuputToLabel"
 		Me.OuputToLabel.Size = New System.Drawing.Size(58, 13)
 		Me.OuputToLabel.TabIndex = 3
@@ -104,7 +107,7 @@ Partial Class DownloadUserControl
 		'
 		Me.OutputPathComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.OutputPathComboBox.FormattingEnabled = True
-		Me.OutputPathComboBox.Location = New System.Drawing.Point(87, 30)
+		Me.OutputPathComboBox.Location = New System.Drawing.Point(87, 33)
 		Me.OutputPathComboBox.Name = "OutputPathComboBox"
 		Me.OutputPathComboBox.Size = New System.Drawing.Size(140, 21)
 		Me.OutputPathComboBox.TabIndex = 4
@@ -114,15 +117,15 @@ Partial Class DownloadUserControl
 		Me.OutputPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.OutputPathTextBox.CueBannerText = ""
-		Me.OutputPathTextBox.Location = New System.Drawing.Point(233, 30)
+		Me.OutputPathTextBox.Location = New System.Drawing.Point(233, 34)
 		Me.OutputPathTextBox.Name = "OutputPathTextBox"
-		Me.OutputPathTextBox.Size = New System.Drawing.Size(427, 21)
+		Me.OutputPathTextBox.Size = New System.Drawing.Size(429, 21)
 		Me.OutputPathTextBox.TabIndex = 5
 		'
 		'GotoOutputPathButton
 		'
 		Me.GotoOutputPathButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.GotoOutputPathButton.Location = New System.Drawing.Point(736, 30)
+		Me.GotoOutputPathButton.Location = New System.Drawing.Point(738, 32)
 		Me.GotoOutputPathButton.Name = "GotoOutputPathButton"
 		Me.GotoOutputPathButton.Size = New System.Drawing.Size(43, 23)
 		Me.GotoOutputPathButton.TabIndex = 8
@@ -132,7 +135,7 @@ Partial Class DownloadUserControl
 		'BrowseForOutputPathButton
 		'
 		Me.BrowseForOutputPathButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.BrowseForOutputPathButton.Location = New System.Drawing.Point(666, 30)
+		Me.BrowseForOutputPathButton.Location = New System.Drawing.Point(668, 32)
 		Me.BrowseForOutputPathButton.Name = "BrowseForOutputPathButton"
 		Me.BrowseForOutputPathButton.Size = New System.Drawing.Size(64, 23)
 		Me.BrowseForOutputPathButton.TabIndex = 7
@@ -143,22 +146,75 @@ Partial Class DownloadUserControl
 		'
 		Me.OptionsGroupBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.OptionsGroupBox.Controls.Add(Me.ConvertToExpectedFileOrFolderCheckBox)
-		Me.OptionsGroupBox.Controls.Add(Me.OptionsUseDefaultsButton)
-		Me.OptionsGroupBox.Controls.Add(Me.ReplaceSpacesWithUnderscoresCheckBox)
-		Me.OptionsGroupBox.Controls.Add(Me.AppendDateTimeCheckBox)
-		Me.OptionsGroupBox.Controls.Add(Me.PrependTitleCheckBox)
 		Me.OptionsGroupBox.Controls.Add(Me.UseIdCheckBox)
+		Me.OptionsGroupBox.Controls.Add(Me.PrependTitleCheckBox)
+		Me.OptionsGroupBox.Controls.Add(Me.AppendDateTimeCheckBox)
+		Me.OptionsGroupBox.Controls.Add(Me.ReplaceSpacesWithUnderscoresCheckBox)
+		Me.OptionsGroupBox.Controls.Add(Me.OptionsUseDefaultsButton)
+		Me.OptionsGroupBox.Controls.Add(Me.ConvertToExpectedFileOrFolderCheckBox)
 		Me.OptionsGroupBox.Controls.Add(Me.ExampleOutputFileNameLabel)
 		Me.OptionsGroupBox.Controls.Add(Me.ExampleOutputFileNameTextBox)
 		Me.OptionsGroupBox.IsReadOnly = False
-		Me.OptionsGroupBox.Location = New System.Drawing.Point(3, 57)
+		Me.OptionsGroupBox.Location = New System.Drawing.Point(3, 61)
 		Me.OptionsGroupBox.Name = "OptionsGroupBox"
 		Me.OptionsGroupBox.SelectedValue = Nothing
-		Me.OptionsGroupBox.Size = New System.Drawing.Size(776, 198)
+		Me.OptionsGroupBox.Size = New System.Drawing.Size(778, 194)
 		Me.OptionsGroupBox.TabIndex = 9
 		Me.OptionsGroupBox.TabStop = False
 		Me.OptionsGroupBox.Text = "Output File Name Options"
+		'
+		'UseIdCheckBox
+		'
+		Me.UseIdCheckBox.AutoSize = True
+		Me.UseIdCheckBox.IsReadOnly = False
+		Me.UseIdCheckBox.Location = New System.Drawing.Point(6, 20)
+		Me.UseIdCheckBox.Name = "UseIdCheckBox"
+		Me.UseIdCheckBox.Size = New System.Drawing.Size(190, 17)
+		Me.UseIdCheckBox.TabIndex = 0
+		Me.UseIdCheckBox.Text = "Use item ID instead of given name"
+		Me.UseIdCheckBox.UseVisualStyleBackColor = True
+		'
+		'PrependTitleCheckBox
+		'
+		Me.PrependTitleCheckBox.AutoSize = True
+		Me.PrependTitleCheckBox.IsReadOnly = False
+		Me.PrependTitleCheckBox.Location = New System.Drawing.Point(6, 43)
+		Me.PrependTitleCheckBox.Name = "PrependTitleCheckBox"
+		Me.PrependTitleCheckBox.Size = New System.Drawing.Size(110, 17)
+		Me.PrependTitleCheckBox.TabIndex = 1
+		Me.PrependTitleCheckBox.Text = "Prepend item title"
+		Me.PrependTitleCheckBox.UseVisualStyleBackColor = True
+		'
+		'AppendDateTimeCheckBox
+		'
+		Me.AppendDateTimeCheckBox.AutoSize = True
+		Me.AppendDateTimeCheckBox.IsReadOnly = False
+		Me.AppendDateTimeCheckBox.Location = New System.Drawing.Point(6, 66)
+		Me.AppendDateTimeCheckBox.Name = "AppendDateTimeCheckBox"
+		Me.AppendDateTimeCheckBox.Size = New System.Drawing.Size(191, 17)
+		Me.AppendDateTimeCheckBox.TabIndex = 2
+		Me.AppendDateTimeCheckBox.Text = "Append the item update date-time"
+		Me.AppendDateTimeCheckBox.UseVisualStyleBackColor = True
+		'
+		'ReplaceSpacesWithUnderscoresCheckBox
+		'
+		Me.ReplaceSpacesWithUnderscoresCheckBox.AutoSize = True
+		Me.ReplaceSpacesWithUnderscoresCheckBox.IsReadOnly = False
+		Me.ReplaceSpacesWithUnderscoresCheckBox.Location = New System.Drawing.Point(6, 89)
+		Me.ReplaceSpacesWithUnderscoresCheckBox.Name = "ReplaceSpacesWithUnderscoresCheckBox"
+		Me.ReplaceSpacesWithUnderscoresCheckBox.Size = New System.Drawing.Size(185, 17)
+		Me.ReplaceSpacesWithUnderscoresCheckBox.TabIndex = 3
+		Me.ReplaceSpacesWithUnderscoresCheckBox.Text = "Replace spaces with underscores"
+		Me.ReplaceSpacesWithUnderscoresCheckBox.UseVisualStyleBackColor = True
+		'
+		'OptionsUseDefaultsButton
+		'
+		Me.OptionsUseDefaultsButton.Location = New System.Drawing.Point(6, 112)
+		Me.OptionsUseDefaultsButton.Name = "OptionsUseDefaultsButton"
+		Me.OptionsUseDefaultsButton.Size = New System.Drawing.Size(90, 23)
+		Me.OptionsUseDefaultsButton.TabIndex = 4
+		Me.OptionsUseDefaultsButton.Text = "Use Defaults"
+		Me.OptionsUseDefaultsButton.UseVisualStyleBackColor = True
 		'
 		'ConvertToExpectedFileOrFolderCheckBox
 		'
@@ -172,64 +228,11 @@ Partial Class DownloadUserControl
 		Me.ToolTip1.SetToolTip(Me.ConvertToExpectedFileOrFolderCheckBox, "Example: Garry's Mod uses compressed GMA (LZMA) instead of GMA.")
 		Me.ConvertToExpectedFileOrFolderCheckBox.UseVisualStyleBackColor = True
 		'
-		'OptionsUseDefaultsButton
-		'
-		Me.OptionsUseDefaultsButton.Location = New System.Drawing.Point(6, 112)
-		Me.OptionsUseDefaultsButton.Name = "OptionsUseDefaultsButton"
-		Me.OptionsUseDefaultsButton.Size = New System.Drawing.Size(90, 23)
-		Me.OptionsUseDefaultsButton.TabIndex = 4
-		Me.OptionsUseDefaultsButton.Text = "Use Defaults"
-		Me.OptionsUseDefaultsButton.UseVisualStyleBackColor = True
-		'
-		'ReplaceSpacesWithUnderscoresCheckBox
-		'
-		Me.ReplaceSpacesWithUnderscoresCheckBox.AutoSize = True
-		Me.ReplaceSpacesWithUnderscoresCheckBox.IsReadOnly = False
-		Me.ReplaceSpacesWithUnderscoresCheckBox.Location = New System.Drawing.Point(6, 89)
-		Me.ReplaceSpacesWithUnderscoresCheckBox.Name = "ReplaceSpacesWithUnderscoresCheckBox"
-		Me.ReplaceSpacesWithUnderscoresCheckBox.Size = New System.Drawing.Size(185, 17)
-		Me.ReplaceSpacesWithUnderscoresCheckBox.TabIndex = 3
-		Me.ReplaceSpacesWithUnderscoresCheckBox.Text = "Replace spaces with underscores"
-		Me.ReplaceSpacesWithUnderscoresCheckBox.UseVisualStyleBackColor = True
-		'
-		'AppendDateTimeCheckBox
-		'
-		Me.AppendDateTimeCheckBox.AutoSize = True
-		Me.AppendDateTimeCheckBox.IsReadOnly = False
-		Me.AppendDateTimeCheckBox.Location = New System.Drawing.Point(6, 66)
-		Me.AppendDateTimeCheckBox.Name = "AppendDateTimeCheckBox"
-		Me.AppendDateTimeCheckBox.Size = New System.Drawing.Size(191, 17)
-		Me.AppendDateTimeCheckBox.TabIndex = 2
-		Me.AppendDateTimeCheckBox.Text = "Append the item update date-time"
-		Me.AppendDateTimeCheckBox.UseVisualStyleBackColor = True
-		'
-		'PrependTitleCheckBox
-		'
-		Me.PrependTitleCheckBox.AutoSize = True
-		Me.PrependTitleCheckBox.IsReadOnly = False
-		Me.PrependTitleCheckBox.Location = New System.Drawing.Point(6, 43)
-		Me.PrependTitleCheckBox.Name = "PrependTitleCheckBox"
-		Me.PrependTitleCheckBox.Size = New System.Drawing.Size(110, 17)
-		Me.PrependTitleCheckBox.TabIndex = 1
-		Me.PrependTitleCheckBox.Text = "Prepend item title"
-		Me.PrependTitleCheckBox.UseVisualStyleBackColor = True
-		'
-		'UseIdCheckBox
-		'
-		Me.UseIdCheckBox.AutoSize = True
-		Me.UseIdCheckBox.IsReadOnly = False
-		Me.UseIdCheckBox.Location = New System.Drawing.Point(6, 20)
-		Me.UseIdCheckBox.Name = "UseIdCheckBox"
-		Me.UseIdCheckBox.Size = New System.Drawing.Size(190, 17)
-		Me.UseIdCheckBox.TabIndex = 0
-		Me.UseIdCheckBox.Text = "Use item ID instead of given name"
-		Me.UseIdCheckBox.UseVisualStyleBackColor = True
-		'
 		'ExampleOutputFileNameLabel
 		'
 		Me.ExampleOutputFileNameLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.ExampleOutputFileNameLabel.AutoSize = True
-		Me.ExampleOutputFileNameLabel.Location = New System.Drawing.Point(6, 155)
+		Me.ExampleOutputFileNameLabel.Location = New System.Drawing.Point(6, 151)
 		Me.ExampleOutputFileNameLabel.Name = "ExampleOutputFileNameLabel"
 		Me.ExampleOutputFileNameLabel.Size = New System.Drawing.Size(132, 13)
 		Me.ExampleOutputFileNameLabel.TabIndex = 5
@@ -240,10 +243,10 @@ Partial Class DownloadUserControl
 		Me.ExampleOutputFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ExampleOutputFileNameTextBox.CueBannerText = ""
-		Me.ExampleOutputFileNameTextBox.Location = New System.Drawing.Point(6, 171)
+		Me.ExampleOutputFileNameTextBox.Location = New System.Drawing.Point(6, 167)
 		Me.ExampleOutputFileNameTextBox.Name = "ExampleOutputFileNameTextBox"
 		Me.ExampleOutputFileNameTextBox.ReadOnly = True
-		Me.ExampleOutputFileNameTextBox.Size = New System.Drawing.Size(761, 21)
+		Me.ExampleOutputFileNameTextBox.Size = New System.Drawing.Size(763, 21)
 		Me.ExampleOutputFileNameTextBox.TabIndex = 6
 		'
 		'CancelDownloadButton
@@ -263,13 +266,13 @@ Partial Class DownloadUserControl
 		Me.DownloadProgressBar.ForeColor = System.Drawing.SystemColors.ControlText
 		Me.DownloadProgressBar.Location = New System.Drawing.Point(255, 261)
 		Me.DownloadProgressBar.Name = "DownloadProgressBar"
-		Me.DownloadProgressBar.Size = New System.Drawing.Size(524, 23)
+		Me.DownloadProgressBar.Size = New System.Drawing.Size(526, 23)
 		Me.DownloadProgressBar.TabIndex = 12
 		'
 		'OpenWorkshopPageButton
 		'
 		Me.OpenWorkshopPageButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.OpenWorkshopPageButton.Location = New System.Drawing.Point(736, 1)
+		Me.OpenWorkshopPageButton.Location = New System.Drawing.Point(738, 3)
 		Me.OpenWorkshopPageButton.Name = "OpenWorkshopPageButton"
 		Me.OpenWorkshopPageButton.Size = New System.Drawing.Size(43, 23)
 		Me.OpenWorkshopPageButton.TabIndex = 2
@@ -281,10 +284,10 @@ Partial Class DownloadUserControl
 		Me.DocumentsOutputPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.DocumentsOutputPathTextBox.CueBannerText = ""
-		Me.DocumentsOutputPathTextBox.Location = New System.Drawing.Point(233, 30)
+		Me.DocumentsOutputPathTextBox.Location = New System.Drawing.Point(233, 34)
 		Me.DocumentsOutputPathTextBox.Name = "DocumentsOutputPathTextBox"
 		Me.DocumentsOutputPathTextBox.ReadOnly = True
-		Me.DocumentsOutputPathTextBox.Size = New System.Drawing.Size(427, 21)
+		Me.DocumentsOutputPathTextBox.Size = New System.Drawing.Size(429, 21)
 		Me.DocumentsOutputPathTextBox.TabIndex = 6
 		'
 		'DownloadedItemTextBox
@@ -292,59 +295,73 @@ Partial Class DownloadUserControl
 		Me.DownloadedItemTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.DownloadedItemTextBox.CueBannerText = ""
-		Me.DownloadedItemTextBox.Location = New System.Drawing.Point(79, 525)
+		Me.DownloadedItemTextBox.Location = New System.Drawing.Point(79, 522)
 		Me.DownloadedItemTextBox.Name = "DownloadedItemTextBox"
 		Me.DownloadedItemTextBox.ReadOnly = True
-		Me.DownloadedItemTextBox.Size = New System.Drawing.Size(651, 21)
+		Me.DownloadedItemTextBox.Size = New System.Drawing.Size(653, 21)
 		Me.DownloadedItemTextBox.TabIndex = 15
 		'
-		'Label1
+		'DownloadedLabel
 		'
-		Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.Label1.AutoSize = True
-		Me.Label1.Location = New System.Drawing.Point(3, 528)
-		Me.Label1.Name = "Label1"
-		Me.Label1.Size = New System.Drawing.Size(70, 13)
-		Me.Label1.TabIndex = 14
-		Me.Label1.Text = "Downloaded:"
+		Me.DownloadedLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.DownloadedLabel.AutoSize = True
+		Me.DownloadedLabel.Location = New System.Drawing.Point(3, 525)
+		Me.DownloadedLabel.Name = "DownloadedLabel"
+		Me.DownloadedLabel.Size = New System.Drawing.Size(70, 13)
+		Me.DownloadedLabel.TabIndex = 14
+		Me.DownloadedLabel.Text = "Downloaded:"
 		'
-		'DownloadedItemButton
+		'GotoDownloadedItemButton
 		'
-		Me.DownloadedItemButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.DownloadedItemButton.Location = New System.Drawing.Point(736, 523)
-		Me.DownloadedItemButton.Name = "DownloadedItemButton"
-		Me.DownloadedItemButton.Size = New System.Drawing.Size(43, 23)
-		Me.DownloadedItemButton.TabIndex = 16
-		Me.DownloadedItemButton.Text = "Goto"
-		Me.DownloadedItemButton.UseVisualStyleBackColor = True
+		Me.GotoDownloadedItemButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.GotoDownloadedItemButton.Location = New System.Drawing.Point(738, 520)
+		Me.GotoDownloadedItemButton.Name = "GotoDownloadedItemButton"
+		Me.GotoDownloadedItemButton.Size = New System.Drawing.Size(43, 23)
+		Me.GotoDownloadedItemButton.TabIndex = 16
+		Me.GotoDownloadedItemButton.Text = "Goto"
+		Me.GotoDownloadedItemButton.UseVisualStyleBackColor = True
+		'
+		'Panel1
+		'
+		Me.Panel1.Controls.Add(Me.ItemIdOrLinkLabel)
+		Me.Panel1.Controls.Add(Me.ItemIdTextBox)
+		Me.Panel1.Controls.Add(Me.OpenWorkshopPageButton)
+		Me.Panel1.Controls.Add(Me.OuputToLabel)
+		Me.Panel1.Controls.Add(Me.OutputPathComboBox)
+		Me.Panel1.Controls.Add(Me.OutputPathTextBox)
+		Me.Panel1.Controls.Add(Me.DocumentsOutputPathTextBox)
+		Me.Panel1.Controls.Add(Me.BrowseForOutputPathButton)
+		Me.Panel1.Controls.Add(Me.GotoOutputPathButton)
+		Me.Panel1.Controls.Add(Me.OptionsGroupBox)
+		Me.Panel1.Controls.Add(Me.DownloadButton)
+		Me.Panel1.Controls.Add(Me.CancelDownloadButton)
+		Me.Panel1.Controls.Add(Me.DownloadProgressBar)
+		Me.Panel1.Controls.Add(Me.LogTextBox)
+		Me.Panel1.Controls.Add(Me.DownloadedLabel)
+		Me.Panel1.Controls.Add(Me.DownloadedItemTextBox)
+		Me.Panel1.Controls.Add(Me.GotoDownloadedItemButton)
+		Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.Panel1.Location = New System.Drawing.Point(0, 0)
+		Me.Panel1.Name = "Panel1"
+		Me.Panel1.Size = New System.Drawing.Size(784, 546)
+		Me.Panel1.TabIndex = 17
+		'
+		'Timer1
+		'
+		Me.Timer1.Interval = 1000
 		'
 		'DownloadUserControl
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-		Me.Controls.Add(Me.DownloadedItemButton)
-		Me.Controls.Add(Me.Label1)
-		Me.Controls.Add(Me.DownloadedItemTextBox)
-		Me.Controls.Add(Me.ItemIdOrLinkLabel)
-		Me.Controls.Add(Me.OpenWorkshopPageButton)
-		Me.Controls.Add(Me.BrowseForOutputPathButton)
-		Me.Controls.Add(Me.GotoOutputPathButton)
-		Me.Controls.Add(Me.OutputPathTextBox)
-		Me.Controls.Add(Me.DocumentsOutputPathTextBox)
-		Me.Controls.Add(Me.OutputPathComboBox)
-		Me.Controls.Add(Me.OuputToLabel)
-		Me.Controls.Add(Me.ItemIdTextBox)
-		Me.Controls.Add(Me.OptionsGroupBox)
-		Me.Controls.Add(Me.DownloadButton)
-		Me.Controls.Add(Me.CancelDownloadButton)
-		Me.Controls.Add(Me.DownloadProgressBar)
-		Me.Controls.Add(Me.LogTextBox)
+		Me.Controls.Add(Me.Panel1)
 		Me.Name = "DownloadUserControl"
 		Me.Size = New System.Drawing.Size(784, 546)
 		Me.OptionsGroupBox.ResumeLayout(False)
 		Me.OptionsGroupBox.PerformLayout()
+		Me.Panel1.ResumeLayout(False)
+		Me.Panel1.PerformLayout()
 		Me.ResumeLayout(False)
-		Me.PerformLayout()
 
 	End Sub
 
@@ -369,9 +386,11 @@ Partial Class DownloadUserControl
 	Friend WithEvents OpenWorkshopPageButton As Button
 	Friend WithEvents DocumentsOutputPathTextBox As TextBoxEx
 	Friend WithEvents DownloadedItemTextBox As TextBoxEx
-	Friend WithEvents Label1 As Label
-	Friend WithEvents DownloadedItemButton As Button
+	Friend WithEvents DownloadedLabel As Label
+	Friend WithEvents GotoDownloadedItemButton As Button
 	Friend WithEvents ExampleOutputFileNameTextBox As TextBoxEx
 	Friend WithEvents ConvertToExpectedFileOrFolderCheckBox As CheckBoxEx
 	Friend WithEvents ToolTip1 As ToolTip
+	Friend WithEvents Panel1 As Panel
+	Friend WithEvents Timer1 As Timer
 End Class

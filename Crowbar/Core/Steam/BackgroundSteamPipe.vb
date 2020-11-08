@@ -122,10 +122,12 @@ Public Class BackgroundSteamPipe
 		outputInfo.PublishedItemID = inputInfo.PublishedItemID
 		outputInfo.ContentFolderOrFileName = ""
 		Dim contentFile As Byte() = {0}
-		result = steamPipe.Crowbar_DownloadContentFolderOrFile(inputInfo.PublishedItemID, contentFile, outputInfo.ItemUpdated_Text, outputInfo.ItemTitle, outputInfo.ContentFolderOrFileName)
+		Dim returned_AppID_Text As String = "0"
+		result = steamPipe.Crowbar_DownloadContentFolderOrFile(inputInfo.PublishedItemID, contentFile, outputInfo.ItemUpdated_Text, outputInfo.ItemTitle, outputInfo.ContentFolderOrFileName, returned_AppID_Text)
 		If result = "success" Then
 			outputInfo.ContentFile = contentFile
 		ElseIf result = "success_SteamUGC" Then
+			outputInfo.AppID = UInteger.Parse(returned_AppID_Text)
 		Else
 			bw.ReportProgress(0, "ERROR: Unable to download the content file name from Steam." + vbCrLf)
 		End If
@@ -388,6 +390,12 @@ Public Class BackgroundSteamPipe
 		Public Item As WorkshopItem
 	End Class
 
+	Public Class PublishItemProgressInfo
+		Public Status As String
+		Public UploadedByteCount As ULong
+		Public TotalUploadedByteCount As ULong
+	End Class
+
 	Public Class PublishItemOutputInfo
 		Public Result As String
 		Public SteamAgreementStatus As String
@@ -507,7 +515,8 @@ Public Class BackgroundSteamPipe
 						End Try
 
 						If outputInfo.Result <> "Failed" AndAlso File.Exists(pathFileName) Then
-							Dim setItemContentWasSuccessful As String = steamPipe.SteamUGC_SetItemContent(inputInfo.Item.ContentPathFolderOrFileName)
+							'Dim setItemContentWasSuccessful As String = steamPipe.SteamUGC_SetItemContent(inputInfo.Item.ContentPathFolderOrFileName)
+							Dim setItemContentWasSuccessful As String = steamPipe.SteamUGC_SetItemContent(pathFileName)
 							If setItemContentWasSuccessful = "success" Then
 								Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item content completed." + vbCrLf)
 							Else
@@ -619,7 +628,7 @@ Public Class BackgroundSteamPipe
 						outputInfo.PublishedItemID = returnedPublishedItemID
 						outputInfo.SteamAgreementStatus = "NotAccepted"
 					Else
-						Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: Unable to create workshop item. Steam error message: " + resultOfCreateItem + vbCrLf)
+						Me.thePublishItemBackgroundWorker.ReportProgress(0, "ERROR: Unable to publish workshop item. Steam error message: " + resultOfCreateItem + vbCrLf)
 						outputInfo.Result = "Failed"
 					End If
 				End If

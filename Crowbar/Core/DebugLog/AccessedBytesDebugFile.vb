@@ -32,42 +32,42 @@ Public Class AccessedBytesDebugFile
 		line = "====== File Seek Log ======"
 		Me.WriteLogLine(0, line)
 
-		line = "--- Summary ---"
-		Me.WriteLogLine(0, line)
+		'line = "--- Summary ---"
+		'Me.WriteLogLine(0, line)
 
 		Dim offsetStart As Long
 		Dim offsetEnd As Long
-		offsetStart = -1
-		offsetEnd = -1
-		For i As Integer = 0 To aFileSeekLog.theFileSeekList.Count - 1
-			If offsetStart = -1 Then
-				offsetStart = aFileSeekLog.theFileSeekList.Keys(i)
-			End If
-			offsetEnd = aFileSeekLog.theFileSeekList.Values(i)
+		'offsetStart = -1
+		'offsetEnd = -1
+		'For i As Integer = 0 To aFileSeekLog.theFileSeekList.Count - 1
+		'	If offsetStart = -1 Then
+		'		offsetStart = aFileSeekLog.theFileSeekList.Keys(i)
+		'	End If
+		'	offsetEnd = aFileSeekLog.theFileSeekList.Values(i)
 
-			If aFileSeekLog.theFileSeekDescriptionList.Values(i).StartsWith("[ERROR] Unread bytes") Then
-				If i > 0 Then
-					line = offsetStart.ToString("N0") + " - " + (aFileSeekLog.theFileSeekList.Keys(i) - 1).ToString("N0")
-					Me.WriteLogLine(1, line)
-				End If
-				If aFileSeekLog.theFileSeekDescriptionList.Values(i).StartsWith("[ERROR] Unread bytes (all zeroes)") Then
-					line = aFileSeekLog.theFileSeekList.Keys(i).ToString("N0") + " - " + offsetEnd.ToString("N0") + " [ERROR] Unread bytes (all zeroes)"
-				Else
-					line = aFileSeekLog.theFileSeekList.Keys(i).ToString("N0") + " - " + offsetEnd.ToString("N0") + " [ERROR] Unread bytes (non-zero)"
-				End If
-				Me.WriteLogLine(1, line)
-				offsetStart = -1
-			ElseIf (i = aFileSeekLog.theFileSeekList.Count - 1) OrElse (offsetEnd + 1 <> aFileSeekLog.theFileSeekList.Keys(i + 1)) Then
-				line = offsetStart.ToString("N0") + " - " + offsetEnd.ToString("N0")
-				Me.WriteLogLine(1, line)
-				offsetStart = -1
-			End If
-		Next
+		'	If aFileSeekLog.theFileSeekDescriptionList.Values(i).StartsWith("[ERROR] Unread bytes") Then
+		'		If i > 0 Then
+		'			line = offsetStart.ToString("N0") + " - " + (aFileSeekLog.theFileSeekList.Keys(i) - 1).ToString("N0")
+		'			Me.WriteLogLine(1, line)
+		'		End If
+		'		If aFileSeekLog.theFileSeekDescriptionList.Values(i).StartsWith("[ERROR] Unread bytes (all zeroes)") Then
+		'			line = aFileSeekLog.theFileSeekList.Keys(i).ToString("N0") + " - " + offsetEnd.ToString("N0") + " [ERROR] Unread bytes (all zeroes)"
+		'		Else
+		'			line = aFileSeekLog.theFileSeekList.Keys(i).ToString("N0") + " - " + offsetEnd.ToString("N0") + " [ERROR] Unread bytes (non-zero)"
+		'		End If
+		'		Me.WriteLogLine(1, line)
+		'		offsetStart = -1
+		'	ElseIf (i = aFileSeekLog.theFileSeekList.Count - 1) OrElse (offsetEnd + 1 <> aFileSeekLog.theFileSeekList.Keys(i + 1)) Then
+		'		line = offsetStart.ToString("N0") + " - " + offsetEnd.ToString("N0")
+		'		Me.WriteLogLine(1, line)
+		'		offsetStart = -1
+		'	End If
+		'Next
 
-		line = "------------------------"
-		Me.WriteLogLine(0, line)
-		line = "--- Each Section or Loop ---"
-		Me.WriteLogLine(0, line)
+		'line = "------------------------"
+		'Me.WriteLogLine(0, line)
+		'line = "--- Each Section or Loop ---"
+		'Me.WriteLogLine(0, line)
 
 		offsetEnd = -1
 		For i As Integer = 0 To aFileSeekLog.theFileSeekList.Count - 1

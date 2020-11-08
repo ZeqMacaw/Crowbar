@@ -46,6 +46,7 @@ Public Class AppSettings
 		Me.theUnpackMode = InputOptions.File
 
 		Me.thePreviewMdlPathFileName = ""
+		Me.thePreviewOverrideMdlVersion = SupportedMdlVersion.DoNotOverride
 		Me.thePreviewGameSetupSelectedIndex = 0
 
 		Me.theDecompileMdlPathFileName = ""
@@ -53,8 +54,13 @@ Public Class AppSettings
 		Me.theDecompileOutputFolderOption = DecompileOutputPathOptions.WorkFolder
 		Me.SetDefaultDecompileOutputSubfolderName()
 		Me.theDecompileOutputFullPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-		Me.SetDefaultDecompileOptions()
+		Me.SetDefaultDecompileReCreateFilesOptions()
 		Me.theDecompileMode = InputOptions.File
+		Me.theDecompileFolderForEachModelIsChecked = False
+		Me.theDecompileStricterFormatIsChecked = False
+		Me.theDecompileLogFileIsChecked = False
+		Me.theDecompileDebugInfoFilesIsChecked = False
+		Me.theDecompileOverrideMdlVersion = SupportedMdlVersion.DoNotOverride
 
 		Me.theCompileQcPathFileName = ""
 		Me.theCompileOutputFolderIsChecked = True
@@ -70,6 +76,7 @@ Public Class AppSettings
 		Me.thePatchMode = InputOptions.File
 
 		Me.theViewMdlPathFileName = ""
+		Me.theViewOverrideMdlVersion = SupportedMdlVersion.DoNotOverride
 		Me.theViewGameSetupSelectedIndex = 0
 
 		Me.thePackInputPathFileName = ""
@@ -91,6 +98,11 @@ Public Class AppSettings
 		Me.SetDefaultOptionsAutoOpenOptions()
 		Me.SetDefaultOptionsDragAndDropOptions()
 		Me.SetDefaultOptionsContextMenuOptions()
+
+		Me.theUpdateDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+		Me.theUpdateUpdateToNewPathIsChecked = False
+		Me.theUpdateUpdateDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+		Me.theUpdateCopySettingsIsChecked = True
 
 		'Me.Init()
 	End Sub
@@ -435,6 +447,16 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	Public Property PreviewOverrideMdlVersion() As SupportedMdlVersion
+		Get
+			Return Me.thePreviewOverrideMdlVersion
+		End Get
+		Set(ByVal value As SupportedMdlVersion)
+			Me.thePreviewOverrideMdlVersion = value
+			NotifyPropertyChanged("PreviewOverrideMdlVersion")
+		End Set
+	End Property
+
 	Public Property PreviewGameSetupSelectedIndex() As Integer
 		Get
 			'NOTE: Must change in the Get() because theGameSetups might not have been read-in yet (i.e. GameSetups appear *after* this setting in XML file).
@@ -661,16 +683,6 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	Public Property DecompileDeclareSequenceQciFileIsChecked() As Boolean
-		Get
-			Return Me.theDecompileDeclareSequenceQciFileIsChecked
-		End Get
-		Set(ByVal value As Boolean)
-			Me.theDecompileDeclareSequenceQciFileIsChecked = value
-			NotifyPropertyChanged("DecompileDeclareSequenceQciFileIsChecked")
-		End Set
-	End Property
-
 	Public Property DecompileFolderForEachModelIsChecked() As Boolean
 		Get
 			Return Me.theDecompileFolderForEachModelIsChecked
@@ -678,6 +690,26 @@ Public Class AppSettings
 		Set(ByVal value As Boolean)
 			Me.theDecompileFolderForEachModelIsChecked = value
 			NotifyPropertyChanged("DecompileFolderForEachModelIsChecked")
+		End Set
+	End Property
+
+	Public Property DecompilePrefixFileNamesWithModelNameIsChecked() As Boolean
+		Get
+			Return Me.theDecompilePrefixFileNamesWithModelNameIsChecked
+		End Get
+		Set(ByVal value As Boolean)
+			Me.theDecompilePrefixFileNamesWithModelNameIsChecked = value
+			NotifyPropertyChanged("DecompilePrefixFileNamesWithModelNameIsChecked")
+		End Set
+	End Property
+
+	Public Property DecompileStricterFormatIsChecked() As Boolean
+		Get
+			Return Me.theDecompileStricterFormatIsChecked
+		End Get
+		Set(ByVal value As Boolean)
+			Me.theDecompileStricterFormatIsChecked = value
+			NotifyPropertyChanged("DecompileStricterFormatIsChecked")
 		End Set
 	End Property
 
@@ -701,13 +733,13 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	Public Property DecompileStricterFormatIsChecked() As Boolean
+	Public Property DecompileDeclareSequenceQciFileIsChecked() As Boolean
 		Get
-			Return Me.theDecompileStricterFormatIsChecked
+			Return Me.theDecompileDeclareSequenceQciFileIsChecked
 		End Get
 		Set(ByVal value As Boolean)
-			Me.theDecompileStricterFormatIsChecked = value
-			NotifyPropertyChanged("DecompileStricterFormatIsChecked")
+			Me.theDecompileDeclareSequenceQciFileIsChecked = value
+			NotifyPropertyChanged("DecompileDeclareSequenceQciFileIsChecked")
 		End Set
 	End Property
 
@@ -721,13 +753,13 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	Public Property DecompileUseUvsForDoomMusicCompilerIsChecked() As Boolean
+	Public Property DecompileUseNonValveUvConversionIsChecked() As Boolean
 		Get
-			Return Me.theDecompileUseUvsForDoomMusicCompilerIsChecked
+			Return Me.theDecompileUseNonValveUvConversionIsChecked
 		End Get
 		Set(ByVal value As Boolean)
-			Me.theDecompileUseUvsForDoomMusicCompilerIsChecked = value
-			NotifyPropertyChanged("DecompileUseUvsForDoomMusicCompilerIsChecked")
+			Me.theDecompileUseNonValveUvConversionIsChecked = value
+			NotifyPropertyChanged("DecompileUseNonValveUvConversionIsChecked")
 		End Set
 	End Property
 
@@ -985,6 +1017,16 @@ Public Class AppSettings
 		Set(ByVal value As String)
 			Me.theViewMdlPathFileName = value
 			NotifyPropertyChanged("ViewMdlPathFileName")
+		End Set
+	End Property
+
+	Public Property ViewOverrideMdlVersion() As SupportedMdlVersion
+		Get
+			Return Me.theViewOverrideMdlVersion
+		End Get
+		Set(ByVal value As SupportedMdlVersion)
+			Me.theViewOverrideMdlVersion = value
+			NotifyPropertyChanged("ViewOverrideMdlVersion")
 		End Set
 	End Property
 
@@ -1501,6 +1543,46 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	Public Property UpdateDownloadPath() As String
+		Get
+			Return Me.theUpdateDownloadPath
+		End Get
+		Set(ByVal value As String)
+			Me.theUpdateDownloadPath = value
+			NotifyPropertyChanged("UpdateDownloadPath")
+		End Set
+	End Property
+
+	Public Property UpdateUpdateToNewPathIsChecked() As Boolean
+		Get
+			Return Me.theUpdateUpdateToNewPathIsChecked
+		End Get
+		Set(ByVal value As Boolean)
+			Me.theUpdateUpdateToNewPathIsChecked = value
+			NotifyPropertyChanged("UpdateUpdateToNewPathIsChecked")
+		End Set
+	End Property
+
+	Public Property UpdateUpdateDownloadPath() As String
+		Get
+			Return Me.theUpdateUpdateDownloadPath
+		End Get
+		Set(ByVal value As String)
+			Me.theUpdateUpdateDownloadPath = value
+			NotifyPropertyChanged("UpdateUpdateDownloadPath")
+		End Set
+	End Property
+
+	Public Property UpdateCopySettingsIsChecked() As Boolean
+		Get
+			Return Me.theUpdateCopySettingsIsChecked
+		End Get
+		Set(ByVal value As Boolean)
+			Me.theUpdateCopySettingsIsChecked = value
+			NotifyPropertyChanged("UpdateCopySettingsIsChecked")
+		End Set
+	End Property
+
 #End Region
 
 #Region "Core Event Handlers"
@@ -1535,7 +1617,7 @@ Public Class AppSettings
 		Me.DecompileOutputSubfolderName = "decompiled " + My.Application.Info.Version.ToString(2)
 	End Sub
 
-	Public Sub SetDefaultDecompileOptions()
+	Public Sub SetDefaultDecompileReCreateFilesOptions()
 		'NOTE: Call the properties so the NotifyPropertyChanged events are raised.
 		Me.DecompileQcFileIsChecked = True
 		Me.DecompileGroupIntoQciFilesIsChecked = False
@@ -1546,7 +1628,7 @@ Public Class AppSettings
 
 		Me.DecompileReferenceMeshSmdFileIsChecked = True
 		Me.DecompileRemovePathFromSmdMaterialFileNamesIsChecked = True
-		Me.DecompileUseUvsForDoomMusicCompilerIsChecked = False
+		Me.DecompileUseNonValveUvConversionIsChecked = False
 
 		Me.DecompileBoneAnimationSmdFilesIsChecked = True
 		Me.DecompileBoneAnimationPlaceInSubfolderIsChecked = True
@@ -1556,12 +1638,6 @@ Public Class AppSettings
 		Me.DecompilePhysicsMeshSmdFileIsChecked = True
 		Me.DecompileVertexAnimationVtaFileIsChecked = True
 		Me.DecompileProceduralBonesVrdFileIsChecked = True
-
-		Me.DecompileFolderForEachModelIsChecked = False
-		Me.DecompileStricterFormatIsChecked = False
-
-		Me.DecompileLogFileIsChecked = False
-		Me.DecompileDebugInfoFilesIsChecked = False
 	End Sub
 
 	Public Sub SetDefaultCompileOutputSubfolderName()
@@ -1709,6 +1785,7 @@ Public Class AppSettings
 	' Preview tab
 
 	Private thePreviewMdlPathFileName As String
+	Private thePreviewOverrideMdlVersion As SupportedMdlVersion
 	Private thePreviewGameSetupSelectedIndex As Integer
 
 	Private thePreviewDataViewerIsRunning As Boolean
@@ -1732,7 +1809,7 @@ Public Class AppSettings
 
 	Private theDecompileReferenceMeshSmdFileIsChecked As Boolean
 	Private theDecompileRemovePathFromSmdMaterialFileNamesIsChecked As Boolean
-	Private theDecompileUseUvsForDoomMusicCompilerIsChecked As Boolean
+	Private theDecompileUseNonValveUvConversionIsChecked As Boolean
 
 	Private theDecompileBoneAnimationSmdFilesIsChecked As Boolean
 	Private theDecompileBoneAnimationPlaceInSubfolderIsChecked As Boolean
@@ -1746,9 +1823,10 @@ Public Class AppSettings
 	Private theDecompileDeclareSequenceQciFileIsChecked As Boolean
 
 	Private theDecompileFolderForEachModelIsChecked As Boolean
+	Private theDecompilePrefixFileNamesWithModelNameIsChecked As Boolean
+	Private theDecompileStricterFormatIsChecked As Boolean
 	Private theDecompileLogFileIsChecked As Boolean
 	Private theDecompileDebugInfoFilesIsChecked As Boolean
-	Private theDecompileStricterFormatIsChecked As Boolean
 
 	Private theDecompileOverrideMdlVersion As SupportedMdlVersion
 
@@ -1792,6 +1870,7 @@ Public Class AppSettings
 	' View tab
 
 	Private theViewMdlPathFileName As String
+	Private theViewOverrideMdlVersion As SupportedMdlVersion
 	Private theViewGameSetupSelectedIndex As Integer
 
 	Private theViewDataViewerIsRunning As Boolean
@@ -1865,6 +1944,13 @@ Public Class AppSettings
 	Private theOptionsCompileQcFileIsChecked As Boolean
 	Private theOptionsCompileFolderIsChecked As Boolean
 	Private theOptionsCompileFolderAndSubfoldersIsChecked As Boolean
+
+	' Update tab
+
+	Private theUpdateDownloadPath As String
+	Private theUpdateUpdateToNewPathIsChecked As Boolean
+	Private theUpdateUpdateDownloadPath As String
+	Private theUpdateCopySettingsIsChecked As Boolean
 
 #End Region
 
