@@ -45,6 +45,7 @@ Partial Class PublishUserControl
 		Me.ItemDescriptionLabel = New System.Windows.Forms.Label()
 		Me.ItemChangeNoteTextBox = New Crowbar.RichTextBoxEx()
 		Me.ItemChangeNoteTopPanel = New System.Windows.Forms.Panel()
+		Me.ToggleWordWrapForChangeNotePanel = New System.Windows.Forms.Panel()
 		Me.ToggleWordWrapForChangeNoteCheckBox = New System.Windows.Forms.CheckBox()
 		Me.ItemChangeNoteLabel = New System.Windows.Forms.Label()
 		Me.ItemTopPanel = New System.Windows.Forms.Panel()
@@ -73,7 +74,6 @@ Partial Class PublishUserControl
 		Me.LogTextBox = New Crowbar.RichTextBoxEx()
 		Me.PublishItemButton = New System.Windows.Forms.Button()
 		Me.QueueListView = New System.Windows.Forms.ListView()
-		Me.ToggleWordWrapForChangeNotePanel = New System.Windows.Forms.Panel()
 		CType(Me.TopMiddleSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.TopMiddleSplitContainer.Panel1.SuspendLayout()
 		Me.TopMiddleSplitContainer.Panel2.SuspendLayout()
@@ -97,20 +97,22 @@ Partial Class PublishUserControl
 		Me.DescriptionChangeNoteSplitContainer.SuspendLayout()
 		Me.ItemDescriptionTopPanel.SuspendLayout()
 		Me.ItemChangeNoteTopPanel.SuspendLayout()
+		Me.ToggleWordWrapForChangeNotePanel.SuspendLayout()
 		Me.ItemTopPanel.SuspendLayout()
 		Me.ItemBottomPanel.SuspendLayout()
 		CType(Me.ItemPreviewImagePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
-		Me.ToggleWordWrapForChangeNotePanel.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'RefreshGameItemsButton
 		'
 		Me.RefreshGameItemsButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.RefreshGameItemsButton.BackgroundImage = Global.Crowbar.My.Resources.Resources.Refresh
 		Me.RefreshGameItemsButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+		Me.RefreshGameItemsButton.FlatAppearance.BorderSize = 0
+		Me.RefreshGameItemsButton.Image = Global.Crowbar.My.Resources.Resources.Refresh
 		Me.RefreshGameItemsButton.Location = New System.Drawing.Point(394, 3)
 		Me.RefreshGameItemsButton.Margin = New System.Windows.Forms.Padding(0, 3, 3, 3)
 		Me.RefreshGameItemsButton.Name = "RefreshGameItemsButton"
+		Me.RefreshGameItemsButton.Padding = New System.Windows.Forms.Padding(0, 0, 1, 2)
 		Me.RefreshGameItemsButton.Size = New System.Drawing.Size(23, 22)
 		Me.RefreshGameItemsButton.TabIndex = 36
 		Me.ToolTip1.SetToolTip(Me.RefreshGameItemsButton, "Refresh Game Items")
@@ -487,6 +489,15 @@ Partial Class PublishUserControl
 		Me.ItemChangeNoteTopPanel.Size = New System.Drawing.Size(281, 19)
 		Me.ItemChangeNoteTopPanel.TabIndex = 18
 		'
+		'ToggleWordWrapForChangeNotePanel
+		'
+		Me.ToggleWordWrapForChangeNotePanel.Controls.Add(Me.ToggleWordWrapForChangeNoteCheckBox)
+		Me.ToggleWordWrapForChangeNotePanel.Dock = System.Windows.Forms.DockStyle.Right
+		Me.ToggleWordWrapForChangeNotePanel.Location = New System.Drawing.Point(267, 0)
+		Me.ToggleWordWrapForChangeNotePanel.Name = "ToggleWordWrapForChangeNotePanel"
+		Me.ToggleWordWrapForChangeNotePanel.Size = New System.Drawing.Size(14, 19)
+		Me.ToggleWordWrapForChangeNotePanel.TabIndex = 18
+		'
 		'ToggleWordWrapForChangeNoteCheckBox
 		'
 		Me.ToggleWordWrapForChangeNoteCheckBox.Appearance = System.Windows.Forms.Appearance.Button
@@ -797,15 +808,6 @@ Partial Class PublishUserControl
 		Me.QueueListView.UseCompatibleStateImageBehavior = False
 		Me.QueueListView.Visible = False
 		'
-		'ToggleWordWrapForChangeNotePanel
-		'
-		Me.ToggleWordWrapForChangeNotePanel.Controls.Add(Me.ToggleWordWrapForChangeNoteCheckBox)
-		Me.ToggleWordWrapForChangeNotePanel.Dock = System.Windows.Forms.DockStyle.Right
-		Me.ToggleWordWrapForChangeNotePanel.Location = New System.Drawing.Point(267, 0)
-		Me.ToggleWordWrapForChangeNotePanel.Name = "ToggleWordWrapForChangeNotePanel"
-		Me.ToggleWordWrapForChangeNotePanel.Size = New System.Drawing.Size(14, 19)
-		Me.ToggleWordWrapForChangeNotePanel.TabIndex = 18
-		'
 		'PublishUserControl
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -839,12 +841,12 @@ Partial Class PublishUserControl
 		Me.DescriptionChangeNoteSplitContainer.ResumeLayout(False)
 		Me.ItemDescriptionTopPanel.ResumeLayout(False)
 		Me.ItemChangeNoteTopPanel.ResumeLayout(False)
+		Me.ToggleWordWrapForChangeNotePanel.ResumeLayout(False)
 		Me.ItemTopPanel.ResumeLayout(False)
 		Me.ItemTopPanel.PerformLayout()
 		Me.ItemBottomPanel.ResumeLayout(False)
 		Me.ItemBottomPanel.PerformLayout()
 		CType(Me.ItemPreviewImagePictureBox, System.ComponentModel.ISupportInitialize).EndInit()
-		Me.ToggleWordWrapForChangeNotePanel.ResumeLayout(False)
 		Me.ResumeLayout(False)
 
 	End Sub
