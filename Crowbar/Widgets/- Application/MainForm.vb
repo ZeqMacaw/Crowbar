@@ -155,6 +155,7 @@ Public Class MainForm
 		If commandLineValues.Count > 1 Then
 			Dim command As String = commandLineValues(1)
 			If command <> "" AndAlso Not TheApp.CommandLineValueIsAnAppSetting(command) Then
+				Me.HandleMultipleAutoOpenedPackages(commandLineValues)
 				Me.SetDroppedPathFileName(True, command)
 
 				''TEST: Every file selected and dropped onto EXE is a string in the array, starting at index 1. Index 0 is the EXE path file name.
@@ -315,10 +316,49 @@ Public Class MainForm
 
 #Region "Private Methods"
 
-	Private Sub SetDroppedPathFileName(ByVal setViaAutoOpen As Boolean, ByVal pathFileName As String)
-		Dim extension As String = ""
+	Private Sub HandleMultipleAutoOpenedPackages(ByVal commandLineValues As ReadOnlyCollection(Of String))
+		If commandLineValues.Count > 2 Then
+			Dim pathFileName As String = commandLineValues(1)
+			Dim extension As String = Path.GetExtension(pathFileName).ToLower()
 
-		extension = Path.GetExtension(pathFileName).ToLower()
+			If extension = ".vpk" OrElse extension = ".gma" OrElse extension = ".fpx" Then
+				If TheApp.Settings.AppIsSingleInstance Then
+					'TODO: Check if first command-line value's extension is set to auto-open Unpack; if not, then skip all of this.
+					'TODO: If the extension auto-open is set to Unpack, then add to list of packages that should open in Unpack.
+					'For commandLineValueIndex As Integer = 1 To commandLineValues.Count - 1
+					'Next
+				Else
+					'TODO: Open another instance of Crowbar with same commandLineValues but with the current one removed.
+					Dim appPathFileName As String = commandLineValues(0)
+					If File.Exists(appPathFileName) Then
+						Dim crowbarExeProcess As New Process()
+						Try
+							crowbarExeProcess.StartInfo.UseShellExecute = False
+							crowbarExeProcess.StartInfo.FileName = appPathFileName
+							crowbarExeProcess.StartInfo.Arguments = ""
+							For commandLineValueIndex As Integer = 2 To commandLineValues.Count - 1
+								pathFileName = commandLineValues(commandLineValueIndex)
+								'NOTE: A commandLineValue does not have any double-quotes around pathFileNames, but need them for StartInfo.Arguments.
+								crowbarExeProcess.StartInfo.Arguments += " """ + pathFileName + """"
+							Next
+#If DEBUG Then
+							crowbarExeProcess.StartInfo.CreateNoWindow = False
+#Else
+				crowbarExeProcess.StartInfo.CreateNoWindow = True
+#End If
+							crowbarExeProcess.Start()
+						Catch ex As Exception
+							Dim debug As Integer = 4242
+						Finally
+						End Try
+					End If
+				End If
+			End If
+		End If
+	End Sub
+
+	Private Sub SetDroppedPathFileName(ByVal setViaAutoOpen As Boolean, ByVal pathFileName As String)
+		Dim extension As String = Path.GetExtension(pathFileName).ToLower()
 		If extension = ".url" Then
 			Dim fileLines() As String
 			fileLines = File.ReadAllLines(pathFileName)
