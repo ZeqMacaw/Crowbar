@@ -257,12 +257,12 @@ Public Class GarrysModSteamAppInfo
 		Return processedPathFileName
 	End Function
 
-	Public Overrides Sub CleanUpAfterUpload()
+	Public Overrides Sub CleanUpAfterUpload(ByVal bw As BackgroundWorkerEx)
 		If Directory.Exists(Me.theTempCrowbarPath) Then
 			Try
 				Directory.Delete(Me.theTempCrowbarPath, True)
 			Catch ex As Exception
-				Throw New System.Exception("Crowbar tried to delete its temp folder """ + Me.theTempCrowbarPath + """ but Windows gave this message: " + ex.Message)
+				bw.ReportProgress(0, "Crowbar tried to delete its temp folder """ + Me.theTempCrowbarPath + """ but Windows gave this message: " + ex.Message)
 			End Try
 		End If
 		Me.theTempCrowbarPath = ""
