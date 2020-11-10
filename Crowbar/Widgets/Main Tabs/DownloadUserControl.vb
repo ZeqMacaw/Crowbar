@@ -312,7 +312,10 @@ Public Class DownloadUserControl
 					'======
 					'NOTE: File remains: "C:\Program Files (x86)\Steam\depotcache\<app_id>_<manifest_id>.manifest"
 					'NOTE: Data for the downloaded file remains in: "<steam_folder_on_drive_where_game_is_installed>\steamapps\workshop\appworkshop_<app_id>.acf"
-					Directory.Move(outputInfo.ContentFolderOrFileName, targetOutputPath)
+					'NOTE: Do not use Directory.Move() because it raises exception when trying to move between drives.
+					'Directory.Move(outputInfo.ContentFolderOrFileName, targetOutputPath)
+					'======
+					My.Computer.FileSystem.MoveDirectory(outputInfo.ContentFolderOrFileName, targetOutputPath)
 
 					If Directory.Exists(targetOutputPath) Then
 						'Me.ProcessFolderOrFileAfterDownload(targetOutputPath)
