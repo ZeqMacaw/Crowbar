@@ -151,7 +151,7 @@ Public Class DownloadUserControl
 		TheApp.Settings.SetDefaultDownloadOptions()
 	End Sub
 
-	Private Sub DownloadFromLinkButton_Click(sender As Object, e As EventArgs) Handles DownloadButton.Click
+	Private Sub DownloadButton_Click(sender As Object, e As EventArgs) Handles DownloadButton.Click
 		Me.DownloadFromLink()
 	End Sub
 
@@ -159,7 +159,11 @@ Public Class DownloadUserControl
 		Me.CancelDownload()
 	End Sub
 
-	Private Sub DownloadedItemButton_Click(sender As Object, e As EventArgs) Handles GotoDownloadedItemButton.Click
+	Private Sub UseInUnpackButton_Click(sender As Object, e As EventArgs) Handles UseInUnpackButton.Click
+		Me.UseInUnpack()
+	End Sub
+
+	Private Sub GotoDownloadedItemButton_Click(sender As Object, e As EventArgs) Handles GotoDownloadedItemButton.Click
 		Me.GotoDownloadedItem()
 	End Sub
 
@@ -451,6 +455,14 @@ Public Class DownloadUserControl
 		ElseIf TheApp.Settings.DownloadOutputFolderOption = DownloadOutputPathOptions.WorkFolder Then
 			FileManager.OpenWindowsExplorer(TheApp.Settings.DownloadOutputWorkPath)
 		End If
+	End Sub
+
+	Private Sub UseInUnpack()
+		Dim extension As String = Path.GetExtension(Me.DownloadedItemTextBox.Text)
+		If extension = ".gma" OrElse extension = ".vpk" Then
+
+		End If
+		TheApp.Settings.UnpackPackagePathFolderOrFileName = Me.DownloadedItemTextBox.Text
 	End Sub
 
 	Private Sub GotoDownloadedItem()
