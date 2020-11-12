@@ -1,4 +1,5 @@
 Imports System.IO
+Imports System.Web.Script.Serialization
 
 Public Class PackUserControl
 
@@ -8,6 +9,8 @@ Public Class PackUserControl
 		MyBase.New()
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
+
+		Me.theGmaGarrysModTagsUserControlIsBeingChangedByMe = False
 	End Sub
 
 #End Region
@@ -78,7 +81,9 @@ Public Class PackUserControl
 
 		Me.GmaTitleTextBox.DataBindings.Add("Text", TheApp.Settings, "PackGmaTitle", False, DataSourceUpdateMode.OnValidation)
 		'NOTE: There is no automatic data-binding with TagsWidget, so manually bind from object to widget here.
+		Me.theGmaGarrysModTagsUserControlIsBeingChangedByMe = True
 		Me.GmaGarrysModTagsUserControl.ItemTags = TheApp.Settings.PackGmaItemTags
+		Me.theGmaGarrysModTagsUserControlIsBeingChangedByMe = False
 		AddHandler Me.GmaGarrysModTagsUserControl.TagsPropertyChanged, AddressOf Me.GmaGarrysModTagsUserControl_TagsPropertyChanged
 	End Sub
 
@@ -185,7 +190,9 @@ Public Class PackUserControl
 
 	'NOTE: There is no automatic data-binding with TagsWidget, so manually bind from widget to object here.
 	Private Sub GmaGarrysModTagsUserControl_TagsPropertyChanged(sender As Object, e As EventArgs)
-		TheApp.Settings.PackGmaItemTags = Me.GmaGarrysModTagsUserControl.ItemTags
+		If Not Me.theGmaGarrysModTagsUserControlIsBeingChangedByMe Then
+			TheApp.Settings.PackGmaItemTags = Me.GmaGarrysModTagsUserControl.ItemTags
+		End If
 	End Sub
 
 	Private Sub DirectPackerOptionsTextBox_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DirectPackerOptionsTextBox.TextChanged
@@ -204,8 +211,15 @@ Public Class PackUserControl
 		TheApp.Packer.CancelAsync()
 	End Sub
 
-	Private Sub UseAllInReleaseButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UseAllInPublishButton.Click
-		'TODO: Use the output folder (including file name when needed) as the release tab's input file or folder.
+	Private Sub UseAllInPublishButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UseAllInPublishButton.Click
+		'NOTE: It might not be good idea to try to auto-publish more than one workshop item at a time.
+	End Sub
+
+	Private Sub UseInPublishButton_Click(sender As Object, e As EventArgs) Handles UseInPublishButton.Click
+		'TODO: Use the output folder (including file name when needed) as the Publish tab's input file or folder.
+		'Dim pathFileName As String
+		'pathFileName = TheApp.Packer.GetOutputPathFileName(Me.thePackedRelativePathFileNames(Me.PackedFilesComboBox.SelectedIndex))
+		'TheApp.Settings.Publish = pathFileName
 	End Sub
 
 	Private Sub GotoPackedFileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GotoPackedFileButton.Click
@@ -327,7 +341,7 @@ Public Class PackUserControl
 
 		Me.PackedFilesComboBox.Enabled = Not packerIsRunning AndAlso Me.thePackedRelativePathFileNames.Count > 0
 		'TODO: Check for the various Pack extensions instead of just for "vpk".
-		Me.UseInReleaseButton.Enabled = Not packerIsRunning AndAlso Me.thePackedRelativePathFileNames.Count > 0 AndAlso (Path.GetExtension(Me.thePackedRelativePathFileNames(Me.PackedFilesComboBox.SelectedIndex)) = ".vpk")
+		Me.UseInPublishButton.Enabled = Not packerIsRunning AndAlso Me.thePackedRelativePathFileNames.Count > 0 AndAlso (Path.GetExtension(Me.thePackedRelativePathFileNames(Me.PackedFilesComboBox.SelectedIndex)) = ".vpk")
 		Me.GotoPackedFileButton.Enabled = Not packerIsRunning AndAlso Me.thePackedRelativePathFileNames.Count > 0
 	End Sub
 
@@ -425,6 +439,13 @@ Public Class PackUserControl
 		Me.PackerOptionsTextBox.Text += " "
 		If gamePackerFileName = "gmad.exe" Then
 			Me.PackerOptionsTextBox.Text += "create -folder "
+
+			Dim pathFileName As String = Path.Combine(inputPath, "addon.json")
+			Dim garrysModAppInfo As GarrysModSteamAppInfo = New GarrysModSteamAppInfo()
+			garrysModAppInfo.ReadDataFromAddonJsonFile(pathFileName, TheApp.Settings.PackGmaTitle, TheApp.Settings.PackGmaItemTags)
+			Me.theGmaGarrysModTagsUserControlIsBeingChangedByMe = True
+			Me.GmaGarrysModTagsUserControl.ItemTags = TheApp.Settings.PackGmaItemTags
+			Me.theGmaGarrysModTagsUserControlIsBeingChangedByMe = False
 		End If
 		Me.PackerOptionsTextBox.Text += """"
 		Me.PackerOptionsTextBox.Text += inputFolder
@@ -525,11 +546,11 @@ Public Class PackUserControl
 
 #Region "Data"
 
-	Friend WithEvents GarrysModTagsUserControl1 As GarrysModTagsUserControl
-
 	Private theSelectedPackerOptions As List(Of String)
 
 	Private thePackedRelativePathFileNames As BindingListEx(Of String)
+
+	Private theGmaGarrysModTagsUserControlIsBeingChangedByMe As Boolean
 
 #End Region
 

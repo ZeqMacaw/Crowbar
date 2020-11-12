@@ -1,5 +1,6 @@
 ﻿Imports System.ComponentModel
 Imports System.IO
+Imports System.Linq
 Imports System.Web.Script.Serialization
 
 Public Class Packer
@@ -228,7 +229,7 @@ Public Class Packer
 			Me.UpdateProgress(1, "Packing """ + inputPath + """ ...")
 
 			Dim result As String
-			result = Me.CheckFiles()
+			result = Me.CheckFiles(inputPath)
 			If result = "success" Then
 				Me.UpdateProgress(2, "Output from packer """ + Me.GetGamePackerPathFileName() + """: ")
 				Me.RunPackerApp(inputPath)
@@ -238,7 +239,7 @@ Public Class Packer
 					Me.UpdateProgress(2, "CAUSE: The packer is not the correct one for the selected game.")
 					Me.UpdateProgress(2, "SOLUTION: Verify integrity of game files via Steam so that the correct packer is installed.")
 				Else
-					Me.ProcessPackedModel(inputPath)
+					Me.ProcessPackage(inputPath)
 				End If
 
 				'' Clean up any created folders.
@@ -260,119 +261,24 @@ Public Class Packer
 		Return status
 	End Function
 
-	Private Function CheckFiles() As String
+	Private Function CheckFiles(ByVal inputPath As String) As String
 		Dim result As String = "success"
 
 		'TODO: Determine what to check before Packer runs for a folder.
 		Dim gamePackerPathFileName As String = Me.GetGamePackerPathFileName()
 		Dim gamePackerFileName As String = Path.GetFileName(gamePackerPathFileName)
 		If gamePackerFileName = "gmad.exe" Then
-			'Dim addonJsonPathFileName As String = Me.CreateAddonJsonFile(item.ContentPathFolderOrFileName, item.Title, item.Tags)
-			'If File.Exists(addonJsonPathFileName) Then
-
-			'End If
+			If Directory.Exists(inputPath) Then
+				Dim garrysModAppInfo As GarrysModSteamAppInfo = New GarrysModSteamAppInfo()
+				Dim addonJsonPathFileName As String = garrysModAppInfo.CreateAddonJsonFile(inputPath, TheApp.Settings.PackGmaTitle, TheApp.Settings.PackGmaItemTags)
+				If Not File.Exists(addonJsonPathFileName) Then
+					result = "error"
+				End If
+			End If
 		End If
 
 		Return result
 	End Function
-
-	'Example 01:
-	'{
-	'	"title"		:	"My Server Content",
-	'	"type"		:	"ServerContent",
-	'	"tags"		:	[ "roleplay", "realism" ],
-	'	"ignore"	:
-	'	[
-	'		"*.psd",
-	'		"*.vcproj",
-	'		"*.svn*"
-	'	]
-	'}
-	'Example 02:
-	'{
-	'	"title": "Ragdoll Fight",
-	'	"type": "tool",
-	'	"tags": 
-	'	[
-	'		"scenic",
-	'		"fun"
-	'	]
-	'}
-	Private Function CreateAddonJsonFile(ByVal addonJsonPath As String, ByVal itemTitle As String, ByVal itemTags As BindingListEx(Of String)) As String
-		Dim addonJsonPathFileName As String = Path.Combine(addonJsonPath, "addon.json")
-
-		ArrangeTagsForEasierUseInAddonJsonFile(itemTags)
-
-		Try
-			If File.Exists(addonJsonPathFileName) Then
-				'NOTE: User's data in Crowbar overrides data in "addon.json" file.
-				File.Delete(addonJsonPathFileName)
-			End If
-		Catch ex As Exception
-			Throw New System.Exception("Crowbar tried to delete an old temp file """ + addonJsonPathFileName + """ but Windows gave this message: " + ex.Message)
-		End Try
-
-		Dim fileStream As StreamWriter
-		fileStream = File.CreateText(addonJsonPathFileName)
-		fileStream.AutoFlush = True
-		Try
-			Dim jss As JavaScriptSerializer = New JavaScriptSerializer()
-			If File.Exists(addonJsonPathFileName) Then
-				fileStream.WriteLine("{")
-				fileStream.WriteLine(vbTab + """title"": " + jss.Serialize(itemTitle) + ",")
-				If itemTags.Count > 1 Then
-					fileStream.WriteLine(vbTab + """type"": " + jss.Serialize(itemTags(0)) + ",")
-					fileStream.WriteLine(vbTab + """tags"": ")
-					fileStream.WriteLine(vbTab + "[")
-					If itemTags.Count > 2 Then
-						fileStream.WriteLine(vbTab + vbTab + jss.Serialize(itemTags(1)) + ",")
-						fileStream.WriteLine(vbTab + vbTab + jss.Serialize(itemTags(2)))
-					Else
-						fileStream.WriteLine(vbTab + vbTab + jss.Serialize(itemTags(1)))
-					End If
-					fileStream.WriteLine(vbTab + "]")
-				Else
-					fileStream.WriteLine(vbTab + """type"": " + jss.Serialize(itemTags(0)))
-				End If
-				fileStream.WriteLine("}")
-				fileStream.Flush()
-			End If
-		Catch ex As Exception
-			'NOTE: This is here in case I missed something, such as itemTags being empty.
-			Dim debug As Integer = 4242
-		Finally
-			If fileStream IsNot Nothing Then
-				fileStream.Flush()
-				fileStream.Close()
-				fileStream = Nothing
-			End If
-		End Try
-
-		Return addonJsonPathFileName
-	End Function
-
-	Private Sub ArrangeTagsForEasierUseInAddonJsonFile(ByRef tags As BindingListEx(Of String))
-		Dim anEnumList As IList
-		anEnumList = EnumHelper.ToList(GetType(GarrysModSteamAppInfo.GarrysModTypeTags))
-		Dim index As Integer
-		For Each tag As String In tags
-			index = EnumHelper.IndexOfKeyAsCaseInsensitiveString(tag, anEnumList)
-			If index <> -1 Then
-				tags.Remove(tag)
-				tags.Insert(0, tag)
-				Exit For
-			End If
-		Next
-		For tagIndex As Integer = 0 To tags.Count - 1
-			If tags(tagIndex) <> "ServerContent" AndAlso tags(tagIndex) <> "Addon" Then
-				tags(tagIndex) = tags(tagIndex).ToLower()
-			End If
-		Next
-		'NOTE: Not sure how this became empty for me in testing, so let's make sure there is a tag so Crowbar does not show exception window.
-		If tags.Count = 0 Then
-			tags.Add("ServerContent")
-		End If
-	End Sub
 
 	Private Sub RunPackerApp(ByVal inputPath As String)
 		Dim currentFolder As String = Directory.GetCurrentDirectory()
@@ -412,6 +318,7 @@ Public Class Packer
 		myProcess.BeginOutputReadLine()
 		myProcess.BeginErrorReadLine()
 		Me.theProcessHasOutputData = False
+		Me.theGmadResultFileName = ""
 		myProcess.WaitForExit()
 
 		myProcess.Close()
@@ -421,12 +328,16 @@ Public Class Packer
 		Directory.SetCurrentDirectory(currentFolder)
 	End Sub
 
-	Private Sub ProcessPackedModel(ByVal inputPath As String)
+	Private Sub ProcessPackage(ByVal inputPath As String)
 		Dim gameSetup As GameSetup = TheApp.Settings.GameSetups(TheApp.Settings.PackGameSetupSelectedIndex)
 		Dim gamePackerFileName As String = Path.GetFileName(gameSetup.PackerPathFileName)
 		Dim sourcePathFileName As String = inputPath
 		If gamePackerFileName = "gmad.exe" Then
-			sourcePathFileName += ".gma"
+			'sourcePathFileName += ".gma"
+			' Gmad removes the first dot and text past that from the created file name, 
+			'    so use the file name shown in the log from Gmad.
+			sourcePathFileName = Path.GetDirectoryName(sourcePathFileName)
+			sourcePathFileName = Path.Combine(sourcePathFileName, Me.theGmadResultFileName)
 		Else
 			sourcePathFileName += ".vpk"
 		End If
@@ -507,6 +418,15 @@ Public Class Packer
 		Try
 			line = e.Data
 			If line IsNot Nothing Then
+				' Gmad removes the first dot and text past that from the created file name, 
+				'    so get the file name shown in the log from Gmad.
+				If line.StartsWith("Successfully saved to ") Then
+					Dim delimiters As Char() = {""""c}
+					Dim tokens As String() = {""}
+					tokens = line.Split(delimiters)
+					Me.theGmadResultFileName = tokens(1)
+				End If
+
 				Me.theProcessHasOutputData = True
 				Me.UpdateProgress(3, line)
 			End If
@@ -653,6 +573,7 @@ Public Class Packer
 	Private theDefineBonesFileStream As StreamWriter
 
 	Private theProcessHasOutputData As Boolean
+	Private theGmadResultFileName As String
 
 #End Region
 

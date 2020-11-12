@@ -107,6 +107,7 @@ Public Class MainForm
 		AddHandler Me.ViewViewUserControl.SetUpGameButton.Click, AddressOf Me.ViewSetUpGamesButton_Click
 		AddHandler Me.ViewViewUserControl.UseInDecompileButton.Click, AddressOf Me.ViewUserControl_UseInDecompileButton_Click
 		AddHandler Me.PackUserControl1.SetUpGamesButton.Click, AddressOf Me.PackSetUpGamesButton_Click
+		AddHandler Me.PackUserControl1.UseAllInPublishButton.Click, AddressOf Me.PackUserControl1_UseAllInPublishButton_Click
 		AddHandler Me.PublishUserControl1.UseInDownloadToolStripMenuItem.Click, AddressOf Me.PublishUserControl1_UseInDownloadToolStripMenuItem_Click
 		AddHandler Me.UpdateUserControl1.UpdateAvailable, AddressOf Me.UpdateUserControl1_UpdateAvailable
 
@@ -131,6 +132,7 @@ Public Class MainForm
 		RemoveHandler Me.ViewViewUserControl.SetUpGameButton.Click, AddressOf Me.ViewSetUpGamesButton_Click
 		RemoveHandler Me.ViewViewUserControl.UseInDecompileButton.Click, AddressOf Me.ViewUserControl_UseInDecompileButton_Click
 		RemoveHandler Me.PackUserControl1.SetUpGamesButton.Click, AddressOf Me.PackSetUpGamesButton_Click
+		RemoveHandler Me.PackUserControl1.UseAllInPublishButton.Click, AddressOf Me.PackUserControl1_UseAllInPublishButton_Click
 		RemoveHandler Me.PublishUserControl1.UseInDownloadToolStripMenuItem.Click, AddressOf Me.PublishUserControl1_UseInDownloadToolStripMenuItem_Click
 		RemoveHandler Me.UpdateUserControl1.UpdateAvailable, AddressOf Me.UpdateUserControl1_UpdateAvailable
 
@@ -299,6 +301,10 @@ Public Class MainForm
 	Private Sub PackSetUpGamesButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
 		Me.theTabThatCalledSetUpGames = Me.PackTabPage
 		Me.SelectSetUpGamesFromAnotherTab(TheApp.Settings.PackGameSetupSelectedIndex)
+	End Sub
+
+	Private Sub PackUserControl1_UseAllInPublishButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
+		Me.MainTabControl.SelectTab(Me.PublishTabPage)
 	End Sub
 
 	Private Sub PublishUserControl1_UseInDownloadToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)

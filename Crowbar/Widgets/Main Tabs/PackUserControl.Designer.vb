@@ -39,15 +39,16 @@ Partial Class PackUserControl
 		Me.OptionsGroupBox = New System.Windows.Forms.GroupBox()
 		Me.OptionsGroupBoxFillPanel = New System.Windows.Forms.Panel()
 		Me.PackerOptionsPanel = New System.Windows.Forms.Panel()
-		Me.GmaGarrysModTagsUserControl = New Crowbar.GarrysModTagsUserControl()
-		Me.GmaTitleTextBox = New Crowbar.TextBoxEx()
-		Me.GmaTitleLabel = New System.Windows.Forms.Label()
 		Me.MultiFileVpkCheckBox = New System.Windows.Forms.CheckBox()
 		Me.PackOptionsUseDefaultsButton = New System.Windows.Forms.Button()
 		Me.LogFileCheckBox = New System.Windows.Forms.CheckBox()
 		Me.Label3 = New System.Windows.Forms.Label()
 		Me.GameSetupComboBox = New System.Windows.Forms.ComboBox()
 		Me.SetUpGamesButton = New System.Windows.Forms.Button()
+		Me.GmaPanel = New System.Windows.Forms.Panel()
+		Me.GmaTitleTextBox = New Crowbar.TextBoxEx()
+		Me.GmaTitleLabel = New System.Windows.Forms.Label()
+		Me.GmaGarrysModTagsUserControl = New Crowbar.GarrysModTagsUserControl()
 		Me.DirectPackerOptionsLabel = New System.Windows.Forms.Label()
 		Me.DirectPackerOptionsTextBox = New System.Windows.Forms.TextBox()
 		Me.PackerOptionsTextBox = New System.Windows.Forms.TextBox()
@@ -60,10 +61,9 @@ Partial Class PackUserControl
 		Me.UseAllInPublishButton = New System.Windows.Forms.Button()
 		Me.PostPackPanel = New System.Windows.Forms.Panel()
 		Me.PackedFilesComboBox = New System.Windows.Forms.ComboBox()
-		Me.UseInReleaseButton = New System.Windows.Forms.Button()
+		Me.UseInPublishButton = New System.Windows.Forms.Button()
 		Me.GotoPackedFileButton = New System.Windows.Forms.Button()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-		Me.GmaPanel = New System.Windows.Forms.Panel()
 		Me.Panel1.SuspendLayout()
 		CType(Me.Options_LogSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.Options_LogSplitContainer.Panel1.SuspendLayout()
@@ -72,9 +72,9 @@ Partial Class PackUserControl
 		Me.OptionsGroupBox.SuspendLayout()
 		Me.OptionsGroupBoxFillPanel.SuspendLayout()
 		Me.PackerOptionsPanel.SuspendLayout()
+		Me.GmaPanel.SuspendLayout()
 		Me.PackButtonsPanel.SuspendLayout()
 		Me.PostPackPanel.SuspendLayout()
-		Me.GmaPanel.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'Panel1
@@ -271,32 +271,6 @@ Partial Class PackUserControl
 		Me.PackerOptionsPanel.Size = New System.Drawing.Size(764, 153)
 		Me.PackerOptionsPanel.TabIndex = 0
 		'
-		'GmaGarrysModTagsUserControl
-		'
-		Me.GmaGarrysModTagsUserControl.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-		Me.GmaGarrysModTagsUserControl.Location = New System.Drawing.Point(0, 28)
-		Me.GmaGarrysModTagsUserControl.Name = "GmaGarrysModTagsUserControl"
-		Me.GmaGarrysModTagsUserControl.Orientation = Crowbar.AppEnums.OrientationType.Horizontal
-		Me.GmaGarrysModTagsUserControl.Size = New System.Drawing.Size(362, 94)
-		Me.GmaGarrysModTagsUserControl.TabIndex = 15
-		'
-		'GmaTitleTextBox
-		'
-		Me.GmaTitleTextBox.CueBannerText = ""
-		Me.GmaTitleTextBox.Location = New System.Drawing.Point(42, 1)
-		Me.GmaTitleTextBox.Name = "GmaTitleTextBox"
-		Me.GmaTitleTextBox.Size = New System.Drawing.Size(317, 22)
-		Me.GmaTitleTextBox.TabIndex = 14
-		'
-		'GmaTitleLabel
-		'
-		Me.GmaTitleLabel.AutoSize = True
-		Me.GmaTitleLabel.Location = New System.Drawing.Point(3, 6)
-		Me.GmaTitleLabel.Name = "GmaTitleLabel"
-		Me.GmaTitleLabel.Size = New System.Drawing.Size(32, 13)
-		Me.GmaTitleLabel.TabIndex = 4
-		Me.GmaTitleLabel.Text = "Title:"
-		'
 		'MultiFileVpkCheckBox
 		'
 		Me.MultiFileVpkCheckBox.AutoSize = True
@@ -357,6 +331,42 @@ Partial Class PackUserControl
 		Me.SetUpGamesButton.TabIndex = 2
 		Me.SetUpGamesButton.Text = "Set Up Games"
 		Me.SetUpGamesButton.UseVisualStyleBackColor = True
+		'
+		'GmaPanel
+		'
+		Me.GmaPanel.Controls.Add(Me.GmaTitleTextBox)
+		Me.GmaPanel.Controls.Add(Me.GmaTitleLabel)
+		Me.GmaPanel.Controls.Add(Me.GmaGarrysModTagsUserControl)
+		Me.GmaPanel.Location = New System.Drawing.Point(217, 29)
+		Me.GmaPanel.Name = "GmaPanel"
+		Me.GmaPanel.Size = New System.Drawing.Size(423, 122)
+		Me.GmaPanel.TabIndex = 0
+		'
+		'GmaTitleTextBox
+		'
+		Me.GmaTitleTextBox.CueBannerText = ""
+		Me.GmaTitleTextBox.Location = New System.Drawing.Point(42, 1)
+		Me.GmaTitleTextBox.Name = "GmaTitleTextBox"
+		Me.GmaTitleTextBox.Size = New System.Drawing.Size(317, 22)
+		Me.GmaTitleTextBox.TabIndex = 14
+		'
+		'GmaTitleLabel
+		'
+		Me.GmaTitleLabel.AutoSize = True
+		Me.GmaTitleLabel.Location = New System.Drawing.Point(3, 6)
+		Me.GmaTitleLabel.Name = "GmaTitleLabel"
+		Me.GmaTitleLabel.Size = New System.Drawing.Size(32, 13)
+		Me.GmaTitleLabel.TabIndex = 4
+		Me.GmaTitleLabel.Text = "Title:"
+		'
+		'GmaGarrysModTagsUserControl
+		'
+		Me.GmaGarrysModTagsUserControl.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.GmaGarrysModTagsUserControl.Location = New System.Drawing.Point(0, 28)
+		Me.GmaGarrysModTagsUserControl.Name = "GmaGarrysModTagsUserControl"
+		Me.GmaGarrysModTagsUserControl.Orientation = Crowbar.AppEnums.OrientationType.Horizontal
+		Me.GmaGarrysModTagsUserControl.Size = New System.Drawing.Size(362, 94)
+		Me.GmaGarrysModTagsUserControl.TabIndex = 15
 		'
 		'DirectPackerOptionsLabel
 		'
@@ -463,7 +473,7 @@ Partial Class PackUserControl
 		'PostPackPanel
 		'
 		Me.PostPackPanel.Controls.Add(Me.PackedFilesComboBox)
-		Me.PostPackPanel.Controls.Add(Me.UseInReleaseButton)
+		Me.PostPackPanel.Controls.Add(Me.UseInPublishButton)
 		Me.PostPackPanel.Controls.Add(Me.GotoPackedFileButton)
 		Me.PostPackPanel.Dock = System.Windows.Forms.DockStyle.Bottom
 		Me.PostPackPanel.Location = New System.Drawing.Point(0, 182)
@@ -482,16 +492,16 @@ Partial Class PackUserControl
 		Me.PackedFilesComboBox.Size = New System.Drawing.Size(721, 21)
 		Me.PackedFilesComboBox.TabIndex = 1
 		'
-		'UseInReleaseButton
+		'UseInPublishButton
 		'
-		Me.UseInReleaseButton.Enabled = False
-		Me.UseInReleaseButton.Location = New System.Drawing.Point(632, 3)
-		Me.UseInReleaseButton.Name = "UseInReleaseButton"
-		Me.UseInReleaseButton.Size = New System.Drawing.Size(89, 23)
-		Me.UseInReleaseButton.TabIndex = 3
-		Me.UseInReleaseButton.Text = "Use in Release"
-		Me.UseInReleaseButton.UseVisualStyleBackColor = True
-		Me.UseInReleaseButton.Visible = False
+		Me.UseInPublishButton.Enabled = False
+		Me.UseInPublishButton.Location = New System.Drawing.Point(632, 3)
+		Me.UseInPublishButton.Name = "UseInPublishButton"
+		Me.UseInPublishButton.Size = New System.Drawing.Size(89, 23)
+		Me.UseInPublishButton.TabIndex = 3
+		Me.UseInPublishButton.Text = "Use in Publish"
+		Me.UseInPublishButton.UseVisualStyleBackColor = True
+		Me.UseInPublishButton.Visible = False
 		'
 		'GotoPackedFileButton
 		'
@@ -502,16 +512,6 @@ Partial Class PackUserControl
 		Me.GotoPackedFileButton.TabIndex = 4
 		Me.GotoPackedFileButton.Text = "Goto"
 		Me.GotoPackedFileButton.UseVisualStyleBackColor = True
-		'
-		'GmaPanel
-		'
-		Me.GmaPanel.Controls.Add(Me.GmaTitleTextBox)
-		Me.GmaPanel.Controls.Add(Me.GmaTitleLabel)
-		Me.GmaPanel.Controls.Add(Me.GmaGarrysModTagsUserControl)
-		Me.GmaPanel.Location = New System.Drawing.Point(217, 29)
-		Me.GmaPanel.Name = "GmaPanel"
-		Me.GmaPanel.Size = New System.Drawing.Size(423, 122)
-		Me.GmaPanel.TabIndex = 0
 		'
 		'PackUserControl
 		'
@@ -531,10 +531,10 @@ Partial Class PackUserControl
 		Me.OptionsGroupBoxFillPanel.PerformLayout()
 		Me.PackerOptionsPanel.ResumeLayout(False)
 		Me.PackerOptionsPanel.PerformLayout()
-		Me.PackButtonsPanel.ResumeLayout(False)
-		Me.PostPackPanel.ResumeLayout(False)
 		Me.GmaPanel.ResumeLayout(False)
 		Me.GmaPanel.PerformLayout()
+		Me.PackButtonsPanel.ResumeLayout(False)
+		Me.PostPackPanel.ResumeLayout(False)
 		Me.ResumeLayout(False)
 
 	End Sub
@@ -562,7 +562,7 @@ Partial Class PackUserControl
 	Friend WithEvents CancelPackButton As System.Windows.Forms.Button
 	Friend WithEvents SkipCurrentFolderButton As System.Windows.Forms.Button
 	Friend WithEvents PackButton As System.Windows.Forms.Button
-	Friend WithEvents UseInReleaseButton As System.Windows.Forms.Button
+	Friend WithEvents UseInPublishButton As System.Windows.Forms.Button
 	Friend WithEvents LogRichTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents PackedFilesComboBox As System.Windows.Forms.ComboBox
 	Friend WithEvents GotoPackedFileButton As System.Windows.Forms.Button

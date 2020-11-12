@@ -290,7 +290,7 @@ Public Class GarrysModSteamAppInfo
 	'		"fun"
 	'	]
 	'}
-	Private Function CreateAddonJsonFile(ByVal addonJsonPath As String, ByVal itemTitle As String, ByVal itemTags As BindingListEx(Of String)) As String
+	Public Function CreateAddonJsonFile(ByVal addonJsonPath As String, ByVal itemTitle As String, ByVal itemTags As BindingListEx(Of String)) As String
 		Dim addonJsonPathFileName As String = Path.Combine(addonJsonPath, "addon.json")
 
 		ArrangeTagsForEasierUseInAddonJsonFile(itemTags)
@@ -348,6 +348,42 @@ Public Class GarrysModSteamAppInfo
 
 		Return addonJsonPathFileName
 	End Function
+
+	Public Sub ReadDataFromAddonJsonFile(ByVal addonJsonPathFileName As String, ByRef itemTitle As String, ByRef itemTags As BindingListEx(Of String))
+		If File.Exists(addonJsonPathFileName) Then
+			Dim fileStream As New StreamReader(addonJsonPathFileName)
+			Dim addonFileContents As String = Nothing
+
+			Try
+				addonFileContents = fileStream.ReadToEnd()
+			Catch ex As Exception
+				Dim debug As Integer = 4242
+			Finally
+				fileStream.Close()
+			End Try
+
+			If addonFileContents IsNot Nothing AndAlso addonFileContents <> "" Then
+				Dim jss As JavaScriptSerializer = New JavaScriptSerializer()
+				Dim addon As GarrysMod_AddonJson = jss.Deserialize(Of GarrysMod_AddonJson)(addonFileContents)
+
+				itemTitle = addon.title
+				itemTags.Clear()
+				itemTags.Add(addon.type)
+				For Each tag As String In addon.tags
+					itemTags.Add(tag)
+				Next
+				For tagIndex As Integer = 0 To itemTags.Count - 1
+					If itemTags(tagIndex) <> "ServerContent" AndAlso itemTags(tagIndex) <> "Addon" Then
+						If itemTags(tagIndex).Length > 1 Then
+							itemTags(tagIndex) = itemTags(tagIndex).Substring(0, 1).ToUpper() + itemTags(tagIndex).Substring(1)
+						ElseIf itemTags(tagIndex).Length = 1 Then
+							itemTags(tagIndex) = itemTags(tagIndex).ToUpper()
+						End If
+					End If
+				Next
+			End If
+		End If
+    End Sub
 
 	Private Sub ArrangeTagsForEasierUseInAddonJsonFile(ByRef tags As BindingListEx(Of String))
 		Dim anEnumList As IList
