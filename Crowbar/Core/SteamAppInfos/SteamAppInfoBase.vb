@@ -83,7 +83,7 @@ Public Class SteamAppInfoBase
 		Return processedPathFileName
 	End Function
 
-	Public Overridable Sub CleanUpAfterUpload()
+	Public Overridable Sub CleanUpAfterUpload(ByVal bw As BackgroundWorkerEx)
 	End Sub
 
 #Region "Delegates"

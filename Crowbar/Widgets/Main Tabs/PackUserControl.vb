@@ -61,7 +61,8 @@ Public Class PackUserControl
 			Me.OutputPathComboBox.DataSource = anEnumList
 			Me.OutputPathComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "PackOutputFolderOption", False, DataSourceUpdateMode.OnPropertyChanged)
 
-			Me.OutputPathComboBox.SelectedIndex = 0
+			' Do not use this line because it will override the value automatically assigned by the data bindings above.
+			'Me.OutputPathComboBox.SelectedIndex = 0
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		End Try

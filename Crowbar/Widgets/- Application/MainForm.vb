@@ -91,6 +91,7 @@ Public Class MainForm
 		Me.ViewViewUserControl.RunDataViewer()
 
 		AddHandler Me.SetUpGamesUserControl1.GoBackButton.Click, AddressOf Me.SetUpGamesGoBackButton_Click
+		AddHandler Me.DownloadUserControl1.UseInUnpackButton.Click, AddressOf Me.DownloadUserControl1_UseInUnpackButton_Click
 		AddHandler Me.UnpackUserControl1.UseAllInDecompileButton.Click, AddressOf Me.UnpackUserControl_UseAllInDecompileButton_Click
 		AddHandler Me.UnpackUserControl1.UseInPreviewButton.Click, AddressOf Me.UnpackUserControl_UseInPreviewButton_Click
 		AddHandler Me.UnpackUserControl1.UseInDecompileButton.Click, AddressOf Me.UnpackUserControl_UseInDecompileButton_Click
@@ -114,6 +115,7 @@ Public Class MainForm
 
 	Private Sub Free()
 		RemoveHandler Me.SetUpGamesUserControl1.GoBackButton.Click, AddressOf Me.SetUpGamesGoBackButton_Click
+		RemoveHandler Me.DownloadUserControl1.UseInUnpackButton.Click, AddressOf Me.DownloadUserControl1_UseInUnpackButton_Click
 		RemoveHandler Me.UnpackUserControl1.UseAllInDecompileButton.Click, AddressOf Me.UnpackUserControl_UseAllInDecompileButton_Click
 		RemoveHandler Me.UnpackUserControl1.UseInPreviewButton.Click, AddressOf Me.UnpackUserControl_UseInPreviewButton_Click
 		RemoveHandler Me.UnpackUserControl1.UseInDecompileButton.Click, AddressOf Me.UnpackUserControl_UseInDecompileButton_Click
@@ -233,6 +235,10 @@ Public Class MainForm
 
 		Me.SetUpGamesUserControl1.GoBackButton.Enabled = False
 		Me.MainTabControl.SelectTab(Me.theTabThatCalledSetUpGames)
+	End Sub
+
+	Private Sub DownloadUserControl1_UseInUnpackButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
+		Me.MainTabControl.SelectTab(Me.UnpackTabPage)
 	End Sub
 
 	Private Sub UnpackUserControl_UseAllInDecompileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
