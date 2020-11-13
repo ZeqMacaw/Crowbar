@@ -9,6 +9,8 @@ Public Class GarrysModTagsUserControl
 		InitializeComponent()
 
 		' Add any initialization after the InitializeComponent() call.
+		Me.theOrientation = OrientationType.Vertical
+		Me.ChangeOrientation()
 	End Sub
 
 	Protected Overrides Sub Init()
@@ -35,6 +37,17 @@ Public Class GarrysModTagsUserControl
 		Next
 	End Sub
 
+	Public Property Orientation() As OrientationType
+		Get
+			Return Me.theOrientation
+		End Get
+		Set
+			Me.theOrientation = Value
+			Me.ChangeOrientation()
+		End Set
+	End Property
+
+	<Browsable(False), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
 	Public Overrides Property ItemTags As BindingListEx(Of String)
 		Get
 			'Dim tags As BindingListEx(Of String) = MyBase.ItemTags
@@ -101,8 +114,55 @@ Public Class GarrysModTagsUserControl
 		MyBase.OnCheckBox_CheckedChanged(sender, e)
 	End Sub
 
+	Private Sub ChangeOrientation()
+		If Me.theOrientation = OrientationType.Horizontal Then
+			''Build
+			'Me.CheckBox1.Location = New System.Drawing.Point(6, 20)
+			''Cartoon
+			'Me.CheckBox2.Location = New System.Drawing.Point(6, 43)
+			'Comic
+			Me.CheckBox3.Location = New System.Drawing.Point(78, 20)
+			'Fun
+			Me.CheckBox4.Location = New System.Drawing.Point(78, 43)
+			'Movie
+			Me.CheckBox5.Location = New System.Drawing.Point(150, 20)
+			'Realism
+			Me.CheckBox6.Location = New System.Drawing.Point(150, 43)
+			'Roleplay
+			Me.CheckBox7.Location = New System.Drawing.Point(222, 20)
+			'Scenic
+			Me.CheckBox8.Location = New System.Drawing.Point(222, 43)
+			'Water
+			Me.CheckBox9.Location = New System.Drawing.Point(294, 20)
+			'GroupBox1
+			Me.GroupBox1.Size = New System.Drawing.Size(356, 68)
+		Else
+			''Build
+			'Me.CheckBox1.Location = New System.Drawing.Point(6, 20)
+			''Cartoon
+			'Me.CheckBox2.Location = New System.Drawing.Point(6, 43)
+			'Comic
+			Me.CheckBox3.Location = New System.Drawing.Point(6, 66)
+			'Fun
+			Me.CheckBox4.Location = New System.Drawing.Point(6, 89)
+			'Movie
+			Me.CheckBox5.Location = New System.Drawing.Point(6, 112)
+			'Realism
+			Me.CheckBox6.Location = New System.Drawing.Point(6, 135)
+			'Roleplay
+			Me.CheckBox7.Location = New System.Drawing.Point(6, 158)
+			'Scenic
+			Me.CheckBox8.Location = New System.Drawing.Point(6, 181)
+			'Water
+			Me.CheckBox9.Location = New System.Drawing.Point(6, 204)
+			'GroupBox1
+			Me.GroupBox1.Size = New System.Drawing.Size(161, 235)
+		End If
+	End Sub
+
 	Private theCheckBoxes As List(Of CheckBoxEx)
 	Private theCheckmarkedCheckBoxes As List(Of CheckBoxEx)
+	Private theOrientation As OrientationType
 
 	' From Garry's Mod web page "Workshop Addon Creation" [ https://wiki.garrysmod.com/page/Workshop_Addon_Creation ]: 
 	'type is the type of addon, one of:

@@ -76,7 +76,7 @@ Partial Class SetUpGamesUserControl
 		Me.AddLibraryPathButton.Name = "AddLibraryPathButton"
 		Me.AddLibraryPathButton.Size = New System.Drawing.Size(75, 23)
 		Me.AddLibraryPathButton.TabIndex = 51
-		Me.AddLibraryPathButton.Text = "Add"
+		Me.AddLibraryPathButton.Text = "Add Macro"
 		Me.AddLibraryPathButton.UseVisualStyleBackColor = True
 		'
 		'DeleteLibraryPathButton

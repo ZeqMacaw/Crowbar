@@ -151,7 +151,7 @@ Public Class DownloadUserControl
 		TheApp.Settings.SetDefaultDownloadOptions()
 	End Sub
 
-	Private Sub DownloadFromLinkButton_Click(sender As Object, e As EventArgs) Handles DownloadButton.Click
+	Private Sub DownloadButton_Click(sender As Object, e As EventArgs) Handles DownloadButton.Click
 		Me.DownloadFromLink()
 	End Sub
 
@@ -159,7 +159,11 @@ Public Class DownloadUserControl
 		Me.CancelDownload()
 	End Sub
 
-	Private Sub DownloadedItemButton_Click(sender As Object, e As EventArgs) Handles GotoDownloadedItemButton.Click
+	Private Sub UseInUnpackButton_Click(sender As Object, e As EventArgs) Handles UseInUnpackButton.Click
+		Me.UseInUnpack()
+	End Sub
+
+	Private Sub GotoDownloadedItemButton_Click(sender As Object, e As EventArgs) Handles GotoDownloadedItemButton.Click
 		Me.GotoDownloadedItem()
 	End Sub
 
@@ -312,7 +316,10 @@ Public Class DownloadUserControl
 					'======
 					'NOTE: File remains: "C:\Program Files (x86)\Steam\depotcache\<app_id>_<manifest_id>.manifest"
 					'NOTE: Data for the downloaded file remains in: "<steam_folder_on_drive_where_game_is_installed>\steamapps\workshop\appworkshop_<app_id>.acf"
-					Directory.Move(outputInfo.ContentFolderOrFileName, targetOutputPath)
+					'NOTE: Do not use Directory.Move() because it raises exception when trying to move between drives.
+					'Directory.Move(outputInfo.ContentFolderOrFileName, targetOutputPath)
+					'======
+					My.Computer.FileSystem.MoveDirectory(outputInfo.ContentFolderOrFileName, targetOutputPath)
 
 					If Directory.Exists(targetOutputPath) Then
 						'Me.ProcessFolderOrFileAfterDownload(targetOutputPath)
@@ -448,6 +455,14 @@ Public Class DownloadUserControl
 		ElseIf TheApp.Settings.DownloadOutputFolderOption = DownloadOutputPathOptions.WorkFolder Then
 			FileManager.OpenWindowsExplorer(TheApp.Settings.DownloadOutputWorkPath)
 		End If
+	End Sub
+
+	Private Sub UseInUnpack()
+		Dim extension As String = Path.GetExtension(Me.DownloadedItemTextBox.Text)
+		If extension = ".gma" OrElse extension = ".vpk" Then
+
+		End If
+		TheApp.Settings.UnpackPackagePathFolderOrFileName = Me.DownloadedItemTextBox.Text
 	End Sub
 
 	Private Sub GotoDownloadedItem()
