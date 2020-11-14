@@ -600,6 +600,8 @@ Public Class DownloadUserControl
 		Try
 			postStream = request.GetRequestStream()
 			postStream.Write(byteData, 0, byteData.Length)
+		Catch ex As Exception
+			Dim debug As Integer = 4242
 		Finally
 			If postStream IsNot Nothing Then
 				postStream.Close()
