@@ -47,7 +47,7 @@ Public Class UnpackUserControl
 		'NOTE: The TreeView.Sorted property does not show in Intellisense or Properties window.
 		Me.PackageTreeView.Sorted = True
 		Me.PackageTreeView.TreeViewNodeSorter = New NodeSorter()
-		Me.PackageTreeView.Nodes.Add("<root>", "<root>")
+		'Me.PackageTreeView.Nodes.Add("<root>", "<root>")
 
 		Me.PackageListView.Columns.Add("Name", 100)
 		Me.PackageListView.Columns.Add("Size (bytes)", 100)
@@ -135,8 +135,10 @@ Public Class UnpackUserControl
 			Exit Sub
 		End If
 
+		Me.PackageTreeView.Nodes.Clear()
+		Me.PackageTreeView.Nodes.Add("<root>", "<refreshing>")
 		Me.UpdateWidgets(True)
-		Me.PackageTreeView.Nodes(0).Text = "<refreshing>"
+		'Me.PackageTreeView.Nodes(0).Text = "<refreshing>"
 		Me.PackageTreeView.Nodes(0).Nodes.Clear()
 		Me.PackageTreeView.Nodes(0).Tag = Nothing
 		Me.PackageListView.Items.Clear()
@@ -820,7 +822,10 @@ Public Class UnpackUserControl
 		Me.OptionsGroupBox.Enabled = Not unpackerIsRunning
 
 		'Me.UnpackButton.Enabled = (Not unpackerIsRunning) AndAlso (Me.PackageTreeView.Nodes(0).Nodes.Count > 0)
-		Dim folderResourceInfos As List(Of PackageResourceFileNameInfo) = CType(Me.PackageTreeView.Nodes(0).Tag, List(Of PackageResourceFileNameInfo))
+		Dim folderResourceInfos As List(Of PackageResourceFileNameInfo) = Nothing
+		If Me.PackageTreeView.Nodes.Count > 0 Then
+			folderResourceInfos = CType(Me.PackageTreeView.Nodes(0).Tag, List(Of PackageResourceFileNameInfo))
+		End If
 		Me.UnpackButton.Enabled = (Not unpackerIsRunning) AndAlso (folderResourceInfos IsNot Nothing) AndAlso (folderResourceInfos.Count > 0)
 		Me.SkipCurrentPackageButton.Enabled = unpackerIsRunning
 		Me.CancelUnpackButton.Enabled = unpackerIsRunning
