@@ -37,7 +37,7 @@ Partial Class UnpackUserControl
 		Me.OutputPathComboBox = New System.Windows.Forms.ComboBox()
 		Me.Label2 = New System.Windows.Forms.Label()
 		Me.UseDefaultOutputSubfolderButton = New System.Windows.Forms.Button()
-		Me.Label1 = New System.Windows.Forms.Label()
+		Me.PackagesLabel = New System.Windows.Forms.Label()
 		Me.PackagePathFileNameTextBox = New Crowbar.TextBoxEx()
 		Me.BrowseForPackagePathFolderOrFileNameButton = New System.Windows.Forms.Button()
 		Me.GotoPackageButton = New System.Windows.Forms.Button()
@@ -60,6 +60,7 @@ Partial Class UnpackUserControl
 		Me.ContentsMinScrollerPanel = New System.Windows.Forms.Panel()
 		Me.OptionsGroupBox = New System.Windows.Forms.GroupBox()
 		Me.OptionsGroupBoxFillPanel = New System.Windows.Forms.Panel()
+		Me.KeepFullPathCheckBox = New System.Windows.Forms.CheckBox()
 		Me.FolderForEachPackageCheckBox = New System.Windows.Forms.CheckBox()
 		Me.Label3 = New System.Windows.Forms.Label()
 		Me.EditGameSetupButton = New System.Windows.Forms.Button()
@@ -77,7 +78,6 @@ Partial Class UnpackUserControl
 		Me.UseInPreviewButton = New System.Windows.Forms.Button()
 		Me.UseInDecompileButton = New System.Windows.Forms.Button()
 		Me.GotoUnpackedFileButton = New System.Windows.Forms.Button()
-		Me.KeepFullPathCheckBox = New System.Windows.Forms.CheckBox()
 		Me.Panel2.SuspendLayout()
 		CType(Me.Options_LogSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.Options_LogSplitContainer.Panel1.SuspendLayout()
@@ -130,7 +130,7 @@ Partial Class UnpackUserControl
 		Me.Panel2.Controls.Add(Me.OutputPathComboBox)
 		Me.Panel2.Controls.Add(Me.Label2)
 		Me.Panel2.Controls.Add(Me.UseDefaultOutputSubfolderButton)
-		Me.Panel2.Controls.Add(Me.Label1)
+		Me.Panel2.Controls.Add(Me.PackagesLabel)
 		Me.Panel2.Controls.Add(Me.PackagePathFileNameTextBox)
 		Me.Panel2.Controls.Add(Me.BrowseForPackagePathFolderOrFileNameButton)
 		Me.Panel2.Controls.Add(Me.GotoPackageButton)
@@ -242,14 +242,14 @@ Partial Class UnpackUserControl
 		Me.UseDefaultOutputSubfolderButton.Text = "Use Default"
 		Me.UseDefaultOutputSubfolderButton.UseVisualStyleBackColor = True
 		'
-		'Label1
+		'PackagesLabel
 		'
-		Me.Label1.AutoSize = True
-		Me.Label1.Location = New System.Drawing.Point(3, 8)
-		Me.Label1.Name = "Label1"
-		Me.Label1.Size = New System.Drawing.Size(52, 13)
-		Me.Label1.TabIndex = 1
-		Me.Label1.Text = "Package:"
+		Me.PackagesLabel.AutoSize = True
+		Me.PackagesLabel.Location = New System.Drawing.Point(3, 8)
+		Me.PackagesLabel.Name = "PackagesLabel"
+		Me.PackagesLabel.Size = New System.Drawing.Size(57, 13)
+		Me.PackagesLabel.TabIndex = 1
+		Me.PackagesLabel.Text = "Packages:"
 		'
 		'PackagePathFileNameTextBox
 		'
@@ -320,7 +320,7 @@ Partial Class UnpackUserControl
 		'
 		Me.SplitContainer2.Panel2.Controls.Add(Me.OptionsGroupBox)
 		Me.SplitContainer2.Size = New System.Drawing.Size(770, 347)
-		Me.SplitContainer2.SplitterDistance = 550
+		Me.SplitContainer2.SplitterDistance = 548
 		Me.SplitContainer2.SplitterWidth = 6
 		Me.SplitContainer2.TabIndex = 0
 		'
@@ -330,7 +330,7 @@ Partial Class UnpackUserControl
 		Me.ContentsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.ContentsGroupBox.Location = New System.Drawing.Point(0, 0)
 		Me.ContentsGroupBox.Name = "ContentsGroupBox"
-		Me.ContentsGroupBox.Size = New System.Drawing.Size(550, 347)
+		Me.ContentsGroupBox.Size = New System.Drawing.Size(548, 347)
 		Me.ContentsGroupBox.TabIndex = 0
 		Me.ContentsGroupBox.TabStop = False
 		Me.ContentsGroupBox.Text = "Contents of package"
@@ -345,7 +345,7 @@ Partial Class UnpackUserControl
 		Me.ContentsGroupBoxFillPanel.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.ContentsGroupBoxFillPanel.Location = New System.Drawing.Point(3, 18)
 		Me.ContentsGroupBoxFillPanel.Name = "ContentsGroupBoxFillPanel"
-		Me.ContentsGroupBoxFillPanel.Size = New System.Drawing.Size(544, 326)
+		Me.ContentsGroupBoxFillPanel.Size = New System.Drawing.Size(542, 326)
 		Me.ContentsGroupBoxFillPanel.TabIndex = 12
 		'
 		'SplitContainer3
@@ -362,7 +362,7 @@ Partial Class UnpackUserControl
 		'SplitContainer3.Panel2
 		'
 		Me.SplitContainer3.Panel2.Controls.Add(Me.PackageListView)
-		Me.SplitContainer3.Size = New System.Drawing.Size(544, 275)
+		Me.SplitContainer3.Size = New System.Drawing.Size(542, 275)
 		Me.SplitContainer3.SplitterDistance = 250
 		Me.SplitContainer3.TabIndex = 6
 		'
@@ -388,7 +388,7 @@ Partial Class UnpackUserControl
 		Me.PackageListView.Location = New System.Drawing.Point(0, 0)
 		Me.PackageListView.Name = "PackageListView"
 		Me.PackageListView.ShowGroups = False
-		Me.PackageListView.Size = New System.Drawing.Size(290, 275)
+		Me.PackageListView.Size = New System.Drawing.Size(288, 275)
 		Me.PackageListView.SmallImageList = Me.ImageList1
 		Me.PackageListView.Sorting = System.Windows.Forms.SortOrder.Ascending
 		Me.PackageListView.TabIndex = 1
@@ -401,7 +401,7 @@ Partial Class UnpackUserControl
 		Me.Panel3.Dock = System.Windows.Forms.DockStyle.Top
 		Me.Panel3.Location = New System.Drawing.Point(0, 0)
 		Me.Panel3.Name = "Panel3"
-		Me.Panel3.Size = New System.Drawing.Size(544, 26)
+		Me.Panel3.Size = New System.Drawing.Size(542, 26)
 		Me.Panel3.TabIndex = 11
 		'
 		'SelectionPathTextBox
@@ -410,7 +410,7 @@ Partial Class UnpackUserControl
 		Me.SelectionPathTextBox.Location = New System.Drawing.Point(0, 0)
 		Me.SelectionPathTextBox.Name = "SelectionPathTextBox"
 		Me.SelectionPathTextBox.ReadOnly = True
-		Me.SelectionPathTextBox.Size = New System.Drawing.Size(544, 22)
+		Me.SelectionPathTextBox.Size = New System.Drawing.Size(542, 22)
 		Me.SelectionPathTextBox.TabIndex = 1
 		'
 		'ToolStrip1
@@ -421,7 +421,7 @@ Partial Class UnpackUserControl
 		Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FindToolStripTextBox, Me.FindToolStripButton, Me.ToolStripSeparator1, Me.FilesSelectedCountToolStripLabel, Me.SizeSelectedTotalToolStripLabel, Me.RefreshListingToolStripButton})
 		Me.ToolStrip1.Location = New System.Drawing.Point(0, 301)
 		Me.ToolStrip1.Name = "ToolStrip1"
-		Me.ToolStrip1.Size = New System.Drawing.Size(544, 25)
+		Me.ToolStrip1.Size = New System.Drawing.Size(542, 25)
 		Me.ToolStrip1.Stretch = True
 		Me.ToolStrip1.TabIndex = 10
 		Me.ToolStrip1.Text = "ToolStrip1"
@@ -429,7 +429,7 @@ Partial Class UnpackUserControl
 		'FindToolStripTextBox
 		'
 		Me.FindToolStripTextBox.Name = "FindToolStripTextBox"
-		Me.FindToolStripTextBox.Size = New System.Drawing.Size(421, 25)
+		Me.FindToolStripTextBox.Size = New System.Drawing.Size(419, 25)
 		Me.FindToolStripTextBox.ToolTipText = "Text to find"
 		'
 		'FindToolStripButton
@@ -484,7 +484,7 @@ Partial Class UnpackUserControl
 		Me.OptionsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.OptionsGroupBox.Location = New System.Drawing.Point(0, 0)
 		Me.OptionsGroupBox.Name = "OptionsGroupBox"
-		Me.OptionsGroupBox.Size = New System.Drawing.Size(214, 347)
+		Me.OptionsGroupBox.Size = New System.Drawing.Size(216, 347)
 		Me.OptionsGroupBox.TabIndex = 0
 		Me.OptionsGroupBox.TabStop = False
 		Me.OptionsGroupBox.Text = "Options"
@@ -503,8 +503,18 @@ Partial Class UnpackUserControl
 		Me.OptionsGroupBoxFillPanel.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.OptionsGroupBoxFillPanel.Location = New System.Drawing.Point(3, 18)
 		Me.OptionsGroupBoxFillPanel.Name = "OptionsGroupBoxFillPanel"
-		Me.OptionsGroupBoxFillPanel.Size = New System.Drawing.Size(208, 326)
+		Me.OptionsGroupBoxFillPanel.Size = New System.Drawing.Size(210, 326)
 		Me.OptionsGroupBoxFillPanel.TabIndex = 0
+		'
+		'KeepFullPathCheckBox
+		'
+		Me.KeepFullPathCheckBox.AutoSize = True
+		Me.KeepFullPathCheckBox.Location = New System.Drawing.Point(3, 26)
+		Me.KeepFullPathCheckBox.Name = "KeepFullPathCheckBox"
+		Me.KeepFullPathCheckBox.Size = New System.Drawing.Size(98, 17)
+		Me.KeepFullPathCheckBox.TabIndex = 13
+		Me.KeepFullPathCheckBox.Text = "Keep full path"
+		Me.KeepFullPathCheckBox.UseVisualStyleBackColor = True
 		'
 		'FolderForEachPackageCheckBox
 		'
@@ -529,7 +539,7 @@ Partial Class UnpackUserControl
 		'EditGameSetupButton
 		'
 		Me.EditGameSetupButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.EditGameSetupButton.Location = New System.Drawing.Point(5745, 229)
+		Me.EditGameSetupButton.Location = New System.Drawing.Point(5808, 229)
 		Me.EditGameSetupButton.Name = "EditGameSetupButton"
 		Me.EditGameSetupButton.Size = New System.Drawing.Size(90, 23)
 		Me.EditGameSetupButton.TabIndex = 1
@@ -545,7 +555,7 @@ Partial Class UnpackUserControl
 		Me.GameSetupComboBox.FormattingEnabled = True
 		Me.GameSetupComboBox.Location = New System.Drawing.Point(3, 255)
 		Me.GameSetupComboBox.Name = "GameSetupComboBox"
-		Me.GameSetupComboBox.Size = New System.Drawing.Size(5832, 21)
+		Me.GameSetupComboBox.Size = New System.Drawing.Size(5895, 21)
 		Me.GameSetupComboBox.TabIndex = 2
 		Me.GameSetupComboBox.Visible = False
 		'
@@ -691,16 +701,6 @@ Partial Class UnpackUserControl
 		Me.GotoUnpackedFileButton.Text = "Goto"
 		Me.GotoUnpackedFileButton.UseVisualStyleBackColor = True
 		'
-		'KeepFullPathCheckBox
-		'
-		Me.KeepFullPathCheckBox.AutoSize = True
-		Me.KeepFullPathCheckBox.Location = New System.Drawing.Point(3, 26)
-		Me.KeepFullPathCheckBox.Name = "KeepFullPathCheckBox"
-		Me.KeepFullPathCheckBox.Size = New System.Drawing.Size(98, 17)
-		Me.KeepFullPathCheckBox.TabIndex = 13
-		Me.KeepFullPathCheckBox.Text = "Keep full path"
-		Me.KeepFullPathCheckBox.UseVisualStyleBackColor = True
-		'
 		'UnpackUserControl
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -739,7 +739,7 @@ Partial Class UnpackUserControl
 	End Sub
 	Friend WithEvents Panel2 As System.Windows.Forms.Panel
 	Friend WithEvents GotoPackageButton As System.Windows.Forms.Button
-	Friend WithEvents Label1 As System.Windows.Forms.Label
+	Friend WithEvents PackagesLabel As System.Windows.Forms.Label
 	Friend WithEvents BrowseForPackagePathFolderOrFileNameButton As System.Windows.Forms.Button
 	Friend WithEvents PackagePathFileNameTextBox As Crowbar.TextBoxEx
 	Friend WithEvents Options_LogSplitContainer As System.Windows.Forms.SplitContainer
