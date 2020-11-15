@@ -15,7 +15,7 @@ Public Module AppEnums
 	End Enum
 
 	Public Enum UnpackOutputPathOptions
-		<Description("Same folder")> SameFolder
+		<Description("Same folder (as Package)")> SameFolder
 		<Description("Subfolder (of Package)")> Subfolder
 		<Description("Work folder")> WorkFolder
 		<Description("Game's addons folder")> GameAddonsFolder
