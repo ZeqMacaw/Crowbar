@@ -394,15 +394,15 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	'Public Property UnpackExtractIsChecked() As Boolean
-	'	Get
-	'		Return Me.theUnpackExtractIsChecked
-	'	End Get
-	'	Set(ByVal value As Boolean)
-	'		Me.theUnpackExtractIsChecked = value
-	'		NotifyPropertyChanged("UnpackExtractIsChecked")
-	'	End Set
-	'End Property
+	Public Property UnpackKeepFullPathIsChecked() As Boolean
+		Get
+			Return Me.theUnpackKeepFullPathIsChecked
+		End Get
+		Set(ByVal value As Boolean)
+			Me.theUnpackKeepFullPathIsChecked = value
+			NotifyPropertyChanged("UnpackKeepFullPathIsChecked")
+		End Set
+	End Property
 
 	Public Property UnpackLogFileIsChecked() As Boolean
 		Get
@@ -1648,7 +1648,7 @@ Public Class AppSettings
 	Public Sub SetDefaultUnpackOptions()
 		'NOTE: Call the properties so the NotifyPropertyChanged events are raised.
 		Me.UnpackFolderForEachPackageIsChecked = False
-		'Me.UnpackExtractIsChecked = False
+		Me.UnpackKeepFullPathIsChecked = False
 		Me.UnpackLogFileIsChecked = False
 	End Sub
 
@@ -1821,7 +1821,7 @@ Public Class AppSettings
 	Private theUnpackGameSetupSelectedIndex As Integer
 
 	Private theUnpackFolderForEachPackageIsChecked As Boolean
-	'Private theUnpackExtractIsChecked As Boolean
+	Private theUnpackKeepFullPathIsChecked As Boolean
 	Private theUnpackLogFileIsChecked As Boolean
 
 	Private theUnpackMode As InputOptions
