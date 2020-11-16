@@ -66,7 +66,7 @@ Public Class UnpackUserControl
 		Me.InitUnpackerOptions()
 
 		Me.theOutputPathOrOutputFileName = ""
-		Me.theUnpackedRelativePathFileNames = New List(Of String)
+		Me.theUnpackedRelativePathFileNames = New BindingListEx(Of String)
 		Me.UnpackedFilesComboBox.DataSource = Me.theUnpackedRelativePathFileNames
 
 		Me.UpdateUnpackMode()
@@ -137,6 +137,7 @@ Public Class UnpackUserControl
 
 		Me.PackageTreeView.Nodes.Clear()
 		Me.PackageTreeView.Nodes.Add("<root>", "<refreshing>")
+		Me.theUnpackedRelativePathFileNames.Clear()
 		Me.UpdateWidgets(True)
 		'Me.PackageTreeView.Nodes(0).Text = "<refreshing>"
 		Me.PackageTreeView.Nodes(0).Nodes.Clear()
@@ -837,7 +838,7 @@ Public Class UnpackUserControl
 		Me.GotoUnpackedFileButton.Enabled = Not unpackerIsRunning AndAlso Me.theUnpackedRelativePathFileNames.Count > 0
 	End Sub
 
-	Private Sub UpdateUnpackedRelativePathFileNames(ByVal iUnpackedRelativePathFileNames As List(Of String))
+	Private Sub UpdateUnpackedRelativePathFileNames(ByVal iUnpackedRelativePathFileNames As BindingListEx(Of String))
 		If iUnpackedRelativePathFileNames IsNot Nothing Then
 			Me.theUnpackedRelativePathFileNames = iUnpackedRelativePathFileNames
 			Me.theUnpackedRelativePathFileNames.Sort()
@@ -1309,7 +1310,7 @@ Public Class UnpackUserControl
 
 	Private thePackageFileNames As BindingListEx(Of PackagePathFileNameInfo)
 
-	Private theUnpackedRelativePathFileNames As List(Of String)
+	Private theUnpackedRelativePathFileNames As BindingListEx(Of String)
 	Private theOutputPathOrOutputFileName As String
 
 	Private theSortColumnIndex As Integer

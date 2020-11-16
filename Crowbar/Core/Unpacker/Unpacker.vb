@@ -9,10 +9,10 @@ Public Class Unpacker
 	Public Sub New()
 		MyBase.New()
 
-		Me.theUnpackedMdlFiles = New List(Of String)()
-		Me.theLogFiles = New List(Of String)()
+		Me.theUnpackedMdlFiles = New BindingListEx(Of String)()
+		Me.theLogFiles = New BindingListEx(Of String)()
 		Me.theUnpackedPaths = New List(Of String)()
-		Me.theUnpackedRelativePathsAndFileNames = New List(Of String)()
+		Me.theUnpackedRelativePathsAndFileNames = New BindingListEx(Of String)()
 		Me.theUnpackedTempPathsAndPathFileNames = New List(Of String)()
 
 		Me.WorkerReportsProgress = True
@@ -1226,11 +1226,11 @@ Public Class Unpacker
 	'NOTE: Extra guard against deleting non-temp paths from accidental bad coding.
 	Private theUnpackedPathsAreInTempPath As Boolean
 	' Used for listing unpacked files in combobox.
-	Private theUnpackedRelativePathsAndFileNames As List(Of String)
+	Private theUnpackedRelativePathsAndFileNames As BindingListEx(Of String)
 	'TODO: Not currently used for anything.
 	Private theUnpackedTempPathsAndPathFileNames As List(Of String)
-	Private theUnpackedMdlFiles As List(Of String)
-	Private theLogFiles As List(Of String)
+	Private theUnpackedMdlFiles As BindingListEx(Of String)
+	Private theLogFiles As BindingListEx(Of String)
 
 	'Private theTempUnpackPaths As List(Of String)
 
