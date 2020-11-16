@@ -206,7 +206,13 @@ Public Class VpkFile
 
 						If entry.preloadByteCount > 0 Then
 							entry.preloadBytesOffset = Me.theInputFileReader.BaseStream.Position
-							Me.theInputFileReader.ReadBytes(entry.preloadByteCount)
+							'Me.theInputFileReader.ReadBytes(entry.preloadByteCount)
+							Me.theInputFileReader.BaseStream.Position += entry.preloadByteCount
+
+							If entry.dataLength = 0 Then
+								'NOTE: Reaches here when a packed file is actually stored in the "_dir" vpk file, so override whatever archiveIndex was assigned.
+								entry.archiveIndex = &H7FFF
+							End If
 						End If
 					End If
 

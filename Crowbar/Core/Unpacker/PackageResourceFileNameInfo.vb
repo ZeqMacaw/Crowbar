@@ -85,6 +85,16 @@ Public Class PackageResourceFileNameInfo
 		End Set
 	End Property
 
+	Public Property ArchivePathFileNameExists() As Boolean
+		Get
+			Return Me.thePathFileNameExists
+		End Get
+		Set(ByVal value As Boolean)
+			Me.thePathFileNameExists = value
+			NotifyPropertyChanged("PathFileNameExists")
+		End Set
+	End Property
+
 	Public Property EntryIndex() As Integer
 		Get
 			Return Me.theEntryIndex
@@ -116,6 +126,7 @@ Public Class PackageResourceFileNameInfo
 	Private theArchivePathFileName As String
 
 	Private thePathFileName As String
+	Private thePathFileNameExists As Boolean
 
 	Private theName As String
 	Private theSize As UInt64

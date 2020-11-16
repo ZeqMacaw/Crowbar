@@ -464,6 +464,7 @@ Public Class UnpackUserControl
 			'materials/models/weapons/melee/crowbar.vtf crc=0xded2e058 metadatasz=0 fnumber=32767 ofs=0x5390 sz=174920
 			'materials/models/weapons/melee/crowbar_normal.vtf crc=0x7ac0e054 metadatasz=0 fnumber=32767 ofs=0x2fed8 sz=1398196
 
+			'Try
 			Dim fields() As String
 			fields = line.Split(" "c)
 
@@ -567,6 +568,7 @@ Public Class UnpackUserControl
 				resourceInfo.Extension = fileExtension
 				resourceInfo.IsFolder = False
 				resourceInfo.ArchivePathFileName = Me.theArchivePathFileName
+				resourceInfo.ArchivePathFileNameExists = File.Exists(Me.theArchivePathFileName)
 				resourceInfo.EntryIndex = Me.theEntryIndex
 
 				If treeNode.Tag Is Nothing Then
@@ -581,6 +583,12 @@ Public Class UnpackUserControl
 				'Me.SetNodeText(treeNode, list.Count)
 			End If
 			Me.PackageTreeView.Nodes(0).Expand()
+			'Catch ex As Exception
+			'	'TODO: Try to catch an out-of-memory exception. Probably not going to work, though.
+			'	Dim worker As Unpacker = CType(sender, Unpacker)
+			'	worker.CancelAsync()
+			'	Dim debug As Integer = 4242
+			'End Try
 		ElseIf e.ProgressPercentage = 50 Then
 			Me.UnpackerLogTextBox.Text = ""
 			Me.UnpackerLogTextBox.AppendText(line + vbCr)
@@ -985,6 +993,11 @@ Public Class UnpackUserControl
 					Me.ImageList1.Images.Add(info.Extension, anIcon)
 				End If
 				item.ImageKey = info.Extension
+
+				If Not info.IsFolder AndAlso Not info.ArchivePathFileNameExists Then
+					item.ForeColor = SystemColors.GrayText
+					'item.BackColor = SystemColors
+				End If
 
 				Me.PackageListView.Items.Add(item)
 			Next
