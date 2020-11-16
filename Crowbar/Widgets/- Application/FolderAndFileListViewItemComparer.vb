@@ -21,12 +21,13 @@ Public Class FolderAndFileListViewItemComparer
 		yItem = CType(y, ListViewItem)
 
 		'NOTE: Must use "And" so that both expressions are evaluated.
-		If xItem.SubItems(3).Text = "<Folder>" And yItem.SubItems(3).Text <> "<Folder>" Then
+		' The SubItems(4) means "Extension" column; using the 4 here because already using several item.SubItems.Add() that are dependent on order of columns anyway.
+		If xItem.SubItems(4).Text = "<Folder>" And yItem.SubItems(4).Text <> "<Folder>" Then
 			returnVal = -1
-		ElseIf xItem.SubItems(3).Text <> "<Folder>" And yItem.SubItems(3).Text = "<Folder>" Then
+		ElseIf xItem.SubItems(4).Text <> "<Folder>" And yItem.SubItems(4).Text = "<Folder>" Then
 			returnVal = 1
 		Else
-			If Me.col = 1 AndAlso xItem.SubItems(3).Text <> "<Folder>" Then
+			If Me.col = 1 AndAlso xItem.SubItems(4).Text <> "<Folder>" Then
 				If Int32.Parse(xItem.SubItems(Me.col).Text, NumberStyles.Integer Or NumberStyles.AllowThousands, TheApp.InternalCultureInfo) < Int32.Parse(yItem.SubItems(Me.col).Text, NumberStyles.Integer Or NumberStyles.AllowThousands, TheApp.InternalCultureInfo) Then
 					returnVal = -1
 				Else

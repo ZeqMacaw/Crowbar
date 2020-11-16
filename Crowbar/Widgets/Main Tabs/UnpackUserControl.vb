@@ -51,11 +51,12 @@ Public Class UnpackUserControl
 
 		Me.PackageListView.Columns.Add("Name", 100)
 		Me.PackageListView.Columns.Add("Size (bytes)", 100)
+		Me.PackageListView.Columns.Add("Count", 50)
 		Me.PackageListView.Columns.Add("Type", 100)
 		Me.PackageListView.Columns.Add("Extension", 100)
 		Me.PackageListView.Columns.Add("Archive", 100)
 		Me.theSortColumnIndex = 0
-		Me.PackageListView.ListViewItemSorter = New FolderAndFileListViewItemComparer(0, Me.PackageListView.Sorting)
+		Me.PackageListView.ListViewItemSorter = New FolderAndFileListViewItemComparer(Me.theSortColumnIndex, Me.PackageListView.Sorting)
 
 		'NOTE: The DataSource, DisplayMember, and ValueMember need to be set before DataBindings, or else an exception is raised.
 		Me.GameSetupComboBox.DisplayMember = "GameName"
@@ -150,6 +151,7 @@ Public Class UnpackUserControl
 		Me.CancelUnpackButton.Enabled = False
 		Me.UnpackerLogTextBox.Text = ""
 		Me.thePackageCount = 0
+		Me.UpdateSelectionCounts()
 
 		AddHandler TheApp.Unpacker.ProgressChanged, AddressOf Me.ListerBackgroundWorker_ProgressChanged
 		AddHandler TheApp.Unpacker.RunWorkerCompleted, AddressOf Me.ListerBackgroundWorker_RunWorkerCompleted
@@ -470,6 +472,8 @@ Public Class UnpackUserControl
 			For fieldIndex As Integer = 1 To fields.Length - 6
 				pathFileName = pathFileName + " " + fields(fieldIndex)
 			Next
+			Dim fileSize As UInt64
+			fileSize = CULng(CLng(fields(fields.Length - 1).Remove(0, 3)))
 
 			Dim foldersAndFileName() As String
 			foldersAndFileName = pathFileName.Split("/"c)
@@ -493,6 +497,13 @@ Public Class UnpackUserControl
 
 					If parentTreeNode.Nodes.ContainsKey(name) Then
 						treeNode = parentTreeNode.Nodes.Item(parentTreeNode.Nodes.IndexOfKey(name))
+						list = CType(parentTreeNode.Tag, List(Of PackageResourceFileNameInfo))
+						For Each info As PackageResourceFileNameInfo In list
+							If info.IsFolder AndAlso info.Name = name Then
+								info.Count += 1UL
+								info.Size += fileSize
+							End If
+						Next
 					Else
 						treeNode = parentTreeNode.Nodes.Add(name)
 						treeNode.Name = name
@@ -501,7 +512,8 @@ Public Class UnpackUserControl
 						'resourceInfo.PathFileName = name
 						resourceInfo.PathFileName = resourcePathFileName
 						resourceInfo.Name = name
-						resourceInfo.Size = 0
+						resourceInfo.Size = fileSize
+						resourceInfo.Count = 1
 						resourceInfo.Type = "Folder"
 						resourceInfo.Extension = "<Folder>"
 						resourceInfo.IsFolder = True
@@ -537,8 +549,8 @@ Public Class UnpackUserControl
 						fileExtension = fileExtension.Substring(1)
 					End If
 				End If
-				Dim fileSize As Long
-				fileSize = CLng(fields(fields.Length - 1).Remove(0, 3))
+				'Dim fileSize As UInt64
+				'fileSize = CULng(CLng(fields(fields.Length - 1).Remove(0, 3)))
 				Dim fileType As String
 				fileType = "<type>"
 
@@ -546,6 +558,7 @@ Public Class UnpackUserControl
 				resourceInfo.PathFileName = pathFileName
 				resourceInfo.Name = fileName
 				resourceInfo.Size = fileSize
+				resourceInfo.Count = 1
 				If pathFileName.StartsWith("<") Then
 					resourceInfo.Type = "<internal data>"
 				Else
@@ -588,7 +601,11 @@ Public Class UnpackUserControl
 		If Not e.Cancelled Then
 			Dim unpackResultInfo As UnpackerOutputInfo
 			unpackResultInfo = CType(e.Result, UnpackerOutputInfo)
-			Me.PackageTreeView.Nodes(0).Text = "<root>"
+			If Me.PackageTreeView.Nodes(0).Nodes.Count = 0 AndAlso Me.PackageTreeView.Nodes(0).Tag Is Nothing Then
+				Me.PackageTreeView.Nodes.Clear()
+			Else
+				Me.PackageTreeView.Nodes(0).Text = "<root>"
+			End If
 		Else
 			Me.PackageTreeView.Nodes(0).Text = "<root-incomplete>"
 		End If
@@ -608,12 +625,12 @@ Public Class UnpackUserControl
 
 	Private Sub SearchBackgroundWorker_ProgressChanged(ByVal sender As System.Object, ByVal e As System.ComponentModel.ProgressChangedEventArgs)
 		If e.ProgressPercentage = 1 Then
-			Me.theResultsRootTreeNode.Text = "<Found> " + Me.theTextToFind + " (" + Me.theResultsCount.ToString() + ")"
+			Me.theResultsRootTreeNode.Text = "<Found> " + Me.theTextToFind + " (" + Me.theResultsCount.ToString("N0", TheApp.InternalCultureInfo) + ")"
 		End If
 	End Sub
 
 	Private Sub SearchBackgroundWorker_RunWorkerCompleted(ByVal sender As System.Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs)
-		Dim resultsText As String = "<Found> " + Me.theTextToFind + " (" + Me.theResultsCount.ToString() + ")"
+		Dim resultsText As String = "<Found> " + Me.theTextToFind + " (" + Me.theResultsCount.ToString("N0", TheApp.InternalCultureInfo) + ")"
 		If e.Cancelled Then
 			resultsText += " <incomplete>"
 		End If
@@ -798,7 +815,7 @@ Public Class UnpackUserControl
 
 	Private Sub UpdateContentsGroupBox()
 		If Me.thePackageCount > 1 Then
-			Me.ContentsGroupBox.Text = "Contents of " + Me.thePackageCount.ToString("N0") + " packages"
+			Me.ContentsGroupBox.Text = "Contents of " + Me.thePackageCount.ToString("N0", TheApp.InternalCultureInfo) + " packages"
 		Else
 			Me.ContentsGroupBox.Text = "Contents of package"
 		End If
@@ -911,13 +928,13 @@ Public Class UnpackUserControl
 	'	If treeNode.Nodes.Count = 1 Then
 	'		folderCountText = "1 folder "
 	'	Else
-	'		folderCountText = treeNode.Nodes.Count.ToString() + " folders "
+	'		folderCountText = treeNode.Nodes.Count.ToString("N0", TheApp.InternalCultureInfo) + " folders "
 	'	End If
 	'	Dim fileCountText As String
 	'	If fileCount = 1 Then
 	'		fileCountText = "1 file"
 	'	Else
-	'		fileCountText = fileCount.ToString() + " files"
+	'		fileCountText = fileCount.ToString("N0", TheApp.InternalCultureInfo) + " files"
 	'	End If
 	'	treeNode.Text = treeNode.Name + " <" + folderCountText + fileCountText + ">"
 	'End Sub
@@ -937,20 +954,23 @@ Public Class UnpackUserControl
 				item = New ListViewItem(info.Name)
 				item.Tag = info
 				If info.IsFolder Then
-					Dim treeNodeForFolder As TreeNode
-					Dim listForFolder As List(Of PackageResourceFileNameInfo)
-					Dim itemCountText As String
-					treeNodeForFolder = selectedTreeNode.Nodes.Find(info.Name, False)(0)
-					listForFolder = CType(treeNodeForFolder.Tag, List(Of PackageResourceFileNameInfo))
-					itemCountText = listForFolder.Count.ToString()
-					If listForFolder.Count = 1 Then
-						itemCountText += " item"
-					Else
-						itemCountText += " items"
-					End If
-					item.SubItems.Add(itemCountText)
+					'Dim treeNodeForFolder As TreeNode
+					'Dim listForFolder As List(Of PackageResourceFileNameInfo)
+					'Dim itemCountText As String
+					'treeNodeForFolder = selectedTreeNode.Nodes.Find(info.Name, False)(0)
+					'listForFolder = CType(treeNodeForFolder.Tag, List(Of PackageResourceFileNameInfo))
+					'itemCountText = listForFolder.Count.ToString("N0", TheApp.InternalCultureInfo)
+					''If listForFolder.Count = 1 Then
+					''	itemCountText += " item"
+					''Else
+					''	itemCountText += " items"
+					''End If
+					'item.SubItems.Add(itemCountText)
+					item.SubItems.Add(info.Size.ToString("N0", TheApp.InternalCultureInfo))
+					item.SubItems.Add(info.Count.ToString("N0", TheApp.InternalCultureInfo))
 				Else
 					item.SubItems.Add(info.Size.ToString("N0", TheApp.InternalCultureInfo))
+					item.SubItems.Add(info.Count.ToString("N0", TheApp.InternalCultureInfo))
 				End If
 				item.SubItems.Add(info.Type)
 				item.SubItems.Add(info.Extension)
@@ -970,9 +990,9 @@ Public Class UnpackUserControl
 			Next
 
 			Me.PackageListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent)
-
-			Me.UpdateSelectionCounts()
 		End If
+
+		Me.UpdateSelectionCounts()
 	End Sub
 
 	'NOTE: Searches the folder (and its subfolders) selected in treeview.
@@ -989,7 +1009,7 @@ Public Class UnpackUserControl
 
 			Me.theResultsCount = 0
 			Dim resultsRootTreeNodeText As String
-			resultsRootTreeNodeText = "<Found> " + Me.theTextToFind + " (" + Me.theResultsCount.ToString() + ") <searching>"
+			resultsRootTreeNodeText = "<Found> " + Me.theTextToFind + " (" + Me.theResultsCount.ToString("N0", TheApp.InternalCultureInfo) + ") <searching>"
 			Me.theResultsRootTreeNode = New TreeNode(resultsRootTreeNodeText)
 
 			Me.theSearchBackgroundWorker = New BackgroundWorker()
@@ -1096,8 +1116,9 @@ Public Class UnpackUserControl
 	End Sub
 
 	Private Sub UpdateSelectionCounts()
-		Dim fileCount As Integer = 0
-		Dim sizeTotal As Long = 0
+		Dim selectedFileCount As UInt64 = 0
+		Dim totalFileCount As UInt64 = 0
+		Dim selectedByteCount As UInt64 = 0
 
 		Dim selectedTreeNode As TreeNode
 		selectedTreeNode = Me.PackageTreeView.SelectedNode
@@ -1105,19 +1126,42 @@ Public Class UnpackUserControl
 			Dim list As List(Of PackageResourceFileNameInfo)
 			list = CType(selectedTreeNode.Tag, List(Of PackageResourceFileNameInfo))
 
-			fileCount = list.Count
+			'fileCount = list.Count
+			For Each item As ListViewItem In Me.PackageListView.Items
+				totalFileCount += CType(item.Tag, PackageResourceFileNameInfo).Count
+			Next
 
 			For Each item As ListViewItem In Me.PackageListView.SelectedItems
-				sizeTotal += CType(item.Tag, PackageResourceFileNameInfo).Size
+				selectedFileCount += CType(item.Tag, PackageResourceFileNameInfo).Count
+				selectedByteCount += CType(item.Tag, PackageResourceFileNameInfo).Size
 			Next
 		End If
+		'Me.UpdateSelectionCountsRecursive(selectedTreeNode, fileCount, sizeTotal)
 
-		Me.FilesSelectedCountToolStripLabel.Text = Me.PackageListView.SelectedItems.Count.ToString() + "/" + fileCount.ToString()
-		Me.SizeSelectedTotalToolStripLabel.Text = sizeTotal.ToString()
+		'Me.FilesSelectedCountToolStripLabel.Text = Me.PackageListView.SelectedItems.Count.ToString("N0", TheApp.InternalCultureInfo) + "/" + fileCount.ToString("N0", TheApp.InternalCultureInfo)
+		Me.FilesSelectedCountToolStripLabel.Text = selectedFileCount.ToString("N0", TheApp.InternalCultureInfo) + "/" + totalFileCount.ToString("N0", TheApp.InternalCultureInfo)
+		Me.SizeSelectedTotalToolStripLabel.Text = selectedByteCount.ToString("N0", TheApp.InternalCultureInfo)
 
 		'IMPORTANT: Update the toolstrip so the items are resized properly. Needed because of the 'springing' textbox.
 		Me.ToolStrip1.PerformLayout()
 	End Sub
+
+	'Private Sub UpdateSelectionCountsRecursive(ByVal currentTreeNode As TreeNode, ByRef fileCount As Integer, ByRef sizeTotal As Long)
+	'	If currentTreeNode IsNot Nothing AndAlso currentTreeNode.Tag IsNot Nothing Then
+	'		Dim list As List(Of PackageResourceFileNameInfo)
+	'		list = CType(currentTreeNode.Tag, List(Of PackageResourceFileNameInfo))
+
+	'		fileCount += list.Count
+
+	'		For Each item As ListViewItem In Me.PackageListView.SelectedItems
+	'			sizeTotal += CType(item.Tag, PackageResourceFileNameInfo).Size
+	'		Next
+
+	'		For Each childNode As TreeNode In currentTreeNode.Nodes
+	'			Me.UpdateSelectionCountsRecursive(childNode, fileCount, sizeTotal)
+	'		Next
+	'	End If
+	'End Sub
 
 	Private Function GetEntriesFromFolderEntry(ByVal resourceInfos As List(Of PackageResourceFileNameInfo), ByVal treeNode As TreeNode, ByVal archivePathFileNameToEntryIndexMap As SortedList(Of String, List(Of Integer))) As SortedList(Of String, List(Of Integer))
 		Dim folderNode As TreeNode

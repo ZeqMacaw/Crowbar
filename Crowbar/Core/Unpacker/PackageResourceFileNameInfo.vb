@@ -25,13 +25,23 @@ Public Class PackageResourceFileNameInfo
 		End Set
 	End Property
 
-	Public Property Size() As Long
+	Public Property Size() As UInt64
 		Get
 			Return Me.theSize
 		End Get
-		Set(ByVal value As Long)
+		Set(ByVal value As UInt64)
 			Me.theSize = value
 			NotifyPropertyChanged("Size")
+		End Set
+	End Property
+
+	Public Property Count() As UInt64
+		Get
+			Return Me.theCount
+		End Get
+		Set(ByVal value As UInt64)
+			Me.theCount = value
+			NotifyPropertyChanged("Count")
 		End Set
 	End Property
 
@@ -108,7 +118,8 @@ Public Class PackageResourceFileNameInfo
 	Private thePathFileName As String
 
 	Private theName As String
-	Private theSize As Long
+	Private theSize As UInt64
+	Private theCount As UInt64
 	Private theType As String
 	Private theExtension As String
 
