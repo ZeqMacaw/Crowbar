@@ -46,7 +46,7 @@ Partial Class UnpackUserControl
 		Me.ContentsGroupBox = New System.Windows.Forms.GroupBox()
 		Me.ContentsGroupBoxFillPanel = New System.Windows.Forms.Panel()
 		Me.SplitContainer3 = New System.Windows.Forms.SplitContainer()
-		Me.PackageTreeView = New System.Windows.Forms.TreeView()
+		Me.PackageTreeView = New Crowbar.TreeViewEx()
 		Me.PackageListView = New System.Windows.Forms.ListView()
 		Me.Panel3 = New System.Windows.Forms.Panel()
 		Me.SelectionPathTextBox = New System.Windows.Forms.TextBox()
@@ -372,6 +372,7 @@ Partial Class UnpackUserControl
 		'
 		Me.PackageTreeView.BackColor = System.Drawing.SystemColors.Control
 		Me.PackageTreeView.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.PackageTreeView.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText
 		Me.PackageTreeView.HideSelection = False
 		Me.PackageTreeView.ImageIndex = 0
 		Me.PackageTreeView.ImageList = Me.ImageList1
@@ -390,7 +391,7 @@ Partial Class UnpackUserControl
 		Me.PackageListView.Location = New System.Drawing.Point(0, 0)
 		Me.PackageListView.Name = "PackageListView"
 		Me.PackageListView.ShowGroups = False
-		Me.PackageListView.Size = New System.Drawing.Size(284, 275)
+		Me.PackageListView.Size = New System.Drawing.Size(266, 275)
 		Me.PackageListView.SmallImageList = Me.ImageList1
 		Me.PackageListView.Sorting = System.Windows.Forms.SortOrder.Ascending
 		Me.PackageListView.TabIndex = 1
@@ -767,7 +768,7 @@ Partial Class UnpackUserControl
 	Friend WithEvents UnpackedFilesComboBox As System.Windows.Forms.ComboBox
 	Friend WithEvents GotoUnpackedFileButton As System.Windows.Forms.Button
 	Friend WithEvents ContentsGroupBox As System.Windows.Forms.GroupBox
-	Friend WithEvents PackageTreeView As System.Windows.Forms.TreeView
+	Friend WithEvents PackageTreeView As Crowbar.TreeViewEx
 	Friend WithEvents SplitContainer2 As System.Windows.Forms.SplitContainer
 	Friend WithEvents SplitContainer3 As System.Windows.Forms.SplitContainer
 	Friend WithEvents UnpackOptionsUseDefaultsButton As System.Windows.Forms.Button

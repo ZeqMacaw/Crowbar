@@ -542,6 +542,9 @@
     <Compile Include="Widgets\- General\GroupBoxEx.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Widgets\- General\TreeViewEx.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Widgets\- General\ProgressBarEx.vb">
       <SubType>Component</SubType>
     </Compile>
@@ -780,6 +783,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\- Application\MacroDataGridView.resx">
       <DependentUpon>MacroDataGridView.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\- General\TreeViewEx.resx">
+      <DependentUpon>TreeViewEx.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\Main Tabs\AboutUserControl.resx">
       <SubType>Designer</SubType>
