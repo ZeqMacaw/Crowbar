@@ -508,6 +508,11 @@ Public Class UnpackUserControl
 							If info.IsFolder AndAlso info.Name = name Then
 								info.Count += 1UL
 								info.Size += fileSize
+								If info.ArchivePathFileNameExists Then
+									Dim temp As New TreeNode
+									treeNode.ForeColor = temp.ForeColor
+									info.ArchivePathFileNameExists = True
+								End If
 							End If
 						Next
 					Else
@@ -526,6 +531,9 @@ Public Class UnpackUserControl
 						'resourceInfo.ArchivePathFileName = Me.theArchivePathFileName
 						'NOTE: Because same folder can be in multiple archives, don't bother showing which archive the folder is in. Crowbar only shows the first one added to the list.
 						resourceInfo.ArchivePathFileName = ""
+						' Using this field to determine when to dim the folder in the treeview and listview.
+						resourceInfo.ArchivePathFileNameExists = False
+						treeNode.ForeColor = SystemColors.GrayText
 
 						If parentTreeNode.Tag Is Nothing Then
 							list = New List(Of PackageResourceFileNameInfo)()
@@ -575,6 +583,12 @@ Public Class UnpackUserControl
 				resourceInfo.ArchivePathFileName = Me.theArchivePathFileName
 				resourceInfo.ArchivePathFileNameExists = File.Exists(Me.theArchivePathFileName)
 				resourceInfo.EntryIndex = Me.theEntryIndex
+
+				If resourceInfo.ArchivePathFileNameExists Then
+					Dim temp As New TreeNode
+					treeNode.ForeColor = temp.ForeColor
+					resourceInfo.ArchivePathFileNameExists = True
+				End If
 
 				If treeNode.Tag Is Nothing Then
 					list = New List(Of PackageResourceFileNameInfo)()
@@ -999,7 +1013,7 @@ Public Class UnpackUserControl
 				End If
 				item.ImageKey = info.Extension
 
-				If Not info.IsFolder AndAlso Not info.ArchivePathFileNameExists Then
+				If Not info.ArchivePathFileNameExists Then
 					item.ForeColor = SystemColors.GrayText
 					'item.BackColor = SystemColors
 				End If
