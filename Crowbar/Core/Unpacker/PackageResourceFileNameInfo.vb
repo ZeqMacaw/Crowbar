@@ -1,7 +1,29 @@
 ﻿Imports System.ComponentModel
 
 Public Class PackageResourceFileNameInfo
+	Implements ICloneable
 	Implements INotifyPropertyChanged
+
+	Public Sub New()
+		'MyBase.New()
+	End Sub
+
+	Protected Sub New(ByVal originalObject As PackageResourceFileNameInfo)
+		Me.thePathFileName = originalObject.PathFileName
+		Me.theName = originalObject.Name
+		Me.theSize = originalObject.Size
+		Me.theCount = originalObject.Count
+		Me.theType = originalObject.Type
+		Me.theExtension = originalObject.Extension
+		Me.theResourceFileIsFolder = originalObject.IsFolder
+		Me.theArchivePathFileName = originalObject.ArchivePathFileName
+		Me.thePathFileNameExists = originalObject.ArchivePathFileNameExists
+		Me.theEntryIndex = originalObject.EntryIndex
+	End Sub
+
+	Public Function Clone() As Object Implements System.ICloneable.Clone
+		Return New PackageResourceFileNameInfo(Me)
+	End Function
 
 #Region "Properties"
 

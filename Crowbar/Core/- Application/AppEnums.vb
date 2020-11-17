@@ -21,6 +21,11 @@ Public Module AppEnums
 		<Description("Game's addons folder")> GameAddonsFolder
 	End Enum
 
+	Public Enum UnpackSearchFieldOptions
+		<Description("Files")> Files
+		<Description("Files and Folders")> FilesAndFolders
+	End Enum
+
 	Public Enum DecompileOutputPathOptions
 		<Description("Work folder")> WorkFolder
 		<Description("Subfolder (of MDL input)")> Subfolder

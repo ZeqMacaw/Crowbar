@@ -58,11 +58,16 @@ Public Class UnpackUserControl
 		Me.theSortColumnIndex = 0
 		Me.PackageListView.ListViewItemSorter = New FolderAndFileListViewItemComparer(Me.theSortColumnIndex, Me.PackageListView.Sorting)
 
-		'NOTE: The DataSource, DisplayMember, and ValueMember need to be set before DataBindings, or else an exception is raised.
-		Me.GameSetupComboBox.DisplayMember = "GameName"
-		Me.GameSetupComboBox.ValueMember = "GameName"
-		Me.GameSetupComboBox.DataSource = TheApp.Settings.GameSetups
-		Me.GameSetupComboBox.DataBindings.Add("SelectedIndex", TheApp.Settings, "UnpackGameSetupSelectedIndex", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.SearchToolStripComboBox.ComboBox.DisplayMember = "Value"
+		Me.SearchToolStripComboBox.ComboBox.ValueMember = "Key"
+		Me.SearchToolStripComboBox.ComboBox.DataSource = EnumHelper.ToList(GetType(UnpackSearchFieldOptions))
+		Me.SearchToolStripComboBox.ComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "UnpackSearchField", False, DataSourceUpdateMode.OnPropertyChanged)
+
+		''NOTE: The DataSource, DisplayMember, and ValueMember need to be set before DataBindings, or else an exception is raised.
+		'Me.GameSetupComboBox.DisplayMember = "GameName"
+		'Me.GameSetupComboBox.ValueMember = "GameName"
+		'Me.GameSetupComboBox.DataSource = TheApp.Settings.GameSetups
+		'Me.GameSetupComboBox.DataBindings.Add("SelectedIndex", TheApp.Settings, "UnpackGameSetupSelectedIndex", False, DataSourceUpdateMode.OnPropertyChanged)
 
 		Me.InitUnpackerOptions()
 
@@ -1020,10 +1025,17 @@ Public Class UnpackUserControl
 			Me.FindToolStripButton.Image = My.Resources.CancelSearch
 			Me.FindToolStripButton.Text = "Cancel"
 
+			Me.theResultsFileCount = 0
+			Me.theResultsFolderCount = 0
 			Me.theResultsCount = 0
-			Dim resultsRootTreeNodeText As String
-			resultsRootTreeNodeText = "<Found> " + Me.theTextToFind + " (" + Me.theResultsCount.ToString("N0", TheApp.InternalCultureInfo) + ") <searching>"
+			Dim resultsRootTreeNodeText As String = "<Found> " + Me.theTextToFind + " (" + Me.theResultsCount.ToString("N0", TheApp.InternalCultureInfo) + ") <searching>"
 			Me.theResultsRootTreeNode = New TreeNode(resultsRootTreeNodeText)
+
+			If TheApp.Settings.UnpackSearchField = UnpackSearchFieldOptions.FilesAndFolders Then
+				Dim resultsFoldersTreeNodeText As String = "<Folders found> (0)"
+				Me.theResultsFoldersTreeNode = New TreeNode(resultsFoldersTreeNodeText)
+				Me.theResultsRootTreeNode.Nodes.Add(Me.theResultsFoldersTreeNode)
+			End If
 
 			Me.theSearchBackgroundWorker = New BackgroundWorker()
 			Me.theSearchBackgroundWorker.WorkerReportsProgress = True
@@ -1054,7 +1066,9 @@ Public Class UnpackUserControl
 			Dim infoName As String
 			Dim currentResultsTreeNodeList As List(Of PackageResourceFileNameInfo)
 			currentResultsTreeNodeList = CType(currentResultsTreeNode.Tag, List(Of PackageResourceFileNameInfo))
+			Dim currentResultsFolderTreeNodeList As List(Of PackageResourceFileNameInfo) = CType(Me.theResultsFoldersTreeNode.Tag, List(Of PackageResourceFileNameInfo))
 
+			Dim nodeClone As TreeNode
 			For Each info As PackageResourceFileNameInfo In list
 				If Not info.IsFolder Then
 					infoName = info.Name.ToLower()
@@ -1065,7 +1079,29 @@ Public Class UnpackUserControl
 						End If
 						currentResultsTreeNodeList.Add(info)
 
-						Me.theResultsCount += 1
+						Me.theResultsFileCount += 1
+						Me.theSearchBackgroundWorker.ReportProgress(1)
+					End If
+				ElseIf TheApp.Settings.UnpackSearchField = UnpackSearchFieldOptions.FilesAndFolders Then
+					infoName = info.Name.ToLower()
+					If infoName.Contains(Me.theTextToFind.ToLower()) Then
+						If currentResultsFolderTreeNodeList Is Nothing Then
+							currentResultsFolderTreeNodeList = New List(Of PackageResourceFileNameInfo)()
+							Me.theResultsFoldersTreeNode.Tag = currentResultsFolderTreeNodeList
+						End If
+						Dim infoClone As PackageResourceFileNameInfo = CType(info.Clone(), PackageResourceFileNameInfo)
+						infoClone.Name = infoClone.PathFileName
+						currentResultsFolderTreeNodeList.Add(infoClone)
+
+						Me.theResultsFolderCount += 1
+
+						'If Not Me.theResultsFoldersTreeNode.Nodes.ContainsKey(info.Name) Then
+						Me.theResultsFoldersTreeNode.Text = "<Folders found> (" + Me.theResultsFolderCount.ToString("N0", TheApp.InternalCultureInfo) + ")"
+
+						'TODO: Add a special Tag to above node that allows double-clicking on it to go to real folder.
+						'End If
+
+						'Me.theResultsCount += 1
 						Me.theSearchBackgroundWorker.ReportProgress(1)
 					End If
 				End If
@@ -1077,7 +1113,6 @@ Public Class UnpackUserControl
 			Next
 
 			Dim count As Integer
-			Dim nodeClone As TreeNode
 			For Each node As TreeNode In treeNodeToSearch.Nodes
 				If Not node.Text.StartsWith("<Found>") Then
 					If Not currentResultsTreeNode.Nodes.ContainsKey(node.Name) Then
@@ -1086,7 +1121,7 @@ Public Class UnpackUserControl
 						nodeClone = New TreeNode(node.Text)
 						nodeClone.Name = node.Name
 						currentResultsTreeNode.Nodes.Add(nodeClone)
-						count = Me.theResultsCount
+						count = Me.theResultsFileCount
 
 						Me.CreateTreeNodesThatMatchTextToFind(e, node, nodeClone)
 
@@ -1095,7 +1130,8 @@ Public Class UnpackUserControl
 							Exit Sub
 						End If
 
-						If count = Me.theResultsCount Then
+						Me.theResultsCount = Me.theResultsFileCount + Me.theResultsFolderCount
+						If count = Me.theResultsFileCount Then
 							currentResultsTreeNode.Nodes.Remove(nodeClone)
 						Else
 							For Each info As PackageResourceFileNameInfo In list
@@ -1382,7 +1418,10 @@ Public Class UnpackUserControl
 	Private theSearchBackgroundWorker As BackgroundWorker
 	Private theSelectedTreeNode As TreeNode
 	Private theResultsRootTreeNode As TreeNode
+	Private theResultsFoldersTreeNode As TreeNode
 	Private theTextToFind As String
+	Private theResultsFileCount As Integer
+	Private theResultsFolderCount As Integer
 	Private theResultsCount As Integer
 	Private theSearchCount As Integer
 

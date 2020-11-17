@@ -42,6 +42,8 @@ Public Class AppSettings
 		Me.SetDefaultUnpackOutputSubfolderName()
 		Me.theUnpackOutputFullPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
 		Me.theUnpackGameSetupSelectedIndex = 0
+		Me.theUnpackSearchField = UnpackSearchFieldOptions.Files
+		Me.theUnpackSearchText = ""
 		Me.SetDefaultUnpackOptions()
 		Me.theUnpackMode = InputOptions.File
 
@@ -381,6 +383,30 @@ Public Class AppSettings
 		Set(ByVal value As Integer)
 			Me.theUnpackGameSetupSelectedIndex = value
 			NotifyPropertyChanged("UnpackGameSetupSelectedIndex")
+		End Set
+	End Property
+
+	Public Property UnpackSearchField() As UnpackSearchFieldOptions
+		Get
+			Return Me.theUnpackSearchField
+		End Get
+		Set(ByVal value As UnpackSearchFieldOptions)
+			If Me.theUnpackSearchField <> value Then
+				Me.theUnpackSearchField = value
+				NotifyPropertyChanged("UnpackSearchField")
+			End If
+		End Set
+	End Property
+
+	Public Property UnpackSearchText() As String
+		Get
+			Return Me.theUnpackSearchText
+		End Get
+		Set(ByVal value As String)
+			If Me.theUnpackSearchText <> value Then
+				Me.theUnpackSearchText = value
+				NotifyPropertyChanged("UnpackSearchText")
+			End If
 		End Set
 	End Property
 
@@ -1819,6 +1845,8 @@ Public Class AppSettings
 	Private theUnpackOutputFullPath As String
 	Private theUnpackPackagePathFileName As String
 	Private theUnpackGameSetupSelectedIndex As Integer
+	Private theUnpackSearchField As UnpackSearchFieldOptions
+	Private theUnpackSearchText As String
 
 	Private theUnpackFolderForEachPackageIsChecked As Boolean
 	Private theUnpackKeepFullPathIsChecked As Boolean
