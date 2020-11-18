@@ -106,11 +106,21 @@ Public Class Updater
 						Me.theAppVersion = Nothing
 					End If
 
+					'NOTE: File name needs to be in this form: "Crowbar_" + whatever; usually date + "_" + app version (e.g. 0.68) + ".7z"
+					Me.theRemoteFileLink = ""
 					Dim assets As ArrayList = CType(root("assets"), ArrayList)
-					Dim asset As Dictionary(Of String, Object) = CType(assets(0), Dictionary(Of String, Object))
-					Me.theRemoteFileLink = CType(asset("browser_download_url"), String)
-					Me.theLocalFileName = CType(asset("name"), String)
-					fileSize = CType(asset("size"), ULong)
+					Dim asset As Dictionary(Of String, Object)
+					Dim assetName As String
+					For assetIndex As Integer = 0 To assets.Count - 1
+						asset = CType(assets(assetIndex), Dictionary(Of String, Object))
+						assetName = CType(asset("name"), String)
+						If assetName.StartsWith("Crowbar_") AndAlso assetName.EndsWith("_" + appVersionTag + ".7z") Then
+							Me.theRemoteFileLink = CType(asset("browser_download_url"), String)
+							Me.theLocalFileName = CType(asset("name"), String)
+							fileSize = CType(asset("size"), ULong)
+							Exit For
+						End If
+					Next
 				Catch ex As Exception
 					Me.theAppVersion = Nothing
 				Finally
@@ -129,7 +139,7 @@ Public Class Updater
 		Dim updateCheckStatusMessage As String
 		If Not securityProtocolIsSupported Then
 			updateCheckStatusMessage = "Unable to get update info because ""TLS 1.2"" protocol unavailable."
-		ElseIf Me.theAppVersion Is Nothing Then
+		ElseIf Me.theAppVersion Is Nothing OrElse Me.theRemoteFileLink = "" Then
 			updateCheckStatusMessage = "Unable to get update info. Please try again later."
 		ElseIf Me.theAppVersion = My.Application.Info.Version Then
 			updateCheckStatusMessage = "Crowbar is up to date."
