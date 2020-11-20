@@ -210,9 +210,9 @@ Partial Class SetUpGamesUserControl
 		'CreateModelsFolderTreeButton
 		'
 		Me.CreateModelsFolderTreeButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.CreateModelsFolderTreeButton.Location = New System.Drawing.Point(511, 275)
+		Me.CreateModelsFolderTreeButton.Location = New System.Drawing.Point(502, 275)
 		Me.CreateModelsFolderTreeButton.Name = "CreateModelsFolderTreeButton"
-		Me.CreateModelsFolderTreeButton.Size = New System.Drawing.Size(261, 23)
+		Me.CreateModelsFolderTreeButton.Size = New System.Drawing.Size(270, 23)
 		Me.CreateModelsFolderTreeButton.TabIndex = 40
 		Me.CreateModelsFolderTreeButton.Text = "Create ""models"" folder tree from this game's VPKs"
 		Me.ToolTip1.SetToolTip(Me.CreateModelsFolderTreeButton, "Use this so HLMV can view models found in VPKs.")
