@@ -232,9 +232,9 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.MappingToolPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.MappingToolPathFileNameTextBox.Location = New System.Drawing.Point(93, 217)
+		Me.MappingToolPathFileNameTextBox.Location = New System.Drawing.Point(102, 217)
 		Me.MappingToolPathFileNameTextBox.Name = "MappingToolPathFileNameTextBox"
-		Me.MappingToolPathFileNameTextBox.Size = New System.Drawing.Size(598, 22)
+		Me.MappingToolPathFileNameTextBox.Size = New System.Drawing.Size(589, 22)
 		Me.MappingToolPathFileNameTextBox.TabIndex = 38
 		'
 		'MappingToolLabel
@@ -328,9 +328,9 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.PackerPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.PackerPathFileNameTextBox.Location = New System.Drawing.Point(93, 246)
+		Me.PackerPathFileNameTextBox.Location = New System.Drawing.Point(102, 246)
 		Me.PackerPathFileNameTextBox.Name = "PackerPathFileNameTextBox"
-		Me.PackerPathFileNameTextBox.Size = New System.Drawing.Size(598, 22)
+		Me.PackerPathFileNameTextBox.Size = New System.Drawing.Size(589, 22)
 		Me.PackerPathFileNameTextBox.TabIndex = 17
 		'
 		'ModelViewerLabel
@@ -357,9 +357,9 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.ViewerPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ViewerPathFileNameTextBox.Location = New System.Drawing.Point(93, 188)
+		Me.ViewerPathFileNameTextBox.Location = New System.Drawing.Point(102, 188)
 		Me.ViewerPathFileNameTextBox.Name = "ViewerPathFileNameTextBox"
-		Me.ViewerPathFileNameTextBox.Size = New System.Drawing.Size(598, 22)
+		Me.ViewerPathFileNameTextBox.Size = New System.Drawing.Size(589, 22)
 		Me.ViewerPathFileNameTextBox.TabIndex = 14
 		'
 		'CloneGameSetupButton
@@ -413,9 +413,9 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.GamePathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.GamePathFileNameTextBox.Location = New System.Drawing.Point(93, 130)
+		Me.GamePathFileNameTextBox.Location = New System.Drawing.Point(102, 130)
 		Me.GamePathFileNameTextBox.Name = "GamePathFileNameTextBox"
-		Me.GamePathFileNameTextBox.Size = New System.Drawing.Size(598, 22)
+		Me.GamePathFileNameTextBox.Size = New System.Drawing.Size(589, 22)
 		Me.GamePathFileNameTextBox.TabIndex = 3
 		'
 		'ModelCompilerLabel
@@ -442,9 +442,9 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.CompilerPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.CompilerPathFileNameTextBox.Location = New System.Drawing.Point(93, 159)
+		Me.CompilerPathFileNameTextBox.Location = New System.Drawing.Point(102, 159)
 		Me.CompilerPathFileNameTextBox.Name = "CompilerPathFileNameTextBox"
-		Me.CompilerPathFileNameTextBox.Size = New System.Drawing.Size(598, 22)
+		Me.CompilerPathFileNameTextBox.Size = New System.Drawing.Size(589, 22)
 		Me.CompilerPathFileNameTextBox.TabIndex = 6
 		'
 		'GamePathLabel
