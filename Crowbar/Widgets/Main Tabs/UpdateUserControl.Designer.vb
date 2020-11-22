@@ -93,6 +93,7 @@ Partial Class UpdateUserControl
 		'
 		'ChangelogTextBox
 		'
+		Me.ChangelogTextBox.BackColor = System.Drawing.SystemColors.Control
 		Me.ChangelogTextBox.CueBannerText = ""
 		Me.ChangelogTextBox.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.ChangelogTextBox.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
