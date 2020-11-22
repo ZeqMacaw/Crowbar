@@ -235,6 +235,20 @@ Public Class UnpackUserControl
 		FileManager.OpenWindowsExplorer(TheApp.Settings.UnpackPackagePathFolderOrFileName)
 	End Sub
 
+	Private Sub OutputPathTextBox_DragDrop(sender As Object, e As DragEventArgs) Handles OutputPathTextBox.DragDrop
+		Dim pathFileNames() As String = CType(e.Data.GetData(DataFormats.FileDrop), String())
+		Dim pathFileName As String = pathFileNames(0)
+		If Directory.Exists(pathFileName) Then
+			TheApp.Settings.UnpackOutputFullPath = pathFileName
+		End If
+	End Sub
+
+	Private Sub OutputPathTextBox_DragEnter(sender As Object, e As DragEventArgs) Handles OutputPathTextBox.DragEnter
+		If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+			e.Effect = DragDropEffects.Copy
+		End If
+	End Sub
+
 	Private Sub OutputPathTextBox_Validated(sender As Object, e As EventArgs) Handles OutputPathTextBox.Validated
 		Me.UpdateOutputPathTextBox()
 	End Sub

@@ -25,6 +25,7 @@ Partial Class UpdateUserControl
 		Me.components = New System.ComponentModel.Container()
 		Me.UpdateUserControlFillPanel = New System.Windows.Forms.Panel()
 		Me.CheckForUpdateGroupBox = New System.Windows.Forms.GroupBox()
+		Me.Panel1 = New System.Windows.Forms.Panel()
 		Me.ChangelogTextBox = New Crowbar.RichTextBoxEx()
 		Me.CurrentVersionLabel = New System.Windows.Forms.Label()
 		Me.CheckForUpdateTopPanel = New System.Windows.Forms.Panel()
@@ -48,13 +49,12 @@ Partial Class UpdateUserControl
 		Me.UpdateButton = New System.Windows.Forms.Button()
 		Me.UpdateToNewPathCheckBox = New System.Windows.Forms.CheckBox()
 		Me.UpdateCopySettingsCheckBox = New System.Windows.Forms.CheckBox()
-		Me.Panel1 = New System.Windows.Forms.Panel()
 		Me.UpdateUserControlFillPanel.SuspendLayout()
 		Me.CheckForUpdateGroupBox.SuspendLayout()
+		Me.Panel1.SuspendLayout()
 		Me.CheckForUpdateTopPanel.SuspendLayout()
 		Me.DownloadGroupBox.SuspendLayout()
 		Me.UpdateGroupBox.SuspendLayout()
-		Me.Panel1.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'UpdateUserControlFillPanel
@@ -80,6 +80,16 @@ Partial Class UpdateUserControl
 		Me.CheckForUpdateGroupBox.TabIndex = 14
 		Me.CheckForUpdateGroupBox.TabStop = False
 		Me.CheckForUpdateGroupBox.Text = "Check for Update - Check for latest version and get changelog"
+		'
+		'Panel1
+		'
+		Me.Panel1.Controls.Add(Me.ChangelogTextBox)
+		Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.Panel1.Location = New System.Drawing.Point(3, 44)
+		Me.Panel1.Name = "Panel1"
+		Me.Panel1.Padding = New System.Windows.Forms.Padding(3)
+		Me.Panel1.Size = New System.Drawing.Size(770, 318)
+		Me.Panel1.TabIndex = 16
 		'
 		'ChangelogTextBox
 		'
@@ -175,6 +185,7 @@ Partial Class UpdateUserControl
 		'
 		'DownloadFolderTextBox
 		'
+		Me.DownloadFolderTextBox.AllowDrop = True
 		Me.DownloadFolderTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.DownloadFolderTextBox.CueBannerText = ""
@@ -283,6 +294,7 @@ Partial Class UpdateUserControl
 		'
 		'UpdateFolderTextBox
 		'
+		Me.UpdateFolderTextBox.AllowDrop = True
 		Me.UpdateFolderTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.UpdateFolderTextBox.CueBannerText = ""
@@ -331,16 +343,6 @@ Partial Class UpdateUserControl
 		Me.UpdateCopySettingsCheckBox.Text = "Copy settings from current version to new version"
 		Me.UpdateCopySettingsCheckBox.UseVisualStyleBackColor = True
 		'
-		'Panel1
-		'
-		Me.Panel1.Controls.Add(Me.ChangelogTextBox)
-		Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.Panel1.Location = New System.Drawing.Point(3, 44)
-		Me.Panel1.Name = "Panel1"
-		Me.Panel1.Padding = New System.Windows.Forms.Padding(3)
-		Me.Panel1.Size = New System.Drawing.Size(770, 318)
-		Me.Panel1.TabIndex = 16
-		'
 		'UpdateUserControl
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -351,13 +353,13 @@ Partial Class UpdateUserControl
 		Me.UpdateUserControlFillPanel.ResumeLayout(False)
 		Me.CheckForUpdateGroupBox.ResumeLayout(False)
 		Me.CheckForUpdateGroupBox.PerformLayout()
+		Me.Panel1.ResumeLayout(False)
 		Me.CheckForUpdateTopPanel.ResumeLayout(False)
 		Me.CheckForUpdateTopPanel.PerformLayout()
 		Me.DownloadGroupBox.ResumeLayout(False)
 		Me.DownloadGroupBox.PerformLayout()
 		Me.UpdateGroupBox.ResumeLayout(False)
 		Me.UpdateGroupBox.PerformLayout()
-		Me.Panel1.ResumeLayout(False)
 		Me.ResumeLayout(False)
 
 	End Sub

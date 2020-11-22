@@ -51,8 +51,8 @@ Partial Class DownloadUserControl
 		Me.Options_LogSplitContainer = New System.Windows.Forms.SplitContainer()
 		Me.DownloadButtonsPanel = New System.Windows.Forms.Panel()
 		Me.PostDownloadPanel = New System.Windows.Forms.Panel()
-		Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
 		Me.UseInUnpackButton = New System.Windows.Forms.Button()
+		Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
 		Me.OptionsGroupBox.SuspendLayout()
 		Me.OptionsGroupBoxFillPanel.SuspendLayout()
 		Me.DownloadUserControlFillPanel.SuspendLayout()
@@ -124,6 +124,7 @@ Partial Class DownloadUserControl
 		'
 		'OutputPathTextBox
 		'
+		Me.OutputPathTextBox.AllowDrop = True
 		Me.OutputPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.OutputPathTextBox.CueBannerText = ""
@@ -403,10 +404,6 @@ Partial Class DownloadUserControl
 		Me.PostDownloadPanel.Size = New System.Drawing.Size(770, 26)
 		Me.PostDownloadPanel.TabIndex = 18
 		'
-		'Timer1
-		'
-		Me.Timer1.Interval = 1000
-		'
 		'UseInUnpackButton
 		'
 		Me.UseInUnpackButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -416,6 +413,10 @@ Partial Class DownloadUserControl
 		Me.UseInUnpackButton.TabIndex = 17
 		Me.UseInUnpackButton.Text = "Use In Unpack"
 		Me.UseInUnpackButton.UseVisualStyleBackColor = True
+		'
+		'Timer1
+		'
+		Me.Timer1.Interval = 1000
 		'
 		'DownloadUserControl
 		'
