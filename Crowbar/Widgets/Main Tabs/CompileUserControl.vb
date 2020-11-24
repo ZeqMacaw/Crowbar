@@ -387,6 +387,7 @@ Public Class CompileUserControl
 		ElseIf e.PropertyName = "CompileGameSetupSelectedIndex" Then
 			Me.UpdateGameModelsOutputPathTextBox()
 			Me.UpdateCompilerOptions()
+			Me.UpdateCompileButton()
 		ElseIf e.PropertyName = "CompileOptionDefineBonesIsChecked" Then
 			Me.EditCompilerOptionsText("definebones", TheApp.Settings.CompileOptionDefineBonesIsChecked)
 			Me.SetCompilerOptionsText()
@@ -576,6 +577,18 @@ Public Class CompileUserControl
 		Me.CompilerOptionDefineBonesFileNameTextBox.Enabled = Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Enabled AndAlso Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Checked
 		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.Enabled = Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Enabled AndAlso Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Checked
 		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Enabled = Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Enabled AndAlso Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Checked
+
+		Me.UpdateCompileButton()
+	End Sub
+
+	Private Sub UpdateCompileButton()
+		Dim gameSetup As GameSetup
+		gameSetup = TheApp.Settings.GameSetups(TheApp.Settings.CompileGameSetupSelectedIndex)
+		If Me.CompilerOptionDefineBonesCheckBox.Checked AndAlso gameSetup.GameEngine = GameEngine.Source Then
+			Me.CompileButton.Text = "&Compile DefineBones"
+		Else
+			Me.CompileButton.Text = "&Compile"
+		End If
 	End Sub
 
 	Private Sub UpdateWidgets(ByVal compilerIsRunning As Boolean)

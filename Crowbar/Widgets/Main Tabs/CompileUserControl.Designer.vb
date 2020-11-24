@@ -141,9 +141,9 @@ Partial Class CompileUserControl
 		Me.CompilerOptionDefineBonesCheckBox.AutoSize = True
 		Me.CompilerOptionDefineBonesCheckBox.Location = New System.Drawing.Point(179, 4)
 		Me.CompilerOptionDefineBonesCheckBox.Name = "CompilerOptionDefineBonesCheckBox"
-		Me.CompilerOptionDefineBonesCheckBox.Size = New System.Drawing.Size(94, 17)
+		Me.CompilerOptionDefineBonesCheckBox.Size = New System.Drawing.Size(91, 17)
 		Me.CompilerOptionDefineBonesCheckBox.TabIndex = 7
-		Me.CompilerOptionDefineBonesCheckBox.Text = "Define Bones"
+		Me.CompilerOptionDefineBonesCheckBox.Text = "DefineBones"
 		Me.CompilerOptionDefineBonesCheckBox.UseVisualStyleBackColor = True
 		'
 		'CompilerOptionNoP4CheckBox
@@ -255,9 +255,9 @@ Partial Class CompileUserControl
 		'
 		Me.CompileButton.Location = New System.Drawing.Point(0, 0)
 		Me.CompileButton.Name = "CompileButton"
-		Me.CompileButton.Size = New System.Drawing.Size(120, 23)
+		Me.CompileButton.Size = New System.Drawing.Size(125, 23)
 		Me.CompileButton.TabIndex = 1
-		Me.CompileButton.Text = "&Compile"
+		Me.CompileButton.Text = "&Compile DefineBones"
 		Me.CompileButton.UseVisualStyleBackColor = True
 		'
 		'Panel1
@@ -565,7 +565,7 @@ Partial Class CompileUserControl
 		'SkipCurrentModelButton
 		'
 		Me.SkipCurrentModelButton.Enabled = False
-		Me.SkipCurrentModelButton.Location = New System.Drawing.Point(126, 0)
+		Me.SkipCurrentModelButton.Location = New System.Drawing.Point(131, 0)
 		Me.SkipCurrentModelButton.Name = "SkipCurrentModelButton"
 		Me.SkipCurrentModelButton.Size = New System.Drawing.Size(120, 23)
 		Me.SkipCurrentModelButton.TabIndex = 2
@@ -575,7 +575,7 @@ Partial Class CompileUserControl
 		'CancelCompileButton
 		'
 		Me.CancelCompileButton.Enabled = False
-		Me.CancelCompileButton.Location = New System.Drawing.Point(252, 0)
+		Me.CancelCompileButton.Location = New System.Drawing.Point(257, 0)
 		Me.CancelCompileButton.Name = "CancelCompileButton"
 		Me.CancelCompileButton.Size = New System.Drawing.Size(120, 23)
 		Me.CancelCompileButton.TabIndex = 3
@@ -585,7 +585,7 @@ Partial Class CompileUserControl
 		'UseAllInPackButton
 		'
 		Me.UseAllInPackButton.Enabled = False
-		Me.UseAllInPackButton.Location = New System.Drawing.Point(378, 0)
+		Me.UseAllInPackButton.Location = New System.Drawing.Point(383, 0)
 		Me.UseAllInPackButton.Name = "UseAllInPackButton"
 		Me.UseAllInPackButton.Size = New System.Drawing.Size(120, 23)
 		Me.UseAllInPackButton.TabIndex = 4
