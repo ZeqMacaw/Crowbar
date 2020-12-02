@@ -656,9 +656,14 @@ Public Class Unpacker
 			Me.theArchivePathFileNameToFileDataMap.Add(archivePathFileName, Me.thePackageFileData)
 		End If
 		Me.UpdateProgressInternal(2, archivePathFileName)
+		If File.Exists(archivePathFileName) Then
+			Me.UpdateProgressInternal(3, "True")
+		Else
+			Me.UpdateProgressInternal(3, "False")
+		End If
 
 		line = e.EntryDataOutputText
-		Me.UpdateProgressInternal(3, line)
+		Me.UpdateProgressInternal(4, line)
 
 		If Me.CancellationPending Then
 			Return

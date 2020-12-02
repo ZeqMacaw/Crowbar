@@ -473,6 +473,8 @@ Public Class UnpackUserControl
 		ElseIf e.ProgressPercentage = 2 Then
 			Me.theArchivePathFileName = line
 		ElseIf e.ProgressPercentage = 3 Then
+			Me.theArchivePathFileNameExists = (line = "True")
+		ElseIf e.ProgressPercentage = 4 Then
 			Me.theEntryIndex += 1
 
 			'Example output:
@@ -522,10 +524,10 @@ Public Class UnpackUserControl
 							If info.IsFolder AndAlso info.Name = name Then
 								info.Count += 1UL
 								info.Size += fileSize
-								If info.ArchivePathFileNameExists Then
+								If Me.theArchivePathFileNameExists Then
+									info.ArchivePathFileNameExists = Me.theArchivePathFileNameExists
 									Dim temp As New TreeNode
 									treeNode.ForeColor = temp.ForeColor
-									info.ArchivePathFileNameExists = True
 								End If
 							End If
 						Next
@@ -546,8 +548,10 @@ Public Class UnpackUserControl
 						'NOTE: Because same folder can be in multiple archives, don't bother showing which archive the folder is in. Crowbar only shows the first one added to the list.
 						resourceInfo.ArchivePathFileName = ""
 						' Using this field to determine when to dim the folder in the treeview and listview.
-						resourceInfo.ArchivePathFileNameExists = False
-						treeNode.ForeColor = SystemColors.GrayText
+						resourceInfo.ArchivePathFileNameExists = Me.theArchivePathFileNameExists
+						If Not resourceInfo.ArchivePathFileNameExists Then
+							treeNode.ForeColor = SystemColors.GrayText
+						End If
 
 						If parentTreeNode.Tag Is Nothing Then
 							list = New List(Of PackageResourceFileNameInfo)()
@@ -595,14 +599,8 @@ Public Class UnpackUserControl
 				resourceInfo.Extension = fileExtension
 				resourceInfo.IsFolder = False
 				resourceInfo.ArchivePathFileName = Me.theArchivePathFileName
-				resourceInfo.ArchivePathFileNameExists = File.Exists(Me.theArchivePathFileName)
+				resourceInfo.ArchivePathFileNameExists = Me.theArchivePathFileNameExists
 				resourceInfo.EntryIndex = Me.theEntryIndex
-
-				If resourceInfo.ArchivePathFileNameExists Then
-					Dim temp As New TreeNode
-					treeNode.ForeColor = temp.ForeColor
-					resourceInfo.ArchivePathFileNameExists = True
-				End If
 
 				If treeNode.Tag Is Nothing Then
 					list = New List(Of PackageResourceFileNameInfo)()
@@ -1441,6 +1439,7 @@ Public Class UnpackUserControl
 
 	Private thePackageCount As Integer
 	Private theArchivePathFileName As String
+	Private theArchivePathFileNameExists As Boolean
 	Private theEntryIndex As Integer
 
 	Private theSearchBackgroundWorker As BackgroundWorker
