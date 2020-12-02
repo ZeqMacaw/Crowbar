@@ -368,6 +368,16 @@ Public Class UnpackUserControl
 	'	End If
 	'End Sub
 
+	Private Sub PackageListView_KeyDown(sender As Object, e As KeyEventArgs) Handles PackageListView.KeyDown
+		If e.KeyCode = Keys.A And e.Control Then
+			Me.PackageListView.BeginUpdate()
+			For Each i As ListViewItem In Me.PackageListView.Items
+				i.Selected = True
+			Next
+			Me.PackageListView.EndUpdate()
+		End If
+	End Sub
+
 	Private Sub PackageListView_SelectedIndexChanged(sender As Object, e As EventArgs) Handles PackageListView.SelectedIndexChanged
 		Me.UpdateSelectionCounts()
 	End Sub
