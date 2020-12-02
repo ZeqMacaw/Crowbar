@@ -13,7 +13,7 @@ Public Class UnpackUserControl
 		Me.CustomMenu = New ContextMenuStrip()
 		Me.CustomMenu.Items.Add(Me.DeleteSearchToolStripMenuItem)
 		Me.CustomMenu.Items.Add(Me.DeleteAllSearchesToolStripMenuItem)
-		Me.ContextMenuStrip = Me.CustomMenu
+		Me.PackageTreeView.ContextMenuStrip = Me.CustomMenu
 
 		Me.theSearchCount = 0
 
