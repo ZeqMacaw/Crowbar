@@ -122,7 +122,7 @@ Partial Class PublishUserControl
 		'
 		Me.ItemOwnerLabel.Location = New System.Drawing.Point(150, 4)
 		Me.ItemOwnerLabel.Name = "ItemOwnerLabel"
-		Me.ItemOwnerLabel.Size = New System.Drawing.Size(43, 13)
+		Me.ItemOwnerLabel.Size = New System.Drawing.Size(45, 13)
 		Me.ItemOwnerLabel.TabIndex = 35
 		Me.ItemOwnerLabel.Text = "Owner:"
 		Me.ToolTip1.SetToolTip(Me.ItemOwnerLabel, "Double-click to swap between Steam Name and Steam ID.")
@@ -558,7 +558,7 @@ Partial Class PublishUserControl
 		'ItemOwnerTextBox
 		'
 		Me.ItemOwnerTextBox.CueBannerText = ""
-		Me.ItemOwnerTextBox.Location = New System.Drawing.Point(199, 0)
+		Me.ItemOwnerTextBox.Location = New System.Drawing.Point(201, 0)
 		Me.ItemOwnerTextBox.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
 		Me.ItemOwnerTextBox.Name = "ItemOwnerTextBox"
 		Me.ItemOwnerTextBox.ReadOnly = True
