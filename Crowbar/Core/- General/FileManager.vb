@@ -363,6 +363,10 @@ Public Class FileManager
 		Dim fromPathAbsolute As String
 		Dim toPathAbsolute As String
 
+		If fromPath = "" Then
+			Return toPath
+		End If
+
 		fromPathAbsolute = Path.GetFullPath(fromPath)
 		toPathAbsolute = Path.GetFullPath(toPath)
 

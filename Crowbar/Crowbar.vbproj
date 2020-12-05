@@ -433,6 +433,7 @@
     <Compile Include="Core\SteamAppInfos\GarrysModSteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\Left4Dead2SteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\SteamAppInfoBase.vb" />
+    <Compile Include="Core\SteamAppInfos\GarrysMod_AddonJson.vb" />
     <Compile Include="Core\SteamAppInfos\ZombiePanicSourceSteamAppInfo.vb" />
     <Compile Include="Core\Steam\BackgroundSteamPipe.vb" />
     <Compile Include="Core\Steam\SteamAppUserInfo.vb" />
@@ -540,6 +541,9 @@
     </Compile>
     <Compile Include="Widgets\- General\FileDragDropHelper.vb" />
     <Compile Include="Widgets\- General\GroupBoxEx.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Widgets\- General\TreeViewEx.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Widgets\- General\ProgressBarEx.vb">
@@ -784,10 +788,8 @@
     <EmbeddedResource Include="Widgets\- Application\MacroDataGridView.resx">
       <DependentUpon>MacroDataGridView.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Widgets\- Application\MainForm.resx">
-      <DependentUpon>MainForm.vb</DependentUpon>
-      <CustomToolNamespace>My.Resources</CustomToolNamespace>
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="Widgets\- General\TreeViewEx.resx">
+      <DependentUpon>TreeViewEx.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\Main Tabs\AboutUserControl.resx">
       <SubType>Designer</SubType>

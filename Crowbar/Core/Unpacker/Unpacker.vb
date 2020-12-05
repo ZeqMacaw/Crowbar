@@ -9,10 +9,10 @@ Public Class Unpacker
 	Public Sub New()
 		MyBase.New()
 
-		Me.theUnpackedMdlFiles = New List(Of String)()
-		Me.theLogFiles = New List(Of String)()
+		Me.theUnpackedMdlFiles = New BindingListEx(Of String)()
+		Me.theLogFiles = New BindingListEx(Of String)()
 		Me.theUnpackedPaths = New List(Of String)()
-		Me.theUnpackedRelativePathsAndFileNames = New List(Of String)()
+		Me.theUnpackedRelativePathsAndFileNames = New BindingListEx(Of String)()
 		Me.theUnpackedTempPathsAndPathFileNames = New List(Of String)()
 
 		Me.WorkerReportsProgress = True
@@ -38,19 +38,23 @@ Public Class Unpacker
 
 #Region "Methods"
 
-	Public Sub Run(ByVal unpackerAction As ArchiveAction, ByVal archivePathFileNameToEntryIndexesMap As SortedList(Of String, List(Of Integer)))
+	Public Sub Run(ByVal unpackerAction As ArchiveAction, ByVal archivePathFileNameToEntryIndexesMap As SortedList(Of String, List(Of Integer)), ByVal outputPathIsExtendedWithPackageName As Boolean, ByVal selectedRelativeOutputPath As String)
 		Me.theSynchronousWorkerIsActive = False
 		Dim info As New UnpackerInputInfo()
 		info.theArchiveAction = unpackerAction
 		info.theArchivePathFileNameToEntryIndexesMap = archivePathFileNameToEntryIndexesMap
+		info.theOutputPathIsExtendedWithPackageName = outputPathIsExtendedWithPackageName
+		info.theSelectedRelativeOutputPath = selectedRelativeOutputPath
 		Me.RunWorkerAsync(info)
 	End Sub
 
-	Public Function RunSynchronous(ByVal unpackerAction As ArchiveAction, ByVal archivePathFileNameToEntryIndexesMap As SortedList(Of String, List(Of Integer))) As String
+	Public Function RunSynchronous(ByVal unpackerAction As ArchiveAction, ByVal archivePathFileNameToEntryIndexesMap As SortedList(Of String, List(Of Integer)), ByVal outputPathIsExtendedWithPackageName As Boolean, ByVal selectedRelativeOutputPath As String) As String
 		Me.theSynchronousWorkerIsActive = True
 		Dim info As New UnpackerInputInfo()
 		info.theArchiveAction = unpackerAction
 		info.theArchivePathFileNameToEntryIndexesMap = archivePathFileNameToEntryIndexesMap
+		info.theOutputPathIsExtendedWithPackageName = outputPathIsExtendedWithPackageName
+		info.theSelectedRelativeOutputPath = selectedRelativeOutputPath
 
 		Me.theRunSynchronousResultMessage = ""
 		Dim e As New System.ComponentModel.DoWorkEventArgs(info)
@@ -148,6 +152,8 @@ Public Class Unpacker
 
 		Dim info As UnpackerInputInfo
 		info = CType(e.Argument, UnpackerInputInfo)
+		Me.theOutputPathIsExtendedWithPackageName = info.theOutputPathIsExtendedWithPackageName
+		Me.theSelectedRelativeOutputPath = info.theSelectedRelativeOutputPath
 
 		Me.theUnpackedPathsAreInTempPath = False
 
@@ -558,6 +564,7 @@ Public Class Unpacker
 							RemoveHandler packageFile.PackEntryRead, AddressOf Me.Package_PackEntryRead
 							loopingIsNeeded = False
 						ElseIf checkForDirFile AndAlso Path.GetExtension(packageDirectoryPathFileName) = ".vpk" Then
+							'NOTE: Reaches this when user tries to list from a VPK file that is part of a multi-file package, but it is not the "dir" file.
 							'NOTE: Set this to false to only check once for a package directory file.
 							checkForDirFile = False
 
@@ -649,9 +656,14 @@ Public Class Unpacker
 			Me.theArchivePathFileNameToFileDataMap.Add(archivePathFileName, Me.thePackageFileData)
 		End If
 		Me.UpdateProgressInternal(2, archivePathFileName)
+		If File.Exists(archivePathFileName) Then
+			Me.UpdateProgressInternal(3, "True")
+		Else
+			Me.UpdateProgressInternal(3, "False")
+		End If
 
 		line = e.EntryDataOutputText
-		Me.UpdateProgressInternal(3, line)
+		Me.UpdateProgressInternal(4, line)
 
 		If Me.CancellationPending Then
 			Return
@@ -1113,17 +1125,27 @@ Public Class Unpacker
 	'Private Sub UnpackEntryDataToFile(ByVal vpkFile As VpkFile, ByVal entry As VpkDirectoryEntry, ByVal extractPath As String)
 	Private Sub UnpackEntryDataToFile(ByVal packageFileNameWithoutExtension As String, ByVal vpkFile As BasePackageFile, ByVal entry As BasePackageDirectoryEntry)
 		Dim outputPathStart As String
-		If TheApp.Settings.UnpackFolderForEachPackageIsChecked Then
+		If TheApp.Settings.UnpackFolderForEachPackageIsChecked OrElse Me.theOutputPathIsExtendedWithPackageName Then
 			outputPathStart = Path.Combine(Me.theOutputPath, packageFileNameWithoutExtension)
 		Else
 			outputPathStart = Me.theOutputPath
 		End If
-		Dim outputPathFileName As String
+
+		Dim entryPathFileName As String
 		If entry.thePathFileName.StartsWith("<") Then
-			outputPathFileName = Path.Combine(outputPathStart, entry.theRealPathFileName)
+			entryPathFileName = entry.theRealPathFileName
 		Else
-			outputPathFileName = Path.Combine(outputPathStart, entry.thePathFileName)
+			entryPathFileName = entry.thePathFileName
 		End If
+
+		Dim outputPathFileName As String
+		If TheApp.Settings.UnpackKeepFullPathIsChecked Then
+			outputPathFileName = Path.Combine(outputPathStart, entryPathFileName)
+		Else
+			Dim entryRelativePathFileName As String = FileManager.GetRelativePathFileName(Me.theSelectedRelativeOutputPath, entryPathFileName)
+			outputPathFileName = Path.Combine(outputPathStart, entryRelativePathFileName)
+		End If
+
 		Dim outputPath As String
 		outputPath = FileManager.GetPath(outputPathFileName)
 
@@ -1172,12 +1194,17 @@ Public Class Unpacker
 		Dim vpkFileNamePrefix As String
 		Dim underscoreIndex As Integer
 		vpkFileNameWithoutExtension = Path.GetFileNameWithoutExtension(archivePathFileName)
-		underscoreIndex = vpkFileNameWithoutExtension.LastIndexOf("_")
-		If underscoreIndex >= 0 Then
-			vpkFileNamePrefix = vpkFileNameWithoutExtension.Substring(0, underscoreIndex)
-			packageDirectoryFileNameWithoutExtension = vpkFileNamePrefix + vpkFileData.DirectoryFileNameSuffix
-		Else
-			packageDirectoryFileNameWithoutExtension = vpkFileNameWithoutExtension
+
+		packageDirectoryFileNameWithoutExtension = vpkFileNameWithoutExtension
+		If vpkFileData.DirectoryFileNameSuffix <> "" Then
+			underscoreIndex = vpkFileNameWithoutExtension.LastIndexOf("_")
+			If underscoreIndex >= 0 Then
+				vpkFileNamePrefix = vpkFileNameWithoutExtension.Substring(0, underscoreIndex)
+				Dim packageDirectoryPathFileName As String = Path.Combine(FileManager.GetPath(archivePathFileName), vpkFileNamePrefix + vpkFileData.DirectoryFileNameSuffix + vpkFileData.FileExtension)
+				If File.Exists(packageDirectoryPathFileName) Then
+					packageDirectoryFileNameWithoutExtension = vpkFileNamePrefix + vpkFileData.DirectoryFileNameSuffix
+				End If
+			End If
 		End If
 
 		Return packageDirectoryFileNameWithoutExtension
@@ -1193,6 +1220,8 @@ Public Class Unpacker
 	Private theInputVpkPath As String
 	Private theOutputPath As String
 	Private theOutputPathOrModelOutputFileName As String
+	Private theOutputPathIsExtendedWithPackageName As Boolean
+	Private theSelectedRelativeOutputPath As String
 
 	Private theLogFileStream As StreamWriter
 	Private theLastLine As String
@@ -1202,11 +1231,11 @@ Public Class Unpacker
 	'NOTE: Extra guard against deleting non-temp paths from accidental bad coding.
 	Private theUnpackedPathsAreInTempPath As Boolean
 	' Used for listing unpacked files in combobox.
-	Private theUnpackedRelativePathsAndFileNames As List(Of String)
+	Private theUnpackedRelativePathsAndFileNames As BindingListEx(Of String)
 	'TODO: Not currently used for anything.
 	Private theUnpackedTempPathsAndPathFileNames As List(Of String)
-	Private theUnpackedMdlFiles As List(Of String)
-	Private theLogFiles As List(Of String)
+	Private theUnpackedMdlFiles As BindingListEx(Of String)
+	Private theLogFiles As BindingListEx(Of String)
 
 	'Private theTempUnpackPaths As List(Of String)
 

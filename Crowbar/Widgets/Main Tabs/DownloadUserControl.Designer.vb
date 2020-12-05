@@ -51,6 +51,7 @@ Partial Class DownloadUserControl
 		Me.Options_LogSplitContainer = New System.Windows.Forms.SplitContainer()
 		Me.DownloadButtonsPanel = New System.Windows.Forms.Panel()
 		Me.PostDownloadPanel = New System.Windows.Forms.Panel()
+		Me.UseInUnpackButton = New System.Windows.Forms.Button()
 		Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
 		Me.OptionsGroupBox.SuspendLayout()
 		Me.OptionsGroupBoxFillPanel.SuspendLayout()
@@ -123,6 +124,7 @@ Partial Class DownloadUserControl
 		'
 		'OutputPathTextBox
 		'
+		Me.OutputPathTextBox.AllowDrop = True
 		Me.OutputPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.OutputPathTextBox.CueBannerText = ""
@@ -316,7 +318,7 @@ Partial Class DownloadUserControl
 		Me.DownloadedItemTextBox.Location = New System.Drawing.Point(83, 3)
 		Me.DownloadedItemTextBox.Name = "DownloadedItemTextBox"
 		Me.DownloadedItemTextBox.ReadOnly = True
-		Me.DownloadedItemTextBox.Size = New System.Drawing.Size(638, 22)
+		Me.DownloadedItemTextBox.Size = New System.Drawing.Size(542, 22)
 		Me.DownloadedItemTextBox.TabIndex = 15
 		'
 		'DownloadedLabel
@@ -392,6 +394,7 @@ Partial Class DownloadUserControl
 		'
 		'PostDownloadPanel
 		'
+		Me.PostDownloadPanel.Controls.Add(Me.UseInUnpackButton)
 		Me.PostDownloadPanel.Controls.Add(Me.DownloadedLabel)
 		Me.PostDownloadPanel.Controls.Add(Me.DownloadedItemTextBox)
 		Me.PostDownloadPanel.Controls.Add(Me.GotoDownloadedItemButton)
@@ -400,6 +403,16 @@ Partial Class DownloadUserControl
 		Me.PostDownloadPanel.Name = "PostDownloadPanel"
 		Me.PostDownloadPanel.Size = New System.Drawing.Size(770, 26)
 		Me.PostDownloadPanel.TabIndex = 18
+		'
+		'UseInUnpackButton
+		'
+		Me.UseInUnpackButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.UseInUnpackButton.Location = New System.Drawing.Point(631, 3)
+		Me.UseInUnpackButton.Name = "UseInUnpackButton"
+		Me.UseInUnpackButton.Size = New System.Drawing.Size(90, 23)
+		Me.UseInUnpackButton.TabIndex = 17
+		Me.UseInUnpackButton.Text = "Use In Unpack"
+		Me.UseInUnpackButton.UseVisualStyleBackColor = True
 		'
 		'Timer1
 		'
@@ -460,4 +473,5 @@ Partial Class DownloadUserControl
 	Friend WithEvents PostDownloadPanel As Panel
 	Friend WithEvents DownloadButtonsPanel As Panel
 	Friend WithEvents OptionsGroupBoxFillPanel As Panel
+	Friend WithEvents UseInUnpackButton As Button
 End Class

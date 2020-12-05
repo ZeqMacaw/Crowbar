@@ -146,9 +146,9 @@ Partial Class DecompileUserControl
 		Me.UseMixedCaseForKeywordsCheckBox.AutoSize = True
 		Me.UseMixedCaseForKeywordsCheckBox.Location = New System.Drawing.Point(20, 95)
 		Me.UseMixedCaseForKeywordsCheckBox.Name = "UseMixedCaseForKeywordsCheckBox"
-		Me.UseMixedCaseForKeywordsCheckBox.Size = New System.Drawing.Size(173, 17)
+		Me.UseMixedCaseForKeywordsCheckBox.Size = New System.Drawing.Size(217, 17)
 		Me.UseMixedCaseForKeywordsCheckBox.TabIndex = 42
-		Me.UseMixedCaseForKeywordsCheckBox.Text = "Use MixedCase for keywords"
+		Me.UseMixedCaseForKeywordsCheckBox.Text = "Use MixedCase for keywords (Source)"
 		Me.ToolTip1.SetToolTip(Me.UseMixedCaseForKeywordsCheckBox, "$CommandLikeThis instead of $commandlikethis")
 		Me.UseMixedCaseForKeywordsCheckBox.UseVisualStyleBackColor = True
 		'
@@ -299,6 +299,7 @@ Partial Class DecompileUserControl
 		'
 		'OutputPathTextBox
 		'
+		Me.OutputPathTextBox.AllowDrop = True
 		Me.OutputPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.OutputPathTextBox.CueBannerText = ""

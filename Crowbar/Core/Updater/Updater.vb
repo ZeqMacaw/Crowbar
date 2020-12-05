@@ -88,22 +88,39 @@ Public Class Updater
 					Dim jss As JavaScriptSerializer = New JavaScriptSerializer()
 					Dim root As Dictionary(Of String, Object) = jss.Deserialize(Of Dictionary(Of String, Object))(responseFromServer)
 
-					Dim appNameVersion As String = CType(root("name"), String)
-					'NOTE: Must append ".0.0" to version so that Version comparisons are correct.
-					Dim appVersionText As String = appNameVersion.Replace("Crowbar ", "") + ".0.0"
-					Me.theAppVersion = New Version(appVersionText)
+					Dim appVersionTag As String = CType(root("tag_name"), String)
+					If appVersionTag <> "" Then
+						If appVersionTag(0) = "v" Then
+							appVersionTag = appVersionTag.Remove(0, 1)
+						End If
+						'NOTE: Must append ".0.0" to version so that Version comparisons are correct.
+						Dim appVersionText As String = appVersionTag + ".0.0"
+						Me.theAppVersion = New Version(appVersionText)
 
-					'Dim appVersionIsNewer As Boolean = appVersion > My.Application.Info.Version
-					'Dim appVersionIsOlder As Boolean = appVersion < My.Application.Info.Version
-					'Dim appVersionIsEqual As Boolean = appVersion = My.Application.Info.Version
+						'Dim appVersionIsNewer As Boolean = appVersion > My.Application.Info.Version
+						'Dim appVersionIsOlder As Boolean = appVersion < My.Application.Info.Version
+						'Dim appVersionIsEqual As Boolean = appVersion = My.Application.Info.Version
 
-					bw.ReportProgress(0, appNameVersion + vbCrLf + CType(root("body"), String))
+						bw.ReportProgress(0, "Crowbar " + appVersionTag + vbCrLf + CType(root("body"), String))
+					Else
+						Me.theAppVersion = Nothing
+					End If
 
+					'NOTE: File name needs to be in this form: "Crowbar_" + whatever; usually date + "_" + app version (e.g. 0.68) + ".7z"
+					Me.theRemoteFileLink = ""
 					Dim assets As ArrayList = CType(root("assets"), ArrayList)
-					Dim asset As Dictionary(Of String, Object) = CType(assets(0), Dictionary(Of String, Object))
-					Me.theRemoteFileLink = CType(asset("browser_download_url"), String)
-					Me.theLocalFileName = CType(asset("name"), String)
-					fileSize = CType(asset("size"), ULong)
+					Dim asset As Dictionary(Of String, Object)
+					Dim assetName As String
+					For assetIndex As Integer = 0 To assets.Count - 1
+						asset = CType(assets(assetIndex), Dictionary(Of String, Object))
+						assetName = CType(asset("name"), String)
+						If assetName.StartsWith("Crowbar_") AndAlso assetName.EndsWith("_" + appVersionTag + ".7z") Then
+							Me.theRemoteFileLink = CType(asset("browser_download_url"), String)
+							Me.theLocalFileName = CType(asset("name"), String)
+							fileSize = CType(asset("size"), ULong)
+							Exit For
+						End If
+					Next
 				Catch ex As Exception
 					Me.theAppVersion = Nothing
 				Finally
@@ -122,7 +139,7 @@ Public Class Updater
 		Dim updateCheckStatusMessage As String
 		If Not securityProtocolIsSupported Then
 			updateCheckStatusMessage = "Unable to get update info because ""TLS 1.2"" protocol unavailable."
-		ElseIf Me.theAppVersion Is Nothing Then
+		ElseIf Me.theAppVersion Is Nothing OrElse Me.theRemoteFileLink = "" Then
 			updateCheckStatusMessage = "Unable to get update info. Please try again later."
 		ElseIf Me.theAppVersion = My.Application.Info.Version Then
 			updateCheckStatusMessage = "Crowbar is up to date."

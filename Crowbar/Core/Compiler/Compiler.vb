@@ -191,7 +191,7 @@ Public Class Compiler
 			inputsAreValid = False
 			Me.WriteErrorMessage(1, "The QC file, """ + TheApp.Settings.CompileQcPathFileName + """, does not exist.")
 		End If
-		If TheApp.Settings.CompileOptionDefineBonesIsChecked Then
+		If gameSetup.GameEngine = GameEngine.Source AndAlso TheApp.Settings.CompileOptionDefineBonesIsChecked Then
 			If TheApp.Settings.CompileOptionDefineBonesCreateFileIsChecked Then
 				Dim defineBonesPathFileName As String
 				defineBonesPathFileName = Me.GetDefineBonesPathFileName()
@@ -247,8 +247,8 @@ Public Class Compiler
 			Me.theInputQcPath = qcPathFileName
 		End If
 
-		'Dim gameSetup As GameSetup
-		'gameSetup = TheApp.Settings.GameSetups(TheApp.Settings.CompileGameSetupSelectedIndex)
+		Dim gameSetup As GameSetup
+		gameSetup = TheApp.Settings.GameSetups(TheApp.Settings.CompileGameSetupSelectedIndex)
 
 		'Dim info As New CompilerInputInfo()
 		'info.compilerPathFileName = gameSetup.CompilerPathFileName
@@ -259,7 +259,7 @@ Public Class Compiler
 		'info.theCompileMode = TheApp.Settings.CompileMode
 
 		Dim defineBonesText As String = ""
-		If TheApp.Settings.CompileOptionDefineBonesIsChecked Then
+		If gameSetup.GameEngine = GameEngine.Source AndAlso TheApp.Settings.CompileOptionDefineBonesIsChecked Then
 			defineBonesText = "Define Bones "
 		End If
 
@@ -431,7 +431,7 @@ Public Class Compiler
 			End If
 
 			Dim defineBonesText As String = ""
-			If TheApp.Settings.CompileOptionDefineBonesIsChecked Then
+			If gameSetup.GameEngine = GameEngine.Source AndAlso TheApp.Settings.CompileOptionDefineBonesIsChecked Then
 				defineBonesText = "Define Bones of "
 			End If
 
@@ -441,7 +441,7 @@ Public Class Compiler
 			Dim result As String
 			result = Me.CheckFiles()
 			If result = "success" Then
-				If TheApp.Settings.CompileOptionDefineBonesIsChecked AndAlso TheApp.Settings.CompileOptionDefineBonesCreateFileIsChecked Then
+				If gameSetup.GameEngine = GameEngine.Source AndAlso TheApp.Settings.CompileOptionDefineBonesIsChecked AndAlso TheApp.Settings.CompileOptionDefineBonesCreateFileIsChecked Then
 					Me.OpenDefineBonesFile()
 				End If
 

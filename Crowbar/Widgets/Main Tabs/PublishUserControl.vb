@@ -490,7 +490,7 @@ Public Class PublishUserControl
 		Me.DeleteItem()
 	End Sub
 
-	'NOTE: There is no auotmatic data-binding with TagsWidget, so manually bind from widget to object here.
+	'NOTE: There is no automatic data-binding with TagsWidget, so manually bind from widget to object here.
 	Private Sub TagsWidget_TagsPropertyChanged(sender As Object, e As EventArgs)
 		Me.theSelectedItem.Tags = Me.theTagsWidget.ItemTags
 	End Sub
@@ -1192,7 +1192,7 @@ Public Class PublishUserControl
 		Me.ItemVisibilityComboBox.Enabled = editableNonTextWidgetsAreEnabled
 
 		Me.ItemTagsGroupBox.Enabled = True
-		'NOTE: There is no auotmatic data-binding with TagsWidget, so manually bind from object to widget here.
+		'NOTE: There is no automatic data-binding with TagsWidget, so manually bind from object to widget here.
 		Me.theTagsWidget.ItemTags = Me.theSelectedItem.Tags
 		Me.UpdateItemTagsLabel()
 		Me.theTagsWidget.Enabled = editableNonTextWidgetsAreEnabled

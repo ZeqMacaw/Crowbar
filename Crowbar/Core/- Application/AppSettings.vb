@@ -42,6 +42,8 @@ Public Class AppSettings
 		Me.SetDefaultUnpackOutputSubfolderName()
 		Me.theUnpackOutputFullPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
 		Me.theUnpackGameSetupSelectedIndex = 0
+		Me.theUnpackSearchField = UnpackSearchFieldOptions.Files
+		Me.theUnpackSearchText = ""
 		Me.SetDefaultUnpackOptions()
 		Me.theUnpackMode = InputOptions.File
 
@@ -384,6 +386,30 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	Public Property UnpackSearchField() As UnpackSearchFieldOptions
+		Get
+			Return Me.theUnpackSearchField
+		End Get
+		Set(ByVal value As UnpackSearchFieldOptions)
+			If Me.theUnpackSearchField <> value Then
+				Me.theUnpackSearchField = value
+				NotifyPropertyChanged("UnpackSearchField")
+			End If
+		End Set
+	End Property
+
+	Public Property UnpackSearchText() As String
+		Get
+			Return Me.theUnpackSearchText
+		End Get
+		Set(ByVal value As String)
+			If Me.theUnpackSearchText <> value Then
+				Me.theUnpackSearchText = value
+				NotifyPropertyChanged("UnpackSearchText")
+			End If
+		End Set
+	End Property
+
 	Public Property UnpackFolderForEachPackageIsChecked() As Boolean
 		Get
 			Return Me.theUnpackFolderForEachPackageIsChecked
@@ -394,15 +420,15 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	'Public Property UnpackExtractIsChecked() As Boolean
-	'	Get
-	'		Return Me.theUnpackExtractIsChecked
-	'	End Get
-	'	Set(ByVal value As Boolean)
-	'		Me.theUnpackExtractIsChecked = value
-	'		NotifyPropertyChanged("UnpackExtractIsChecked")
-	'	End Set
-	'End Property
+	Public Property UnpackKeepFullPathIsChecked() As Boolean
+		Get
+			Return Me.theUnpackKeepFullPathIsChecked
+		End Get
+		Set(ByVal value As Boolean)
+			Me.theUnpackKeepFullPathIsChecked = value
+			NotifyPropertyChanged("UnpackKeepFullPathIsChecked")
+		End Set
+	End Property
 
 	Public Property UnpackLogFileIsChecked() As Boolean
 		Get
@@ -1160,6 +1186,26 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	Public Property PackGmaTitle() As String
+		Get
+			Return Me.thePackGmaTitle
+		End Get
+		Set(ByVal value As String)
+			Me.thePackGmaTitle = value
+			NotifyPropertyChanged("PackGmaTitle")
+		End Set
+	End Property
+
+	Public Property PackGmaItemTags() As BindingListEx(Of String)
+		Get
+			Return Me.thePackGmaItemTags
+		End Get
+		Set(ByVal value As BindingListEx(Of String))
+			Me.thePackGmaItemTags = value
+			NotifyPropertyChanged("PackGmaItemTags")
+		End Set
+	End Property
+
 	<XmlIgnore()>
 	Public Property PackOptionsText() As String
 		Get
@@ -1628,7 +1674,7 @@ Public Class AppSettings
 	Public Sub SetDefaultUnpackOptions()
 		'NOTE: Call the properties so the NotifyPropertyChanged events are raised.
 		Me.UnpackFolderForEachPackageIsChecked = False
-		'Me.UnpackExtractIsChecked = False
+		Me.UnpackKeepFullPathIsChecked = False
 		Me.UnpackLogFileIsChecked = False
 	End Sub
 
@@ -1687,6 +1733,9 @@ Public Class AppSettings
 		Me.PackLogFileIsChecked = False
 
 		Me.PackOptionMultiFileVpkIsChecked = False
+
+		Me.PackGmaTitle = ""
+		Me.PackGmaItemTags = New BindingListEx(Of String)()
 
 		Me.PackOptionsText = ""
 	End Sub
@@ -1796,9 +1845,11 @@ Public Class AppSettings
 	Private theUnpackOutputFullPath As String
 	Private theUnpackPackagePathFileName As String
 	Private theUnpackGameSetupSelectedIndex As Integer
+	Private theUnpackSearchField As UnpackSearchFieldOptions
+	Private theUnpackSearchText As String
 
 	Private theUnpackFolderForEachPackageIsChecked As Boolean
-	'Private theUnpackExtractIsChecked As Boolean
+	Private theUnpackKeepFullPathIsChecked As Boolean
 	Private theUnpackLogFileIsChecked As Boolean
 
 	Private theUnpackMode As InputOptions
@@ -1912,6 +1963,9 @@ Public Class AppSettings
 
 	Private thePackLogFileIsChecked As Boolean
 	Private thePackOptionMultiFileVpkIsChecked As Boolean
+
+	Private thePackGmaTitle As String
+	Private thePackGmaItemTags As BindingListEx(Of String)
 
 	Private thePackOptionsText As String
 

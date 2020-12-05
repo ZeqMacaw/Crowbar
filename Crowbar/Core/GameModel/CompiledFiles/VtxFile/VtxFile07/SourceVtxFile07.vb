@@ -59,8 +59,6 @@ Public Class SourceVtxFile07
 			Me.theExpectedStartOfDataAfterFirstStripGroupList = -1
 			Me.theStripGroupAndStripUseExtraFields = False
 
-			Dim bodyPartInputFileStreamPosition As Long
-			Dim inputFileStreamPosition As Long
 			Dim fileOffsetStart As Long
 			Dim fileOffsetEnd As Long
 			'Dim fileOffsetStart2 As Long
@@ -70,22 +68,17 @@ Public Class SourceVtxFile07
 				Me.theInputFileReader.BaseStream.Seek(Me.theVtxFileOffsetStart + Me.theVtxFileData.bodyPartOffset, SeekOrigin.Begin)
 				fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-				Me.theVtxFileData.theVtxBodyParts = New List(Of SourceVtxBodyPart07)(Me.theVtxFileData.bodyPartCount)
-				For i As Integer = 0 To Me.theVtxFileData.bodyPartCount - 1
-					bodyPartInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-					Dim aBodyPart As New SourceVtxBodyPart07()
+				Me.ReadSourceVtxBodyParts_Internal()
 
-					aBodyPart.modelCount = Me.theInputFileReader.ReadInt32()
-					aBodyPart.modelOffset = Me.theInputFileReader.ReadInt32()
-
-					Me.theVtxFileData.theVtxBodyParts.Add(aBodyPart)
-
-					inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-
-					Me.ReadSourceVtxModels(bodyPartInputFileStreamPosition, aBodyPart)
-
-					Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
-				Next
+				'TODO: If there is no second mesh with strip groups, then check if calculated offset matches actual offset.
+				'      If does not match, then read again with larger sizes.
+				If Me.theSecondMeshWithStripGroups Is Nothing Then
+					If Me.theStartOfStripGroupVtxStrips <> -1 AndAlso Me.theExpectedStartOfDataAfterFirstStripGroupList <> Me.theStartOfStripGroupVtxStrips Then
+						Me.theStripGroupAndStripUseExtraFields = True
+						Me.theInputFileReader.BaseStream.Seek(Me.theVtxFileOffsetStart + Me.theVtxFileData.bodyPartOffset, SeekOrigin.Begin)
+						Me.ReadSourceVtxBodyParts_Internal()
+					End If
+				End If
 
 				fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 				Me.theVtxFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theVtxFileData.theVtxBodyParts " + Me.theVtxFileData.theVtxBodyParts.Count.ToString())
@@ -140,6 +133,32 @@ Public Class SourceVtxFile07
 #End Region
 
 #Region "Private Methods"
+
+	Private Sub ReadSourceVtxBodyParts_Internal()
+		Dim bodyPartInputFileStreamPosition As Long
+		Dim inputFileStreamPosition As Long
+
+		Try
+			Me.theVtxFileData.theVtxBodyParts = New List(Of SourceVtxBodyPart07)(Me.theVtxFileData.bodyPartCount)
+			For i As Integer = 0 To Me.theVtxFileData.bodyPartCount - 1
+				bodyPartInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+				Dim aBodyPart As New SourceVtxBodyPart07()
+
+				aBodyPart.modelCount = Me.theInputFileReader.ReadInt32()
+				aBodyPart.modelOffset = Me.theInputFileReader.ReadInt32()
+
+				Me.theVtxFileData.theVtxBodyParts.Add(aBodyPart)
+
+				inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+
+				Me.ReadSourceVtxModels(bodyPartInputFileStreamPosition, aBodyPart)
+
+				Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
+			Next
+		Catch ex As Exception
+			Dim debug As Integer = 4242
+		End Try
+	End Sub
 
 	Private Sub ReadSourceVtxModels(ByVal bodyPartInputFileStreamPosition As Long, ByVal aBodyPart As SourceVtxBodyPart07)
 		If aBodyPart.modelCount > 0 AndAlso aBodyPart.modelOffset <> 0 Then
@@ -252,14 +271,14 @@ Public Class SourceVtxFile07
 						Me.theFirstMeshWithStripGroupsInputFileStreamPosition = meshInputFileStreamPosition
 						Me.AnalyzeVtxStripGroups(meshInputFileStreamPosition, aMesh)
 
-						'NOTE: If there is only one mesh, then compare end offset of VtxStripGroups with start of VtxStrips.
-						If aModelLod.meshCount = 1 Then
-							If aMesh.theVtxStripGroups(0).stripCount > 0 AndAlso aMesh.theVtxStripGroups(0).stripOffset <> 0 Then
-								If Me.theExpectedStartOfDataAfterFirstStripGroupList <> (meshInputFileStreamPosition + aMesh.stripGroupOffset + aMesh.theVtxStripGroups(0).stripOffset) Then
-									Me.theStripGroupAndStripUseExtraFields = True
-								End If
-							End If
-						End If
+						''NOTE: If there is only one mesh, then compare end offset of VtxStripGroups with start of VtxStrips.
+						'If aModelLod.meshCount = 1 Then
+						'	If aMesh.theVtxStripGroups(0).stripCount > 0 AndAlso aMesh.theVtxStripGroups(0).stripOffset <> 0 Then
+						'		If Me.theExpectedStartOfDataAfterFirstStripGroupList <> (meshInputFileStreamPosition + aMesh.stripGroupOffset + aMesh.theVtxStripGroups(0).stripOffset) Then
+						'			Me.theStripGroupAndStripUseExtraFields = True
+						'		End If
+						'	End If
+						'End If
 					ElseIf Me.theSecondMeshWithStripGroups Is Nothing Then
 						Me.theSecondMeshWithStripGroups = aMesh
 						If Me.theExpectedStartOfDataAfterFirstStripGroupList <> (meshInputFileStreamPosition + aMesh.stripGroupOffset) Then
@@ -496,6 +515,10 @@ Public Class SourceVtxFile07
 		'Dim fileOffsetEnd2 As Long
 
 		Try
+			If Me.theStartOfStripGroupVtxStrips = -1 Then
+				Me.theStartOfStripGroupVtxStrips = stripGroupInputFileStreamPosition + aStripGroup.stripOffset
+			End If
+
 			Me.theInputFileReader.BaseStream.Seek(stripGroupInputFileStreamPosition + aStripGroup.stripOffset, SeekOrigin.Begin)
 			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
@@ -688,6 +711,7 @@ Public Class SourceVtxFile07
 	Private theModelLodHasOnlyOneMesh As Boolean
 	Private theSecondMeshWithStripGroups As SourceVtxMesh07
 	Private theExpectedStartOfDataAfterFirstStripGroupList As Long
+	Private theStartOfStripGroupVtxStrips As Long
 	Private theStripGroupAndStripUseExtraFields As Boolean
 
 #End Region

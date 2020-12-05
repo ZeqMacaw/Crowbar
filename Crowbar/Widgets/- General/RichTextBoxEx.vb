@@ -49,14 +49,21 @@ Public Class RichTextBoxEx
 
 #Region "Widget Event Handlers"
 
-	Protected Overrides Sub OnHandleCreated(e As EventArgs)
-		MyBase.OnHandleCreated(e)
+	'Protected Overrides Sub OnHandleCreated(e As EventArgs)
+	'	'If Me.theOriginalFont Is Nothing Then
+	'	'	'NOTE: Font gets changed at some point after changing style, messing up when cue banner is turned off, 
+	'	'	'      so save the Font after widget is visible for first time, but before changing style within the widget.
+	'	'	Me.theOriginalFont = New System.Drawing.Font(Me.Font.FontFamily, Me.Font.Size, Me.Font.Style, Me.Font.Unit)
 
-		' Always use UserPaint, so set it here when widget is created.
-		SetStyle(ControlStyles.AllPaintingInWmPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
-		SetStyle(ControlStyles.DoubleBuffer, Me.theCueBannerText <> "" AndAlso Me.Text = "")
-		SetStyle(ControlStyles.UserPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
-	End Sub
+	'	'	'SetStyle(ControlStyles.UserPaint, Me.theCueBannerText <> "")
+	'	'	SetStyle(ControlStyles.AllPaintingInWmPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+	'	'	SetStyle(ControlStyles.DoubleBuffer, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+	'	'	SetStyle(ControlStyles.UserPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+	'	'End If
+
+	'	Me.AutoWordSelection = True
+	'	Me.AutoWordSelection = False
+	'End Sub
 
 	Protected Overrides Sub OnPaint(e As PaintEventArgs)
 		MyBase.OnPaint(e)
@@ -126,10 +133,14 @@ Public Class RichTextBoxEx
 			'      so save the Font after widget is visible for first time, but before changing style within the widget.
 			Me.theOriginalFont = New System.Drawing.Font(Me.Font.FontFamily, Me.Font.Size, Me.Font.Style, Me.Font.Unit)
 
-			''SetStyle(ControlStyles.UserPaint, Me.theCueBannerText <> "")
-			'SetStyle(ControlStyles.AllPaintingInWmPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
-			'SetStyle(ControlStyles.DoubleBuffer, Me.theCueBannerText <> "" AndAlso Me.Text = "")
-			'SetStyle(ControlStyles.UserPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+			'SetStyle(ControlStyles.UserPaint, Me.theCueBannerText <> "")
+			SetStyle(ControlStyles.AllPaintingInWmPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+			SetStyle(ControlStyles.DoubleBuffer, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+			SetStyle(ControlStyles.UserPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+
+			'WORKAROUND - Without these two lines, selecting individual characters with the mouse often selects to end of words.
+			Me.AutoWordSelection = True
+			Me.AutoWordSelection = False
 		End If
 	End Sub
 

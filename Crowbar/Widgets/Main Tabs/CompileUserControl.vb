@@ -58,7 +58,8 @@ Public Class CompileUserControl
 			Me.OutputPathComboBox.DataSource = anEnumList
 			Me.OutputPathComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "CompileOutputFolderOption", False, DataSourceUpdateMode.OnPropertyChanged)
 
-			Me.OutputPathComboBox.SelectedIndex = 0
+			' Do not use this line because it will override the value automatically assigned by the data bindings above.
+			'Me.OutputPathComboBox.SelectedIndex = 0
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		End Try
@@ -259,6 +260,20 @@ Public Class CompileUserControl
 	'	FileManager.OpenWindowsExplorer(Me.OutputFullPathTextBox.Text)
 	'End Sub
 
+	Private Sub OutputPathTextBox_DragDrop(sender As Object, e As DragEventArgs) Handles OutputPathTextBox.DragDrop
+		Dim pathFileNames() As String = CType(e.Data.GetData(DataFormats.FileDrop), String())
+		Dim pathFileName As String = pathFileNames(0)
+		If Directory.Exists(pathFileName) Then
+			TheApp.Settings.CompileOutputFullPath = pathFileName
+		End If
+	End Sub
+
+	Private Sub OutputPathTextBox_DragEnter(sender As Object, e As DragEventArgs) Handles OutputPathTextBox.DragEnter
+		If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+			e.Effect = DragDropEffects.Copy
+		End If
+	End Sub
+
 	Private Sub OutputPathTextBox_Validated(sender As Object, e As EventArgs) Handles OutputPathTextBox.Validated
 		Me.UpdateOutputPathTextBox()
 	End Sub
@@ -372,6 +387,7 @@ Public Class CompileUserControl
 		ElseIf e.PropertyName = "CompileGameSetupSelectedIndex" Then
 			Me.UpdateGameModelsOutputPathTextBox()
 			Me.UpdateCompilerOptions()
+			Me.UpdateCompileButton()
 		ElseIf e.PropertyName = "CompileOptionDefineBonesIsChecked" Then
 			Me.EditCompilerOptionsText("definebones", TheApp.Settings.CompileOptionDefineBonesIsChecked)
 			Me.SetCompilerOptionsText()
@@ -561,6 +577,18 @@ Public Class CompileUserControl
 		Me.CompilerOptionDefineBonesFileNameTextBox.Enabled = Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Enabled AndAlso Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Checked
 		Me.CompilerOptionDefineBonesOverwriteQciFileCheckBox.Enabled = Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Enabled AndAlso Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Checked
 		Me.CompilerOptionDefineBonesModifyQcFileCheckBox.Enabled = Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Enabled AndAlso Me.CompilerOptionDefineBonesWriteQciFileCheckBox.Checked
+
+		Me.UpdateCompileButton()
+	End Sub
+
+	Private Sub UpdateCompileButton()
+		Dim gameSetup As GameSetup
+		gameSetup = TheApp.Settings.GameSetups(TheApp.Settings.CompileGameSetupSelectedIndex)
+		If Me.CompilerOptionDefineBonesCheckBox.Checked AndAlso gameSetup.GameEngine = GameEngine.Source Then
+			Me.CompileButton.Text = "&Compile DefineBones"
+		Else
+			Me.CompileButton.Text = "&Compile"
+		End If
 	End Sub
 
 	Private Sub UpdateWidgets(ByVal compilerIsRunning As Boolean)

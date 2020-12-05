@@ -69,26 +69,28 @@ Public Class Base_TagsUserControl
 		Dim aCheckBox As CheckBoxEx
 		Dim aComboBox As ComboBox
 		Dim aTextBox As TextBox
-		For Each widget As Control In Me.theWidgets
-			If TypeOf widget.Tag Is String Then
-				If TypeOf widget Is CheckBoxEx Then
-					aCheckBox = CType(widget, CheckBoxEx)
-					RemoveHandler aCheckBox.CheckedChanged, AddressOf Me.CheckBox_CheckedChanged
-				ElseIf TypeOf widget Is ComboBox Then
-					Dim aComboBoxTag As String = CType(widget.Tag, String)
-					If aComboBoxTag = "TagsEnabled" Then
-						aComboBox = CType(widget, ComboBox)
-						RemoveHandler aComboBox.SelectedIndexChanged, AddressOf Me.ComboBox_SelectedIndexChanged
-					End If
-				ElseIf TypeOf widget Is TextBox Then
-					Dim aTextBoxTag As String = CType(widget.Tag, String)
-					If aTextBoxTag = "TagsEnabled" Then
-						aTextBox = CType(widget, TextBox)
-						RemoveHandler aTextBox.TextChanged, AddressOf Me.TextBox_TextChanged
+		If Me.theWidgets IsNot Nothing Then
+			For Each widget As Control In Me.theWidgets
+				If TypeOf widget.Tag Is String Then
+					If TypeOf widget Is CheckBoxEx Then
+						aCheckBox = CType(widget, CheckBoxEx)
+						RemoveHandler aCheckBox.CheckedChanged, AddressOf Me.CheckBox_CheckedChanged
+					ElseIf TypeOf widget Is ComboBox Then
+						Dim aComboBoxTag As String = CType(widget.Tag, String)
+						If aComboBoxTag = "TagsEnabled" Then
+							aComboBox = CType(widget, ComboBox)
+							RemoveHandler aComboBox.SelectedIndexChanged, AddressOf Me.ComboBox_SelectedIndexChanged
+						End If
+					ElseIf TypeOf widget Is TextBox Then
+						Dim aTextBoxTag As String = CType(widget.Tag, String)
+						If aTextBoxTag = "TagsEnabled" Then
+							aTextBox = CType(widget, TextBox)
+							RemoveHandler aTextBox.TextChanged, AddressOf Me.TextBox_TextChanged
+						End If
 					End If
 				End If
-			End If
-		Next
+			Next
+		End If
 	End Sub
 
 #End Region

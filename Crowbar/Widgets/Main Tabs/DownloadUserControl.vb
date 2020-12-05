@@ -135,6 +135,20 @@ Public Class DownloadUserControl
 		Me.OpenWorkshopPage()
 	End Sub
 
+	Private Sub OutputPathTextBox_DragDrop(sender As Object, e As DragEventArgs) Handles OutputPathTextBox.DragDrop
+		Dim pathFileNames() As String = CType(e.Data.GetData(DataFormats.FileDrop), String())
+		Dim pathFileName As String = pathFileNames(0)
+		If Directory.Exists(pathFileName) Then
+			TheApp.Settings.DownloadOutputWorkPath = pathFileName
+		End If
+	End Sub
+
+	Private Sub OutputPathTextBox_DragEnter(sender As Object, e As DragEventArgs) Handles OutputPathTextBox.DragEnter
+		If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+			e.Effect = DragDropEffects.Copy
+		End If
+	End Sub
+
 	Private Sub OutputPathTextBox_Validated(sender As Object, e As EventArgs) Handles OutputPathTextBox.Validated
 		Me.UpdateOutputPathTextBox()
 	End Sub
@@ -151,7 +165,7 @@ Public Class DownloadUserControl
 		TheApp.Settings.SetDefaultDownloadOptions()
 	End Sub
 
-	Private Sub DownloadFromLinkButton_Click(sender As Object, e As EventArgs) Handles DownloadButton.Click
+	Private Sub DownloadButton_Click(sender As Object, e As EventArgs) Handles DownloadButton.Click
 		Me.DownloadFromLink()
 	End Sub
 
@@ -159,7 +173,11 @@ Public Class DownloadUserControl
 		Me.CancelDownload()
 	End Sub
 
-	Private Sub DownloadedItemButton_Click(sender As Object, e As EventArgs) Handles GotoDownloadedItemButton.Click
+	Private Sub UseInUnpackButton_Click(sender As Object, e As EventArgs) Handles UseInUnpackButton.Click
+		Me.UseInUnpack()
+	End Sub
+
+	Private Sub GotoDownloadedItemButton_Click(sender As Object, e As EventArgs) Handles GotoDownloadedItemButton.Click
 		Me.GotoDownloadedItem()
 	End Sub
 
@@ -312,7 +330,10 @@ Public Class DownloadUserControl
 					'======
 					'NOTE: File remains: "C:\Program Files (x86)\Steam\depotcache\<app_id>_<manifest_id>.manifest"
 					'NOTE: Data for the downloaded file remains in: "<steam_folder_on_drive_where_game_is_installed>\steamapps\workshop\appworkshop_<app_id>.acf"
-					Directory.Move(outputInfo.ContentFolderOrFileName, targetOutputPath)
+					'NOTE: Do not use Directory.Move() because it raises exception when trying to move between drives.
+					'Directory.Move(outputInfo.ContentFolderOrFileName, targetOutputPath)
+					'======
+					My.Computer.FileSystem.MoveDirectory(outputInfo.ContentFolderOrFileName, targetOutputPath)
 
 					If Directory.Exists(targetOutputPath) Then
 						'Me.ProcessFolderOrFileAfterDownload(targetOutputPath)
@@ -450,6 +471,14 @@ Public Class DownloadUserControl
 		End If
 	End Sub
 
+	Private Sub UseInUnpack()
+		Dim extension As String = Path.GetExtension(Me.DownloadedItemTextBox.Text)
+		If extension = ".gma" OrElse extension = ".vpk" Then
+
+		End If
+		TheApp.Settings.UnpackPackagePathFolderOrFileName = Me.DownloadedItemTextBox.Text
+	End Sub
+
 	Private Sub GotoDownloadedItem()
 		If Me.DownloadedItemTextBox.Text <> "" Then
 			FileManager.OpenWindowsExplorer(Me.DownloadedItemTextBox.Text)
@@ -585,6 +614,8 @@ Public Class DownloadUserControl
 		Try
 			postStream = request.GetRequestStream()
 			postStream.Write(byteData, 0, byteData.Length)
+		Catch ex As Exception
+			Dim debug As Integer = 4242
 		Finally
 			If postStream IsNot Nothing Then
 				postStream.Close()
