@@ -21,14 +21,14 @@ Public Class TextBoxEx
 		End Set
 	End Property
 
-	Protected Overrides Sub OnHandleCreated(e As EventArgs)
-		MyBase.OnHandleCreated(e)
+	'Protected Overrides Sub OnHandleCreated(e As EventArgs)
+	'	MyBase.OnHandleCreated(e)
 
-		' Always use UserPaint, so set it here when widget is created.
-		SetStyle(ControlStyles.AllPaintingInWmPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
-		SetStyle(ControlStyles.DoubleBuffer, Me.theCueBannerText <> "" AndAlso Me.Text = "")
-		SetStyle(ControlStyles.UserPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
-	End Sub
+	'	' Always use UserPaint, so set it here when widget is created.
+	'	SetStyle(ControlStyles.AllPaintingInWmPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+	'	SetStyle(ControlStyles.DoubleBuffer, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+	'	SetStyle(ControlStyles.UserPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+	'End Sub
 
 	Protected Overrides Sub OnKeyDown(ByVal e As System.Windows.Forms.KeyEventArgs)
 		If e.Control AndAlso e.KeyCode = Keys.A Then
@@ -136,9 +136,9 @@ Public Class TextBoxEx
 			Me.theOriginalFont = New System.Drawing.Font(Me.Font.FontFamily, Me.Font.Size, Me.Font.Style, Me.Font.Unit)
 
 			''SetStyle(ControlStyles.UserPaint, Me.theCueBannerText <> "")
-			'SetStyle(ControlStyles.AllPaintingInWmPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
-			'SetStyle(ControlStyles.DoubleBuffer, Me.theCueBannerText <> "" AndAlso Me.Text = "")
-			'SetStyle(ControlStyles.UserPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+			SetStyle(ControlStyles.AllPaintingInWmPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+			SetStyle(ControlStyles.DoubleBuffer, Me.theCueBannerText <> "" AndAlso Me.Text = "")
+			SetStyle(ControlStyles.UserPaint, Me.theCueBannerText <> "" AndAlso Me.Text = "")
 			''Me.Invalidate()
 		End If
 	End Sub
