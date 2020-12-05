@@ -788,6 +788,9 @@
     <EmbeddedResource Include="Widgets\- Application\MacroDataGridView.resx">
       <DependentUpon>MacroDataGridView.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\- Application\MainForm.resx">
+      <DependentUpon>MainForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Widgets\- General\TreeViewEx.resx">
       <DependentUpon>TreeViewEx.vb</DependentUpon>
     </EmbeddedResource>
