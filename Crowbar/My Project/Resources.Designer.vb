@@ -436,6 +436,24 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to Toggle Word Wrap - currently not wrapping.
+        '''</summary>
+        Friend ReadOnly Property ToggleWordWrapCurrentlyOff() As String
+            Get
+                Return ResourceManager.GetString("ToggleWordWrapCurrentlyOff", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to Toggle Word Wrap - currently wrapping.
+        '''</summary>
+        Friend ReadOnly Property ToggleWordWrapCurrentlyOn() As String
+            Get
+                Return ResourceManager.GetString("ToggleWordWrapCurrentlyOn", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to unpack-log.txt.
         '''</summary>
         Friend ReadOnly Property Unpack_LogFileNameSuffix() As String
