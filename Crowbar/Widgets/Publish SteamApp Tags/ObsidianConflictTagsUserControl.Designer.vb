@@ -154,7 +154,7 @@ Partial Class ObsidianConflictTagsUserControl
 		'MapRadioButton
 		'
 		Me.MapRadioButton.AutoSize = True
-		Me.MapRadioButton.Location = New System.Drawing.Point(3, 141)
+		Me.MapRadioButton.Location = New System.Drawing.Point(141, 3)
 		Me.MapRadioButton.Name = "MapRadioButton"
 		Me.MapRadioButton.Size = New System.Drawing.Size(51, 17)
 		Me.MapRadioButton.TabIndex = 7
@@ -189,7 +189,7 @@ Partial Class ObsidianConflictTagsUserControl
 		'PlayermodelRadioButton
 		'
 		Me.PlayermodelRadioButton.AutoSize = True
-		Me.PlayermodelRadioButton.Location = New System.Drawing.Point(3, 417)
+		Me.PlayermodelRadioButton.Location = New System.Drawing.Point(282, 3)
 		Me.PlayermodelRadioButton.Name = "PlayermodelRadioButton"
 		Me.PlayermodelRadioButton.Size = New System.Drawing.Size(90, 17)
 		Me.PlayermodelRadioButton.TabIndex = 12
@@ -235,7 +235,7 @@ Partial Class ObsidianConflictTagsUserControl
 		Me.MapPanel.Controls.Add(Me.CoopCheckBox)
 		Me.MapPanel.Controls.Add(Me.DeathmatchCheckBox)
 		Me.MapPanel.Enabled = False
-		Me.MapPanel.Location = New System.Drawing.Point(22, 164)
+		Me.MapPanel.Location = New System.Drawing.Point(160, 26)
 		Me.MapPanel.Name = "MapPanel"
 		Me.MapPanel.Size = New System.Drawing.Size(109, 247)
 		Me.MapPanel.TabIndex = 0
@@ -345,7 +345,7 @@ Partial Class ObsidianConflictTagsUserControl
 		Me.PlayermodelPanel.Controls.Add(Me.AlienCheckBox)
 		Me.PlayermodelPanel.Controls.Add(Me.AnimeCheckBox)
 		Me.PlayermodelPanel.Enabled = False
-		Me.PlayermodelPanel.Location = New System.Drawing.Point(22, 440)
+		Me.PlayermodelPanel.Location = New System.Drawing.Point(299, 26)
 		Me.PlayermodelPanel.Name = "PlayermodelPanel"
 		Me.PlayermodelPanel.Size = New System.Drawing.Size(109, 132)
 		Me.PlayermodelPanel.TabIndex = 0
@@ -410,7 +410,7 @@ Partial Class ObsidianConflictTagsUserControl
 		Me.Controls.Add(Me.MapRadioButton)
 		Me.Controls.Add(Me.PackRadioButton)
 		Me.Name = "ObsidianConflictTagsUserControl"
-		Me.Size = New System.Drawing.Size(139, 581)
+		Me.Size = New System.Drawing.Size(421, 289)
 		Me.PackPanel.ResumeLayout(False)
 		Me.PackPanel.PerformLayout()
 		Me.MapPanel.ResumeLayout(False)

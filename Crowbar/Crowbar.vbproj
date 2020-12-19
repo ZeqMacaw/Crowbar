@@ -714,6 +714,18 @@
     <Compile Include="Widgets\- Application\UnhandledExceptionWindow.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Widgets\Publish SteamApp Tags\Base\Base_KeyValuesUserControl.Designer.vb">
+      <DependentUpon>Base_KeyValuesUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Widgets\Publish SteamApp Tags\Base\Base_KeyValuesUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Widgets\Publish SteamApp Tags\ObsidianConflictKeyValuesUserControl.Designer.vb">
+      <DependentUpon>ObsidianConflictKeyValuesUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Widgets\Publish SteamApp Tags\ObsidianConflictKeyValuesUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Widgets\Publish SteamApp Tags\AnarchyArcadeTagsUserControl.Designer.vb">
       <DependentUpon>AnarchyArcadeTagsUserControl.vb</DependentUpon>
     </Compile>
@@ -859,6 +871,12 @@
     <EmbeddedResource Include="Widgets\- Application\UnhandledExceptionWindow.resx">
       <DependentUpon>UnhandledExceptionWindow.vb</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\Publish SteamApp Tags\Base\Base_KeyValuesUserControl.resx">
+      <DependentUpon>Base_KeyValuesUserControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\Publish SteamApp Tags\ObsidianConflictKeyValuesUserControl.resx">
+      <DependentUpon>ObsidianConflictKeyValuesUserControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\Publish SteamApp Tags\Base\Base_TagsUserControl.resx">
       <DependentUpon>Base_TagsUserControl.vb</DependentUpon>

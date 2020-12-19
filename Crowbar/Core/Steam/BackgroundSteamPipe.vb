@@ -223,7 +223,8 @@ Public Class BackgroundSteamPipe
 				Exit Sub
 			End If
 
-			resultOfSendRequest = steamPipe.SteamUGC_SendQueryUGCRequest()
+			Dim publishedItem As WorkshopItem = Nothing
+			resultOfSendRequest = steamPipe.SteamUGC_SendQueryUGCRequest(publishedItem, False)
 			If resultOfSendRequest = "success" Then
 				pageNumber += 1UI
 			Else
@@ -304,9 +305,31 @@ Public Class BackgroundSteamPipe
 			Exit Sub
 		End If
 
-		Dim appID_text As String = ""
-		Dim publishedItem As WorkshopItem = Nothing
-		publishedItem = Me.theGetItemDetailsSteamPipe.SteamRemoteStorage_GetPublishedFileDetails(input.ItemID_text, input.AppID_text, appID_text)
+		'Dim appID_text As String = ""
+		'Dim publishedItem As WorkshopItem = Nothing
+		'publishedItem = Me.theGetItemDetailsSteamPipe.SteamRemoteStorage_GetPublishedFileDetails(input.ItemID_text, input.AppID_text, appID_text)
+		'
+		'If bw.CancellationPending Then
+		'	Me.theGetItemDetailsSteamPipe.Kill()
+		'	e.Cancel = True
+		'	Me.theActiveSteamPipes.Remove(Me.theGetItemDetailsSteamPipe)
+		'	Me.theActiveBackgroundWorkers.Remove(bw)
+		'	Exit Sub
+		'End If
+		'
+		'If publishedItem.ID <> "0" Then
+		'	result = Me.theGetItemDetailsSteamPipe.Crowbar_DownloadPreviewFile(publishedItem.PreviewImagePathFileName)
+		'Else
+		'	'NOTE: Error message is stored in publishedItem.Title.
+		'	bw.ReportProgress(0, "ERROR: " + publishedItem.Title + vbCrLf)
+		'	bw.ReportProgress(1, Nothing)
+		'End If
+		'======
+		Dim result_SteamUGC_CreateQueryUGCDetailsRequest As String = Me.theGetItemDetailsSteamPipe.SteamUGC_CreateQueryUGCDetailsRequest(input.ItemID_text)
+		If result_SteamUGC_CreateQueryUGCDetailsRequest <> "success" Then
+			bw.ReportProgress(0, "ERROR: " + result_SteamUGC_CreateQueryUGCDetailsRequest + vbCrLf)
+			Exit Sub
+		End If
 
 		If bw.CancellationPending Then
 			Me.theGetItemDetailsSteamPipe.Kill()
@@ -316,24 +339,25 @@ Public Class BackgroundSteamPipe
 			Exit Sub
 		End If
 
-		If publishedItem.ID <> "0" Then
-			result = Me.theGetItemDetailsSteamPipe.Crowbar_DownloadPreviewFile(publishedItem.PreviewImagePathFileName)
-		Else
-			'NOTE: Error message is stored in publishedItem.Title.
-			bw.ReportProgress(0, "ERROR: " + publishedItem.Title + vbCrLf)
-			bw.ReportProgress(1, Nothing)
+		Dim publishedItem As WorkshopItem = Nothing
+		Dim resultOfSendRequest As String = Me.theGetItemDetailsSteamPipe.SteamUGC_SendQueryUGCRequest(publishedItem, True)
+		If resultOfSendRequest = "success" Then
+			If bw.CancellationPending Then
+				Me.theGetItemDetailsSteamPipe.Kill()
+				e.Cancel = True
+				Me.theActiveSteamPipes.Remove(Me.theGetItemDetailsSteamPipe)
+				Me.theActiveBackgroundWorkers.Remove(bw)
+				Exit Sub
+			End If
+
+			If publishedItem IsNot Nothing AndAlso publishedItem.PreviewImagePathFileName IsNot Nothing Then
+				result = Me.theGetItemDetailsSteamPipe.Crowbar_DownloadPreviewFile(publishedItem.PreviewImagePathFileName)
+			End If
 		End If
 
 		Me.theGetItemDetailsSteamPipe.Shut()
 		Me.theActiveSteamPipes.Remove(Me.theGetItemDetailsSteamPipe)
 		Me.theGetItemDetailsSteamPipe = Nothing
-
-		If bw.CancellationPending Then
-			e.Cancel = True
-			Me.theActiveBackgroundWorkers.Remove(bw)
-			Exit Sub
-		End If
-
 		Me.theActiveBackgroundWorkers.Remove(bw)
 		Dim output As New GetPublishedFileDetailsOutputInfo(publishedItem, input.Action)
 		e.Result = output
@@ -822,6 +846,16 @@ Public Class BackgroundSteamPipe
 				Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item tags completed." + vbCrLf)
 			Else
 				Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item tags failed." + vbCrLf)
+				Return "error"
+			End If
+		End If
+
+		If inputInfo.Item.KeyValuesIsChanged Then
+			Dim setItemKeyValuesWasSuccessful As String = steamPipe.Crowbar_SetKeyValues(inputInfo.Item.KeyValuesForXml)
+			If setItemKeyValuesWasSuccessful = "success" Then
+				Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item keyvalues completed." + vbCrLf)
+			Else
+				Me.thePublishItemBackgroundWorker.ReportProgress(0, "Set item keyvalues failed." + vbCrLf)
 				Return "error"
 			End If
 		End If

@@ -35,12 +35,14 @@ Public Class Base_TagsUserControl
 #Region "Init and Free"
 
 	Protected Overridable Sub Init()
-		Me.theWidgets = New List(Of Control)()
-		Me.GetAllWidgets(Me.Controls)
+		If Me.theWidgets Is Nothing Then
+			Me.theWidgets = New List(Of Control)()
+			Me.GetAllWidgets(Me.Controls)
 
-		Me.theCheckBoxesAreChangingViaMe = False
-		Me.theComboBoxesAreChangingViaMe = False
-		Me.theTextBoxesAreChangingViaMe = False
+			Me.theCheckBoxesAreChangingViaMe = False
+			Me.theComboBoxesAreChangingViaMe = False
+			Me.theTextBoxesAreChangingViaMe = False
+		End If
 	End Sub
 
 	Private Sub GetAllWidgets(ByVal iWidgets As ControlCollection)
@@ -132,6 +134,9 @@ Public Class Base_TagsUserControl
 			Return itemTagsList
 		End Get
 		Set
+			' Because tags widget might not be shown (such as when on unseen TabPage), must call Init() here.
+			Me.Init()
+
 			Me.theCheckBoxesAreChangingViaMe = True
 			Me.theComboBoxesAreChangingViaMe = True
 			Me.theTextBoxesAreChangingViaMe = True

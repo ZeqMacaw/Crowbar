@@ -245,7 +245,7 @@ Public Class SteamPipe
 					End If
 
 					Dim pictureBytes As New MemoryStream(data)
-					Me.theBackgroundWorker.ReportProgress(1, Image.FromStream(pictureBytes))
+					Me.theBackgroundWorker.ReportProgress(3, Image.FromStream(pictureBytes))
 				Catch ex As Exception
 					Me.theBackgroundWorker.ReportProgress(0, "WARNING: Unable to get preview image." + vbCrLf)
 				End Try
@@ -352,6 +352,7 @@ Public Class SteamPipe
 			publishedItem.VisibilityText = Me.theStreamReader.ReadLine()
 
 			publishedItem.TagsAsTextLine = Me.theStreamReader.ReadLine()
+			'publishedItem.KeyValuesAsTextLine = Me.theStreamReader.ReadLine()
 
 			If itemAppID <> appID_text Then
 				publishedItem.ID = "0"
@@ -438,8 +439,9 @@ Public Class SteamPipe
 		Return result
 	End Function
 
-	Public Function SteamUGC_SendQueryUGCRequest() As String
+	Public Function SteamUGC_SendQueryUGCRequest(ByRef item As WorkshopItem, ByVal fullInfoIsRequested As Boolean) As String
 		Me.theStreamWriter.WriteLine("SteamUGC_SendQueryUGCRequest")
+		Me.theStreamWriter.WriteLine(fullInfoIsRequested.ToString())
 
 		Dim result As String = Me.theStreamReader.ReadLine()
 		If result = "success" Then
@@ -455,10 +457,16 @@ Public Class SteamPipe
 				totalCountText = Me.theStreamReader.ReadLine()
 				totalCount = UInteger.Parse(totalCountText)
 
-				Dim item As WorkshopItem
+				'Dim item As WorkshopItem
 				Dim unixTimeStampText As String
 				Dim ownerSteamIDText As String
 				'Dim steamID As Steamworks.CSteamID = Steamworks.SteamUser.GetSteamID()
+
+				Dim keyValueCountText As String
+				Dim keyValueCount As UInteger
+				Dim aKey As String
+				Dim aValue As String
+				Dim tagValueList As List(Of String)
 
 				Me.theBackgroundWorker.ReportProgress(1, totalCount)
 				For i As UInteger = 0 To CUInt(resultsCount - 1)
@@ -479,12 +487,33 @@ Public Class SteamPipe
 					'======
 					item.Title = Me.ReadMultipleLinesOfText(Me.theStreamReader)
 
-					'item.Description = Me.streamReaderForQuerying.ReadLine()
+					If fullInfoIsRequested Then
+						'item.Description = Me.streamReaderForQuerying.ReadLine()
+						item.Description = Me.ReadMultipleLinesOfText(Me.theStreamReader)
+					End If
 
 					item.ContentPathFolderOrFileName = Me.theStreamReader.ReadLine()
 					item.PreviewImagePathFileName = Me.theStreamReader.ReadLine()
 					item.VisibilityText = Me.theStreamReader.ReadLine()
 					item.TagsAsTextLine = Me.theStreamReader.ReadLine()
+
+					keyValueCountText = Me.theStreamReader.ReadLine()
+					keyValueCount = UInt32.Parse(keyValueCountText)
+					If keyValueCount > 0 Then
+						For keyValueIndex As UInt32 = 0 To CType(keyValueCount - 1, UInt32)
+							aKey = Me.theStreamReader.ReadLine()
+							aValue = Me.theStreamReader.ReadLine()
+							If aKey <> "" AndAlso aValue <> "" Then
+								If item.KeyValues.ContainsKey(aKey) Then
+									item.KeyValues(aKey).Add(aValue)
+								Else
+									tagValueList = New List(Of String)()
+									tagValueList.Add(aValue)
+									item.KeyValues.Add(aKey, tagValueList)
+								End If
+							End If
+						Next
+					End If
 
 					'publishedItems.Add(item)
 					Me.theBackgroundWorker.ReportProgress(2, item)
@@ -576,6 +605,22 @@ Public Class SteamPipe
 		For Each tag As String In tags
 			Me.theStreamWriter.WriteLine(tag)
 		Next
+		Dim result As String = Me.theStreamReader.ReadLine()
+		Return result
+	End Function
+
+	Public Function Crowbar_SetKeyValues(ByVal newKeyValueList As List(Of String)) As String
+		Me.theStreamWriter.WriteLine("Crowbar_SetKeyValues")
+
+		Dim delimiters As Char() = {"="c}
+		Dim tokens As String()
+		Me.theStreamWriter.WriteLine(newKeyValueList.Count.ToString())
+		For Each keyValue As String In newKeyValueList
+			tokens = keyValue.Split(delimiters, StringSplitOptions.RemoveEmptyEntries)
+			Me.theStreamWriter.WriteLine(tokens(0))
+			Me.theStreamWriter.WriteLine(tokens(1))
+		Next
+
 		Dim result As String = Me.theStreamReader.ReadLine()
 		Return result
 	End Function

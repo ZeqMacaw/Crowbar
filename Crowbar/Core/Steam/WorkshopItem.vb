@@ -46,6 +46,10 @@ Public Class WorkshopItem
 		Me.theTagsAsTextLine = ""
 		Me.theTagsIsChanged = False
 
+		Me.theKeyValues = New SortedList(Of String, List(Of String))
+		Me.theKeyValuesAsList = New List(Of String)
+		Me.theKeyValuesIsChanged = False
+
 		Me.theItemIsChanged = False
 	End Sub
 
@@ -83,6 +87,18 @@ Public Class WorkshopItem
 		Next
 		Me.theTagsAsTextLine = originalObject.TagsAsTextLine
 		Me.theTagsIsChanged = False
+
+		Me.theKeyValues = New SortedList(Of String, List(Of String))
+		For Each pair As KeyValuePair(Of String, List(Of String)) In originalObject.KeyValues
+			For Each pairValue As String In pair.Value
+				Me.AddKeyValuePair(pair.Key, pairValue, Me.theKeyValues)
+			Next
+		Next
+		Me.theKeyValuesAsList = New List(Of String)
+		For Each keyValue As String In originalObject.KeyValuesForXml
+			Me.theKeyValuesAsList.Add(keyValue)
+		Next
+		Me.theKeyValuesIsChanged = False
 
 		'NOTE: Clone becomes a draft item; thus theItemIsChanged is always False.
 		Me.theItemIsChanged = False
@@ -391,6 +407,7 @@ Public Class WorkshopItem
 
 	Public Property Tags As BindingListEx(Of String)
 		Get
+			'NOTE: XML deserializer uses this for setting the value, so must return a class object that will be filled in.
 			Return Me.theTags
 		End Get
 		Set(value As BindingListEx(Of String))
@@ -470,6 +487,89 @@ Public Class WorkshopItem
 	End Property
 
 	<XmlIgnore()>
+	Public Property KeyValues As SortedList(Of String, List(Of String))
+		Get
+			'NOTE: This is not set by reading in from XML file, so call this function to make sure it is filled-in.
+			If Me.theKeyValues.Count = 0 Then
+				Me.theKeyValues = Me.ConvertKeyValueListToKeyValueSortedList(Me.theKeyValuesAsList)
+			End If
+			Return Me.theKeyValues
+		End Get
+		Set(value As SortedList(Of String, List(Of String)))
+			If Not KeyValuesAreEqual(value, Me.theKeyValues) Then
+				Me.theKeyValues = value
+
+				Me.theKeyValuesAsList.Clear()
+				Dim aKey As String
+				Dim aValueList As List(Of String)
+				Dim aKeyValue As String
+				For keyIndex As Integer = 0 To Me.theKeyValues.Count - 1
+					aKey = Me.theKeyValues.Keys(keyIndex)
+					aValueList = Me.theKeyValues.Values(keyIndex)
+					For valueListIndex As Integer = 0 To aValueList.Count - 1
+						aKeyValue = aKey + "=" + aValueList(valueListIndex)
+						Me.theKeyValuesAsList.Add(aKeyValue)
+					Next
+				Next
+
+				Me.theKeyValuesIsChanged = True
+				NotifyPropertyChanged("KeyValues")
+			End If
+		End Set
+	End Property
+
+	' According to SteamWorks documentation ( https://partner.steamgames.com/doc/api/ISteamUGC#AddItemKeyValueTag ):
+	'    Key names are restricted to alpha-numeric characters and the '_' character.
+	' The XML de/serialization can not handle SortedList, so use a List(Of String) where the string is "key=value".
+	'    Thus, can split using the "=" character.
+	<XmlArray(ElementName:="KeyValues")>
+	<XmlArrayItem("KeyValue")>
+	Public Property KeyValuesForXml As List(Of String)
+		Get
+			'NOTE: XML deserializer uses this for setting the value, so must return a class object that will be filled in.
+			Return Me.theKeyValuesAsList
+		End Get
+		Set(value As List(Of String))
+			'Dim convertedGivenList As New SortedList(Of String, List(Of String))()
+			'Dim delimiters As Char() = {"="c}
+			'Dim tokens As String()
+			'Dim aKey As String
+			'Dim aValue As String
+			'For Each keyValue As String In value
+			'	tokens = keyValue.Split(delimiters, StringSplitOptions.RemoveEmptyEntries)
+			'	aKey = tokens(0)
+			'	aValue = tokens(1)
+			'	If convertedGivenList.ContainsKey(aKey) Then
+			'		convertedGivenList(aKey).Add(aValue)
+			'	Else
+			'		Dim aValueList As New List(Of String)()
+			'		aValueList.Add(aValue)
+			'		convertedGivenList.Add(aKey, aValueList)
+			'	End If
+			'Next
+			Dim convertedGivenList As SortedList(Of String, List(Of String)) = Me.ConvertKeyValueListToKeyValueSortedList(value)
+
+			If Not KeyValuesAreEqual(convertedGivenList, Me.theKeyValues) Then
+				Me.theKeyValues = convertedGivenList
+				Me.theKeyValuesAsList = value
+				Me.theKeyValuesIsChanged = True
+				NotifyPropertyChanged("KeyValues")
+			End If
+		End Set
+	End Property
+
+	Public Property KeyValuesIsChanged As Boolean
+		Get
+			Return Me.theKeyValuesIsChanged
+		End Get
+		Set(value As Boolean)
+			If Me.theKeyValuesIsChanged <> value Then
+				Me.theKeyValuesIsChanged = value
+			End If
+		End Set
+	End Property
+
+	<XmlIgnore()>
 	Public Property IsChanged As Boolean
 		Get
 			Return Me.theItemIsChanged
@@ -484,6 +584,7 @@ Public Class WorkshopItem
 				Me.thePreviewImagePathFileNameIsChanged = False
 				Me.theVisibilityIsChanged = False
 				Me.theTagsIsChanged = False
+				Me.theKeyValuesIsChanged = False
 			End If
 
 			If Me.theItemIsChanged <> value Then
@@ -571,6 +672,85 @@ Public Class WorkshopItem
 
 #Region "Private Methods"
 
+	Private Function ConvertKeyValueListToKeyValueSortedList(ByVal keyValueList As List(Of String)) As SortedList(Of String, List(Of String))
+		Dim convertedGivenList As New SortedList(Of String, List(Of String))()
+		Dim delimiters As Char() = {"="c}
+		Dim tokens As String()
+		Dim aKey As String
+		Dim aValue As String
+		For Each keyValue As String In keyValueList
+			tokens = keyValue.Split(delimiters, StringSplitOptions.RemoveEmptyEntries)
+			aKey = tokens(0)
+			aValue = tokens(1)
+			If convertedGivenList.ContainsKey(aKey) Then
+				convertedGivenList(aKey).Add(aValue)
+			Else
+				Dim aValueList As New List(Of String)()
+				aValueList.Add(aValue)
+				convertedGivenList.Add(aKey, aValueList)
+			End If
+		Next
+		Return convertedGivenList
+	End Function
+
+	Protected Function KeyValuesAreEqual(ByVal firstList As SortedList(Of String, List(Of String)), ByVal secondList As SortedList(Of String, List(Of String))) As Boolean
+		Dim listsAreEqual As Boolean = True
+
+		If firstList.Count = secondList.Count Then
+			Dim firstListKey As String
+			Dim secondListKey As String
+			Dim firstListValue As String
+			Dim secondListValue As String
+
+			For keyIndex As Integer = 0 To firstList.Keys.Count - 1
+				firstListKey = firstList.Keys(keyIndex)
+				firstListKey = firstListKey.ToLower()
+				secondListKey = secondList.Keys(keyIndex)
+				secondListKey = secondListKey.ToLower()
+
+				For valueIndex As Integer = 0 To firstList.Values(keyIndex).Count - 1
+					firstListValue = firstList.Values(keyIndex)(valueIndex)
+					firstListValue = firstListValue.ToLower()
+					secondListValue = secondList.Values(keyIndex)(valueIndex)
+					secondListValue = secondListValue.ToLower()
+					If firstListValue <> secondListValue Then
+						listsAreEqual = False
+						Exit For
+					End If
+				Next
+				If Not listsAreEqual Then
+					Exit For
+				End If
+			Next
+		Else
+			listsAreEqual = False
+		End If
+
+		Return listsAreEqual
+	End Function
+
+	Protected Sub AddKeyValue(ByVal keyValuePair As String, ByRef itemTagsList As SortedList(Of String, List(Of String)))
+		Dim tokens As String() = keyValuePair.Split("="c)
+		Dim tagKey As String
+		Dim tagValue As String
+
+		tagKey = tokens(0)
+		tagValue = tokens(1)
+
+		Me.AddKeyValuePair(tagKey, tagValue, itemTagsList)
+	End Sub
+
+	Private Sub AddKeyValuePair(ByVal aKey As String, ByVal aValue As String, ByRef itemTagsList As SortedList(Of String, List(Of String)))
+		Dim tagValueList As List(Of String)
+		If itemTagsList.ContainsKey(aKey) Then
+			itemTagsList(aKey).Add(aValue)
+		Else
+			tagValueList = New List(Of String)()
+			tagValueList.Add(aValue)
+			itemTagsList.Add(aKey, tagValueList)
+		End If
+	End Sub
+
 	Protected Sub NotifyPropertyChanged(ByVal info As String)
 		RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(info))
 	End Sub
@@ -625,6 +805,10 @@ Public Class WorkshopItem
 	Private theTags As BindingListEx(Of String)
 	Private theTagsAsTextLine As String
 	Private theTagsIsChanged As Boolean
+
+	Private theKeyValues As SortedList(Of String, List(Of String))
+	Private theKeyValuesAsList As List(Of String)
+	Private theKeyValuesIsChanged As Boolean
 
 	Private theItemIsChanged As Boolean
 

@@ -124,6 +124,10 @@ Public Class PublishUserControl
 			RemoveHandler Me.theTagsWidget.TagsPropertyChanged, AddressOf Me.TagsWidget_TagsPropertyChanged
 		End If
 
+		If Me.theKeyValuesWidget IsNot Nothing Then
+			RemoveHandler Me.theKeyValuesWidget.KeyValuesPropertyChanged, AddressOf Me.KeyValuesWidget_KeyValuesPropertyChanged
+		End If
+
 		If Me.theSelectedItem IsNot Nothing Then
 			If Me.theSelectedItem.IsTemplate AndAlso Me.theSelectedItem.IsChanged Then
 				Me.SaveChangedTemplateToDraft()
@@ -495,6 +499,11 @@ Public Class PublishUserControl
 		Me.theSelectedItem.Tags = Me.theTagsWidget.ItemTags
 	End Sub
 
+	'NOTE: There is no automatic data-binding with TagsWidget, so manually bind from widget to object here.
+	Private Sub KeyValuesWidget_KeyValuesPropertyChanged(sender As Object, e As EventArgs)
+		Me.theSelectedItem.KeyValues = Me.theKeyValuesWidget.ItemKeyValues
+	End Sub
+
 	Private Sub PublishItemButton_Click(sender As Object, e As EventArgs) Handles PublishItemButton.Click
 		Me.PublishItem()
 	End Sub
@@ -540,14 +549,17 @@ Public Class PublishUserControl
 			Me.UpdateItemPreviewImageLabel()
 			Me.UpdateItemPreviewImageBox()
 			Me.UpdateItemChangedStatus()
-			'NOTE: Using this property raises an exception, possibly because the DataGridView gets confused by the property being a list, so use "TagsAsTextLine" property.
-			'ElseIf e.PropertyName = "Tags" Then
-		ElseIf e.PropertyName = "TagsAsTextLine" Then
-			Me.UpdateItemTagsLabel()
-			Me.UpdateItemChangedStatus()
 		ElseIf e.PropertyName = "Visibility" Then
 			Me.UpdateItemVisibilityLabel()
 			Me.UpdateItemChangedStatus()
+			'NOTE: Using this property raises an exception, possibly because the DataGridView gets confused by the property being a list, so use "TagsAsTextLine" property.
+			'ElseIf e.PropertyName = "Tags" Then
+		ElseIf e.PropertyName = "TagsAsTextLine" Then
+			Me.UpdateItemChangedStatus()
+			Me.UpdateItemTagsTabPageText()
+		ElseIf e.PropertyName = "KeyValues" Then
+			Me.UpdateItemChangedStatus()
+			Me.UpdateItemOptionsTabPageText()
 		End If
 
 		If Me.theSelectedItem.IsDraft Then
@@ -609,6 +621,11 @@ Public Class PublishUserControl
 		If e.ProgressPercentage = 0 Then
 			Me.LogTextBox.AppendText(CStr(e.UserState))
 		ElseIf e.ProgressPercentage = 1 Then
+			Me.theExpectedPublishedItemCount = CUInt(e.UserState)
+		ElseIf e.ProgressPercentage = 2 Then
+			Dim publishedItem As WorkshopItem
+			publishedItem = CType(e.UserState, WorkshopItem)
+		ElseIf e.ProgressPercentage = 3 Then
 			If Me.ItemPreviewImagePictureBox.Image IsNot Nothing Then
 				Me.ItemPreviewImagePictureBox.Image.Dispose()
 			End If
@@ -651,6 +668,7 @@ Public Class PublishUserControl
 						Me.theSelectedItem.PreviewImagePathFileName = publishedItem.PreviewImagePathFileName
 						Me.theSelectedItem.Visibility = publishedItem.Visibility
 						Me.theSelectedItem.TagsAsTextLine = publishedItem.TagsAsTextLine
+						Me.theSelectedItem.KeyValues = publishedItem.KeyValues
 
 						Me.theSelectedItem.IsChanged = False
 						Me.DeleteTempPreviewImageFile(previewImagePathFileName, Me.theSelectedItem.ID)
@@ -681,7 +699,8 @@ Public Class PublishUserControl
 		Me.ItemChangeNoteTextBox.Enabled = True
 		Me.ItemContentPathFileNameTextBox.Enabled = True
 		Me.ItemPreviewImagePathFileNameTextBox.Enabled = True
-		Me.ItemTagsGroupBox.Enabled = True
+		Me.theTagsWidget.Enabled = True
+		Me.theKeyValuesWidget.Enabled = True
 		Me.UpdateItemDetailWidgets()
 	End Sub
 
@@ -715,7 +734,8 @@ Public Class PublishUserControl
 		Me.ItemChangeNoteTextBox.Enabled = True
 		Me.ItemContentPathFileNameTextBox.Enabled = True
 		Me.ItemPreviewImagePathFileNameTextBox.Enabled = True
-		Me.ItemTagsGroupBox.Enabled = True
+		Me.theTagsWidget.Enabled = True
+		Me.theKeyValuesWidget.Enabled = True
 	End Sub
 
 	Private Sub PublishItem_ProgressChanged(ByVal sender As System.Object, ByVal e As System.ComponentModel.ProgressChangedEventArgs)
@@ -843,6 +863,7 @@ Public Class PublishUserControl
 
 		'NOTE: Swap the Tags widget before selecting an item so when item is selected tags will set correctly.
 		Me.SwapSteamAppTagsWidget()
+		Me.SwapSteamAppKeyValuesWidget()
 
 		Dim selectedRowIndex As Integer = 0
 		Me.theDisplayedItems.Clear()
@@ -878,28 +899,47 @@ Public Class PublishUserControl
 	End Sub
 
 	Private Sub SwapSteamAppTagsWidget()
-		If theTagsWidget IsNot Nothing Then
+		If Me.theTagsWidget IsNot Nothing Then
 			RemoveHandler Me.theTagsWidget.TagsPropertyChanged, AddressOf Me.TagsWidget_TagsPropertyChanged
 		End If
 
-		'Me.theTagsWidget = CType(Me.AppIdComboBox.SelectedItem, SteamAppInfo).TagsWidget
-		'Dim info As SteamAppInfo = CType(Me.AppIdComboBox.SelectedItem, SteamAppInfo)
 		Dim info As SteamAppInfoBase = TheApp.SteamAppInfos(TheApp.Settings.PublishGameSelectedIndex)
 		Dim t As Type = info.TagsControlType
 		Me.theTagsWidget = CType(t.GetConstructor(New System.Type() {}).Invoke(New Object() {}), Base_TagsUserControl)
-		If Me.ItemTagsGroupBox.Controls.Count > 0 Then
-			Me.ItemTagsGroupBox.Controls.RemoveAt(0)
+		If Me.TagsTabPage.Controls.Count > 0 Then
+			Me.TagsTabPage.Controls.RemoveAt(0)
 		End If
-		Me.ItemTagsGroupBox.Controls.Add(Me.theTagsWidget)
+		Me.TagsTabPage.Controls.Add(Me.theTagsWidget)
 		Me.theTagsWidget.AutoScroll = True
 		Me.theTagsWidget.Dock = System.Windows.Forms.DockStyle.Fill
-		'Me.theTagsWidget.ItemTags = CType(Resources.GetObject("ContagionTagsUserControl1.ItemTags"), System.Collections.Generic.List(Of String))
 		Me.theTagsWidget.Location = New System.Drawing.Point(3, 17)
 		Me.theTagsWidget.Name = "TagsUserControl"
 		Me.theTagsWidget.Size = New System.Drawing.Size(193, 307)
 		Me.theTagsWidget.TabIndex = 0
 
 		AddHandler Me.theTagsWidget.TagsPropertyChanged, AddressOf Me.TagsWidget_TagsPropertyChanged
+	End Sub
+
+	Private Sub SwapSteamAppKeyValuesWidget()
+		If Me.theKeyValuesWidget IsNot Nothing Then
+			RemoveHandler Me.theKeyValuesWidget.KeyValuesPropertyChanged, AddressOf Me.KeyValuesWidget_KeyValuesPropertyChanged
+		End If
+
+		Dim info As SteamAppInfoBase = TheApp.SteamAppInfos(TheApp.Settings.PublishGameSelectedIndex)
+		Dim t As Type = info.KeyValuesControlType
+		Me.theKeyValuesWidget = CType(t.GetConstructor(New System.Type() {}).Invoke(New Object() {}), Base_KeyValuesUserControl)
+		If Me.OptionsTabPage.Controls.Count > 0 Then
+			Me.OptionsTabPage.Controls.RemoveAt(0)
+		End If
+		Me.OptionsTabPage.Controls.Add(Me.theKeyValuesWidget)
+		Me.theKeyValuesWidget.AutoScroll = True
+		Me.theKeyValuesWidget.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.theKeyValuesWidget.Location = New System.Drawing.Point(3, 17)
+		Me.theKeyValuesWidget.Name = "KeyValuesUserControl"
+		Me.theKeyValuesWidget.Size = New System.Drawing.Size(193, 307)
+		Me.theKeyValuesWidget.TabIndex = 0
+
+		AddHandler Me.theKeyValuesWidget.KeyValuesPropertyChanged, AddressOf Me.KeyValuesWidget_KeyValuesPropertyChanged
 	End Sub
 
 	Private Sub SelectItemInGrid()
@@ -968,7 +1008,7 @@ Public Class PublishUserControl
 		If Not itemHasBeenFound Then
 			Try
 				If ULong.TryParse(itemTextToFind, Nothing) Then
-					GetPublishedItemDetailsViaSteamRemoteStorage(itemTextToFind, "FindAll")
+					GetPublishedItemDetails(itemTextToFind, "FindAll")
 				End If
 			Catch ex As Exception
 				Dim debug As Integer = 4242
@@ -1154,7 +1194,7 @@ Public Class PublishUserControl
 			Me.UpdateItemDetailWidgets()
 		Else
 			'NOTE: UpdateItemDetailWidgets() will be called from the 'bw_completed' handler.
-			Me.GetPublishedItemDetailsViaSteamRemoteStorage(Me.theSelectedItem.ID, "All")
+			Me.GetPublishedItemDetails(Me.theSelectedItem.ID, "All")
 			Exit Sub
 		End If
 	End Sub
@@ -1167,8 +1207,8 @@ Public Class PublishUserControl
 		Dim editableTextBoxesAreReadOnly As Boolean = (Me.theSelectedItem.IsPublished) AndAlso (Me.theSelectedItem.OwnerID <> Me.theUserSteamID)
 		Dim editableNonTextWidgetsAreEnabled As Boolean = (Me.theSelectedItem.IsDraft) OrElse (Me.theSelectedItem.IsTemplate) OrElse (Me.theSelectedItem.OwnerID = Me.theUserSteamID)
 
-		Me.ItemGroupBox.Enabled = True
-		Me.UpdateItemGroupBoxLabel()
+		Me.ItemTabControl.Enabled = True
+		'Me.UpdateItemContentTabPageText()
 
 		Me.UpdateItemTitleLabel()
 		Me.ItemTitleTextBox.ReadOnly = editableTextBoxesAreReadOnly
@@ -1191,11 +1231,17 @@ Public Class PublishUserControl
 		Me.UpdateItemVisibilityLabel()
 		Me.ItemVisibilityComboBox.Enabled = editableNonTextWidgetsAreEnabled
 
-		Me.ItemTagsGroupBox.Enabled = True
 		'NOTE: There is no automatic data-binding with TagsWidget, so manually bind from object to widget here.
 		Me.theTagsWidget.ItemTags = Me.theSelectedItem.Tags
-		Me.UpdateItemTagsLabel()
+		Me.UpdateItemTagsTabPageText()
 		Me.theTagsWidget.Enabled = editableNonTextWidgetsAreEnabled
+
+		'NOTE: There is no automatic data-binding with TagsWidget, so manually bind from object to widget here.
+		Me.theKeyValuesWidget.ItemKeyValues = Me.theSelectedItem.KeyValues
+		Me.UpdateItemOptionsTabPageText()
+		'Me.theKeyValuesWidget.Enabled = editableNonTextWidgetsAreEnabled
+		'TODO: Enable above line and disable below line when done testing keyvalues.
+		Me.theKeyValuesWidget.Enabled = True
 
 		Me.theWorkshopPageLink = AppConstants.WorkshopLinkStart + Me.theSelectedItem.ID
 
@@ -1206,23 +1252,23 @@ Public Class PublishUserControl
 		If Not Me.theSelectedItem.IsChanged Then
 			If Me.theSelectedItem.IsTemplate Then
 				Me.theSelectedItem.IsChanged = True
-				Me.UpdateItemGroupBoxLabel()
+				'Me.UpdateItemContentTabPageText()
 			ElseIf Me.theSelectedItem.IsPublished Then
 				Me.theSelectedItem.IsChanged = True
 				Me.ChangePublishedItemIntoChangedItem(Me.theSelectedItem)
-				Me.UpdateItemGroupBoxLabel()
+				'Me.UpdateItemContentTabPageText()
 			End If
 		End If
 		Me.theSelectedItem.Updated = MathModule.DateTimeToUnixTimeStamp(DateTime.Now())
 		Me.UpdateItemDetailButtons()
 	End Sub
 
-	Private Sub UpdateItemGroupBoxLabel()
+	Private Sub UpdateItemContentTabPageText(ByVal contentIsChanged As Boolean)
 		Dim changedMarker As String = ""
-		If Me.theSelectedItem.IsChanged AndAlso Not Me.theSelectedItem.IsDraft Then
+		If contentIsChanged AndAlso Not Me.theSelectedItem.IsDraft Then
 			changedMarker = AppConstants.ChangedMarker
 		End If
-		Me.ItemGroupBox.Text = "Item" + changedMarker
+		Me.ContentTabPage.Text = "Content" + changedMarker
 	End Sub
 
 	Private Sub UpdateItemTitleLabel()
@@ -1233,6 +1279,7 @@ Public Class PublishUserControl
 			changedMarker = AppConstants.ChangedMarker
 		End If
 		Me.ItemTitleLabel.Text = "Title" + changedMarker + " (" + titleSize.ToString() + " / " + titleSizeMax.ToString() + " characters max):"
+		Me.UpdateItemContentTabPageText(Me.theSelectedItem.TitleIsChanged)
 	End Sub
 
 	Private Sub UpdateItemDescriptionLabel()
@@ -1243,6 +1290,7 @@ Public Class PublishUserControl
 			changedMarker = AppConstants.ChangedMarker
 		End If
 		Me.ItemDescriptionLabel.Text = "Description" + changedMarker + " (" + descriptionSize.ToString() + " / " + descriptionSizeMax.ToString() + " characters max):"
+		Me.UpdateItemContentTabPageText(Me.theSelectedItem.DescriptionIsChanged)
 	End Sub
 
 	Private Sub UpdateItemChangeNoteLabel()
@@ -1253,6 +1301,7 @@ Public Class PublishUserControl
 			changedMarker = AppConstants.ChangedMarker
 		End If
 		Me.ItemChangeNoteLabel.Text = "Change Note" + changedMarker + " (" + changeNoteSize.ToString() + " / " + changeNoteSizeMax.ToString() + " characters max):"
+		Me.UpdateItemContentTabPageText(Me.theSelectedItem.ChangeNoteIsChanged)
 	End Sub
 
 	Private Sub UpdateItemContentLabel()
@@ -1299,6 +1348,7 @@ Public Class PublishUserControl
 			Me.ItemContentFolderOrFileLabel.Text += " (" + contentFileSizeText + ")"
 		End If
 		Me.ItemContentFolderOrFileLabel.Text += ":"
+		Me.UpdateItemContentTabPageText(Me.theSelectedItem.ContentPathFolderOrFileNameIsChanged)
 	End Sub
 
 	Private Sub UpdateItemPreviewImageLabel()
@@ -1321,6 +1371,7 @@ Public Class PublishUserControl
 			Me.ItemPreviewImageLabel.Text += " (" + previewImageSizeText + ")"
 		End If
 		Me.ItemPreviewImageLabel.Text += ":"
+		Me.UpdateItemContentTabPageText(Me.theSelectedItem.PreviewImagePathFileNameIsChanged)
 	End Sub
 
 	Private Sub UpdateItemPreviewImageBox()
@@ -1381,26 +1432,26 @@ Public Class PublishUserControl
 
 	' Copy the image into memory, so the image file can be deleted.
 	Private Sub DeleteInUseTempPreviewImageFile(ByVal itemPreviewImagePathFileName As String, ByVal itemID As String)
-        Dim img As Image = Nothing
+		Dim img As Image = Nothing
 
-        Try
-            If File.Exists(itemPreviewImagePathFileName) Then
-                img = Image.FromFile(itemPreviewImagePathFileName)
-                If Me.ItemPreviewImagePictureBox.Image IsNot Nothing Then
-                    Me.ItemPreviewImagePictureBox.Image.Dispose()
-                End If
-                Me.ItemPreviewImagePictureBox.Image = New Bitmap(img)
-                img.Dispose()
-            End If
-        Catch ex As Exception
-            If img IsNot Nothing Then
-                img.Dispose()
-                img = Nothing
-            End If
-        End Try
+		Try
+			If File.Exists(itemPreviewImagePathFileName) Then
+				img = Image.FromFile(itemPreviewImagePathFileName)
+				If Me.ItemPreviewImagePictureBox.Image IsNot Nothing Then
+					Me.ItemPreviewImagePictureBox.Image.Dispose()
+				End If
+				Me.ItemPreviewImagePictureBox.Image = New Bitmap(img)
+				img.Dispose()
+			End If
+		Catch ex As Exception
+			If img IsNot Nothing Then
+				img.Dispose()
+				img = Nothing
+			End If
+		End Try
 
-        Me.DeleteTempPreviewImageFile(itemPreviewImagePathFileName, itemID)
-    End Sub
+		Me.DeleteTempPreviewImageFile(itemPreviewImagePathFileName, itemID)
+	End Sub
 
 	Private Sub DeleteTempPreviewImageFile(ByVal itemPreviewImagePathFileName As String, ByVal itemID As String)
 		Dim previewImagePathFileName As String = Me.GetPreviewImagePathFileName(itemPreviewImagePathFileName, itemID, 0)
@@ -1437,14 +1488,23 @@ Public Class PublishUserControl
 			changedMarker = AppConstants.ChangedMarker
 		End If
 		Me.ItemVisibilityLabel.Text = "Visibility" + changedMarker + ":"
+		Me.UpdateItemContentTabPageText(Me.theSelectedItem.VisibilityIsChanged)
 	End Sub
 
-	Private Sub UpdateItemTagsLabel()
+	Private Sub UpdateItemTagsTabPageText()
 		Dim changedMarker As String = ""
 		If Me.theSelectedItem.TagsIsChanged AndAlso Not Me.theSelectedItem.IsDraft Then
 			changedMarker = AppConstants.ChangedMarker
 		End If
-		Me.ItemTagsGroupBox.Text = "Tags" + changedMarker
+		Me.TagsTabPage.Text = "Tags" + changedMarker
+	End Sub
+
+	Private Sub UpdateItemOptionsTabPageText()
+		Dim changedMarker As String = ""
+		If Me.theSelectedItem.KeyValuesIsChanged AndAlso Not Me.theSelectedItem.IsDraft Then
+			changedMarker = AppConstants.ChangedMarker
+		End If
+		Me.OptionsTabPage.Text = "Options" + changedMarker
 	End Sub
 
 	Private Sub UpdateItemDetailButtons()
@@ -1687,7 +1747,7 @@ Public Class PublishUserControl
 	Private Sub DeletePublishedItemFromWorkshop()
 		Me.AppIdComboBox.Enabled = False
 		Me.ItemsDataGridView.Enabled = False
-		Me.ItemGroupBox.Enabled = False
+		Me.ItemTabControl.Enabled = False
 		'Me.DeleteItemButton.Enabled = False
 		Me.PublishItemButton.Enabled = False
 		If Me.LogTextBox.Text <> "" Then
@@ -1697,10 +1757,10 @@ Public Class PublishUserControl
 		Me.theBackgroundSteamPipe.DeletePublishedItemFromWorkshop(AddressOf Me.DeletePublishedItemFromWorkshop_ProgressChanged, AddressOf Me.DeletePublishedItemFromWorkshop_RunWorkerCompleted, Me.theSelectedItem.ID)
 	End Sub
 
-	Private Sub GetPublishedItemDetailsViaSteamRemoteStorage(ByVal itemID As String, ByVal action As String)
+	Private Sub GetPublishedItemDetails(ByVal itemID As String, ByVal action As String)
 		Me.AppIdComboBox.Enabled = False
 		Me.ItemsDataGridView.Enabled = False
-		Me.ItemGroupBox.Enabled = False
+		Me.ItemTabControl.Enabled = False
 		Me.PublishItemButton.Enabled = False
 		If Me.LogTextBox.Text <> "" Then
 			Me.LogTextBox.AppendText("------" + vbCrLf)
@@ -1721,7 +1781,7 @@ Public Class PublishUserControl
 		'NOTE: Need to do this after the template-to-draft change above.
 		Me.AppIdComboBox.Enabled = False
 		Me.ItemsDataGridView.Enabled = False
-		Me.ItemGroupBox.Enabled = False
+		Me.ItemTabControl.Enabled = False
 		'Me.ItemTitleTextBox.Enabled = False
 		'Me.ItemDescriptionTextBox.Enabled = False
 		'Me.ItemChangeNoteTextBox.Enabled = False
@@ -1784,7 +1844,8 @@ Public Class PublishUserControl
 		Me.ItemChangeNoteTextBox.Enabled = True
 		Me.ItemContentPathFileNameTextBox.Enabled = True
 		Me.ItemPreviewImagePathFileNameTextBox.Enabled = True
-		Me.ItemTagsGroupBox.Enabled = True
+		Me.theTagsWidget.Enabled = True
+		Me.theKeyValuesWidget.Enabled = True
 		Me.UpdateItemDetailWidgets()
 	End Sub
 
@@ -1849,6 +1910,7 @@ Public Class PublishUserControl
 	Private theSelectedGameIsStillUpdatingInterface As Boolean
 
 	Private theTagsWidget As Base_TagsUserControl
+	Private theKeyValuesWidget As Base_KeyValuesUserControl
 
 	Private theItemBindingSource As BindingSource
 

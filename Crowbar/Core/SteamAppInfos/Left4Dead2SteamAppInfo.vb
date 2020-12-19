@@ -14,6 +14,9 @@ Public Class Left4Dead2SteamAppInfo
 		Me.CanUseContentFolderOrFile = False
 		Me.ContentFileExtensionsAndDescriptions.Add("vpk", "Source Engine VPK Files")
 		Me.TagsControlType = GetType(Left4Dead2TagsUserControl)
+#If DEBUG Then
+		Me.KeyValuesControlType = GetType(ObsidianConflictKeyValuesUserControl)
+#End If
 	End Sub
 
 End Class
