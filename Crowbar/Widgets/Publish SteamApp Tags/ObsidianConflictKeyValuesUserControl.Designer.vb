@@ -41,6 +41,7 @@ Partial Class ObsidianConflictKeyValuesUserControl
 		Me.CheckBoxEx2 = New Crowbar.CheckBoxEx()
 		Me.CheckBoxEx3 = New Crowbar.CheckBoxEx()
 		Me.OverrideModeCheckBox = New Crowbar.CheckBoxEx()
+		Me.DebugTextBox = New System.Windows.Forms.TextBox()
 		Me.MountDependenciesGroupBox.SuspendLayout()
 		Me.MapPanel.SuspendLayout()
 		Me.SuspendLayout()
@@ -68,7 +69,6 @@ Partial Class ObsidianConflictKeyValuesUserControl
 		Me.MapPanel.Controls.Add(Me.LostCoastCheckBox)
 		Me.MapPanel.Controls.Add(Me.Ep2CheckBox)
 		Me.MapPanel.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.MapPanel.Enabled = False
 		Me.MapPanel.Location = New System.Drawing.Point(3, 18)
 		Me.MapPanel.Name = "MapPanel"
 		Me.MapPanel.Size = New System.Drawing.Size(219, 98)
@@ -257,11 +257,21 @@ Partial Class ObsidianConflictKeyValuesUserControl
 		Me.OverrideModeCheckBox.Text = "Override mode"
 		Me.OverrideModeCheckBox.UseVisualStyleBackColor = True
 		'
+		'DebugTextBox
+		'
+		Me.DebugTextBox.Location = New System.Drawing.Point(385, 60)
+		Me.DebugTextBox.Multiline = True
+		Me.DebugTextBox.Name = "DebugTextBox"
+		Me.DebugTextBox.Size = New System.Drawing.Size(227, 155)
+		Me.DebugTextBox.TabIndex = 20
+		Me.DebugTextBox.Tag = ""
+		'
 		'ObsidianConflictKeyValuesUserControl
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.AutoScroll = True
+		Me.Controls.Add(Me.DebugTextBox)
 		Me.Controls.Add(Me.OverrideModeCheckBox)
 		Me.Controls.Add(Me.CheckBoxEx3)
 		Me.Controls.Add(Me.CheckBoxEx2)
@@ -300,4 +310,5 @@ Partial Class ObsidianConflictKeyValuesUserControl
 	Friend WithEvents CheckBoxEx2 As CheckBoxEx
 	Friend WithEvents CheckBoxEx3 As CheckBoxEx
 	Friend WithEvents OverrideModeCheckBox As CheckBoxEx
+	Friend WithEvents DebugTextBox As TextBox
 End Class
