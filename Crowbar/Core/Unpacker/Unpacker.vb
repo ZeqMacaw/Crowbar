@@ -1161,8 +1161,11 @@ Public Class Unpacker
 			'If Not Me.theUnpackedTempPathsAndPathFileNames.Contains(entry.thePathFileName) Then
 			'	Me.theUnpackedTempPathsAndPathFileNames.Add(entry.thePathFileName)
 			'End If
+			relativePathFileName = FileManager.GetRelativePathFileName(Me.theOutputPath, outputPathFileName)
+			Me.theUnpackedRelativePathsAndFileNames.Add(relativePathFileName)
+
 			If Path.GetExtension(outputPathFileName) = ".mdl" Then
-				Me.theUnpackedMdlFiles.Add(FileManager.GetRelativePathFileName(Me.theOutputPath, outputPathFileName))
+				Me.theUnpackedMdlFiles.Add(relativePathFileName)
 			End If
 
 			If entry.thePathFileName.StartsWith("<") Then

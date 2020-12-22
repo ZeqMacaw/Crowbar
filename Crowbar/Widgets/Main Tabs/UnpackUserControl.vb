@@ -1366,6 +1366,9 @@ Public Class UnpackUserControl
 		AddHandler TheApp.Unpacker.ProgressChanged, AddressOf Me.UnpackerBackgroundWorker_ProgressChanged
 		AddHandler TheApp.Unpacker.RunWorkerCompleted, AddressOf Me.UnpackerBackgroundWorker_RunWorkerCompleted
 
+		'NOTE: [21-Dec-2020] Must unbind this combobox to prevent slowdown on second and subsequent unpacks.
+		Me.UnpackedFilesComboBox.DataSource = Nothing
+
 		If unpackerAction = ArchiveAction.ExtractToTemp Then
 			Dim message As String = TheApp.Unpacker.RunSynchronous(unpackerAction, archivePathFileNameToEntryIndexMap, outputPathIsExtendedWithPackageName, selectedRelativeOutputPath)
 			If message <> "" Then
