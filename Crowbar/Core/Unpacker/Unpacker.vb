@@ -1157,10 +1157,8 @@ Public Class Unpacker
 			If Not Me.theUnpackedPaths.Contains(Me.theOutputPath) Then
 				Me.theUnpackedPaths.Add(Me.theOutputPath)
 			End If
-			Me.theUnpackedRelativePathsAndFileNames.Add(FileManager.GetRelativePathFileName(Me.theOutputPath, outputPathFileName))
-			'If Not Me.theUnpackedTempPathsAndPathFileNames.Contains(entry.thePathFileName) Then
-			'	Me.theUnpackedTempPathsAndPathFileNames.Add(entry.thePathFileName)
-			'End If
+
+			Dim relativePathFileName As String = ""
 			relativePathFileName = FileManager.GetRelativePathFileName(Me.theOutputPath, outputPathFileName)
 			Me.theUnpackedRelativePathsAndFileNames.Add(relativePathFileName)
 
