@@ -169,9 +169,10 @@ Public Class SteamPipe
 		Return result
 	End Function
 
-	Public Function Crowbar_DownloadContentFolderOrFile(ByVal itemID_text As String, ByRef contentFileBytes As Byte(), ByRef itemUpdated_Text As String, ByRef itemTitle As String, ByRef contentFolderOrFileName As String) As String
+	Public Function Crowbar_DownloadContentFolderOrFile(ByVal itemID_text As String, ByVal targetPath As String, ByRef contentFileBytes As Byte(), ByRef itemUpdated_Text As String, ByRef itemTitle As String, ByRef contentFolderOrFileName As String, ByRef appID_Text As String) As String
 		Me.theStreamWriter.WriteLine("Crowbar_DownloadContentFolderOrFile")
 		Me.theStreamWriter.WriteLine(itemID_text)
+		Me.theStreamWriter.WriteLine(targetPath)
 
 		Dim result As String = Me.theStreamReader.ReadLine()
 		If result = "success" Then
@@ -216,6 +217,7 @@ Public Class SteamPipe
 			itemUpdated_Text = Me.theStreamReader.ReadLine()
 			itemTitle = Me.ReadMultipleLinesOfText(Me.theStreamReader)
 			contentFolderOrFileName = Me.theStreamReader.ReadLine()
+			appID_Text = Me.theStreamReader.ReadLine()
 
 			Dim debug As Integer = 4242
 		Else
@@ -583,7 +585,44 @@ Public Class SteamPipe
 	Public Function SteamUGC_SubmitItemUpdate(ByVal changeNote As String) As String
 		Me.theStreamWriter.WriteLine("SteamUGC_SubmitItemUpdate")
 		Me.WriteTextThatMightHaveMultipleLines(Me.theStreamWriter, changeNote)
-		Dim result As String = Me.theStreamReader.ReadLine()
+
+		Dim result As String = ""
+		Dim outputInfo As New BackgroundSteamPipe.PublishItemProgressInfo()
+		Dim previousOutputInfo As New BackgroundSteamPipe.PublishItemProgressInfo()
+
+		While True
+			result = Me.theStreamReader.ReadLine()
+			'NOTE: The Sleep() is needed to prevent Crowbar Publish locking up when publishing to a workshop via SteamUGC.
+			'      Unfortunately, I do not understand how this prevents lock up considering that each ReadLine() waits for available input.
+			Threading.Thread.Sleep(1)
+			If result = "OnSubmitItemUpdate" Then
+				result = Me.theStreamReader.ReadLine()
+				Exit While
+			Else
+				'Threading.Thread.Sleep(1)
+				outputInfo.Status = result
+				outputInfo.UploadedByteCount = CULng(Me.theStreamReader.ReadLine())
+				outputInfo.TotalUploadedByteCount = CULng(Me.theStreamReader.ReadLine())
+				'Threading.Thread.Sleep(1)
+				If outputInfo.Status = "invalid" Then
+					Dim debug As Integer = 4242
+				Else
+					'Threading.Thread.Sleep(1)
+					If previousOutputInfo.Status <> outputInfo.Status OrElse previousOutputInfo.UploadedByteCount <> outputInfo.UploadedByteCount OrElse previousOutputInfo.TotalUploadedByteCount <> outputInfo.TotalUploadedByteCount Then
+						'Threading.Thread.Sleep(1)
+						'If outputInfo.TotalUploadedByteCount > 0 Then
+						Me.theBackgroundWorker.ReportProgress(2, outputInfo)
+
+						'Threading.Thread.Sleep(1)
+						previousOutputInfo.Status = outputInfo.Status
+						previousOutputInfo.UploadedByteCount = outputInfo.UploadedByteCount
+						previousOutputInfo.TotalUploadedByteCount = outputInfo.TotalUploadedByteCount
+						'End If
+					End If
+				End If
+			End If
+		End While
+
 		Return result
 	End Function
 
@@ -649,12 +688,14 @@ Public Class SteamPipe
 
 		Dim textLineCount As Integer
 		textLineCount = CInt(sr.ReadLine())
-		'NOTE: Do not add CRLF to last line.
-		For i As Integer = 0 To textLineCount - 2
-			'NOTE: Add CRLF because TextBoxes use it for newlines.
-			text += sr.ReadLine() + vbCrLf
-		Next
-		text += sr.ReadLine()
+		If textLineCount > 0 Then
+			'NOTE: Do not add CRLF to last line.
+			For i As Integer = 0 To textLineCount - 2
+				'NOTE: Add CRLF because TextBoxes use it for newlines.
+				text += sr.ReadLine() + vbCrLf
+			Next
+			text += sr.ReadLine()
+		End If
 
 		Return text
 	End Function

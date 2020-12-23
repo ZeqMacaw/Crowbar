@@ -8,12 +8,6 @@ Public Class ViewUserControl
 	Public Sub New()
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
-
-		''NOTE: Try-Catch is needed so that widget will be shown in MainForm without raising exception.
-		'Try
-		'	Me.Init()
-		'Catch
-		'End Try
 	End Sub
 
 	'UserControl overrides dispose to clean up the component list.
@@ -56,16 +50,20 @@ Public Class ViewUserControl
 		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 
 		'RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
-		RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		If Me.MdlPathFileNameTextBox.DataBindings("Text") IsNot Nothing Then
+			RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		End If
 		Me.MdlPathFileNameTextBox.DataBindings.Clear()
 
 		Me.OverrideMdlVersionComboBox.DataBindings.Clear()
 
 		Me.FreeDataViewer()
 		Me.FreeModelViewerWithModel()
-		For Each aModelViewer As Viewer In Me.theModelViewers
-			Me.FreeModelViewer(aModelViewer)
-		Next
+		If Me.theModelViewers IsNot Nothing Then
+			For Each aModelViewer As Viewer In Me.theModelViewers
+				Me.FreeModelViewer(aModelViewer)
+			Next
+		End If
 	End Sub
 
 #End Region
@@ -78,11 +76,6 @@ Public Class ViewUserControl
 		End Get
 		Set(value As ViewerType)
 			Me.theViewerType = value
-			'NOTE: Try-Catch is needed so that widget will be shown in MainForm Designer without raising exception.
-			Try
-				Me.Init()
-			Catch
-			End Try
 		End Set
 	End Property
 
@@ -111,6 +104,15 @@ Public Class ViewUserControl
 #End Region
 
 #Region "Widget Event Handlers"
+
+	Private Sub UpdateUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.MdlPathFileNameTextBox, Me.BrowseForMdlFileButton)
+
+		If Not Me.DesignMode Then
+			Me.Init()
+		End If
+	End Sub
 
 #End Region
 

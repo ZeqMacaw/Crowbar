@@ -4207,26 +4207,19 @@ Public Class SourceMdlFile49
 		'Me.theMdlFileData.theFlexFrames.Add(aFlexFrame)
 
 		If Me.theMdlFileData.theFlexDescs IsNot Nothing AndAlso Me.theMdlFileData.theFlexDescs.Count > 0 Then
-			'Dim flexDescToMeshIndexes As List(Of List(Of Integer))
 			Dim flexDescToFlexFrames As List(Of List(Of FlexFrame))
 			Dim meshVertexIndexStart As Integer
 			Dim cumulativebodyPartVertexIndexStart As Integer
 
-			'flexDescToMeshIndexes = New List(Of List(Of Integer))(Me.theMdlFileData.theFlexDescs.Count)
-			'For x As Integer = 0 To Me.theMdlFileData.theFlexDescs.Count - 1
-			'	Dim meshIndexList As New List(Of Integer)()
-			'	flexDescToMeshIndexes.Add(meshIndexList)
-			'Next
-
-			flexDescToFlexFrames = New List(Of List(Of FlexFrame))(Me.theMdlFileData.theFlexDescs.Count)
-			For x As Integer = 0 To Me.theMdlFileData.theFlexDescs.Count - 1
-				Dim flexFrameList As New List(Of FlexFrame)()
-				flexDescToFlexFrames.Add(flexFrameList)
-			Next
-
 			cumulativebodyPartVertexIndexStart = 0
 			For bodyPartIndex As Integer = 0 To Me.theMdlFileData.theBodyParts.Count - 1
 				aBodyPart = Me.theMdlFileData.theBodyParts(bodyPartIndex)
+
+				flexDescToFlexFrames = New List(Of List(Of FlexFrame))(Me.theMdlFileData.theFlexDescs.Count)
+				For x As Integer = 0 To Me.theMdlFileData.theFlexDescs.Count - 1
+					Dim flexFrameList As New List(Of FlexFrame)()
+					flexDescToFlexFrames.Add(flexFrameList)
+				Next
 
 				aBodyPart.theFlexFrames = New List(Of FlexFrame)()
 				'NOTE: Create the defaultflex.

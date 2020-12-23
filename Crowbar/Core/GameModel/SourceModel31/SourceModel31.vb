@@ -135,7 +135,7 @@ Public Class SourceModel31
 		Dim status As AppEnums.FilesFoundFlags = FilesFoundFlags.AllFilesFound
 
 		If Not Me.theMdlFileDataGeneric.theMdlFileOnlyHasAnimations Then
-			'Me.thePhyPathFileName = Path.ChangeExtension(Me.theMdlPathFileName, ".phy")
+			Me.thePhyPathFileName = Path.ChangeExtension(Me.theMdlPathFileName, ".phy")
 
 			Me.theVtxPathFileName = Path.ChangeExtension(Me.theMdlPathFileName, ".dx11.vtx")
 			If Not File.Exists(Me.theVtxPathFileName) Then
@@ -541,21 +541,21 @@ Public Class SourceModel31
 		Return status
 	End Function
 
-	'Protected Overrides Sub WritePhysicsMeshSmdFile()
-	'	Dim physicsMeshSmdFile As New SourceSmdFile31(Me.theOutputFileTextWriter, Me.theMdlFileData, Me.thePhyFileData)
+	Protected Overrides Sub WritePhysicsMeshSmdFile()
+		Dim physicsMeshSmdFile As New SourceSmdFile31(Me.theOutputFileTextWriter, Me.theMdlFileData, Me.thePhyFileDataGeneric)
 
-	'	Try
-	'		physicsMeshSmdFile.WriteHeaderComment()
+		Try
+			physicsMeshSmdFile.WriteHeaderComment()
 
-	'		physicsMeshSmdFile.WriteHeaderSection()
-	'		physicsMeshSmdFile.WriteNodesSection(-1)
-	'		physicsMeshSmdFile.WriteSkeletonSection(-1)
-	'		physicsMeshSmdFile.WriteTrianglesSectionForPhysics()
-	'	Catch ex As Exception
-	'		Dim debug As Integer = 4242
-	'	Finally
-	'	End Try
-	'End Sub
+			physicsMeshSmdFile.WriteHeaderSection()
+			physicsMeshSmdFile.WriteNodesSection(-1)
+			physicsMeshSmdFile.WriteSkeletonSection(-1)
+			physicsMeshSmdFile.WriteTrianglesSectionForPhysics()
+		Catch ex As Exception
+			Dim debug As Integer = 4242
+		Finally
+		End Try
+	End Sub
 
 	Protected Overrides Sub WriteBoneAnimationSmdFile(ByVal aSequenceDesc As SourceMdlSequenceDescBase, ByVal anAnimationDesc As SourceMdlAnimationDescBase)
 		Dim smdFile As New SourceSmdFile31(Me.theOutputFileTextWriter, Me.theMdlFileData)

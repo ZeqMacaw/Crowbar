@@ -7,18 +7,8 @@ Public Class DecompileUserControl
 
 	Public Sub New()
 		MyBase.New()
-
-		'Me.Font = New Font(SystemFonts.MessageBoxFont.Name, 8.25)
-
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
-
-		'NOTE: Try-Catch is needed so that widget will be shown in MainForm without raising exception.
-		Try
-			Me.Init()
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		End Try
 	End Sub
 
 #End Region
@@ -30,7 +20,7 @@ Public Class DecompileUserControl
 
 		Me.OutputPathTextBox.DataBindings.Add("Text", TheApp.Settings, "DecompileOutputFullPath", False, DataSourceUpdateMode.OnValidation)
 		Me.OutputSubfolderTextBox.DataBindings.Add("Text", TheApp.Settings, "DecompileOutputSubfolderName", False, DataSourceUpdateMode.OnValidation)
-		Me.UpdateOutputPathComboBox()
+		Me.InitOutputPathComboBox()
 		Me.UpdateOutputPathWidgets()
 
 		Me.InitDecompilerOptions()
@@ -143,10 +133,14 @@ Public Class DecompileUserControl
 #Region "Widget Event Handlers"
 
 	Private Sub DecompileUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
-		'NOTE: This code prevents Visual Studio often inexplicably extending the right side of these textboxes.
-		Me.MdlPathFileNameTextBox.Size = New System.Drawing.Size(Me.BrowseForMdlPathFolderOrFileNameButton.Left - Me.BrowseForMdlPathFolderOrFileNameButton.Margin.Left - Me.MdlPathFileNameTextBox.Margin.Right - Me.MdlPathFileNameTextBox.Left, 21)
-		Me.OutputPathTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputPathTextBox.Margin.Right - Me.OutputPathTextBox.Left, 21)
-		Me.OutputSubfolderTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputSubfolderTextBox.Margin.Right - Me.OutputSubfolderTextBox.Left, 21)
+		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.MdlPathFileNameTextBox, Me.BrowseForMdlPathFolderOrFileNameButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputPathTextBox, Me.BrowseForOutputPathButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputSubfolderTextBox, Me.BrowseForOutputPathButton)
+
+		If Not Me.DesignMode Then
+			Me.Init()
+		End If
 	End Sub
 
 #End Region
@@ -256,6 +250,20 @@ Public Class DecompileUserControl
 	'Private Sub GotoOutputButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
 	'	FileManager.OpenWindowsExplorer(Me.OutputFullPathTextBox.Text)
 	'End Sub
+
+	Private Sub OutputPathTextBox_DragDrop(sender As Object, e As DragEventArgs) Handles OutputPathTextBox.DragDrop
+		Dim pathFileNames() As String = CType(e.Data.GetData(DataFormats.FileDrop), String())
+		Dim pathFileName As String = pathFileNames(0)
+		If Directory.Exists(pathFileName) Then
+			TheApp.Settings.DecompileOutputFullPath = pathFileName
+		End If
+	End Sub
+
+	Private Sub OutputPathTextBox_DragEnter(sender As Object, e As DragEventArgs) Handles OutputPathTextBox.DragEnter
+		If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+			e.Effect = DragDropEffects.Copy
+		End If
+	End Sub
 
 	Private Sub OutputPathTextBox_Validated(sender As Object, e As EventArgs) Handles OutputPathTextBox.Validated
 		Me.UpdateOutputPathTextBox()
@@ -368,7 +376,7 @@ Public Class DecompileUserControl
 	'	End If
 	'End Sub
 
-	Private Sub UpdateOutputPathComboBox()
+	Private Sub InitOutputPathComboBox()
 		Dim anEnumList As IList
 
 		anEnumList = EnumHelper.ToList(GetType(DecompileOutputPathOptions))
@@ -379,7 +387,8 @@ Public Class DecompileUserControl
 			Me.OutputPathComboBox.DataSource = anEnumList
 			Me.OutputPathComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "DecompileOutputFolderOption", False, DataSourceUpdateMode.OnPropertyChanged)
 
-			Me.OutputPathComboBox.SelectedIndex = 0
+			' Do not use this line because it will override the value automatically assigned by the data bindings above.
+			'Me.OutputPathComboBox.SelectedIndex = 0
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		End Try

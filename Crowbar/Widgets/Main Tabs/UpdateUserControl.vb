@@ -70,6 +70,12 @@ Public Class UpdateUserControl
 #Region "Widget Event Handlers"
 
 	Private Sub UpdateUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DownloadFolderTextBox, Me.BrowseForDownloadFolderButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DownloadProgressBarEx, Me.CancelDownloadButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.UpdateFolderTextBox, Me.BrowseForUpdateFolderButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.UpdateProgressBarEx, Me.CancelUpdateButton)
+
 		If Not Me.DesignMode Then
 			Me.Init()
 		End If
@@ -81,6 +87,20 @@ Public Class UpdateUserControl
 
 	Private Sub CheckForUpdateButton_Click(sender As Object, e As EventArgs) Handles CheckForUpdateButton.Click
 		Me.CheckForUpdate()
+	End Sub
+
+	Private Sub DownloadFolderTextBox_DragDrop(sender As Object, e As DragEventArgs) Handles DownloadFolderTextBox.DragDrop
+		Dim pathFileNames() As String = CType(e.Data.GetData(DataFormats.FileDrop), String())
+		Dim pathFileName As String = pathFileNames(0)
+		If Directory.Exists(pathFileName) Then
+			TheApp.Settings.UpdateDownloadPath = pathFileName
+		End If
+	End Sub
+
+	Private Sub DownloadFolderTextBox_DragEnter(sender As Object, e As DragEventArgs) Handles DownloadFolderTextBox.DragEnter
+		If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+			e.Effect = DragDropEffects.Copy
+		End If
 	End Sub
 
 	Private Sub BrowseForDownloadFolderButton_Click(sender As Object, e As EventArgs) Handles BrowseForDownloadFolderButton.Click
@@ -101,6 +121,20 @@ Public Class UpdateUserControl
 
 	Private Sub GotoDownloadFileButton_Click(sender As Object, e As EventArgs) Handles GotoDownloadFileButton.Click
 		Me.GotoDownloadFile()
+	End Sub
+
+	Private Sub UpdateFolderTextBox_DragDrop(sender As Object, e As DragEventArgs) Handles UpdateFolderTextBox.DragDrop
+		Dim pathFileNames() As String = CType(e.Data.GetData(DataFormats.FileDrop), String())
+		Dim pathFileName As String = pathFileNames(0)
+		If Directory.Exists(pathFileName) Then
+			TheApp.Settings.UpdateUpdateDownloadPath = pathFileName
+		End If
+	End Sub
+
+	Private Sub UpdateFolderTextBox_DragEnter(sender As Object, e As DragEventArgs) Handles UpdateFolderTextBox.DragEnter
+		If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+			e.Effect = DragDropEffects.Copy
+		End If
 	End Sub
 
 	Private Sub BrowseForUpdateFolderButton_Click(sender As Object, e As EventArgs) Handles BrowseForUpdateFolderButton.Click

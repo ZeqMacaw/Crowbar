@@ -49,29 +49,26 @@ Public Class SourceQcFile
 		Return qcModelName
 	End Function
 
-	Public Sub InsertAnIncludeFileCommand(ByVal qcPathFileName As String, ByVal includedPathFileName As String)
+	Public Function InsertAnIncludeFileCommand(ByVal qcPathFileName As String, ByVal qciPathFileName As String) As String
+		Dim line As String = ""
+
 		Using outputFileStream As StreamWriter = File.AppendText(qcPathFileName)
-			If File.Exists(includedPathFileName) Then
-				Dim qciFileInfo As New FileInfo(includedPathFileName)
-				If qciFileInfo.Length > 0 Then
-					Dim line As String = ""
+			outputFileStream.WriteLine()
 
-					outputFileStream.WriteLine()
-
-					If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
-						line += "$Include"
-					Else
-						line += "$include"
-					End If
-					line += " "
-					line += """"
-					line += FileManager.GetRelativePathFileName(qcPathFileName, includedPathFileName)
-					line += """"
-					outputFileStream.WriteLine(line)
-				End If
+			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+				line += "$Include"
+			Else
+				line += "$include"
 			End If
+			line += " "
+			line += """"
+			line += FileManager.GetRelativePathFileName(FileManager.GetPath(qcPathFileName), qciPathFileName)
+			line += """"
+			outputFileStream.WriteLine(line)
 		End Using
-	End Sub
+
+		Return line
+	End Function
 
 #End Region
 
