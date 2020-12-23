@@ -107,8 +107,6 @@ Public Class GarrysModSteamAppInfo
 
 		Dim gmaPathFileName As String
 		If Directory.Exists(item.ContentPathFolderOrFileName) Then
-			Me.theBackgroundWorker.ReportProgress(0, "Creating GMA file." + vbCrLf)
-
 			'NOTE: File name is all lowercase in case Garry's Mod needs that on Linux.
 			If item.IsDraft Then
 				gmaPathFileName = Path.Combine(Me.theTempCrowbarPath, "new_item_via_crowbar.gma")
@@ -126,8 +124,17 @@ Public Class GarrysModSteamAppInfo
 			steamPipe.Shut()
 			If appInstallPath <> "" Then
 				Dim garrysModBinPath As String = Path.Combine(appInstallPath, "bin")
-				Dim garrysModPathGmadExe As String = Path.Combine(garrysModBinPath, "gmad.exe")
-				If File.Exists(garrysModPathGmadExe) Then
+				Dim garrysModBinGmadExe As String = Path.Combine(garrysModBinPath, "gmad.exe")
+				Dim garrysModWin64Path As String = Path.Combine(garrysModBinPath, "win64")
+				Dim garrysModWin64PathGmadExe As String = Path.Combine(garrysModWin64Path, "gmad.exe")
+				Dim garrysModGmadExe As String = ""
+				If File.Exists(garrysModWin64PathGmadExe) Then
+					garrysModGmadExe = garrysModWin64PathGmadExe
+				ElseIf File.Exists(garrysModBinGmadExe) Then
+					garrysModGmadExe = garrysModBinGmadExe
+				End If
+				If garrysModGmadExe <> "" Then
+					Me.theBackgroundWorker.ReportProgress(0, "Creating GMA file via """ + garrysModGmadExe + """." + vbCrLf)
 					Dim addonJsonPathFileName As String = Me.CreateAddonJsonFile(item.ContentPathFolderOrFileName, item.Title, item.Tags)
 					If File.Exists(addonJsonPathFileName) Then
 						Dim gmadExeProcess As New Process()
@@ -137,7 +144,7 @@ Public Class GarrysModSteamAppInfo
 							'      On Windows Vista and earlier versions of the Windows operating system, 
 							'      the length of the arguments added to the length of the full path to the process must be less than 2080. 
 							'      On Windows 7 and later versions, the length must be less than 32699. 
-							gmadExeProcess.StartInfo.FileName = garrysModPathGmadExe
+							gmadExeProcess.StartInfo.FileName = garrysModGmadExe
 							'gmad.exe create -folder "<FULL PATH TO ADDON FOLDER>" -out "<FULL PATH TO OUTPUT .gma FILE>"
 							gmadExeProcess.StartInfo.Arguments = "create -folder """ + item.ContentPathFolderOrFileName + """ -out """ + gmaPathFileName + """"
 							gmadExeProcess.StartInfo.RedirectStandardOutput = True
@@ -172,86 +179,12 @@ Public Class GarrysModSteamAppInfo
 						Throw New System.Exception("Crowbar tried to create the file """ + addonJsonPathFileName + """, but the file was not created.")
 					End If
 				Else
-					Throw New System.Exception("Crowbar tried to run """ + garrysModPathGmadExe + """, but the file was not found. Note that Garry's Mod must be installed for this to work.")
+					Throw New System.Exception("Crowbar tried to run """ + garrysModGmadExe + """, but the file was not found. Note that Garry's Mod must be installed for this to work.")
 				End If
 			End If
 		Else
 			gmaPathFileName = item.ContentPathFolderOrFileName
 		End If
-
-		'		Dim gmaFileInfo As New FileInfo(gmaPathFileName)
-		'		Dim uncompressedFileSize As UInt32 = CUInt(gmaFileInfo.Length)
-
-		'		'NOTE: Compress GMA file for Garry's Mod before uploading it.
-		'		'      Calling lzma.exe (outside of Crowbar) works (i.e. subscribed item can be used within Garry's Mod), but does not compress to same bytes as Garry's Mod gmpublish.exe. 
-		'		'      In tests, files were smaller, possibly because lzma.exe has newer compression code than what Garry's Mod gmpublish.exe has.
-
-		'		Dim givenFileNameWithoutExtension As String
-		'		givenFileNameWithoutExtension = Path.GetFileNameWithoutExtension(gmaPathFileName)
-		'		processedPathFileName = Path.Combine(Me.theTempCrowbarPath, givenFileNameWithoutExtension + ".lzma")
-
-		'		Try
-		'			If File.Exists(processedPathFileName) Then
-		'				File.Delete(processedPathFileName)
-		'			End If
-		'		Catch ex As Exception
-		'			Throw New System.Exception("Crowbar tried to delete an old temp file """ + processedPathFileName + """ but Windows gave this message: " + ex.Message)
-		'		End Try
-
-		'		Me.theBackgroundWorker.ReportProgress(0, "Compressing GMA file." + vbCrLf)
-		'		Dim lzmaExeProcess As New Process()
-		'		Try
-		'			lzmaExeProcess.StartInfo.UseShellExecute = False
-		'			'NOTE: From Microsoft website: 
-		'			'      On Windows Vista and earlier versions of the Windows operating system, 
-		'			'      the length of the arguments added to the length of the full path to the process must be less than 2080. 
-		'			'      On Windows 7 and later versions, the length must be less than 32699. 
-		'			lzmaExeProcess.StartInfo.FileName = TheApp.LzmaExePathFileName
-		'			'lzmaExeProcess.StartInfo.Arguments = "e """ + gmaPathFileName + """ """ + processedPathFileName + """ -d25 -fb256"
-		'			'lzmaExeProcess.StartInfo.Arguments = "e """ + givenPathFileName + """ """ + processedPathFileName + """ -d25"
-		'			lzmaExeProcess.StartInfo.Arguments = "e """ + gmaPathFileName + """ """ + processedPathFileName + """ -d25 -fb32"
-		'#If DEBUG Then
-		'			lzmaExeProcess.StartInfo.CreateNoWindow = False
-		'#Else
-		'				lzmaExeProcess.StartInfo.CreateNoWindow = True
-		'#End If
-		'			lzmaExeProcess.Start()
-		'			lzmaExeProcess.WaitForExit()
-		'			lzmaExeProcess.Close()
-		'		Catch ex As Exception
-		'			Throw New System.Exception("Crowbar tried to compress the file """ + gmaPathFileName + """ to """ + processedPathFileName + """ but Windows gave this message: " + ex.Message)
-		'		Finally
-		'			lzmaExeProcess.Close()
-		'		End Try
-
-		'		' Write 8 extra bytes after the lzma compressed data: 4 bytes for uncompressed file size and 4 magic bytes (BEEFCACE), both values in little-endian order.
-		'		Dim outputFileStream As FileStream = Nothing
-		'		Try
-		'			If File.Exists(processedPathFileName) Then
-		'				outputFileStream = New FileStream(processedPathFileName, FileMode.Open)
-		'				If outputFileStream IsNot Nothing Then
-		'					Dim inputFileWriter As BinaryWriter = Nothing
-		'					Try
-		'						inputFileWriter = New BinaryWriter(outputFileStream)
-
-		'						inputFileWriter.Seek(0, SeekOrigin.End)
-		'						inputFileWriter.Write(uncompressedFileSize)
-		'						'-1091581234   BEEFCACE in little endian order: CE CA EF BE
-		'						inputFileWriter.Write(-1091581234)
-		'					Catch
-		'					Finally
-		'						If inputFileWriter IsNot Nothing Then
-		'							inputFileWriter.Close()
-		'						End If
-		'					End Try
-		'				End If
-		'			End If
-		'		Catch
-		'		Finally
-		'			If outputFileStream IsNot Nothing Then
-		'				outputFileStream.Close()
-		'			End If
-		'		End Try
 
 		processedPathFileName = gmaPathFileName
 		Return processedPathFileName
