@@ -4329,7 +4329,8 @@ Public Class SourceQcFile49
 					line = vbTab
 					line += vbTab
 					line += "impact_angle "
-					line += aBone.theJiggleBone.boingImpactAngle.ToString("0.######", TheApp.InternalNumberFormat)
+					' Reverse this: jiggleInfo->data.boingImpactAngle = cos( DEG2RAD( verify_atof( token ) ) );
+					line += MathModule.RadiansToDegrees(Math.Acos(aBone.theJiggleBone.boingImpactAngle)).ToString("0.######", TheApp.InternalNumberFormat)
 					Me.theOutputFileStreamWriter.WriteLine(line)
 					line = vbTab
 					line += vbTab
