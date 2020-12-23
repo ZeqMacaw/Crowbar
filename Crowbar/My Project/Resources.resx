@@ -248,4 +248,10 @@
   <data name="Steamworks_NET" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Steamworks.NET.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="ToggleWordWrapCurrentlyOff" xml:space="preserve">
+    <value>Toggle Word Wrap - currently not wrapping</value>
+  </data>
+  <data name="ToggleWordWrapCurrentlyOn" xml:space="preserve">
+    <value>Toggle Word Wrap - currently wrapping</value>
+  </data>
 </root>
