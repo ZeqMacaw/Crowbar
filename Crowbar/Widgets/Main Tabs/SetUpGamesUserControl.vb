@@ -309,9 +309,8 @@ Public Class SetUpGamesUserControl
 	End Sub
 
 	Private Sub CreateModelsFolderTreeButton_Click(sender As Object, e As EventArgs) Handles CreateModelsFolderTreeButton.Click
-		'TODO: [CreateModelsFolderTreeButton_Click] Call a function in Unpacker to do the unpacking.
 		Dim gamePath As String = FileManager.GetPath(Me.theSelectedGameSetup.GamePathFileName)
-		TheApp.Unpacker.UnpackFolderTreeFromVPK(gamePath)
+		TheApp.Unpacker.UnpackFolderTreeFromGame(gamePath)
 	End Sub
 
 	Private Sub BrowseForSteamAppPathFileNameButton_Click(sender As Object, e As EventArgs) Handles BrowseForSteamAppPathFileNameButton.Click

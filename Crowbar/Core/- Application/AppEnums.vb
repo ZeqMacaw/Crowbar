@@ -109,12 +109,11 @@ Public Module AppEnums
 		VPK
 	End Enum
 
-	Public Enum ArchiveAction
+	Public Enum PackageAction
 		Undefined
-		'Extract
-		ExtractAndOpen
-		ExtractToTemp
-		ExtractFolderTree
+		UnpackAndOpen
+		UnpackToTemp
+		UnpackFolderTree
 		Insert
 		List
 		Pack
