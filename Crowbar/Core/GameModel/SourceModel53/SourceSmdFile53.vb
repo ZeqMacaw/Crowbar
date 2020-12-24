@@ -1169,6 +1169,17 @@ Public Class SourceSmdFile53
 			rotationQuat.w = rot.w
 			angleVector = MathModule.ToEulerAngles(rot)
 
+			'NOTE: Change NaN to 0. This is needed for Titanfall 2 "models\titans\light\titan_light_northstar_prime.mdl" for "ragdoll.smd".
+			If Double.IsNaN(angleVector.x) Then
+				angleVector.x = 0
+			End If
+			If Double.IsNaN(angleVector.y) Then
+				angleVector.y = 0
+			End If
+			If Double.IsNaN(angleVector.z) Then
+				angleVector.z = 0
+			End If
+
 			angleVector.debug_text = "raw48"
 			Return angleVector
 		ElseIf (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_RAWROT2) > 0 Then
