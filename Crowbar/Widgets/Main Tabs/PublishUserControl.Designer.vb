@@ -752,7 +752,7 @@ Partial Class PublishUserControl
 		'
 		Me.ItemLeftMinScrollPanel.Location = New System.Drawing.Point(0, 0)
 		Me.ItemLeftMinScrollPanel.Name = "ItemLeftMinScrollPanel"
-		Me.ItemLeftMinScrollPanel.Size = New System.Drawing.Size(580, 1)
+		Me.ItemLeftMinScrollPanel.Size = New System.Drawing.Size(580, 175)
 		Me.ItemLeftMinScrollPanel.TabIndex = 38
 		'
 		'ItemTagsGroupBox
