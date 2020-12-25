@@ -168,7 +168,7 @@ Public Class UnpackUserControl
 		'      [24-Jun-2019: Is this still relevant? It makes sense to use same object because it can not unpack at same time as list.]
 		'TODO: What happens if the listing takes a long time and what should the gui look like when it does?
 		'      Maybe the DataGridView should be swapped with a textbox that shows something like "Getting a list."
-		TheApp.Unpacker.Run(ArchiveAction.List, Nothing, False, "")
+		TheApp.Unpacker.Run(PackageAction.List, Nothing, False, "")
 	End Sub
 
 #End Region
@@ -277,7 +277,7 @@ Public Class UnpackUserControl
 
 	Private Sub PackageTreeView_ItemDrag(sender As Object, e As ItemDragEventArgs) Handles PackageTreeView.ItemDrag
 		If Me.PackageTreeView.SelectedNode IsNot Nothing Then
-			Me.RunUnpackerToExtractFilesInternal(ArchiveAction.ExtractToTemp, Nothing)
+			Me.RunUnpackerToUnpackFilesInternal(PackageAction.UnpackToTemp, Nothing)
 		End If
 	End Sub
 
@@ -352,7 +352,7 @@ Public Class UnpackUserControl
 
 	Private Sub PackageListView_ItemDrag(sender As Object, e As ItemDragEventArgs) Handles PackageListView.ItemDrag
 		If Me.PackageListView.SelectedItems.Count > 0 Then
-			Me.RunUnpackerToExtractFiles(ArchiveAction.ExtractToTemp, Me.PackageListView.SelectedItems)
+			Me.RunUnpackerToExtractFiles(PackageAction.UnpackToTemp, Me.PackageListView.SelectedItems)
 		End If
 	End Sub
 
@@ -406,9 +406,9 @@ Public Class UnpackUserControl
 
 	Private Sub UnpackButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UnpackButton.Click
 		If Me.PackageListView.SelectedItems.Count > 0 Then
-			Me.RunUnpackerToExtractFiles(ArchiveAction.Unpack, Me.PackageListView.SelectedItems)
+			Me.RunUnpackerToExtractFiles(PackageAction.Unpack, Me.PackageListView.SelectedItems)
 		Else
-			Me.RunUnpackerToExtractFilesInternal(ArchiveAction.Unpack, Nothing)
+			Me.RunUnpackerToUnpackFilesInternal(PackageAction.Unpack, Nothing)
 		End If
 	End Sub
 
@@ -1317,11 +1317,11 @@ Public Class UnpackUserControl
 			Dim archiveEntryIndexes As New List(Of Integer)()
 			archiveEntryIndexes.Add(resourceInfo.EntryIndex)
 			archivePathFileNameToEntryIndexMap.Add(resourceInfo.ArchivePathFileName, archiveEntryIndexes)
-			TheApp.Unpacker.Run(ArchiveAction.ExtractAndOpen, archivePathFileNameToEntryIndexMap, False, "")
+			TheApp.Unpacker.Run(PackageAction.UnpackAndOpen, archivePathFileNameToEntryIndexMap, False, "")
 		End If
 	End Sub
 
-	Private Sub RunUnpackerToExtractFiles(ByVal unpackerAction As ArchiveAction, ByVal selectedItems As ListView.SelectedListViewItemCollection)
+	Private Sub RunUnpackerToExtractFiles(ByVal unpackerAction As PackageAction, ByVal selectedItems As ListView.SelectedListViewItemCollection)
 		Dim selectedResourceInfo As PackageResourceFileNameInfo
 		Dim selectedResourceInfos As New List(Of PackageResourceFileNameInfo)
 		For Each selectedItem As ListViewItem In selectedItems
@@ -1329,13 +1329,12 @@ Public Class UnpackUserControl
 			selectedResourceInfos.Add(selectedResourceInfo)
 		Next
 
-		Me.RunUnpackerToExtractFilesInternal(unpackerAction, selectedResourceInfos)
+		Me.RunUnpackerToUnpackFilesInternal(unpackerAction, selectedResourceInfos)
 	End Sub
 
-	Private Sub RunUnpackerToExtractFilesInternal(ByVal unpackerAction As ArchiveAction, ByVal selectedResourceInfos As List(Of PackageResourceFileNameInfo))
-		Dim archivePathFileNameToEntryIndexMap As New SortedList(Of String, List(Of Integer))()
+	Private Sub RunUnpackerToUnpackFilesInternal(ByVal unpackerAction As PackageAction, ByVal selectedResourceInfos As List(Of PackageResourceFileNameInfo))
+		Dim packagePathFileNameToEntryIndexMap As New SortedList(Of String, List(Of Integer))()
 		Dim selectedNode As TreeNode
-		Dim outputPathIsExtendedWithPackageName As Boolean = False
 		Dim selectedRelativeOutputPath As String
 
 		selectedNode = Me.PackageTreeView.SelectedNode
@@ -1351,17 +1350,13 @@ Public Class UnpackUserControl
 				Exit Sub
 			End If
 
-			If Not TheApp.Settings.UnpackFolderForEachPackageIsChecked AndAlso selectedNode.FullPath = "<root>" Then
-				outputPathIsExtendedWithPackageName = True
-			End If
-
 			selectedRelativeOutputPath = selectedNode.FullPath.Replace("<root>\", "")
 			selectedRelativeOutputPath = FileManager.GetPath(selectedRelativeOutputPath)
 		Else
 			selectedRelativeOutputPath = FileManager.GetPath(selectedResourceInfos(0).PathFileName)
 		End If
 
-		archivePathFileNameToEntryIndexMap = Me.GetEntriesFromFolderEntry(selectedResourceInfos, selectedNode, archivePathFileNameToEntryIndexMap)
+		packagePathFileNameToEntryIndexMap = Me.GetEntriesFromFolderEntry(selectedResourceInfos, selectedNode, packagePathFileNameToEntryIndexMap)
 
 		AddHandler TheApp.Unpacker.ProgressChanged, AddressOf Me.UnpackerBackgroundWorker_ProgressChanged
 		AddHandler TheApp.Unpacker.RunWorkerCompleted, AddressOf Me.UnpackerBackgroundWorker_RunWorkerCompleted
@@ -1369,8 +1364,8 @@ Public Class UnpackUserControl
 		'NOTE: [21-Dec-2020] Must unbind this combobox to prevent slowdown on second and subsequent unpacks.
 		Me.UnpackedFilesComboBox.DataSource = Nothing
 
-		If unpackerAction = ArchiveAction.ExtractToTemp Then
-			Dim message As String = TheApp.Unpacker.RunSynchronous(unpackerAction, archivePathFileNameToEntryIndexMap, outputPathIsExtendedWithPackageName, selectedRelativeOutputPath)
+		If unpackerAction = PackageAction.UnpackToTemp Then
+			Dim message As String = TheApp.Unpacker.RunSynchronous(unpackerAction, packagePathFileNameToEntryIndexMap, TheApp.Settings.UnpackFolderForEachPackageIsChecked, selectedRelativeOutputPath)
 			If message <> "" Then
 				Me.UnpackerLogTextBox.AppendText(message + vbCr)
 			End If
@@ -1380,7 +1375,7 @@ Public Class UnpackUserControl
 
 			Me.DoDragAndDrop(tempRelativePathsAndFileNames)
 		Else
-			TheApp.Unpacker.Run(unpackerAction, archivePathFileNameToEntryIndexMap, outputPathIsExtendedWithPackageName, selectedRelativeOutputPath)
+			TheApp.Unpacker.Run(unpackerAction, packagePathFileNameToEntryIndexMap, TheApp.Settings.UnpackFolderForEachPackageIsChecked, selectedRelativeOutputPath)
 		End If
 	End Sub
 
