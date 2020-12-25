@@ -48,6 +48,14 @@ Public Class SourceMdlJiggleBone
 	'	float			baseMaxForward;
 	'	float			baseForwardFriction;
 
+	'FROM: https://github.com/ValveSoftware/source-sdk-2013/blob/master/mp/src/public/studio.h
+	'	// boing
+	'	float			boingImpactSpeed;
+	'	float			boingImpactAngle;
+	'	float			boingDampingRate;
+	'	float			boingFrequency;
+	'	float			boingAmplitude;
+
 	'private:
 	'	// No copy constructors allowed
 	'	//mstudiojigglebone_t(const mstudiojigglebone_t& vOther);
@@ -91,6 +99,13 @@ Public Class SourceMdlJiggleBone
 	Public baseMaxForward As Double
 	Public baseForwardFriction As Double
 
+	'NOTE: These fields seem to be only in models compiled with Source SDK Base 2013 MP and SP.
+	Public boingImpactSpeed As Double
+	Public boingImpactAngle As Double
+	Public boingDampingRate As Double
+	Public boingFrequency As Double
+	Public boingAmplitude As Double
+
 
 
 	' flags values:
@@ -101,6 +116,10 @@ Public Class SourceMdlJiggleBone
 	'#define JIGGLE_HAS_ANGLE_CONSTRAINT		0x10
 	'#define JIGGLE_HAS_LENGTH_CONSTRAINT	0x20
 	'#define JIGGLE_HAS_BASE_SPRING			0x40
+	'======
+	'FROM: VERSION 48 - https://github.com/ValveSoftware/source-sdk-2013/blob/master/mp/src/public/studio.h
+	'FROM: VERSION 49 - Not found in studiomdl.exe of CSGO, L4D2, or SFM, but probably safe to check for flag value.
+	'#define JIGGLE_IS_BOING					0x80		// simple squash and stretch sinusoid "boing"
 	Public Const JIGGLE_IS_FLEXIBLE As Integer = &H1
 	Public Const JIGGLE_IS_RIGID As Integer = &H2
 	Public Const JIGGLE_HAS_YAW_CONSTRAINT As Integer = &H4
@@ -108,5 +127,6 @@ Public Class SourceMdlJiggleBone
 	Public Const JIGGLE_HAS_ANGLE_CONSTRAINT As Integer = &H10
 	Public Const JIGGLE_HAS_LENGTH_CONSTRAINT As Integer = &H20
 	Public Const JIGGLE_HAS_BASE_SPRING As Integer = &H40
+	Public Const JIGGLE_IS_BOING As Integer = &H80
 
 End Class

@@ -4313,6 +4313,45 @@ Public Class SourceQcFile49
 					line += "}"
 					Me.theOutputFileStreamWriter.WriteLine(line)
 				End If
+				If (aBone.theJiggleBone.flags And SourceMdlJiggleBone.JIGGLE_IS_BOING) > 0 Then
+					line = vbTab
+					line += "is_boing"
+					Me.theOutputFileStreamWriter.WriteLine(line)
+					line = vbTab
+					line += "{"
+					Me.theOutputFileStreamWriter.WriteLine(line)
+
+					line = vbTab
+					line += vbTab
+					line += "impact_speed "
+					line += aBone.theJiggleBone.boingImpactSpeed.ToString("0.######", TheApp.InternalNumberFormat)
+					Me.theOutputFileStreamWriter.WriteLine(line)
+					line = vbTab
+					line += vbTab
+					line += "impact_angle "
+					' Reverse this: jiggleInfo->data.boingImpactAngle = cos( DEG2RAD( verify_atof( token ) ) );
+					line += MathModule.RadiansToDegrees(Math.Acos(aBone.theJiggleBone.boingImpactAngle)).ToString("0.######", TheApp.InternalNumberFormat)
+					Me.theOutputFileStreamWriter.WriteLine(line)
+					line = vbTab
+					line += vbTab
+					line += "damping_rate "
+					line += aBone.theJiggleBone.boingDampingRate.ToString("0.######", TheApp.InternalNumberFormat)
+					Me.theOutputFileStreamWriter.WriteLine(line)
+					line = vbTab
+					line += vbTab
+					line += "frequency "
+					line += aBone.theJiggleBone.boingFrequency.ToString("0.######", TheApp.InternalNumberFormat)
+					Me.theOutputFileStreamWriter.WriteLine(line)
+					line = vbTab
+					line += vbTab
+					line += "amplitude "
+					line += aBone.theJiggleBone.boingAmplitude.ToString("0.######", TheApp.InternalNumberFormat)
+					Me.theOutputFileStreamWriter.WriteLine(line)
+
+					line = vbTab
+					line += "}"
+					Me.theOutputFileStreamWriter.WriteLine(line)
+				End If
 				line = "}"
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			End If
