@@ -42,6 +42,8 @@ Public Class AppSettings
 		Me.SetDefaultUnpackOutputSubfolderName()
 		Me.theUnpackOutputFullPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
 		Me.theUnpackGameSetupSelectedIndex = 0
+		Me.theUnpackSearchField = UnpackSearchFieldOptions.Files
+		Me.theUnpackSearchText = ""
 		Me.SetDefaultUnpackOptions()
 		Me.theUnpackMode = InputOptions.File
 
@@ -384,6 +386,30 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	Public Property UnpackSearchField() As UnpackSearchFieldOptions
+		Get
+			Return Me.theUnpackSearchField
+		End Get
+		Set(ByVal value As UnpackSearchFieldOptions)
+			If Me.theUnpackSearchField <> value Then
+				Me.theUnpackSearchField = value
+				NotifyPropertyChanged("UnpackSearchField")
+			End If
+		End Set
+	End Property
+
+	Public Property UnpackSearchText() As String
+		Get
+			Return Me.theUnpackSearchText
+		End Get
+		Set(ByVal value As String)
+			If Me.theUnpackSearchText <> value Then
+				Me.theUnpackSearchText = value
+				NotifyPropertyChanged("UnpackSearchText")
+			End If
+		End Set
+	End Property
+
 	Public Property UnpackFolderForEachPackageIsChecked() As Boolean
 		Get
 			Return Me.theUnpackFolderForEachPackageIsChecked
@@ -394,15 +420,15 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	'Public Property UnpackExtractIsChecked() As Boolean
-	'	Get
-	'		Return Me.theUnpackExtractIsChecked
-	'	End Get
-	'	Set(ByVal value As Boolean)
-	'		Me.theUnpackExtractIsChecked = value
-	'		NotifyPropertyChanged("UnpackExtractIsChecked")
-	'	End Set
-	'End Property
+	Public Property UnpackKeepFullPathIsChecked() As Boolean
+		Get
+			Return Me.theUnpackKeepFullPathIsChecked
+		End Get
+		Set(ByVal value As Boolean)
+			Me.theUnpackKeepFullPathIsChecked = value
+			NotifyPropertyChanged("UnpackKeepFullPathIsChecked")
+		End Set
+	End Property
 
 	Public Property UnpackLogFileIsChecked() As Boolean
 		Get
@@ -928,6 +954,16 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	Public Property CompileOptionDefineBonesOverwriteQciFileIsChecked() As Boolean
+		Get
+			Return Me.theCompileOptionDefineBonesOverwriteQciFileIsChecked
+		End Get
+		Set(ByVal value As Boolean)
+			Me.theCompileOptionDefineBonesOverwriteQciFileIsChecked = value
+			NotifyPropertyChanged("CompileOptionDefineBonesOverwriteQciFileIsChecked")
+		End Set
+	End Property
+
 	Public Property CompileOptionDefineBonesModifyQcFileIsChecked() As Boolean
 		Get
 			Return Me.theCompileOptionDefineBonesModifyQcFileIsChecked
@@ -1147,6 +1183,26 @@ Public Class AppSettings
 		Set(ByVal value As Boolean)
 			Me.thePackOptionMultiFileVpkIsChecked = value
 			NotifyPropertyChanged("PackOptionMultiFileVpkIsChecked")
+		End Set
+	End Property
+
+	Public Property PackGmaTitle() As String
+		Get
+			Return Me.thePackGmaTitle
+		End Get
+		Set(ByVal value As String)
+			Me.thePackGmaTitle = value
+			NotifyPropertyChanged("PackGmaTitle")
+		End Set
+	End Property
+
+	Public Property PackGmaItemTags() As BindingListEx(Of String)
+		Get
+			Return Me.thePackGmaItemTags
+		End Get
+		Set(ByVal value As BindingListEx(Of String))
+			Me.thePackGmaItemTags = value
+			NotifyPropertyChanged("PackGmaItemTags")
 		End Set
 	End Property
 
@@ -1543,6 +1599,16 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	'<XmlElement(Type:=GetType(XmlColor))>
+	'Public Property AboutTabBackgroundColor() As Color
+	'	Get
+	'		Return Me.theAboutTabBackgroundColor
+	'	End Get
+	'	Set(ByVal value As Color)
+	'		Me.theAboutTabBackgroundColor = value
+	'	End Set
+	'End Property
+
 	Public Property UpdateDownloadPath() As String
 		Get
 			Return Me.theUpdateDownloadPath
@@ -1608,7 +1674,7 @@ Public Class AppSettings
 	Public Sub SetDefaultUnpackOptions()
 		'NOTE: Call the properties so the NotifyPropertyChanged events are raised.
 		Me.UnpackFolderForEachPackageIsChecked = False
-		'Me.UnpackExtractIsChecked = False
+		Me.UnpackKeepFullPathIsChecked = False
 		Me.UnpackLogFileIsChecked = False
 	End Sub
 
@@ -1656,6 +1722,7 @@ Public Class AppSettings
 		Me.CompileOptionDefineBonesIsChecked = False
 		Me.CompileOptionDefineBonesCreateFileIsChecked = False
 		Me.CompileOptionDefineBonesQciFileName = "DefineBones"
+		Me.CompileOptionDefineBonesOverwriteQciFileIsChecked = False
 		Me.CompileOptionDefineBonesModifyQcFileIsChecked = False
 
 		Me.CompileOptionsText = ""
@@ -1666,6 +1733,9 @@ Public Class AppSettings
 		Me.PackLogFileIsChecked = False
 
 		Me.PackOptionMultiFileVpkIsChecked = False
+
+		Me.PackGmaTitle = ""
+		Me.PackGmaItemTags = New BindingListEx(Of String)()
 
 		Me.PackOptionsText = ""
 	End Sub
@@ -1743,6 +1813,7 @@ Public Class AppSettings
 	Private theWindowLocation As Point
 	Private theWindowSize As Size
 	Private theWindowState As FormWindowState
+	Private theAboutTabBackgroundColor As Color
 	Private theMainWindowSelectedTabIndex As Integer
 
 	' Set Up Games tab
@@ -1774,9 +1845,11 @@ Public Class AppSettings
 	Private theUnpackOutputFullPath As String
 	Private theUnpackPackagePathFileName As String
 	Private theUnpackGameSetupSelectedIndex As Integer
+	Private theUnpackSearchField As UnpackSearchFieldOptions
+	Private theUnpackSearchText As String
 
 	Private theUnpackFolderForEachPackageIsChecked As Boolean
-	'Private theUnpackExtractIsChecked As Boolean
+	Private theUnpackKeepFullPathIsChecked As Boolean
 	Private theUnpackLogFileIsChecked As Boolean
 
 	Private theUnpackMode As InputOptions
@@ -1854,6 +1927,7 @@ Public Class AppSettings
 	Private theCompileOptionDefineBonesIsChecked As Boolean
 	Private theCompileOptionDefineBonesCreateFileIsChecked As Boolean
 	Private theCompileOptionDefineBonesQciFileName As String
+	Private theCompileOptionDefineBonesOverwriteQciFileIsChecked As Boolean
 	Private theCompileOptionDefineBonesModifyQcFileIsChecked As Boolean
 	Private theCompileOptionNoP4IsChecked As Boolean
 	Private theCompileOptionVerboseIsChecked As Boolean
@@ -1889,6 +1963,9 @@ Public Class AppSettings
 
 	Private thePackLogFileIsChecked As Boolean
 	Private thePackOptionMultiFileVpkIsChecked As Boolean
+
+	Private thePackGmaTitle As String
+	Private thePackGmaItemTags As BindingListEx(Of String)
 
 	Private thePackOptionsText As String
 

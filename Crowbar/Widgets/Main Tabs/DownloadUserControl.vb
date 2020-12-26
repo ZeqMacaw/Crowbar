@@ -116,6 +116,12 @@ Public Class DownloadUserControl
 #Region "Widget Event Handlers"
 
 	Private Sub DownloadUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.ItemIdTextBox, Me.OpenWorkshopPageButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputPathTextBox, Me.BrowseForOutputPathButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DocumentsOutputPathTextBox, Me.BrowseForOutputPathButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DownloadProgressBar, Me.DownloadProgressBar.Parent, True)
+
 		If Not Me.DesignMode Then
 			Me.Init()
 		End If
@@ -127,6 +133,20 @@ Public Class DownloadUserControl
 
 	Private Sub OpenWorkshopPageButton_Click(sender As Object, e As EventArgs) Handles OpenWorkshopPageButton.Click
 		Me.OpenWorkshopPage()
+	End Sub
+
+	Private Sub OutputPathTextBox_DragDrop(sender As Object, e As DragEventArgs) Handles OutputPathTextBox.DragDrop
+		Dim pathFileNames() As String = CType(e.Data.GetData(DataFormats.FileDrop), String())
+		Dim pathFileName As String = pathFileNames(0)
+		If Directory.Exists(pathFileName) Then
+			TheApp.Settings.DownloadOutputWorkPath = pathFileName
+		End If
+	End Sub
+
+	Private Sub OutputPathTextBox_DragEnter(sender As Object, e As DragEventArgs) Handles OutputPathTextBox.DragEnter
+		If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+			e.Effect = DragDropEffects.Copy
+		End If
 	End Sub
 
 	Private Sub OutputPathTextBox_Validated(sender As Object, e As EventArgs) Handles OutputPathTextBox.Validated
@@ -145,7 +165,7 @@ Public Class DownloadUserControl
 		TheApp.Settings.SetDefaultDownloadOptions()
 	End Sub
 
-	Private Sub DownloadFromLinkButton_Click(sender As Object, e As EventArgs) Handles DownloadButton.Click
+	Private Sub DownloadButton_Click(sender As Object, e As EventArgs) Handles DownloadButton.Click
 		Me.DownloadFromLink()
 	End Sub
 
@@ -153,7 +173,11 @@ Public Class DownloadUserControl
 		Me.CancelDownload()
 	End Sub
 
-	Private Sub DownloadedItemButton_Click(sender As Object, e As EventArgs) Handles GotoDownloadedItemButton.Click
+	Private Sub UseInUnpackButton_Click(sender As Object, e As EventArgs) Handles UseInUnpackButton.Click
+		Me.UseInUnpack()
+	End Sub
+
+	Private Sub GotoDownloadedItemButton_Click(sender As Object, e As EventArgs) Handles GotoDownloadedItemButton.Click
 		Me.GotoDownloadedItem()
 	End Sub
 
@@ -294,14 +318,22 @@ Public Class DownloadUserControl
 				targetOutputPath = FileManager.GetTestedPath(targetOutputPath)
 
 				If Directory.Exists(outputInfo.ContentFolderOrFileName) Then
-					FileManager.CopyFolder(outputInfo.ContentFolderOrFileName, targetOutputPath, True)
-
-					'TODO: [DownloadItem_RunWorkerCompleted] Delete Steam's cached item after downloading SteamUGC item.
-					'NOTE: Deleting the folder makes the item un-downloadable for later attempts because Steam still thinks it is installed.
+					'FileManager.CopyFolder(outputInfo.ContentFolderOrFileName, targetOutputPath, True)
+					'' [DownloadItem_RunWorkerCompleted] Delete Steam's cached item after downloading SteamUGC item.
+					''NOTE: Deleting the folder makes the item un-downloadable for later attempts because Steam still thinks it is installed.
+					''      This only occurred because Crowbar used different Steamworks functions calls to download when EItemState.k_EItemStateInstalled was set. 
+					''TODO: [DownloadItem_RunWorkerCompleted] Delete Steam's cached item manifest file and cached acf info after downloading SteamUGC item.
 					'Directory.Delete(outputInfo.ContentFolderOrFileName, True)
+					''======
+					''NOTE: UnsubscribeItem() does not delete the folder.
+					''Me.UnsubscribeItem(outputInfo.AppID, outputInfo.PublishedItemID)
 					'======
-					'NOTE: UnsubscribeItem() does not delete the folder.
-					'Me.UnsubscribeItem(outputInfo.AppID, outputInfo.PublishedItemID)
+					'NOTE: File remains: "C:\Program Files (x86)\Steam\depotcache\<app_id>_<manifest_id>.manifest"
+					'NOTE: Data for the downloaded file remains in: "<steam_folder_on_drive_where_game_is_installed>\steamapps\workshop\appworkshop_<app_id>.acf"
+					'NOTE: Do not use Directory.Move() because it raises exception when trying to move between drives.
+					'Directory.Move(outputInfo.ContentFolderOrFileName, targetOutputPath)
+					'======
+					My.Computer.FileSystem.MoveDirectory(outputInfo.ContentFolderOrFileName, targetOutputPath)
 
 					If Directory.Exists(targetOutputPath) Then
 						'Me.ProcessFolderOrFileAfterDownload(targetOutputPath)
@@ -439,6 +471,14 @@ Public Class DownloadUserControl
 		End If
 	End Sub
 
+	Private Sub UseInUnpack()
+		Dim extension As String = Path.GetExtension(Me.DownloadedItemTextBox.Text)
+		If extension = ".gma" OrElse extension = ".vpk" Then
+
+		End If
+		TheApp.Settings.UnpackPackagePathFolderOrFileName = Me.DownloadedItemTextBox.Text
+	End Sub
+
 	Private Sub GotoDownloadedItem()
 		If Me.DownloadedItemTextBox.Text <> "" Then
 			FileManager.OpenWindowsExplorer(Me.DownloadedItemTextBox.Text)
@@ -475,7 +515,20 @@ Public Class DownloadUserControl
 		Else
 			'Me.LogTextBox.AppendText("Item content download link not found. Probably an item that uses newer Steam API or a Friends-only item not downloadable via web." + vbCrLf)
 			Me.LogTextBox.AppendText("Item content download link not found. Downloading file via Steam." + vbCrLf)
-			Me.DownloadViaSteam(appID, itemID)
+
+			Dim outputPath As String
+			outputPath = Me.GetOutputPath()
+
+			'Dim outputFolder As String
+			'outputFolder = Me.GetOutputFileName(outputInfo.ItemTitle, outputInfo.PublishedItemID, outputInfo.ContentFolderOrFileName, outputInfo.ItemUpdated_Text)
+
+			Dim targetPath As String
+			'targetPath = Path.Combine(outputPath, outputFolder)
+			'targetPath = FileManager.GetTestedPath(targetPath)
+			'------
+			targetPath = outputPath
+
+			Me.DownloadViaSteam(appID, itemID, targetPath)
 		End If
 	End Sub
 
@@ -561,6 +614,8 @@ Public Class DownloadUserControl
 		Try
 			postStream = request.GetRequestStream()
 			postStream.Write(byteData, 0, byteData.Length)
+		Catch ex As Exception
+			Dim debug As Integer = 4242
 		Finally
 			If postStream IsNot Nothing Then
 				postStream.Close()
@@ -651,7 +706,7 @@ Public Class DownloadUserControl
 		Me.theWebClient.DownloadFileAsync(uri, outputPathFileName, outputPathFileName)
 	End Sub
 
-	Private Sub DownloadViaSteam(ByVal appID As UInteger, ByVal itemID As String)
+	Private Sub DownloadViaSteam(ByVal appID As UInteger, ByVal itemID As String, ByVal targetPath As String)
 		'Me.theDownloadBytesReceived = 0
 		'Me.DownloadedItemTextBox.Text = ""
 		'Me.DownloadButton.Enabled = False
@@ -660,6 +715,7 @@ Public Class DownloadUserControl
 		Dim inputInfo As New BackgroundSteamPipe.DownloadItemInputInfo()
 		inputInfo.AppID = appID
 		inputInfo.PublishedItemID = itemID
+		inputInfo.TargetPath = targetPath
 		Me.theBackgroundSteamPipe.DownloadItem(AddressOf Me.DownloadItem_ProgressChanged, AddressOf Me.DownloadItem_RunWorkerCompleted, inputInfo)
 	End Sub
 

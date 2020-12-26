@@ -265,6 +265,7 @@
 	Public theModelCommandIsUsed As Boolean
 	'Public theProceduralBonesCommandIsUsed As Boolean
 
+	Public theBoneNameToBoneIndexMap As New SortedList(Of String, Integer)()
 	'Public theEyelidFlexFrameIndexes As List(Of Integer)
 	Public theFirstAnimationDesc As SourceMdlAnimationDesc31
 	Public theFirstAnimationDescFrameLines As New SortedList(Of Integer, AnimationFrameLine)()

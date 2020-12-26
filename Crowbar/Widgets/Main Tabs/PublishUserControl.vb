@@ -15,6 +15,13 @@ Public Class PublishUserControl
 		' This call is required by the designer.
 		InitializeComponent()
 
+		' Set the ToolStrip and its child controls to use same default FontSize as the other controls. 
+		'    Inexplicably, the default FontSize for them is 9 instead of 8.25 like all other controls.
+		Me.ToolStrip1.Font = Me.Font
+		For Each widget As Control In Me.ToolStrip1.Controls
+			widget.Font = Me.Font
+		Next
+
 		Me.UseInDownloadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.UseInDownloadToolStripMenuItem.Name = "ItemsDataGridViewUseInDownloadToolStripMenuItem"
 		Me.UseInDownloadToolStripMenuItem.Size = New System.Drawing.Size(176, 22)
@@ -140,29 +147,36 @@ Public Class PublishUserControl
 
 	'NOTE: Gets the quota for the logged-in Steam user for the selected SteamApp. 
 	Private Sub GetUserSteamAppCloudQuota()
-		Dim steamPipe As New SteamPipe()
-		Dim result As String = steamPipe.Open("GetQuota", Nothing, "")
-		If result <> "success" Then
-			Me.theUserSteamID = 0
-			Exit Sub
-		End If
-		Dim availableBytes As ULong
-		Dim totalBytes As ULong
-		steamPipe.GetQuota(availableBytes, totalBytes)
-		steamPipe.Shut()
-
-		If totalBytes = 0 Then
-			Me.QuotaProgressBar.Text = "unknown"
+		If Me.theSteamAppInfo.UsesSteamUGC Then
+			Me.QuotaProgressBar.Text = ""
 			Me.QuotaProgressBar.Value = 0
-			Me.ToolTip1.SetToolTip(Me.QuotaProgressBar, "Quota (unknown)")
+			Me.ToolTip1.SetToolTip(Me.QuotaProgressBar, "")
 		Else
-			Dim usedBytes As ULong = totalBytes - availableBytes
-			Dim progressPercentage As Integer = CInt(usedBytes * Me.QuotaProgressBar.Maximum / totalBytes)
-			Dim usedBytesText As String = MathModule.ByteUnitsConversion(usedBytes)
-			Dim totalBytesText As String = MathModule.ByteUnitsConversion(totalBytes)
-			Me.QuotaProgressBar.Text = usedBytesText + " / " + totalBytesText
-			Me.QuotaProgressBar.Value = progressPercentage
-			Me.ToolTip1.SetToolTip(Me.QuotaProgressBar, "Quota (" + progressPercentage.ToString() + "% used)")
+			Dim steamPipe As New SteamPipe()
+			Dim result As String = steamPipe.Open("GetQuota", Nothing, "")
+			If result <> "success" Then
+				Me.theUserSteamID = 0
+				Exit Sub
+			End If
+			Dim availableBytes As ULong
+			Dim totalBytes As ULong
+			steamPipe.GetQuota(availableBytes, totalBytes)
+			steamPipe.Shut()
+
+			If totalBytes = 0 Then
+				Me.QuotaProgressBar.Text = "unknown"
+				Me.QuotaProgressBar.Value = 0
+				Me.ToolTip1.SetToolTip(Me.QuotaProgressBar, "Quota (unknown)")
+			Else
+				Dim usedBytes As ULong = totalBytes - availableBytes
+				Dim progressPercentage As Integer = CInt(usedBytes * Me.QuotaProgressBar.Maximum / totalBytes)
+				Dim availableBytesText As String = MathModule.ByteUnitsConversion(availableBytes)
+				Dim usedBytesText As String = MathModule.ByteUnitsConversion(usedBytes)
+				Dim totalBytesText As String = MathModule.ByteUnitsConversion(totalBytes)
+				Me.QuotaProgressBar.Text = availableBytesText + " available "
+				Me.QuotaProgressBar.Value = progressPercentage
+				Me.ToolTip1.SetToolTip(Me.QuotaProgressBar, "Quota: " + usedBytesText + " used of " + totalBytesText + " total (" + progressPercentage.ToString() + "% used)")
+			End If
 		End If
 	End Sub
 
@@ -294,6 +308,7 @@ Public Class PublishUserControl
 		'NOTE: For RichTextBox, set the Formatting argument to True when DataSourceUpdateMode.OnPropertyChanged is used, to prevent characters being entered in reverse order.
 		Me.ItemDescriptionTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Description", True, DataSourceUpdateMode.OnPropertyChanged)
 		Me.ItemChangeNoteTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "ChangeNote", True, DataSourceUpdateMode.OnPropertyChanged)
+		Me.UpdateWordWrapButtons()
 		Me.ItemContentPathFileNameTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "ContentPathFolderOrFileName", False, DataSourceUpdateMode.OnValidation)
 		Me.ItemPreviewImagePathFileNameTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "PreviewImagePathFileName", False, DataSourceUpdateMode.OnValidation)
 
@@ -316,6 +331,9 @@ Public Class PublishUserControl
 #Region "Widget Event Handlers"
 
 	Private Sub PublishUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.AppIdComboBox, Me.RefreshGameItemsButton)
+
 		If Not Me.DesignMode Then
 			Me.Init()
 		End If
@@ -430,11 +448,13 @@ Public Class PublishUserControl
 	Private Sub ToggleWordWrapForDescriptionCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ToggleWordWrapForDescriptionCheckBox.CheckedChanged
 		Me.ToggleWordWrapImageOnCheckbox(CType(sender, CheckBox))
 		Me.ItemDescriptionTextBox.WordWrap = Me.ToggleWordWrapForDescriptionCheckBox.Checked
+		Me.UpdateWordWrapButtons()
 	End Sub
 
 	Private Sub ToggleWordWrapForChangeNoteCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ToggleWordWrapForChangeNoteCheckBox.CheckedChanged
 		Me.ToggleWordWrapImageOnCheckbox(CType(sender, CheckBox))
 		Me.ItemChangeNoteTextBox.WordWrap = Me.ToggleWordWrapForChangeNoteCheckBox.Checked
+		Me.UpdateWordWrapButtons()
 	End Sub
 
 	Private Sub BrowseContentPathFileNameButton_Click(sender As Object, e As EventArgs) Handles BrowseItemContentPathFileNameButton.Click
@@ -473,7 +493,7 @@ Public Class PublishUserControl
 		Me.DeleteItem()
 	End Sub
 
-	'NOTE: There is no auotmatic data-binding with TagsWidget, so manually bind from widget to object here.
+	'NOTE: There is no automatic data-binding with TagsWidget, so manually bind from widget to object here.
 	Private Sub TagsWidget_TagsPropertyChanged(sender As Object, e As EventArgs)
 		Me.theSelectedItem.Tags = Me.theTagsWidget.ItemTags
 	End Sub
@@ -679,7 +699,12 @@ Public Class PublishUserControl
 			Dim result As String = CType(e.Result, String)
 			If result = "success" Then
 				Me.LogTextBox.AppendText("Delete of published item succeeded." + vbCrLf)
-				Me.theExpectedPublishedItemCount -= 1UI
+				If Me.theExpectedPublishedItemCount > 0 Then
+					Me.theExpectedPublishedItemCount -= 1UI
+				Else
+					'TODO: When testing, somehow got to here.
+					Dim debug As Integer = 4242
+				End If
 				Me.UpdateAfterDeleteItem()
 			Else
 				Me.LogTextBox.AppendText("ERROR: " + result + vbCrLf)
@@ -704,7 +729,12 @@ Public Class PublishUserControl
 		ElseIf e.ProgressPercentage = 2 Then
 			Dim outputInfo As BackgroundSteamPipe.PublishItemProgressInfo = CType(e.UserState, BackgroundSteamPipe.PublishItemProgressInfo)
 			'TODO: Change to using a progressbar.
-			Me.LogTextBox.AppendText(vbTab + outputInfo.Status + ": " + outputInfo.UploadedByteCount.ToString() + " / " + outputInfo.TotalUploadedByteCount.ToString() + vbCrLf)
+			If outputInfo.TotalUploadedByteCount > 0 Then
+				Dim progressPercentage As Integer = CInt(outputInfo.UploadedByteCount * 100 / outputInfo.TotalUploadedByteCount)
+				Me.LogTextBox.AppendText(vbTab + vbTab + outputInfo.Status + ": " + outputInfo.UploadedByteCount.ToString("N0") + " / " + outputInfo.TotalUploadedByteCount.ToString("N0") + "   " + progressPercentage.ToString() + " %" + vbCrLf)
+			Else
+				Me.LogTextBox.AppendText(vbTab + outputInfo.Status + "." + vbCrLf)
+			End If
 		End If
 	End Sub
 
@@ -760,15 +790,16 @@ Public Class PublishUserControl
 			End If
 		End If
 
-		Me.AppIdComboBox.Enabled = True
-		Me.ItemsDataGridView.Enabled = True
-		Me.ItemTitleTextBox.Enabled = True
-		Me.ItemDescriptionTextBox.Enabled = True
-		Me.ItemChangeNoteTextBox.Enabled = True
-		Me.ItemContentPathFileNameTextBox.Enabled = True
-		Me.ItemPreviewImagePathFileNameTextBox.Enabled = True
-		Me.ItemTagsGroupBox.Enabled = True
-		Me.UpdateItemDetailWidgets()
+		'Me.AppIdComboBox.Enabled = True
+		'Me.ItemsDataGridView.Enabled = True
+		'Me.ItemTitleTextBox.Enabled = True
+		'Me.ItemDescriptionTextBox.Enabled = True
+		'Me.ItemChangeNoteTextBox.Enabled = True
+		'Me.ItemContentPathFileNameTextBox.Enabled = True
+		'Me.ItemPreviewImagePathFileNameTextBox.Enabled = True
+		'Me.ItemTagsGroupBox.Enabled = True
+		'Me.UpdateItemDetailWidgets()
+		Me.UpdateWidgetsAfterPublish()
 
 		Me.GetUserSteamAppCloudQuota()
 
@@ -782,6 +813,19 @@ Public Class PublishUserControl
 #End Region
 
 #Region "Private Methods"
+
+	Private Sub UpdateWordWrapButtons()
+		If Me.ToggleWordWrapForDescriptionCheckBox.Checked Then
+			Me.ToolTip1.SetToolTip(Me.ToggleWordWrapForDescriptionCheckBox, My.Resources.ToggleWordWrapCurrentlyOn)
+		Else
+			Me.ToolTip1.SetToolTip(Me.ToggleWordWrapForDescriptionCheckBox, My.Resources.ToggleWordWrapCurrentlyOff)
+		End If
+		If Me.ToggleWordWrapForChangeNoteCheckBox.Checked Then
+			Me.ToolTip1.SetToolTip(Me.ToggleWordWrapForChangeNoteCheckBox, My.Resources.ToggleWordWrapCurrentlyOn)
+		Else
+			Me.ToolTip1.SetToolTip(Me.ToggleWordWrapForChangeNoteCheckBox, My.Resources.ToggleWordWrapCurrentlyOff)
+		End If
+	End Sub
 
 	Private Sub UpdateSteamAppWidgets()
 		'NOTE: If this has not been created, then app is in not far enough in Init() and not ready for update.
@@ -865,7 +909,6 @@ Public Class PublishUserControl
 		Me.ItemTagsGroupBox.Controls.Add(Me.theTagsWidget)
 		Me.theTagsWidget.AutoScroll = True
 		Me.theTagsWidget.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.theTagsWidget.Font = New System.Drawing.Font("Tahoma", 8.25!)
 		'Me.theTagsWidget.ItemTags = CType(Resources.GetObject("ContagionTagsUserControl1.ItemTags"), System.Collections.Generic.List(Of String))
 		Me.theTagsWidget.Location = New System.Drawing.Point(3, 17)
 		Me.theTagsWidget.Name = "TagsUserControl"
@@ -940,7 +983,9 @@ Public Class PublishUserControl
 
 		If Not itemHasBeenFound Then
 			Try
-				GetPublishedItemDetailsViaSteamRemoteStorage(itemTextToFind, "FindAll")
+				If ULong.TryParse(itemTextToFind, Nothing) Then
+					GetPublishedItemDetailsViaSteamRemoteStorage(itemTextToFind, "FindAll")
+				End If
 			Catch ex As Exception
 				Dim debug As Integer = 4242
 			End Try
@@ -1163,7 +1208,7 @@ Public Class PublishUserControl
 		Me.ItemVisibilityComboBox.Enabled = editableNonTextWidgetsAreEnabled
 
 		Me.ItemTagsGroupBox.Enabled = True
-		'NOTE: There is no auotmatic data-binding with TagsWidget, so manually bind from object to widget here.
+		'NOTE: There is no automatic data-binding with TagsWidget, so manually bind from object to widget here.
 		Me.theTagsWidget.ItemTags = Me.theSelectedItem.Tags
 		Me.UpdateItemTagsLabel()
 		Me.theTagsWidget.Enabled = editableNonTextWidgetsAreEnabled
@@ -1352,16 +1397,26 @@ Public Class PublishUserControl
 
 	' Copy the image into memory, so the image file can be deleted.
 	Private Sub DeleteInUseTempPreviewImageFile(ByVal itemPreviewImagePathFileName As String, ByVal itemID As String)
-		Dim img As Image = Image.FromFile(itemPreviewImagePathFileName)
+        Dim img As Image = Nothing
 
-		If Me.ItemPreviewImagePictureBox.Image IsNot Nothing Then
-			Me.ItemPreviewImagePictureBox.Image.Dispose()
-		End If
-		Me.ItemPreviewImagePictureBox.Image = New Bitmap(img)
-		img.Dispose()
+        Try
+            If File.Exists(itemPreviewImagePathFileName) Then
+                img = Image.FromFile(itemPreviewImagePathFileName)
+                If Me.ItemPreviewImagePictureBox.Image IsNot Nothing Then
+                    Me.ItemPreviewImagePictureBox.Image.Dispose()
+                End If
+                Me.ItemPreviewImagePictureBox.Image = New Bitmap(img)
+                img.Dispose()
+            End If
+        Catch ex As Exception
+            If img IsNot Nothing Then
+                img.Dispose()
+                img = Nothing
+            End If
+        End Try
 
-		Me.DeleteTempPreviewImageFile(itemPreviewImagePathFileName, itemID)
-	End Sub
+        Me.DeleteTempPreviewImageFile(itemPreviewImagePathFileName, itemID)
+    End Sub
 
 	Private Sub DeleteTempPreviewImageFile(ByVal itemPreviewImagePathFileName As String, ByVal itemID As String)
 		Dim previewImagePathFileName As String = Me.GetPreviewImagePathFileName(itemPreviewImagePathFileName, itemID, 0)
@@ -1563,8 +1618,8 @@ Public Class PublishUserControl
 
 		Me.theSelectedItemDetailsIsChangingViaMe = True
 		anItem.IsTemplate = True
-		anItem.ContentPathFolderOrFileName = ""
-		anItem.PreviewImagePathFileName = ""
+		'anItem.ContentPathFolderOrFileName = ""
+		'anItem.PreviewImagePathFileName = ""
 		anItem.IsChanged = False
 		'NOTE: Without this line, the ID field in the widgets does not change until a different item is selected.
 		Me.theItemBindingSource.ResetCurrentItem()
@@ -1674,27 +1729,28 @@ Public Class PublishUserControl
 	End Sub
 
 	Private Sub PublishItem()
-		Me.AppIdComboBox.Enabled = False
-		Me.ItemsDataGridView.Enabled = False
-		'Me.ItemGroupBox.Enabled = False
-		Me.ItemTitleTextBox.Enabled = False
-		Me.ItemDescriptionTextBox.Enabled = False
-		Me.ItemChangeNoteTextBox.Enabled = False
-		Me.ItemContentPathFileNameTextBox.Enabled = False
-		Me.ItemPreviewImagePathFileNameTextBox.Enabled = False
-		Me.SaveAsTemplateOrDraftItemButton.Enabled = False
-		Me.RefreshOrRevertItemButton.Enabled = False
-		Me.OpenWorkshopPageButton.Enabled = True
-		Me.DeleteItemButton.Enabled = False
-		Me.ItemTagsGroupBox.Enabled = False
-		Me.PublishItemButton.Enabled = False
-		If Me.LogTextBox.Text <> "" Then
-			Me.LogTextBox.AppendText("------" + vbCrLf)
-		End If
-
 		If Me.theSelectedItem.IsTemplate Then
 			Me.SaveChangedTemplateToDraft()
 			Me.SelectItemInGrid(Me.ItemsDataGridView.Rows.Count - 1)
+		End If
+
+		'NOTE: Need to do this after the template-to-draft change above.
+		Me.AppIdComboBox.Enabled = False
+		Me.ItemsDataGridView.Enabled = False
+		Me.ItemGroupBox.Enabled = False
+		'Me.ItemTitleTextBox.Enabled = False
+		'Me.ItemDescriptionTextBox.Enabled = False
+		'Me.ItemChangeNoteTextBox.Enabled = False
+		'Me.ItemContentPathFileNameTextBox.Enabled = False
+		'Me.ItemPreviewImagePathFileNameTextBox.Enabled = False
+		'Me.SaveAsTemplateOrDraftItemButton.Enabled = False
+		'Me.RefreshOrRevertItemButton.Enabled = False
+		'Me.OpenWorkshopPageButton.Enabled = True
+		'Me.DeleteItemButton.Enabled = False
+		'Me.ItemTagsGroupBox.Enabled = False
+		Me.PublishItemButton.Enabled = False
+		If Me.LogTextBox.Text <> "" Then
+			Me.LogTextBox.AppendText("------" + vbCrLf)
 		End If
 
 		Dim prePublishChecksAreSuccessful As Boolean = True
@@ -1723,7 +1779,8 @@ Public Class PublishUserControl
 			End If
 		End If
 		If Not prePublishChecksAreSuccessful Then
-			Me.UpdateItemDetailWidgets()
+			'Me.UpdateItemDetailWidgets()
+			Me.UpdateWidgetsAfterPublish()
 			Exit Sub
 		End If
 
@@ -1733,6 +1790,18 @@ Public Class PublishUserControl
 		inputInfo.AppInfo = Me.theSteamAppInfo
 		inputInfo.Item = Me.theSelectedItem
 		Me.theBackgroundSteamPipe.PublishItem(AddressOf Me.PublishItem_ProgressChanged, AddressOf Me.PublishItem_RunWorkerCompleted, inputInfo)
+	End Sub
+
+	Private Sub UpdateWidgetsAfterPublish()
+		Me.AppIdComboBox.Enabled = True
+		Me.ItemsDataGridView.Enabled = True
+		Me.ItemTitleTextBox.Enabled = True
+		Me.ItemDescriptionTextBox.Enabled = True
+		Me.ItemChangeNoteTextBox.Enabled = True
+		Me.ItemContentPathFileNameTextBox.Enabled = True
+		Me.ItemPreviewImagePathFileNameTextBox.Enabled = True
+		Me.ItemTagsGroupBox.Enabled = True
+		Me.UpdateItemDetailWidgets()
 	End Sub
 
 	Private Sub OpenAgreementRequiresAcceptanceWindow()
@@ -1807,6 +1876,16 @@ Public Class PublishUserControl
 	Private theUnchangedSelectedTemplateItem As WorkshopItem
 
 	Private theBackgroundSteamPipe As BackgroundSteamPipe
+
+	Private Sub ItemPreviewImagePictureBox_Resize(sender As Object, e As EventArgs) Handles ItemPreviewImagePictureBox.Resize
+		' Make sure size stays a square even when theme font changes it.
+		Dim width As Integer = Me.ItemPreviewImagePictureBox.Width
+		Dim height As Integer = Me.ItemPreviewImagePictureBox.Height
+		If width <> height Then
+			Dim length As Integer = Math.Min(width, height)
+			Me.ItemPreviewImagePictureBox.Size = New System.Drawing.Size(length, length)
+		End If
+	End Sub
 
 #End Region
 

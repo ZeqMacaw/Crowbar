@@ -359,28 +359,47 @@ Public Class FileManager
 		Return maybeRelativePath
 	End Function
 
-	Public Shared Function GetRelativePathFileName(ByVal fromPath As String, ByVal toPathFileName As String) As String
+	Public Shared Function GetRelativePathFileName(ByVal fromPath As String, ByVal toPath As String) As String
 		Dim fromPathAbsolute As String
 		Dim toPathAbsolute As String
 
-		fromPathAbsolute = Path.GetFullPath(fromPath)
-		toPathAbsolute = Path.GetFullPath(toPathFileName)
-
-		Dim fromAttr As Integer = GetPathAttribute(fromPathAbsolute)
-		Dim toAttr As Integer = GetPathAttribute(toPathAbsolute)
-
-		' MAX_PATH = 260
-		Dim newPathFileName As New StringBuilder(260)
-		If PathRelativePathTo(newPathFileName, fromPathAbsolute, fromAttr, toPathAbsolute, toAttr) = 0 Then
-			'Throw New ArgumentException("Paths must have a common prefix")
-			Return toPathAbsolute
+		If fromPath = "" Then
+			Return toPath
 		End If
 
-		Dim cleanedPath As String
+		fromPathAbsolute = Path.GetFullPath(fromPath)
+		toPathAbsolute = Path.GetFullPath(toPath)
+
+		'Dim fromAttr As Integer = GetPathAttribute(fromPathAbsolute)
+		'Dim toAttr As Integer = GetPathAttribute(toPathAbsolute)
+
+		'IMPORTANT: Use Uri.MakeRelativeUri() instead of PathRelativePathTo(), 
+		'      because PathRelativePathTo() does not handle unicode characters properly.
+		' MAX_PATH = 260
+		'Dim newPathFileName As New StringBuilder(260)
+		'If PathRelativePathTo(newPathFileName, fromPathAbsolute, fromAttr, toPathAbsolute, toAttr) = 0 Then
+		'	'Throw New ArgumentException("Paths must have a common prefix")
+		'	Return toPathAbsolute
+		'End If
+		'NOTE: Need to add the Path.DirectorySeparatorChar to force MakeRelativeUri() to treat the paths as folder names, not file names.
+		'      Otherwise, for example, this happens:
+		'      path1 = "C:\temp\Crowbar"
+		'      path2 = "C:\temp\Crowbar\addon.txt"
+		'      diff  = "Crowbar\addon.txt"
+		'      WANT: diff = "addon.txt"
+		Dim path1 As Uri = New Uri(fromPathAbsolute + Path.DirectorySeparatorChar)
+		Dim path2 As Uri = New Uri(toPathAbsolute + Path.DirectorySeparatorChar)
+		Dim diff As Uri = path1.MakeRelativeUri(path2)
+		' Convert Uri escaped characters and convert Uri forward slash to default directory separator.
+		Dim newPathFileName As String = Uri.UnescapeDataString(diff.OriginalString).Replace("/", Path.DirectorySeparatorChar)
+
+        Dim cleanedPath As String
 		cleanedPath = newPathFileName.ToString()
-		If cleanedPath.StartsWith(".\") Then
+		If cleanedPath.StartsWith("." + Path.DirectorySeparatorChar) Then
 			cleanedPath = cleanedPath.Remove(0, 2)
 		End If
+		'NOTE: Remove the ending path separator that is there because of modified inputs to MakeRelativeUri() earlier.
+		cleanedPath = cleanedPath.TrimEnd(Path.DirectorySeparatorChar)
 		Return cleanedPath
 	End Function
 
@@ -501,8 +520,9 @@ Public Class FileManager
 		Return iPath
 	End Function
 
-	' Example: "C:\folder\subfolder\temp" returns "C:\folder".
-	' Example: "subfolder\temp"           returns "subfolder".
+	' Example: "C:\folder\subfolder\temp" returns "C:\folder"
+	' Example: "subfolder\temp"           returns "subfolder"
+	' Example: "temp"                     returns ""
 	Public Shared Function GetTopFolderPath(ByVal iPathFileName As String) As String
 		Dim topFolderPath As String = ""
 		Dim fullPath As String

@@ -43,7 +43,7 @@ Partial Class GarrysModTagsUserControl
 		'
 		Me.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.ComboBox1.FormattingEnabled = True
-		Me.ComboBox1.Location = New System.Drawing.Point(44, 0)
+		Me.ComboBox1.Location = New System.Drawing.Point(42, 0)
 		Me.ComboBox1.Name = "ComboBox1"
 		Me.ComboBox1.Size = New System.Drawing.Size(110, 21)
 		Me.ComboBox1.TabIndex = 1
@@ -52,9 +52,9 @@ Partial Class GarrysModTagsUserControl
 		'Label1
 		'
 		Me.Label1.AutoSize = True
-		Me.Label1.Location = New System.Drawing.Point(3, 3)
+		Me.Label1.Location = New System.Drawing.Point(3, 4)
 		Me.Label1.Name = "Label1"
-		Me.Label1.Size = New System.Drawing.Size(35, 13)
+		Me.Label1.Size = New System.Drawing.Size(33, 13)
 		Me.Label1.TabIndex = 0
 		Me.Label1.Text = "Type:"
 		'
@@ -64,7 +64,7 @@ Partial Class GarrysModTagsUserControl
 		Me.CheckBox1.IsReadOnly = False
 		Me.CheckBox1.Location = New System.Drawing.Point(6, 20)
 		Me.CheckBox1.Name = "CheckBox1"
-		Me.CheckBox1.Size = New System.Drawing.Size(48, 17)
+		Me.CheckBox1.Size = New System.Drawing.Size(52, 17)
 		Me.CheckBox1.TabIndex = 0
 		Me.CheckBox1.Tag = "Build"
 		Me.CheckBox1.Text = "Build"
@@ -76,7 +76,7 @@ Partial Class GarrysModTagsUserControl
 		Me.CheckBox2.IsReadOnly = False
 		Me.CheckBox2.Location = New System.Drawing.Point(6, 43)
 		Me.CheckBox2.Name = "CheckBox2"
-		Me.CheckBox2.Size = New System.Drawing.Size(65, 17)
+		Me.CheckBox2.Size = New System.Drawing.Size(68, 17)
 		Me.CheckBox2.TabIndex = 1
 		Me.CheckBox2.Tag = "Cartoon"
 		Me.CheckBox2.Text = "Cartoon"
@@ -88,7 +88,7 @@ Partial Class GarrysModTagsUserControl
 		Me.CheckBox3.IsReadOnly = False
 		Me.CheckBox3.Location = New System.Drawing.Point(6, 66)
 		Me.CheckBox3.Name = "CheckBox3"
-		Me.CheckBox3.Size = New System.Drawing.Size(54, 17)
+		Me.CheckBox3.Size = New System.Drawing.Size(57, 17)
 		Me.CheckBox3.TabIndex = 2
 		Me.CheckBox3.Tag = "Comic"
 		Me.CheckBox3.Text = "Comic"
@@ -100,7 +100,7 @@ Partial Class GarrysModTagsUserControl
 		Me.CheckBox4.IsReadOnly = False
 		Me.CheckBox4.Location = New System.Drawing.Point(6, 89)
 		Me.CheckBox4.Name = "CheckBox4"
-		Me.CheckBox4.Size = New System.Drawing.Size(44, 17)
+		Me.CheckBox4.Size = New System.Drawing.Size(46, 17)
 		Me.CheckBox4.TabIndex = 3
 		Me.CheckBox4.Tag = "Fun"
 		Me.CheckBox4.Text = "Fun"
@@ -112,7 +112,7 @@ Partial Class GarrysModTagsUserControl
 		Me.CheckBox5.IsReadOnly = False
 		Me.CheckBox5.Location = New System.Drawing.Point(6, 112)
 		Me.CheckBox5.Name = "CheckBox5"
-		Me.CheckBox5.Size = New System.Drawing.Size(54, 17)
+		Me.CheckBox5.Size = New System.Drawing.Size(57, 17)
 		Me.CheckBox5.TabIndex = 4
 		Me.CheckBox5.Tag = "Movie"
 		Me.CheckBox5.Text = "Movie"
@@ -124,7 +124,7 @@ Partial Class GarrysModTagsUserControl
 		Me.CheckBox6.IsReadOnly = False
 		Me.CheckBox6.Location = New System.Drawing.Point(6, 135)
 		Me.CheckBox6.Name = "CheckBox6"
-		Me.CheckBox6.Size = New System.Drawing.Size(62, 17)
+		Me.CheckBox6.Size = New System.Drawing.Size(65, 17)
 		Me.CheckBox6.TabIndex = 5
 		Me.CheckBox6.Tag = "Realism"
 		Me.CheckBox6.Text = "Realism"
@@ -136,7 +136,7 @@ Partial Class GarrysModTagsUserControl
 		Me.CheckBox7.IsReadOnly = False
 		Me.CheckBox7.Location = New System.Drawing.Point(6, 158)
 		Me.CheckBox7.Name = "CheckBox7"
-		Me.CheckBox7.Size = New System.Drawing.Size(67, 17)
+		Me.CheckBox7.Size = New System.Drawing.Size(70, 17)
 		Me.CheckBox7.TabIndex = 6
 		Me.CheckBox7.Tag = "Roleplay"
 		Me.CheckBox7.Text = "Roleplay"
@@ -148,7 +148,7 @@ Partial Class GarrysModTagsUserControl
 		Me.CheckBox8.IsReadOnly = False
 		Me.CheckBox8.Location = New System.Drawing.Point(6, 181)
 		Me.CheckBox8.Name = "CheckBox8"
-		Me.CheckBox8.Size = New System.Drawing.Size(56, 17)
+		Me.CheckBox8.Size = New System.Drawing.Size(58, 17)
 		Me.CheckBox8.TabIndex = 7
 		Me.CheckBox8.Tag = "Scenic"
 		Me.CheckBox8.Text = "Scenic"
@@ -160,7 +160,7 @@ Partial Class GarrysModTagsUserControl
 		Me.CheckBox9.IsReadOnly = False
 		Me.CheckBox9.Location = New System.Drawing.Point(6, 204)
 		Me.CheckBox9.Name = "CheckBox9"
-		Me.CheckBox9.Size = New System.Drawing.Size(56, 17)
+		Me.CheckBox9.Size = New System.Drawing.Size(57, 17)
 		Me.CheckBox9.TabIndex = 8
 		Me.CheckBox9.Tag = "Water"
 		Me.CheckBox9.Text = "Water"
@@ -193,7 +193,7 @@ Partial Class GarrysModTagsUserControl
 		Me.AddonTagCheckBox.IsReadOnly = False
 		Me.AddonTagCheckBox.Location = New System.Drawing.Point(72, 261)
 		Me.AddonTagCheckBox.Name = "AddonTagCheckBox"
-		Me.AddonTagCheckBox.Size = New System.Drawing.Size(57, 17)
+		Me.AddonTagCheckBox.Size = New System.Drawing.Size(61, 17)
 		Me.AddonTagCheckBox.TabIndex = 9
 		Me.AddonTagCheckBox.Tag = "Addon"
 		Me.AddonTagCheckBox.Text = "Addon"

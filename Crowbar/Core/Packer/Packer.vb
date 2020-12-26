@@ -1,5 +1,7 @@
 ﻿Imports System.ComponentModel
 Imports System.IO
+Imports System.Linq
+Imports System.Web.Script.Serialization
 
 Public Class Packer
 	Inherits BackgroundWorker
@@ -227,7 +229,7 @@ Public Class Packer
 			Me.UpdateProgress(1, "Packing """ + inputPath + """ ...")
 
 			Dim result As String
-			result = Me.CheckFiles()
+			result = Me.CheckFiles(inputPath)
 			If result = "success" Then
 				Me.UpdateProgress(2, "Output from packer """ + Me.GetGamePackerPathFileName() + """: ")
 				Me.RunPackerApp(inputPath)
@@ -237,7 +239,7 @@ Public Class Packer
 					Me.UpdateProgress(2, "CAUSE: The packer is not the correct one for the selected game.")
 					Me.UpdateProgress(2, "SOLUTION: Verify integrity of game files via Steam so that the correct packer is installed.")
 				Else
-					Me.ProcessPackedModel(inputPath)
+					Me.ProcessPackage(inputPath)
 				End If
 
 				'' Clean up any created folders.
@@ -259,10 +261,21 @@ Public Class Packer
 		Return status
 	End Function
 
-	Private Function CheckFiles() As String
+	Private Function CheckFiles(ByVal inputPath As String) As String
 		Dim result As String = "success"
 
 		'TODO: Determine what to check before Packer runs for a folder.
+		Dim gamePackerPathFileName As String = Me.GetGamePackerPathFileName()
+		Dim gamePackerFileName As String = Path.GetFileName(gamePackerPathFileName)
+		If gamePackerFileName = "gmad.exe" Then
+			If Directory.Exists(inputPath) Then
+				Dim garrysModAppInfo As GarrysModSteamAppInfo = New GarrysModSteamAppInfo()
+				Dim addonJsonPathFileName As String = garrysModAppInfo.CreateAddonJsonFile(inputPath, TheApp.Settings.PackGmaTitle, TheApp.Settings.PackGmaItemTags)
+				If Not File.Exists(addonJsonPathFileName) Then
+					result = "error"
+				End If
+			End If
+		End If
 
 		Return result
 	End Function
@@ -305,6 +318,7 @@ Public Class Packer
 		myProcess.BeginOutputReadLine()
 		myProcess.BeginErrorReadLine()
 		Me.theProcessHasOutputData = False
+		Me.theGmadResultFileName = ""
 		myProcess.WaitForExit()
 
 		myProcess.Close()
@@ -314,12 +328,16 @@ Public Class Packer
 		Directory.SetCurrentDirectory(currentFolder)
 	End Sub
 
-	Private Sub ProcessPackedModel(ByVal inputPath As String)
+	Private Sub ProcessPackage(ByVal inputPath As String)
 		Dim gameSetup As GameSetup = TheApp.Settings.GameSetups(TheApp.Settings.PackGameSetupSelectedIndex)
 		Dim gamePackerFileName As String = Path.GetFileName(gameSetup.PackerPathFileName)
 		Dim sourcePathFileName As String = inputPath
 		If gamePackerFileName = "gmad.exe" Then
-			sourcePathFileName += ".gma"
+			'sourcePathFileName += ".gma"
+			' Gmad removes the first dot and text past that from the created file name, 
+			'    so use the file name shown in the log from Gmad.
+			sourcePathFileName = Path.GetDirectoryName(sourcePathFileName)
+			sourcePathFileName = Path.Combine(sourcePathFileName, Me.theGmadResultFileName)
 		Else
 			sourcePathFileName += ".vpk"
 		End If
@@ -400,6 +418,15 @@ Public Class Packer
 		Try
 			line = e.Data
 			If line IsNot Nothing Then
+				' Gmad removes the first dot and text past that from the created file name, 
+				'    so get the file name shown in the log from Gmad.
+				If line.StartsWith("Successfully saved to ") Then
+					Dim delimiters As Char() = {""""c}
+					Dim tokens As String() = {""}
+					tokens = line.Split(delimiters)
+					Me.theGmadResultFileName = tokens(1)
+				End If
+
 				Me.theProcessHasOutputData = True
 				Me.UpdateProgress(3, line)
 			End If
@@ -546,6 +573,7 @@ Public Class Packer
 	Private theDefineBonesFileStream As StreamWriter
 
 	Private theProcessHasOutputData As Boolean
+	Private theGmadResultFileName As String
 
 #End Region
 

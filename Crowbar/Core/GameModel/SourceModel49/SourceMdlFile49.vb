@@ -657,6 +657,18 @@ Public Class SourceMdlFile49
 		aBone.theJiggleBone.baseMaxForward = Me.theInputFileReader.ReadSingle()
 		aBone.theJiggleBone.baseForwardFriction = Me.theInputFileReader.ReadSingle()
 
+		'NOTE: How to determine when to read in these bytes that probably are only compiled with Source SDK Base 2013 MP and SP?
+		'      Only read these bytes if aBone.theJiggleBone.flags has "is_boing" set.
+		'      The only disadvantage is decompile-MDL log will show "unread bytes" when the flag is not set for models that have these bytes, 
+		'      but "unread bytes" often show up for alignment bytes anyway.
+		If (aBone.theJiggleBone.flags And SourceMdlJiggleBone.JIGGLE_IS_BOING) > 0 AndAlso (Me.theMdlFileData.version = 48 OrElse Me.theMdlFileData.version = 49) Then
+			aBone.theJiggleBone.boingImpactSpeed = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.boingImpactAngle = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.boingDampingRate = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.boingFrequency = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.boingAmplitude = Me.theInputFileReader.ReadSingle()
+		End If
+
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aBone.theJiggleBone")
 	End Sub
@@ -4254,26 +4266,19 @@ Public Class SourceMdlFile49
 		'Me.theMdlFileData.theFlexFrames.Add(aFlexFrame)
 
 		If Me.theMdlFileData.theFlexDescs IsNot Nothing AndAlso Me.theMdlFileData.theFlexDescs.Count > 0 Then
-			'Dim flexDescToMeshIndexes As List(Of List(Of Integer))
 			Dim flexDescToFlexFrames As List(Of List(Of FlexFrame))
 			Dim meshVertexIndexStart As Integer
 			Dim cumulativebodyPartVertexIndexStart As Integer
 
-			'flexDescToMeshIndexes = New List(Of List(Of Integer))(Me.theMdlFileData.theFlexDescs.Count)
-			'For x As Integer = 0 To Me.theMdlFileData.theFlexDescs.Count - 1
-			'	Dim meshIndexList As New List(Of Integer)()
-			'	flexDescToMeshIndexes.Add(meshIndexList)
-			'Next
-
-			flexDescToFlexFrames = New List(Of List(Of FlexFrame))(Me.theMdlFileData.theFlexDescs.Count)
-			For x As Integer = 0 To Me.theMdlFileData.theFlexDescs.Count - 1
-				Dim flexFrameList As New List(Of FlexFrame)()
-				flexDescToFlexFrames.Add(flexFrameList)
-			Next
-
 			cumulativebodyPartVertexIndexStart = 0
 			For bodyPartIndex As Integer = 0 To Me.theMdlFileData.theBodyParts.Count - 1
 				aBodyPart = Me.theMdlFileData.theBodyParts(bodyPartIndex)
+
+				flexDescToFlexFrames = New List(Of List(Of FlexFrame))(Me.theMdlFileData.theFlexDescs.Count)
+				For x As Integer = 0 To Me.theMdlFileData.theFlexDescs.Count - 1
+					Dim flexFrameList As New List(Of FlexFrame)()
+					flexDescToFlexFrames.Add(flexFrameList)
+				Next
 
 				aBodyPart.theFlexFrames = New List(Of FlexFrame)()
 				'NOTE: Create the defaultflex.

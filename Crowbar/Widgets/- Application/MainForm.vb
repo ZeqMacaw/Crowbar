@@ -33,6 +33,21 @@ Public Class MainForm
 			Me.Size = TheApp.Settings.WindowSize
 			Me.WindowState = TheApp.Settings.WindowState
 
+			' Ensure minimum size of window. 
+			'     Usually MinimumSize Handles this, but MinimumSize changes when Windows Theme Message Box Font Is something weird Like "SimSun-ExtB" 8pt.
+			'     Thus, set the minimum size manually here.
+			Dim minimumWidth As Integer = 800
+			Dim minimumHeight As Integer = 600
+			If Me.MinimumSize.Width < minimumWidth OrElse Me.MinimumSize.Height < minimumHeight Then
+				Me.MinimumSize = New Size(minimumWidth, minimumHeight)
+			End If
+			If Me.Width < Me.MinimumSize.Width Then
+				Me.Width = Me.MinimumSize.Width
+			End If
+			If Me.Height < Me.MinimumSize.Height Then
+				Me.Height = Me.MinimumSize.Height
+			End If
+
 			If TheApp.CommandLineOption_Settings_IsEnabled Then
 				TheApp.Settings.MainWindowSelectedTabIndex = Me.MainTabControl.TabPages.IndexOf(Me.UpdateTabPage)
 			End If
@@ -76,6 +91,7 @@ Public Class MainForm
 		Me.ViewViewUserControl.RunDataViewer()
 
 		AddHandler Me.SetUpGamesUserControl1.GoBackButton.Click, AddressOf Me.SetUpGamesGoBackButton_Click
+		AddHandler Me.DownloadUserControl1.UseInUnpackButton.Click, AddressOf Me.DownloadUserControl1_UseInUnpackButton_Click
 		AddHandler Me.UnpackUserControl1.UseAllInDecompileButton.Click, AddressOf Me.UnpackUserControl_UseAllInDecompileButton_Click
 		AddHandler Me.UnpackUserControl1.UseInPreviewButton.Click, AddressOf Me.UnpackUserControl_UseInPreviewButton_Click
 		AddHandler Me.UnpackUserControl1.UseInDecompileButton.Click, AddressOf Me.UnpackUserControl_UseInDecompileButton_Click
@@ -91,6 +107,7 @@ Public Class MainForm
 		AddHandler Me.ViewViewUserControl.SetUpGameButton.Click, AddressOf Me.ViewSetUpGamesButton_Click
 		AddHandler Me.ViewViewUserControl.UseInDecompileButton.Click, AddressOf Me.ViewUserControl_UseInDecompileButton_Click
 		AddHandler Me.PackUserControl1.SetUpGamesButton.Click, AddressOf Me.PackSetUpGamesButton_Click
+		AddHandler Me.PackUserControl1.UseAllInPublishButton.Click, AddressOf Me.PackUserControl1_UseAllInPublishButton_Click
 		AddHandler Me.PublishUserControl1.UseInDownloadToolStripMenuItem.Click, AddressOf Me.PublishUserControl1_UseInDownloadToolStripMenuItem_Click
 		AddHandler Me.UpdateUserControl1.UpdateAvailable, AddressOf Me.UpdateUserControl1_UpdateAvailable
 
@@ -99,6 +116,7 @@ Public Class MainForm
 
 	Private Sub Free()
 		RemoveHandler Me.SetUpGamesUserControl1.GoBackButton.Click, AddressOf Me.SetUpGamesGoBackButton_Click
+		RemoveHandler Me.DownloadUserControl1.UseInUnpackButton.Click, AddressOf Me.DownloadUserControl1_UseInUnpackButton_Click
 		RemoveHandler Me.UnpackUserControl1.UseAllInDecompileButton.Click, AddressOf Me.UnpackUserControl_UseAllInDecompileButton_Click
 		RemoveHandler Me.UnpackUserControl1.UseInPreviewButton.Click, AddressOf Me.UnpackUserControl_UseInPreviewButton_Click
 		RemoveHandler Me.UnpackUserControl1.UseInDecompileButton.Click, AddressOf Me.UnpackUserControl_UseInDecompileButton_Click
@@ -114,6 +132,7 @@ Public Class MainForm
 		RemoveHandler Me.ViewViewUserControl.SetUpGameButton.Click, AddressOf Me.ViewSetUpGamesButton_Click
 		RemoveHandler Me.ViewViewUserControl.UseInDecompileButton.Click, AddressOf Me.ViewUserControl_UseInDecompileButton_Click
 		RemoveHandler Me.PackUserControl1.SetUpGamesButton.Click, AddressOf Me.PackSetUpGamesButton_Click
+		RemoveHandler Me.PackUserControl1.UseAllInPublishButton.Click, AddressOf Me.PackUserControl1_UseAllInPublishButton_Click
 		RemoveHandler Me.PublishUserControl1.UseInDownloadToolStripMenuItem.Click, AddressOf Me.PublishUserControl1_UseInDownloadToolStripMenuItem_Click
 		RemoveHandler Me.UpdateUserControl1.UpdateAvailable, AddressOf Me.UpdateUserControl1_UpdateAvailable
 
@@ -220,6 +239,10 @@ Public Class MainForm
 		Me.MainTabControl.SelectTab(Me.theTabThatCalledSetUpGames)
 	End Sub
 
+	Private Sub DownloadUserControl1_UseInUnpackButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
+		Me.MainTabControl.SelectTab(Me.UnpackTabPage)
+	End Sub
+
 	Private Sub UnpackUserControl_UseAllInDecompileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
 		Me.MainTabControl.SelectTab(Me.DecompileTabPage)
 	End Sub
@@ -278,6 +301,10 @@ Public Class MainForm
 	Private Sub PackSetUpGamesButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
 		Me.theTabThatCalledSetUpGames = Me.PackTabPage
 		Me.SelectSetUpGamesFromAnotherTab(TheApp.Settings.PackGameSetupSelectedIndex)
+	End Sub
+
+	Private Sub PackUserControl1_UseAllInPublishButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
+		Me.MainTabControl.SelectTab(Me.PublishTabPage)
 	End Sub
 
 	Private Sub PublishUserControl1_UseInDownloadToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
