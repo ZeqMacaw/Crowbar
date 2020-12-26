@@ -368,7 +368,11 @@ Public Class FileManager
 		End If
 
 		fromPathAbsolute = Path.GetFullPath(fromPath)
+		fromPathAbsolute = fromPathAbsolute.TrimEnd(Path.DirectorySeparatorChar)
+		fromPathAbsolute = fromPathAbsolute.TrimEnd(Path.AltDirectorySeparatorChar)
 		toPathAbsolute = Path.GetFullPath(toPath)
+		toPathAbsolute = toPathAbsolute.TrimEnd(Path.DirectorySeparatorChar)
+		toPathAbsolute = toPathAbsolute.TrimEnd(Path.AltDirectorySeparatorChar)
 
 		'Dim fromAttr As Integer = GetPathAttribute(fromPathAbsolute)
 		'Dim toAttr As Integer = GetPathAttribute(toPathAbsolute)
@@ -417,6 +421,9 @@ Public Class FileManager
 			End Try
 		End If
 
+		cleanPath = cleanPath.TrimEnd(Path.DirectorySeparatorChar)
+		cleanPath = cleanPath.TrimEnd(Path.AltDirectorySeparatorChar)
+
 		Return cleanPath
 	End Function
 
@@ -451,7 +458,10 @@ Public Class FileManager
             cleanPathFileName = Path.Combine(cleanedGivenPath, cleanedGivenFileName)
         End If
 
-        Return cleanPathFileName
+		cleanPathFileName = cleanPathFileName.TrimEnd(Path.DirectorySeparatorChar)
+		cleanPathFileName = cleanPathFileName.TrimEnd(Path.AltDirectorySeparatorChar)
+
+		Return cleanPathFileName
     End Function
 
 	Public Shared Sub ParsePath(ByVal sender As Object, ByVal e As ConvertEventArgs)
