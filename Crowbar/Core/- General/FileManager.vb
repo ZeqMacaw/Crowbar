@@ -397,7 +397,7 @@ Public Class FileManager
 		' Convert Uri escaped characters and convert Uri forward slash to default directory separator.
 		Dim newPathFileName As String = Uri.UnescapeDataString(diff.OriginalString).Replace("/", Path.DirectorySeparatorChar)
 
-        Dim cleanedPath As String
+		Dim cleanedPath As String
 		cleanedPath = newPathFileName.ToString()
 		If cleanedPath.StartsWith("." + Path.DirectorySeparatorChar) Then
 			cleanedPath = cleanedPath.Remove(0, 2)
@@ -428,41 +428,41 @@ Public Class FileManager
 	End Function
 
 	Public Shared Function GetCleanPathFileName(ByVal givenPathFileName As String, ByVal returnFullPathFileName As Boolean) As String
-        Dim cleanPathFileName As String
+		Dim cleanPathFileName As String
 
-        Dim cleanedPathGivenPathFileName As String
-        cleanedPathGivenPathFileName = givenPathFileName
-        For Each invalidChar As Char In Path.GetInvalidPathChars()
-            cleanedPathGivenPathFileName = cleanedPathGivenPathFileName.Replace(invalidChar, "")
-        Next
-        If returnFullPathFileName Then
-            Try
-                cleanedPathGivenPathFileName = Path.GetFullPath(cleanedPathGivenPathFileName)
-            Catch ex As Exception
-                cleanedPathGivenPathFileName = cleanedPathGivenPathFileName.Replace(":", "")
-            End Try
-        End If
+		Dim cleanedPathGivenPathFileName As String
+		cleanedPathGivenPathFileName = givenPathFileName
+		For Each invalidChar As Char In Path.GetInvalidPathChars()
+			cleanedPathGivenPathFileName = cleanedPathGivenPathFileName.Replace(invalidChar, "")
+		Next
+		If returnFullPathFileName Then
+			Try
+				cleanedPathGivenPathFileName = Path.GetFullPath(cleanedPathGivenPathFileName)
+			Catch ex As Exception
+				cleanedPathGivenPathFileName = cleanedPathGivenPathFileName.Replace(":", "")
+			End Try
+		End If
 
-        Dim cleanedGivenFileName As String
-        cleanedGivenFileName = Path.GetFileName(cleanedPathGivenPathFileName)
-        For Each invalidChar As Char In Path.GetInvalidFileNameChars()
-            cleanedGivenFileName = cleanedGivenFileName.Replace(invalidChar, "")
-        Next
+		Dim cleanedGivenFileName As String
+		cleanedGivenFileName = Path.GetFileName(cleanedPathGivenPathFileName)
+		For Each invalidChar As Char In Path.GetInvalidFileNameChars()
+			cleanedGivenFileName = cleanedGivenFileName.Replace(invalidChar, "")
+		Next
 
-        Dim cleanedGivenPath As String
-        cleanedGivenPath = FileManager.GetPath(cleanedPathGivenPathFileName)
+		Dim cleanedGivenPath As String
+		cleanedGivenPath = FileManager.GetPath(cleanedPathGivenPathFileName)
 
-        If cleanedGivenFileName = "" Then
-            cleanPathFileName = cleanedPathGivenPathFileName
-        Else
-            cleanPathFileName = Path.Combine(cleanedGivenPath, cleanedGivenFileName)
-        End If
+		If cleanedGivenFileName = "" Then
+			cleanPathFileName = cleanedPathGivenPathFileName
+		Else
+			cleanPathFileName = Path.Combine(cleanedGivenPath, cleanedGivenFileName)
+		End If
 
 		cleanPathFileName = cleanPathFileName.TrimEnd(Path.DirectorySeparatorChar)
 		cleanPathFileName = cleanPathFileName.TrimEnd(Path.AltDirectorySeparatorChar)
 
 		Return cleanPathFileName
-    End Function
+	End Function
 
 	Public Shared Sub ParsePath(ByVal sender As Object, ByVal e As ConvertEventArgs)
 		If e.DesiredType IsNot GetType(String) Then
@@ -633,13 +633,17 @@ Public Class FileManager
 
 	Public Shared Function GetFolderSize(ByVal aFolder As String) As ULong
 		Dim size As ULong
-		Dim FolderInfo As DirectoryInfo = New IO.DirectoryInfo(aFolder)
-		For Each File As FileInfo In FolderInfo.GetFiles
-			size += CULng(File.Length)
-		Next
-		For Each SubFolderInfo As DirectoryInfo In FolderInfo.GetDirectories
-			size += GetFolderSize(SubFolderInfo.FullName)
-		Next
+		Dim aFolderInfo As DirectoryInfo = New IO.DirectoryInfo(aFolder)
+		Try
+			For Each aFileInfo As FileInfo In aFolderInfo.GetFiles
+				size += CULng(aFileInfo.Length)
+			Next
+			For Each aSubFolderInfo As DirectoryInfo In aFolderInfo.GetDirectories
+				size += GetFolderSize(aSubFolderInfo.FullName)
+			Next
+		Catch ex As Exception
+			size = 0
+		End Try
 		Return size
 	End Function
 
