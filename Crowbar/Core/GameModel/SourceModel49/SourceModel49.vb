@@ -140,15 +140,15 @@ Public Class SourceModel49
 
 		'TODO: If the checksum of the vtx does not match checksum in MDL, check the next vtx.
 		Me.theVtxPathFileName = Path.ChangeExtension(Me.theMdlPathFileName, ".dx11.vtx")
-		If Not File.Exists(Me.theVtxPathFileName) Then
+		If Not File.Exists(Me.theVtxPathFileName) OrElse Not VtxFileHasSameChecksum() Then
 			Me.theVtxPathFileName = Path.ChangeExtension(Me.theMdlPathFileName, ".dx90.vtx")
-			If Not File.Exists(Me.theVtxPathFileName) Then
+			If Not File.Exists(Me.theVtxPathFileName) OrElse Not VtxFileHasSameChecksum() Then
 				Me.theVtxPathFileName = Path.ChangeExtension(Me.theMdlPathFileName, ".dx80.vtx")
-				If Not File.Exists(Me.theVtxPathFileName) Then
+				If Not File.Exists(Me.theVtxPathFileName) OrElse Not VtxFileHasSameChecksum() Then
 					Me.theVtxPathFileName = Path.ChangeExtension(Me.theMdlPathFileName, ".sw.vtx")
-					If Not File.Exists(Me.theVtxPathFileName) Then
+					If Not File.Exists(Me.theVtxPathFileName) OrElse Not VtxFileHasSameChecksum() Then
 						Me.theVtxPathFileName = Path.ChangeExtension(Me.theMdlPathFileName, ".vtx")
-						If Not File.Exists(Me.theVtxPathFileName) Then
+						If Not File.Exists(Me.theVtxPathFileName) OrElse Not VtxFileHasSameChecksum() Then
 							status = status Or FilesFoundFlags.ErrorRequiredVtxFileNotFound
 						End If
 					End If
@@ -564,6 +564,22 @@ Public Class SourceModel49
 			phyFile.ReadCollisionTextSection()
 		End If
 		phyFile.ReadUnreadBytes()
+	End Sub
+
+	Private Function VtxFileHasSameChecksum() As Boolean
+		Me.ReadVtxFileHeader()
+		Return Me.theMdlFileData.checksum = Me.theVtxFileData.checksum
+	End Function
+
+	Protected Overrides Sub ReadVtxFileHeader_Internal()
+		If Me.theVtxFileData Is Nothing Then
+			Me.theVtxFileData = New SourceVtxFileData07()
+		End If
+
+		'TEST: When a model has a nameCopy, it seems to also use the VTF file strip group topology fields.
+		Dim vtxFile As New SourceVtxFile07(Me.theInputFileReader, Me.theVtxFileData)
+
+		vtxFile.ReadSourceVtxHeader()
 	End Sub
 
 	Protected Overrides Sub ReadVtxFile_Internal()
