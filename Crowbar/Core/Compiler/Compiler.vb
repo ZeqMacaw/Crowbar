@@ -1,5 +1,6 @@
 Imports System.ComponentModel
 Imports System.IO
+Imports Microsoft.VisualBasic.FileIO
 
 Public Class Compiler
 	Inherits BackgroundWorker
@@ -448,7 +449,7 @@ Public Class Compiler
 				Me.UpdateProgress(2, "Output from compiler """ + Me.GetGameCompilerPathFileName() + """: ")
 				Me.RunStudioMdlApp(qcPath, qcFileName)
 
-				If Not Me.theProcessHasOutputData Then
+				If Not Me.theProcessHasOutputData AndAlso Not Me.CompilerOptionQuietIsEnabled() Then
 					Me.UpdateProgress(2, "ERROR: The compiler did not return any status messages.")
 					Me.UpdateProgress(2, "CAUSE: The compiler is not the correct one for the selected game.")
 					Me.UpdateProgress(2, "SOLUTION: Verify integrity of game files via Steam so that the correct compiler is installed.")
@@ -517,6 +518,31 @@ Public Class Compiler
 		End Try
 
 		Return status
+	End Function
+
+	Private Function CompilerOptionQuietIsEnabled() As Boolean
+		Dim quietIsEnabled As Boolean = False
+		Using parser As New TextFieldParser(New StringReader(TheApp.Settings.CompileOptionsText))
+			parser.TextFieldType = FieldType.Delimited
+			parser.Delimiters = New String() {" "}
+			parser.TrimWhiteSpace = True
+			parser.HasFieldsEnclosedInQuotes = True
+			Dim currentRow As String()
+			While Not parser.EndOfData AndAlso Not quietIsEnabled
+				Try
+					currentRow = parser.ReadFields()
+					For Each currentField As String In currentRow
+						If currentField = "-quiet" Then
+							quietIsEnabled = True
+							Exit For
+						End If
+					Next
+				Catch ex As MalformedLineException
+					Dim debug As Integer = 4242
+				End Try
+			End While
+		End Using
+		Return quietIsEnabled
 	End Function
 
 	Private Function CheckFiles() As String
