@@ -1673,7 +1673,7 @@ Public Module CrowbarSteamPipe
 		ElseIf steamErrorResult = EResult.k_EResultInsufficientPrivilege Then
 			errorMessage += "Insufficient privilege. The user's Steam account is currently restricted from uploading content due to a hub ban, account lock, or community ban."
 		ElseIf steamErrorResult = EResult.k_EResultInvalidParam Then
-			errorMessage += "Invalid paramater. Content file too big, invalid App ID, or the preview file is smaller than 16 bytes."
+			errorMessage += "Invalid parameter. Content file too big, invalid App ID, or the preview file is smaller than 16 bytes."
 		ElseIf steamErrorResult = EResult.k_EResultLimitExceeded Then
 			errorMessage += "Limit exceeded. The preview image is too large, it must be less than 1 megabyte; or there is not enough space available on the user's Steam Cloud."
 		ElseIf steamErrorResult = EResult.k_EResultLockingFailed Then
