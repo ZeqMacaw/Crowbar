@@ -359,13 +359,13 @@ Public Class Viewer
 	End Function
 
 	Private Sub ModifyGameInfoFile()
-		Me.theGameInfoFile = GameInfoTxtFile.Create()
-		Me.theGameInfoFile.WriteNewGamePath(Me.theGameSetup.GamePathFileName, "crowbar")
+		Me.theGameInfoFile = New GameInfoTxtFile(Me.theGameSetup.GamePathFileName)
+		Me.theGameInfoFile.WriteNewGamePath("crowbar")
 	End Sub
 
 	Private Sub RevertGameInfoFile()
 		If Me.theGameInfoFile IsNot Nothing Then
-			Me.theGameInfoFile.RestoreGameInfoFile(Me.theGameSetup.GamePathFileName)
+			Me.theGameInfoFile.RestoreGameInfoFile()
 			Me.theGameInfoFile = Nothing
 		End If
 	End Sub

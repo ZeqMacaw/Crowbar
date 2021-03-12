@@ -1,29 +1,24 @@
 ﻿Imports System.IO
 
-Public Class GameInfoTxtFile
+Public NotInheritable Class GameInfoTxtFile
 
 #Region "Creation and Destruction"
 
-	' This is only way to create the GameInfoTxtFile singleton object.
-	Public Shared Function Create() As GameInfoTxtFile
-		If GameInfoTxtFile.theGameInfoTxtFile Is Nothing Then
-			GameInfoTxtFile.theGameInfoTxtFile = New GameInfoTxtFile()
-		End If
-		Return GameInfoTxtFile.theGameInfoTxtFile
-	End Function
+	' Disallow parameterless constructor.
+	Private Sub New()
+	End Sub
 
-	' Only here to make compiler happy with anything that inherits from this class.
-	Protected Sub New()
-		Me.theGameInfoPathFileNames = New List(Of String)(2)
-		Me.theBackupGameInfoPathFileNames = New SortedList(Of String, String)(2)
+	Public Sub New(ByVal gameInfoPathFileName As String)
+		Me.theGameInfoPathFileName = gameInfoPathFileName
+		Me.theBackupGameInfoPathFileName = ""
 	End Sub
 
 #End Region
 
 #Region "Methods"
 
-	Public Sub WriteNewGamePath(ByVal gameInfoPathFileName As String, ByVal newGamePath As String)
-		Me.MakeBackupOfGameInfoFile(gameInfoPathFileName, newGamePath)
+	Public Function GetSteamAppId() As String
+		Dim steamAppID As String = ""
 
 		Dim sr As StreamReader = Nothing
 		Dim sw As StreamWriter = Nothing
@@ -32,11 +27,62 @@ Public Class GameInfoTxtFile
 		Dim textPastPosition As String = ""
 
 		Try
-			If File.Exists(gameInfoPathFileName) Then
+			If File.Exists(Me.theGameInfoPathFileName) Then
 				Dim buffer As String
 				Dim token As String = ""
 
-				sr = New StreamReader(gameInfoPathFileName)
+				sr = New StreamReader(Me.theGameInfoPathFileName)
+				fullText = sr.ReadToEnd()
+				buffer = fullText
+
+				token = FileManager.ReadKeyValueToken(buffer)
+				If token = "GameInfo" Then
+					token = FileManager.ReadKeyValueToken(buffer)
+					If token = "{" Then
+						While token <> ""
+							token = FileManager.ReadKeyValueToken(buffer)
+							If token = "FileSystem" Then
+								token = FileManager.ReadKeyValueToken(buffer)
+								If token = "{" Then
+									While token <> ""
+										token = FileManager.ReadKeyValueToken(buffer)
+										If token = "SteamAppId" Then
+											steamAppID = FileManager.ReadKeyValueToken(buffer)
+										End If
+									End While
+								End If
+								Exit While
+							End If
+						End While
+					End If
+				End If
+			End If
+		Catch ex As Exception
+			Throw
+		Finally
+			If sr IsNot Nothing Then
+				sr.Close()
+			End If
+		End Try
+
+		Return steamAppID
+	End Function
+
+	Public Sub WriteNewGamePath(ByVal newGamePath As String)
+		Me.MakeBackupOfGameInfoFile(newGamePath)
+
+		Dim sr As StreamReader = Nothing
+		Dim sw As StreamWriter = Nothing
+		Dim fullText As String = ""
+		Dim textUptoPosition As String = ""
+		Dim textPastPosition As String = ""
+
+		Try
+			If File.Exists(Me.theGameInfoPathFileName) Then
+				Dim buffer As String
+				Dim token As String = ""
+
+				sr = New StreamReader(Me.theGameInfoPathFileName)
 				fullText = sr.ReadToEnd()
 				buffer = fullText
 
@@ -65,7 +111,7 @@ Public Class GameInfoTxtFile
 													'NOTE: Do nothing because crowbar search path already exists.
 												Else
 													sr.Close()
-													Me.WriteModifiedFile(gameInfoPathFileName, newGamePath, textUptoPosition, textPastPosition)
+													Me.WriteModifiedFile(newGamePath, textUptoPosition, textPastPosition)
 												End If
 											End If
 											Exit While
@@ -87,23 +133,11 @@ Public Class GameInfoTxtFile
 		End Try
 	End Sub
 
-	Public Sub RestoreGameInfoFile(ByVal gameInfoPathFileName As String)
+	Public Sub RestoreGameInfoFile()
 		Try
-			If Me.theGameInfoPathFileNames.Contains(gameInfoPathFileName) Then
-				Me.theGameInfoPathFileNames.Remove(gameInfoPathFileName)
-
-				If Not Me.theGameInfoPathFileNames.Contains(gameInfoPathFileName) Then
-					If Me.theBackupGameInfoPathFileNames.ContainsKey(gameInfoPathFileName) Then
-						Dim backupPathFileName As String
-						backupPathFileName = Me.theBackupGameInfoPathFileNames(gameInfoPathFileName)
-
-						If File.Exists(backupPathFileName) Then
-							File.Copy(backupPathFileName, gameInfoPathFileName, True)
-							File.Delete(backupPathFileName)
-							Me.theBackupGameInfoPathFileNames.Remove(gameInfoPathFileName)
-						End If
-					End If
-				End If
+			If File.Exists(Me.theBackupGameInfoPathFileName) Then
+				File.Copy(Me.theBackupGameInfoPathFileName, Me.theGameInfoPathFileName, True)
+				File.Delete(Me.theBackupGameInfoPathFileName)
 			End If
 		Catch ex As Exception
 			Throw
@@ -114,29 +148,23 @@ Public Class GameInfoTxtFile
 
 #Region "Private Methods"
 
-	Private Sub MakeBackupOfGameInfoFile(ByVal gameInfoPathFileName As String, ByVal newGamePath As String)
+	Private Sub MakeBackupOfGameInfoFile(ByVal newGamePath As String)
 		Try
-			Me.theGameInfoPathFileNames.Add(gameInfoPathFileName)
+			If File.Exists(Me.theGameInfoPathFileName) Then
+				Me.theBackupGameInfoPathFileName = Path.Combine(FileManager.GetPath(Me.theGameInfoPathFileName), Path.GetFileNameWithoutExtension(Me.theGameInfoPathFileName) + "_" + newGamePath + Path.GetExtension(Me.theGameInfoPathFileName))
 
-			If Not Me.theBackupGameInfoPathFileNames.ContainsKey(gameInfoPathFileName) Then
-				If File.Exists(gameInfoPathFileName) Then
-					Dim backupPathFileName As String
-					backupPathFileName = Path.Combine(FileManager.GetPath(gameInfoPathFileName), Path.GetFileNameWithoutExtension(gameInfoPathFileName) + "_" + newGamePath + Path.GetExtension(gameInfoPathFileName))
-
-					File.Copy(gameInfoPathFileName, backupPathFileName, True)
-					Me.theBackupGameInfoPathFileNames.Add(gameInfoPathFileName, backupPathFileName)
-				End If
+				File.Copy(Me.theGameInfoPathFileName, Me.theBackupGameInfoPathFileName, True)
 			End If
 		Catch ex As Exception
 			Throw
 		End Try
 	End Sub
 
-	Private Sub WriteModifiedFile(ByVal gameInfoPathFileName As String, ByVal newGamePath As String, ByVal textUptoPosition As String, ByVal textPastPosition As String)
+	Private Sub WriteModifiedFile(ByVal newGamePath As String, ByVal textUptoPosition As String, ByVal textPastPosition As String)
 		Dim sw As StreamWriter = Nothing
 
 		Try
-			sw = New StreamWriter(gameInfoPathFileName)
+			sw = New StreamWriter(Me.theGameInfoPathFileName)
 
 			sw.Write(textUptoPosition)
 
@@ -158,11 +186,8 @@ Public Class GameInfoTxtFile
 
 #Region "Data"
 
-	Private Shared theGameInfoTxtFile As GameInfoTxtFile
-
-	' This var is used for simple resource counting.
-	Protected theGameInfoPathFileNames As List(Of String)
-	Protected theBackupGameInfoPathFileNames As SortedList(Of String, String)
+	Private theGameInfoPathFileName As String
+	Private theBackupGameInfoPathFileName As String
 
 #End Region
 
