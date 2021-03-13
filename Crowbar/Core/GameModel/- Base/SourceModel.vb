@@ -369,6 +369,16 @@ Public MustInherit Class SourceModel
 		Return status
 	End Function
 
+	Public Overridable Function ReadVtxFileHeader() As AppEnums.StatusMessage
+		Dim status As AppEnums.StatusMessage = StatusMessage.Success
+
+		If status = StatusMessage.Success Then
+			Me.ReadFile(Me.theVtxPathFileName, AddressOf Me.ReadVtxFileHeader_Internal)
+		End If
+
+		Return status
+	End Function
+
 	Public Overridable Function ReadVtxFile() As AppEnums.StatusMessage
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
 
@@ -679,6 +689,10 @@ Public MustInherit Class SourceModel
 	End Sub
 
 	Protected Overridable Sub ReadTextureMdlFile_Internal()
+
+	End Sub
+
+	Protected Overridable Sub ReadVtxFileHeader_Internal()
 
 	End Sub
 

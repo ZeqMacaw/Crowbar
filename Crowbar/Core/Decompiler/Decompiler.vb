@@ -380,7 +380,7 @@ Public Class Decompiler
 				Me.UpdateProgress(3, "WARNING: ANI file not found.")
 			End If
 			If (filesFoundFlags And AppEnums.FilesFoundFlags.ErrorRequiredVtxFileNotFound) > 0 Then
-				Me.UpdateProgress(3, "WARNING: VTX file not found.")
+				Me.UpdateProgress(3, "WARNING: VTX file not found or the VTX file checksum does not match MDL file checksum.")
 			End If
 			If (filesFoundFlags And AppEnums.FilesFoundFlags.ErrorRequiredVvdFileNotFound) > 0 Then
 				Me.UpdateProgress(3, "WARNING: VVD file not found.")

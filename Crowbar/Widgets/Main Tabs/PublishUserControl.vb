@@ -308,6 +308,7 @@ Public Class PublishUserControl
 		'NOTE: For RichTextBox, set the Formatting argument to True when DataSourceUpdateMode.OnPropertyChanged is used, to prevent characters being entered in reverse order.
 		Me.ItemDescriptionTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Description", True, DataSourceUpdateMode.OnPropertyChanged)
 		Me.ItemChangeNoteTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "ChangeNote", True, DataSourceUpdateMode.OnPropertyChanged)
+		Me.UpdateWordWrapButtons()
 		Me.ItemContentPathFileNameTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "ContentPathFolderOrFileName", False, DataSourceUpdateMode.OnValidation)
 		Me.ItemPreviewImagePathFileNameTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "PreviewImagePathFileName", False, DataSourceUpdateMode.OnValidation)
 
@@ -447,11 +448,13 @@ Public Class PublishUserControl
 	Private Sub ToggleWordWrapForDescriptionCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ToggleWordWrapForDescriptionCheckBox.CheckedChanged
 		Me.ToggleWordWrapImageOnCheckbox(CType(sender, CheckBox))
 		Me.ItemDescriptionTextBox.WordWrap = Me.ToggleWordWrapForDescriptionCheckBox.Checked
+		Me.UpdateWordWrapButtons()
 	End Sub
 
 	Private Sub ToggleWordWrapForChangeNoteCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ToggleWordWrapForChangeNoteCheckBox.CheckedChanged
 		Me.ToggleWordWrapImageOnCheckbox(CType(sender, CheckBox))
 		Me.ItemChangeNoteTextBox.WordWrap = Me.ToggleWordWrapForChangeNoteCheckBox.Checked
+		Me.UpdateWordWrapButtons()
 	End Sub
 
 	Private Sub BrowseContentPathFileNameButton_Click(sender As Object, e As EventArgs) Handles BrowseItemContentPathFileNameButton.Click
@@ -810,6 +813,19 @@ Public Class PublishUserControl
 #End Region
 
 #Region "Private Methods"
+
+	Private Sub UpdateWordWrapButtons()
+		If Me.ToggleWordWrapForDescriptionCheckBox.Checked Then
+			Me.ToolTip1.SetToolTip(Me.ToggleWordWrapForDescriptionCheckBox, My.Resources.ToggleWordWrapCurrentlyOn)
+		Else
+			Me.ToolTip1.SetToolTip(Me.ToggleWordWrapForDescriptionCheckBox, My.Resources.ToggleWordWrapCurrentlyOff)
+		End If
+		If Me.ToggleWordWrapForChangeNoteCheckBox.Checked Then
+			Me.ToolTip1.SetToolTip(Me.ToggleWordWrapForChangeNoteCheckBox, My.Resources.ToggleWordWrapCurrentlyOn)
+		Else
+			Me.ToolTip1.SetToolTip(Me.ToggleWordWrapForChangeNoteCheckBox, My.Resources.ToggleWordWrapCurrentlyOff)
+		End If
+	End Sub
 
 	Private Sub UpdateSteamAppWidgets()
 		'NOTE: If this has not been created, then app is in not far enough in Init() and not ready for update.

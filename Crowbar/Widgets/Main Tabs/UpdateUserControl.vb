@@ -89,6 +89,20 @@ Public Class UpdateUserControl
 		Me.CheckForUpdate()
 	End Sub
 
+	Private Sub DownloadFolderTextBox_DragDrop(sender As Object, e As DragEventArgs) Handles DownloadFolderTextBox.DragDrop
+		Dim pathFileNames() As String = CType(e.Data.GetData(DataFormats.FileDrop), String())
+		Dim pathFileName As String = pathFileNames(0)
+		If Directory.Exists(pathFileName) Then
+			TheApp.Settings.UpdateDownloadPath = pathFileName
+		End If
+	End Sub
+
+	Private Sub DownloadFolderTextBox_DragEnter(sender As Object, e As DragEventArgs) Handles DownloadFolderTextBox.DragEnter
+		If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+			e.Effect = DragDropEffects.Copy
+		End If
+	End Sub
+
 	Private Sub BrowseForDownloadFolderButton_Click(sender As Object, e As EventArgs) Handles BrowseForDownloadFolderButton.Click
 		Me.BrowseForDownloadPath()
 	End Sub
@@ -107,6 +121,20 @@ Public Class UpdateUserControl
 
 	Private Sub GotoDownloadFileButton_Click(sender As Object, e As EventArgs) Handles GotoDownloadFileButton.Click
 		Me.GotoDownloadFile()
+	End Sub
+
+	Private Sub UpdateFolderTextBox_DragDrop(sender As Object, e As DragEventArgs) Handles UpdateFolderTextBox.DragDrop
+		Dim pathFileNames() As String = CType(e.Data.GetData(DataFormats.FileDrop), String())
+		Dim pathFileName As String = pathFileNames(0)
+		If Directory.Exists(pathFileName) Then
+			TheApp.Settings.UpdateUpdateDownloadPath = pathFileName
+		End If
+	End Sub
+
+	Private Sub UpdateFolderTextBox_DragEnter(sender As Object, e As DragEventArgs) Handles UpdateFolderTextBox.DragEnter
+		If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+			e.Effect = DragDropEffects.Copy
+		End If
 	End Sub
 
 	Private Sub BrowseForUpdateFolderButton_Click(sender As Object, e As EventArgs) Handles BrowseForUpdateFolderButton.Click
