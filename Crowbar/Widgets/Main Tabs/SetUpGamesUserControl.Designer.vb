@@ -30,7 +30,7 @@ Partial Class SetUpGamesUserControl
 		Me.BrowseForSteamAppPathFileNameButton = New System.Windows.Forms.Button()
 		Me.SteamAppPathFileNameTextBox = New System.Windows.Forms.TextBox()
 		Me.AddGameSetupButton = New System.Windows.Forms.Button()
-		Me.GameSetupComboBox = New System.Windows.Forms.ComboBox()
+		Me.GameSetupComboBox = New Crowbar.ComboBoxEx()
 		Me.GameGroupBox = New System.Windows.Forms.GroupBox()
 		Me.EngineLabel = New System.Windows.Forms.Label()
 		Me.EngineComboBox = New System.Windows.Forms.ComboBox()
@@ -146,9 +146,10 @@ Partial Class SetUpGamesUserControl
 		Me.GameSetupComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.GameSetupComboBox.FormattingEnabled = True
 		Me.GameSetupComboBox.Location = New System.Drawing.Point(3, 4)
+		Me.GameSetupComboBox.ItemHeight = 13
 		Me.GameSetupComboBox.Name = "GameSetupComboBox"
-		Me.GameSetupComboBox.Size = New System.Drawing.Size(697, 21)
 		Me.GameSetupComboBox.TabIndex = 42
+		Me.GameSetupComboBox.Size = New System.Drawing.Size(682, 19)
 		'
 		'GameGroupBox
 		'
@@ -530,7 +531,7 @@ Partial Class SetUpGamesUserControl
 	Friend WithEvents BrowseForSteamAppPathFileNameButton As System.Windows.Forms.Button
 	Friend WithEvents SteamAppPathFileNameTextBox As System.Windows.Forms.TextBox
 	Friend WithEvents AddGameSetupButton As System.Windows.Forms.Button
-	Friend WithEvents GameSetupComboBox As System.Windows.Forms.ComboBox
+	Friend WithEvents GameSetupComboBox As ComboBoxEx
 	Friend WithEvents GameGroupBox As System.Windows.Forms.GroupBox
 	Friend WithEvents CreateModelsFolderTreeButton As System.Windows.Forms.Button
 	Friend WithEvents BrowseForMappingToolPathFileNameButton As System.Windows.Forms.Button

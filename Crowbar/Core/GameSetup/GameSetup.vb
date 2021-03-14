@@ -20,6 +20,8 @@ Public Class GameSetup
 		Me.theViewerPathFileName = "C:\Program Files (x86)\Steam\steamapps\common\left 4 dead 2\bin\hlmv.exe"
 		Me.theMappingToolPathFileName = "C:\Program Files (x86)\Steam\steamapps\common\left 4 dead 2\bin\hammer.exe"
 		Me.thePackerPathFileName = "C:\Program Files (x86)\Steam\steamapps\common\left 4 dead 2\bin\vpk.exe"
+
+		Me.theGameSetupWasScanned = False
 	End Sub
 
 	Protected Sub New(ByVal originalObject As GameSetup)
@@ -38,6 +40,8 @@ Public Class GameSetup
 		Me.theViewerPathFileName = originalObject.ViewerPathFileNameUnprocessed
 		Me.theMappingToolPathFileName = originalObject.MappingToolPathFileNameUnprocessed
 		Me.thePackerPathFileName = originalObject.PackerPathFileNameUnprocessed
+
+		Me.theGameSetupWasScanned = originalObject.WasScanned
 	End Sub
 
 	Public Function Clone() As Object Implements System.ICloneable.Clone
@@ -220,6 +224,16 @@ Public Class GameSetup
 		End Set
 	End Property
 
+	Public Property WasScanned() As Boolean
+		Get
+			Return Me.theGameSetupWasScanned
+		End Get
+		Set(ByVal value As Boolean)
+			Me.theGameSetupWasScanned = value
+			NotifyPropertyChanged("WasScanned")
+		End Set
+	End Property
+
 #End Region
 
 #Region "Methods"
@@ -252,6 +266,8 @@ Public Class GameSetup
 	Private theViewerPathFileName As String
 	Private theMappingToolPathFileName As String
 	Private thePackerPathFileName As String
+
+	Private theGameSetupWasScanned As Boolean
 
 #End Region
 
