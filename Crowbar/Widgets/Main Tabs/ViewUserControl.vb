@@ -32,13 +32,6 @@ Public Class ViewUserControl
 	Private Sub Init()
 		Me.theModelViewers = New List(Of Viewer)()
 
-		Dim anEnumList As IList
-		anEnumList = EnumHelper.ToList(GetType(SupportedMdlVersion))
-		Me.OverrideMdlVersionComboBox.DisplayMember = "Value"
-		Me.OverrideMdlVersionComboBox.ValueMember = "Key"
-		Me.OverrideMdlVersionComboBox.DataSource = anEnumList
-		Me.OverrideMdlVersionComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, Me.NameOfAppSettingOverrideMdlVersionName, False, DataSourceUpdateMode.OnPropertyChanged)
-
 		Me.UpdateDataBindings()
 
 		Me.UpdateWidgets(False)
@@ -433,10 +426,19 @@ Public Class ViewUserControl
 #Region "Private Methods"
 
 	Private Sub UpdateDataBindings()
+		Dim anEnumList As IList
+		anEnumList = EnumHelper.ToList(GetType(SupportedMdlVersion))
+		Me.OverrideMdlVersionComboBox.DisplayMember = "Value"
+		Me.OverrideMdlVersionComboBox.ValueMember = "Key"
+		Me.OverrideMdlVersionComboBox.DataSource = anEnumList
+		Me.OverrideMdlVersionComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, Me.NameOfAppSettingOverrideMdlVersionName, False, DataSourceUpdateMode.OnPropertyChanged)
+
 		Me.MdlPathFileNameTextBox.DataBindings.Add("Text", TheApp.Settings, Me.NameOfAppSettingMdlPathFileName, False, DataSourceUpdateMode.OnValidation)
 		'AddHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
 		AddHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
 
+		'NOTE: Prevent changing this combobox's SelectedIndex when another combobox's (which also accesses "SelectedIndex" and TheApp.Settings) SelectedIndex changes.
+		Me.GameSetupComboBox.BindingContext = New BindingContext()
 		'NOTE: The DataSource, DisplayMember, and ValueMember need to be set before DataBindings, or else an exception is raised.
 		Me.GameSetupComboBox.DisplayMember = "GameName"
 		Me.GameSetupComboBox.ValueMember = "GameName"

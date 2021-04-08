@@ -23,6 +23,8 @@ Public Class CompileUserControl
 		Me.InitOutputPathComboBox()
 		Me.UpdateOutputPathWidgets()
 
+		'NOTE: Prevent changing this combobox's SelectedIndex when another combobox's (which also accesses "SelectedIndex" and TheApp.Settings) SelectedIndex changes.
+		Me.GameSetupComboBox.BindingContext = New BindingContext()
 		'NOTE: The DataSource, DisplayMember, and ValueMember need to be set before DataBindings, or else an exception is raised.
 		Me.GameSetupComboBox.DisplayMember = "GameName"
 		Me.GameSetupComboBox.ValueMember = "GameName"
