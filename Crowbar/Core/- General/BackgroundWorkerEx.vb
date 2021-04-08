@@ -19,8 +19,7 @@ Public Class BackgroundWorkerEx
 
 		bw.DoWorkHandler = bw_DoWork
 		bw.ProgressChangedHandler = bw_ProgressChanged
-		AddHandler bw.RunWorkerCompleted, AddressOf bw.BWE_RunWorkerCompleted
-		bw.ExternalRunWorkerCompletedHandler = bw_RunWorkerCompleted
+		bw.RunWorkerCompletedHandler = bw_RunWorkerCompleted
 
 		bw.RunWorkerAsync(bw_argument)
 
@@ -29,7 +28,17 @@ Public Class BackgroundWorkerEx
 
 #End Region
 
-#Region "Properties"
+#Region "Methods"
+
+	Public Sub Kill()
+		RemoveHandler Me.DoWork, Me.theDoWorkHandler
+		RemoveHandler Me.ProgressChanged, Me.theProgressChangedHandler
+		RemoveHandler Me.RunWorkerCompleted, AddressOf Me.BWE_RunWorkerCompleted
+	End Sub
+
+#End Region
+
+#Region "Private Properties"
 
 	Public Property DoWorkHandler() As DoWorkEventHandler
 		Get
@@ -51,39 +60,24 @@ Public Class BackgroundWorkerEx
 		End Set
 	End Property
 
-	Public Property ExternalRunWorkerCompletedHandler() As RunWorkerCompletedEventHandler
+	Public Property RunWorkerCompletedHandler() As RunWorkerCompletedEventHandler
 		Get
-			Return Me.theExternalRunWorkerCompletedHandler
+			Return Me.theRunWorkerCompletedHandler
 		End Get
 		Set
-			Me.theExternalRunWorkerCompletedHandler = Value
+			Me.theRunWorkerCompletedHandler = Value
+			' Assign BWE_RunWorkerCompleted so can remove all handlers before calling real RunWorkerCompleted.
+			AddHandler Me.RunWorkerCompleted, AddressOf Me.BWE_RunWorkerCompleted
 		End Set
 	End Property
 
 #End Region
 
-#Region "Methods"
-
-	Public Sub Kill()
-		RemoveHandler Me.DoWork, Me.theDoWorkHandler
-		RemoveHandler Me.ProgressChanged, Me.theProgressChangedHandler
-		RemoveHandler Me.RunWorkerCompleted, AddressOf Me.BWE_RunWorkerCompleted
-	End Sub
-
-#End Region
-
-#Region "Private Methods"
+#Region "Private Handlers"
 
 	Private Sub BWE_RunWorkerCompleted(ByVal sender As Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs)
-		'Dim bw As BackgroundWorkerEx = CType(sender, BackgroundWorkerEx)
-
-		'RemoveHandler bw.DoWork, Me.theDoWorkHandler
-		'RemoveHandler bw.ProgressChanged, Me.theProgressChangedHandler
-		'RemoveHandler bw.RunWorkerCompleted, AddressOf Me.BWE_RunWorkerCompleted
-		'Me.theExternalRunWorkerCompletedHandler(bw, e)
-		'======
 		Me.Kill()
-		Me.theExternalRunWorkerCompletedHandler(Me, e)
+		Me.theRunWorkerCompletedHandler(Me, e)
 	End Sub
 
 #End Region
@@ -92,7 +86,7 @@ Public Class BackgroundWorkerEx
 
 	Private theDoWorkHandler As DoWorkEventHandler
 	Private theProgressChangedHandler As ProgressChangedEventHandler
-	Private theExternalRunWorkerCompletedHandler As RunWorkerCompletedEventHandler
+	Private theRunWorkerCompletedHandler As RunWorkerCompletedEventHandler
 
 #End Region
 
