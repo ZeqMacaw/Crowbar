@@ -216,7 +216,7 @@ Public Class AppSettings
 		Get
 			'NOTE: Must change in the Get() because theGameSetups might not have been read-in yet (i.e. GameSetups appear *after* this setting in XML file).
 			If Me.theSetUpGamesGameSetupSelectedIndex >= Me.theGameSetups.Count Then
-				Me.theSetUpGamesGameSetupSelectedIndex = TheApp.Settings.GameSetups.Count - 1
+				Me.theSetUpGamesGameSetupSelectedIndex = Me.theGameSetups.Count - 1
 			End If
 			Return Me.theSetUpGamesGameSetupSelectedIndex
 		End Get
@@ -376,7 +376,7 @@ Public Class AppSettings
 		Get
 			'NOTE: Must change in the Get() because theGameSetups might not have been read-in yet (i.e. GameSetups appear *after* this setting in XML file).
 			If Me.theUnpackGameSetupSelectedIndex >= Me.theGameSetups.Count Then
-				Me.theUnpackGameSetupSelectedIndex = TheApp.Settings.GameSetups.Count - 1
+				Me.theUnpackGameSetupSelectedIndex = Me.theGameSetups.Count - 1
 			End If
 			Return Me.theUnpackGameSetupSelectedIndex
 		End Get
@@ -487,7 +487,7 @@ Public Class AppSettings
 		Get
 			'NOTE: Must change in the Get() because theGameSetups might not have been read-in yet (i.e. GameSetups appear *after* this setting in XML file).
 			If Me.thePreviewGameSetupSelectedIndex >= Me.theGameSetups.Count Then
-				Me.thePreviewGameSetupSelectedIndex = TheApp.Settings.GameSetups.Count - 1
+				Me.thePreviewGameSetupSelectedIndex = Me.theGameSetups.Count - 1
 			End If
 			Return Me.thePreviewGameSetupSelectedIndex
 		End Get
@@ -894,7 +894,7 @@ Public Class AppSettings
 		Get
 			'NOTE: Must change in the Get() because theGameSetups might not have been read-in yet (i.e. GameSetups appear *after* this setting in XML file).
 			If Me.theCompileGameSetupSelectedIndex >= Me.theGameSetups.Count Then
-				Me.theCompileGameSetupSelectedIndex = TheApp.Settings.GameSetups.Count - 1
+				Me.theCompileGameSetupSelectedIndex = Me.theGameSetups.Count - 1
 			End If
 			Return Me.theCompileGameSetupSelectedIndex
 		End Get
@@ -1070,7 +1070,7 @@ Public Class AppSettings
 		Get
 			'NOTE: Must change in the Get() because theGameSetups might not have been read-in yet (i.e. GameSetups appear *after* this setting in XML file).
 			If Me.theViewGameSetupSelectedIndex >= Me.theGameSetups.Count Then
-				Me.theViewGameSetupSelectedIndex = TheApp.Settings.GameSetups.Count - 1
+				Me.theViewGameSetupSelectedIndex = Me.theGameSetups.Count - 1
 			End If
 			Return Me.theViewGameSetupSelectedIndex
 		End Get
@@ -1156,7 +1156,7 @@ Public Class AppSettings
 		Get
 			'NOTE: Must change in the Get() because theGameSetups might not have been read-in yet (i.e. GameSetups appear *after* this setting in XML file).
 			If Me.thePackGameSetupSelectedIndex >= Me.theGameSetups.Count Then
-				Me.thePackGameSetupSelectedIndex = TheApp.Settings.GameSetups.Count - 1
+				Me.thePackGameSetupSelectedIndex = Me.theGameSetups.Count - 1
 			End If
 			Return Me.thePackGameSetupSelectedIndex
 		End Get
