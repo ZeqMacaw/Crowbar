@@ -472,11 +472,11 @@ Public Class SourceSmdFile36
 		Try
 			aVtxVertexIndex = aStripGroup.theVtxIndexes(aVtxIndexIndex)
 			aVtxVertex = aStripGroup.theVtxVertexes(aVtxVertexIndex)
-			If Me.theMdlFileData.version = 35 Then
-				vertexIndex = aVtxVertex.originalMeshVertexIndex + meshVertexIndexStart
-			Else
-				vertexIndex = aVtxVertex.originalMeshVertexIndex + bodyPartVertexIndexStart + meshVertexIndexStart
-			End If
+			'If Me.theMdlFileData.version = 35 Then
+			vertexIndex = aVtxVertex.originalMeshVertexIndex + meshVertexIndexStart
+			'Else
+			'	vertexIndex = aVtxVertex.originalMeshVertexIndex + bodyPartVertexIndexStart + meshVertexIndexStart
+			'End If
 			'aVertex = Me.theMdlFileData.theBodyParts(0).theModels(0).theVertexes(vertexIndex)
 			aVertex = aBodyModel.theVertexes(vertexIndex)
 
