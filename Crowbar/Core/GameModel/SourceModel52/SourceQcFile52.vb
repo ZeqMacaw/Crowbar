@@ -3362,7 +3362,7 @@ Public Class SourceQcFile52
 	'$assumeworldspace
 	'$automass          // baked-in as mass
 	'$concave           // done
-	'$concaveperjoint
+	'$concaveperjoint   // done
 	'$damping           // done
 	'$drag
 	'$inertia           // done
@@ -3414,6 +3414,13 @@ Public Class SourceQcFile52
 			line = vbTab
 			line += "$concave"
 			Me.theOutputFileStreamWriter.WriteLine(line)
+			
+			if Not Me.thePhyFileData.theSourcePhyIsCollisionModel Then
+				line = vbTab
+				line += "$concaveperjoint"
+				Me.theOutputFileStreamWriter.WriteLine(line)
+			End If
+
 			line = vbTab
 			line += "$maxconvexpieces "
 			line += Me.thePhyFileData.theSourcePhyMaxConvexPieces.ToString()

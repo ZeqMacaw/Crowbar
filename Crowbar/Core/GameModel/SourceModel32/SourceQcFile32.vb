@@ -2865,7 +2865,7 @@ Public Class SourceQcFile32
 	'$assumeworldspace
 	'$automass          // baked-in as mass
 	'$concave           // done
-	'$concaveperjoint
+	'$concaveperjoint   // done
 	'$damping           // done
 	'$drag
 	'$inertia           // done
@@ -2917,6 +2917,11 @@ Public Class SourceQcFile32
 			line = vbTab
 			line += "$concave"
 			Me.theOutputFileStreamWriter.WriteLine(line)
+			if Not Me.thePhyFileData.theSourcePhyIsCollisionModel Then
+				line = vbTab
+				line += "$concaveperjoint"
+				Me.theOutputFileStreamWriter.WriteLine(line)
+			End If
 		End If
 
 		For i As Integer = 0 To Me.thePhyFileData.theSourcePhyPhysCollisionModels.Count - 1
