@@ -906,7 +906,7 @@ Public Class SourceMdlFile49
 				'      to the initial null byte at the start of the string list at end of file.
 				'      CSS HLMV opens and shows the hitboxes.
 				'NOTE: The "SCAL" seems to be in every MDL file in Vindictus.
-				If aHitbox.nameOffset <> 0 AndAlso ((Me.theMdlFileData.version = 44 AndAlso Me.theMdlFileData.flexControllerUiOffset = SourceMdlFileData49.text_SCAL_VERSION44Vindictus) OrElse Me.theMdlFileData.version = 49) Then
+				If aHitbox.nameOffset <> 0 AndAlso (Me.theMdlFileData.flexControllerUiOffset = SourceMdlFileData49.text_SCAL_VERSION44Vindictus OrElse Me.theMdlFileData.version = 49) Then
 					'NOTE: For Vindictus pet_succubus_tiny.mdl (MDL44), relative offset is correct.
 					Me.theInputFileReader.BaseStream.Seek(hitboxInputFileStreamPosition + aHitbox.nameOffset, SeekOrigin.Begin)
 					fileOffsetStart2 = Me.theInputFileReader.BaseStream.Position
@@ -3653,7 +3653,7 @@ Public Class SourceMdlFile49
 	End Sub
 
 	Public Sub ReadFlexControllerUis()
-		If Me.theMdlFileData.flexControllerUiCount > 0 AndAlso Not (Me.theMdlFileData.version = 44 AndAlso Me.theMdlFileData.flexControllerUiOffset = SourceMdlFileData49.text_SCAL_VERSION44Vindictus) Then
+		If Me.theMdlFileData.flexControllerUiCount > 0 AndAlso Not Me.theMdlFileData.flexControllerUiOffset = SourceMdlFileData49.text_SCAL_VERSION44Vindictus Then
 			Dim flexControllerUiInputFileStreamPosition As Long
 			Dim inputFileStreamPosition As Long
 			Dim fileOffsetStart As Long
