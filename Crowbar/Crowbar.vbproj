@@ -75,9 +75,6 @@
     <DefineDebug>false</DefineDebug>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LzhamWrapper">
-      <HintPath>Resources\LzhamWrapper.dll</HintPath>
-    </Reference>
     <Reference Include="Steamworks.NET, Version=12.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Resources\Steamworks.NET.dll</HintPath>
@@ -905,6 +902,7 @@
     <Content Include="- Documents\History 2014.txt" />
     <Content Include="- Documents\Specifications.txt" />
     <None Include="Resources\26_Grey_PayPal_Pill_Button.png" />
+    <Content Include="Resources\lzham_x86.dll" />
     <Content Include="Resources\WordWrap.png" />
     <None Include="Resources\WordWrapOff.png" />
     <None Include="Resources\CrowbarSteamPipe.exe" />

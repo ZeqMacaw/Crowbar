@@ -344,38 +344,17 @@ Public Class VpkFile
 								Dim bytes() As Byte = Me.theVpkDataFileReader.ReadBytes(CInt(entryBlock.compressedSize))
 								Me.theOutputFileWriter.Write(bytes)
 							Else
-								'TODO: decompress via lzham
 								Dim bytes() As Byte = Me.theVpkDataFileReader.ReadBytes(CInt(entryBlock.compressedSize))
-
-								'' Stack overflow exception.
-								'Dim uncompressedBytes() As Byte = LZHAM.Decompress(bytes)
-								'======
-								'DecompressStatus DecompressMemory(
-								'  DecompressionParameters parameters, 
-								'  byte[] inBuf,int inBufSize, int inBufOffset, 
-								'  byte[] outBuf, ref int outBufSize, int outBufOffset, 
-								'  ref uint adler32)
 								'TODO: Need to redo size of byte array to handle uncompressedSize > Int32.
 								Dim uncompressedlength As Int32 = CInt(entryBlock.uncompressedSize)
 								Dim uncompressedBytes(uncompressedlength - 1) As Byte
-								uncompressedBytes(0) = 42
 								Dim adler32 As UInt32
 
-								'Dim params As New LzhamWrapper.DecompressionParameters()
-								'params.DictionarySize = 20
-								''params.DictionarySize = 26
-								'params.Flags = LzhamWrapper.Enums.DecompressionFlag.OutputUnbuffered
-								'Dim decompressStatus As LzhamWrapper.Enums.DecompressStatus = LzhamWrapper.Lzham.DecompressMemory(params, bytes, bytes.Length, 0, uncompressedBytes, uncompressedlength, 0, adler32)
-								'Dim blah As UInteger = LzhamWrapper.Lzham.GetVersion()
-								'------
 								Dim params As New DecompressionParameters()
 								params.m_struct_size = CUInt(Marshal.SizeOf(params))
 								params.m_dict_size_log2 = 20
 								params.m_decompress_flags = DecompressionFlag.OutputUnbuffered
-								Dim uncompressedBytesLength As New IntPtr(uncompressedBytes.Length)
-								'Dim bytesLength As New IntPtr(bytes.Length)
-								Dim adler As New IntPtr(adler32)
-								Dim status As Integer = lzham_decompress_memory(params, uncompressedBytes, uncompressedBytesLength, bytes, bytes.Length, adler)
+								Dim status As Integer = lzham_decompress_memory(params, uncompressedBytes, uncompressedBytes.Length, bytes, bytes.Length, adler32)
 
 								Me.theOutputFileWriter.Write(uncompressedBytes)
 							End If
@@ -408,8 +387,11 @@ Public Class VpkFile
 		End Try
 	End Sub
 
-	<DllImport("lzham_x86.Dll")>
-	Private Shared Function lzham_decompress_memory(ByRef parameters As DecompressionParameters, <MarshalAs(UnmanagedType.LPArray)> dstBuffer As Byte(), dstLength As IntPtr, <MarshalAs(UnmanagedType.LPArray)> srcBuffer As Byte(), srcLength As Integer, adler32 As IntPtr) As Integer
+	'FROM: Use Lzham alpha version: https://github.com/richgel999/lzham_alpha
+	'      More recent versions [as of 05-Apr-2022] do not work: https://github.com/richgel999/lzham_codec 
+	'lzham_decompress_status_t lzham_decompress_memory(const lzham_decompress_params *pParams, lzham_uint8* pDst_buf, size_t *pDst_len, const lzham_uint8* pSrc_buf, size_t src_len, lzham_uint32 *pAdler32)
+	<DllImport("lzham_x86.dll", CallingConvention:=CallingConvention.Cdecl)>
+	Private Shared Function lzham_decompress_memory(ByRef parameters As DecompressionParameters, dstBuffer As Byte(), ByRef dstLength As Int32, srcBuffer As Byte(), srcLength As Int32, ByRef adler32 As UInt32) As Integer
 	End Function
 
 	Public Enum DecompressionFlag
@@ -420,55 +402,12 @@ Public Class VpkFile
 
 	<StructLayout(LayoutKind.Sequential)>
 	Public Structure DecompressionParameters
-
-		Public m_struct_size As UInteger ' set to sizeof(lzham_decompress_params)
+		Public m_struct_size As UInteger
 		Public m_dict_size_log2 As UInteger
-		' set to the log2(dictionary_size), must range between [LZHAM_MIN_DICT_SIZE_LOG2, LZHAM_MAX_DICT_SIZE_LOG2_X86] for x86 LZHAM_MAX_DICT_SIZE_LOG2_X64 for x64
-
-		'Public m_table_update_rate As TableUpdateRate
-		' Controls tradeoff between ratio and decompression throughput. 0=default, or [1,LZHAM_MAX_TABLE_UPDATE_RATE], higher=faster but lower ratio.
-
-		Public m_decompress_flags As DecompressionFlag ' optional decompression flags (see lzham_decompress_flags enum)
-		' for delta compression (optional) - number of seed bytes pointed to by m_pSeed_bytes
-
+		Public m_decompress_flags As DecompressionFlag
 		Public m_num_seed_bytes As UInteger
 		Public m_pSeed_bytes As Byte()
-		' for delta compression (optional) - pointer to seed bytes buffer, must be at least m_num_seed_bytes long
-
-		' Advanced settings - set to 0 if you don't care.
-		' m_table_max_update_interval/m_table_update_interval_slow_rate override m_table_update_rate and allow finer control over the table update settings.
-		' If either are non-zero they will override whatever m_table_update_rate is set to. Just leave them 0 unless you are specifically customizing them for your data.
-
-		'' def=0, typical range 12-128 (LZHAM_DEFAULT_TABLE_UPDATE_RATE=64), controls the max interval between table updates, higher=longer max interval (faster decode/lower ratio). Was 16 in prev. releases.
-		'Public m_table_max_update_interval As UInteger
-
-		'' def=0, 32 or higher (LZHAM_DEFAULT_TABLE_UPDATE_RATE=64), scaled by 32, controls the slowing of the update update freq, higher=more rapid slowing (faster decode/lower ratio). Was 40 in prev. releases.
-		'Public m_table_update_interval_slow_rate As UInteger
 	End Structure
-
-	'Public Shared Function DecompressMemory(ByVal parameters As DecompressionParameters, ByVal inBuf As Byte(), ByVal inBufSize As Integer, ByVal inBufOffset As Integer, ByVal outBuf As Byte(), ByRef outBufSize As Integer, ByVal outBufOffset As Integer, ByRef adler32 As UInteger) As DecompressStatus
-	'	Dim p As DecompressionParameters
-	'	p.m_decompress_flags = parameters.Flags
-	'	p.m_dict_size_log2 = parameters.DictionarySize
-	'	p.m_table_max_update_interval = parameters.MaxUpdateInterval
-	'	p.m_table_update_interval_slow_rate = parameters.UpdateIntervalSlowRate
-	'	p.m_table_update_rate = parameters.UpdateRate
-
-	'	If parameters.SeedBytes IsNot Nothing Then
-	'		p.m_num_seed_bytes = CUInt(parameters.SeedBytes.Length)
-	'	End If
-
-	'	p.m_struct_size = (uint)sizeof(DecompressionParametersInternal);
-
-	'            fixed(Byte * outBytes = outBuf)
-	'	fixed(Byte * inBytes = inBuf)
-	'	p.m_pSeed_bytes = seedBytes;
-	'                Byte* pBytes = (Byte *) & p;
-	'                IntPtr outSize = New IntPtr(outBufSize);
-	'				DecompressStatus result = (DecompressStatus)lzham_decompress_memory(pBytes, outBytes + outBufOffset, ref outSize, inBytes + inBufOffset, inBufSize, ref adler32);
-	'                outBufSize = outSize.ToInt32();
-	'                Return result;
-	'End Function
 
 #End Region
 
