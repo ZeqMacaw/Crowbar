@@ -144,7 +144,7 @@ Public Class Updater
 		ElseIf Me.theAppVersion = My.Application.Info.Version Then
 			updateCheckStatusMessage = "Crowbar is up to date."
 		ElseIf Me.theAppVersion > My.Application.Info.Version Then
-			updateCheckStatusMessage = "Update to version " + Me.theAppVersion.ToString(2) + " available.   Size: " + MathModule.ByteUnitsConversion(fileSize)
+			updateCheckStatusMessage = "Update to version " + Me.theAppVersion.ToString(2) + " available.   Size: " + MathModule.BinaryByteUnitsConversion(fileSize)
 			outputInfo.UpdateIsAvailable = True
 		Else
 			'NOTE: Should not get here if versioning is done correctly.

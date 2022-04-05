@@ -1,5 +1,5 @@
 ﻿Public Class HfsDirectoryEntry
-	Inherits BasePackageDirectoryEntry
+	Inherits SourcePackageDirectoryEntry
 
 	'    char {4}     - Signature (HF) (0x02014648)
 	'    uint16 {2}   - Version needed to extract (seen as 20)
@@ -28,7 +28,7 @@
 	Public extraFieldSize As UInt16
 
 	Public fileName As String
-	Public offset As Long
+	'Public offset As Long
 	'Public fileDataBlockPosition As Long
 
 End Class

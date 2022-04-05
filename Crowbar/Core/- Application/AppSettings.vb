@@ -41,8 +41,8 @@ Public Class AppSettings
 		Me.theUnpackOutputFolderOption = UnpackOutputPathOptions.SameFolder
 		Me.SetDefaultUnpackOutputSubfolderName()
 		Me.theUnpackOutputFullPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+		Me.theUnpackByteUnitsOption = ByteUnitsOption.Bytes
 		Me.theUnpackGameSetupSelectedIndex = 0
-		Me.theUnpackSearchField = UnpackSearchFieldOptions.Files
 		Me.theUnpackSearchText = ""
 		Me.SetDefaultUnpackOptions()
 		Me.theUnpackMode = InputOptions.File
@@ -372,6 +372,16 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	Public Property UnpackByteUnitsOption() As ByteUnitsOption
+		Get
+			Return Me.theUnpackByteUnitsOption
+		End Get
+		Set(ByVal value As ByteUnitsOption)
+			Me.theUnpackByteUnitsOption = value
+			NotifyPropertyChanged("UnpackByteUnitsOption")
+		End Set
+	End Property
+
 	Public Property UnpackGameSetupSelectedIndex() As Integer
 		Get
 			'NOTE: Must change in the Get() because theGameSetups might not have been read-in yet (i.e. GameSetups appear *after* this setting in XML file).
@@ -383,18 +393,6 @@ Public Class AppSettings
 		Set(ByVal value As Integer)
 			Me.theUnpackGameSetupSelectedIndex = value
 			NotifyPropertyChanged("UnpackGameSetupSelectedIndex")
-		End Set
-	End Property
-
-	Public Property UnpackSearchField() As UnpackSearchFieldOptions
-		Get
-			Return Me.theUnpackSearchField
-		End Get
-		Set(ByVal value As UnpackSearchFieldOptions)
-			If Me.theUnpackSearchField <> value Then
-				Me.theUnpackSearchField = value
-				NotifyPropertyChanged("UnpackSearchField")
-			End If
 		End Set
 	End Property
 
@@ -1843,9 +1841,9 @@ Public Class AppSettings
 	Private theUnpackOutputSamePath As String
 	Private theUnpackOutputSubfolderName As String
 	Private theUnpackOutputFullPath As String
+	Private theUnpackByteUnitsOption As ByteUnitsOption
 	Private theUnpackPackagePathFileName As String
 	Private theUnpackGameSetupSelectedIndex As Integer
-	Private theUnpackSearchField As UnpackSearchFieldOptions
 	Private theUnpackSearchText As String
 
 	Private theUnpackFolderForEachPackageIsChecked As Boolean

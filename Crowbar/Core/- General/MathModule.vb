@@ -33,24 +33,44 @@ Module MathModule
 	'	Return value.ToString("####.##") + " " + suffix(suffixIndex)
 	'End Function
 
-	Public Function ByteUnitsConversion(ByVal iBytes As ULong) As String
+	Public Function BinaryByteUnitsConversion(ByVal iBytes As ULong) As String
 		Dim value As Double = iBytes
-		Dim suffix As String = "Bytes"
+		Dim suffix As String = ""
 
-		If iBytes >= 1073741824 Then
-			value = iBytes / (1024 * 1024 * 1024)
-			suffix = "GB"
+		If iBytes >= 1099511627776 Then
+			value = iBytes / 1099511627776
+			suffix = "T"
+		ElseIf iBytes >= 1073741824 Then
+			value = iBytes / 1073741824
+			suffix = "G"
 		ElseIf iBytes >= 1048576 Then
-			value = iBytes / (1024 * 1024)
-			suffix = "MB"
+			value = iBytes / 1048576
+			suffix = "M"
 		ElseIf iBytes >= 1024 Then
 			value = iBytes / 1024
-			suffix = "KB"
+			suffix = "K"
 		End If
 
-		'Return value.ToString("####.##") + " " + suffix
-		Return value.ToString("N2") + " " + suffix
+		Return value.ToString("#.##", TheApp.InternalCultureInfo) + " " + suffix
 	End Function
+
+	'Public Function DecimalByteUnitsConversion(ByVal iBytes As ULong) As String
+	'	Dim value As Double = iBytes
+	'	Dim suffix As String = "Bytes"
+
+	'	If iBytes >= 1073741824 Then
+	'		value = iBytes / (1024 * 1024 * 1024)
+	'		suffix = "GB"
+	'	ElseIf iBytes >= 1048576 Then
+	'		value = iBytes / (1024 * 1024)
+	'		suffix = "MB"
+	'	ElseIf iBytes >= 1024 Then
+	'		value = iBytes / 1024
+	'		suffix = "KB"
+	'	End If
+
+	'	Return value.ToString("N2", TheApp.InternalCultureInfo) + " " + suffix
+	'End Function
 
 	Public Function AlignLong(ByVal currentValue As Long, ByVal alignmentValue As Long) As Long
 		' File seek to next nearest start of 4-byte block. 

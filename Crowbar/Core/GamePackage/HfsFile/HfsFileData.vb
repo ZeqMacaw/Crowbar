@@ -1,5 +1,5 @@
 ﻿Public Class HfsFileData
-	Inherits BasePackageFileData
+	Inherits SourcePackageFileData
 
 	Public Sub New()
 		MyBase.New()

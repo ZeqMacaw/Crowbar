@@ -75,6 +75,9 @@
     <DefineDebug>false</DefineDebug>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LzhamWrapper">
+      <HintPath>Resources\LzhamWrapper.dll</HintPath>
+    </Reference>
     <Reference Include="Steamworks.NET, Version=12.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Resources\Steamworks.NET.dll</HintPath>
@@ -113,6 +116,7 @@
     <Compile Include="Core\- General\Bitmap\BitmapFileHeader.vb" />
     <Compile Include="Core\- General\Bitmap\BitmapInfoHeader.vb" />
     <Compile Include="Core\- General\Bitmap\BitmapRgbQuad.vb" />
+    <Compile Include="Core\- General\BufferedBinaryReader.vb" />
     <Compile Include="Core\- General\Workarounds.vb" />
     <Compile Include="Core\- General\XmlColor.vb" />
     <Compile Include="Core\- General\DuplicateKeyComparer.vb" />
@@ -122,9 +126,14 @@
     <Compile Include="Core\Compiler\CompilerOutputInfo.vb" />
     <Compile Include="Core\Compiler\ParseMeshSmdInfo.vb" />
     <Compile Include="Core\Compiler\ParseSMD.vb" />
+    <Compile Include="Core\GamePackage\- Base\SourcePackage.vb" />
     <Compile Include="Core\GamePackage\ApkFile\ApkDirectoryEntry.vb" />
     <Compile Include="Core\GamePackage\ApkFile\ApkFile.vb" />
     <Compile Include="Core\GamePackage\ApkFile\ApkFileData.vb" />
+    <Compile Include="Core\GamePackage\ApkFile\SourcePackageApk.vb" />
+    <Compile Include="Core\GamePackage\GmaFile\SourcePackageGma.vb" />
+    <Compile Include="Core\GamePackage\VpkFile\SourcePackageVpk.vb" />
+    <Compile Include="Core\GamePackage\VpkFile\VpkTitanfallEntryBlock.vb" />
     <Compile Include="Core\GameSetup\GameInfoTxtFile.vb" />
     <Compile Include="Core\GameSetup\SteamLibraryPath.vb" />
     <Compile Include="Core\- Application\AppSettings.vb" />
@@ -166,9 +175,9 @@
     <Compile Include="Core\GameModel\SourceModel14\SourceModel14.vb" />
     <Compile Include="Core\GameModel\SourceModel14\SourceQcFile14.vb" />
     <Compile Include="Core\GameModel\SourceModel14\SourceSmdFile14.vb" />
-    <Compile Include="Core\GamePackage\- Base\BasePackageFile.vb" />
-    <Compile Include="Core\GamePackage\- Base\BasePackageDirectoryEntry.vb" />
-    <Compile Include="Core\GamePackage\- Base\BasePackageFileData.vb" />
+    <Compile Include="Core\GamePackage\- Base\SourcePackageFile.vb" />
+    <Compile Include="Core\GamePackage\- Base\SourcePackageDirectoryEntry.vb" />
+    <Compile Include="Core\GamePackage\- Base\SourcePackageFileData.vb" />
     <Compile Include="Core\GamePackage\HfsFile\HfsDirectoryEntry.vb" />
     <Compile Include="Core\GamePackage\HfsFile\HfsFile.vb" />
     <Compile Include="Core\GamePackage\HfsFile\HfsFileData.vb" />
@@ -425,7 +434,7 @@
     <Compile Include="Core\GameModel\SourceModel49\SourceVtaFile49.vb" />
     <Compile Include="Core\GameModel\CompiledFiles\VtxFile\VtxFile07\SourceVtxFile07.vb" />
     <Compile Include="Core\GamePackage\HfsFile\HfsMainDirectoryEntry.vb" />
-    <Compile Include="Core\GamePackage\SourcePackageEventArgs.vb" />
+    <Compile Include="Core\GamePackage\- Base\SourcePackageEventArgs.vb" />
     <Compile Include="Core\SteamAppInfos\AnarchyArcadeSteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\BlackMesaSteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\ContagionSteamAppInfo.vb" />
@@ -447,8 +456,6 @@
     <Compile Include="Core\Unpacker\Unpacker.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core\Unpacker\PackageResourceFileNameInfo.vb" />
-    <Compile Include="Core\Unpacker\PackagePathFileNameInfo.vb" />
     <Compile Include="Core\Updater\Updater.vb" />
     <Compile Include="Core\Viewer\Viewer.vb">
       <SubType>Component</SubType>

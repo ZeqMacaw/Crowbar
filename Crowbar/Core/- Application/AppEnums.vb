@@ -21,11 +21,6 @@ Public Module AppEnums
 		<Description("Game's addons folder")> GameAddonsFolder
 	End Enum
 
-	Public Enum UnpackSearchFieldOptions
-		<Description("Files")> Files
-		<Description("Files and Folders")> FilesAndFolders
-	End Enum
-
 	Public Enum DecompileOutputPathOptions
 		<Description("Work folder")> WorkFolder
 		<Description("Subfolder (of MDL input)")> Subfolder
@@ -111,13 +106,13 @@ Public Module AppEnums
 
 	Public Enum PackageAction
 		Undefined
-		UnpackAndOpen
-		UnpackToTemp
-		UnpackFolderTree
 		Insert
 		List
 		Pack
 		Unpack
+		UnpackToTemp
+		UnpackToTempAndOpen
+		UnpackFolderTree
 	End Enum
 
 	Public Enum ViewerType
@@ -186,6 +181,12 @@ Public Module AppEnums
 	Public Enum OrientationType
 		<Description("Horizontal")> Horizontal
 		<Description("Vertical")> Vertical
+	End Enum
+
+	Public Enum ByteUnitsOption
+		<Description("Bytes")> Bytes
+		<Description("Binary")> Binary
+		<Description("Decimal")> [Decimal]
 	End Enum
 
 End Module

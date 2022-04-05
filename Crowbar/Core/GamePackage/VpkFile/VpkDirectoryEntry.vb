@@ -1,8 +1,12 @@
 ﻿Public Class VpkDirectoryEntry
-	Inherits BasePackageDirectoryEntry
+	Inherits SourcePackageDirectoryEntry
 
 	Public Sub New()
-		Me.isVtmbVpk = False
+		MyBase.New()
+
+		' Write this value to indicate a single-file VPK; i.e. not a multi-file VPK.
+		Me.multiFilePackageFileIndex = &H7FFF
+		'Me.isVtmbVpk = False
 	End Sub
 
 	'FROM: Nem's Tools\hllib245\HLLib\VPKFile.h
@@ -39,23 +43,21 @@
 
 	'Public crc As UInt32
 	Public preloadByteCount As UInt16
-	'Public archiveIndex As UInt16
-	Public dataOffset As UInt32
-	Public dataLength As UInt32
-	Public endBytes As UInt16
+	Public preloadBytesOffset As Long
+	Public dataLength As UInt64
+	Public multiFilePackageFileIndex As UInt16
+	'Public endBytes As UInt16
 
 	'TODO: Titanfall VPK
-	Public unknown01 As UInt16
-	Public unknown02 As UInt32
-	Public unknown03 As UInt32
-	Public unknown04 As UInt32
-	Public fileSize As UInt32
-	Public unknown05 As UInt32
-	Public endOfEntryBytes As UInt16
+	'Public unknown01 As UInt16
+	'Public unknown02 As UInt32
+	'Public unknown03 As UInt32
+	'Public unknown04 As UInt32
+	'Public unknown05 As UInt32
+	'Public endOfEntryBytes As UInt16
 
-	'Public thePathFileName As String
-	Public preloadBytesOffset As Long
-
-	Public isVtmbVpk As Boolean
+	'Public isVtmbVpk As Boolean
+	Public PackageDirPathFileName As String
+	Public titanfallEntryBlocks As List(Of VpkTitanfallEntryBlock)
 
 End Class

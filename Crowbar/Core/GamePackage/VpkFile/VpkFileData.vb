@@ -1,5 +1,5 @@
 ﻿Public Class VpkFileData
-	Inherits BasePackageFileData
+	Inherits SourcePackageFileData
 
 	Public Sub New()
 		MyBase.New()
@@ -106,7 +106,7 @@
 	Public directoryLength As UInt32
 
 	Public unused01 As UInt32
-	Public archiveHashLength As UInt32
+	Public packageHashLength As UInt32
 	Public extraLength As UInt32
 	Public unused02 As UInt32
 
