@@ -4120,7 +4120,7 @@ Public Class SourceMdlFile49
 	End Sub
 
 	Public Sub ReadBodygroupPresets()
-		If Me.theMdlFileData.bodygroupPresetCount > 0 Then
+		If Me.theMdlFileData.bodygroupPresetCount > 0 AndAlso Me.theMdlFileData.bodygroupPresetOffset <> 0 Then
 			Dim bodygroupPresetInputFileStreamPosition As Long
 			Dim inputFileStreamPosition As Long
 			Dim fileOffsetStart As Long

@@ -619,6 +619,7 @@ Public Class SourceModel49
 			'End If
 			'qcFile.WriteModelCommand()
 			qcFile.WriteBodyGroupCommand()
+			qcFile.WriteBodyGroupPresetCommand()
 			qcFile.WriteGroup("lod", AddressOf qcFile.WriteGroupLod, False, False)
 
 			qcFile.WriteSurfacePropCommand()
