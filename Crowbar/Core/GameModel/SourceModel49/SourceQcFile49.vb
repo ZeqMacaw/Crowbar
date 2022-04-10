@@ -4759,7 +4759,7 @@ Public Class SourceQcFile49
 		Dim accumMask As Integer
 		Dim accumValue As Integer
 		Dim currentBodyModelValue As Integer
-		Dim bodyGroupPresetLines As New List(Of String)()
+		Dim bodyGroupPresetLines As List(Of String)
 
 		For Each aBodyGroupPreset As SourceMdlBodygroupPreset In Me.theMdlFileData.theBodygroupPresets
 			line = ""
@@ -4780,6 +4780,7 @@ Public Class SourceQcFile49
 
 			accumMask = aBodyGroupPreset.mask
 			accumValue = aBodyGroupPreset.value
+			bodyGroupPresetLines = New List(Of String)()
 			For bodyPartIndex As Integer = Me.theMdlFileData.theBodyParts.Count - 1 To 0 Step -1
 				aBodyPart = Me.theMdlFileData.theBodyParts(bodyPartIndex)
 				currentBodyModelValue = 0
