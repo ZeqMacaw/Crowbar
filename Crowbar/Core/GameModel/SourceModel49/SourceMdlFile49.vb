@@ -422,7 +422,10 @@ Public Class SourceMdlFile49
 					ElseIf aBone.theName Is Nothing Then
 						aBone.theName = ""
 					End If
-					Me.theMdlFileData.theBoneNameToBoneIndexMap.Add(aBone.theName, boneIndex)
+					' Model versions above MDL37 can have multiple bones with same name, so avoid raising exception from adding duplicate name.
+					If Not Me.theMdlFileData.theBoneNameToBoneIndexMap.ContainsKey(aBone.theName) Then
+						Me.theMdlFileData.theBoneNameToBoneIndexMap.Add(aBone.theName, boneIndex)
+					End If
 
 					If aBone.proceduralRuleOffset <> 0 Then
 						If aBone.proceduralRuleType = SourceMdlBone.STUDIO_PROC_AXISINTERP Then
