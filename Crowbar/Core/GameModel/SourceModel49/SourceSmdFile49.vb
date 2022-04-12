@@ -182,7 +182,7 @@ Public Class SourceSmdFile49
 		Me.theOutputFileStreamWriter.WriteLine(line)
 	End Sub
 
-	Public Sub WriteTrianglesSection(ByVal aVtxModel As SourceVtxModel07, ByVal lodIndex As Integer, ByVal aModel As SourceMdlModel, ByVal bodyPartVertexIndexStart As Integer)
+	Public Sub WriteTrianglesSection(ByVal aVtxModel As SourceVtxModel07, ByVal lodIndex As Integer, ByVal aModel As SourceMdlModel, ByVal bodyPartVertexIndexStart As Integer, ByVal extraUvChannelIndex As Integer)
 		Dim line As String = ""
 		Dim materialLine As String = ""
 		Dim vertex1Line As String = ""
@@ -239,9 +239,9 @@ Public Class SourceSmdFile49
 									'------
 									'NOTE: studiomdl.exe will complain if texture name for eyeball is not at start of line.
 									materialLine = materialFileName
-									vertex1Line = Me.WriteVertexLine(aStripGroup, vtxIndexIndex, lodIndex, meshVertexIndexStart, bodyPartVertexIndexStart)
-									vertex2Line = Me.WriteVertexLine(aStripGroup, vtxIndexIndex + 2, lodIndex, meshVertexIndexStart, bodyPartVertexIndexStart)
-									vertex3Line = Me.WriteVertexLine(aStripGroup, vtxIndexIndex + 1, lodIndex, meshVertexIndexStart, bodyPartVertexIndexStart)
+									vertex1Line = Me.WriteVertexLine(aStripGroup, vtxIndexIndex, lodIndex, meshVertexIndexStart, bodyPartVertexIndexStart, extraUvChannelIndex)
+									vertex2Line = Me.WriteVertexLine(aStripGroup, vtxIndexIndex + 2, lodIndex, meshVertexIndexStart, bodyPartVertexIndexStart, extraUvChannelIndex)
+									vertex3Line = Me.WriteVertexLine(aStripGroup, vtxIndexIndex + 1, lodIndex, meshVertexIndexStart, bodyPartVertexIndexStart, extraUvChannelIndex)
 									If vertex1Line.StartsWith("// ") OrElse vertex2Line.StartsWith("// ") OrElse vertex3Line.StartsWith("// ") Then
 										materialLine = "// " + materialLine
 										If Not vertex1Line.StartsWith("// ") Then
@@ -1563,7 +1563,7 @@ Public Class SourceSmdFile49
 		'End If
 	End Sub
 
-	Private Function WriteVertexLine(ByVal aStripGroup As SourceVtxStripGroup07, ByVal aVtxIndexIndex As Integer, ByVal lodIndex As Integer, ByVal meshVertexIndexStart As Integer, ByVal bodyPartVertexIndexStart As Integer) As String
+	Private Function WriteVertexLine(ByVal aStripGroup As SourceVtxStripGroup07, ByVal aVtxIndexIndex As Integer, ByVal lodIndex As Integer, ByVal meshVertexIndexStart As Integer, ByVal bodyPartVertexIndexStart As Integer, ByVal extraUvChannelIndex As Integer) As String
 		Dim aVtxVertexIndex As UShort
 		Dim aVtxVertex As SourceVtxVertex07
 		Dim aVertex As SourceVertex
@@ -1616,10 +1616,19 @@ Public Class SourceSmdFile49
 			line += " "
 			line += aVertex.normalZ.ToString("0.000000", TheApp.InternalNumberFormat)
 
-			line += " "
-			line += aVertex.texCoordX.ToString("0.000000", TheApp.InternalNumberFormat)
-			line += " "
-			line += (1 - aVertex.texCoordY).ToString("0.000000", TheApp.InternalNumberFormat)
+			If extraUvChannelIndex = -1 Then
+				line += " "
+				line += aVertex.texCoordX.ToString("0.000000", TheApp.InternalNumberFormat)
+				line += " "
+				line += (1 - aVertex.texCoordY).ToString("0.000000", TheApp.InternalNumberFormat)
+			Else
+				Dim u As Double = Me.theVvdFileData.theExtraDatas(extraUvChannelIndex).theTextureCoordinates(vertexIndex).X
+				Dim v As Double = Me.theVvdFileData.theExtraDatas(extraUvChannelIndex).theTextureCoordinates(vertexIndex).Y
+				line += " "
+				line += u.ToString("0.000000", TheApp.InternalNumberFormat)
+				line += " "
+				line += (1 - v).ToString("0.000000", TheApp.InternalNumberFormat)
+			End If
 
 			line += " "
 			line += aVertex.boneWeight.boneCount.ToString(TheApp.InternalNumberFormat)

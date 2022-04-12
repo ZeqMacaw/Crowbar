@@ -122,6 +122,8 @@
     <Compile Include="Core\Compiler\CompilerOutputInfo.vb" />
     <Compile Include="Core\Compiler\ParseMeshSmdInfo.vb" />
     <Compile Include="Core\Compiler\ParseSMD.vb" />
+    <Compile Include="Core\GameModel\CompiledFiles\VvdFile\VvdFile04\SourceVvdExtraData04.vb" />
+    <Compile Include="Core\GameModel\SourceGlobal\SourceTextureCoordinates.vb" />
     <Compile Include="Core\GamePackage\ApkFile\ApkDirectoryEntry.vb" />
     <Compile Include="Core\GamePackage\ApkFile\ApkFile.vb" />
     <Compile Include="Core\GamePackage\ApkFile\ApkFileData.vb" />

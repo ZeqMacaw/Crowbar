@@ -2,7 +2,7 @@
 
 Module SourceFileNamesModule
 
-	Public Function CreateBodyGroupSmdFileName(ByVal givenBodyGroupSmdFileName As String, ByVal bodyPartIndex As Integer, ByVal modelIndex As Integer, ByVal lodIndex As Integer, ByVal modelName As String, ByVal bodyModelName As String) As String
+	Public Function CreateBodyGroupSmdFileName(ByVal givenBodyGroupSmdFileName As String, ByVal bodyPartIndex As Integer, ByVal modelIndex As Integer, ByVal lodIndex As Integer, ByVal modelName As String, ByVal bodyModelName As String, Optional ByVal extraUvChannelIndex As Integer = -1) As String
 		'Dim bodyModelNameTrimmed As String
 		'Dim bodyModelFileName As String = ""
 		'Dim bodyModelFileNameWithoutExtension As String
@@ -100,6 +100,14 @@ Module SourceFileNamesModule
 
 		If Not String.IsNullOrEmpty(givenBodyGroupSmdFileName) Then
 			bodyGroupSmdFileName = givenBodyGroupSmdFileName
+			If lodIndex = 0 Then
+				If extraUvChannelIndex >= 0 Then
+					bodyGroupSmdFileName = Path.GetFileNameWithoutExtension(givenBodyGroupSmdFileName)
+					bodyGroupSmdFileName += "_uv"
+					bodyGroupSmdFileName += extraUvChannelIndex.ToString()
+					bodyGroupSmdFileName += Path.GetExtension(givenBodyGroupSmdFileName)
+				End If
+			End If
 		Else
 			Try
 				bodyModelFileName = Path.GetFileName(bodyModelName.Trim(Chr(0)))
@@ -121,7 +129,12 @@ Module SourceFileNamesModule
 				bodyGroupSmdFileName += modelName + "_"
 			End If
 			bodyGroupSmdFileName += bodyModelFileNameWithoutExtension
-			If lodIndex > 0 Then
+			If lodIndex = 0 Then
+				If extraUvChannelIndex >= 0 Then
+					bodyGroupSmdFileName += "_uv"
+					bodyGroupSmdFileName += extraUvChannelIndex.ToString()
+				End If
+			Else
 				bodyGroupSmdFileName += "_lod"
 				bodyGroupSmdFileName += lodIndex.ToString()
 			End If

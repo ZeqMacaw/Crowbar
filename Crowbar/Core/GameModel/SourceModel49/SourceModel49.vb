@@ -594,7 +594,9 @@ Public Class SourceModel49
 
 		vvdFile.ReadSourceVvdHeader()
 		vvdFile.ReadVertexes(Me.theMdlFileData.version)
+		vvdFile.ReadTangents()
 		vvdFile.ReadFixups()
+		vvdFile.ReadExtraData()
 		vvdFile.ReadUnreadBytes()
 	End Sub
 
@@ -718,6 +720,7 @@ Public Class SourceModel49
 		Dim aVtxBodyModel As SourceVtxModel07
 		Dim aBodyModel As SourceMdlModel
 		Dim bodyPartVertexIndexStart As Integer
+		Dim extraUvChannelCount As Integer
 
 		bodyPartVertexIndexStart = 0
 		If Me.theVtxFileData.theVtxBodyParts IsNot Nothing AndAlso Me.theMdlFileData.theBodyParts IsNot Nothing Then
@@ -740,22 +743,31 @@ Public Class SourceModel49
 									Exit For
 								End If
 
-								smdFileName = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(lodIndex), bodyPartIndex, modelIndex, lodIndex, Me.theName, Me.theMdlFileData.theBodyParts(bodyPartIndex).theModels(modelIndex).name)
-								smdPathFileName = Path.Combine(modelOutputPath, smdFileName)
-
-								Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, smdPathFileName)
-								'NOTE: Check here in case writing is canceled in the above event.
-								If Me.theWritingIsCanceled Then
-									status = StatusMessage.Canceled
-									Return status
-								ElseIf Me.theWritingSingleFileIsCanceled Then
-									Me.theWritingSingleFileIsCanceled = False
-									Continue For
+								If lodIndex = 0 AndAlso Me.theVvdFileData49.theExtraDatas IsNot Nothing AndAlso Me.theVvdFileData49.theExtraDatas.Count > 0 Then
+									extraUvChannelCount = Me.theVvdFileData49.theExtraDatas.Count
+								Else
+									extraUvChannelCount = 0
 								End If
 
-								Me.WriteMeshSmdFile(smdPathFileName, lodIndex, aVtxBodyModel, aBodyModel, bodyPartVertexIndexStart)
+								For extraUvChannelIndex As Integer = -1 To extraUvChannelCount - 1
+									smdFileName = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(lodIndex), bodyPartIndex, modelIndex, lodIndex, Me.theName, Me.theMdlFileData.theBodyParts(bodyPartIndex).theModels(modelIndex).name, extraUvChannelIndex)
+									smdPathFileName = Path.Combine(modelOutputPath, smdFileName)
 
-								Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, smdPathFileName)
+									Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, smdPathFileName)
+									'NOTE: Check here in case writing is canceled in the above event.
+									If Me.theWritingIsCanceled Then
+										status = StatusMessage.Canceled
+										Return status
+									ElseIf Me.theWritingSingleFileIsCanceled Then
+										Me.theWritingSingleFileIsCanceled = False
+										Continue For
+									End If
+
+									Me.theExtraUvChannelIndex = extraUvChannelIndex
+									Me.WriteMeshSmdFile(smdPathFileName, lodIndex, aVtxBodyModel, aBodyModel, bodyPartVertexIndexStart)
+
+									Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, smdPathFileName)
+								Next
 							Next
 
 							bodyPartVertexIndexStart += aBodyModel.vertexCount
@@ -777,7 +789,7 @@ Public Class SourceModel49
 			smdFile.WriteHeaderSection()
 			smdFile.WriteNodesSection()
 			smdFile.WriteSkeletonSection(lodIndex)
-			smdFile.WriteTrianglesSection(aVtxModel, lodIndex, aModel, bodyPartVertexIndexStart)
+			smdFile.WriteTrianglesSection(aVtxModel, lodIndex, aModel, bodyPartVertexIndexStart, Me.theExtraUvChannelIndex)
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		End Try
@@ -942,6 +954,7 @@ Public Class SourceModel49
 	Private theVvdFileData49 As SourceVvdFileData04
 
 	'Private theCorrectiveAnimationDescs As List(Of SourceMdlAnimationDesc49)
+	Private theExtraUvChannelIndex As Integer
 
 #End Region
 
