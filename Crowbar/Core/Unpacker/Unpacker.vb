@@ -614,8 +614,8 @@ Public Class Unpacker
 		ElseIf e.Progress = ProgressOptions.WritingFileFinished Then
 			Dim entry As SourcePackageDirectoryEntry = e.Entry
 			Dim outputPathFileName As String = e.Message
-			Dim fileName As String = Path.GetFileName(outputPathFileName)
-			Me.UpdateProgress(4, fileName)
+			'Dim fileName As String = Path.GetFileName(outputPathFileName)
+			'Me.UpdateProgress(4, fileName)
 
 			If File.Exists(outputPathFileName) Then
 				If Not Me.theUnpackedPaths.Contains(Me.theOutputPath) Then

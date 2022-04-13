@@ -1,5 +1,4 @@
 ﻿Imports System.ComponentModel
-Imports System.Runtime.InteropServices
 Imports System.IO
 Imports System.Text
 
@@ -343,18 +342,17 @@ Public Class VpkFile
 							If entryBlock.compressedSize = entryBlock.uncompressedSize Then
 								Dim bytes() As Byte = Me.theVpkDataFileReader.ReadBytes(CInt(entryBlock.compressedSize))
 								Me.theOutputFileWriter.Write(bytes)
+
+								'If entry.titanfallEntryBlocks.Count > 1 Then
+								'	Dim debug As Integer = 4242
+								'End If
 							Else
-								Dim bytes() As Byte = Me.theVpkDataFileReader.ReadBytes(CInt(entryBlock.compressedSize))
-								'TODO: Need to redo size of byte array to handle uncompressedSize > Int32.
+								Dim compressedBytes() As Byte = Me.theVpkDataFileReader.ReadBytes(CInt(entryBlock.compressedSize))
+								'TODO: Might need to redo size of byte array to handle uncompressedSize > Int32.
 								Dim uncompressedlength As Int32 = CInt(entryBlock.uncompressedSize)
 								Dim uncompressedBytes(uncompressedlength - 1) As Byte
-								Dim adler32 As UInt32
 
-								Dim params As New DecompressionParameters()
-								params.m_struct_size = CUInt(Marshal.SizeOf(params))
-								params.m_dict_size_log2 = 20
-								params.m_decompress_flags = DecompressionFlag.OutputUnbuffered
-								Dim status As Integer = lzham_decompress_memory(params, uncompressedBytes, uncompressedBytes.Length, bytes, bytes.Length, adler32)
+								Dim status As Integer = LzhamApi.Decompress(compressedBytes, uncompressedBytes)
 
 								Me.theOutputFileWriter.Write(uncompressedBytes)
 							End If
@@ -386,28 +384,6 @@ Public Class VpkFile
 			End If
 		End Try
 	End Sub
-
-	'FROM: Use Lzham alpha version: https://github.com/richgel999/lzham_alpha
-	'      More recent versions [as of 05-Apr-2022] do not work: https://github.com/richgel999/lzham_codec 
-	'lzham_decompress_status_t lzham_decompress_memory(const lzham_decompress_params *pParams, lzham_uint8* pDst_buf, size_t *pDst_len, const lzham_uint8* pSrc_buf, size_t src_len, lzham_uint32 *pAdler32)
-	<DllImport("lzham_x86.dll", CallingConvention:=CallingConvention.Cdecl)>
-	Private Shared Function lzham_decompress_memory(ByRef parameters As DecompressionParameters, dstBuffer As Byte(), ByRef dstLength As Int32, srcBuffer As Byte(), srcLength As Int32, ByRef adler32 As UInt32) As Integer
-	End Function
-
-	Public Enum DecompressionFlag
-		OutputUnbuffered = 1
-		ComputeAdler32 = 2
-		ReadZlibStream = 4
-	End Enum
-
-	<StructLayout(LayoutKind.Sequential)>
-	Public Structure DecompressionParameters
-		Public m_struct_size As UInteger
-		Public m_dict_size_log2 As UInteger
-		Public m_decompress_flags As DecompressionFlag
-		Public m_num_seed_bytes As UInteger
-		Public m_pSeed_bytes As Byte()
-	End Structure
 
 #End Region
 
