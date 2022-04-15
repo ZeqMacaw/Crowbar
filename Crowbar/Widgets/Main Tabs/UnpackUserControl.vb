@@ -437,15 +437,11 @@ Public Class UnpackUserControl
 	'End Sub
 
 	Private Sub PackageListView_ItemSelectionChanged(sender As Object, e As ListViewItemSelectionChangedEventArgs) Handles PackageListView.ItemSelectionChanged
-		If e.IsSelected Then
-			Me.UpdateSelectionCounts()
-		End If
+		Me.UpdateSelectionCounts()
 	End Sub
 
 	Private Sub PackageListView_VirtualItemsSelectionRangeChanged(sender As Object, e As ListViewVirtualItemsSelectionRangeChangedEventArgs) Handles PackageListView.VirtualItemsSelectionRangeChanged
-		If e.IsSelected Then
-			Me.UpdateSelectionCounts()
-		End If
+		Me.UpdateSelectionCounts()
 	End Sub
 
 	Private Sub ToggleSizeUnitsToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToggleSizeUnitsToolStripMenuItem.Click
