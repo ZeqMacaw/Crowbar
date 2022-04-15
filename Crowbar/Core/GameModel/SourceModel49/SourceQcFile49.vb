@@ -4753,6 +4753,64 @@ Public Class SourceQcFile49
 		End If
 	End Sub
 
+	Public Sub WriteBodyGroupPresetCommand()
+		If Me.theMdlFileData.theBodygroupPresets IsNot Nothing AndAlso Me.theMdlFileData.theBodygroupPresets.Count > 0 Then
+			Dim line As String = ""
+			Dim aBodyPart As SourceMdlBodyPart
+			Dim accumMask As Integer
+			Dim accumValue As Integer
+			Dim currentBodyModelValue As Integer
+			Dim bodyGroupPresetLines As List(Of String)
+
+			For Each aBodyGroupPreset As SourceMdlBodygroupPreset In Me.theMdlFileData.theBodygroupPresets
+				line = ""
+				Me.theOutputFileStreamWriter.WriteLine(line)
+
+				If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+					line = "$BodyGroupPreset"
+				Else
+					line = "$bodygrouppreset"
+				End If
+				line += " """
+				line += aBodyGroupPreset.theName
+				line += """"
+				Me.theOutputFileStreamWriter.WriteLine(line)
+
+				line = "{"
+				Me.theOutputFileStreamWriter.WriteLine(line)
+
+				accumMask = aBodyGroupPreset.mask
+				accumValue = aBodyGroupPreset.value
+				bodyGroupPresetLines = New List(Of String)()
+				For bodyPartIndex As Integer = Me.theMdlFileData.theBodyParts.Count - 1 To 0 Step -1
+					aBodyPart = Me.theMdlFileData.theBodyParts(bodyPartIndex)
+					currentBodyModelValue = 0
+					If aBodyPart.modelCount > 1 AndAlso accumMask >= aBodyPart.base Then
+						accumMask -= aBodyPart.base
+						While accumValue >= aBodyPart.base
+							currentBodyModelValue += 1
+							accumValue -= aBodyPart.base
+						End While
+
+						line = vbTab
+						line += """"
+						line += aBodyPart.theName
+						line += """ "
+						line += currentBodyModelValue.ToString(TheApp.InternalNumberFormat)
+						bodyGroupPresetLines.Add(line)
+					End If
+				Next
+				For bodyGroupPresetLineIndex As Integer = bodyGroupPresetLines.Count - 1 To 0 Step -1
+					line = bodyGroupPresetLines(bodyGroupPresetLineIndex)
+					Me.theOutputFileStreamWriter.WriteLine(line)
+				Next
+
+				line = "}"
+				Me.theOutputFileStreamWriter.WriteLine(line)
+			Next
+		End If
+	End Sub
+
 	Public Sub WriteControllerCommand()
 		Dim line As String = ""
 		Dim boneController As SourceMdlBoneController

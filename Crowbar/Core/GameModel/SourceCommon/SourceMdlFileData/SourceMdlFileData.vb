@@ -999,4 +999,10 @@ Public Class SourceMdlFileData
 	Public Const STUDIOHDR_FLAGS_NO_ANIM_EVENTS As Integer = 1 << 20
 	Public Const STUDIOHDR_FLAGS_VERT_ANIM_FIXED_POINT_SCALE As Integer = 1 << 21
 
+	'FROM: [49] csgo_studiomdl\public\studio.h
+	'// internally generated combined model
+	Public Const STUDIOHDR_FLAGS_COMBINED As Integer = 1 << 25
+	'// Model has an additional set of UVs
+	Public Const STUDIOHDR_FLAGS_EXTRA_VERTEX_DATA As Integer = 1 << 26
+
 End Class

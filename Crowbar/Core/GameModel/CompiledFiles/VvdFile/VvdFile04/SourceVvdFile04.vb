@@ -39,6 +39,7 @@ Public Class SourceVvdFile04
 		Me.theVvdFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "VVD File Header")
 	End Sub
 
+	'NOTE: Me.theVvdFileData.lodVertexCount(0) is the count for all vertices stored.
 	Public Sub ReadVertexes(Optional ByVal mdlVersion As Integer = 0)
 		If Me.theVvdFileData.lodCount <= 0 Then
 			Exit Sub
@@ -107,6 +108,36 @@ Public Class SourceVvdFile04
 		Me.theVvdFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theVertexes " + Me.theVvdFileData.theVertexes.Count.ToString())
 	End Sub
 
+	' Not needed for decompiling, but is nice to have for debugging.
+	'NOTE: Me.theVvdFileData.lodVertexCount(0) is the count for all tangents stored.
+	Public Sub ReadTangents()
+		If Me.theVvdFileData.lodCount <= 0 Then
+			Exit Sub
+		End If
+
+		Dim fileOffsetStart As Long
+		Dim fileOffsetEnd As Long
+
+		Me.theInputFileReader.BaseStream.Seek(Me.theVvdFileOffsetStart + Me.theVvdFileData.tangentDataOffset, SeekOrigin.Begin)
+		fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+
+		Dim vertexCount As Integer
+		vertexCount = Me.theVvdFileData.lodVertexCount(0)
+		Me.theVvdFileData.theTangents = New List(Of SourceVector4D)(vertexCount)
+		For j As Integer = 0 To vertexCount - 1
+			Dim aSourceVector4D As New SourceVector4D()
+
+			aSourceVector4D.x = Me.theInputFileReader.ReadSingle()
+			aSourceVector4D.y = Me.theInputFileReader.ReadSingle()
+			aSourceVector4D.z = Me.theInputFileReader.ReadSingle()
+			aSourceVector4D.w = Me.theInputFileReader.ReadSingle()
+			Me.theVvdFileData.theTangents.Add(aSourceVector4D)
+		Next
+
+		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
+		Me.theVvdFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theTangents " + Me.theVvdFileData.theTangents.Count.ToString())
+	End Sub
+
 	Public Sub ReadFixups()
 		If Me.theVvdFileData.fixupCount > 0 Then
 			Dim fileOffsetStart As Long
@@ -136,6 +167,63 @@ Public Class SourceVvdFile04
 				Next
 			End If
 		End If
+	End Sub
+
+	Public Sub ReadExtraData()
+		If Me.theVvdFileData.lodCount <= 0 Then
+			Exit Sub
+		End If
+
+		Dim fileOffsetStart As Long
+		Dim fileOffsetEnd As Long
+
+		Try
+			' The "* 16" is the size of the x,y,z,w values stored in a SourceVector4D.
+			Dim extraDataOffset As Long = Me.theVvdFileOffsetStart + Me.theVvdFileData.tangentDataOffset + Me.theVvdFileData.lodVertexCount(0) * 16
+			If extraDataOffset >= Me.theInputFileReader.BaseStream.Length Then
+				' No extra data stored.
+				Exit Sub
+			End If
+			Me.theInputFileReader.BaseStream.Seek(extraDataOffset, SeekOrigin.Begin)
+			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+
+			'FROM: [49] csgo_studiomdl\public\studio.h
+			'	int		m_count; // Number of individual extra attribute chunks
+			'	int		m_totalbytes; // Total size of extra attribute data (all chunks plus header and index)
+			Dim extraDataCount As Integer = Me.theInputFileReader.ReadInt32()
+			Dim extraDataByteCount As Integer = Me.theInputFileReader.ReadInt32()
+
+			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
+			Me.theVvdFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "ExtraDataCount = " + extraDataCount.ToString() + "; ExtraDataByteCount = " + extraDataByteCount.ToString())
+
+			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+
+			Dim vertexCount As Integer
+			vertexCount = Me.theVvdFileData.lodVertexCount(0)
+			Me.theVvdFileData.theExtraDatas = New List(Of SourceVvdExtraData04)(extraDataCount)
+			For i As Integer = 0 To extraDataCount - 1
+				Dim anExtraData As New SourceVvdExtraData04()
+
+				anExtraData.type = CType(Me.theInputFileReader.ReadInt32(), SourceVvdExtraData04.ExtraVertexAttributeType)
+				anExtraData.offset = Me.theInputFileReader.ReadInt32()
+				anExtraData.bytesPerVertex = Me.theInputFileReader.ReadInt32()
+				Me.theVvdFileData.theExtraDatas.Add(anExtraData)
+
+				anExtraData.theTextureCoordinates = New List(Of SourceTextureCoordinates)(vertexCount)
+				For j As Integer = 0 To vertexCount - 1
+					Dim aTextureCoordinates As New SourceTextureCoordinates()
+
+					aTextureCoordinates.X = Me.theInputFileReader.ReadSingle()
+					aTextureCoordinates.Y = Me.theInputFileReader.ReadSingle()
+					anExtraData.theTextureCoordinates.Add(aTextureCoordinates)
+				Next
+			Next
+		Catch ex As Exception
+			Dim debug As Integer = 4242
+		End Try
+
+		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
+		Me.theVvdFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "ExtraData (Second UV)")
 	End Sub
 
 	Public Sub ReadUnreadBytes()

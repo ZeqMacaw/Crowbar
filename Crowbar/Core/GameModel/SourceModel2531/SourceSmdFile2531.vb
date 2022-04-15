@@ -257,7 +257,7 @@ Public Class SourceSmdFile2531
 		Dim aBone As SourceMdlBone2531
 		Dim boneIndex As Integer
 		Dim aTriangle As SourcePhyFace
-		Dim faceSection As SourcePhyFaceSection
+		Dim faceSection As SourcePhyConvexMesh
 		Dim phyVertex As SourcePhyVertex
 		Dim aVectorTransformed As SourceVector
 		Dim aSourcePhysCollisionModel As SourcePhyPhysCollisionModel
@@ -273,8 +273,8 @@ Public Class SourceSmdFile2531
 						aSourcePhysCollisionModel = Nothing
 					End If
 
-					For faceSectionIndex As Integer = 0 To collisionData.theFaceSections.Count - 1
-						faceSection = collisionData.theFaceSections(faceSectionIndex)
+					For faceSectionIndex As Integer = 0 To collisionData.theConvexMeshes.Count - 1
+						faceSection = collisionData.theConvexMeshes(faceSectionIndex)
 
 						If faceSection.theBoneIndex >= Me.theMdlFileData.theBones.Count Then
 							Continue For

@@ -41,9 +41,10 @@ Public Class SourceVvdFileData04
 
 
 
-	'Public theVertexesByLod(MAX_NUM_LODS - 1) As List(Of SourceVertex)
-	Public theVertexes As List(Of SourceVertex)
-	Public theFixups As List(Of SourceVvdFixup04)
+	Public theExtraDatas As List(Of SourceVvdExtraData04)
 	Public theFixedVertexesByLod(MAX_NUM_LODS - 1) As List(Of SourceVertex)
+	Public theFixups As List(Of SourceVvdFixup04)
+	Public theTangents As List(Of SourceVector4D)
+	Public theVertexes As List(Of SourceVertex)
 
 End Class

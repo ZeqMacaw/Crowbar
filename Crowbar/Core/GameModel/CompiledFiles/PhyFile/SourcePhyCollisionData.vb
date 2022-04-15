@@ -26,7 +26,7 @@ Public Class SourcePhyCollisionData
 
 	'Public theBoneIndex As Integer
 	'Public theFaces As List(Of SourcePhyFace)
-	Public theFaceSections As List(Of SourcePhyFaceSection)
+	Public theConvexMeshes As List(Of SourcePhyConvexMesh)
 	'Public theVertices As List(Of SourceVector)
 	Public theVertices As List(Of SourcePhyVertex)
 

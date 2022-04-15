@@ -309,6 +309,11 @@ Public Class SourceMdlFile49
 		Me.theMdlFileData.boneFlexDriverCount = Me.theInputFileReader.ReadInt32()
 		Me.theMdlFileData.boneFlexDriverOffset = Me.theInputFileReader.ReadInt32()
 
+		Me.theMdlFileData.unknownValue = Me.theInputFileReader.ReadInt32()
+
+		Me.theMdlFileData.bodygroupPresetCount = Me.theInputFileReader.ReadInt32()
+		Me.theMdlFileData.bodygroupPresetOffset = fileOffsetStart + Me.theInputFileReader.ReadInt32()
+
 		For x As Integer = 0 To Me.theMdlFileData.reserved.Length - 1
 			Me.theMdlFileData.reserved(x) = Me.theInputFileReader.ReadInt32()
 		Next
@@ -417,7 +422,10 @@ Public Class SourceMdlFile49
 					ElseIf aBone.theName Is Nothing Then
 						aBone.theName = ""
 					End If
-					Me.theMdlFileData.theBoneNameToBoneIndexMap.Add(aBone.theName, boneIndex)
+					' Model versions above MDL37 can have multiple bones with same name, so avoid raising exception from adding duplicate name.
+					If Not Me.theMdlFileData.theBoneNameToBoneIndexMap.ContainsKey(aBone.theName) Then
+						Me.theMdlFileData.theBoneNameToBoneIndexMap.Add(aBone.theName, boneIndex)
+					End If
 
 					If aBone.proceduralRuleOffset <> 0 Then
 						If aBone.proceduralRuleType = SourceMdlBone.STUDIO_PROC_AXISINTERP Then
@@ -4108,6 +4116,59 @@ Public Class SourceMdlFile49
 				Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart2, fileOffsetEnd2, "theMdlFileData.theLinearBoneTable.theQAlignments")
 				'End If
 				Me.theMdlFileData.theFileSeekLog.LogToEndAndAlignToNextStart(Me.theInputFileReader, fileOffsetEnd2, 4, "theMdlFileData.theLinearBoneTable.theQAlignments alignment")
+			Catch ex As Exception
+				Dim debug As Integer = 4242
+			End Try
+		End If
+	End Sub
+
+	Public Sub ReadBodygroupPresets()
+		If Me.theMdlFileData.bodygroupPresetCount > 0 AndAlso Me.theMdlFileData.bodygroupPresetOffset <> 0 Then
+			Dim bodygroupPresetInputFileStreamPosition As Long
+			Dim inputFileStreamPosition As Long
+			Dim fileOffsetStart As Long
+			Dim fileOffsetEnd As Long
+			Dim fileOffsetStart2 As Long
+			Dim fileOffsetEnd2 As Long
+
+			Try
+				Me.theInputFileReader.BaseStream.Seek(Me.theMdlFileData.bodygroupPresetOffset, SeekOrigin.Begin)
+				fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+
+				Me.theMdlFileData.theBodygroupPresets = New List(Of SourceMdlBodygroupPreset)(Me.theMdlFileData.bodygroupPresetCount)
+				For i As Integer = 0 To Me.theMdlFileData.bodygroupPresetCount - 1
+					bodygroupPresetInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+					Dim aBodygroupPreset As New SourceMdlBodygroupPreset()
+
+					aBodygroupPreset.nameOffset = Me.theInputFileReader.ReadInt32()
+					aBodygroupPreset.value = Me.theInputFileReader.ReadInt32()
+					aBodygroupPreset.mask = Me.theInputFileReader.ReadInt32()
+
+					Me.theMdlFileData.theBodygroupPresets.Add(aBodygroupPreset)
+
+					inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+
+					If aBodygroupPreset.nameOffset <> 0 Then
+						Me.theInputFileReader.BaseStream.Seek(bodygroupPresetInputFileStreamPosition + aBodygroupPreset.nameOffset, SeekOrigin.Begin)
+						fileOffsetStart2 = Me.theInputFileReader.BaseStream.Position
+
+						aBodygroupPreset.theName = FileManager.ReadNullTerminatedString(Me.theInputFileReader)
+
+						fileOffsetEnd2 = Me.theInputFileReader.BaseStream.Position - 1
+						If Not Me.theMdlFileData.theFileSeekLog.ContainsKey(fileOffsetStart2) Then
+							Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart2, fileOffsetEnd2, "aBodygroupPreset.theName = " + aBodygroupPreset.theName)
+						End If
+					ElseIf aBodygroupPreset.theName Is Nothing Then
+						aBodygroupPreset.theName = ""
+					End If
+
+					Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
+				Next
+
+				fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
+				Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theMdlFileData.theBodygroupPresets " + Me.theMdlFileData.theBodygroupPresets.Count.ToString())
+
+				'Me.theMdlFileData.theFileSeekLog.LogToEndAndAlignToNextStart(Me.theInputFileReader, fileOffsetEnd, 4, "theMdlFileData.theBodygroupPresets alignment")
 			Catch ex As Exception
 				Dim debug As Integer = 4242
 			End Try

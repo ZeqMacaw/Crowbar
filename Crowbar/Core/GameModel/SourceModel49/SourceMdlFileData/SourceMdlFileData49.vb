@@ -497,7 +497,16 @@
 	Public nameCopyOffset As Integer
 	Public boneFlexDriverCount As Integer
 	Public boneFlexDriverOffset As Integer
-	Public reserved(55) As Integer
+
+	'For CSGO models.
+	Public unknownValue As Integer
+	Public bodygroupPresetCount As Integer
+	Public bodygroupPresetOffset As Long
+
+	'Public reserved(55) As Integer
+	Public reserved(52) As Integer
+	'======
+	'Public studiohdr2(63) As Integer
 
 
 
@@ -505,6 +514,7 @@
 	Public theAnimBlocks As List(Of SourceMdlAnimBlock)
 	Public theAnimBlockRelativePathFileName As String
 	Public theAttachments As List(Of SourceMdlAttachment)
+	Public theBodygroupPresets As List(Of SourceMdlBodygroupPreset)
 	Public theBodyParts As List(Of SourceMdlBodyPart)
 	Public theBoneControllers As List(Of SourceMdlBoneController)
 	Public theBones As List(Of SourceMdlBone)

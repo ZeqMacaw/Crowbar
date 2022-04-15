@@ -54,14 +54,20 @@ Public Class SourcePhyFile
 		Dim faceDataStreamPosition As Long
 		Dim vertexDataStreamPosition As Long
 		Dim vertexDataOffset As Long
-		Dim faceSection As SourcePhyFaceSection
+		Dim convexMesh As SourcePhyConvexMesh
+
+		If Me.thePhyFileData.solidCount = 1 Then
+			Me.thePhyFileData.theSourcePhyIsCollisionModel = True
+		End If
 
 		Me.thePhyFileData.theSourcePhyMaxConvexPieces = 0
 		Me.thePhyFileData.theSourcePhyCollisionDatas = New List(Of SourcePhyCollisionData)()
 		For solidIndex As Integer = 0 To Me.thePhyFileData.solidCount - 1
 			Dim collisionData As New SourcePhyCollisionData()
-			collisionData.theFaceSections = New List(Of SourcePhyFaceSection)()
+			collisionData.theConvexMeshes = New List(Of SourcePhyConvexMesh)()
 			collisionData.theVertices = New List(Of SourcePhyVertex)()
+
+			Me.theBoneIndexes = New SortedSet(Of Integer)()
 
 			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
@@ -86,7 +92,7 @@ Public Class SourcePhyFile
 			vertices = New List(Of Integer)()
 			vertexDataStreamPosition = Me.theInputFileReader.BaseStream.Position + collisionData.size
 			While Me.theInputFileReader.BaseStream.Position < vertexDataStreamPosition
-				faceSection = New SourcePhyFaceSection()
+				convexMesh = New SourcePhyConvexMesh()
 
 				faceDataStreamPosition = Me.theInputFileReader.BaseStream.Position
 
@@ -96,20 +102,8 @@ Public Class SourcePhyFile
 				vertexDataOffset = Me.theInputFileReader.ReadInt32()
 				vertexDataStreamPosition = faceDataStreamPosition + vertexDataOffset
 
-				If vphyId <> "VPHY" Then
-					' This is MDL v37 model, so use different code.
-					faceSection.theBoneIndex = Me.theInputFileReader.ReadInt32()
-					If Me.thePhyFileData.solidCount = 1 Then
-						Me.thePhyFileData.theSourcePhyIsCollisionModel = True
-					End If
-				Else
-					'TODO: Verify why this is using "- 1". Needed for L4D2 survivor_teenangst.
-					faceSection.theBoneIndex = Me.theInputFileReader.ReadInt32() - 1
-					If faceSection.theBoneIndex < 0 Then
-						faceSection.theBoneIndex = 0
-						Me.thePhyFileData.theSourcePhyIsCollisionModel = True
-					End If
-				End If
+				convexMesh.theBoneIndex = Me.theInputFileReader.ReadInt32() - 1
+				Me.theBoneIndexes.Add(convexMesh.theBoneIndex)
 
 				Me.theInputFileReader.ReadInt32()
 
@@ -182,13 +176,13 @@ Public Class SourcePhyFile
 							vertices.Add(phyTriangle.vertexIndex(j))
 						End If
 					Next
-					faceSection.theFaces.Add(phyTriangle)
+					convexMesh.theFaces.Add(phyTriangle)
 				Next
-				collisionData.theFaceSections.Add(faceSection)
+				collisionData.theConvexMeshes.Add(convexMesh)
 			End While
 
-			If Me.thePhyFileData.theSourcePhyMaxConvexPieces < collisionData.theFaceSections.Count Then
-				Me.thePhyFileData.theSourcePhyMaxConvexPieces = collisionData.theFaceSections.Count
+			If Me.thePhyFileData.theSourcePhyMaxConvexPieces < collisionData.theConvexMeshes.Count Then
+				Me.thePhyFileData.theSourcePhyMaxConvexPieces = collisionData.theConvexMeshes.Count
 			End If
 
 			Me.theInputFileReader.BaseStream.Seek(vertexDataStreamPosition, SeekOrigin.Begin)
@@ -204,8 +198,8 @@ Public Class SourcePhyFile
 			'20 04 4b 39 34 79 4f 3d 82 e2 61 bc 78 f7 18 00 
 			'07 b1 fc 3d 1c 7d 4f 3d 90 15 89 bc 78 f7 18 00 
 			Dim w As Double
-			Dim faceSection0Vertices As List(Of SourcePhyVertex)
-			faceSection0Vertices = collisionData.theFaceSections(0).theVertices
+			Dim convexMesh0Vertices As List(Of SourcePhyVertex)
+			convexMesh0Vertices = collisionData.theConvexMeshes(0).theVertices
 			For i As Integer = 0 To vertices.Count - 1
 				Dim phyVertex As New SourcePhyVertex()
 
@@ -214,18 +208,18 @@ Public Class SourcePhyFile
 				phyVertex.vertex.z = Me.theInputFileReader.ReadSingle()
 				w = Me.theInputFileReader.ReadSingle()
 
-				faceSection0Vertices.Add(phyVertex)
+				convexMesh0Vertices.Add(phyVertex)
 			Next
-			For faceSectionIndex As Integer = 1 To collisionData.theFaceSections.Count - 1
-				faceSection = collisionData.theFaceSections(faceSectionIndex)
+			For convexMeshIndex As Integer = 1 To collisionData.theConvexMeshes.Count - 1
+				convexMesh = collisionData.theConvexMeshes(convexMeshIndex)
 				For i As Integer = 0 To vertices.Count - 1
 					Dim phyVertex As New SourcePhyVertex()
 
-					phyVertex.vertex.x = faceSection0Vertices(i).vertex.x
-					phyVertex.vertex.y = faceSection0Vertices(i).vertex.y
-					phyVertex.vertex.z = faceSection0Vertices(i).vertex.z
+					phyVertex.vertex.x = convexMesh0Vertices(i).vertex.x
+					phyVertex.vertex.y = convexMesh0Vertices(i).vertex.y
+					phyVertex.vertex.z = convexMesh0Vertices(i).vertex.z
 
-					faceSection.theVertices.Add(phyVertex)
+					convexMesh.theVertices.Add(phyVertex)
 				Next
 			Next
 
@@ -266,8 +260,12 @@ Public Class SourcePhyFile
 
 			Me.thePhyFileData.theSourcePhyCollisionDatas.Add(collisionData)
 
+			Dim boneIndexesText As String = ""
+			For Each boneIndex As Integer In Me.theBoneIndexes
+				boneIndexesText += "  " + boneIndex.ToString()
+			Next
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-			Me.thePhyFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "Solid(" + solidIndex.ToString() + ")")
+			Me.thePhyFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "Solid(" + solidIndex.ToString() + ")   Convex mesh count = " + collisionData.theConvexMeshes.Count.ToString() + "   Bone indexes:" + boneIndexesText)
 
 			Me.theInputFileReader.BaseStream.Seek(nextSolidDataStreamPosition, SeekOrigin.Begin)
 		Next
@@ -353,14 +351,14 @@ Public Class SourcePhyFile
 	Public Sub CalculateVertexNormals()
 		Dim collisionData As SourcePhyCollisionData
 		Dim aTriangle As SourcePhyFace
-		Dim faceSection As SourcePhyFaceSection
+		Dim faceSection As SourcePhyConvexMesh
 
 		If Me.thePhyFileData.theSourcePhyCollisionDatas IsNot Nothing Then
 			For collisionDataIndex As Integer = 0 To Me.thePhyFileData.theSourcePhyCollisionDatas.Count - 1
 				collisionData = Me.thePhyFileData.theSourcePhyCollisionDatas(collisionDataIndex)
 
-				For faceSectionIndex As Integer = 0 To collisionData.theFaceSections.Count - 1
-					faceSection = collisionData.theFaceSections(faceSectionIndex)
+				For faceSectionIndex As Integer = 0 To collisionData.theConvexMeshes.Count - 1
+					faceSection = collisionData.theConvexMeshes(faceSectionIndex)
 
 					For triangleIndex As Integer = 0 To faceSection.theFaces.Count - 1
 						aTriangle = faceSection.theFaces(triangleIndex)
@@ -712,7 +710,7 @@ Public Class SourcePhyFile
 
 #Region "Private Methods"
 
-	Private Sub CalculateFaceNormal(ByVal faceSection As SourcePhyFaceSection, ByVal aTriangle As SourcePhyFace)
+	Private Sub CalculateFaceNormal(ByVal faceSection As SourcePhyConvexMesh, ByVal aTriangle As SourcePhyFace)
 		Dim vertex(3) As SourceVector
 		Dim vector0 As New SourceVector()
 		Dim vector1 As New SourceVector()
@@ -759,6 +757,8 @@ Public Class SourcePhyFile
 	Private theDampingToCountMap As SortedList(Of Single, Integer)
 	Private theInertiaToCountMap As SortedList(Of Single, Integer)
 	Private theRotDampingToCountMap As SortedList(Of Single, Integer)
+
+	Private theBoneIndexes As SortedSet(Of Integer)
 
 #End Region
 
