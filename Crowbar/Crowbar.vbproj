@@ -103,7 +103,6 @@
     <Compile Include="Core\- Application\AppConstants.vb" />
     <Compile Include="Core\- Application\AppEnums.vb" />
     <Compile Include="Core\- Application\AppExceptionHandler.vb" />
-    <Compile Include="Core\- Application\LogMessage.vb" />
     <Compile Include="Core\- Application\SingleInstanceApplication.vb" />
     <Compile Include="Core\- Application\SingleInstanceEventArgs.vb" />
     <Compile Include="Core\- Application\VersionModule.vb" />
