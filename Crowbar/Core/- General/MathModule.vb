@@ -51,7 +51,10 @@ Module MathModule
 			suffix = "K"
 		End If
 
-		Return value.ToString("#.##", TheApp.InternalCultureInfo) + " " + suffix
+		If suffix <> "" Then
+			suffix = " " + suffix
+		End If
+		Return value.ToString("0.##", TheApp.InternalCultureInfo) + suffix
 	End Function
 
 	'Public Function DecimalByteUnitsConversion(ByVal iBytes As ULong) As String
