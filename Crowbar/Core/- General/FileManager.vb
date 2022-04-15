@@ -41,6 +41,20 @@ Public Class FileManager
 		Return text.ToString()
 	End Function
 
+	Public Shared Function ReadNullTerminatedString(ByVal inputFileReader As BufferedBinaryReader) As String
+		Dim text As New StringBuilder()
+		text.Length = 0
+		Dim aCharacter As Char
+		While True
+			aCharacter = inputFileReader.ReadChar()
+			If aCharacter = ControlChars.NullChar Then
+				Exit While
+			End If
+			text.Append(aCharacter)
+		End While
+		Return text.ToString()
+	End Function
+
 	'Public Function ReadKeyValueLine(ByVal textFileReader As StreamReader, ByVal key As String) As String
 	'	Dim line As String
 	'	Dim delimiters As Char() = {""""c, " "c, CChar(vbTab)}
@@ -478,8 +492,8 @@ Public Class FileManager
 			Exit Sub
 		End If
 		If CStr(e.Value) <> "" Then
-            e.Value = FileManager.GetCleanPathFileName(CStr(e.Value), True)
-        End If
+			e.Value = FileManager.GetCleanPathFileName(CStr(e.Value), True)
+		End If
 	End Sub
 
 	Public Shared Function GetNormalizedPathFileName(ByVal givenPathFileName As String) As String
@@ -604,7 +618,7 @@ Public Class FileManager
 	Private Const FILE_ATTRIBUTE_DIRECTORY As Integer = &H10
 	Private Const FILE_ATTRIBUTE_NORMAL As Integer = &H80
 
-	<DllImport("shlwapi.dll", SetLastError:=True)> _
+	<DllImport("shlwapi.dll", SetLastError:=True)>
 	Private Shared Function PathRelativePathTo(ByVal pszPath As StringBuilder, ByVal pszFrom As String, ByVal dwAttrFrom As Integer, ByVal pszTo As String, ByVal dwAttrTo As Integer) As Integer
 	End Function
 

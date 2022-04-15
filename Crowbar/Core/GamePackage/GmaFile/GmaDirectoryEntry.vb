@@ -1,5 +1,5 @@
 ﻿Public Class GmaDirectoryEntry
-	Inherits BasePackageDirectoryEntry
+	Inherits SourcePackageDirectoryEntry
 
 	'FROM: Garry's Mod Addon Tool source gmad-master\gmad-master\include\AddonFormat.h
 	'	struct FileEntry
@@ -14,9 +14,9 @@
 	'	};
 
 	Public fileNumberStored As UInt32
-	Public size As Int64
+	Public sizeAsInt64 As Int64
 
-	Public offset As Int64
+	'Public offset As Int64
 	Public fileNumberUsed As UInt32
 
 End Class

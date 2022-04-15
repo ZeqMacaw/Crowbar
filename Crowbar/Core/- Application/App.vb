@@ -187,6 +187,9 @@ Public Class App
 		Me.LzmaExePathFileName = Path.Combine(Me.GetCustomDataPath(), App.theLzmaExeFileName)
 		Me.WriteResourceToFileIfDifferent(My.Resources.lzma, Me.LzmaExePathFileName)
 
+		Dim lzhamAPIDLLPathFileName As String = Path.Combine(Me.GetCustomDataPath(), App.theLzhamDLLFileName)
+		Me.WriteResourceToFileIfDifferent(My.Resources.lzham_x86, lzhamAPIDLLPathFileName)
+
 		'NOTE: Only write settings file if it does not exist.
 		Dim appSettingsPathFileName As String = Path.Combine(Me.GetCustomDataPath(), App.theAppSettingsFileName)
 		Try
@@ -460,6 +463,7 @@ Public Class App
 	Private Const theSevenZrEXEFileName As String = "7zr.exe"
 	Private Const theCrowbarLauncherEXEFileName As String = "CrowbarLauncher.exe"
 	Private Const theLzmaExeFileName As String = "lzma.exe"
+	Private Const theLzhamDLLFileName As String = "lzham_x86.dll"
 	Public SevenZrExePathFileName As String
 	Public CrowbarLauncherExePathFileName As String
 	Public LzmaExePathFileName As String

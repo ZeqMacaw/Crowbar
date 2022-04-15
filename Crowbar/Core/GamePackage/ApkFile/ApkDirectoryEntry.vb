@@ -1,5 +1,5 @@
 ﻿Public Class ApkDirectoryEntry
-	Inherits BasePackageDirectoryEntry
+	Inherits SourcePackageDirectoryEntry
 
 	'FROM: Fairy Tale Busters "models00.apk"
 	'1B 00 00 00   length of file name without the ending null character
@@ -15,8 +15,8 @@
 	'Public pathFileName(variable_size) As Char
 	'      Use this field in base class: Public thePathFileName As String
 	'Public nullCharacter As Byte
-	Public offsetOfFile As UInt32
-	Public fileSize As UInt32
+	'Public offsetOfFile As UInt32
+	'Public fileSize As UInt32
 	Public offsetOfNextDirectoryEntry As Int64
 	Public unknown As UInt32
 

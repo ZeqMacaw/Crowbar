@@ -1,5 +1,5 @@
 ﻿Public Class ApkFileData
-	Inherits BasePackageFileData
+	Inherits SourcePackageFileData
 
 	Public Sub New()
 		MyBase.New()

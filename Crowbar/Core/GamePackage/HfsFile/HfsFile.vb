@@ -3,12 +3,11 @@ Imports System.IO
 Imports System.Text
 
 Public Class HfsFile
-	Inherits BasePackageFile
+	Inherits SourcePackageFile
 
 #Region "Creation and Destruction"
 
-	Public Sub New(ByVal packageDirectoryFileReader As BinaryReader, ByVal packageFileReader As BinaryReader, ByVal hfsFileData As HfsFileData)
-		Me.thePackageDirectoryInputFileReader = packageDirectoryFileReader
+	Public Sub New(ByVal packageFileReader As BinaryReader, ByVal hfsFileData As HfsFileData)
 		Me.theInputFileReader = packageFileReader
 		Me.theHfsFileData = hfsFileData
 	End Sub
@@ -57,14 +56,14 @@ Public Class HfsFile
 		'Me.theHfsFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "HFS File Header")
 	End Sub
 
-	Public Overrides Sub ReadEntries(ByVal bw As BackgroundWorker)
+	Public Overrides Sub ReadEntries()
 		If Not Me.theHfsFileData.IsSourcePackage Then
 			Exit Sub
 		End If
 
 		Try
 			'Dim entry As HfsDirectoryEntry
-			Dim entryDataOutputText As New StringBuilder
+			'Dim entryDataOutputText As New StringBuilder
 
 			'    uint16 {2}   - Number of disk
 			'    uint16 {2}   - Disk where CD starts
@@ -142,7 +141,8 @@ Public Class HfsFile
 				entry.unused03 = Me.theInputFileReader.ReadUInt16()
 				entry.fileLastModificationTime = Me.theInputFileReader.ReadUInt16()
 				entry.fileLastModificationDate = Me.theInputFileReader.ReadUInt16()
-				entry.crc = Me.theInputFileReader.ReadUInt32()
+				'entry.Crc = Me.theInputFileReader.ReadUInt32()
+				Me.theInputFileReader.ReadUInt32()
 				entry.compressedFileSize = Me.theInputFileReader.ReadUInt32()
 				entry.decompressedFileSize = Me.theInputFileReader.ReadUInt32()
 				entry.fileNameSize = Me.theInputFileReader.ReadUInt16()
@@ -156,9 +156,9 @@ Public Class HfsFile
 					entry.fileName = System.Text.Encoding.ASCII.GetString(fileNameEncoded)
 					'TODO: Figure out how the path is stored and insert it here.
 					If Path.GetExtension(entry.fileName) = ".comp" Then
-						entry.thePathFileName = Path.GetFileNameWithoutExtension(entry.fileName)
+						entry.DisplayPathFileName = Path.GetFileNameWithoutExtension(entry.fileName)
 					Else
-						entry.thePathFileName = entry.fileName
+						entry.DisplayPathFileName = entry.fileName
 					End If
 				End If
 				If entry.extraFieldSize > 0 Then
@@ -166,23 +166,25 @@ Public Class HfsFile
 					extraField = Me.theInputFileReader.ReadBytes(entry.extraFieldSize)
 				End If
 				If entry.compressedFileSize > 0 AndAlso entry.decompressedFileSize > 0 Then
-					entry.offset = Me.theInputFileReader.BaseStream.Position
+					entry.DataOffset = Me.theInputFileReader.BaseStream.Position
 				End If
 				'entry.fileDataBlockPosition = Me.theInputFileReader.BaseStream.Position
+				entry.DataSize = entry.decompressedFileSize
 
 				Me.theHfsFileData.theEntries.Add(entry)
 
-				entryDataOutputText.Append(entry.thePathFileName)
-				entryDataOutputText.Append(" crc=0x" + entry.crc.ToString("X8"))
-				entryDataOutputText.Append(" metadatasz=0")
-				entryDataOutputText.Append(" fnumber=0")
-				entryDataOutputText.Append(" ofs=0x" + entry.offset.ToString("X8"))
-				entryDataOutputText.Append(" sz=" + entry.decompressedFileSize.ToString("G0"))
+				'entryDataOutputText.Append(entry.thePathFileName)
+				'entryDataOutputText.Append(" crc=0x" + entry.crc.ToString("X8"))
+				'entryDataOutputText.Append(" metadatasz=0")
+				'entryDataOutputText.Append(" fnumber=0")
+				'entryDataOutputText.Append(" ofs=0x" + entry.offset.ToString("X8"))
+				'entryDataOutputText.Append(" sz=" + entry.decompressedFileSize.ToString("G0"))
 
-				Me.theHfsFileData.theEntryDataOutputTexts.Add(entryDataOutputText.ToString())
-				NotifyPackEntryRead(entry, entryDataOutputText.ToString())
+				'Me.theHfsFileData.theEntryDataOutputTexts.Add(entryDataOutputText.ToString())
+				'NotifyPackEntryRead(entry, entryDataOutputText.ToString())
+				'NotifyPackEntryRead(entry)
 
-				entryDataOutputText.Clear()
+				'entryDataOutputText.Clear()
 
 				Me.theInputFileReader.BaseStream.Seek(nextMainDirectoryEntryOffset, SeekOrigin.Begin)
 			Next
@@ -194,7 +196,7 @@ Public Class HfsFile
 		End Try
 	End Sub
 
-	Public Overrides Sub UnpackEntryDataToFile(ByVal iEntry As BasePackageDirectoryEntry, ByVal outputPathFileName As String)
+	Public Overrides Sub UnpackEntryDataToFile(ByVal iEntry As SourcePackageDirectoryEntry, ByVal outputPathFileName As String)
 		Dim entry As HfsDirectoryEntry
 		entry = CType(iEntry, HfsDirectoryEntry)
 
@@ -205,7 +207,7 @@ Public Class HfsFile
 				Try
 					Me.theOutputFileWriter = New BinaryWriter(outputFileStream, System.Text.Encoding.ASCII)
 
-					Me.theInputFileReader.BaseStream.Seek(entry.offset, SeekOrigin.Begin)
+					Me.theInputFileReader.BaseStream.Seek(entry.DataOffset, SeekOrigin.Begin)
 					Dim bytes() As Byte
 					bytes = Me.theInputFileReader.ReadBytes(CInt(entry.compressedFileSize))
 
@@ -305,7 +307,6 @@ Public Class HfsFile
 
 #Region "Data"
 
-	Private thePackageDirectoryInputFileReader As BinaryReader
 	Private theInputFileReader As BinaryReader
 	Private theOutputFileWriter As BinaryWriter
 	Private theHfsFileData As HfsFileData

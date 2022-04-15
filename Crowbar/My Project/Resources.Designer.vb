@@ -378,6 +378,16 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Byte[].
         '''</summary>
+        Friend ReadOnly Property lzham_x86() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("lzham_x86", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
         Friend ReadOnly Property lzma() As Byte()
             Get
                 Dim obj As Object = ResourceManager.GetObject("lzma", resourceCulture)

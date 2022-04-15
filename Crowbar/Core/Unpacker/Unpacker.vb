@@ -37,21 +37,21 @@ Public Class Unpacker
 
 #Region "Methods"
 
-	Public Sub Run(ByVal unpackerAction As PackageAction, ByVal packagePathFileNameToEntryIndexesMap As SortedList(Of String, List(Of Integer)), ByVal outputPathIsExtendedWithPackageName As Boolean, ByVal selectedRelativeOutputPath As String)
+	Public Sub Run(ByVal unpackerAction As PackageAction, ByVal packagePathFileNameToEntriesMap As SortedList(Of String, List(Of SourcePackageDirectoryEntry)), ByVal outputPathIsExtendedWithPackageName As Boolean, ByVal selectedRelativeOutputPath As String)
 		Me.theSynchronousWorkerIsActive = False
 		Dim info As New UnpackerInputInfo()
 		info.thePackageAction = unpackerAction
-		info.thePackagePathFileNameToEntryIndexesMap = packagePathFileNameToEntryIndexesMap
+		info.thePackagePathFileNameToEntriesMap = packagePathFileNameToEntriesMap
 		info.theOutputPathIsExtendedWithPackageName = outputPathIsExtendedWithPackageName
 		info.theSelectedRelativeOutputPath = selectedRelativeOutputPath
 		Me.RunWorkerAsync(info)
 	End Sub
 
-	Public Function RunSynchronous(ByVal unpackerAction As PackageAction, ByVal packagePathFileNameToEntryIndexesMap As SortedList(Of String, List(Of Integer)), ByVal outputPathIsExtendedWithPackageName As Boolean, ByVal selectedRelativeOutputPath As String) As String
+	Public Function RunSynchronous(ByVal unpackerAction As PackageAction, ByVal packagePathFileNameToEntriesMap As SortedList(Of String, List(Of SourcePackageDirectoryEntry)), ByVal outputPathIsExtendedWithPackageName As Boolean, ByVal selectedRelativeOutputPath As String) As String
 		Me.theSynchronousWorkerIsActive = True
 		Dim info As New UnpackerInputInfo()
 		info.thePackageAction = unpackerAction
-		info.thePackagePathFileNameToEntryIndexesMap = packagePathFileNameToEntryIndexesMap
+		info.thePackagePathFileNameToEntriesMap = packagePathFileNameToEntriesMap
 		info.theOutputPathIsExtendedWithPackageName = outputPathIsExtendedWithPackageName
 		info.theSelectedRelativeOutputPath = selectedRelativeOutputPath
 
@@ -88,7 +88,7 @@ Public Class Unpacker
 
 	Public Sub SkipCurrentPackage()
 		'NOTE: This might have thread race condition, but it probably doesn't matter.
-		Me.theSkipCurrentPackIsActive = True
+		Me.theSkipCurrentPackageIsActive = True
 	End Sub
 
 	Public Function GetOutputPathFileName(ByVal relativePathFileName As String) As String
@@ -147,15 +147,16 @@ Public Class Unpacker
 			If Me.UnpackerInputsAreValid() Then
 				If info.thePackageAction = PackageAction.List Then
 					Me.List()
+					status = StatusMessage.Success
 				ElseIf info.thePackageAction = PackageAction.Unpack Then
-					status = Me.Unpack(info.thePackagePathFileNameToEntryIndexesMap)
-				ElseIf info.thePackageAction = PackageAction.UnpackAndOpen Then
-					status = Me.UnpackWithoutLogging(info.thePackagePathFileNameToEntryIndexesMap)
+					status = Me.UnpackWithLogging(info.thePackagePathFileNameToEntriesMap)
+				ElseIf info.thePackageAction = PackageAction.UnpackToTemp Then
+					status = Me.UnpackToTempWithoutLogging(info.thePackagePathFileNameToEntriesMap)
+				ElseIf info.thePackageAction = PackageAction.UnpackToTempAndOpen Then
+					status = Me.UnpackToTempWithoutLogging(info.thePackagePathFileNameToEntriesMap)
 					If status = StatusMessage.Success Then
 						Me.StartFile(Path.Combine(Me.theOutputPath, Me.theUnpackedRelativePathsAndFileNames(0)))
 					End If
-				ElseIf info.thePackageAction = PackageAction.UnpackToTemp Then
-					status = Me.UnpackWithoutLogging(info.thePackagePathFileNameToEntryIndexesMap)
 				End If
 			Else
 				status = StatusMessage.Error
@@ -228,6 +229,8 @@ Public Class Unpacker
 			Me.theOutputPathOrModelOutputFileName = Me.theOutputPath
 		End If
 
+		unpackResultInfo.entries = Me.thePackageEntries
+
 		Return unpackResultInfo
 	End Function
 
@@ -256,6 +259,40 @@ Public Class Unpacker
 		Next
 		indentedLine += line
 		Me.UpdateProgressInternal(1, indentedLine)
+	End Sub
+
+	Private Sub StartLog(ByVal packagePathFileName As String, ByRef packageRelativePathFileName As String)
+		Dim logFileStatus As AppEnums.StatusMessage = Me.CreateLogTextFile()
+
+		Dim inputPackagePath As String = ""
+		If File.Exists(packagePathFileName) Then
+			inputPackagePath = FileManager.GetPath(packagePathFileName)
+		ElseIf Directory.Exists(packagePathFileName) Then
+			inputPackagePath = packagePathFileName
+		End If
+
+		Dim packageFileName As String
+		Dim packageRelativePath As String
+		packageFileName = Path.GetFileName(packagePathFileName)
+		packageRelativePath = FileManager.GetRelativePathFileName(inputPackagePath, FileManager.GetPath(packagePathFileName))
+		packageRelativePathFileName = Path.Combine(packageRelativePath, packageFileName)
+
+		Me.UpdateProgress()
+		Me.UpdateProgress(1, "Unpacking from """ + packageRelativePathFileName + """ to """ + Me.theOutputPath + """ ...")
+	End Sub
+
+	Private Sub StopLog(ByVal status As AppEnums.StatusMessage, ByVal packageRelativePathFileName As String)
+		If status <> StatusMessage.Error Then
+			If Me.CancellationPending Then
+				Me.UpdateProgress(1, "... Unpacking from """ + packageRelativePathFileName + """ canceled. Check above for any errors.")
+			Else
+				Me.UpdateProgress(1, "... Unpacking from """ + packageRelativePathFileName + """ finished. Check above for any errors.")
+			End If
+		Else
+			Me.UpdateProgress(1, "... Unpacking from """ + packageRelativePathFileName + """ failed. Check above for any errors.")
+		End If
+
+		Me.CloseLogTextFile()
 	End Sub
 
 	Private Function CreateLogTextFile() As AppEnums.StatusMessage
@@ -373,80 +410,14 @@ Public Class Unpacker
 	Private Function UnpackFolderTreeFromPackage(ByVal packagePathFileName As String) As AppEnums.StatusMessage
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
 
-		Dim aPackageFileData As BasePackageFileData = Nothing
-
-		Dim inputFileStream As FileStream = Nothing
-		Me.theInputFileReader = Nothing
+		Dim package As SourcePackage = Nothing
 		Try
-			inputFileStream = New FileStream(packagePathFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
-			If inputFileStream IsNot Nothing Then
-				Try
-					Me.theInputFileReader = New BinaryReader(inputFileStream, System.Text.Encoding.ASCII)
-
-					Dim packageFile As BasePackageFile
-					packageFile = BasePackageFile.Create(packagePathFileName, Me.thePackageDirectoryInputFileReader, Me.theInputFileReader, aPackageFileData)
-
-					packageFile.ReadHeader()
-					packageFile.ReadEntries(Me)
-				Catch ex As Exception
-					Throw
-				Finally
-					If Me.theInputFileReader IsNot Nothing Then
-						Me.theInputFileReader.Close()
-					End If
-				End Try
-			End If
-		Catch ex As Exception
-			status = StatusMessage.Error
-			Throw
-		Finally
-			If inputFileStream IsNot Nothing Then
-				inputFileStream.Close()
-			End If
-		End Try
-
-		If Me.CancellationPending Then
-			Return StatusMessage.Canceled
-		End If
-
-		If aPackageFileData IsNot Nothing AndAlso aPackageFileData.IsSourcePackage Then
-			'Dim entry As BasePackageDirectoryEntry
-			Dim line As String
-			'Dim archivePathFileName As String
-			'Dim packagePath As String
-			'Dim packageFileNameWithoutExtension As String
-			'Dim packageFileNamePrefix As String
-			Dim paths As New List(Of String)()
-
-			For i As Integer = 0 To aPackageFileData.theEntries.Count - 1
-				'entry = aPackageFileData.theEntries(i)
-				'If entry.archiveIndex <> &H7FFF Then
-				'	packagePath = FileManager.GetPath(packagePathFileName)
-				'	packageFileNameWithoutExtension = Path.GetFileNameWithoutExtension(packagePathFileName)
-				'	packageFileNamePrefix = packageFileNameWithoutExtension.Substring(0, packageFileNameWithoutExtension.LastIndexOf(aPackageFileData.DirectoryFileNameSuffix))
-				'	archivePathFileName = Path.Combine(packagePath, packageFileNamePrefix + "_" + entry.archiveIndex.ToString("000") + aPackageFileData.FileExtension)
-				'Else
-				'	archivePathFileName = packagePathFileName
-				'End If
-
-				line = aPackageFileData.theEntryDataOutputTexts(i)
-
-				'Example output:
-				'addonimage.jpg crc=0x50ea4a15 metadatasz=0 fnumber=32767 ofs=0x0 sz=10749
-				'materials/models/weapons/melee/crowbar_normal.vtf crc=0x7ac0e054 metadatasz=0 fnumber=32767 ofs=0x2fed8 sz=1398196
-
-				Dim fields() As String
-				fields = line.Split(" "c)
-
-				Dim pathFileName As String = fields(0)
-				'NOTE: The last 5 fields should not have any spaces, but the path+filename field might.
-				For fieldIndex As Integer = 1 To fields.Length - 6
-					pathFileName = pathFileName + " " + fields(fieldIndex)
-				Next
-
+			package = SourcePackage.Create(packagePathFileName)
+			Me.thePackageEntries = package.GetEntries()
+			For Each entry As SourcePackageDirectoryEntry In Me.thePackageEntries
 				'NOTE: Only need to create "models" folder-tree to have models accessible in HLMV.
-				If pathFileName.StartsWith("models/") Then
-					Dim aRelativePath As String = FileManager.GetPath(pathFileName)
+				If entry.DisplayPathFileName.StartsWith("models/") Then
+					Dim aRelativePath As String = FileManager.GetPath(entry.DisplayPathFileName)
 					Dim aPath As String = Path.Combine(Me.theGamePath, aRelativePath)
 					If Not FileManager.PathExistsAfterTryToCreate(aPath) Then
 						'TODO: [UnpackFolderTreeFromPackage] Path was not created, so warn user.
@@ -455,7 +426,9 @@ Public Class Unpacker
 					End If
 				End If
 			Next
-		End If
+		Catch ex As Exception
+			Dim debug As Integer = 4242
+		End Try
 
 		Return status
 	End Function
@@ -474,16 +447,19 @@ Public Class Unpacker
 			Exit Sub
 		End If
 
-		Me.thePackagePathFileNameToFileDataMap = New SortedList(Of String, BasePackageFileData)()
-
 		Try
+			Me.thePackageDirectoryPathFileNamesAlreadyProcessed = New SortedSet(Of String)()
+
+			Me.thePackageEntries = New List(Of SourcePackageDirectoryEntry)()
 			If TheApp.Settings.UnpackMode = InputOptions.FolderRecursion Then
 				Me.ListPackagesInFolderRecursively(packagePath)
 			ElseIf TheApp.Settings.UnpackMode = InputOptions.Folder Then
 				Me.ListPackagesInFolder(packagePath)
 			Else
-				Me.ListPackage(packagePathFileName, True)
+				Me.ListPackage(packagePathFileName)
 			End If
+
+			Me.thePackageDirectoryPathFileNamesAlreadyProcessed = Nothing
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		End Try
@@ -507,10 +483,10 @@ Public Class Unpacker
 
 	Private Sub ListPackagesInFolder(ByVal packagePath As String)
 		Try
-			Dim packageExtensions As List(Of String) = BasePackageFile.GetListOfPackageExtensions()
+			Dim packageExtensions As List(Of String) = SourcePackage.GetListOfPackageExtensions()
 			For Each packageExtension As String In packageExtensions
-				For Each anPackagePathFileName As String In Directory.GetFiles(packagePath, packageExtension)
-					Me.ListPackage(anPackagePathFileName, False)
+				For Each aPackagePathFileName As String In Directory.GetFiles(packagePath, packageExtension)
+					Me.ListPackage(aPackagePathFileName)
 
 					If Me.CancellationPending Then
 						Return
@@ -522,110 +498,25 @@ Public Class Unpacker
 		End Try
 	End Sub
 
-	'checkForDirFile = true: Check if package file is valid. If not, check for a directory package file in same folder and open that instead.
-	Private Sub ListPackage(ByVal packageDirectoryPathFileName As String, ByVal checkForDirFile As Boolean)
-		Dim aPackageFileData As BasePackageFileData = Nothing
-
-		Dim inputFileStream As FileStream = Nothing
-		Me.theInputFileReader = Nothing
-		Dim loopingIsNeeded As Boolean = True
-		While loopingIsNeeded
-			Try
-				inputFileStream = New FileStream(packageDirectoryPathFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
-				If inputFileStream IsNot Nothing Then
-					Try
-						Me.theInputFileReader = New BinaryReader(inputFileStream, System.Text.Encoding.ASCII)
-
-						Dim packageFile As BasePackageFile
-						packageFile = BasePackageFile.Create(packageDirectoryPathFileName, Me.thePackageDirectoryInputFileReader, Me.theInputFileReader, aPackageFileData)
-
-						packageFile.ReadHeader()
-						If aPackageFileData IsNot Nothing AndAlso aPackageFileData.IsSourcePackage Then
-							Me.thePackageDirectoryPathFileName = packageDirectoryPathFileName
-							Me.thePackageFileData = aPackageFileData
-							Me.UpdateProgressInternal(1, "")
-							AddHandler packageFile.PackEntryRead, AddressOf Me.Package_PackEntryRead
-							packageFile.ReadEntries(Me)
-							RemoveHandler packageFile.PackEntryRead, AddressOf Me.Package_PackEntryRead
-							loopingIsNeeded = False
-						ElseIf checkForDirFile AndAlso Path.GetExtension(packageDirectoryPathFileName) = ".vpk" Then
-							'NOTE: Reaches this when user tries to list from a VPK file that is part of a multi-file package, but it is not the "dir" file.
-							'NOTE: Set this to false to only check once for a package directory file.
-							checkForDirFile = False
-
-							Dim tempPath As String = FileManager.GetPath(packageDirectoryPathFileName)
-							Dim tempFileName As String = Path.GetFileNameWithoutExtension(packageDirectoryPathFileName)
-							Dim pos As Integer = tempFileName.LastIndexOf("_")
-							If pos >= 0 Then
-								Dim dirFileName As String = tempFileName.Remove(pos + 1) + "dir.vpk"
-								packageDirectoryPathFileName = Path.Combine(tempPath, dirFileName)
-							Else
-								loopingIsNeeded = False
-							End If
-						Else
-							loopingIsNeeded = False
-						End If
-					Catch ex As Exception
-						Throw
-					Finally
-						If Me.theInputFileReader IsNot Nothing Then
-							Me.theInputFileReader.Close()
-						End If
-					End Try
-				End If
-			Catch ex As Exception
-				Throw
-			Finally
-				If inputFileStream IsNot Nothing Then
-					inputFileStream.Close()
-				End If
-			End Try
-
-			If Me.CancellationPending Then
-				Return
+	Private Sub ListPackage(ByVal packagePathFileName As String)
+		Dim package As SourcePackage = Nothing
+		Try
+			package = SourcePackage.Create(packagePathFileName)
+			' Avoid processing a multi-file package more than once.
+			If Not Me.thePackageDirectoryPathFileNamesAlreadyProcessed.Contains(package.DirectoryPathFileName) Then
+				Me.thePackageDirectoryPathFileNamesAlreadyProcessed.Add(package.DirectoryPathFileName)
+				Me.thePackageEntries.AddRange(package.GetEntries())
+				Me.UpdateProgressInternal(1, "")
 			End If
-		End While
+		Catch ex As Exception
+			Dim debug As Integer = 4242
+		End Try
 	End Sub
 
-	Private Sub Package_PackEntryRead(ByVal sender As Object, ByVal e As SourcePackageEventArgs)
-		Dim entry As BasePackageDirectoryEntry
-		Dim line As String
-		Dim packagePathFileName As String
-		Dim packagePath As String
-		Dim packageFileNameWithoutExtension As String
-		Dim packageFileNamePrefix As String
-
-		entry = e.Entry
-		If entry.archiveIndex <> &H7FFF Then
-			packagePath = FileManager.GetPath(Me.thePackageDirectoryPathFileName)
-			packageFileNameWithoutExtension = Path.GetFileNameWithoutExtension(Me.thePackageDirectoryPathFileName)
-			packageFileNamePrefix = packageFileNameWithoutExtension.Substring(0, packageFileNameWithoutExtension.LastIndexOf(Me.thePackageFileData.DirectoryFileNameSuffix))
-			packagePathFileName = Path.Combine(packagePath, packageFileNamePrefix + "_" + entry.archiveIndex.ToString("000") + Me.thePackageFileData.FileExtension)
-		Else
-			packagePathFileName = Me.thePackageDirectoryPathFileName
-		End If
-		If Not Me.thePackagePathFileNameToFileDataMap.Keys.Contains(packagePathFileName) Then
-			Me.thePackagePathFileNameToFileDataMap.Add(packagePathFileName, Me.thePackageFileData)
-		End If
-		Me.UpdateProgressInternal(2, packagePathFileName)
-		If File.Exists(packagePathFileName) Then
-			Me.UpdateProgressInternal(3, "True")
-		Else
-			Me.UpdateProgressInternal(3, "False")
-		End If
-
-		line = e.EntryDataOutputText
-		Me.UpdateProgressInternal(4, line)
-
-		If Me.CancellationPending Then
-			Return
-		End If
-	End Sub
-
-	Private Function Unpack(ByVal packagePathFileNameToEntryIndexMap As SortedList(Of String, List(Of Integer))) As AppEnums.StatusMessage
+	Private Function UnpackWithLogging(ByVal packagePathFileNameToEntriesMap As SortedList(Of String, List(Of SourcePackageDirectoryEntry))) As AppEnums.StatusMessage
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
 
-		Me.theSkipCurrentPackIsActive = False
+		Me.theSkipCurrentPackageIsActive = False
 
 		Me.theUnpackedPaths.Clear()
 		Me.theUnpackedRelativePathsAndFileNames.Clear()
@@ -634,23 +525,24 @@ Public Class Unpacker
 
 		Me.theOutputPath = Me.GetOutputPath()
 
-		Dim packagePathFileName As String
-		packagePathFileName = TheApp.Settings.UnpackPackagePathFolderOrFileName
-		If File.Exists(packagePathFileName) Then
-			Me.theInputPackagePath = FileManager.GetPath(packagePathFileName)
-		ElseIf Directory.Exists(packagePathFileName) Then
-			Me.theInputPackagePath = packagePathFileName
-		End If
-
 		Dim progressDescriptionText As String
 		progressDescriptionText = "Unpacking with " + TheApp.GetProductNameAndVersion() + ": "
 
+		Dim packageRelativePathFileName As String = Nothing
 		Try
+			Dim packagePathFileName As String
+			packagePathFileName = TheApp.Settings.UnpackPackagePathFolderOrFileName
+
 			progressDescriptionText += """" + packagePathFileName + """"
 			Me.UpdateProgressStart(progressDescriptionText + " ...")
-			Me.UnpackFromPackage(packagePathFileName, packagePathFileNameToEntryIndexMap)
+
+			Me.StartLog(packagePathFileName, packageRelativePathFileName)
+
+			status = Me.UnpackFromPackages(packagePathFileNameToEntriesMap)
 		Catch ex As Exception
 			status = StatusMessage.Error
+		Finally
+			Me.StopLog(status, packageRelativePathFileName)
 		End Try
 
 		If Me.CancellationPending Then
@@ -662,56 +554,7 @@ Public Class Unpacker
 		Return status
 	End Function
 
-	Private Function UnpackFromPackage(ByVal packageDirectoryPathFileName As String, ByVal packagePathFileNameToEntryIndexMap As SortedList(Of String, List(Of Integer))) As AppEnums.StatusMessage
-		Dim status As AppEnums.StatusMessage = StatusMessage.Success
-
-		Try
-			Dim packagePath As String
-			Dim packageFileName As String
-			Dim packageRelativePath As String
-			Dim packageRelativePathFileName As String
-			packageFileName = Path.GetFileName(packageDirectoryPathFileName)
-			packageRelativePath = FileManager.GetRelativePathFileName(Me.theInputPackagePath, FileManager.GetPath(packageDirectoryPathFileName))
-			packageRelativePathFileName = Path.Combine(packageRelativePath, packageFileName)
-
-			status = Me.CreateLogTextFile()
-
-			Me.UpdateProgress()
-			Me.UpdateProgress(1, "Unpacking from """ + packageRelativePathFileName + """ to """ + Me.theOutputPath + """ ...")
-
-			Dim packagePathFileName As String
-			Dim packageEntryIndexes As List(Of Integer)
-
-			Me.thePackageDirectoryFileNamePrefix = ""
-			For i As Integer = 0 To packagePathFileNameToEntryIndexMap.Count - 1
-				packagePathFileName = packagePathFileNameToEntryIndexMap.Keys(i)
-				packageEntryIndexes = packagePathFileNameToEntryIndexMap.Values(i)
-
-				packagePath = FileManager.GetPath(packagePathFileName)
-				packageFileName = Path.GetFileName(packagePathFileName)
-
-				Me.OpenPackageDirectoryFile(Me.thePackagePathFileNameToFileDataMap(packagePathFileName), packagePathFileName)
-				Me.DoUnpackAction(Me.thePackagePathFileNameToFileDataMap(packagePathFileName), packagePath, packageFileName, packageEntryIndexes)
-			Next
-			If Me.thePackageDirectoryFileNamePrefix <> "" Then
-				Me.ClosePackageDirectoryFile()
-			End If
-
-			If Me.CancellationPending Then
-				Me.UpdateProgress(1, "... Unpacking from """ + packageRelativePathFileName + """ canceled. Check above for any errors.")
-			Else
-				Me.UpdateProgress(1, "... Unpacking from """ + packageRelativePathFileName + """ finished. Check above for any errors.")
-			End If
-		Catch ex As Exception
-			status = StatusMessage.Error
-		Finally
-			Me.CloseLogTextFile()
-		End Try
-
-		Return status
-	End Function
-
-	Private Function UnpackWithoutLogging(ByVal packagePathFileNameToEntryIndexMap As SortedList(Of String, List(Of Integer))) As AppEnums.StatusMessage
+	Private Function UnpackToTempWithoutLogging(ByVal packagePathFileNameToEntriesMap As SortedList(Of String, List(Of SourcePackageDirectoryEntry))) As AppEnums.StatusMessage
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
 
 		Me.theUnpackedPaths.Clear()
@@ -733,25 +576,7 @@ Public Class Unpacker
 		End If
 
 		Try
-			Dim packagePathFileName As String
-			Dim packageEntryIndexes As List(Of Integer)
-			Dim packagePath As String
-			Dim packageFileName As String
-
-			Me.thePackageDirectoryFileNamePrefix = ""
-			For i As Integer = 0 To packagePathFileNameToEntryIndexMap.Count - 1
-				packagePathFileName = packagePathFileNameToEntryIndexMap.Keys(i)
-				packageEntryIndexes = packagePathFileNameToEntryIndexMap.Values(i)
-
-				packagePath = FileManager.GetPath(packagePathFileName)
-				packageFileName = Path.GetFileName(packagePathFileName)
-
-				Me.OpenPackageDirectoryFile(Me.thePackagePathFileNameToFileDataMap(packagePathFileName), packagePathFileName)
-				Me.DoUnpackAction(Me.thePackagePathFileNameToFileDataMap(packagePathFileName), packagePath, packageFileName, packageEntryIndexes)
-			Next
-			If Me.thePackageDirectoryFileNamePrefix <> "" Then
-				Me.ClosePackageDirectoryFile()
-			End If
+			status = Me.UnpackFromPackages(packagePathFileNameToEntriesMap)
 		Catch ex As Exception
 			status = StatusMessage.Error
 		End Try
@@ -759,242 +584,80 @@ Public Class Unpacker
 		Return status
 	End Function
 
-	Private Sub OpenPackageDirectoryFile(ByVal packageFileData As BasePackageFileData, ByVal packagePathFileName As String)
-		If packageFileData Is Nothing Then
-			Exit Sub
-		End If
-		If packageFileData.DirectoryFileNameSuffix = "" Then
-			Exit Sub
-		End If
-
-		Dim packageDirectoryPathFileName As String
-		Dim packageFileNameWithoutExtension As String
-		Dim packageFileNamePrefix As String
-		Dim underscoreIndex As Integer
-
-		packageFileNameWithoutExtension = Path.GetFileNameWithoutExtension(packagePathFileName)
-		underscoreIndex = packageFileNameWithoutExtension.LastIndexOf("_")
-		If underscoreIndex >= 0 Then
-			packageFileNamePrefix = packageFileNameWithoutExtension.Substring(0, underscoreIndex)
-		Else
-			packageFileNamePrefix = ""
-		End If
-
-		If packageFileNamePrefix <> Me.thePackageDirectoryFileNamePrefix Then
-			Me.ClosePackageDirectoryFile()
-
-			Try
-				Me.thePackageDirectoryFileNamePrefix = packageFileNamePrefix
-
-				Dim packagePath As String
-				packagePath = FileManager.GetPath(packagePathFileName)
-				packageDirectoryPathFileName = Path.Combine(packagePath, packageFileNamePrefix + packageFileData.DirectoryFileNameSuffixWithExtension)
-
-				If File.Exists(packageDirectoryPathFileName) Then
-					Me.thePackageDirectoryInputFileStream = New FileStream(packageDirectoryPathFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
-					If Me.thePackageDirectoryInputFileStream IsNot Nothing Then
-						Try
-							Me.thePackageDirectoryInputFileReader = New BinaryReader(Me.thePackageDirectoryInputFileStream, System.Text.Encoding.ASCII)
-						Catch ex As Exception
-							Throw
-						End Try
-					End If
-				End If
-			Catch ex As Exception
-				Me.ClosePackageDirectoryFile()
-				Throw
-			End Try
-		End If
-	End Sub
-
-	Private Sub ClosePackageDirectoryFile()
-		If Me.thePackageDirectoryInputFileReader IsNot Nothing Then
-			Me.thePackageDirectoryInputFileReader.Close()
-			Me.thePackageDirectoryInputFileReader = Nothing
-		End If
-		If Me.thePackageDirectoryInputFileStream IsNot Nothing Then
-			Me.thePackageDirectoryInputFileStream.Close()
-			Me.thePackageDirectoryInputFileStream = Nothing
-		End If
-	End Sub
-
-	Private Sub DoUnpackAction(ByVal packageFileData As BasePackageFileData, ByVal packagePath As String, ByVal packageFileName As String, ByVal entryIndexes As List(Of Integer))
-		If packageFileData Is Nothing Then
-			Exit Sub
-		End If
-
-		Dim entries As List(Of BasePackageDirectoryEntry)
-		If entryIndexes Is Nothing Then
-			entries = New List(Of BasePackageDirectoryEntry)(packageFileData.theEntries.Count)
-			For Each entry As BasePackageDirectoryEntry In packageFileData.theEntries
-				entries.Add(entry)
-			Next
-		Else
-			entries = New List(Of BasePackageDirectoryEntry)(entryIndexes.Count)
-			For Each entryIndex As Integer In entryIndexes
-				entries.Add(packageFileData.theEntries(entryIndex))
-			Next
-		End If
-
-		Dim packagePathFileName As String
-		packagePathFileName = Path.Combine(packagePath, packageFileName)
-		Dim packageFileNameWithoutExtension As String
-		packageFileNameWithoutExtension = Path.GetFileNameWithoutExtension(packageFileName)
-
-		Me.UnpackEntryDatasToFiles(packageFileData, packagePathFileName, entries)
-	End Sub
-
-	Private Sub UnpackEntryDatasToFiles(ByVal packageFileData As BasePackageFileData, ByVal packagePathFileName As String, ByVal entries As List(Of BasePackageDirectoryEntry))
-		' Example: [03-Nov-2019] Left 4 Dead main multi-file VPK does not have a "pak01_048.vpk" file.
-		If Not File.Exists(packagePathFileName) Then
-			Me.UpdateProgress(2, "WARNING: Package file not found - """ + packagePathFileName + """. The following files are indicated as being in the missing package file: ")
-			For Each entry As BasePackageDirectoryEntry In entries
-				Me.UpdateProgress(3, """" + entry.thePathFileName + """")
-			Next
-			Exit Sub
-		End If
-
-		Dim inputFileStream As FileStream = Nothing
-		Me.theInputFileReader = Nothing
+	Private Function UnpackFromPackages(ByVal packagePathFileNameToEntriesMap As SortedList(Of String, List(Of SourcePackageDirectoryEntry))) As AppEnums.StatusMessage
+		Dim status As AppEnums.StatusMessage = StatusMessage.Success
 
 		Try
-			inputFileStream = New FileStream(packagePathFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
-			If inputFileStream IsNot Nothing Then
-				Try
-					Me.theInputFileReader = New BinaryReader(inputFileStream, System.Text.Encoding.ASCII)
-
-					Dim targetFolder As String = Me.GetPackageDirectoryFileNameWithoutExtension(packagePathFileName, packageFileData)
-
-					Dim packageFile As BasePackageFile
-					packageFile = BasePackageFile.Create(packagePathFileName, Me.thePackageDirectoryInputFileReader, Me.theInputFileReader, packageFileData)
-
-					For Each entry As BasePackageDirectoryEntry In entries
-						Me.UnpackEntryDataToFile(targetFolder, packageFile, entry)
-
-						If Me.CancellationPending Then
-							Exit For
-						End If
-					Next
-				Catch ex As Exception
-					Throw
-				Finally
-					If Me.theInputFileReader IsNot Nothing Then
-						Me.theInputFileReader.Close()
-					End If
-				End Try
-			End If
+			For i As Integer = 0 To packagePathFileNameToEntriesMap.Count - 1
+				Dim package As SourcePackage = SourcePackage.Create(packagePathFileNameToEntriesMap.Keys(i))
+				AddHandler package.Progress, AddressOf Me.Package_Progress
+				package.UnpackEntryDatasToFiles(packagePathFileNameToEntriesMap.Values(i), Me.theOutputPath, Me.theSelectedRelativeOutputPath)
+				RemoveHandler package.Progress, AddressOf Me.Package_Progress
+			Next
 		Catch ex As Exception
-			Throw
-		Finally
-			If inputFileStream IsNot Nothing Then
-				inputFileStream.Close()
-			End If
+			status = StatusMessage.Error
+			'Finally
 		End Try
-	End Sub
 
-	Private Sub UnpackEntryDataToFile(ByVal targetFolder As String, ByVal packageFile As BasePackageFile, ByVal entry As BasePackageDirectoryEntry)
-		Dim outputPathStart As String
-		If Me.theOutputPathIsExtendedWithPackageName Then
-			outputPathStart = Path.Combine(Me.theOutputPath, targetFolder)
-		Else
-			outputPathStart = Me.theOutputPath
-		End If
+		Return status
+	End Function
 
-		Dim entryPathFileName As String
-		If entry.thePathFileName.StartsWith("<") Then
-			entryPathFileName = entry.theRealPathFileName
-		Else
-			entryPathFileName = entry.thePathFileName
-		End If
-
-		Dim outputPathFileName As String
-		If TheApp.Settings.UnpackKeepFullPathIsChecked Then
-			outputPathFileName = Path.Combine(outputPathStart, entryPathFileName)
-		Else
-			Dim entryRelativePathFileName As String = FileManager.GetRelativePathFileName(Me.theSelectedRelativeOutputPath, entryPathFileName)
-			outputPathFileName = Path.Combine(outputPathStart, entryRelativePathFileName)
-		End If
-
-		Dim outputPath As String
-		outputPath = FileManager.GetPath(outputPathFileName)
-
-		If FileManager.PathExistsAfterTryToCreate(outputPath) Then
-			packageFile.UnpackEntryDataToFile(entry, outputPathFileName)
-		End If
-
-		If File.Exists(outputPathFileName) Then
-			If Not Me.theUnpackedPaths.Contains(Me.theOutputPath) Then
-				Me.theUnpackedPaths.Add(Me.theOutputPath)
-			End If
-
-			Dim relativePathFileName As String = ""
-			relativePathFileName = FileManager.GetRelativePathFileName(Me.theOutputPath, outputPathFileName)
-			Me.theUnpackedRelativePathsAndFileNames.Add(relativePathFileName)
-
-			If Path.GetExtension(outputPathFileName) = ".mdl" Then
-				Me.theUnpackedMdlFiles.Add(relativePathFileName)
-			End If
-
-			If entry.thePathFileName.StartsWith("<") Then
-				Me.UpdateProgress(2, "Unpacked: """ + entry.thePathFileName + """ as """ + entry.theRealPathFileName + """")
-			Else
-				Me.UpdateProgress(2, "Unpacked: " + entry.thePathFileName)
-			End If
-		Else
-			Me.UpdateProgress(2, "WARNING: Not unpacked: " + entry.thePathFileName)
-		End If
-	End Sub
-
-	'Private Sub StartFile(ByVal packInternalPathFileName As String)
-	'	Dim tempUnpackRelativePathFileName As String
-	'	Dim pathFileName As String
-	'	tempUnpackRelativePathFileName = Path.Combine(Me.theTempUnpackPaths(0), packInternalPathFileName)
-	'	pathFileName = Me.GetOutputPathFileName(tempUnpackRelativePathFileName)
-
-	'	System.Diagnostics.Process.Start(pathFileName)
-	'End Sub
 	Private Sub StartFile(ByVal pathFileName As String)
 		System.Diagnostics.Process.Start(pathFileName)
 	End Sub
 
-	Private Function GetPackageDirectoryFileNameWithoutExtension(ByVal PackagePathFileName As String, ByVal packageFileData As BasePackageFileData) As String
-		Dim packageDirectoryFileNameWithoutExtension As String = ""
+#Region "Event Handlers"
 
-		Dim packageFileNameWithoutExtension As String
-		Dim packageFileNamePrefix As String
-		Dim underscoreIndex As Integer
-		packageFileNameWithoutExtension = Path.GetFileNameWithoutExtension(PackagePathFileName)
+	Private Sub Package_Progress(ByVal sender As Object, ByVal e As SourcePackage.ProgressEventArgs)
+		If e.Progress = ProgressOptions.WritingFileFailed Then
+			Me.UpdateProgress(4, e.Message)
+		ElseIf e.Progress = ProgressOptions.WritingFileFinished Then
+			Dim entry As SourcePackageDirectoryEntry = e.Entry
+			Dim outputPathFileName As String = e.Message
+			'Dim fileName As String = Path.GetFileName(outputPathFileName)
+			'Me.UpdateProgress(4, fileName)
 
-		packageDirectoryFileNameWithoutExtension = packageFileNameWithoutExtension
-		If packageFileData.DirectoryFileNameSuffix <> "" Then
-			underscoreIndex = packageFileNameWithoutExtension.LastIndexOf("_")
-			If underscoreIndex >= 0 Then
-				packageFileNamePrefix = packageFileNameWithoutExtension.Substring(0, underscoreIndex)
-				Dim packageDirectoryPathFileName As String = Path.Combine(FileManager.GetPath(PackagePathFileName), packageFileNamePrefix + packageFileData.DirectoryFileNameSuffix + packageFileData.FileExtension)
-				If File.Exists(packageDirectoryPathFileName) Then
-					packageDirectoryFileNameWithoutExtension = packageFileNamePrefix + packageFileData.DirectoryFileNameSuffix
+			If File.Exists(outputPathFileName) Then
+				If Not Me.theUnpackedPaths.Contains(Me.theOutputPath) Then
+					Me.theUnpackedPaths.Add(Me.theOutputPath)
 				End If
-			End If
-		End If
 
-		Return packageDirectoryFileNameWithoutExtension
-	End Function
+				Dim relativePathFileName As String = ""
+				relativePathFileName = FileManager.GetRelativePathFileName(Me.theOutputPath, outputPathFileName)
+				Me.theUnpackedRelativePathsAndFileNames.Add(relativePathFileName)
+
+				If Path.GetExtension(outputPathFileName) = ".mdl" Then
+					Me.theUnpackedMdlFiles.Add(relativePathFileName)
+				End If
+
+				If entry.DisplayPathFileName.StartsWith("<") Then
+					Me.UpdateProgress(2, "Unpacked: """ + entry.DisplayPathFileName + """ as """ + entry.PathFileName + """")
+				Else
+					Me.UpdateProgress(2, "Unpacked: " + entry.DisplayPathFileName)
+				End If
+			Else
+				Me.UpdateProgress(2, "WARNING: Not unpacked: " + entry.DisplayPathFileName)
+			End If
+		Else
+			Dim progressUnhandled As Integer = 4242
+		End If
+	End Sub
+
+#End Region
 
 #End Region
 
 #Region "Data"
 
-	Private theSkipCurrentPackIsActive As Boolean
+	Private theSkipCurrentPackageIsActive As Boolean
 	Private theSynchronousWorkerIsActive As Boolean
 	Private theRunSynchronousResultMessage As String
-	Private theInputPackagePath As String
 	Private theOutputPath As String
 	Private theOutputPathOrModelOutputFileName As String
 	Private theOutputPathIsExtendedWithPackageName As Boolean
 	Private theSelectedRelativeOutputPath As String
 
 	Private theLogFileStream As StreamWriter
-	Private theLastLine As String
 
 	' Used for drag-drop temp path deleteion.
 	Private theUnpackedPaths As List(Of String)
@@ -1005,14 +668,8 @@ Public Class Unpacker
 	Private theUnpackedMdlFiles As BindingListEx(Of String)
 	Private theLogFiles As BindingListEx(Of String)
 
-	Private thePackagePathFileNameToFileDataMap As SortedList(Of String, BasePackageFileData)
-	Private thePackageDirectoryFileNamePrefix As String
-	Private thePackageDirectoryInputFileStream As FileStream
-	Private thePackageDirectoryInputFileReader As BinaryReader
-	Private theInputFileReader As BinaryReader
-
-	Private thePackageDirectoryPathFileName As String
-	Private thePackageFileData As BasePackageFileData
+	Private thePackageDirectoryPathFileNamesAlreadyProcessed As SortedSet(Of String)
+	Private thePackageEntries As List(Of SourcePackageDirectoryEntry)
 
 	Private theGamePath As String
 

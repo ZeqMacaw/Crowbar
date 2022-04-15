@@ -42,6 +42,7 @@ Public Class Win32Api
 		LVM_DELETEALLITEMS = (LVM_FIRST + 9)
 		'LVM_FINDITEM = (LVM_FIRST + 13)
 		'LVM_SETCOLUMNWIDTH = (LVM_FIRST + 30)
+		LVM_SETITEMSTATE = LVM_FIRST + 43
 		'LVM_GETITEMTEXT = (LVM_FIRST + 45)
 		'LVM_SORTITEMS = (LVM_FIRST + 48)
 		'LVSCW_AUTOSIZE_USEHEADER = -2
@@ -370,13 +371,20 @@ Public Class Win32Api
 	Public Shared Function PostMessage(ByVal hWnd As IntPtr, ByVal Msg As UInteger, ByVal wParam As IntPtr, ByVal lParam As IntPtr) As Boolean
 	End Function
 
-	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)> _
-	Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal Msg As UInteger, ByVal wParam As IntPtr, ByVal lParam As IntPtr) As IntPtr
+	'<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)> _
+	'Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal Msg As UInteger, ByVal wParam As IntPtr, ByVal lParam As IntPtr) As IntPtr
+	'End Function
+
+	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
+	Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal Msg As UInteger, ByVal wParam As IntPtr, ByRef lParam As LV_ITEM) As IntPtr
 	End Function
 
-	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)> _
-	Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal Msg As UInteger, ByVal wParam As IntPtr, ByVal lParam As LV_ITEM) As IntPtr
-	End Function
+	'<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
+	'Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal Msg As UInteger, ByVal wParam As IntPtr, ByVal lParam As LV_ITEM) As IntPtr
+	'End Function
+	'<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
+	'Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal Msg As ListViewMessages, ByVal wParam As IntPtr, ByVal lParam As LV_ITEM) As IntPtr
+	'End Function
 
 	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)> _
 	Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal Msg As UInteger, ByVal wParam As IntPtr, ByVal lParam As System.Text.StringBuilder) As IntPtr
@@ -441,7 +449,8 @@ Public Class Win32Api
 
 		bmp = Nothing
 		shfi = New SHFILEINFO()
-		ret = SHGetFileInfo(path, fileAttributes, shfi, Marshal.SizeOf(shfi), SHGFI_USEFILEATTRIBUTES Or SHGFI_ICON)
+		' Must use SHGFI_SMALLICON for the icons to show correctly in Details view.
+		ret = SHGetFileInfo(path, fileAttributes, shfi, Marshal.SizeOf(shfi), SHGFI_USEFILEATTRIBUTES Or SHGFI_ICON Or SHGFI_SMALLICON)
 		If ret <> IntPtr.Zero Then
 			bmp = System.Drawing.Icon.FromHandle(shfi.hIcon).ToBitmap
 			DestroyIcon(shfi.hIcon)
@@ -662,5 +671,17 @@ Public Class Win32Api
 
 	' IDataObject constants
 	Public Const DV_E_TYMED As Int32 = &H80040069
+
+	Public Shared Sub SetItemState(ByVal list As ListView, ByVal itemIndex As Integer, ByVal mask As Integer, ByVal value As Integer)
+		Dim lvItem As LV_ITEM = New LV_ITEM()
+		lvItem.stateMask = mask
+		lvItem.state = value
+		SendMessage(list.Handle, CUInt(ListViewMessages.LVM_SETITEMSTATE), New IntPtr(itemIndex), lvItem)
+	End Sub
+
+	' Select all listview items much more quickly than other ways.
+	Public Shared Sub SelectAllItems(ByVal list As ListView)
+		SetItemState(list, -1, 2, 2)
+	End Sub
 
 End Class

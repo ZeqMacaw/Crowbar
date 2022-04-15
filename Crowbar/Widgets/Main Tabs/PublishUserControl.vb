@@ -170,9 +170,9 @@ Public Class PublishUserControl
 			Else
 				Dim usedBytes As ULong = totalBytes - availableBytes
 				Dim progressPercentage As Integer = CInt(usedBytes * Me.QuotaProgressBar.Maximum / totalBytes)
-				Dim availableBytesText As String = MathModule.ByteUnitsConversion(availableBytes)
-				Dim usedBytesText As String = MathModule.ByteUnitsConversion(usedBytes)
-				Dim totalBytesText As String = MathModule.ByteUnitsConversion(totalBytes)
+				Dim availableBytesText As String = MathModule.BinaryByteUnitsConversion(availableBytes)
+				Dim usedBytesText As String = MathModule.BinaryByteUnitsConversion(usedBytes)
+				Dim totalBytesText As String = MathModule.BinaryByteUnitsConversion(totalBytes)
 				Me.QuotaProgressBar.Text = availableBytesText + " available "
 				Me.QuotaProgressBar.Value = progressPercentage
 				Me.ToolTip1.SetToolTip(Me.QuotaProgressBar, "Quota: " + usedBytesText + " used of " + totalBytesText + " total (" + progressPercentage.ToString() + "% used)")
@@ -1277,28 +1277,28 @@ Public Class PublishUserControl
 			Me.ItemContentFolderOrFileLabel.Text = "Content Folder or File"
 			If Directory.Exists(Me.theSelectedItem.ContentPathFolderOrFileName) Then
 				Dim folderSize As ULong = FileManager.GetFolderSize(Me.theSelectedItem.ContentPathFolderOrFileName)
-				contentFileSizeText = MathModule.ByteUnitsConversion(folderSize)
+				contentFileSizeText = MathModule.BinaryByteUnitsConversion(folderSize)
 			ElseIf File.Exists(Me.theSelectedItem.ContentPathFolderOrFileName) Then
 				Dim aFile As New FileInfo(Me.theSelectedItem.ContentPathFolderOrFileName)
-				contentFileSizeText = MathModule.ByteUnitsConversion(CULng(aFile.Length))
+				contentFileSizeText = MathModule.BinaryByteUnitsConversion(CULng(aFile.Length))
 			ElseIf Me.theSelectedItem.ContentSize > 0 AndAlso Me.theSelectedItem.IsPublished Then
-				contentFileSizeText = MathModule.ByteUnitsConversion(CULng(Me.theSelectedItem.ContentSize))
+				contentFileSizeText = MathModule.BinaryByteUnitsConversion(CULng(Me.theSelectedItem.ContentSize))
 			End If
 		ElseIf TheApp.SteamAppInfos(TheApp.Settings.PublishGameSelectedIndex).UsesSteamUGC Then
 			Me.ItemContentFolderOrFileLabel.Text = "Content Folder"
 			If Directory.Exists(Me.theSelectedItem.ContentPathFolderOrFileName) Then
 				Dim folderSize As ULong = FileManager.GetFolderSize(Me.theSelectedItem.ContentPathFolderOrFileName)
-				contentFileSizeText = MathModule.ByteUnitsConversion(folderSize)
+				contentFileSizeText = MathModule.BinaryByteUnitsConversion(folderSize)
 			ElseIf Me.theSelectedItem.ContentSize > 0 AndAlso Me.theSelectedItem.IsPublished Then
-				contentFileSizeText = MathModule.ByteUnitsConversion(CULng(Me.theSelectedItem.ContentSize))
+				contentFileSizeText = MathModule.BinaryByteUnitsConversion(CULng(Me.theSelectedItem.ContentSize))
 			End If
 		Else
 			Me.ItemContentFolderOrFileLabel.Text = "Content File"
 			If File.Exists(Me.theSelectedItem.ContentPathFolderOrFileName) Then
 				Dim aFile As New FileInfo(Me.theSelectedItem.ContentPathFolderOrFileName)
-				contentFileSizeText = MathModule.ByteUnitsConversion(CULng(aFile.Length))
+				contentFileSizeText = MathModule.BinaryByteUnitsConversion(CULng(aFile.Length))
 			ElseIf Me.theSelectedItem.ContentSize > 0 AndAlso Me.theSelectedItem.IsPublished Then
-				contentFileSizeText = MathModule.ByteUnitsConversion(CULng(Me.theSelectedItem.ContentSize))
+				contentFileSizeText = MathModule.BinaryByteUnitsConversion(CULng(Me.theSelectedItem.ContentSize))
 			End If
 		End If
 		'Dim contentFileSizeMaxText As String = "<unknown>"
@@ -1321,9 +1321,9 @@ Public Class PublishUserControl
 		Dim previewImageSizeText As String = "0"
 		If File.Exists(Me.theSelectedItem.PreviewImagePathFileName) Then
 			Dim aFile As New FileInfo(Me.theSelectedItem.PreviewImagePathFileName)
-			previewImageSizeText = MathModule.ByteUnitsConversion(CULng(aFile.Length))
+			previewImageSizeText = MathModule.BinaryByteUnitsConversion(CULng(aFile.Length))
 		ElseIf Me.theSelectedItem.PreviewImageSize > 0 AndAlso Me.theSelectedItem.IsPublished Then
-			previewImageSizeText = MathModule.ByteUnitsConversion(CULng(Me.theSelectedItem.PreviewImageSize))
+			previewImageSizeText = MathModule.BinaryByteUnitsConversion(CULng(Me.theSelectedItem.PreviewImageSize))
 		End If
 		'Dim previewImageSizeMaxText As String = "<unknown>"
 		Dim changedMarker As String = ""

@@ -51,7 +51,6 @@ Partial Class UnpackUserControl
 		Me.Panel3 = New System.Windows.Forms.Panel()
 		Me.SelectionPathTextBox = New System.Windows.Forms.TextBox()
 		Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
-		Me.SearchToolStripComboBox = New System.Windows.Forms.ToolStripComboBox()
 		Me.FindToolStripTextBox = New Crowbar.ToolStripSpringTextBox()
 		Me.FindToolStripButton = New System.Windows.Forms.ToolStripButton()
 		Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -324,7 +323,7 @@ Partial Class UnpackUserControl
 		'
 		Me.SplitContainer2.Panel2.Controls.Add(Me.OptionsGroupBox)
 		Me.SplitContainer2.Size = New System.Drawing.Size(770, 347)
-		Me.SplitContainer2.SplitterDistance = 600
+		Me.SplitContainer2.SplitterDistance = 598
 		Me.SplitContainer2.SplitterWidth = 6
 		Me.SplitContainer2.TabIndex = 0
 		'
@@ -334,7 +333,7 @@ Partial Class UnpackUserControl
 		Me.ContentsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.ContentsGroupBox.Location = New System.Drawing.Point(0, 0)
 		Me.ContentsGroupBox.Name = "ContentsGroupBox"
-		Me.ContentsGroupBox.Size = New System.Drawing.Size(600, 347)
+		Me.ContentsGroupBox.Size = New System.Drawing.Size(598, 347)
 		Me.ContentsGroupBox.TabIndex = 0
 		Me.ContentsGroupBox.TabStop = False
 		Me.ContentsGroupBox.Text = "Contents of package"
@@ -349,7 +348,7 @@ Partial Class UnpackUserControl
 		Me.ContentsGroupBoxFillPanel.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.ContentsGroupBoxFillPanel.Location = New System.Drawing.Point(3, 18)
 		Me.ContentsGroupBoxFillPanel.Name = "ContentsGroupBoxFillPanel"
-		Me.ContentsGroupBoxFillPanel.Size = New System.Drawing.Size(594, 326)
+		Me.ContentsGroupBoxFillPanel.Size = New System.Drawing.Size(592, 326)
 		Me.ContentsGroupBoxFillPanel.TabIndex = 12
 		'
 		'SplitContainer3
@@ -366,7 +365,7 @@ Partial Class UnpackUserControl
 		'SplitContainer3.Panel2
 		'
 		Me.SplitContainer3.Panel2.Controls.Add(Me.PackageListView)
-		Me.SplitContainer3.Size = New System.Drawing.Size(594, 275)
+		Me.SplitContainer3.Size = New System.Drawing.Size(592, 275)
 		Me.SplitContainer3.SplitterDistance = 250
 		Me.SplitContainer3.TabIndex = 6
 		'
@@ -393,7 +392,7 @@ Partial Class UnpackUserControl
 		Me.PackageListView.Location = New System.Drawing.Point(0, 0)
 		Me.PackageListView.Name = "PackageListView"
 		Me.PackageListView.ShowGroups = False
-		Me.PackageListView.Size = New System.Drawing.Size(340, 275)
+		Me.PackageListView.Size = New System.Drawing.Size(338, 275)
 		Me.PackageListView.SmallImageList = Me.ImageList1
 		Me.PackageListView.Sorting = System.Windows.Forms.SortOrder.Ascending
 		Me.PackageListView.TabIndex = 1
@@ -406,7 +405,7 @@ Partial Class UnpackUserControl
 		Me.Panel3.Dock = System.Windows.Forms.DockStyle.Top
 		Me.Panel3.Location = New System.Drawing.Point(0, 0)
 		Me.Panel3.Name = "Panel3"
-		Me.Panel3.Size = New System.Drawing.Size(594, 26)
+		Me.Panel3.Size = New System.Drawing.Size(592, 26)
 		Me.Panel3.TabIndex = 11
 		'
 		'SelectionPathTextBox
@@ -415,7 +414,7 @@ Partial Class UnpackUserControl
 		Me.SelectionPathTextBox.Location = New System.Drawing.Point(0, 0)
 		Me.SelectionPathTextBox.Name = "SelectionPathTextBox"
 		Me.SelectionPathTextBox.ReadOnly = True
-		Me.SelectionPathTextBox.Size = New System.Drawing.Size(594, 22)
+		Me.SelectionPathTextBox.Size = New System.Drawing.Size(592, 22)
 		Me.SelectionPathTextBox.TabIndex = 1
 		'
 		'ToolStrip1
@@ -423,24 +422,18 @@ Partial Class UnpackUserControl
 		Me.ToolStrip1.CanOverflow = False
 		Me.ToolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom
 		Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-		Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SearchToolStripComboBox, Me.FindToolStripTextBox, Me.FindToolStripButton, Me.ToolStripSeparator1, Me.FilesSelectedCountToolStripLabel, Me.ToolStripSeparator3, Me.SizeSelectedTotalToolStripLabel, Me.ToolStripSeparator2, Me.RefreshListingToolStripButton})
+		Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FindToolStripTextBox, Me.FindToolStripButton, Me.ToolStripSeparator1, Me.FilesSelectedCountToolStripLabel, Me.ToolStripSeparator3, Me.SizeSelectedTotalToolStripLabel, Me.ToolStripSeparator2, Me.RefreshListingToolStripButton})
 		Me.ToolStrip1.Location = New System.Drawing.Point(0, 301)
 		Me.ToolStrip1.Name = "ToolStrip1"
-		Me.ToolStrip1.Size = New System.Drawing.Size(594, 25)
+		Me.ToolStrip1.Size = New System.Drawing.Size(592, 25)
 		Me.ToolStrip1.Stretch = True
 		Me.ToolStrip1.TabIndex = 10
 		Me.ToolStrip1.Text = "ToolStrip1"
 		'
-		'SearchToolStripComboBox
-		'
-		Me.SearchToolStripComboBox.Name = "SearchToolStripComboBox"
-		Me.SearchToolStripComboBox.Size = New System.Drawing.Size(121, 25)
-		Me.SearchToolStripComboBox.ToolTipText = "What to search"
-		'
 		'FindToolStripTextBox
 		'
 		Me.FindToolStripTextBox.Name = "FindToolStripTextBox"
-		Me.FindToolStripTextBox.Size = New System.Drawing.Size(336, 25)
+		Me.FindToolStripTextBox.Size = New System.Drawing.Size(457, 25)
 		Me.FindToolStripTextBox.ToolTipText = "Text to find"
 		'
 		'FindToolStripButton
@@ -505,7 +498,7 @@ Partial Class UnpackUserControl
 		Me.OptionsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.OptionsGroupBox.Location = New System.Drawing.Point(0, 0)
 		Me.OptionsGroupBox.Name = "OptionsGroupBox"
-		Me.OptionsGroupBox.Size = New System.Drawing.Size(164, 347)
+		Me.OptionsGroupBox.Size = New System.Drawing.Size(166, 347)
 		Me.OptionsGroupBox.TabIndex = 0
 		Me.OptionsGroupBox.TabStop = False
 		Me.OptionsGroupBox.Text = "Options"
@@ -524,7 +517,7 @@ Partial Class UnpackUserControl
 		Me.OptionsGroupBoxFillPanel.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.OptionsGroupBoxFillPanel.Location = New System.Drawing.Point(3, 18)
 		Me.OptionsGroupBoxFillPanel.Name = "OptionsGroupBoxFillPanel"
-		Me.OptionsGroupBoxFillPanel.Size = New System.Drawing.Size(158, 326)
+		Me.OptionsGroupBoxFillPanel.Size = New System.Drawing.Size(160, 326)
 		Me.OptionsGroupBoxFillPanel.TabIndex = 0
 		'
 		'KeepFullPathCheckBox
@@ -560,7 +553,7 @@ Partial Class UnpackUserControl
 		'EditGameSetupButton
 		'
 		Me.EditGameSetupButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.EditGameSetupButton.Location = New System.Drawing.Point(6445, 229)
+		Me.EditGameSetupButton.Location = New System.Drawing.Point(6558, 229)
 		Me.EditGameSetupButton.Name = "EditGameSetupButton"
 		Me.EditGameSetupButton.Size = New System.Drawing.Size(90, 23)
 		Me.EditGameSetupButton.TabIndex = 1
@@ -576,7 +569,7 @@ Partial Class UnpackUserControl
 		Me.GameSetupComboBox.FormattingEnabled = True
 		Me.GameSetupComboBox.Location = New System.Drawing.Point(3, 255)
 		Me.GameSetupComboBox.Name = "GameSetupComboBox"
-		Me.GameSetupComboBox.Size = New System.Drawing.Size(6532, 21)
+		Me.GameSetupComboBox.Size = New System.Drawing.Size(6645, 21)
 		Me.GameSetupComboBox.TabIndex = 2
 		Me.GameSetupComboBox.Visible = False
 		'
@@ -815,5 +808,4 @@ Partial Class UnpackUserControl
 	Friend WithEvents KeepFullPathCheckBox As CheckBox
 	Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
 	Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
-	Friend WithEvents SearchToolStripComboBox As ToolStripComboBox
 End Class

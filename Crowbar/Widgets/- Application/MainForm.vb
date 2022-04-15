@@ -527,7 +527,7 @@ Public Class MainForm
 			End If
 
 			If selectedTab Is Nothing AndAlso Directory.Exists(pathFileName) Then
-				Dim packageExtensions As List(Of String) = BasePackageFile.GetListOfPackageExtensions()
+				Dim packageExtensions As List(Of String) = SourcePackage.GetListOfPackageExtensions()
 				For Each packageExtension As String In packageExtensions
 					For Each anArchivePathFileName As String In Directory.GetFiles(pathFileName, packageExtension)
 						If anArchivePathFileName.Length > 0 Then
