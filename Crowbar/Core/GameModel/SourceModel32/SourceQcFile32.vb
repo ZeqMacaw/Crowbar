@@ -2925,7 +2925,7 @@ Public Class SourceQcFile32
 		End If
 		If Me.thePhyFileData.theSourcePhyCollisionDatas.Count > 1 Then
 			For Each collisionData As SourcePhyCollisionData In Me.thePhyFileData.theSourcePhyCollisionDatas
-				If collisionData.theFaceSections.Count > 1 Then
+				If collisionData.theConvexMeshes.Count > 1 Then
 					line = vbTab
 					line += "$concaveperjoint"
 					Me.theOutputFileStreamWriter.WriteLine(line)
