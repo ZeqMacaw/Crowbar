@@ -2923,6 +2923,16 @@ Public Class SourceQcFile32
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			End If
 		End If
+		If Me.thePhyFileData.theSourcePhyCollisionDatas.Count > 1 Then
+			For Each collisionData As SourcePhyCollisionData In Me.thePhyFileData.theSourcePhyCollisionDatas
+				If collisionData.theFaceSections.Count > 1 Then
+					line = vbTab
+					line += "$concaveperjoint"
+					Me.theOutputFileStreamWriter.WriteLine(line)
+					Exit For
+				End If
+			Next
+		End If
 
 		For i As Integer = 0 To Me.thePhyFileData.theSourcePhyPhysCollisionModels.Count - 1
 			Dim aSourcePhysCollisionModel As SourcePhyPhysCollisionModel
