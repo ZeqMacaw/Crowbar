@@ -767,7 +767,7 @@ Public Class SourceSmdFile52
 	End Sub
 
 	Private Sub ProcessTransformsForPhysics()
-		If Me.thePhyFileData.theSourcePhyIsCollisionModel Then
+		If Me.thePhyFileData.theSourcePhyCollisionDatas.Count = 1 Then
 			Dim aFirstAnimationDescFrameLine As New AnimationFrameLine()
 			Me.CalculateFirstAnimDescFrameLinesForPhysics(aFirstAnimationDescFrameLine)
 
@@ -895,7 +895,7 @@ Public Class SourceSmdFile52
 		'	aVectorTransformed = MathModule.VectorITransform(aVector, aBone.poseToBoneColumn0, aBone.poseToBoneColumn1, aBone.poseToBoneColumn2, aBone.poseToBoneColumn3)
 		'End If
 		'------
-		If Me.thePhyFileData.theSourcePhyIsCollisionModel Then
+		If Me.thePhyFileData.theSourcePhyCollisionDatas.Count = 1 Then
 			'Dim copyOfVector As New SourceVector()
 			''copyOfVector.x = 1 / 0.0254 * vertex.x
 			''copyOfVector.y = 1 / 0.0254 * vertex.y

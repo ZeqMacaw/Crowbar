@@ -704,7 +704,7 @@ Public Class SourceSmdFile53
 		Dim aVectorTransformed As New SourceVector
 		Dim aVector As New SourceVector()
 
-		If Me.thePhyFileData.theSourcePhyIsCollisionModel Then
+		If Me.thePhyFileData.theSourcePhyCollisionDatas.Count = 1 Then
 			aVectorTransformed.x = 1 / 0.0254 * vertex.z
 			aVectorTransformed.y = 1 / 0.0254 * -vertex.x
 			aVectorTransformed.z = 1 / 0.0254 * -vertex.y

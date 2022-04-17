@@ -2937,7 +2937,7 @@ Public Class SourceQcFile36
 			'      For example, L4D2 van has several convex shapes, but only one solid and one bone.
 			'      Same for w_minigun. Both use $concave.
 			'If Me.theSourceEngineModel.thePhyFileHeader.solidCount = 1 Then
-			If Me.thePhyFileData.theSourcePhyIsCollisionModel Then
+			If Me.thePhyFileData.theSourcePhyCollisionDatas.Count = 1 Then
 				If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
 					line = "$CollisionModel "
 				Else
@@ -3009,11 +3009,6 @@ Public Class SourceQcFile36
 			line = vbTab
 			line += "$concave"
 			Me.theOutputFileStreamWriter.WriteLine(line)
-			if Not Me.thePhyFileData.theSourcePhyIsCollisionModel Then
-				line = vbTab
-				line += "$concaveperjoint"
-				Me.theOutputFileStreamWriter.WriteLine(line)
-			End If
 		End If
 		If Me.thePhyFileData.theSourcePhyCollisionDatas.Count > 1 Then
 			For Each collisionData As SourcePhyCollisionData In Me.thePhyFileData.theSourcePhyCollisionDatas

@@ -56,10 +56,6 @@ Public Class SourcePhyFile
 		Dim vertexDataOffset As Long
 		Dim convexMesh As SourcePhyConvexMesh
 
-		If Me.thePhyFileData.solidCount = 1 Then
-			Me.thePhyFileData.theSourcePhyIsCollisionModel = True
-		End If
-
 		Me.thePhyFileData.theSourcePhyMaxConvexPieces = 0
 		Me.thePhyFileData.theSourcePhyCollisionDatas = New List(Of SourcePhyCollisionData)()
 		For solidIndex As Integer = 0 To Me.thePhyFileData.solidCount - 1
@@ -105,7 +101,8 @@ Public Class SourcePhyFile
 				convexMesh.theBoneIndex = Me.theInputFileReader.ReadInt32() - 1
 				Me.theBoneIndexes.Add(convexMesh.theBoneIndex)
 
-				Me.theInputFileReader.ReadInt32()
+				' flags: has_children: (self.flags >> 0) & 3  ' 0 = false; > 0 true
+				convexMesh.flags = Me.theInputFileReader.ReadInt32()
 
 				'0c 00 00 00    count of lines after this (00 - 0b)
 				triangleCount = Me.theInputFileReader.ReadInt32()

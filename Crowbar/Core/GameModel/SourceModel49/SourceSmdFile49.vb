@@ -284,7 +284,6 @@ Public Class SourceSmdFile49
 		Dim boneIndex As Integer
 		Dim aTriangle As SourcePhyFace
 		Dim convexMesh As SourcePhyConvexMesh
-		Dim convexMeshCount As Integer
 		Dim phyVertex As SourcePhyVertex
 		Dim aVectorTransformed As SourceVector
 		Dim aSourcePhysCollisionModel As SourcePhyPhysCollisionModel
@@ -302,15 +301,17 @@ Public Class SourceSmdFile49
 						aSourcePhysCollisionModel = Nothing
 					End If
 
-					If Me.thePhyFileData.theSourcePhyIsCollisionModel = True Then
-						' Need to skip the last convex mesh that seems to wrap the entire model.
-						convexMeshCount = collisionData.theConvexMeshes.Count - 1
-					Else
-						convexMeshCount = collisionData.theConvexMeshes.Count
-					End If
-
-					For convexMeshIndex As Integer = 0 To convexMeshCount - 1
+					For convexMeshIndex As Integer = 0 To collisionData.theConvexMeshes.Count - 1
 						convexMesh = collisionData.theConvexMeshes(convexMeshIndex)
+
+						' [12-Apr-2022] From RED_EYE. (He is using someone else's set of data strutures for PHY file.)
+						'     flags: has_children: (self.flags >> 0) & 3  ' 0 = false; > 0 true
+						'     This seems to be correct way rather than checking Me.thePhyFileData.theSourcePhyIsCollisionModel.
+						'     Example where checking Me.thePhyFileData.theSourcePhyIsCollisionModel is incorrect (because the gib meshes are compiled in): 
+						'         "SourceFilmmaker\game\hl2\models\combine_strider.mdl"
+						If (convexMesh.flags And 3) > 0 Then
+							Continue For
+						End If
 
 						If Me.theMdlFileData.theBones.Count = 1 Then
 							boneIndex = 0
@@ -1715,7 +1716,7 @@ Public Class SourceSmdFile49
 	End Sub
 
 	Private Sub ProcessTransformsForPhysics()
-		If Me.thePhyFileData.theSourcePhyIsCollisionModel Then
+		If Me.thePhyFileData.theSourcePhyCollisionDatas.Count = 1 Then
 			Dim aFirstAnimationDescFrameLine As New AnimationFrameLine()
 			Me.CalculateFirstAnimDescFrameLinesForPhysics(aFirstAnimationDescFrameLine)
 
@@ -1836,7 +1837,7 @@ Public Class SourceSmdFile49
 		'TODO: [TransformPhyVertex] Merge the various code blocks (separated by MDL version) into one code block.
 		If Me.theMdlFileData.version >= 44 AndAlso Me.theMdlFileData.version <= 47 Then
 			' This works for various weapons and vehicles in HL2.
-			If Me.thePhyFileData.theSourcePhyIsCollisionModel Then
+			If Me.thePhyFileData.theSourcePhyCollisionDatas.Count = 1 Then
 				aVectorTransformed.x = 1 / 0.0254 * vertex.z
 				aVectorTransformed.y = 1 / 0.0254 * -vertex.x
 				aVectorTransformed.z = 1 / 0.0254 * -vertex.y
@@ -1847,7 +1848,7 @@ Public Class SourceSmdFile49
 				aVectorTransformed = MathModule.VectorITransform(aVector, aBone.poseToBoneColumn0, aBone.poseToBoneColumn1, aBone.poseToBoneColumn2, aBone.poseToBoneColumn3)
 			End If
 		Else
-			If Me.thePhyFileData.theSourcePhyIsCollisionModel Then
+			If Me.thePhyFileData.theSourcePhyCollisionDatas.Count = 1 Then
 				'Dim copyOfVector As New SourceVector()
 				''copyOfVector.x = 1 / 0.0254 * vertex.x
 				''copyOfVector.y = 1 / 0.0254 * vertex.y
