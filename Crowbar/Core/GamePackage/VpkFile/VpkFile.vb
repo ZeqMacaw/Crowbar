@@ -330,7 +330,7 @@ Public Class VpkFile
 					Me.theOutputFileWriter = New BinaryWriter(outputFileStream, System.Text.Encoding.Default)
 
 					' The titanfallEntryBlocks are only used by Titanfall and Titanfall 2.
-					If entry.titanfallEntryBlocks.Count > 0 Then
+					If entry.titanfallEntryBlocks IsNot Nothing AndAlso entry.titanfallEntryBlocks.Count > 0 Then
 						If entry.preloadByteCount > 0 Then
 							Me.theVpkFileReader.Seek(entry.preloadBytesOffset, SeekOrigin.Begin)
 							Dim preloadBytes() As Byte
