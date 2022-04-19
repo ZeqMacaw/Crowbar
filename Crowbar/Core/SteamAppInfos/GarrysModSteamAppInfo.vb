@@ -301,10 +301,14 @@ Public Class GarrysModSteamAppInfo
 
 				itemTitle = addon.title
 				itemTags.Clear()
-				itemTags.Add(addon.type)
-				For Each tag As String In addon.tags
-					itemTags.Add(tag)
-				Next
+				If addon.type IsNot Nothing Then
+					itemTags.Add(addon.type)
+				End If
+				If addon.tags IsNot Nothing Then
+					For Each tag As String In addon.tags
+						itemTags.Add(tag)
+					Next
+				End If
 				For tagIndex As Integer = 0 To itemTags.Count - 1
 					If itemTags(tagIndex) <> "ServerContent" AndAlso itemTags(tagIndex) <> "Addon" Then
 						If itemTags(tagIndex).Length > 1 Then
