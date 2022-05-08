@@ -4081,9 +4081,9 @@ Public Class SourceQcFile49
 					End If
 
 					If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
-						line += "$LimitRotation "
+						line = "$LimitRotation "
 					Else
-						line += "$limitrotation "
+						line = "$limitrotation "
 					End If
 					line += """"
 					line += aBone.theName
