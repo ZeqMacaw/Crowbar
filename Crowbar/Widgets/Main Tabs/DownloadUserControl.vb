@@ -116,15 +116,17 @@ Public Class DownloadUserControl
 #Region "Widget Event Handlers"
 
 	Private Sub DownloadUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+		If Not Me.DesignMode Then
+			Me.Init()
+		End If
+	End Sub
+
+	Private Sub DownloadUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.ItemIdTextBox, Me.OpenWorkshopPageButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputPathTextBox, Me.BrowseForOutputPathButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DocumentsOutputPathTextBox, Me.BrowseForOutputPathButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DownloadProgressBar, Me.DownloadProgressBar.Parent, True)
-
-		If Not Me.DesignMode Then
-			Me.Init()
-		End If
 	End Sub
 
 #End Region

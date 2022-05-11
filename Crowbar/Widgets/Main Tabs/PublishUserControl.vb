@@ -331,12 +331,14 @@ Public Class PublishUserControl
 #Region "Widget Event Handlers"
 
 	Private Sub PublishUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
-		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.AppIdComboBox, Me.RefreshGameItemsButton)
-
 		If Not Me.DesignMode Then
 			Me.Init()
 		End If
+	End Sub
+
+	Private Sub PublishUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
+		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.AppIdComboBox, Me.RefreshGameItemsButton)
 	End Sub
 
 #End Region

@@ -140,15 +140,17 @@ Public Class CompileUserControl
 #Region "Widget Event Handlers"
 
 	Private Sub CompileUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
+		If Not Me.DesignMode Then
+			Me.Init()
+		End If
+	End Sub
+
+	Private Sub CompileUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.QcPathFileNameTextBox, Me.BrowseForQcPathFolderOrFileNameButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputPathTextBox, Me.BrowseForOutputPathButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputSubfolderTextBox, Me.BrowseForOutputPathButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.GameModelsOutputPathTextBox, Me.BrowseForOutputPathButton)
-
-		If Not Me.DesignMode Then
-			Me.Init()
-		End If
 	End Sub
 
 #End Region

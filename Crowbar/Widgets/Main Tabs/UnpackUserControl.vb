@@ -20,13 +20,6 @@ Public Class UnpackUserControl
 		Me.PackageListView.ContextMenuStrip = Me.PackageListViewCustomMenu
 
 		Me.theSearchCount = 0
-
-		'NOTE: Try-Catch is needed so that widget will be shown in MainForm Designer without raising exception.
-		Try
-			Me.Init()
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		End Try
 	End Sub
 
 #End Region
@@ -171,6 +164,12 @@ Public Class UnpackUserControl
 #Region "Widget Event Handlers"
 
 	Private Sub UnpackUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
+		If Not Me.DesignMode Then
+			Me.Init()
+		End If
+	End Sub
+
+	Private Sub UnpackUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 		'NOTE: This code prevents Visual Studio often inexplicably extending the right side of these textboxes.
 		Me.PackagePathFileNameTextBox.Size = New System.Drawing.Size(Me.BrowseForPackagePathFolderOrFileNameButton.Left - Me.BrowseForPackagePathFolderOrFileNameButton.Margin.Left - Me.PackagePathFileNameTextBox.Margin.Right - Me.PackagePathFileNameTextBox.Left, 21)
 		Me.OutputPathTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputPathTextBox.Margin.Right - Me.OutputPathTextBox.Left, 21)

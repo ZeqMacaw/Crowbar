@@ -70,15 +70,17 @@ Public Class UpdateUserControl
 #Region "Widget Event Handlers"
 
 	Private Sub UpdateUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+		If Not Me.DesignMode Then
+			Me.Init()
+		End If
+	End Sub
+
+	Private Sub UpdateUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DownloadFolderTextBox, Me.BrowseForDownloadFolderButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DownloadProgressBarEx, Me.CancelDownloadButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.UpdateFolderTextBox, Me.BrowseForUpdateFolderButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.UpdateProgressBarEx, Me.CancelUpdateButton)
-
-		If Not Me.DesignMode Then
-			Me.Init()
-		End If
 	End Sub
 
 #End Region

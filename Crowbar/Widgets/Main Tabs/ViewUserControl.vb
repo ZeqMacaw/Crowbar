@@ -98,13 +98,15 @@ Public Class ViewUserControl
 
 #Region "Widget Event Handlers"
 
-	Private Sub UpdateUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
-		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.MdlPathFileNameTextBox, Me.BrowseForMdlFileButton)
-
+	Private Sub ViewUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 		If Not Me.DesignMode Then
 			Me.Init()
 		End If
+	End Sub
+
+	Private Sub ViewUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
+		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.MdlPathFileNameTextBox, Me.BrowseForMdlFileButton)
 	End Sub
 
 #End Region

@@ -134,14 +134,16 @@ Public Class PackUserControl
 #Region "Widget Event Handlers"
 
 	Private Sub PackUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
+		If Not Me.DesignMode Then
+			Me.Init()
+		End If
+	End Sub
+
+	Private Sub PackUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.InputPathFileNameTextBox, Me.BrowseForInputFolderOrFileNameButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputPathTextBox, Me.BrowseForOutputPathButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputParentPathTextBox, Me.BrowseForOutputPathButton)
-
-		If Not Me.DesignMode Then
-			Me.Init()
-		End If
 	End Sub
 
 #End Region
