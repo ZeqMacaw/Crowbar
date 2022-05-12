@@ -613,12 +613,6 @@
     <Compile Include="Widgets\Main Tabs\PackUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Widgets\Main Tabs\ReleaseUserControl.Designer.vb">
-      <DependentUpon>ReleaseUserControl.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Widgets\Main Tabs\ReleaseUserControl.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Widgets\Main Tabs\EditUserControl.Designer.vb">
       <DependentUpon>EditUserControl.vb</DependentUpon>
     </Compile>
@@ -818,10 +812,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\Main Tabs\PackUserControl.resx">
       <DependentUpon>PackUserControl.vb</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Widgets\Main Tabs\ReleaseUserControl.resx">
-      <DependentUpon>ReleaseUserControl.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\Main Tabs\EditUserControl.resx">
