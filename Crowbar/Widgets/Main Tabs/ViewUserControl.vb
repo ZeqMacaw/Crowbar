@@ -37,6 +37,8 @@ Public Class ViewUserControl
 		Me.UpdateWidgets(False)
 
 		AddHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
+
+		Me.RunDataViewer()
 	End Sub
 
 	Private Sub Free()
