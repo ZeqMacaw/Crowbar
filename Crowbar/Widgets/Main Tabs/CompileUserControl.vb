@@ -15,7 +15,7 @@ Public Class CompileUserControl
 
 #Region "Init and Free"
 
-	Private Sub Init()
+	Protected Overrides Sub Init()
 		Me.QcPathFileNameTextBox.DataBindings.Add("Text", TheApp.Settings, "CompileQcPathFileName", False, DataSourceUpdateMode.OnValidation)
 
 		Me.OutputPathTextBox.DataBindings.Add("Text", TheApp.Settings, "CompileOutputFullPath", False, DataSourceUpdateMode.OnValidation)
@@ -89,28 +89,29 @@ Public Class CompileUserControl
 		Me.UpdateCompilerOptionDefineBonesWidgets()
 	End Sub
 
-	Private Sub Free()
-		RemoveHandler Me.QcPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
-		RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
-		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
-		RemoveHandler TheApp.Compiler.ProgressChanged, AddressOf Me.CompilerBackgroundWorker_ProgressChanged
-		RemoveHandler TheApp.Compiler.RunWorkerCompleted, AddressOf Me.CompilerBackgroundWorker_RunWorkerCompleted
+	' Do not need Free() because this widget is destroyed only on program exit.
+	'Protected Overrides Sub Free()
+	'	RemoveHandler Me.QcPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+	'	RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+	'	RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
+	'	RemoveHandler TheApp.Compiler.ProgressChanged, AddressOf Me.CompilerBackgroundWorker_ProgressChanged
+	'	RemoveHandler TheApp.Compiler.RunWorkerCompleted, AddressOf Me.CompilerBackgroundWorker_RunWorkerCompleted
 
-		Me.QcPathFileNameTextBox.DataBindings.Clear()
+	'	Me.QcPathFileNameTextBox.DataBindings.Clear()
 
-		Me.OutputPathTextBox.DataBindings.Clear()
-		Me.OutputSubfolderTextBox.DataBindings.Clear()
+	'	Me.OutputPathTextBox.DataBindings.Clear()
+	'	Me.OutputSubfolderTextBox.DataBindings.Clear()
 
-		Me.GameSetupComboBox.DataSource = Nothing
-		Me.GameSetupComboBox.DataBindings.Clear()
+	'	Me.GameSetupComboBox.DataBindings.Clear()
+	'	Me.GameSetupComboBox.DataSource = Nothing
 
-		Me.FreeCrowbarOptions()
-		Me.FreeCompilerOptions()
+	'	Me.FreeCrowbarOptions()
+	'	Me.FreeCompilerOptions()
 
-		Me.CompileComboBox.DataBindings.Clear()
+	'	Me.CompileComboBox.DataBindings.Clear()
 
-		Me.CompiledFilesComboBox.DataBindings.Clear()
-	End Sub
+	'	Me.CompiledFilesComboBox.DataBindings.Clear()
+	'End Sub
 
 	Private Sub FreeCrowbarOptions()
 		Me.GoldSourceEngineLogFileCheckBox.DataBindings.Clear()
@@ -139,11 +140,12 @@ Public Class CompileUserControl
 
 #Region "Widget Event Handlers"
 
-	Private Sub CompileUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
-		If Not Me.DesignMode Then
-			Me.Init()
-		End If
-	End Sub
+	'Private Sub CompileUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
+	'	If Not Me.DesignMode Then
+	'		Me.Init()
+	'		Me.theControlIsInDesignMode = True
+	'	End If
+	'End Sub
 
 	Private Sub CompileUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.

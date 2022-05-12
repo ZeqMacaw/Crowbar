@@ -10,26 +10,11 @@ Public Class ViewUserControl
 		InitializeComponent()
 	End Sub
 
-	'UserControl overrides dispose to clean up the component list.
-	<System.Diagnostics.DebuggerNonUserCode()>
-	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
-		Try
-			If disposing Then
-				Me.Free()
-				If components IsNot Nothing Then
-					components.Dispose()
-				End If
-			End If
-		Finally
-			MyBase.Dispose(disposing)
-		End Try
-	End Sub
-
 #End Region
 
 #Region "Init and Free"
 
-	Private Sub Init()
+	Protected Overrides Sub Init()
 		Me.theModelViewers = New List(Of Viewer)()
 
 		Me.UpdateDataBindings()
@@ -41,18 +26,19 @@ Public Class ViewUserControl
 		Me.RunDataViewer()
 	End Sub
 
-	Private Sub Free()
-		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
+	' Needed for closing any active child processes. Only called on program exit.
+	Protected Overrides Sub Free()
+		'RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 
-		'RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
-		If Me.MdlPathFileNameTextBox.DataBindings("Text") IsNot Nothing Then
-			RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
-		End If
-		Me.MdlPathFileNameTextBox.DataBindings.Clear()
+		''RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
+		'If Me.MdlPathFileNameTextBox.DataBindings("Text") IsNot Nothing Then
+		'	RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		'End If
+		'Me.MdlPathFileNameTextBox.DataBindings.Clear()
 
-		Me.OverrideMdlVersionComboBox.DataBindings.Clear()
+		'Me.OverrideMdlVersionComboBox.DataBindings.Clear()
 
-		Me.FreeDataViewer()
+		'Me.FreeDataViewer()
 		Me.FreeModelViewerWithModel()
 		If Me.theModelViewers IsNot Nothing Then
 			For Each aModelViewer As Viewer In Me.theModelViewers
@@ -100,11 +86,12 @@ Public Class ViewUserControl
 
 #Region "Widget Event Handlers"
 
-	Private Sub ViewUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-		If Not Me.DesignMode Then
-			Me.Init()
-		End If
-	End Sub
+	'Private Sub ViewUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+	'	If Not Me.DesignMode Then
+	'		Me.Init()
+	'		Me.theControlIsInDesignMode = True
+	'	End If
+	'End Sub
 
 	Private Sub ViewUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.

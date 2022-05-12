@@ -4,31 +4,25 @@ Public Class HelpUserControl
 
 #Region "Creation and Destruction"
 
-    Public Sub New()
-        ' This call is required by the Windows Form Designer.
-        InitializeComponent()
-
-        'NOTE: Try-Catch is needed so that widget will be shown in MainForm without raising exception.
-        Try
-            Me.Init()
-        Catch
-        End Try
-    End Sub
+	Public Sub New()
+		' This call is required by the Windows Form Designer.
+		InitializeComponent()
+	End Sub
 
 #End Region
 
 #Region "Init and Free"
 
-    Private Sub Init()
-        Me.TutorialLinkLabel.Links.Add(0, Me.TutorialLinkLabel.Text.Length(), AppConstants.HelpTutorialLink)
-        Me.ContentsLinkLabel.Links.Add(0, Me.ContentsLinkLabel.Text.Length(), AppConstants.HelpContentsLink)
-        Me.IndexLinkLabel.Links.Add(0, Me.IndexLinkLabel.Text.Length(), AppConstants.HelpIndexLink)
-        Me.TipsLinkLabel.Links.Add(0, Me.TipsLinkLabel.Text.Length(), AppConstants.HelpTipsLink)
-    End Sub
+	Protected Overrides Sub Init()
+		Me.TutorialLinkLabel.Links.Add(0, Me.TutorialLinkLabel.Text.Length(), AppConstants.HelpTutorialLink)
+		Me.ContentsLinkLabel.Links.Add(0, Me.ContentsLinkLabel.Text.Length(), AppConstants.HelpContentsLink)
+		Me.IndexLinkLabel.Links.Add(0, Me.IndexLinkLabel.Text.Length(), AppConstants.HelpIndexLink)
+		Me.TipsLinkLabel.Links.Add(0, Me.TipsLinkLabel.Text.Length(), AppConstants.HelpTipsLink)
+	End Sub
 
-    'Private Sub Free()
-
-    'End Sub
+	' Do not need Free() because this widget is destroyed only on program exit.
+	'Protected Overrides Sub Free()
+	'End Sub
 
 #End Region
 

@@ -17,7 +17,7 @@ Public Class PackUserControl
 
 #Region "Init and Free"
 
-	Private Sub Init()
+	Protected Overrides Sub Init()
 		Me.InputComboBox.DisplayMember = "Value"
 		Me.InputComboBox.ValueMember = "Key"
 		Me.InputComboBox.DataSource = EnumHelper.ToList(GetType(PackInputOptions))
@@ -89,28 +89,29 @@ Public Class PackUserControl
 		AddHandler Me.GmaGarrysModTagsUserControl.TagsPropertyChanged, AddressOf Me.GmaGarrysModTagsUserControl_TagsPropertyChanged
 	End Sub
 
-	Private Sub Free()
-		RemoveHandler Me.InputPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePath
-		RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
-		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
-		RemoveHandler TheApp.Packer.ProgressChanged, AddressOf Me.PackerBackgroundWorker_ProgressChanged
-		RemoveHandler TheApp.Packer.RunWorkerCompleted, AddressOf Me.PackerBackgroundWorker_RunWorkerCompleted
+	' Do not need Free() because this widget is destroyed only on program exit.
+	'Protected Overrides Sub Free()
+	'	RemoveHandler Me.InputPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePath
+	'	RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+	'	RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
+	'	RemoveHandler TheApp.Packer.ProgressChanged, AddressOf Me.PackerBackgroundWorker_ProgressChanged
+	'	RemoveHandler TheApp.Packer.RunWorkerCompleted, AddressOf Me.PackerBackgroundWorker_RunWorkerCompleted
 
-		Me.InputPathFileNameTextBox.DataBindings.Clear()
+	'	Me.InputPathFileNameTextBox.DataBindings.Clear()
 
-		Me.OutputPathTextBox.DataBindings.Clear()
-		Me.OutputParentPathTextBox.DataBindings.Clear()
+	'	Me.OutputPathTextBox.DataBindings.Clear()
+	'	Me.OutputParentPathTextBox.DataBindings.Clear()
 
-		Me.GameSetupComboBox.DataSource = Nothing
-		Me.GameSetupComboBox.DataBindings.Clear()
+	'	Me.GameSetupComboBox.DataSource = Nothing
+	'	Me.GameSetupComboBox.DataBindings.Clear()
 
-		Me.FreeCrowbarOptions()
-		Me.FreePackerOptions()
+	'	Me.FreeCrowbarOptions()
+	'	Me.FreePackerOptions()
 
-		Me.InputComboBox.DataBindings.Clear()
+	'	Me.InputComboBox.DataBindings.Clear()
 
-		Me.PackedFilesComboBox.DataBindings.Clear()
-	End Sub
+	'	Me.PackedFilesComboBox.DataBindings.Clear()
+	'End Sub
 
 	Private Sub FreeCrowbarOptions()
 		Me.LogFileCheckBox.DataBindings.Clear()
@@ -132,12 +133,6 @@ Public Class PackUserControl
 #End Region
 
 #Region "Widget Event Handlers"
-
-	Private Sub PackUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
-		If Not Me.DesignMode Then
-			Me.Init()
-		End If
-	End Sub
 
 	Private Sub PackUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.

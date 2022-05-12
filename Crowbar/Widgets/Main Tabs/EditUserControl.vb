@@ -5,23 +5,18 @@ Public Class EditUserControl
 	'Public Sub New()
 	'	' This call is required by the Windows Form Designer.
 	'	InitializeComponent()
-
-	'	'NOTE: Try-Catch is needed so that widget will be shown in MainForm without raising exception.
-	'	Try
-	'		Me.Init()
-	'	Catch
-	'	End Try
 	'End Sub
 
 #End Region
 
 #Region "Init and Free"
 
-	Private Sub Init()
+	Protected Overrides Sub Init()
 	End Sub
 
-	Private Sub Free()
-	End Sub
+	' Do not need Free() because this widget is destroyed only on program exit.
+	'Protected Overrides Sub Free()
+	'End Sub
 
 #End Region
 

@@ -15,26 +15,11 @@ Public Class Base_TagsUserControl
 		InitializeComponent()
 	End Sub
 
-	'UserControl overrides dispose to clean up the component list.
-	<System.Diagnostics.DebuggerNonUserCode()>
-	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
-		Try
-			If disposing Then
-				If components IsNot Nothing Then
-					components.Dispose()
-				End If
-				Me.Free()
-			End If
-		Finally
-			MyBase.Dispose(disposing)
-		End Try
-	End Sub
-
 #End Region
 
 #Region "Init and Free"
 
-	Protected Overridable Sub Init()
+	Protected Overrides Sub Init()
 		Me.theWidgets = New List(Of Control)()
 		Me.GetAllWidgets(Me.Controls)
 
@@ -65,7 +50,7 @@ Public Class Base_TagsUserControl
 		Next
 	End Sub
 
-	Private Sub Free()
+	Protected Overrides Sub Free()
 		Dim aCheckBox As CheckBoxEx
 		Dim aComboBox As ComboBox
 		Dim aTextBox As TextBox
@@ -227,9 +212,9 @@ Public Class Base_TagsUserControl
 
 #Region "Widget Event Handlers"
 
-	Private Sub TagsBaseUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
-		Me.Init()
-	End Sub
+	'Private Sub TagsBaseUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
+	'	Me.Init()
+	'End Sub
 
 #End Region
 

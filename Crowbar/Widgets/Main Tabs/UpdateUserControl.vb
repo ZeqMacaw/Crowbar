@@ -20,7 +20,7 @@ Public Class UpdateUserControl
 
 #Region "Init and Free"
 
-	Private Sub Init()
+	Protected Overrides Sub Init()
 		Me.DownloadFolderTextBox.DataBindings.Add("Text", TheApp.Settings, "UpdateDownloadPath", False, DataSourceUpdateMode.OnValidation)
 
 		Me.UpdateToNewPathCheckBox.DataBindings.Add("Checked", TheApp.Settings, "UpdateUpdateToNewPathIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
@@ -33,16 +33,17 @@ Public Class UpdateUserControl
 		Me.CurrentVersionLabel.Text = "Current Version: " + My.Application.Info.Version.ToString(2)
 	End Sub
 
-	Private Sub Free()
-		RemoveHandler Me.DownloadFolderTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
-		RemoveHandler Me.UpdateFolderTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+	' Do not need Free() because this widget is destroyed only on program exit.
+	'Protected Overrides Sub Free()
+	'	RemoveHandler Me.DownloadFolderTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+	'	RemoveHandler Me.UpdateFolderTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
 
-		Me.DownloadFolderTextBox.DataBindings.Clear()
+	'	Me.DownloadFolderTextBox.DataBindings.Clear()
 
-		Me.UpdateToNewPathCheckBox.DataBindings.Clear()
-		Me.UpdateFolderTextBox.DataBindings.Clear()
-		Me.UpdateCopySettingsCheckBox.DataBindings.Clear()
-	End Sub
+	'	Me.UpdateToNewPathCheckBox.DataBindings.Clear()
+	'	Me.UpdateFolderTextBox.DataBindings.Clear()
+	'	Me.UpdateCopySettingsCheckBox.DataBindings.Clear()
+	'End Sub
 
 #End Region
 
@@ -69,11 +70,11 @@ Public Class UpdateUserControl
 
 #Region "Widget Event Handlers"
 
-	Private Sub UpdateUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-		If Not Me.DesignMode Then
-			Me.Init()
-		End If
-	End Sub
+	'Private Sub UpdateUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+	'	If Not Me.DesignMode Then
+	'		Me.Init()
+	'	End If
+	'End Sub
 
 	Private Sub UpdateUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.

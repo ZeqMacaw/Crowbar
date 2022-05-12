@@ -8,34 +8,13 @@ Public Class PatchUserControl
 	Public Sub New()
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
-
-		''NOTE: Try-Catch is needed so that widget will be shown in MainForm without raising exception.
-		'Try
-		'	Me.Init()
-		'Catch
-		'End Try
-	End Sub
-
-	'UserControl overrides dispose to clean up the component list.
-	<System.Diagnostics.DebuggerNonUserCode()> _
-	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
-		Try
-			If disposing Then
-				Me.Free()
-				If components IsNot Nothing Then
-					components.Dispose()
-				End If
-			End If
-		Finally
-			MyBase.Dispose(disposing)
-		End Try
 	End Sub
 
 #End Region
 
 #Region "Init and Free"
 
-	Private Sub Init()
+	Protected Overrides Sub Init()
 		Me.MdlPathFileNameTextBox.DataBindings.Add("Text", TheApp.Settings, "PatchMdlPathFileName", False, DataSourceUpdateMode.OnValidation)
 
 		Me.UpdateDataBindings()
@@ -45,12 +24,13 @@ Public Class PatchUserControl
 		AddHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
 	End Sub
 
-	Private Sub Free()
-		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
-		RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+	' Do not need Free() because this widget is destroyed only on program exit.
+	'Protected Overrides Sub Free()
+	'	RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
+	'	RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
 
-		Me.MdlPathFileNameTextBox.DataBindings.Clear()
-	End Sub
+	'	Me.MdlPathFileNameTextBox.DataBindings.Clear()
+	'End Sub
 
 #End Region
 

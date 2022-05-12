@@ -18,26 +18,11 @@ Public Class DownloadUserControl
 		InitializeComponent()
 	End Sub
 
-	''UserControl overrides dispose to clean up the component list.
-	'<System.Diagnostics.DebuggerNonUserCode()>
-	'Protected Overrides Sub Dispose(ByVal disposing As Boolean)
-	'	Try
-	'		If disposing Then
-	'			Me.Free()
-	'			If components IsNot Nothing Then
-	'				components.Dispose()
-	'			End If
-	'		End If
-	'	Finally
-	'		MyBase.Dispose(disposing)
-	'	End Try
-	'End Sub
-
 #End Region
 
 #Region "Init and Free"
 
-	Private Sub Init()
+	Protected Overrides Sub Init()
 		TheApp.InitAppInfo()
 
 		Me.ItemIdTextBox.DataBindings.Add("Text", TheApp.Settings, "DownloadItemIdOrLink", False, DataSourceUpdateMode.OnValidation)
@@ -57,24 +42,23 @@ Public Class DownloadUserControl
 		AddHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 	End Sub
 
-	Public Sub Free()
-		'NOTE: Anything related to widgets raises exception because the widgets seem to have already been disposed. Not sure why though.
-
+	' Needed for closing any active child processes. Only called on program exit.
+	Protected Overrides Sub Free()
 		'Me.CancelDownload()
 
 		If Me.theBackgroundSteamPipe IsNot Nothing Then
 			Me.theBackgroundSteamPipe.Kill()
 		End If
 
-		RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		'RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
 
-		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
+		'RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 
-		Me.FreeDownloadOptions()
+		'Me.FreeDownloadOptions()
 
-		Me.FreeOutputPathComboBox()
+		'Me.FreeOutputPathComboBox()
 
-		Me.ItemIdTextBox.DataBindings.Clear()
+		'Me.ItemIdTextBox.DataBindings.Clear()
 	End Sub
 
 	Private Sub InitOutputPathComboBox()
@@ -114,12 +98,6 @@ Public Class DownloadUserControl
 #End Region
 
 #Region "Widget Event Handlers"
-
-	Private Sub DownloadUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-		If Not Me.DesignMode Then
-			Me.Init()
-		End If
-	End Sub
 
 	Private Sub DownloadUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.

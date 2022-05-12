@@ -67,26 +67,11 @@ Public Class PublishUserControl
 		'Me.ItemIDTextBox.ContextMenuStrip = Me.ItemIdTextBoxContextMenuStrip
 	End Sub
 
-	'UserControl overrides dispose to clean up the component list.
-	<System.Diagnostics.DebuggerNonUserCode()>
-	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
-		Try
-			If disposing Then
-				Me.Free()
-				If components IsNot Nothing Then
-					components.Dispose()
-				End If
-			End If
-		Finally
-			MyBase.Dispose(disposing)
-		End Try
-	End Sub
-
 #End Region
 
 #Region "Init and Free"
 
-	Private Sub Init()
+	Protected Overrides Sub Init()
 		TheApp.InitAppInfo()
 
 		If TheApp.Settings.PublishGameSelectedIndex >= TheApp.SteamAppInfos.Count Then
@@ -116,24 +101,24 @@ Public Class PublishUserControl
 		Me.UpdateItemListWidgets(True)
 	End Sub
 
-	'NOTE: This is called after all child widgets (created via designer) are disposed but before this UserControl is disposed.
-	Private Sub Free()
+	' Needed for closing any active child processes. Only called on program exit.
+	Protected Overrides Sub Free()
 		If Me.theBackgroundSteamPipe IsNot Nothing Then
 			Me.theBackgroundSteamPipe.Kill()
 		End If
 
-		If Me.theTagsWidget IsNot Nothing Then
-			RemoveHandler Me.theTagsWidget.TagsPropertyChanged, AddressOf Me.TagsWidget_TagsPropertyChanged
-		End If
+		'If Me.theTagsWidget IsNot Nothing Then
+		'	RemoveHandler Me.theTagsWidget.TagsPropertyChanged, AddressOf Me.TagsWidget_TagsPropertyChanged
+		'End If
 
-		If Me.theSelectedItem IsNot Nothing Then
-			If Me.theSelectedItem.IsTemplate AndAlso Me.theSelectedItem.IsChanged Then
-				Me.SaveChangedTemplateToDraft()
-			End If
-			RemoveHandler Me.theSelectedItem.PropertyChanged, AddressOf Me.WorkshopItem_PropertyChanged
-		End If
+		'If Me.theSelectedItem IsNot Nothing Then
+		'	If Me.theSelectedItem.IsTemplate AndAlso Me.theSelectedItem.IsChanged Then
+		'		Me.SaveChangedTemplateToDraft()
+		'	End If
+		'	RemoveHandler Me.theSelectedItem.PropertyChanged, AddressOf Me.WorkshopItem_PropertyChanged
+		'End If
 
-		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
+		'RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 	End Sub
 
 	Private Sub GetUserSteamID()
@@ -332,11 +317,11 @@ Public Class PublishUserControl
 
 #Region "Widget Event Handlers"
 
-	Private Sub PublishUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-		If Not Me.DesignMode Then
-			Me.Init()
-		End If
-	End Sub
+	'Private Sub PublishUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+	'	If Not Me.DesignMode Then
+	'		Me.Init()
+	'	End If
+	'End Sub
 
 	Private Sub PublishUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
@@ -467,6 +452,16 @@ Public Class PublishUserControl
 
 	Private Sub BrowsePreviewImageButton_Click(sender As Object, e As EventArgs) Handles BrowseItemPreviewImagePathFileNameButton.Click
 		Me.BrowseForPreviewImage()
+	End Sub
+
+	Private Sub ItemPreviewImagePictureBox_Resize(sender As Object, e As EventArgs) Handles ItemPreviewImagePictureBox.Resize
+		' Make sure size stays a square even when theme font changes it.
+		Dim width As Integer = Me.ItemPreviewImagePictureBox.Width
+		Dim height As Integer = Me.ItemPreviewImagePictureBox.Height
+		If width <> height Then
+			Dim length As Integer = Math.Min(width, height)
+			Me.ItemPreviewImagePictureBox.Size = New System.Drawing.Size(length, length)
+		End If
 	End Sub
 
 	Private Sub SaveAsTemplateOrDraftItemButton_Click(sender As Object, e As EventArgs) Handles SaveAsTemplateOrDraftItemButton.Click
@@ -901,7 +896,7 @@ Public Class PublishUserControl
 	End Sub
 
 	Private Sub SwapSteamAppTagsWidget()
-		If theTagsWidget IsNot Nothing Then
+		If Me.theTagsWidget IsNot Nothing Then
 			RemoveHandler Me.theTagsWidget.TagsPropertyChanged, AddressOf Me.TagsWidget_TagsPropertyChanged
 		End If
 
@@ -1404,26 +1399,26 @@ Public Class PublishUserControl
 
 	' Copy the image into memory, so the image file can be deleted.
 	Private Sub DeleteInUseTempPreviewImageFile(ByVal itemPreviewImagePathFileName As String, ByVal itemID As String)
-        Dim img As Image = Nothing
+		Dim img As Image = Nothing
 
-        Try
-            If File.Exists(itemPreviewImagePathFileName) Then
-                img = Image.FromFile(itemPreviewImagePathFileName)
-                If Me.ItemPreviewImagePictureBox.Image IsNot Nothing Then
-                    Me.ItemPreviewImagePictureBox.Image.Dispose()
-                End If
-                Me.ItemPreviewImagePictureBox.Image = New Bitmap(img)
-                img.Dispose()
-            End If
-        Catch ex As Exception
-            If img IsNot Nothing Then
-                img.Dispose()
-                img = Nothing
-            End If
-        End Try
+		Try
+			If File.Exists(itemPreviewImagePathFileName) Then
+				img = Image.FromFile(itemPreviewImagePathFileName)
+				If Me.ItemPreviewImagePictureBox.Image IsNot Nothing Then
+					Me.ItemPreviewImagePictureBox.Image.Dispose()
+				End If
+				Me.ItemPreviewImagePictureBox.Image = New Bitmap(img)
+				img.Dispose()
+			End If
+		Catch ex As Exception
+			If img IsNot Nothing Then
+				img.Dispose()
+				img = Nothing
+			End If
+		End Try
 
-        Me.DeleteTempPreviewImageFile(itemPreviewImagePathFileName, itemID)
-    End Sub
+		Me.DeleteTempPreviewImageFile(itemPreviewImagePathFileName, itemID)
+	End Sub
 
 	Private Sub DeleteTempPreviewImageFile(ByVal itemPreviewImagePathFileName As String, ByVal itemID As String)
 		Dim previewImagePathFileName As String = Me.GetPreviewImagePathFileName(itemPreviewImagePathFileName, itemID, 0)
@@ -1884,16 +1879,6 @@ Public Class PublishUserControl
 	Private theUnchangedSelectedTemplateItem As WorkshopItem
 
 	Private theBackgroundSteamPipe As BackgroundSteamPipe
-
-	Private Sub ItemPreviewImagePictureBox_Resize(sender As Object, e As EventArgs) Handles ItemPreviewImagePictureBox.Resize
-		' Make sure size stays a square even when theme font changes it.
-		Dim width As Integer = Me.ItemPreviewImagePictureBox.Width
-		Dim height As Integer = Me.ItemPreviewImagePictureBox.Height
-		If width <> height Then
-			Dim length As Integer = Math.Min(width, height)
-			Me.ItemPreviewImagePictureBox.Size = New System.Drawing.Size(length, length)
-		End If
-	End Sub
 
 #End Region
 

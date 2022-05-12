@@ -11,7 +11,7 @@ Public Class AboutUserControl
 
 #Region "Init and Free"
 
-	Private Sub Init()
+	Protected Overrides Sub Init()
 		'NOTE: Customize the application's assembly information in the "Application" pane of the project 
 		'    properties dialog (under the "Project" menu).
 
@@ -36,7 +36,7 @@ Public Class AboutUserControl
 		'Me.Panel1.DataBindings.Add("BackColor", TheApp.Settings, "AboutTabBackgroundColor", False, DataSourceUpdateMode.OnPropertyChanged)
 	End Sub
 
-	'Private Sub Free()
+	'Protected Overrides Sub Free()
 
 	'End Sub
 
@@ -47,12 +47,6 @@ Public Class AboutUserControl
 #End Region
 
 #Region "Widget Event Handlers"
-
-	Private Sub AboutUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
-		If Not Me.DesignMode Then
-			Me.Init()
-		End If
-	End Sub
 
 #End Region
 

@@ -26,7 +26,7 @@ Public Class UnpackUserControl
 
 #Region "Init and Free"
 
-	Private Sub Init()
+	Protected Overrides Sub Init()
 		'Me.thePackageFileNames = New BindingListEx(Of PackagePathFileNameInfo)()
 
 		Me.PackagePathFileNameTextBox.DataBindings.Add("Text", TheApp.Settings, "UnpackPackagePathFolderOrFileName", False, DataSourceUpdateMode.OnValidation)
@@ -79,34 +79,33 @@ Public Class UnpackUserControl
 		Me.LogFileCheckBox.DataBindings.Add("Checked", TheApp.Settings, "UnpackLogFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 	End Sub
 
-	Private Sub Free()
-		RemoveHandler Me.PackagePathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
-		RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
-		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
-		RemoveHandler TheApp.Unpacker.ProgressChanged, AddressOf Me.ListerBackgroundWorker_ProgressChanged
-		RemoveHandler TheApp.Unpacker.RunWorkerCompleted, AddressOf Me.ListerBackgroundWorker_RunWorkerCompleted
-		RemoveHandler Me.theSearchBackgroundWorker.ProgressChanged, AddressOf Me.SearchBackgroundWorker_ProgressChanged
-		RemoveHandler Me.theSearchBackgroundWorker.RunWorkerCompleted, AddressOf Me.SearchBackgroundWorker_RunWorkerCompleted
-		RemoveHandler TheApp.Unpacker.ProgressChanged, AddressOf Me.UnpackerBackgroundWorker_ProgressChanged
-		RemoveHandler TheApp.Unpacker.RunWorkerCompleted, AddressOf Me.UnpackerBackgroundWorker_RunWorkerCompleted
+	' Do not need Free() because this widget is destroyed only on program exit.
+	'Protected Overrides Sub Free()
+	'	RemoveHandler Me.PackagePathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+	'	RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+	'	RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
+	'	RemoveHandler TheApp.Unpacker.ProgressChanged, AddressOf Me.ListerBackgroundWorker_ProgressChanged
+	'	RemoveHandler TheApp.Unpacker.RunWorkerCompleted, AddressOf Me.ListerBackgroundWorker_RunWorkerCompleted
+	'	RemoveHandler TheApp.Unpacker.ProgressChanged, AddressOf Me.UnpackerBackgroundWorker_ProgressChanged
+	'	RemoveHandler TheApp.Unpacker.RunWorkerCompleted, AddressOf Me.UnpackerBackgroundWorker_RunWorkerCompleted
 
-		Me.UnpackComboBox.DataBindings.Clear()
-		Me.PackagePathFileNameTextBox.DataBindings.Clear()
+	'	Me.UnpackComboBox.DataBindings.Clear()
+	'	Me.PackagePathFileNameTextBox.DataBindings.Clear()
 
-		Me.OutputPathTextBox.DataBindings.Clear()
-		Me.OutputSamePathTextBox.DataBindings.Clear()
-		Me.OutputSubfolderTextBox.DataBindings.Clear()
+	'	Me.OutputPathTextBox.DataBindings.Clear()
+	'	Me.OutputSamePathTextBox.DataBindings.Clear()
+	'	Me.OutputSubfolderTextBox.DataBindings.Clear()
 
-		Me.FreeUnpackerOptions()
+	'	Me.FreeUnpackerOptions()
 
-		Me.UnpackedFilesComboBox.DataSource = Nothing
-	End Sub
+	'	Me.UnpackedFilesComboBox.DataSource = Nothing
+	'End Sub
 
-	Private Sub FreeUnpackerOptions()
-		Me.FolderForEachPackageCheckBox.DataBindings.Clear()
-		Me.KeepFullPathCheckBox.DataBindings.Clear()
-		Me.LogFileCheckBox.DataBindings.Clear()
-	End Sub
+	'Private Sub FreeUnpackerOptions()
+	'	Me.FolderForEachPackageCheckBox.DataBindings.Clear()
+	'	Me.KeepFullPathCheckBox.DataBindings.Clear()
+	'	Me.LogFileCheckBox.DataBindings.Clear()
+	'End Sub
 
 #End Region
 
@@ -163,11 +162,11 @@ Public Class UnpackUserControl
 
 #Region "Widget Event Handlers"
 
-	Private Sub UnpackUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
-		If Not Me.DesignMode Then
-			Me.Init()
-		End If
-	End Sub
+	'Private Sub UnpackUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
+	'	If Not Me.DesignMode Then
+	'		Me.Init()
+	'	End If
+	'End Sub
 
 	Private Sub UnpackUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 		'NOTE: This code prevents Visual Studio often inexplicably extending the right side of these textboxes.

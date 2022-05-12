@@ -15,7 +15,7 @@ Public Class DecompileUserControl
 
 #Region "Init and Free"
 
-	Private Sub Init()
+	Protected Overrides Sub Init()
 		Me.MdlPathFileNameTextBox.DataBindings.Add("Text", TheApp.Settings, "DecompileMdlPathFileName", False, DataSourceUpdateMode.OnValidation)
 
 		Me.OutputPathTextBox.DataBindings.Add("Text", TheApp.Settings, "DecompileOutputFullPath", False, DataSourceUpdateMode.OnValidation)
@@ -76,23 +76,24 @@ Public Class DecompileUserControl
 		Me.OverrideMdlVersionComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "DecompileOverrideMdlVersion", False, DataSourceUpdateMode.OnPropertyChanged)
 	End Sub
 
-	Private Sub Free()
-		RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
-		RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
-		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
-		RemoveHandler TheApp.Decompiler.ProgressChanged, AddressOf Me.DecompilerBackgroundWorker_ProgressChanged
-		RemoveHandler TheApp.Decompiler.RunWorkerCompleted, AddressOf Me.DecompilerBackgroundWorker_RunWorkerCompleted
+	' Do not need Free() because this widget is destroyed only on program exit.
+	'Protected Overrides Sub Free()
+	'	RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+	'	RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+	'	RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
+	'	RemoveHandler TheApp.Decompiler.ProgressChanged, AddressOf Me.DecompilerBackgroundWorker_ProgressChanged
+	'	RemoveHandler TheApp.Decompiler.RunWorkerCompleted, AddressOf Me.DecompilerBackgroundWorker_RunWorkerCompleted
 
-		Me.DecompileComboBox.DataBindings.Clear()
-		Me.MdlPathFileNameTextBox.DataBindings.Clear()
+	'	Me.DecompileComboBox.DataBindings.Clear()
+	'	Me.MdlPathFileNameTextBox.DataBindings.Clear()
 
-		Me.OutputPathTextBox.DataBindings.Clear()
-		Me.OutputSubfolderTextBox.DataBindings.Clear()
+	'	Me.OutputPathTextBox.DataBindings.Clear()
+	'	Me.OutputSubfolderTextBox.DataBindings.Clear()
 
-		Me.FreeDecompilerOptions()
+	'	Me.FreeDecompilerOptions()
 
-		Me.DecompiledFilesComboBox.DataSource = Nothing
-	End Sub
+	'	Me.DecompiledFilesComboBox.DataSource = Nothing
+	'End Sub
 
 	Private Sub FreeDecompilerOptions()
 		Me.QcFileCheckBox.DataBindings.Clear()
@@ -132,11 +133,11 @@ Public Class DecompileUserControl
 
 #Region "Widget Event Handlers"
 
-	Private Sub DecompileUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
-		If Not Me.DesignMode Then
-			Me.Init()
-		End If
-	End Sub
+	'Private Sub DecompileUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
+	'	If Not Me.DesignMode Then
+	'		Me.Init()
+	'	End If
+	'End Sub
 
 	Private Sub DecompileUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.

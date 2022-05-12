@@ -3,7 +3,7 @@ Partial Class PatchUserControl
 	Inherits BaseUserControl
 
 	''UserControl overrides dispose to clean up the component list.
-	'<System.Diagnostics.DebuggerNonUserCode()> _
+	'<System.Diagnostics.DebuggerNonUserCode()>
 	'Protected Overrides Sub Dispose(ByVal disposing As Boolean)
 	'	Try
 	'		If disposing AndAlso components IsNot Nothing Then

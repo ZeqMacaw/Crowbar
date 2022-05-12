@@ -8,19 +8,13 @@ Public Class SetUpGamesUserControl
 	Public Sub New()
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
-
-		'NOTE: Try-Catch is needed so that widget will be shown in MainForm without raising exception.
-		Try
-			Me.Init()
-		Catch
-		End Try
 	End Sub
 
 #End Region
 
 #Region "Init and Free"
 
-	Protected Sub Init()
+	Protected Overrides Sub Init()
 		Me.GameSetupComboBox.DisplayMember = "GameName"
 		Me.GameSetupComboBox.ValueMember = "GameName"
 		Me.GameSetupComboBox.DataSource = TheApp.Settings.GameSetups
@@ -92,22 +86,25 @@ Public Class SetUpGamesUserControl
 		AddHandler Me.SteamLibraryPathsDataGridView.ChangeToThisMacroInAllGameSetupsToolStripMenuItem.Click, AddressOf Me.ChangeToThisMacroInAllGameSetupsToolStripMenuItem_Click
 	End Sub
 
-	Protected Sub Free()
-		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf Me.AppSettings_PropertyChanged
-		RemoveHandler TheApp.Settings.GameSetups.ListChanged, AddressOf Me.GameSetups_ListChanged
-		RemoveHandler Me.GamePathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
-		RemoveHandler Me.SteamLibraryPathsDataGridView.SetMacroInSelectedGameSetupToolStripMenuItem.Click, AddressOf Me.SetMacroInSelectedGameSetupToolStripMenuItem_Click
-		RemoveHandler Me.SteamLibraryPathsDataGridView.SetMacroInAllGameSetupsToolStripMenuItem.Click, AddressOf Me.SetMacroInAllGameSetupsToolStripMenuItem_Click
-		RemoveHandler Me.SteamLibraryPathsDataGridView.ClearMacroInSelectedGameSetupToolStripMenuItem.Click, AddressOf Me.ClearMacroInSelectedGameSetupToolStripMenuItem_Click
-		RemoveHandler Me.SteamLibraryPathsDataGridView.ClearMacroInAllGameSetupsToolStripMenuItem.Click, AddressOf Me.ClearMacroInAllGameSetupsToolStripMenuItem_Click
-		RemoveHandler Me.SteamLibraryPathsDataGridView.ChangeToThisMacroInSelectedGameSetupToolStripMenuItem.Click, AddressOf Me.ChangeToThisMacroInSelectedGameSetupToolStripMenuItem_Click
-		RemoveHandler Me.SteamLibraryPathsDataGridView.ChangeToThisMacroInAllGameSetupsToolStripMenuItem.Click, AddressOf Me.ChangeToThisMacroInAllGameSetupsToolStripMenuItem_Click
+	' Do not need Free() because this widget is destroyed only on program exit.
+	'Protected Overrides Sub Free()
+	'	RemoveHandler TheApp.Settings.PropertyChanged, AddressOf Me.AppSettings_PropertyChanged
+	'	RemoveHandler TheApp.Settings.GameSetups.ListChanged, AddressOf Me.GameSetups_ListChanged
+	'	RemoveHandler Me.GamePathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
+	'	RemoveHandler Me.SteamLibraryPathsDataGridView.SetMacroInSelectedGameSetupToolStripMenuItem.Click, AddressOf Me.SetMacroInSelectedGameSetupToolStripMenuItem_Click
+	'	RemoveHandler Me.SteamLibraryPathsDataGridView.SetMacroInAllGameSetupsToolStripMenuItem.Click, AddressOf Me.SetMacroInAllGameSetupsToolStripMenuItem_Click
+	'	RemoveHandler Me.SteamLibraryPathsDataGridView.ClearMacroInSelectedGameSetupToolStripMenuItem.Click, AddressOf Me.ClearMacroInSelectedGameSetupToolStripMenuItem_Click
+	'	RemoveHandler Me.SteamLibraryPathsDataGridView.ClearMacroInAllGameSetupsToolStripMenuItem.Click, AddressOf Me.ClearMacroInAllGameSetupsToolStripMenuItem_Click
+	'	RemoveHandler Me.SteamLibraryPathsDataGridView.ChangeToThisMacroInSelectedGameSetupToolStripMenuItem.Click, AddressOf Me.ChangeToThisMacroInSelectedGameSetupToolStripMenuItem_Click
+	'	RemoveHandler Me.SteamLibraryPathsDataGridView.ChangeToThisMacroInAllGameSetupsToolStripMenuItem.Click, AddressOf Me.ChangeToThisMacroInAllGameSetupsToolStripMenuItem_Click
 
-		Me.GameSetupComboBox.DataSource = Nothing
-		Me.GameSetupComboBox.DataBindings.Clear()
-		Me.SteamAppPathFileNameTextBox.DataBindings.Clear()
-		Me.SteamLibraryPathsDataGridView.DataSource = Nothing
-	End Sub
+	'	'IMPORTANT: Call in this order to prevent calling GameSetupComboBox_SelectedIndexChanged() and prevent changing an app setting. 
+	'	Me.GameSetupComboBox.DataBindings.Clear()
+	'	Me.GameSetupComboBox.DataSource = Nothing
+
+	'	Me.SteamAppPathFileNameTextBox.DataBindings.Clear()
+	'	Me.SteamLibraryPathsDataGridView.DataSource = Nothing
+	'End Sub
 
 #End Region
 
@@ -117,14 +114,21 @@ Public Class SetUpGamesUserControl
 
 #Region "Widget Event Handlers"
 
+	'Private Sub SetUpGamesUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
+	'	If Not Me.DesignMode Then
+	'		Me.Init()
+	'		Me.theControlIsInDesignMode = True
+	'	End If
+	'End Sub
+
 #End Region
 
 #Region "Child Widget Event Handlers"
 
-	Private Sub GameSetupComboBox_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GameSetupComboBox.SelectedIndexChanged
-		Me.UpdateWidgets()
-		Me.UpdateWidgetsBasedOnGameEngine()
-	End Sub
+	'Private Sub GameSetupComboBox_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GameSetupComboBox.SelectedIndexChanged
+	'	Me.UpdateWidgets()
+	'	Me.UpdateWidgetsBasedOnGameEngine()
+	'End Sub
 
 	Private Sub AddGameSetupButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AddGameSetupButton.Click
 		Dim gamesetup As New GameSetup()
@@ -420,6 +424,9 @@ Public Class SetUpGamesUserControl
 	Private Sub AppSettings_PropertyChanged(ByVal sender As Object, ByVal e As System.ComponentModel.PropertyChangedEventArgs)
 		If e.PropertyName = "SteamAppPathFileName" Then
 			Me.UpdateUseCounts()
+		ElseIf e.PropertyName = "SetUpGamesGameSetupSelectedIndex" Then
+			Me.UpdateWidgets()
+			Me.UpdateWidgetsBasedOnGameEngine()
 		End If
 	End Sub
 

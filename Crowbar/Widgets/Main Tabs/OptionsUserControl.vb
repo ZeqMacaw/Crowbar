@@ -5,19 +5,13 @@ Public Class OptionsUserControl
 	Public Sub New()
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
-
-		'NOTE: Try-Catch is needed so that widget will be shown in MainForm without raising exception.
-		Try
-			Me.Init()
-		Catch
-		End Try
 	End Sub
 
 #End Region
 
 #Region "Init and Free"
 
-	Private Sub Init()
+	Protected Overrides Sub Init()
 		Me.SingleInstanceCheckBox.DataBindings.Add("Checked", TheApp.Settings, "AppIsSingleInstance", False, DataSourceUpdateMode.OnPropertyChanged)
 
 		' Auto-Open
@@ -98,44 +92,45 @@ Public Class OptionsUserControl
 		Me.DragAndDropFolderForPackRadioButton.Checked = (TheApp.Settings.OptionsDragAndDropFolderOption = ActionType.Pack)
 	End Sub
 
-	Private Sub Free()
-		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
+	' Do not need Free() because this widget is destroyed only on program exit.
+	'Protected Overrides Sub Free()
+	'	RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 
-		Me.SingleInstanceCheckBox.DataBindings.Clear()
+	'	Me.SingleInstanceCheckBox.DataBindings.Clear()
 
-		' Auto-Open
+	'	' Auto-Open
 
-		Me.AutoOpenVpkFileCheckBox.DataBindings.Clear()
-		Me.AutoOpenGmaFileCheckBox.DataBindings.Clear()
-		Me.AutoOpenFpxFileCheckBox.DataBindings.Clear()
-		Me.AutoOpenMdlFileCheckBox.DataBindings.Clear()
-		Me.AutoOpenMdlFileForPreviewCheckBox.DataBindings.Clear()
-		Me.AutoOpenMdlFileForDecompileCheckBox.DataBindings.Clear()
-		Me.AutoOpenMdlFileForViewCheckBox.DataBindings.Clear()
-		Me.AutoOpenQcFileCheckBox.DataBindings.Clear()
+	'	Me.AutoOpenVpkFileCheckBox.DataBindings.Clear()
+	'	Me.AutoOpenGmaFileCheckBox.DataBindings.Clear()
+	'	Me.AutoOpenFpxFileCheckBox.DataBindings.Clear()
+	'	Me.AutoOpenMdlFileCheckBox.DataBindings.Clear()
+	'	Me.AutoOpenMdlFileForPreviewCheckBox.DataBindings.Clear()
+	'	Me.AutoOpenMdlFileForDecompileCheckBox.DataBindings.Clear()
+	'	Me.AutoOpenMdlFileForViewCheckBox.DataBindings.Clear()
+	'	Me.AutoOpenQcFileCheckBox.DataBindings.Clear()
 
-		' Drag and Drop
+	'	' Drag and Drop
 
-		Me.DragAndDropMdlFileForPreviewCheckBox.DataBindings.Clear()
-		Me.DragAndDropMdlFileForDecompileCheckBox.DataBindings.Clear()
-		Me.DragAndDropMdlFileForViewCheckBox.DataBindings.Clear()
+	'	Me.DragAndDropMdlFileForPreviewCheckBox.DataBindings.Clear()
+	'	Me.DragAndDropMdlFileForDecompileCheckBox.DataBindings.Clear()
+	'	Me.DragAndDropMdlFileForViewCheckBox.DataBindings.Clear()
 
-		' Context Menu
+	'	' Context Menu
 
-		Me.IntegrateContextMenuItemsCheckBox.DataBindings.Clear()
-		Me.IntegrateAsSubmenuCheckBox.DataBindings.Clear()
+	'	Me.IntegrateContextMenuItemsCheckBox.DataBindings.Clear()
+	'	Me.IntegrateAsSubmenuCheckBox.DataBindings.Clear()
 
-		Me.OptionsContextMenuOpenWithCrowbarCheckBox.DataBindings.Clear()
-		Me.OptionsContextMenuViewMdlFileCheckBox.DataBindings.Clear()
+	'	Me.OptionsContextMenuOpenWithCrowbarCheckBox.DataBindings.Clear()
+	'	Me.OptionsContextMenuViewMdlFileCheckBox.DataBindings.Clear()
 
-		Me.OptionsContextMenuDecompileMdlFileCheckBox.DataBindings.Clear()
-		Me.OptionsContextMenuDecompileFolderCheckBox.DataBindings.Clear()
-		Me.OptionsContextMenuDecompileFolderAndSubfoldersCheckBox.DataBindings.Clear()
+	'	Me.OptionsContextMenuDecompileMdlFileCheckBox.DataBindings.Clear()
+	'	Me.OptionsContextMenuDecompileFolderCheckBox.DataBindings.Clear()
+	'	Me.OptionsContextMenuDecompileFolderAndSubfoldersCheckBox.DataBindings.Clear()
 
-		Me.OptionsContextMenuCompileQcFileCheckBox.DataBindings.Clear()
-		Me.OptionsContextMenuCompileFolderCheckBox.DataBindings.Clear()
-		Me.OptionsContextMenuCompileFolderAndSubfoldersCheckBox.DataBindings.Clear()
-	End Sub
+	'	Me.OptionsContextMenuCompileQcFileCheckBox.DataBindings.Clear()
+	'	Me.OptionsContextMenuCompileFolderCheckBox.DataBindings.Clear()
+	'	Me.OptionsContextMenuCompileFolderAndSubfoldersCheckBox.DataBindings.Clear()
+	'End Sub
 
 #End Region
 
@@ -144,10 +139,6 @@ Public Class OptionsUserControl
 #End Region
 
 #Region "Widget Event Handlers"
-
-	Private Sub OptionsUserControl_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
-		Me.Free()
-	End Sub
 
 #End Region
 
