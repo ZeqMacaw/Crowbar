@@ -99,7 +99,7 @@ Public Class PublishUserControl
 
 		Me.theBackgroundSteamPipe = New BackgroundSteamPipe()
 
-		Me.GetUserSteamID()
+		'Me.GetUserSteamID()
 
 		Me.theSelectedItemIsChangingViaMe = True
 		Me.theItemBindingSource = New BindingSource()
@@ -111,7 +111,9 @@ Public Class PublishUserControl
 		AddHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 
 		Me.theSelectedGameIsStillUpdatingInterface = False
-		Me.UpdateSteamAppWidgets()
+		'Me.UpdateSteamAppWidgets()
+		Me.theSelectedGameNeedsRefresh = True
+		Me.UpdateItemListWidgets(True)
 	End Sub
 
 	'NOTE: This is called after all child widgets (created via designer) are disposed but before this UserControl is disposed.
@@ -514,6 +516,8 @@ Public Class PublishUserControl
 			TheApp.Settings.PublishSearchText = ""
 
 			Me.UpdateSteamAppWidgets()
+			'Me.theSelectedGameNeedsRefresh = True
+			'Me.UpdateItemListWidgets(True)
 		End If
 	End Sub
 
@@ -834,6 +838,7 @@ Public Class PublishUserControl
 		If Me.theEntireListOfItems Is Nothing OrElse Me.theSelectedGameIsStillUpdatingInterface Then
 			Exit Sub
 		End If
+		Me.theSelectedGameNeedsRefresh = False
 		Me.theSelectedGameIsStillUpdatingInterface = True
 
 		If Me.LogTextBox.Text <> "" Then
@@ -1109,50 +1114,50 @@ Public Class PublishUserControl
 			End If
 		End If
 
-		'Dim draftItemsDisplayedCount As UInteger = CUInt(Me.theSteamAppUserInfo.DraftTemplateAndChangedItems.Count - Me.theTemplateItemDisplayedCount - Me.theChangedItemDisplayedCount)
-		'Dim publishedItemsDisplayedCount As UInteger = CUInt(Me.theDisplayedItems.Count - Me.theSteamAppUserInfo.DraftTemplateAndChangedItems.Count)
-		'Dim draftItemsTotalCount As UInteger = CUInt(Me.theSteamAppUserInfo.DraftTemplateAndChangedItems.Count - Me.theTemplateItemTotalCount - Me.theChangedItemTotalCount)
-		'Dim publishedItemsTotalCount As UInteger = CUInt(Me.theEntireListOfItems.Count - Me.theSteamAppUserInfo.DraftTemplateAndChangedItems.Count)
-		Dim draftItemsDisplayedCount As UInteger = Me.theDisplayedItems.DraftItemCount
-		Dim publishedItemsDisplayedCount As UInteger = Me.theDisplayedItems.PublishedItemCount
-		Dim draftItemsTotalCount As UInteger = Me.theEntireListOfItems.DraftItemCount
-		Dim publishedItemsTotalCount As UInteger = Me.theEntireListOfItems.PublishedItemCount
-
-		Me.ItemCountsToolStripLabel.Text = ""
-		If Me.theDisplayedItems.Count <> Me.theEntireListOfItems.Count Then
-			Me.ItemCountsToolStripLabel.Text += draftItemsDisplayedCount.ToString() + "/"
-		End If
-		Me.ItemCountsToolStripLabel.Text += draftItemsTotalCount.ToString() + " draft + "
-		If Me.theDisplayedItems.Count <> Me.theEntireListOfItems.Count Then
-			'Me.ItemCountsToolStripLabel.Text += Me.theTemplateItemDisplayedCount.ToString() + "/"
-			Me.ItemCountsToolStripLabel.Text += Me.theDisplayedItems.TemplateItemCount.ToString() + "/"
-		End If
-		'Me.ItemCountsToolStripLabel.Text += Me.theTemplateItemTotalCount.ToString() + " template + "
-		Me.ItemCountsToolStripLabel.Text += Me.theEntireListOfItems.TemplateItemCount.ToString() + " template + "
-		If Me.theDisplayedItems.Count <> Me.theEntireListOfItems.Count Then
-			'Me.ItemCountsToolStripLabel.Text += Me.theChangedItemDisplayedCount.ToString() + "/"
-			Me.ItemCountsToolStripLabel.Text += Me.theDisplayedItems.ChangedItemCount.ToString() + "/"
-		End If
-		'Me.ItemCountsToolStripLabel.Text += Me.theChangedItemTotalCount.ToString() + " changed + "
-		Me.ItemCountsToolStripLabel.Text += Me.theEntireListOfItems.ChangedItemCount.ToString() + " changed + "
-		If Me.theDisplayedItems.Count <> Me.theEntireListOfItems.Count Then
-			Me.ItemCountsToolStripLabel.Text += publishedItemsDisplayedCount.ToString() + "/"
-		End If
-		Me.ItemCountsToolStripLabel.Text += publishedItemsTotalCount.ToString() + " published"
-		If isProgress Then
-			Dim remainingPublishedItemsCount As UInteger = Me.theExpectedPublishedItemCount - publishedItemsTotalCount
-			Me.ItemCountsToolStripLabel.Text += " (" + remainingPublishedItemsCount.ToString() + " more to get)"
+		If Me.theSelectedGameNeedsRefresh OrElse Me.theUserSteamID = 0 Then
+			Me.ItemCountsToolStripLabel.Text = "Refresh to see list"
 		Else
-			'If (publishedItemsTotalCount + Me.theChangedItemTotalCount) <> Me.theExpectedPublishedItemCount Then
-			If (publishedItemsTotalCount + Me.theEntireListOfItems.ChangedItemCount) <> Me.theExpectedPublishedItemCount Then
-				Me.ItemCountsToolStripLabel.Text += " (" + Me.theExpectedPublishedItemCount.ToString() + " expected)"
+			Dim draftItemsDisplayedCount As UInteger = Me.theDisplayedItems.DraftItemCount
+			Dim publishedItemsDisplayedCount As UInteger = Me.theDisplayedItems.PublishedItemCount
+			Dim draftItemsTotalCount As UInteger = Me.theEntireListOfItems.DraftItemCount
+			Dim publishedItemsTotalCount As UInteger = Me.theEntireListOfItems.PublishedItemCount
+
+			Me.ItemCountsToolStripLabel.Text = ""
+			If Me.theDisplayedItems.Count <> Me.theEntireListOfItems.Count Then
+				Me.ItemCountsToolStripLabel.Text += draftItemsDisplayedCount.ToString() + "/"
 			End If
+			Me.ItemCountsToolStripLabel.Text += draftItemsTotalCount.ToString() + " draft + "
+			If Me.theDisplayedItems.Count <> Me.theEntireListOfItems.Count Then
+				'Me.ItemCountsToolStripLabel.Text += Me.theTemplateItemDisplayedCount.ToString() + "/"
+				Me.ItemCountsToolStripLabel.Text += Me.theDisplayedItems.TemplateItemCount.ToString() + "/"
+			End If
+			'Me.ItemCountsToolStripLabel.Text += Me.theTemplateItemTotalCount.ToString() + " template + "
+			Me.ItemCountsToolStripLabel.Text += Me.theEntireListOfItems.TemplateItemCount.ToString() + " template + "
+			If Me.theDisplayedItems.Count <> Me.theEntireListOfItems.Count Then
+				'Me.ItemCountsToolStripLabel.Text += Me.theChangedItemDisplayedCount.ToString() + "/"
+				Me.ItemCountsToolStripLabel.Text += Me.theDisplayedItems.ChangedItemCount.ToString() + "/"
+			End If
+			'Me.ItemCountsToolStripLabel.Text += Me.theChangedItemTotalCount.ToString() + " changed + "
+			Me.ItemCountsToolStripLabel.Text += Me.theEntireListOfItems.ChangedItemCount.ToString() + " changed + "
+			If Me.theDisplayedItems.Count <> Me.theEntireListOfItems.Count Then
+				Me.ItemCountsToolStripLabel.Text += publishedItemsDisplayedCount.ToString() + "/"
+			End If
+			Me.ItemCountsToolStripLabel.Text += publishedItemsTotalCount.ToString() + " published"
+			If isProgress Then
+				Dim remainingPublishedItemsCount As UInteger = Me.theExpectedPublishedItemCount - publishedItemsTotalCount
+				Me.ItemCountsToolStripLabel.Text += " (" + remainingPublishedItemsCount.ToString() + " more to get)"
+			Else
+				'If (publishedItemsTotalCount + Me.theChangedItemTotalCount) <> Me.theExpectedPublishedItemCount Then
+				If (publishedItemsTotalCount + Me.theEntireListOfItems.ChangedItemCount) <> Me.theExpectedPublishedItemCount Then
+					Me.ItemCountsToolStripLabel.Text += " (" + Me.theExpectedPublishedItemCount.ToString() + " expected)"
+				End If
+			End If
+			Me.ItemCountsToolStripLabel.Text += " = "
+			If Me.theDisplayedItems.Count <> Me.theEntireListOfItems.Count Then
+				Me.ItemCountsToolStripLabel.Text += Me.theDisplayedItems.Count.ToString() + "/"
+			End If
+			Me.ItemCountsToolStripLabel.Text += Me.theEntireListOfItems.Count.ToString() + " total"
 		End If
-		Me.ItemCountsToolStripLabel.Text += " = "
-		If Me.theDisplayedItems.Count <> Me.theEntireListOfItems.Count Then
-			Me.ItemCountsToolStripLabel.Text += Me.theDisplayedItems.Count.ToString() + "/"
-		End If
-		Me.ItemCountsToolStripLabel.Text += Me.theEntireListOfItems.Count.ToString() + " total"
 	End Sub
 
 	Private Sub UpdateItemDetails()
@@ -1865,6 +1870,7 @@ Public Class PublishUserControl
 	Private theDisplayedItems As WorkshopItemBindingList
 	Private theEntireListOfItems As WorkshopItemBindingList
 	Private theSelectedGameIsStillUpdatingInterface As Boolean
+	Private theSelectedGameNeedsRefresh As Boolean
 
 	Private theTagsWidget As Base_TagsUserControl
 
