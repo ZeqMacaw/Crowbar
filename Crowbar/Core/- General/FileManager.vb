@@ -1,4 +1,5 @@
 Imports System.IO
+Imports System.Linq
 Imports System.Runtime.InteropServices
 Imports System.Text
 Imports System.Xml.Serialization
@@ -659,6 +660,29 @@ Public Class FileManager
 			size = 0
 		End Try
 		Return size
+	End Function
+
+	'FROM: Microsoft document about Directory.GetFiles Method
+	'      https://docs.microsoft.com/en-us/dotnet/api/system.io.directory.getfiles?view=netframework-4.0
+	' If the specified extension is exactly three characters long, the method returns files with extensions that begin with the specified extension. 
+	'     For example, "*.xls" returns both "book.xls" and "book.xlsx".
+	Public Shared Function GetFolderFiles(ByVal givenPathFileName As String, ByVal pattern As String) As List(Of String)
+		Dim pathFileNames As List(Of String)
+		Dim pathFileNamesEnumerable As IEnumerable(Of String)
+
+		If pattern(0) = "*" AndAlso pattern(1) = "." AndAlso pattern.Length = 5 Then
+			Dim patternExtension As String = pattern.Substring(1)
+			pathFileNamesEnumerable = Directory.GetFiles(givenPathFileName, pattern).Where(Function(f) Path.GetExtension(f).ToLowerInvariant() = patternExtension)
+		Else
+			pathFileNamesEnumerable = Directory.GetFiles(givenPathFileName, pattern)
+		End If
+
+		If pathFileNamesEnumerable IsNot Nothing Then
+			pathFileNames = pathFileNamesEnumerable.ToList()
+		Else
+			pathFileNames = New List(Of String)()
+		End If
+		Return pathFileNames
 	End Function
 
 #End Region
