@@ -7,29 +7,6 @@ Public Class FileManager
 
 #Region "Read Methods"
 
-	Public Shared Function FilePathHasInvalidChars(ByVal path As String) As Boolean
-		Dim ret As Boolean = False
-
-		If String.IsNullOrEmpty(path) Then
-			ret = True
-		Else
-			Try
-				Dim fileName As String = System.IO.Path.GetFileName(path)
-				Dim fileDirectory As String = System.IO.Path.GetDirectoryName(path)
-			Catch generatedExceptionName As ArgumentException
-				' Path functions will throw this 
-				' if path contains invalid chars
-				ret = True
-			End Try
-			ret = (path.IndexOfAny(System.IO.Path.GetInvalidPathChars()) >= 0)
-			If ret = False Then
-				ret = (path.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) >= 0)
-			End If
-		End If
-
-		Return ret
-	End Function
-
 	Public Shared Function ReadNullTerminatedString(ByVal inputFileReader As BinaryReader) As String
 		Dim text As New StringBuilder()
 		text.Length = 0
@@ -310,6 +287,29 @@ Public Class FileManager
 #End Region
 
 #Region "Path"
+
+	Public Shared Function FilePathHasInvalidChars(ByVal path As String) As Boolean
+		Dim ret As Boolean = False
+
+		If String.IsNullOrEmpty(path) Then
+			ret = True
+		Else
+			Try
+				Dim fileName As String = System.IO.Path.GetFileName(path)
+				Dim fileDirectory As String = System.IO.Path.GetDirectoryName(path)
+			Catch generatedExceptionName As ArgumentException
+				' Path functions will throw this 
+				' if path contains invalid chars
+				ret = True
+			End Try
+			ret = (path.IndexOfAny(System.IO.Path.GetInvalidPathChars()) >= 0)
+			If ret = False Then
+				ret = (path.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) >= 0)
+			End If
+		End If
+
+		Return ret
+	End Function
 
 	Public Shared Function GetPathFileNameWithoutExtension(ByVal pathFileName As String) As String
 		Try
