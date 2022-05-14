@@ -455,10 +455,14 @@ Public Class PackUserControl
 
 			Dim pathFileName As String = Path.Combine(inputPath, "addon.json")
 			Dim garrysModAppInfo As GarrysModSteamAppInfo = New GarrysModSteamAppInfo()
-			garrysModAppInfo.ReadDataFromAddonJsonFile(pathFileName, TheApp.Settings.PackGmaTitle, TheApp.Settings.PackGmaItemTags)
-			Me.theGmaGarrysModTagsUserControlIsBeingChangedByMe = True
-			Me.GmaGarrysModTagsUserControl.ItemTags = TheApp.Settings.PackGmaItemTags
-			Me.theGmaGarrysModTagsUserControlIsBeingChangedByMe = False
+			Dim readIsSuccess As AppEnums.StatusMessage = garrysModAppInfo.ReadDataFromAddonJsonFile(pathFileName, TheApp.Settings.PackGmaTitle, TheApp.Settings.PackGmaItemTags)
+			If readIsSuccess = StatusMessage.Success Then
+				Me.theGmaGarrysModTagsUserControlIsBeingChangedByMe = True
+				Me.GmaGarrysModTagsUserControl.ItemTags = TheApp.Settings.PackGmaItemTags
+				Me.theGmaGarrysModTagsUserControlIsBeingChangedByMe = False
+			Else
+				Me.LogRichTextBox.AppendText("WARNING: The addon.json file is invalid json format. Crowbar will overwrite the file with current options." + vbCr)
+			End If
 		End If
 		Me.PackerOptionsTextBox.Text += """"
 		Me.PackerOptionsTextBox.Text += inputFolder
