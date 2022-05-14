@@ -113,18 +113,18 @@ Public Class PackUserControl
 	'	Me.PackedFilesComboBox.DataBindings.Clear()
 	'End Sub
 
-	Private Sub FreeCrowbarOptions()
-		Me.LogFileCheckBox.DataBindings.Clear()
-	End Sub
+	'Private Sub FreeCrowbarOptions()
+	'	Me.LogFileCheckBox.DataBindings.Clear()
+	'End Sub
 
-	Private Sub FreePackerOptions()
-		Me.MultiFileVpkCheckBox.DataBindings.Clear()
+	'Private Sub FreePackerOptions()
+	'	Me.MultiFileVpkCheckBox.DataBindings.Clear()
 
-		Me.GmaTitleTextBox.DataBindings.Clear()
-		If Me.GmaGarrysModTagsUserControl IsNot Nothing Then
-			RemoveHandler Me.GmaGarrysModTagsUserControl.TagsPropertyChanged, AddressOf Me.GmaGarrysModTagsUserControl_TagsPropertyChanged
-		End If
-	End Sub
+	'	Me.GmaTitleTextBox.DataBindings.Clear()
+	'	If Me.GmaGarrysModTagsUserControl IsNot Nothing Then
+	'		RemoveHandler Me.GmaGarrysModTagsUserControl.TagsPropertyChanged, AddressOf Me.GmaGarrysModTagsUserControl_TagsPropertyChanged
+	'	End If
+	'End Sub
 
 #End Region
 
