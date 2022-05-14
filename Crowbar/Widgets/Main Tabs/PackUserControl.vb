@@ -247,13 +247,17 @@ Public Class PackUserControl
 
 	Private Sub AppSettings_PropertyChanged(ByVal sender As System.Object, ByVal e As System.ComponentModel.PropertyChangedEventArgs)
 		If e.PropertyName = "PackInputPath" Then
+			Me.DeleteWarningMessage()
 			Me.SetPackerOptionsText()
 			Me.UpdateOutputPathWidgets()
 		ElseIf e.PropertyName = "PackMode" Then
+			Me.DeleteWarningMessage()
+			Me.SetPackerOptionsText()
 			Me.UpdateOutputPathWidgets()
 		ElseIf e.PropertyName = "PackOutputFolderOption" Then
 			Me.UpdateOutputPathWidgets()
 		ElseIf e.PropertyName = "PackGameSetupSelectedIndex" Then
+			Me.DeleteWarningMessage()
 			Me.UpdatePackerOptions()
 		ElseIf e.PropertyName.StartsWith("Pack") AndAlso e.PropertyName.EndsWith("IsChecked") Then
 			Me.UpdateWidgets(TheApp.Settings.PackerIsRunning)
@@ -369,6 +373,12 @@ Public Class PackUserControl
 		End If
 	End Sub
 
+	Private Sub DeleteWarningMessage()
+		If Me.LogRichTextBox.Text.StartsWith(Me.theWarningMessgeAboutInvalidJsonFormat) Then
+			Me.LogRichTextBox.Text = ""
+		End If
+	End Sub
+
 	Private Sub UpdatePackerOptions()
 		'TODO: Add 'Write multi-file VPK' option.
 		Dim gameSetup As GameSetup
@@ -461,7 +471,7 @@ Public Class PackUserControl
 				Me.GmaGarrysModTagsUserControl.ItemTags = TheApp.Settings.PackGmaItemTags
 				Me.theGmaGarrysModTagsUserControlIsBeingChangedByMe = False
 			Else
-				Me.LogRichTextBox.AppendText("WARNING: The addon.json file is invalid json format. Crowbar will overwrite the file with current options." + vbCr)
+				Me.LogRichTextBox.AppendText(Me.theWarningMessgeAboutInvalidJsonFormat + vbCr)
 			End If
 		End If
 		Me.PackerOptionsTextBox.Text += """"
@@ -563,10 +573,9 @@ Public Class PackUserControl
 
 #Region "Data"
 
+	Private theWarningMessgeAboutInvalidJsonFormat As String = "WARNING: The addon.json file is invalid json format. Crowbar will overwrite the file with current options."
 	Private theSelectedPackerOptions As List(Of String)
-
 	Private thePackedRelativePathFileNames As BindingListEx(Of String)
-
 	Private theGmaGarrysModTagsUserControlIsBeingChangedByMe As Boolean
 
 #End Region
