@@ -415,22 +415,95 @@ Public Class PackUserControl
 		End If
 	End Sub
 
-	Private Sub SetPackerOptionsText()
-		TheApp.Settings.PackOptionsText = ""
-		Me.PackerOptionsTextBox.Text = ""
-		If TheApp.Settings.PackMode = PackInputOptions.ParentFolder Then
-			For Each aChildPath As String In Directory.GetDirectories(TheApp.Settings.PackInputPath)
-				Me.SetPackerOptionsTextPerFolder(aChildPath)
-			Next
-		Else
-			Me.SetPackerOptionsTextPerFolder(TheApp.Settings.PackInputPath)
-		End If
-	End Sub
+	'Private Sub SetPackerOptionsText()
+	'	TheApp.Settings.PackOptionsText = ""
+	'	Me.PackerOptionsTextBox.Text = ""
+	'	If TheApp.Settings.PackMode = PackInputOptions.ParentFolder Then
+	'		For Each aChildPath As String In Directory.GetDirectories(TheApp.Settings.PackInputPath)
+	'			Me.SetPackerOptionsTextPerFolder(aChildPath)
+	'		Next
+	'	Else
+	'		Me.SetPackerOptionsTextPerFolder(TheApp.Settings.PackInputPath)
+	'	End If
+	'End Sub
 
-	Private Sub SetPackerOptionsTextPerFolder(ByVal inputPath As String)
+	'Private Sub SetPackerOptionsTextPerFolder(ByVal inputPath As String)
+	'	Dim selectedIndex As Integer = TheApp.Settings.PackGameSetupSelectedIndex
+	'	Dim gameSetup As GameSetup = TheApp.Settings.GameSetups(selectedIndex)
+	'	Dim gamePackerFileName As String = Path.GetFileName(gameSetup.PackerPathFileName)
+	'	Dim inputFolder As String = Path.GetFileName(inputPath)
+
+	'	Dim packOptionsText As String = ""
+	'	'NOTE: Available in Framework 4.0:
+	'	'TheApp.Settings.PackOptionsText = String.Join(" ", Me.packerOptions)
+	'	'------
+	'	For Each packerOption As String In Me.theSelectedPackerOptions
+	'		packOptionsText += " "
+	'		packOptionsText += packerOption
+
+	'		'TODO: Special case for multi-file VPK option. Need to use "response" file.
+	'		'If packerOption = "M" AndAlso gamePackerFileName <> "gmad.exe" Then
+	'		'	'a <vpkfile> @<filename>
+	'		'	If TheApp.Settings.PackMode = PackInputOptions.ParentFolder Then
+	'		'	ElseIf TheApp.Settings.PackMode = PackInputOptions.Folder Then
+	'		'	End If
+	'		'End If
+	'	Next
+	'	If Me.DirectPackerOptionsTextBox.Text.Trim() <> "" Then
+	'		packOptionsText += " "
+	'		packOptionsText += Me.DirectPackerOptionsTextBox.Text
+	'	End If
+	'	TheApp.Settings.PackOptionsText = packOptionsText.Trim()
+
+	'	Me.PackerOptionsTextBox.Text = """"
+	'	Me.PackerOptionsTextBox.Text += gameSetup.PackerPathFileName
+	'	Me.PackerOptionsTextBox.Text += """"
+	'	If gamePackerFileName = "gmad.exe" Then
+	'		Me.PackerOptionsTextBox.Text += " create -folder"
+
+	'		Dim pathFileName As String = Path.Combine(inputPath, "addon.json")
+	'		Dim garrysModAppInfo As GarrysModSteamAppInfo = New GarrysModSteamAppInfo()
+	'		Dim readIsSuccess As AppEnums.StatusMessage = garrysModAppInfo.ReadDataFromAddonJsonFile(pathFileName, TheApp.Settings.PackGmaTitle, TheApp.Settings.PackGmaItemTags)
+	'		If readIsSuccess = StatusMessage.Success Then
+	'			Me.theGmaGarrysModTagsUserControlIsBeingChangedByMe = True
+	'			Me.GmaGarrysModTagsUserControl.ItemTags = TheApp.Settings.PackGmaItemTags
+	'			Me.theGmaGarrysModTagsUserControlIsBeingChangedByMe = False
+	'		Else
+	'			Me.LogRichTextBox.AppendText(Me.theWarningMessgeAboutInvalidJsonFormat + vbCr)
+	'		End If
+	'	End If
+
+	'	If packOptionsText <> "" Then
+	'		Me.PackerOptionsTextBox.Text += packOptionsText
+	'	End If
+
+	'	Me.PackerOptionsTextBox.Text += " "
+	'	Me.PackerOptionsTextBox.Text += """"
+	'	Me.PackerOptionsTextBox.Text += inputFolder
+	'	Me.PackerOptionsTextBox.Text += """"
+	'	'Me.PackerOptionsTextBox.Text += vbCrLf
+	'End Sub
+
+	Private Sub SetPackerOptionsText()
 		Dim selectedIndex As Integer = TheApp.Settings.PackGameSetupSelectedIndex
 		Dim gameSetup As GameSetup = TheApp.Settings.GameSetups(selectedIndex)
 		Dim gamePackerFileName As String = Path.GetFileName(gameSetup.PackerPathFileName)
+		Dim inputPath As String = TheApp.Settings.PackInputPath
+
+		'TODO: [14-May-2022] This block of code should be moved elsewhere.
+		If gamePackerFileName = "gmad.exe" Then
+			Dim pathFileName As String = Path.Combine(inputPath, "addon.json")
+			Dim garrysModAppInfo As GarrysModSteamAppInfo = New GarrysModSteamAppInfo()
+			Dim readIsSuccess As AppEnums.StatusMessage = garrysModAppInfo.ReadDataFromAddonJsonFile(pathFileName, TheApp.Settings.PackGmaTitle, TheApp.Settings.PackGmaItemTags)
+			If readIsSuccess = StatusMessage.Success Then
+				Me.theGmaGarrysModTagsUserControlIsBeingChangedByMe = True
+				Me.GmaGarrysModTagsUserControl.ItemTags = TheApp.Settings.PackGmaItemTags
+				Me.theGmaGarrysModTagsUserControlIsBeingChangedByMe = False
+			Else
+				Me.LogRichTextBox.AppendText(Me.theWarningMessgeAboutInvalidJsonFormat + vbCr)
+			End If
+		End If
+
 		Dim inputFolder As String = Path.GetFileName(inputPath)
 
 		Dim packOptionsText As String = ""
@@ -453,35 +526,24 @@ Public Class PackUserControl
 			packOptionsText += " "
 			packOptionsText += Me.DirectPackerOptionsTextBox.Text
 		End If
+		TheApp.Settings.PackOptionsText = packOptionsText.Trim()
 
-		TheApp.Settings.PackOptionsText = packOptionsText
-
-		Me.PackerOptionsTextBox.Text += """"
+		Me.PackerOptionsTextBox.Text = """"
 		Me.PackerOptionsTextBox.Text += gameSetup.PackerPathFileName
 		Me.PackerOptionsTextBox.Text += """"
-		Me.PackerOptionsTextBox.Text += " "
-		If gamePackerFileName = "gmad.exe" Then
-			Me.PackerOptionsTextBox.Text += "create -folder "
 
-			Dim pathFileName As String = Path.Combine(inputPath, "addon.json")
-			Dim garrysModAppInfo As GarrysModSteamAppInfo = New GarrysModSteamAppInfo()
-			Dim readIsSuccess As AppEnums.StatusMessage = garrysModAppInfo.ReadDataFromAddonJsonFile(pathFileName, TheApp.Settings.PackGmaTitle, TheApp.Settings.PackGmaItemTags)
-			If readIsSuccess = StatusMessage.Success Then
-				Me.theGmaGarrysModTagsUserControlIsBeingChangedByMe = True
-				Me.GmaGarrysModTagsUserControl.ItemTags = TheApp.Settings.PackGmaItemTags
-				Me.theGmaGarrysModTagsUserControlIsBeingChangedByMe = False
-			Else
-				Me.LogRichTextBox.AppendText(Me.theWarningMessgeAboutInvalidJsonFormat + vbCr)
-			End If
+		If packOptionsText <> "" Then
+			Me.PackerOptionsTextBox.Text += packOptionsText
 		End If
+
+		If gamePackerFileName = "gmad.exe" Then
+			Me.PackerOptionsTextBox.Text += " create -folder"
+		End If
+
+		Me.PackerOptionsTextBox.Text += " "
 		Me.PackerOptionsTextBox.Text += """"
 		Me.PackerOptionsTextBox.Text += inputFolder
 		Me.PackerOptionsTextBox.Text += """"
-		Me.PackerOptionsTextBox.Text += " "
-		If TheApp.Settings.PackOptionsText.Trim() <> "" Then
-			Me.PackerOptionsTextBox.Text += packOptionsText
-		End If
-		Me.PackerOptionsTextBox.Text += vbCrLf
 	End Sub
 
 	Private Sub CreateVpkResponseFile()
