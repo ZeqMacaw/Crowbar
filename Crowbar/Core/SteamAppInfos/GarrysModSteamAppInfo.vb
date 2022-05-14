@@ -22,8 +22,8 @@ Public Class GarrysModSteamAppInfo
 
 		If Directory.Exists(givenPathFileName) Then
 			' If the folder contains only one GMA file, then move+rename GMA file from folder and delete the folder.
-			Dim sourcePathFileNames As String() = Directory.GetFiles(givenPathFileName, "*.gma")
-			If sourcePathFileNames.Length = 1 Then
+			Dim sourcePathFileNames As List(Of String) = FileManager.GetFolderFiles(givenPathFileName, "*.gma")
+			If sourcePathFileNames.Count = 1 Then
 				Dim sourcePathFileName As String = sourcePathFileNames(0)
 				If File.Exists(sourcePathFileName) Then
 					Dim givenPath As String = Path.GetDirectoryName(givenPathFileName)
@@ -32,7 +32,10 @@ Public Class GarrysModSteamAppInfo
 					processedPathFileName = Path.Combine(givenPath, fileName)
 					processedPathFileName = FileManager.GetTestedPathFileName(processedPathFileName)
 					File.Move(sourcePathFileName, processedPathFileName)
-					Directory.Delete(givenPathFileName)
+					Dim entries As String() = Directory.GetFileSystemEntries(givenPathFileName)
+					If entries.Length = 0 Then
+						Directory.Delete(givenPathFileName)
+					End If
 				End If
 			Else
 				processedPathFileName = givenPathFileName
