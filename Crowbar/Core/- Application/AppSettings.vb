@@ -1184,6 +1184,16 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	Public Property PackOptionIgnoreWhitelistWarningsIsChecked() As Boolean
+		Get
+			Return Me.thePackOptionIgnoreWhitelistWarningsIsChecked
+		End Get
+		Set(ByVal value As Boolean)
+			Me.thePackOptionIgnoreWhitelistWarningsIsChecked = value
+			NotifyPropertyChanged("PackOptionIgnoreWhitelistWarningsIsChecked")
+		End Set
+	End Property
+
 	Public Property PackGmaTitle() As String
 		Get
 			Return Me.thePackGmaTitle
@@ -1731,6 +1741,7 @@ Public Class AppSettings
 		Me.PackLogFileIsChecked = False
 
 		Me.PackOptionMultiFileVpkIsChecked = False
+		Me.PackOptionIgnoreWhitelistWarningsIsChecked = False
 
 		Me.PackGmaTitle = ""
 		Me.PackGmaItemTags = New BindingListEx(Of String)()
@@ -1961,6 +1972,7 @@ Public Class AppSettings
 
 	Private thePackLogFileIsChecked As Boolean
 	Private thePackOptionMultiFileVpkIsChecked As Boolean
+	Private thePackOptionIgnoreWhitelistWarningsIsChecked As Boolean
 
 	Private thePackGmaTitle As String
 	Private thePackGmaItemTags As BindingListEx(Of String)

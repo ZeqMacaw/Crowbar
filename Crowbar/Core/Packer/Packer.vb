@@ -290,15 +290,21 @@ Public Class Packer
 		Dim gamePackerFileName As String = Path.GetFileName(gamePackerPathFileName)
 
 		Dim arguments As String = ""
+		'NOTE: Vpk.exe expects extra options before the input folder option.
+		'      Gmad.exe has only one extra option: warninvalid.
+		If TheApp.Settings.PackOptionsText <> "" Then
+			arguments += TheApp.Settings.PackOptionsText
+			arguments += " "
+		End If
 		If gamePackerFileName = "gmad.exe" Then
 			arguments += "create -folder "
 		End If
 		arguments += """"
 		arguments += inputFolder
 		arguments += """"
-		arguments += " "
-		'NOTE: Gmad.exe and vpk.exe expect extra options after the input folder option.
-		arguments += TheApp.Settings.PackOptionsText
+		If gamePackerFileName = "gmad.exe" AndAlso TheApp.Settings.PackOptionIgnoreWhitelistWarningsIsChecked Then
+			arguments += " -warninvalid"
+		End If
 
 		Dim myProcess As New Process()
 		Dim myProcessStartInfo As New ProcessStartInfo(gamePackerPathFileName, arguments)

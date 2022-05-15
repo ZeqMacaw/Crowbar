@@ -80,6 +80,7 @@ Public Class PackUserControl
 	Private Sub InitPackerOptions()
 		Me.theSelectedPackerOptions = New List(Of String)()
 		Me.MultiFileVpkCheckBox.DataBindings.Add("Checked", TheApp.Settings, "PackOptionMultiFileVpkIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.IgnoreWhitelistWarningsCheckBox.DataBindings.Add("Checked", TheApp.Settings, "PackOptionIgnoreWhitelistWarningsIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 
 		Me.GmaTitleTextBox.DataBindings.Add("Text", TheApp.Settings, "PackGmaTitle", False, DataSourceUpdateMode.OnValidation)
 		'NOTE: There is no automatic data-binding with TagsWidget, so manually bind from object to widget here.
@@ -259,6 +260,12 @@ Public Class PackUserControl
 		ElseIf e.PropertyName = "PackGameSetupSelectedIndex" Then
 			Me.DeleteWarningMessage()
 			Me.UpdatePackerOptions()
+		ElseIf e.PropertyName = "PackOptionMultiFileVpkIsChecked" Then
+			Me.EditPackerOptionsText("M", TheApp.Settings.PackOptionMultiFileVpkIsChecked)
+			Me.SetPackerOptionsText()
+		ElseIf e.PropertyName = "PackOptionIgnoreWhitelistWarningsIsChecked" Then
+			'Me.EditPackerOptionsText("warninvalid", TheApp.Settings.PackOptionIgnoreWhitelistWarningsIsChecked)
+			Me.SetPackerOptionsText()
 		ElseIf e.PropertyName.StartsWith("Pack") AndAlso e.PropertyName.EndsWith("IsChecked") Then
 			Me.UpdateWidgets(TheApp.Settings.PackerIsRunning)
 		End If
@@ -387,11 +394,15 @@ Public Class PackUserControl
 			Me.MultiFileVpkCheckBox.Visible = False
 			Me.EditPackerOptionsText("M", False)
 
+			Me.IgnoreWhitelistWarningsCheckBox.Visible = True
+			'Me.EditPackerOptionsText("warninvalid", TheApp.Settings.PackOptionIgnoreWhitelistWarningsIsChecked)
 			Me.GmaPanel.Visible = True
 		Else
 			'Me.MultiFileVpkCheckBox.Visible = True
 			'Me.EditPackerOptionsText("M", TheApp.Settings.PackOptionMultiFileVpkIsChecked)
 
+			Me.IgnoreWhitelistWarningsCheckBox.Visible = False
+			'Me.EditPackerOptionsText("warninvalid", False)
 			Me.GmaPanel.Visible = False
 		End If
 
@@ -584,6 +595,8 @@ Public Class PackUserControl
 					vpkResponseFileStream = Nothing
 				End If
 			End Try
+		If gamePackerFileName = "gmad.exe" AndAlso TheApp.Settings.PackOptionIgnoreWhitelistWarningsIsChecked Then
+			Me.PackerOptionsTextBox.Text += " -warninvalid"
 		End If
 	End Sub
 

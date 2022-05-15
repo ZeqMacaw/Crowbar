@@ -39,6 +39,7 @@ Partial Class PackUserControl
 		Me.OptionsGroupBox = New System.Windows.Forms.GroupBox()
 		Me.OptionsGroupBoxFillPanel = New System.Windows.Forms.Panel()
 		Me.PackerOptionsPanel = New System.Windows.Forms.Panel()
+		Me.IgnoreWhitelistWarningsCheckBox = New System.Windows.Forms.CheckBox()
 		Me.MultiFileVpkCheckBox = New System.Windows.Forms.CheckBox()
 		Me.PackOptionsUseDefaultsButton = New System.Windows.Forms.Button()
 		Me.LogFileCheckBox = New System.Windows.Forms.CheckBox()
@@ -259,6 +260,7 @@ Partial Class PackUserControl
 		'PackerOptionsPanel
 		'
 		Me.PackerOptionsPanel.AutoScroll = True
+		Me.PackerOptionsPanel.Controls.Add(Me.IgnoreWhitelistWarningsCheckBox)
 		Me.PackerOptionsPanel.Controls.Add(Me.MultiFileVpkCheckBox)
 		Me.PackerOptionsPanel.Controls.Add(Me.PackOptionsUseDefaultsButton)
 		Me.PackerOptionsPanel.Controls.Add(Me.LogFileCheckBox)
@@ -271,6 +273,17 @@ Partial Class PackUserControl
 		Me.PackerOptionsPanel.Name = "PackerOptionsPanel"
 		Me.PackerOptionsPanel.Size = New System.Drawing.Size(764, 153)
 		Me.PackerOptionsPanel.TabIndex = 0
+		'
+		'IgnoreWhitelistWarningsCheckBox
+		'
+		Me.IgnoreWhitelistWarningsCheckBox.AutoSize = True
+		Me.IgnoreWhitelistWarningsCheckBox.Location = New System.Drawing.Point(6, 51)
+		Me.IgnoreWhitelistWarningsCheckBox.Name = "IgnoreWhitelistWarningsCheckBox"
+		Me.IgnoreWhitelistWarningsCheckBox.Size = New System.Drawing.Size(158, 17)
+		Me.IgnoreWhitelistWarningsCheckBox.TabIndex = 16
+		Me.IgnoreWhitelistWarningsCheckBox.Text = "Ignore whitelist warnings"
+		Me.IgnoreWhitelistWarningsCheckBox.UseVisualStyleBackColor = True
+		Me.IgnoreWhitelistWarningsCheckBox.Visible = False
 		'
 		'MultiFileVpkCheckBox
 		'
@@ -580,4 +593,5 @@ Partial Class PackUserControl
 	Friend WithEvents GmaTitleTextBox As TextBoxEx
 	Friend WithEvents GmaGarrysModTagsUserControl As GarrysModTagsUserControl
 	Friend WithEvents GmaPanel As Panel
+	Friend WithEvents IgnoreWhitelistWarningsCheckBox As CheckBox
 End Class
