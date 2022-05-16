@@ -229,7 +229,7 @@ Public Class Packer
 			Me.UpdateProgress(1, "Packing """ + inputPath + """ ...")
 
 			Dim result As String
-			result = Me.CheckFiles(inputPath)
+			result = Me.PrepareFiles(inputPath)
 			If result = "success" Then
 				Me.UpdateProgress(2, "Output from packer """ + Me.GetGamePackerPathFileName() + """: ")
 				Me.RunPackerApp(inputPath)
@@ -261,10 +261,9 @@ Public Class Packer
 		Return status
 	End Function
 
-	Private Function CheckFiles(ByVal inputPath As String) As String
+	Private Function PrepareFiles(ByVal inputPath As String) As String
 		Dim result As String = "success"
 
-		'TODO: Determine what to check before Packer runs for a folder.
 		Dim gamePackerPathFileName As String = Me.GetGamePackerPathFileName()
 		Dim gamePackerFileName As String = Path.GetFileName(gamePackerPathFileName)
 		If gamePackerFileName = "gmad.exe" Then
@@ -275,10 +274,56 @@ Public Class Packer
 					result = "error"
 				End If
 			End If
+		ElseIf TheApp.Settings.PackOptionMultiFileVpkIsChecked Then
+			Try
+				Me.theInputPath = inputPath
+				Dim parentPath As String = FileManager.GetPath(inputPath)
+				Me.theVpkMultiFileListFileName = Path.Combine(parentPath, "filelist.txt")
+				Me.theVpkMultiFileListFileName = FileManager.GetTestedPathFileName(Me.theVpkMultiFileListFileName)
+
+				Me.theVpkMultiFileListFileStream = File.CreateText(Me.theVpkMultiFileListFileName)
+				Me.theVpkMultiFileListFileStream.AutoFlush = True
+
+				If File.Exists(Me.theVpkMultiFileListFileName) Then
+					Me.WriteFilesToListFileInFolderRecursively(inputPath)
+				End If
+			Catch ex As Exception
+				Me.UpdateProgress(2, "ERROR: Crowbar tried to write the list file for multi-file VPK packing, but the system gave this message: " + ex.Message + vbCr)
+			Finally
+				If Me.theVpkMultiFileListFileStream IsNot Nothing Then
+					Me.theVpkMultiFileListFileStream.Flush()
+					Me.theVpkMultiFileListFileStream.Close()
+					Me.theVpkMultiFileListFileStream = Nothing
+				End If
+			End Try
 		End If
 
 		Return result
 	End Function
+
+	Private Sub WriteFilesToListFileInFolderRecursively(ByVal currentPath As String)
+		Me.WriteFilesToListFileInFolder(currentPath)
+
+		For Each aPathName As String In Directory.GetDirectories(currentPath)
+			Me.WriteFilesToListFileInFolderRecursively(aPathName)
+
+			If Me.CancellationPending Then
+				Return
+			End If
+		Next
+	End Sub
+
+	Private Sub WriteFilesToListFileInFolder(ByVal currentPath As String)
+		Dim relativePathFileName As String
+		For Each aPathFileName As String In Directory.GetFiles(currentPath)
+			relativePathFileName = FileManager.GetRelativePathFileName(Me.theInputPath, aPathFileName)
+			Me.theVpkMultiFileListFileStream.WriteLine(relativePathFileName)
+
+			If Me.CancellationPending Then
+				Return
+			End If
+		Next
+	End Sub
 
 	Private Sub RunPackerApp(ByVal inputPath As String)
 		Dim currentFolder As String = Directory.GetCurrentDirectory()
@@ -298,12 +343,20 @@ Public Class Packer
 		End If
 		If gamePackerFileName = "gmad.exe" Then
 			arguments += "create -folder "
+		ElseIf TheApp.Settings.PackOptionMultiFileVpkIsChecked Then
+			'IMPORTANT: Must be in same folder as the files to be packed so that the package will store the correct folder structure.
+			Directory.SetCurrentDirectory(inputPath)
+			'IMPORTANT: Must use "-v" for verbose mode to have an output message and avoid Crowbar complaining about no status message.
+			arguments += "-v -M a "
 		End If
 		arguments += """"
 		arguments += inputFolder
 		arguments += """"
 		If gamePackerFileName = "gmad.exe" AndAlso TheApp.Settings.PackOptionIgnoreWhitelistWarningsIsChecked Then
 			arguments += " -warninvalid"
+		ElseIf TheApp.Settings.PackOptionMultiFileVpkIsChecked Then
+			arguments += " @..\"
+			arguments += Path.GetFileName(Me.theVpkMultiFileListFileName)
 		End If
 
 		Dim myProcess As New Process()
@@ -344,34 +397,61 @@ Public Class Packer
 			'    so use the file name shown in the log from Gmad.
 			sourcePathFileName = Path.GetDirectoryName(sourcePathFileName)
 			sourcePathFileName = Path.Combine(sourcePathFileName, Me.theGmadResultFileName)
+		ElseIf TheApp.Settings.PackOptionMultiFileVpkIsChecked AndAlso File.Exists(Me.theVpkMultiFileListFileName) Then
+			File.Delete(Me.theVpkMultiFileListFileName)
+			Dim inputFolder As String = Path.GetFileName(inputPath)
+			sourcePathFileName = Path.Combine(inputPath, inputFolder)
+			sourcePathFileName += "_dir.vpk"
 		Else
 			sourcePathFileName += ".vpk"
 		End If
 		If File.Exists(sourcePathFileName) Then
-			Dim targetPath As String = Me.theOutputPath
 			Dim targetFileName As String = Path.GetFileName(sourcePathFileName)
-			Dim targetPathFileName As String = Path.Combine(targetPath, targetFileName)
 
-			If String.Compare(sourcePathFileName, targetPathFileName, True) <> 0 Then
-				Try
-					If File.Exists(targetPathFileName) Then
-						File.Delete(targetPathFileName)
-					End If
-				Catch ex As Exception
-					Dim debug As Integer = 4242
-				End Try
-				Try
-					File.Move(sourcePathFileName, targetPathFileName)
-					Me.UpdateProgress(2, "CROWBAR: Moved package file """ + sourcePathFileName + """ to """ + targetPath + """")
-				Catch ex As Exception
-					Me.UpdateProgress()
-					Me.UpdateProgress(2, "WARNING: Crowbar tried to move the file, """ + sourcePathFileName + """, to the output folder, but Windows complained with this message: " + ex.Message.Trim())
-					Me.UpdateProgress(2, "SOLUTION: Pack again (and hope Windows does not complain again) or move the file yourself.")
-					Me.UpdateProgress()
-				End Try
+			If Not gamePackerFileName = "gmad.exe" AndAlso TheApp.Settings.PackOptionMultiFileVpkIsChecked Then
+				Me.MoveMultiFileVPK()
+			Else
+				Dim targetPathFileName As String = Path.Combine(Me.theOutputPath, targetFileName)
+				Me.MoveFile(sourcePathFileName, targetPathFileName)
 			End If
 
 			Me.thePackedFiles.Add(targetFileName)
+		End If
+	End Sub
+
+	Private Sub MoveMultiFileVPK()
+		Dim inputFolder As String = Path.GetFileName(Me.theInputPath)
+		Dim targetFileName As String
+		Dim targetPathFileName As String
+		For Each sourcePathFileName As String In Directory.GetFiles(Me.theInputPath, inputFolder + "_???.vpk")
+			targetFileName = Path.GetFileName(sourcePathFileName)
+			targetPathFileName = Path.Combine(Me.theOutputPath, targetFileName)
+			Me.MoveFile(sourcePathFileName, targetPathFileName)
+
+			If Me.CancellationPending Then
+				Return
+			End If
+		Next
+	End Sub
+
+	Private Sub MoveFile(ByVal sourcePathFileName As String, ByVal targetPathFileName As String)
+		If String.Compare(sourcePathFileName, targetPathFileName, True) <> 0 Then
+			Try
+				If File.Exists(targetPathFileName) Then
+					File.Delete(targetPathFileName)
+				End If
+			Catch ex As Exception
+				Dim debug As Integer = 4242
+			End Try
+			Try
+				File.Move(sourcePathFileName, targetPathFileName)
+				Me.UpdateProgress(2, "CROWBAR: Moved package file """ + sourcePathFileName + """ to """ + Me.theOutputPath + """")
+			Catch ex As Exception
+				Me.UpdateProgress()
+				Me.UpdateProgress(2, "WARNING: Crowbar tried to move the file, """ + sourcePathFileName + """, to the output folder, but Windows complained with this message: " + ex.Message.Trim())
+				Me.UpdateProgress(2, "SOLUTION: Pack again (and hope Windows does not complain again) or move the file yourself.")
+				Me.UpdateProgress()
+			End Try
 		End If
 	End Sub
 
@@ -483,6 +563,49 @@ Public Class Packer
 		End If
 	End Sub
 
+	Private Sub CreateVpkResponseFile()
+		Dim vpkResponseFileStream As StreamWriter = Nothing
+		Dim listFileName As String
+		Dim listPathFileName As String
+
+		If Directory.Exists(TheApp.Settings.PackInputPath) Then
+			Try
+				' Create a folder in the Windows Temp path, to prevent potential file collisions and to provide user a more obvious folder name.
+				Dim guid As Guid
+				guid = Guid.NewGuid()
+				Dim tempCrowbarFolder As String
+				tempCrowbarFolder = "Crowbar_" + guid.ToString()
+				Dim tempPath As String = Path.GetTempPath()
+				Dim tempCrowbarPath As String
+				tempCrowbarPath = Path.Combine(tempPath, tempCrowbarFolder)
+				Try
+					FileManager.CreatePath(tempCrowbarPath)
+				Catch ex As Exception
+					Throw New System.Exception("Crowbar tried to create folder path """ + tempCrowbarPath + """, but Windows gave this message: " + ex.Message)
+				End Try
+
+				listFileName = "crowbar_vpk_file_list.txt"
+				listPathFileName = Path.Combine(tempCrowbarPath, listFileName)
+
+				vpkResponseFileStream = File.CreateText(listPathFileName)
+				vpkResponseFileStream.AutoFlush = True
+
+				'TODO: Replace this line with code that writes each relativePathFileName.
+				vpkResponseFileStream.WriteLine("// ")
+
+				vpkResponseFileStream.Flush()
+			Catch ex As Exception
+				'Me.LogRichTextBox.AppendText("ERROR: Crowbar tried to write the VPK response file for multi-file VPK packing, but the system gave this message: " + ex.Message + vbCr)
+			Finally
+				If vpkResponseFileStream IsNot Nothing Then
+					vpkResponseFileStream.Flush()
+					vpkResponseFileStream.Close()
+					vpkResponseFileStream = Nothing
+				End If
+			End Try
+		End If
+	End Sub
+
 	Private Function CreateLogTextFile(ByVal inputParentPath As String, ByVal inputPath As String) As AppEnums.StatusMessage
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
 		Dim gameSetup As GameSetup
@@ -576,10 +699,13 @@ Public Class Packer
 	Private thePackedLogFiles As BindingListEx(Of String)
 	Private thePackedFiles As BindingListEx(Of String)
 
-	Private theDefineBonesFileStream As StreamWriter
+	'Private theDefineBonesFileStream As StreamWriter
 
 	Private theProcessHasOutputData As Boolean
 	Private theGmadResultFileName As String
+	Private theInputPath As String
+	Private theVpkMultiFileListFileName As String
+	Private theVpkMultiFileListFileStream As StreamWriter
 
 #End Region
 

@@ -261,7 +261,7 @@ Public Class PackUserControl
 			Me.DeleteWarningMessage()
 			Me.UpdatePackerOptions()
 		ElseIf e.PropertyName = "PackOptionMultiFileVpkIsChecked" Then
-			Me.EditPackerOptionsText("M", TheApp.Settings.PackOptionMultiFileVpkIsChecked)
+			'Me.EditPackerOptionsText(Me.GetMultiFileArgumentText(), TheApp.Settings.PackOptionMultiFileVpkIsChecked)
 			Me.SetPackerOptionsText()
 		ElseIf e.PropertyName = "PackOptionIgnoreWhitelistWarningsIsChecked" Then
 			'Me.EditPackerOptionsText("warninvalid", TheApp.Settings.PackOptionIgnoreWhitelistWarningsIsChecked)
@@ -392,14 +392,14 @@ Public Class PackUserControl
 		gameSetup = TheApp.Settings.GameSetups(TheApp.Settings.PackGameSetupSelectedIndex)
 		If Path.GetFileName(gameSetup.PackerPathFileName) = "gmad.exe" Then
 			Me.MultiFileVpkCheckBox.Visible = False
-			Me.EditPackerOptionsText("M", False)
+			'Me.EditPackerOptionsText(Me.GetMultiFileArgumentText(), False)
 
 			Me.IgnoreWhitelistWarningsCheckBox.Visible = True
 			'Me.EditPackerOptionsText("warninvalid", TheApp.Settings.PackOptionIgnoreWhitelistWarningsIsChecked)
 			Me.GmaPanel.Visible = True
 		Else
-			'Me.MultiFileVpkCheckBox.Visible = True
-			'Me.EditPackerOptionsText("M", TheApp.Settings.PackOptionMultiFileVpkIsChecked)
+			Me.MultiFileVpkCheckBox.Visible = True
+			'Me.EditPackerOptionsText(Me.GetMultiFileArgumentText(), TheApp.Settings.PackOptionMultiFileVpkIsChecked)
 
 			Me.IgnoreWhitelistWarningsCheckBox.Visible = False
 			'Me.EditPackerOptionsText("warninvalid", False)
@@ -409,90 +409,33 @@ Public Class PackUserControl
 		Me.SetPackerOptionsText()
 	End Sub
 
-	Private Sub EditPackerOptionsText(ByVal iCompilerOption As String, ByVal optionIsEnabled As Boolean)
-		Dim compilerOption As String
-
-		compilerOption = "-" + iCompilerOption
-
-		If optionIsEnabled Then
-			If Not Me.theSelectedPackerOptions.Contains(compilerOption) Then
-				Me.theSelectedPackerOptions.Add(compilerOption)
-				Me.theSelectedPackerOptions.Sort()
-			End If
-		Else
-			If Me.theSelectedPackerOptions.Contains(compilerOption) Then
-				Me.theSelectedPackerOptions.Remove(compilerOption)
-			End If
-		End If
-	End Sub
-
-	'Private Sub SetPackerOptionsText()
-	'	TheApp.Settings.PackOptionsText = ""
-	'	Me.PackerOptionsTextBox.Text = ""
-	'	If TheApp.Settings.PackMode = PackInputOptions.ParentFolder Then
-	'		For Each aChildPath As String In Directory.GetDirectories(TheApp.Settings.PackInputPath)
-	'			Me.SetPackerOptionsTextPerFolder(aChildPath)
-	'		Next
-	'	Else
-	'		Me.SetPackerOptionsTextPerFolder(TheApp.Settings.PackInputPath)
-	'	End If
-	'End Sub
-
-	'Private Sub SetPackerOptionsTextPerFolder(ByVal inputPath As String)
-	'	Dim selectedIndex As Integer = TheApp.Settings.PackGameSetupSelectedIndex
-	'	Dim gameSetup As GameSetup = TheApp.Settings.GameSetups(selectedIndex)
-	'	Dim gamePackerFileName As String = Path.GetFileName(gameSetup.PackerPathFileName)
+	'Private Function GetMultiFileArgumentText() As String
+	'	Dim text As String
+	'	Dim inputPath As String = TheApp.Settings.PackInputPath
 	'	Dim inputFolder As String = Path.GetFileName(inputPath)
 
-	'	Dim packOptionsText As String = ""
-	'	'NOTE: Available in Framework 4.0:
-	'	'TheApp.Settings.PackOptionsText = String.Join(" ", Me.packerOptions)
-	'	'------
-	'	For Each packerOption As String In Me.theSelectedPackerOptions
-	'		packOptionsText += " "
-	'		packOptionsText += packerOption
+	'	text = "M a "
+	'	text += inputFolder
+	'	text += " @list.txt"
 
-	'		'TODO: Special case for multi-file VPK option. Need to use "response" file.
-	'		'If packerOption = "M" AndAlso gamePackerFileName <> "gmad.exe" Then
-	'		'	'a <vpkfile> @<filename>
-	'		'	If TheApp.Settings.PackMode = PackInputOptions.ParentFolder Then
-	'		'	ElseIf TheApp.Settings.PackMode = PackInputOptions.Folder Then
-	'		'	End If
-	'		'End If
-	'	Next
-	'	If Me.DirectPackerOptionsTextBox.Text.Trim() <> "" Then
-	'		packOptionsText += " "
-	'		packOptionsText += Me.DirectPackerOptionsTextBox.Text
-	'	End If
-	'	TheApp.Settings.PackOptionsText = packOptionsText.Trim()
+	'	Return text
+	'End Function
 
-	'	Me.PackerOptionsTextBox.Text = """"
-	'	Me.PackerOptionsTextBox.Text += gameSetup.PackerPathFileName
-	'	Me.PackerOptionsTextBox.Text += """"
-	'	If gamePackerFileName = "gmad.exe" Then
-	'		Me.PackerOptionsTextBox.Text += " create -folder"
+	'Private Sub EditPackerOptionsText(ByVal iCompilerOption As String, ByVal optionIsEnabled As Boolean)
+	'	Dim compilerOption As String
 
-	'		Dim pathFileName As String = Path.Combine(inputPath, "addon.json")
-	'		Dim garrysModAppInfo As GarrysModSteamAppInfo = New GarrysModSteamAppInfo()
-	'		Dim readIsSuccess As AppEnums.StatusMessage = garrysModAppInfo.ReadDataFromAddonJsonFile(pathFileName, TheApp.Settings.PackGmaTitle, TheApp.Settings.PackGmaItemTags)
-	'		If readIsSuccess = StatusMessage.Success Then
-	'			Me.theGmaGarrysModTagsUserControlIsBeingChangedByMe = True
-	'			Me.GmaGarrysModTagsUserControl.ItemTags = TheApp.Settings.PackGmaItemTags
-	'			Me.theGmaGarrysModTagsUserControlIsBeingChangedByMe = False
-	'		Else
-	'			Me.LogRichTextBox.AppendText(Me.theWarningMessgeAboutInvalidJsonFormat + vbCr)
+	'	compilerOption = "-" + iCompilerOption
+
+	'	If optionIsEnabled Then
+	'		If Not Me.theSelectedPackerOptions.Contains(compilerOption) Then
+	'			Me.theSelectedPackerOptions.Add(compilerOption)
+	'			Me.theSelectedPackerOptions.Sort()
+	'		End If
+	'	Else
+	'		If Me.theSelectedPackerOptions.Contains(compilerOption) Then
+	'			Me.theSelectedPackerOptions.Remove(compilerOption)
 	'		End If
 	'	End If
-
-	'	If packOptionsText <> "" Then
-	'		Me.PackerOptionsTextBox.Text += packOptionsText
-	'	End If
-
-	'	Me.PackerOptionsTextBox.Text += " "
-	'	Me.PackerOptionsTextBox.Text += """"
-	'	Me.PackerOptionsTextBox.Text += inputFolder
-	'	Me.PackerOptionsTextBox.Text += """"
-	'	'Me.PackerOptionsTextBox.Text += vbCrLf
 	'End Sub
 
 	Private Sub SetPackerOptionsText()
@@ -546,57 +489,22 @@ Public Class PackUserControl
 		If packOptionsText <> "" Then
 			Me.PackerOptionsTextBox.Text += packOptionsText
 		End If
+		Me.PackerOptionsTextBox.Text += " "
 
 		If gamePackerFileName = "gmad.exe" Then
-			Me.PackerOptionsTextBox.Text += " create -folder"
+			Me.PackerOptionsTextBox.Text += "create -folder "
+		ElseIf TheApp.Settings.PackOptionMultiFileVpkIsChecked Then
+			Me.PackerOptionsTextBox.Text += "-M a "
 		End If
 
-		Me.PackerOptionsTextBox.Text += " "
 		Me.PackerOptionsTextBox.Text += """"
 		Me.PackerOptionsTextBox.Text += inputFolder
 		Me.PackerOptionsTextBox.Text += """"
-	End Sub
 
-	Private Sub CreateVpkResponseFile()
-		Dim vpkResponseFileStream As StreamWriter = Nothing
-		Dim listFileName As String
-		Dim listPathFileName As String
-
-		If Directory.Exists(TheApp.Settings.PackInputPath) Then
-			Try
-				' Create a folder in the Windows Temp path, to prevent potential file collisions and to provide user a more obvious folder name.
-				Dim guid As Guid
-				guid = Guid.NewGuid()
-				Dim tempCrowbarFolder As String
-				tempCrowbarFolder = "Crowbar_" + guid.ToString()
-				Dim tempPath As String = Path.GetTempPath()
-				Dim tempCrowbarPath As String
-				tempCrowbarPath = Path.Combine(tempPath, tempCrowbarFolder)
-				Try
-					FileManager.CreatePath(tempCrowbarPath)
-				Catch ex As Exception
-					Throw New System.Exception("Crowbar tried to create folder path """ + tempCrowbarPath + """, but Windows gave this message: " + ex.Message)
-				End Try
-
-				listFileName = "crowbar_vpk_file_list.txt"
-				listPathFileName = Path.Combine(tempCrowbarPath, listFileName)
-
-				vpkResponseFileStream = File.CreateText(listPathFileName)
-				vpkResponseFileStream.AutoFlush = True
-
-				vpkResponseFileStream.WriteLine("// ")
-				vpkResponseFileStream.Flush()
-			Catch ex As Exception
-				Me.LogRichTextBox.AppendText("ERROR: Crowbar tried to write the VPK response file for multi-file VPK packing, but the system gave this message: " + ex.Message + vbCr)
-			Finally
-				If vpkResponseFileStream IsNot Nothing Then
-					vpkResponseFileStream.Flush()
-					vpkResponseFileStream.Close()
-					vpkResponseFileStream = Nothing
-				End If
-			End Try
 		If gamePackerFileName = "gmad.exe" AndAlso TheApp.Settings.PackOptionIgnoreWhitelistWarningsIsChecked Then
 			Me.PackerOptionsTextBox.Text += " -warninvalid"
+		ElseIf TheApp.Settings.PackOptionMultiFileVpkIsChecked Then
+			Me.PackerOptionsTextBox.Text += " @filelist.txt"
 		End If
 	End Sub
 
