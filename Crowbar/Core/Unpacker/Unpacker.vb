@@ -3,11 +3,14 @@ Imports System.IO
 
 Public Class Unpacker
 	Inherits BackgroundWorker
+	Implements INotifyPropertyChanged
 
 #Region "Create and Destroy"
 
 	Public Sub New()
 		MyBase.New()
+
+		Me.theUnpackModes = New BindingListEx(Of String)()
 
 		Me.theUnpackedPaths = New List(Of String)()
 		Me.theUnpackedRelativePathsAndFileNames = New BindingListEx(Of String)()
@@ -16,26 +19,90 @@ Public Class Unpacker
 
 		Me.WorkerReportsProgress = True
 		Me.WorkerSupportsCancellation = True
-		AddHandler Me.DoWork, AddressOf Me.Unpacker_DoWork
+
+		Me.Init()
 	End Sub
 
 #End Region
 
 #Region "Init and Free"
 
-	'Private Sub Init()
-	'End Sub
+	Private Sub Init()
+		Me.InitUnpackModes()
 
+		AddHandler TheApp.Settings.GameSetups.ListChanged, AddressOf Me.GameSetups_ListChanged
+		AddHandler Me.DoWork, AddressOf Me.Unpacker_DoWork
+	End Sub
+
+	Private Sub InitUnpackModes()
+		Me.theUnpackModes.Add("File")
+		Me.theUnpackModes.Add("Folder")
+		Me.theUnpackModes.Add("Folder and subfolders")
+
+		Me.theUnpackModes.Add("------")
+
+		For Each aGameSetup As GameSetup In TheApp.Settings.GameSetups
+			Me.theUnpackModes.Add(aGameSetup.GameName)
+		Next
+	End Sub
+
+	' Do not need Free() because this object is destroyed only on program exit.
 	'Private Sub Free()
+	'	RemoveHandler TheApp.Settings.GameSetups.ListChanged, AddressOf Me.GameSetups_ListChanged
+	'	RemoveHandler Me.DoWork, AddressOf Me.Unpacker_DoWork
 	'End Sub
 
 #End Region
 
 #Region "Properties"
 
+	Public Property UnpackModes() As BindingListEx(Of String)
+		Get
+			Return Me.theUnpackModes
+		End Get
+		Set(ByVal value As BindingListEx(Of String))
+			Me.theUnpackModes = value
+			NotifyPropertyChanged("UnpackModes")
+		End Set
+	End Property
+
+#End Region
+
+#Region "Core Event Handlers"
+
+	Protected Sub GameSetups_ListChanged(ByVal sender As Object, ByVal e As System.ComponentModel.ListChangedEventArgs)
+		Dim gameSetupsOffset As Integer = Me.theUnpackModes.IndexOf("------") + 1
+
+		If e.ListChangedType = ListChangedType.ItemAdded Then
+			Dim aGameSetup As GameSetup = TheApp.Settings.GameSetups(e.NewIndex)
+			Me.theUnpackModes.Insert(gameSetupsOffset + e.NewIndex, aGameSetup.GameName)
+		ElseIf e.ListChangedType = ListChangedType.ItemDeleted AndAlso e.OldIndex = -2 Then
+			Me.theUnpackModes.RemoveAt(gameSetupsOffset + e.NewIndex)
+		ElseIf e.ListChangedType = ListChangedType.ItemChanged Then
+			If e.PropertyDescriptor IsNot Nothing Then
+				If e.PropertyDescriptor.Name = "GameName" Then
+					Dim aGameSetup As GameSetup = TheApp.Settings.GameSetups(e.NewIndex)
+					Me.theUnpackModes.RemoveAt(Me.theUnpackModes.IndexOf("------") + 1 + e.NewIndex)
+					Me.theUnpackModes.Insert(gameSetupsOffset + e.NewIndex, aGameSetup.GameName)
+				End If
+			End If
+		End If
+	End Sub
+
 #End Region
 
 #Region "Methods"
+
+	Public Sub RefreshUnpackModes()
+		If TheApp.Unpacker.UnpackModes(0) <> "File" Then
+			Me.theUnpackModes.Insert(0, "File")
+		End If
+		If TheApp.Unpacker.UnpackModes(1) <> "Folder" Then
+			Me.theUnpackModes.Insert(1, "Folder")
+		End If
+		'Me.theUnpackModes.Add("Folder and subfolders")
+		'Me.theUnpackModes.Add("------")
+	End Sub
 
 	Public Sub Run(ByVal unpackerAction As PackageAction, ByVal packagePathFileNameToEntriesMap As SortedList(Of String, List(Of SourcePackageDirectoryEntry)), ByVal outputPathIsExtendedWithPackageName As Boolean, ByVal selectedRelativeOutputPath As String)
 		Me.theSynchronousWorkerIsActive = False
@@ -121,7 +188,17 @@ Public Class Unpacker
 
 #End Region
 
+#Region "Events"
+
+	Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged
+
+#End Region
+
 #Region "Private Methods"
+
+	Protected Sub NotifyPropertyChanged(ByVal info As String)
+		RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(info))
+	End Sub
 
 #End Region
 
@@ -198,7 +275,7 @@ Public Class Unpacker
 		If String.IsNullOrEmpty(TheApp.Settings.UnpackPackagePathFolderOrFileName) Then
 			inputsAreValid = False
 			Me.WriteErrorMessage(1, "Package file or folder has not been selected.")
-		ElseIf TheApp.Settings.UnpackMode = InputOptions.File AndAlso Not File.Exists(TheApp.Settings.UnpackPackagePathFolderOrFileName) Then
+		ElseIf TheApp.Settings.UnpackModeIndex = TheApp.Unpacker.UnpackModes.IndexOf("File") AndAlso Not File.Exists(TheApp.Settings.UnpackPackagePathFolderOrFileName) Then
 			inputsAreValid = False
 			Me.WriteErrorMessage(1, "The package file, """ + TheApp.Settings.UnpackPackagePathFolderOrFileName + """, does not exist.")
 		End If
@@ -451,9 +528,9 @@ Public Class Unpacker
 			Me.thePackageDirectoryPathFileNamesAlreadyProcessed = New SortedSet(Of String)()
 
 			Me.thePackageEntries = New List(Of SourcePackageDirectoryEntry)()
-			If TheApp.Settings.UnpackMode = InputOptions.FolderRecursion Then
+			If TheApp.Settings.UnpackModeIndex = TheApp.Unpacker.UnpackModes.IndexOf("Folder and subfolders") Then
 				Me.ListPackagesInFolderRecursively(packagePath)
-			ElseIf TheApp.Settings.UnpackMode = InputOptions.Folder Then
+			ElseIf TheApp.Settings.UnpackModeIndex = TheApp.Unpacker.UnpackModes.IndexOf("Folder") OrElse TheApp.Settings.UnpackModeIndex > TheApp.Unpacker.UnpackModes.IndexOf("------") Then
 				Me.ListPackagesInFolder(packagePath)
 			Else
 				Me.ListPackage(packagePathFileName)
@@ -648,6 +725,8 @@ Public Class Unpacker
 #End Region
 
 #Region "Data"
+
+	Private theUnpackModes As BindingListEx(Of String)
 
 	Private theSkipCurrentPackageIsActive As Boolean
 	Private theSynchronousWorkerIsActive As Boolean

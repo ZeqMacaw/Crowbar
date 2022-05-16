@@ -29,7 +29,7 @@ Partial Class UnpackUserControl
 		Me.Panel2 = New System.Windows.Forms.Panel()
 		Me.OutputSamePathTextBox = New Crowbar.TextBoxEx()
 		Me.GameModelsOutputPathTextBox = New Crowbar.TextBoxEx()
-		Me.UnpackComboBox = New System.Windows.Forms.ComboBox()
+		Me.UnpackModeComboBox = New System.Windows.Forms.ComboBox()
 		Me.GotoOutputPathButton = New System.Windows.Forms.Button()
 		Me.BrowseForOutputPathButton = New System.Windows.Forms.Button()
 		Me.OutputPathTextBox = New Crowbar.TextBoxEx()
@@ -124,7 +124,7 @@ Partial Class UnpackUserControl
 		'
 		Me.Panel2.Controls.Add(Me.OutputSamePathTextBox)
 		Me.Panel2.Controls.Add(Me.GameModelsOutputPathTextBox)
-		Me.Panel2.Controls.Add(Me.UnpackComboBox)
+		Me.Panel2.Controls.Add(Me.UnpackModeComboBox)
 		Me.Panel2.Controls.Add(Me.GotoOutputPathButton)
 		Me.Panel2.Controls.Add(Me.BrowseForOutputPathButton)
 		Me.Panel2.Controls.Add(Me.OutputPathTextBox)
@@ -167,12 +167,12 @@ Partial Class UnpackUserControl
 		'
 		'UnpackComboBox
 		'
-		Me.UnpackComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-		Me.UnpackComboBox.FormattingEnabled = True
-		Me.UnpackComboBox.Location = New System.Drawing.Point(71, 4)
-		Me.UnpackComboBox.Name = "UnpackComboBox"
-		Me.UnpackComboBox.Size = New System.Drawing.Size(132, 21)
-		Me.UnpackComboBox.TabIndex = 1
+		Me.UnpackModeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.UnpackModeComboBox.FormattingEnabled = True
+		Me.UnpackModeComboBox.Location = New System.Drawing.Point(71, 4)
+		Me.UnpackModeComboBox.Name = "UnpackComboBox"
+		Me.UnpackModeComboBox.Size = New System.Drawing.Size(132, 21)
+		Me.UnpackModeComboBox.TabIndex = 1
 		'
 		'GotoOutputPathButton
 		'
@@ -762,7 +762,7 @@ Partial Class UnpackUserControl
 	Friend WithEvents PackagePathFileNameTextBox As Crowbar.TextBoxEx
 	Friend WithEvents Options_LogSplitContainer As System.Windows.Forms.SplitContainer
 	Friend WithEvents UseAllInDecompileButton As System.Windows.Forms.Button
-	Friend WithEvents UnpackComboBox As System.Windows.Forms.ComboBox
+	Friend WithEvents UnpackModeComboBox As System.Windows.Forms.ComboBox
 	Friend WithEvents CancelUnpackButton As System.Windows.Forms.Button
 	Friend WithEvents SkipCurrentPackageButton As System.Windows.Forms.Button
 	Friend WithEvents UnpackButton As System.Windows.Forms.Button

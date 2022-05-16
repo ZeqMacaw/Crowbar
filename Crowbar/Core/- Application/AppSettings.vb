@@ -45,7 +45,7 @@ Public Class AppSettings
 		Me.theUnpackGameSetupSelectedIndex = 0
 		Me.theUnpackSearchText = ""
 		Me.SetDefaultUnpackOptions()
-		Me.theUnpackMode = InputOptions.File
+		Me.theUnpackModeIndex = 0
 
 		Me.thePreviewMdlPathFileName = ""
 		Me.thePreviewOverrideMdlVersion = SupportedMdlVersion.DoNotOverride
@@ -438,14 +438,14 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	Public Property UnpackMode() As InputOptions
+	Public Property UnpackModeIndex() As Integer
 		Get
-			Return Me.theUnpackMode
+			Return Me.theUnpackModeIndex
 		End Get
-		Set(ByVal value As InputOptions)
-			If Me.theUnpackMode <> value Then
-				Me.theUnpackMode = value
-				NotifyPropertyChanged("UnpackMode")
+		Set(ByVal value As Integer)
+			If Me.theUnpackModeIndex <> value Then
+				Me.theUnpackModeIndex = value
+				NotifyPropertyChanged("UnpackModeIndex")
 			End If
 		End Set
 	End Property
@@ -1861,7 +1861,7 @@ Public Class AppSettings
 	Private theUnpackKeepFullPathIsChecked As Boolean
 	Private theUnpackLogFileIsChecked As Boolean
 
-	Private theUnpackMode As InputOptions
+	Private theUnpackModeIndex As Integer
 	Private theUnpackerIsRunning As Boolean
 
 	' Preview tab
