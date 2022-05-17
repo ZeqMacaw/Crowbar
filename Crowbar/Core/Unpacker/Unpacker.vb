@@ -511,6 +511,9 @@ Public Class Unpacker
 	End Function
 
 	Private Sub List()
+		'IMPORTANT: This needs to be before the checks below to prevent showing a previous listing.
+		Me.thePackageEntries = New List(Of SourcePackageDirectoryEntry)()
+
 		Dim packagePathFileName As String
 		Dim packagePath As String = ""
 		packagePathFileName = TheApp.Settings.UnpackPackagePathFolderOrFileName
@@ -527,7 +530,6 @@ Public Class Unpacker
 		Try
 			Me.thePackageDirectoryPathFileNamesAlreadyProcessed = New SortedSet(Of String)()
 
-			Me.thePackageEntries = New List(Of SourcePackageDirectoryEntry)()
 			If TheApp.Settings.UnpackModeIndex = TheApp.Unpacker.UnpackModes.IndexOf("Folder and subfolders") Then
 				Me.ListPackagesInFolderRecursively(packagePath)
 			ElseIf TheApp.Settings.UnpackModeIndex = TheApp.Unpacker.UnpackModes.IndexOf("Folder") OrElse TheApp.Settings.UnpackModeIndex > TheApp.Unpacker.UnpackModes.IndexOf("------") Then
