@@ -11,6 +11,8 @@ Public Class UnpackUserControl
 		InitializeComponent()
 
 		Me.UnpackModeComboBox.DropDownWidth = 300
+		Me.theUnpackModeIndexIsBeingChangedByMe = False
+		Me.theUnpackPackagePathFolderOrFileNameIsBeingChangedByMe = False
 
 		Me.PackageTreeViewCustomMenu = New ContextMenuStrip()
 		Me.PackageTreeViewCustomMenu.Items.Add(Me.DeleteSearchToolStripMenuItem)
@@ -520,11 +522,11 @@ Public Class UnpackUserControl
 #Region "Core Event Handlers"
 
 	Private Sub AppSettings_PropertyChanged(ByVal sender As System.Object, ByVal e As System.ComponentModel.PropertyChangedEventArgs)
-		If e.PropertyName = "UnpackPackagePathFolderOrFileName" Then
+		If e.PropertyName = "UnpackPackagePathFolderOrFileName" AndAlso Not Me.theUnpackPackagePathFolderOrFileNameIsBeingChangedByMe Then
 			Me.UpdateUnpackMode()
 			Me.UpdateOutputPathWidgets()
 			Me.RunUnpackerToGetListOfPackageContents()
-		ElseIf e.PropertyName = "UnpackModeIndex" Then
+		ElseIf e.PropertyName = "UnpackModeIndex" AndAlso Not Me.theUnpackModeIndexIsBeingChangedByMe Then
 			Me.UpdateFromModeIndexChange()
 		ElseIf e.PropertyName = "UnpackOutputFolderOption" Then
 			Me.UpdateOutputPathWidgets()
@@ -688,12 +690,74 @@ Public Class UnpackUserControl
 		If TheApp.Settings.UnpackModeIndex >= gameSetupsOffset Then
 			Dim gameSetup As GameSetup = TheApp.Settings.GameSetups(TheApp.Settings.UnpackModeIndex - gameSetupsOffset)
 			Dim gameSetupPath As String = FileManager.GetPath(gameSetup.GamePathFileName)
+
 			If TheApp.Settings.UnpackPackagePathFolderOrFileName <> gameSetupPath Then
+				Me.theUnpackPackagePathFolderOrFileNameIsBeingChangedByMe = True
 				TheApp.Settings.UnpackPackagePathFolderOrFileName = gameSetupPath
+				Me.theUnpackPackagePathFolderOrFileNameIsBeingChangedByMe = False
 			End If
-		Else
-			Me.RunUnpackerToGetListOfPackageContents()
+
+			Me.UpdateUnpackMode()
+			Me.UpdateOutputPathWidgets()
 		End If
+		Me.RunUnpackerToGetListOfPackageContents()
+	End Sub
+
+	Private Sub UpdateUnpackMode()
+		Dim firstTime As Boolean = (Me.UnpackModeComboBox.DataBindings.Count = 0)
+		Me.UnpackModeComboBox.DataBindings.Clear()
+		Dim previousSelectedUnpackModeIndex As Integer = TheApp.Settings.UnpackModeIndex
+		Dim count As Integer = TheApp.Unpacker.UnpackModes.Count
+		TheApp.Unpacker.RefreshUnpackModes()
+		If TheApp.Unpacker.UnpackModes.Count > count Then
+			previousSelectedUnpackModeIndex += TheApp.Unpacker.UnpackModes.Count - count
+		End If
+
+		Try
+			If File.Exists(TheApp.Settings.UnpackPackagePathFolderOrFileName) Then
+				' Set file mode when a file is selected.
+				previousSelectedUnpackModeIndex = TheApp.Unpacker.UnpackModes.IndexOf("File")
+			ElseIf Directory.Exists(TheApp.Settings.UnpackPackagePathFolderOrFileName) Then
+				Dim folderIndexIsRemoved As Boolean = False
+				'NOTE: Remove in reverse index order.
+				Dim packageExtensions As List(Of String) = SourcePackage.GetListOfPackageExtensions()
+				For Each packageExtension As String In packageExtensions
+					For Each anPackagePathFileName As String In Directory.GetFiles(TheApp.Settings.UnpackPackagePathFolderOrFileName, packageExtension)
+						If anPackagePathFileName.Length = 0 Then
+							TheApp.Unpacker.UnpackModes.RemoveAt(TheApp.Unpacker.UnpackModes.IndexOf("Folder"))
+							previousSelectedUnpackModeIndex -= 1
+							folderIndexIsRemoved = True
+							Exit For
+						End If
+					Next
+					If folderIndexIsRemoved Then
+						Exit For
+					End If
+				Next
+				TheApp.Unpacker.UnpackModes.RemoveAt(TheApp.Unpacker.UnpackModes.IndexOf("File"))
+				previousSelectedUnpackModeIndex -= 1
+				'Else
+				'	Exit Try
+			End If
+
+			Me.UnpackModeComboBox.DisplayMember = "Value"
+			Me.UnpackModeComboBox.ValueMember = "Key"
+			Me.UnpackModeComboBox.DataSource = TheApp.Unpacker.UnpackModes
+			Me.UnpackModeComboBox.DataBindings.Add("SelectedIndex", TheApp.Settings, "UnpackModeIndex", False, DataSourceUpdateMode.OnPropertyChanged)
+
+			Me.theUnpackModeIndexIsBeingChangedByMe = True
+			If firstTime Then
+				previousSelectedUnpackModeIndex += count - TheApp.Unpacker.UnpackModes.Count
+			End If
+			If previousSelectedUnpackModeIndex < TheApp.Unpacker.UnpackModes.Count Then
+				TheApp.Settings.UnpackModeIndex = previousSelectedUnpackModeIndex
+			Else
+				TheApp.Settings.UnpackModeIndex = 0
+			End If
+			Me.theUnpackModeIndexIsBeingChangedByMe = False
+		Catch ex As Exception
+			Dim debug As Integer = 4242
+		End Try
 	End Sub
 
 	Private Sub UpdateOutputPathComboBox()
@@ -1030,51 +1094,6 @@ Public Class UnpackUserControl
 			Me.UnpackedFilesComboBox.DataSource = Nothing
 			Me.UnpackedFilesComboBox.DataSource = Me.theUnpackedRelativePathFileNames
 		End If
-	End Sub
-
-	Private Sub UpdateUnpackMode()
-		Me.UnpackModeComboBox.DataBindings.Clear()
-		TheApp.Unpacker.RefreshUnpackModes()
-		Dim previousSelectedUnpackModeIndex As Integer = TheApp.Settings.UnpackModeIndex
-
-		Try
-			If File.Exists(TheApp.Settings.UnpackPackagePathFolderOrFileName) Then
-				' Set file mode when a file is selected.
-				previousSelectedUnpackModeIndex = TheApp.Unpacker.UnpackModes.IndexOf("File")
-			ElseIf Directory.Exists(TheApp.Settings.UnpackPackagePathFolderOrFileName) Then
-				Dim folderIndexIsRemoved As Boolean = False
-				'NOTE: Remove in reverse index order.
-				Dim packageExtensions As List(Of String) = SourcePackage.GetListOfPackageExtensions()
-				For Each packageExtension As String In packageExtensions
-					For Each anPackagePathFileName As String In Directory.GetFiles(TheApp.Settings.UnpackPackagePathFolderOrFileName, packageExtension)
-						If anPackagePathFileName.Length = 0 Then
-							TheApp.Unpacker.UnpackModes.RemoveAt(TheApp.Unpacker.UnpackModes.IndexOf("Folder"))
-							folderIndexIsRemoved = True
-							Exit For
-						End If
-					Next
-					If folderIndexIsRemoved Then
-						Exit For
-					End If
-				Next
-				TheApp.Unpacker.UnpackModes.RemoveAt(TheApp.Unpacker.UnpackModes.IndexOf("File"))
-				'Else
-				'	Exit Try
-			End If
-
-			Me.UnpackModeComboBox.DisplayMember = "Value"
-			Me.UnpackModeComboBox.ValueMember = "Key"
-			Me.UnpackModeComboBox.DataSource = TheApp.Unpacker.UnpackModes
-			Me.UnpackModeComboBox.DataBindings.Add("SelectedIndex", TheApp.Settings, "UnpackModeIndex", False, DataSourceUpdateMode.OnPropertyChanged)
-
-			If previousSelectedUnpackModeIndex < TheApp.Unpacker.UnpackModes.Count Then
-				TheApp.Settings.UnpackModeIndex = previousSelectedUnpackModeIndex
-			Else
-				TheApp.Settings.UnpackModeIndex = 0
-			End If
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		End Try
 	End Sub
 
 	Private Sub UpdateSelectionPathText()
@@ -1826,6 +1845,9 @@ Public Class UnpackUserControl
 
 	Private WithEvents PackageListViewCustomMenu As ContextMenuStrip
 	Private WithEvents ToggleSizeUnitsToolStripMenuItem As New ToolStripMenuItem("Toggle size units")
+
+	Private theUnpackModeIndexIsBeingChangedByMe As Boolean
+	Private theUnpackPackagePathFolderOrFileNameIsBeingChangedByMe As Boolean
 
 	Private theUnpackedRelativePathFileNames As BindingListEx(Of String)
 	Private theOutputPathOrOutputFileName As String
