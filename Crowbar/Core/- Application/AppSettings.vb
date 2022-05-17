@@ -992,6 +992,16 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	Public Property CompileOptionsDirectText() As String
+		Get
+			Return Me.theCompileOptionsDirectText
+		End Get
+		Set(ByVal value As String)
+			Me.theCompileOptionsDirectText = value
+			NotifyPropertyChanged("CompileOptionsDirectText")
+		End Set
+	End Property
+
 	<XmlIgnore()>
 	Public Property CompileOptionsText() As String
 		Get
@@ -1733,6 +1743,7 @@ Public Class AppSettings
 		Me.CompileOptionDefineBonesOverwriteQciFileIsChecked = False
 		Me.CompileOptionDefineBonesModifyQcFileIsChecked = False
 
+		Me.CompileOptionsDirectText = ""
 		Me.CompileOptionsText = ""
 	End Sub
 
@@ -1941,6 +1952,7 @@ Public Class AppSettings
 	Private theCompileOptionNoP4IsChecked As Boolean
 	Private theCompileOptionVerboseIsChecked As Boolean
 
+	Private theCompileOptionsDirectText As String
 	Private theCompileOptionsText As String
 
 	Private theCompilerIsRunning As Boolean

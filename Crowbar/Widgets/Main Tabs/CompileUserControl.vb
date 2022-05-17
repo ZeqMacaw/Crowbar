@@ -74,6 +74,7 @@ Public Class CompileUserControl
 
 	Private Sub InitCompilerOptions()
 		Me.theSelectedCompilerOptions = New List(Of String)()
+		Me.theCompileOptionsDirectTextIsBeingChangedByMe = False
 
 		' GoldSource
 
@@ -87,6 +88,8 @@ Public Class CompileUserControl
 		Me.CompilerOptionNoP4CheckBox.DataBindings.Add("Checked", TheApp.Settings, "CompileOptionNoP4IsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.CompilerOptionVerboseCheckBox.DataBindings.Add("Checked", TheApp.Settings, "CompileOptionVerboseIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.UpdateCompilerOptionDefineBonesWidgets()
+
+		Me.DirectCompilerOptionsTextBox.DataBindings.Add("Text", TheApp.Settings, "CompileOptionsDirectText", False, DataSourceUpdateMode.OnPropertyChanged)
 	End Sub
 
 	' Do not need Free() because this widget is destroyed only on program exit.
@@ -341,10 +344,6 @@ Public Class CompileUserControl
 		TheApp.Settings.SetDefaultCompileOptions()
 	End Sub
 
-	Private Sub DirectCompilerOptionsTextBox_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DirectCompilerOptionsTextBox.TextChanged
-		Me.SetCompilerOptionsText()
-	End Sub
-
 	Private Sub CompileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CompileButton.Click
 		Me.RunCompiler()
 	End Sub
@@ -408,6 +407,10 @@ Public Class CompileUserControl
 		ElseIf e.PropertyName = "CompileOptionVerboseIsChecked" Then
 			Me.EditCompilerOptionsText("verbose", TheApp.Settings.CompileOptionVerboseIsChecked)
 			Me.SetCompilerOptionsText()
+		ElseIf e.PropertyName = "CompileOptionsDirectText" Then
+			If Not Me.theCompileOptionsDirectTextIsBeingChangedByMe Then
+				Me.SetCompilerOptionsText()
+			End If
 		ElseIf e.PropertyName.StartsWith("Compile") AndAlso e.PropertyName.EndsWith("IsChecked") Then
 			Me.UpdateWidgets(TheApp.Settings.CompilerIsRunning)
 		End If
@@ -773,9 +776,12 @@ Public Class CompileUserControl
 			TheApp.Settings.CompileOptionsText += " "
 			TheApp.Settings.CompileOptionsText += compilerOption
 		Next
-		If Me.DirectCompilerOptionsTextBox.Text.Trim() <> "" Then
+		Me.theCompileOptionsDirectTextIsBeingChangedByMe = True
+		TheApp.Settings.CompileOptionsDirectText = TheApp.Settings.CompileOptionsDirectText.Trim()
+		Me.theCompileOptionsDirectTextIsBeingChangedByMe = False
+		If Me.DirectCompilerOptionsTextBox.Text <> "" Then
 			TheApp.Settings.CompileOptionsText += " "
-			TheApp.Settings.CompileOptionsText += Me.DirectCompilerOptionsTextBox.Text
+			TheApp.Settings.CompileOptionsText += TheApp.Settings.CompileOptionsDirectText
 		End If
 
 		Me.CompilerOptionsTextBox.Text = """"
@@ -811,6 +817,7 @@ Public Class CompileUserControl
 #Region "Data"
 
 	Private theSelectedCompilerOptions As List(Of String)
+	Private theCompileOptionsDirectTextIsBeingChangedByMe As Boolean
 	Private theModelRelativePathFileName As String
 
 	Private theCompiledRelativePathFileNames As BindingListEx(Of String)
