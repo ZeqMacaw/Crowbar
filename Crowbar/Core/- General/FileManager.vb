@@ -701,7 +701,7 @@ Public Class FileManager
 		'Dim iObject As Object = Nothing
 		'Try
 		'	iObject = x.Deserialize(objStreamReader)
-		'Catch
+		'Catch ex As Exception
 		'	'TODO: Rename the corrupted file.
 		'	Throw
 		'Finally
@@ -719,7 +719,7 @@ Public Class FileManager
 
 		Try
 			iObject = x.Deserialize(objStreamReader)
-		Catch
+		Catch ex As Exception
 			thereWasReadError = True
 			Throw
 		Finally

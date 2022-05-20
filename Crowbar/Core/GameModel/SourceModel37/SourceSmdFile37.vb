@@ -167,7 +167,7 @@ Public Class SourceSmdFile37
 					End If
 				Next
 			End If
-		Catch
+		Catch ex As Exception
 
 		End Try
 

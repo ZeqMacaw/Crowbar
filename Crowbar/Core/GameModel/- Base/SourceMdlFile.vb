@@ -54,14 +54,14 @@ Public Class SourceMdlFile
 
 					Me.ReadTexturePaths()
 					Me.ReadTextures()
-				Catch
+				Catch ex As Exception
 				Finally
 					If Me.theInputFileReader IsNot Nothing Then
 						Me.theInputFileReader.Close()
 					End If
 				End Try
 			End If
-		Catch
+		Catch ex As Exception
 		Finally
 			If inputFileStream IsNot Nothing Then
 				inputFileStream.Close()
@@ -89,7 +89,7 @@ Public Class SourceMdlFile
 					End If
 				End Try
 			End If
-		Catch
+		Catch ex As Exception
 		Finally
 			If inputFileStream IsNot Nothing Then
 				inputFileStream.Close()
@@ -120,14 +120,14 @@ Public Class SourceMdlFile
 					End If
 					'NOTE: Write the ending null byte.
 					inputFileWriter.Write(Convert.ToByte(0))
-				Catch
+				Catch ex As Exception
 				Finally
 					If inputFileWriter IsNot Nothing Then
 						inputFileWriter.Close()
 					End If
 				End Try
 			End If
-		Catch
+		Catch ex As Exception
 		Finally
 			If inputFileStream IsNot Nothing Then
 				inputFileStream.Close()
@@ -710,7 +710,7 @@ Public Class SourceMdlFile
 	'			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theMdlFileData.theBones")
 
 	'			Me.LogToEndAndAlignToNextStart(fileOffsetEnd, 4, "theMdlFileData.theBones alignment")
-	'		Catch
+	'		Catch ex As Exception
 	'		End Try
 	'	End If
 	'End Sub
@@ -752,7 +752,7 @@ Public Class SourceMdlFile
 
 	'		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 	'		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aBone.theAxisInterpBone")
-	'	Catch
+	'	Catch ex As Exception
 	'	End Try
 	'End Sub
 
@@ -782,7 +782,7 @@ Public Class SourceMdlFile
 
 	'		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 	'		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aBone.theQuatInterpBone")
-	'	Catch
+	'	Catch ex As Exception
 	'	End Try
 	'End Sub
 
@@ -822,7 +822,7 @@ Public Class SourceMdlFile
 
 	'		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 	'		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aQuatInterpBone.theTriggers")
-	'	Catch
+	'	Catch ex As Exception
 	'	End Try
 	'End Sub
 
@@ -3644,7 +3644,7 @@ Public Class SourceMdlFile
 	'				offsetStart = -1
 	'			End If
 	'		Next
-	'	Catch
+	'	Catch ex As Exception
 
 	'	End Try
 	'End Sub

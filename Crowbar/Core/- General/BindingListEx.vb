@@ -125,7 +125,7 @@ Public Class BindingListEx(Of T)
 	Protected Overrides Sub RemoveItem(ByVal index As Integer)
 		Try
 			Me.OnListChanged(New ListChangedEventArgs(ListChangedType.ItemDeleted, index, -2))
-		Catch
+		Catch ex As Exception
 		End Try
 		Dim removedItem As T = Items(index)
 		'NOTE: The base class RemoveItem raises the expected ListChanged event with 
@@ -228,7 +228,7 @@ Public Class BindingListEx(Of T)
 	'Protected Overrides Sub ClearItems()
 	'	'Try
 	'	'	Me.OnListChanged(New ListChangedEventArgs(ListChangedType.Reset, 0, 0))
-	'	'Catch
+	'	'Catch ex As Exception
 	'	'End Try
 	'	MyBase.ClearItems()
 	'End Sub

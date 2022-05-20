@@ -238,7 +238,7 @@ Public Class SourceSmdFile2531
 					End If
 				Next
 			End If
-		Catch
+		Catch ex As Exception
 
 		End Try
 

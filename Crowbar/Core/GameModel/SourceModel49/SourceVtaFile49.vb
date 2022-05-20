@@ -158,7 +158,7 @@ Public Class SourceVtaFile49
 				line += aVertex.normalZ.ToString("0.000000", TheApp.InternalNumberFormat)
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
-		Catch
+		Catch ex As Exception
 		End Try
 
 		Dim timeIndex As Integer

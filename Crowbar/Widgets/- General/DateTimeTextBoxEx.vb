@@ -89,7 +89,7 @@ Public Class DateTimeTextBoxEx
 	'		ElseIf aValue > aUnitlessProperty.MaximumValue Then
 	'			aValue = aUnitlessProperty.MaximumValue
 	'		End If
-	'	Catch
+	'	Catch ex As Exception
 	'		aValue = 0
 	'	End Try
 	'	aUnitlessProperty.Value = aValue

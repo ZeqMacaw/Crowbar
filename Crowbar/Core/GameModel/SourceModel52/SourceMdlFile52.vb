@@ -537,7 +537,7 @@ Public Class SourceMdlFile52
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aBone.theAxisInterpBone")
-		Catch
+		Catch ex As Exception
 		End Try
 	End Sub
 
@@ -567,7 +567,7 @@ Public Class SourceMdlFile52
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aBone.theQuatInterpBone")
-		Catch
+		Catch ex As Exception
 		End Try
 	End Sub
 
@@ -607,7 +607,7 @@ Public Class SourceMdlFile52
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aQuatInterpBone.theTriggers " + aQuatInterpBone.theTriggers.Count.ToString())
-		Catch
+		Catch ex As Exception
 		End Try
 	End Sub
 
@@ -4215,7 +4215,7 @@ Public Class SourceMdlFile52
 	'				offsetStart = -1
 	'			End If
 	'		Next
-	'	Catch
+	'	Catch ex As Exception
 
 	'	End Try
 	'End Sub

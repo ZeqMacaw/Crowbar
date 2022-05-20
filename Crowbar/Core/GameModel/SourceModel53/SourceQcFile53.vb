@@ -381,7 +381,7 @@ Public Class SourceQcFile53
 					Next
 				End If
 			End If
-		Catch
+		Catch ex As Exception
 		End Try
 
 		Me.CreateListOfEyelidFlexFrameIndexes()

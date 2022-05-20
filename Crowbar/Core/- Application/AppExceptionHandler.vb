@@ -78,7 +78,7 @@ Public Class AppExceptionHandler
 
 			anUnhandledExceptionWindow.ErrorReportTextBox.Text = errorReportText
 			anUnhandledExceptionWindow.ShowDialog()
-		Catch
+		Catch ex As Exception
 		Finally
 			anUnhandledExceptionWindow.Dispose()
 		End Try

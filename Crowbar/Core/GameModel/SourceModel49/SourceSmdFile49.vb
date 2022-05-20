@@ -3127,7 +3127,7 @@ Public Class SourceSmdFile49
 				'NOTE: Needs to be offset from current animValues index to match the C++ code above in comment.
 				v1 = animValues(animValueIndex + animValues(animValueIndex).valid).value * scale
 			End If
-		Catch
+		Catch ex As Exception
 		End Try
 
 		Return v1

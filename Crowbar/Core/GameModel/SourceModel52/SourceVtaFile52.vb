@@ -336,7 +336,7 @@ Public Class SourceVtaFile52
 		'			End If
 		'		Next
 		'	End If
-		'Catch
+		'Catch ex As Exception
 		'End Try
 
 		'======
@@ -368,7 +368,7 @@ Public Class SourceVtaFile52
 				line += aVertex.normalZ.ToString("0.000000", TheApp.InternalNumberFormat)
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
-		Catch
+		Catch ex As Exception
 		End Try
 
 		'######
@@ -641,7 +641,7 @@ Public Class SourceVtaFile52
 	'		line += " "
 	'		line += aVertex.normalZ.ToString("0.000000", TheApp.InternalNumberFormat)
 	'		Me.theOutputFileStreamWriter.WriteLine(line)
-	'	Catch
+	'	Catch ex As Exception
 	'	End Try
 	'End Sub
 

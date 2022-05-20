@@ -335,7 +335,7 @@ Public Class App
 			Try
 				VersionModule.ConvertSettingsFile(appSettingsPathFileName)
 				Me.theSettings = CType(FileManager.ReadXml(GetType(AppSettings), appSettingsPathFileName), AppSettings)
-			Catch
+			Catch ex As Exception
 				Me.CreateAppSettings()
 			End Try
 		Else
