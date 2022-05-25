@@ -200,6 +200,7 @@ Partial Class SetUpGamesUserControl
 		'
 		'EngineComboBox
 		'
+		Me.EngineComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.EngineComboBox.FormattingEnabled = True
 		Me.EngineComboBox.Items.AddRange(New Object() {"GoldSource", "Source"})
 		Me.EngineComboBox.Location = New System.Drawing.Point(55, 45)
