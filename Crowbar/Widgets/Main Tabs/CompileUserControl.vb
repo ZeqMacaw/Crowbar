@@ -1,5 +1,6 @@
 Imports System.IO
 Imports System.Text
+Imports Crowbar
 
 Public Class CompileUserControl
 
@@ -16,9 +17,20 @@ Public Class CompileUserControl
 #Region "Init and Free"
 
 	Protected Overrides Sub Init()
-		Me.QcPathFileNameTextBox.DataBindings.Add("Text", TheApp.Settings, "CompileQcPathFileName", False, DataSourceUpdateMode.OnValidation)
+		'Me.QcPathFileNameComboBox.DataBindings.Add("Text", TheApp.Settings, "CompileQcPathFileName", False, DataSourceUpdateMode.OnValidation)
+		'Me.QcPathFileNameComboBox.TextHistoryIsKept = True
+		'Me.QcPathFileNameComboBox.TextHistory = TheApp.Settings.CompileQcPathFileNameHistory
+		'------
+		Me.QcPathFileNameComboUserControl.DataBindings.Add("Text", TheApp.Settings, "CompileQcPathFileName", False, DataSourceUpdateMode.OnValidation)
+		Me.QcPathFileNameComboUserControl.TextHistoryIsKept = True
+		Me.QcPathFileNameComboUserControl.TextHistory = TheApp.Settings.CompileQcPathFileNameHistory
+		Me.QcPathFileNameComboUserControl.MultipleInputs = TheApp.Settings.CompileQcPathFileNameList
+		Me.QcPathFileNameComboUserControl.MultipleInputsIsAllowed = (Me.QcPathFileNameComboUserControl.MultipleInputs.Count > 1)
 
-		Me.OutputPathTextBox.DataBindings.Add("Text", TheApp.Settings, "CompileOutputFullPath", False, DataSourceUpdateMode.OnValidation)
+		Me.OutputFullPathComboBox.BindingContext = New BindingContext()
+		Me.OutputFullPathComboBox.DataBindings.Add("Text", TheApp.Settings, "CompileOutputFullPath", False, DataSourceUpdateMode.OnValidation)
+		Me.OutputFullPathComboBox.TextHistoryIsKept = True
+		Me.OutputFullPathComboBox.TextHistory = TheApp.Settings.CompileOutputFullPathHistory
 		Me.OutputSubfolderTextBox.DataBindings.Add("Text", TheApp.Settings, "CompileOutputSubfolderName", False, DataSourceUpdateMode.OnValidation)
 		Me.InitOutputPathComboBox()
 		Me.UpdateOutputPathWidgets()
@@ -45,8 +57,9 @@ Public Class CompileUserControl
 		AddHandler TheApp.Compiler.ProgressChanged, AddressOf Me.CompilerBackgroundWorker_ProgressChanged
 		AddHandler TheApp.Compiler.RunWorkerCompleted, AddressOf Me.CompilerBackgroundWorker_RunWorkerCompleted
 
-		AddHandler Me.QcPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
-		AddHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		'AddHandler Me.QcPathFileNameComboBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		AddHandler Me.QcPathFileNameComboUserControl.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		AddHandler Me.OutputFullPathComboBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
 	End Sub
 
 	Private Sub InitOutputPathComboBox()
@@ -95,14 +108,14 @@ Public Class CompileUserControl
 	' Do not need Free() because this widget is destroyed only on program exit.
 	'Protected Overrides Sub Free()
 	'	RemoveHandler Me.QcPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
-	'	RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+	'	RemoveHandler Me.OutputFullPathComboBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
 	'	RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 	'	RemoveHandler TheApp.Compiler.ProgressChanged, AddressOf Me.CompilerBackgroundWorker_ProgressChanged
 	'	RemoveHandler TheApp.Compiler.RunWorkerCompleted, AddressOf Me.CompilerBackgroundWorker_RunWorkerCompleted
 
 	'	Me.QcPathFileNameTextBox.DataBindings.Clear()
 
-	'	Me.OutputPathTextBox.DataBindings.Clear()
+	'	Me.OutputFullPathComboBox.DataBindings.Clear()
 	'	Me.OutputSubfolderTextBox.DataBindings.Clear()
 
 	'	Me.GameSetupComboBox.DataBindings.Clear()
@@ -152,8 +165,9 @@ Public Class CompileUserControl
 
 	Private Sub CompileUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
-		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.QcPathFileNameTextBox, Me.BrowseForQcPathFolderOrFileNameButton)
-		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputPathTextBox, Me.BrowseForOutputPathButton)
+		'Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.QcPathFileNameComboBox, Me.BrowseForQcPathFolderOrFileNameButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.QcPathFileNameComboUserControl, Me.BrowseForQcPathFolderOrFileNameButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputFullPathComboBox, Me.BrowseForOutputPathButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputSubfolderTextBox, Me.BrowseForOutputPathButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.GameModelsOutputPathTextBox, Me.BrowseForOutputPathButton)
 	End Sub
@@ -162,9 +176,14 @@ Public Class CompileUserControl
 
 #Region "Child Widget Event Handlers"
 
-	'Private Sub QcPathFileNameTextBox_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
-	'	'Me.QcPathFileNameTextBox.Text = FileManager.GetCleanPathFileName(Me.QcPathFileNameTextBox.Text)
-	'	Me.SetCompilerOptionsText()
+	'Private Sub QcPathFileNameComboBox_DropDownItemSelected(sender As Object, e As ComboBoxEx.DropdownItemSelectedEventArgs) Handles QcPathFileNameComboBox.DropDownItemSelected
+	'	'If e.SelectedItem < 0 OrElse e.IsScrolled Then
+	'	'	ToolTip1.Hide(Me.QcPathFileNameComboBox)
+	'	'Else
+	'	'	ToolTip1.Show(Me.QcPathFileNameComboBox.Items(e.SelectedItem).ToString(), Me.QcPathFileNameComboBox, e.Bounds.Location)
+	'	'End If
+	'	If e.SelectedItem >= 0 AndAlso Not e.IsScrolled Then
+	'	End If
 	'End Sub
 
 	Private Sub BrowseForQcPathFolderOrFileNameButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BrowseForQcPathFolderOrFileNameButton.Click
@@ -208,68 +227,7 @@ Public Class CompileUserControl
 		FileManager.OpenWindowsExplorer(TheApp.Settings.CompileQcPathFileName)
 	End Sub
 
-	'Private Sub OutputFolderCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles OutputFolderCheckBox.CheckedChanged
-	'	Me.UpdateOutputFolderWidgets()
-	'End Sub
-
-	'Private Sub OutputSubfolderNameRadioButton_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OutputSubfolderNameRadioButton.CheckedChanged
-	'       If Me.OutputSubfolderNameRadioButton.Checked Then
-	'           TheApp.Settings.CompileOutputFolderOption = OutputFolderOptions.SubfolderName
-	'       Else
-	'           TheApp.Settings.CompileOutputFolderOption = OutputFolderOptions.PathName
-	'       End If
-
-	'       Me.UpdateOutputFolderWidgets()
-	'End Sub
-
-	'Private Sub OutputFolderPathNameRadioButton_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OutputFullPathRadioButton.CheckedChanged
-	'	Me.UpdateOutputFolderWidgets()
-	'End Sub
-
-	'Private Sub UseDefaultOutputSubfolderNameButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UseDefaultOutputSubfolderNameButton.Click
-	'	TheApp.Settings.SetDefaultCompileOutputSubfolderName()
-	'	'Me.OutputSubfolderNameTextBox.DataBindings("Text").ReadValue()
-	'End Sub
-
-	'Private Sub OutputPathNameTextBox_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OutputFullPathTextBox.Validated
-	'	'Me.OutputFullPathTextBox.Text = FileManager.GetCleanPathFileName(Me.OutputFullPathTextBox.Text)
-	'	Me.UpdateOutputFullPathTextBox()
-	'End Sub
-
-	'Private Sub BrowseForOutputPathNameButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BrowseForOutputPathNameButton.Click
-	'	'NOTE: Using "open file dialog" instead of "open folder dialog" because the "open folder dialog" 
-	'	'      does not show the path name bar nor does it scroll to the selected folder in the folder tree view.
-	'       Dim outputPathWdw As New OpenFileDialog()
-
-	'       outputPathWdw.Title = "Open the folder you want as Output Folder"
-	'	If Directory.Exists(TheApp.Settings.CompileOutputFullPath) Then
-	'		outputPathWdw.InitialDirectory = TheApp.Settings.CompileOutputFullPath
-	'	ElseIf File.Exists(TheApp.Settings.CompileQcPathFileName) Then
-	'		outputPathWdw.InitialDirectory = FileManager.GetPath(TheApp.Settings.CompileQcPathFileName)
-	'	ElseIf Directory.Exists(TheApp.Settings.CompileQcPathFileName) Then
-	'		outputPathWdw.InitialDirectory = TheApp.Settings.CompileQcPathFileName
-	'	Else
-	'		outputPathWdw.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-	'	End If
-	'       outputPathWdw.FileName = "[Folder Selection]"
-	'       outputPathWdw.AddExtension = False
-	'       outputPathWdw.CheckFileExists = False
-	'       outputPathWdw.Multiselect = False
-	'       outputPathWdw.ValidateNames = False
-
-	'       If outputPathWdw.ShowDialog() = Windows.Forms.DialogResult.OK Then
-	'           ' Allow dialog window to completely disappear.
-	'           Application.DoEvents()
-
-	'           TheApp.Settings.CompileOutputFullPath = FileManager.GetPath(outputPathWdw.FileName)
-	'       End If
-	'End Sub
-
-	'Private Sub GotoOutputButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GotoOutputButton.Click
-	'	FileManager.OpenWindowsExplorer(Me.OutputFullPathTextBox.Text)
-	'End Sub
-
-	Private Sub OutputPathTextBox_DragDrop(sender As Object, e As DragEventArgs) Handles OutputPathTextBox.DragDrop
+	Private Sub OutputFullPathComboBox_DragDrop(sender As Object, e As DragEventArgs) Handles OutputFullPathComboBox.DragDrop
 		Dim pathFileNames() As String = CType(e.Data.GetData(DataFormats.FileDrop), String())
 		Dim pathFileName As String = pathFileNames(0)
 		If Directory.Exists(pathFileName) Then
@@ -277,14 +235,14 @@ Public Class CompileUserControl
 		End If
 	End Sub
 
-	Private Sub OutputPathTextBox_DragEnter(sender As Object, e As DragEventArgs) Handles OutputPathTextBox.DragEnter
+	Private Sub OutputFullPathComboBox_DragEnter(sender As Object, e As DragEventArgs) Handles OutputFullPathComboBox.DragEnter
 		If e.Data.GetDataPresent(DataFormats.FileDrop) Then
 			e.Effect = DragDropEffects.Copy
 		End If
 	End Sub
 
-	Private Sub OutputPathTextBox_Validated(sender As Object, e As EventArgs) Handles OutputPathTextBox.Validated
-		Me.UpdateOutputPathTextBox()
+	Private Sub OutputFullPathComboBox_Validated(sender As Object, e As EventArgs) Handles OutputFullPathComboBox.Validated
+		Me.UpdateOutputFullPathComboBox()
 	End Sub
 
 	Private Sub BrowseForOutputPathButton_Click(sender As Object, e As EventArgs) Handles BrowseForOutputPathButton.Click
@@ -468,25 +426,9 @@ Public Class CompileUserControl
 
 #Region "Private Methods"
 
-	'Private Sub UpdateOutputFolderWidgets()
-	'	Me.CompileOutputFolderGroupBox.Enabled = Me.OutputFolderCheckBox.Checked
-	'	Me.OutputSubfolderNameTextBox.ReadOnly = Not Me.OutputSubfolderNameRadioButton.Checked
-	'	Me.OutputFullPathTextBox.ReadOnly = Me.OutputSubfolderNameRadioButton.Checked
-	'	Me.BrowseForOutputPathNameButton.Enabled = Not Me.OutputSubfolderNameRadioButton.Checked
-	'End Sub
-
-	'Private Sub UpdateOutputFullPathTextBox()
-	'	If String.IsNullOrEmpty(Me.OutputFullPathTextBox.Text) Then
-	'		Try
-	'			TheApp.Settings.CompileOutputFullPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-	'		Catch
-	'		End Try
-	'	End If
-	'End Sub
-
 	Private Sub UpdateOutputPathWidgets()
 		Me.GameModelsOutputPathTextBox.Visible = (TheApp.Settings.CompileOutputFolderOption = CompileOutputPathOptions.GameModelsFolder)
-		Me.OutputPathTextBox.Visible = (TheApp.Settings.CompileOutputFolderOption = CompileOutputPathOptions.WorkFolder)
+		Me.OutputFullPathComboBox.Visible = (TheApp.Settings.CompileOutputFolderOption = CompileOutputPathOptions.WorkFolder)
 		Me.OutputSubfolderTextBox.Visible = (TheApp.Settings.CompileOutputFolderOption = CompileOutputPathOptions.Subfolder)
 		Me.BrowseForOutputPathButton.Enabled = (TheApp.Settings.CompileOutputFolderOption = CompileOutputPathOptions.WorkFolder)
 		Me.BrowseForOutputPathButton.Visible = (TheApp.Settings.CompileOutputFolderOption = CompileOutputPathOptions.GameModelsFolder) OrElse (TheApp.Settings.CompileOutputFolderOption = CompileOutputPathOptions.WorkFolder)
@@ -514,9 +456,9 @@ Public Class CompileUserControl
 		End If
 	End Sub
 
-	Private Sub UpdateOutputPathTextBox()
+	Private Sub UpdateOutputFullPathComboBox()
 		If TheApp.Settings.CompileOutputFolderOption = CompileOutputPathOptions.WorkFolder Then
-			If String.IsNullOrEmpty(Me.OutputPathTextBox.Text) Then
+			If String.IsNullOrEmpty(Me.OutputFullPathComboBox.Text) Then
 				Try
 					TheApp.Settings.CompileOutputFullPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
 				Catch ex As Exception
@@ -576,7 +518,6 @@ Public Class CompileUserControl
 				FileManager.OpenWindowsExplorer(gameModelsPath)
 			End If
 		ElseIf TheApp.Settings.CompileOutputFolderOption = CompileOutputPathOptions.WorkFolder Then
-			'FileManager.OpenWindowsExplorer(Me.OutputPathTextBox.Text)
 			FileManager.OpenWindowsExplorer(TheApp.Settings.CompileOutputFullPath)
 		End If
 	End Sub
@@ -604,7 +545,7 @@ Public Class CompileUserControl
 		TheApp.Settings.CompilerIsRunning = compilerIsRunning
 
 		Me.CompileComboBox.Enabled = Not compilerIsRunning
-		Me.QcPathFileNameTextBox.Enabled = Not compilerIsRunning
+		Me.QcPathFileNameComboBox.Enabled = Not compilerIsRunning
 		Me.BrowseForQcPathFolderOrFileNameButton.Enabled = Not compilerIsRunning
 
 		'Me.OutputSubfolderNameRadioButton.Enabled = Not compilerIsRunning
@@ -614,7 +555,7 @@ Public Class CompileUserControl
 		'Me.OutputFullPathTextBox.Enabled = Not compilerIsRunning
 		'Me.BrowseForOutputPathNameButton.Enabled = Not compilerIsRunning
 		Me.OutputPathComboBox.Enabled = Not compilerIsRunning
-		Me.OutputPathTextBox.Enabled = Not compilerIsRunning
+		Me.OutputFullPathComboBox.Enabled = Not compilerIsRunning
 		Me.OutputSubfolderTextBox.Enabled = Not compilerIsRunning
 		Me.BrowseForOutputPathButton.Enabled = Not compilerIsRunning
 		Me.GotoOutputPathButton.Enabled = Not compilerIsRunning

@@ -23,6 +23,7 @@ Partial Class CompileUserControl
 	<System.Diagnostics.DebuggerStepThrough()>
 	Private Sub InitializeComponent()
 		Me.components = New System.ComponentModel.Container()
+		Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(CompileUserControl))
 		Me.CompilerOptionsTextBox = New System.Windows.Forms.TextBox()
 		Me.GameSetupComboBox = New System.Windows.Forms.ComboBox()
 		Me.FolderForEachModelCheckBox = New System.Windows.Forms.CheckBox()
@@ -41,7 +42,9 @@ Partial Class CompileUserControl
 		Me.GameSetupLabel = New System.Windows.Forms.Label()
 		Me.CompileButton = New System.Windows.Forms.Button()
 		Me.Panel1 = New System.Windows.Forms.Panel()
-		Me.QcPathFileNameTextBox = New Crowbar.TextBoxEx()
+		Me.QcPathFileNameComboUserControl = New Crowbar.ComboUserControl()
+		Me.QcPathFileNameComboBox = New Crowbar.ComboBoxEx()
+		Me.OutputFullPathComboBox = New Crowbar.ComboBoxEx()
 		Me.OutputPathTextBox = New Crowbar.TextBoxEx()
 		Me.GameModelsOutputPathTextBox = New Crowbar.TextBoxEx()
 		Me.OutputSubfolderTextBox = New Crowbar.TextBoxEx()
@@ -262,7 +265,9 @@ Partial Class CompileUserControl
 		'
 		'Panel1
 		'
-		Me.Panel1.Controls.Add(Me.QcPathFileNameTextBox)
+		Me.Panel1.Controls.Add(Me.QcPathFileNameComboUserControl)
+		Me.Panel1.Controls.Add(Me.QcPathFileNameComboBox)
+		Me.Panel1.Controls.Add(Me.OutputFullPathComboBox)
 		Me.Panel1.Controls.Add(Me.OutputPathTextBox)
 		Me.Panel1.Controls.Add(Me.GameModelsOutputPathTextBox)
 		Me.Panel1.Controls.Add(Me.OutputSubfolderTextBox)
@@ -283,15 +288,47 @@ Partial Class CompileUserControl
 		Me.Panel1.Size = New System.Drawing.Size(776, 536)
 		Me.Panel1.TabIndex = 15
 		'
-		'QcPathFileNameTextBox
+		'QcPathFileNameComboUserControl
 		'
-		Me.QcPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.QcPathFileNameTextBox.CueBannerText = ""
-		Me.QcPathFileNameTextBox.Location = New System.Drawing.Point(209, 3)
-		Me.QcPathFileNameTextBox.Name = "QcPathFileNameTextBox"
-		Me.QcPathFileNameTextBox.Size = New System.Drawing.Size(445, 22)
-		Me.QcPathFileNameTextBox.TabIndex = 22
+		Me.QcPathFileNameComboUserControl.BackColor = System.Drawing.SystemColors.Window
+		Me.QcPathFileNameComboUserControl.IsReadOnly = False
+		Me.QcPathFileNameComboUserControl.Location = New System.Drawing.Point(209, 4)
+		Me.QcPathFileNameComboUserControl.Name = "QcPathFileNameComboUserControl"
+		Me.QcPathFileNameComboUserControl.Size = New System.Drawing.Size(445, 21)
+		Me.QcPathFileNameComboUserControl.TabIndex = 25
+		Me.QcPathFileNameComboUserControl.TextHistory = Nothing
+		Me.QcPathFileNameComboUserControl.TextHistoryIsKept = False
+		Me.QcPathFileNameComboUserControl.TextHistoryMaxSize = 15
+		'
+		'QcPathFileNameComboBox
+		'
+		Me.QcPathFileNameComboBox.DataSource = CType(resources.GetObject("QcPathFileNameComboBox.DataSource"), Object)
+		Me.QcPathFileNameComboBox.FormattingEnabled = True
+		Me.QcPathFileNameComboBox.IsReadOnly = False
+		Me.QcPathFileNameComboBox.Location = New System.Drawing.Point(209, 4)
+		Me.QcPathFileNameComboBox.Name = "QcPathFileNameComboBox"
+		Me.QcPathFileNameComboBox.Size = New System.Drawing.Size(445, 21)
+		Me.QcPathFileNameComboBox.TabIndex = 23
+		Me.QcPathFileNameComboBox.TextHistory = CType(resources.GetObject("QcPathFileNameComboBox.TextHistory"), System.Collections.Generic.List(Of String))
+		Me.QcPathFileNameComboBox.TextHistoryIsKept = False
+		Me.QcPathFileNameComboBox.TextHistoryMaxSize = 15
+		Me.QcPathFileNameComboBox.TextIsAllowingMultiplePathFileNames = False
+		Me.QcPathFileNameComboBox.Visible = False
+		'
+		'OutputFullPathComboBox
+		'
+		Me.OutputFullPathComboBox.AllowDrop = True
+		Me.OutputFullPathComboBox.DataSource = CType(resources.GetObject("OutputFullPathComboBox.DataSource"), Object)
+		Me.OutputFullPathComboBox.FormattingEnabled = True
+		Me.OutputFullPathComboBox.IsReadOnly = False
+		Me.OutputFullPathComboBox.Location = New System.Drawing.Point(209, 33)
+		Me.OutputFullPathComboBox.Name = "OutputFullPathComboBox"
+		Me.OutputFullPathComboBox.Size = New System.Drawing.Size(445, 21)
+		Me.OutputFullPathComboBox.TabIndex = 24
+		Me.OutputFullPathComboBox.TextHistory = CType(resources.GetObject("OutputFullPathComboBox.TextHistory"), System.Collections.Generic.List(Of String))
+		Me.OutputFullPathComboBox.TextHistoryIsKept = False
+		Me.OutputFullPathComboBox.TextHistoryMaxSize = 15
+		Me.OutputFullPathComboBox.TextIsAllowingMultiplePathFileNames = False
 		'
 		'OutputPathTextBox
 		'
@@ -303,6 +340,7 @@ Partial Class CompileUserControl
 		Me.OutputPathTextBox.Name = "OutputPathTextBox"
 		Me.OutputPathTextBox.Size = New System.Drawing.Size(445, 22)
 		Me.OutputPathTextBox.TabIndex = 9
+		Me.OutputPathTextBox.Visible = False
 		'
 		'GameModelsOutputPathTextBox
 		'
@@ -744,11 +782,13 @@ Partial Class CompileUserControl
 	Friend WithEvents GoldSourceEngineLogFileCheckBox As System.Windows.Forms.CheckBox
 	Friend WithEvents CompileOptionsGoldSourceEngineUseDefaultsButton As System.Windows.Forms.Button
 	Friend WithEvents OutputSubfolderTextBox As Crowbar.TextBoxEx
-	Friend WithEvents QcPathFileNameTextBox As Crowbar.TextBoxEx
 	Friend WithEvents GameSetupPanel As Panel
 	Friend WithEvents CompileButtonsPanel As Panel
 	Friend WithEvents CompilerOptionsTextBoxMinScrollPanel As Panel
 	Friend WithEvents PostCompilePanel As Panel
 	Friend WithEvents DefineBonesGroupBox As GroupBox
 	Friend WithEvents CompilerOptionDefineBonesOverwriteQciFileCheckBox As CheckBox
+	Friend WithEvents QcPathFileNameComboBox As ComboBoxEx
+	Friend WithEvents OutputFullPathComboBox As ComboBoxEx
+	Friend WithEvents QcPathFileNameComboUserControl As ComboUserControl
 End Class

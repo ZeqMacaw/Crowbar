@@ -543,11 +543,27 @@
     <Compile Include="Widgets\- General\CheckBoxEx.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Widgets\- General\ComboBoxEx.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Widgets\- General\ComboUserControl.Designer.vb">
+      <DependentUpon>ComboUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Widgets\- General\ComboUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Widgets\- General\DateTimeTextBoxEx.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Widgets\- General\FileDragDropHelper.vb" />
     <Compile Include="Widgets\- General\GroupBoxEx.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Widgets\- General\HelperFunctions.vb" />
+    <Compile Include="Widgets\- General\ListBoxEx.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Widgets\- General\Popup.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Widgets\- General\TreeViewEx.vb">
@@ -785,6 +801,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\- Application\MacroDataGridView.resx">
       <DependentUpon>MacroDataGridView.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\- General\ComboUserControl.resx">
+      <DependentUpon>ComboUserControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\- General\TreeViewEx.resx">
       <DependentUpon>TreeViewEx.vb</DependentUpon>

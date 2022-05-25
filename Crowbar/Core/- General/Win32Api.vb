@@ -6,12 +6,39 @@ Public Class Win32Api
 	''' <summary>Windows messages (WM_*, look in winuser.h)</summary>
 	Public Enum WindowsMessages
 		WM_ACTIVATE = &H6
-		WM_COMMAND = &H111
-		WM_ENTERIDLE = &H121
-		WM_MOUSEWHEEL = &H20A
-		WM_NOTIFY = &H4E
+		WM_SETFOCUS = &H7
+		WM_KILLFOCUS = &H8
+		WM_PAINT = &HF
 		WM_SHOWWINDOW = &H18
+		WM_NOTIFY = &H4E
+		WM_KEYDOWN = &H100
+		WM_KEYUP = &H101
+		WM_CHAR = &H102
+		WM_COMMAND = &H111
+		WM_VSCROLL = &H115
+		WM_ENTERIDLE = &H121
+		WM_MOUSEMOVE = &H200
+		WM_LBUTTONDOWN = &H201
+		WM_LBUTTONDBLCLK = &H203
+		WM_RBUTTONDOWN = &H204
+		WM_MOUSEWHEEL = &H20A
+		WM_CUT = &H300
+		WM_COPY = &H301
+		WM_PASTE = &H302
+		WM_CLEAR = &H303
+		WM_UNDO = &H304
 		'HWND_BROADCAST = &HFFFF
+	End Enum
+
+	Public Enum GetWindowConsts
+		GW_HWNDFIRST = 0
+		GW_HWNDLAST = 1
+		GW_HWNDNEXT = 2
+		GW_HWNDPREV = 3
+		GW_OWNER = 4
+		GW_CHILD = 5
+		GW_ENABLEDPOPUP = 6
+		GW_MAX = 6
 	End Enum
 
 	Public Enum DialogChangeStatus As Long
@@ -34,6 +61,17 @@ Public Class Win32Api
 		CDM_SETCONTROLTEXT = (CDM_FIRST + &H4)
 		CDM_HIDECONTROL = (CDM_FIRST + &H5)
 		CDM_SETDEFEXT = (CDM_FIRST + &H6)
+	End Enum
+
+	Public Enum EditControlMessage
+		EM_REPLACESEL = &HC2
+		EM_CANUNDO = &HC6
+		EM_UNDO = &HC7
+	End Enum
+
+	Public Enum ListBoxMessages
+		LB_GETCURSEL = &H188
+		LB_GETITEMRECT = &H198
 	End Enum
 
 	Public Enum ListViewMessages
@@ -155,7 +193,7 @@ Public Class Win32Api
 	Public Const RecycleBin As String = "::{645FF040-5081-101B-9F08-00AA002F954E}"
 	Public Const Tasks As String = "::{D6277990-4C6A-11CF-8D87-00AA0060F5BF}"
 
-	<StructLayout(LayoutKind.Sequential)> _
+	<StructLayout(LayoutKind.Sequential)>
 	Public Structure LV_ITEM
 		Public mask As Integer
 		Public iItem As Integer
@@ -167,21 +205,21 @@ Public Class Win32Api
 		Public iImage As Integer
 	End Structure
 
-	<StructLayout(LayoutKind.Sequential)> _
+	<StructLayout(LayoutKind.Sequential)>
 	Public Structure NMHDR
 		Public hwndFrom As IntPtr
 		Public idFrom As UInteger
 		Public code As UInteger
 	End Structure
 
-	<StructLayout(LayoutKind.Sequential)> _
+	<StructLayout(LayoutKind.Sequential)>
 	Public Structure OFNOTIFY
 		Public hdr As NMHDR
 		Public OPENFILENAME As IntPtr
 		Public fileNameShareViolation As IntPtr
 	End Structure
 
-	<StructLayout(LayoutKind.Sequential)> _
+	<StructLayout(LayoutKind.Sequential)>
 	Public Structure RECT
 		Private _Left As Integer, _Top As Integer, _Right As Integer, _Bottom As Integer
 
@@ -309,7 +347,7 @@ Public Class Win32Api
 		End Function
 	End Structure
 
-	<StructLayout(LayoutKind.Sequential)> _
+	<StructLayout(LayoutKind.Sequential)>
 	Public Structure WINDOWINFO
 		Dim cbSize As Integer
 		Dim rcWindow As RECT
@@ -323,43 +361,81 @@ Public Class Win32Api
 		Dim wCreatorVersion As Short
 	End Structure
 
+	<StructLayout(LayoutKind.Sequential)>
+	Public Structure COMBOBOXINFO
+		Public cbSize As Int32
+		Public rcItem As RECT
+		Public rcButton As RECT
+		Public buttonState As Integer
+		Public hwndCombo As IntPtr
+		Public hwndEdit As IntPtr
+		Public hwndList As IntPtr
+		Public Sub Init()
+			cbSize = Marshal.SizeOf(Me)
+		End Sub
+	End Structure
+
 	Public Delegate Function EnumWindowsProc(ByVal Handle As IntPtr, ByVal Parameter As IntPtr) As Boolean
 
-	<DllImport("kernel32.dll", SetLastError:=True)> _
+	<DllImport("kernel32.dll", SetLastError:=True)>
 	Public Shared Function CloseHandle(ByVal hObject As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
 	End Function
 
-	<DllImport("shell32.dll")> _
+	<DllImport("shell32.dll")>
 	Shared Sub SHChangeNotify(ByVal wEventId As Integer, ByVal uFlags As Integer, ByVal dwItem1 As Integer, ByVal dwItem2 As Integer)
 	End Sub
 
-	<DllImport("shell32.dll")> _
+	<DllImport("shell32.dll")>
 	Private Shared Function SHGetFolderPath(ByVal hwndOwner As IntPtr, ByVal nFolder As Int32, ByVal hToken As IntPtr, ByVal dwFlags As Int32, ByVal pszPath As StringBuilder) As Int32
 	End Function
 
-	<DllImport("user32.dll", CharSet:=CharSet.Unicode)> _
+	<DllImport("user32.dll", CharSet:=CharSet.Unicode)>
 	Public Shared Function EnumChildWindows(ByVal hWndParent As System.IntPtr, ByVal lpEnumFunc As EnumWindowsProc, ByVal lParam As Integer) As Boolean
 	End Function
 
-	<DllImport("user32.dll", CharSet:=CharSet.Unicode)> _
+	<DllImport("user32.dll", CharSet:=CharSet.Unicode)>
 	Public Shared Sub GetClassName(ByVal hWnd As System.IntPtr, ByVal lpClassName As System.Text.StringBuilder, ByVal nMaxCount As Integer)
 	End Sub
 
-	<DllImport("user32.dll")> _
+	<DllImport("user32.dll")>
+	Public Shared Function GetComboBoxInfo(ByVal hWnd As IntPtr, ByRef pcbi As COMBOBOXINFO) As Boolean
+	End Function
+
+	<DllImport("user32.dll")>
 	Public Shared Function GetDlgCtrlID(ByVal hwndCtl As System.IntPtr) As Integer
 	End Function
 
-	<DllImport("user32.dll", CharSet:=CharSet.Unicode)> _
+	<DllImport("user32.dll", CharSet:=CharSet.Unicode)>
 	Public Shared Function GetParent(ByVal hWnd As IntPtr) As IntPtr
 	End Function
 
-	<DllImport("user32.dll", SetLastError:=True)> _
+	<DllImport("user32.dll", CharSet:=CharSet.Auto)>
+	Public Shared Function GetClientRect(ByVal hWnd As System.IntPtr, ByRef lpRECT As RECT) As Integer
+	End Function
+
+	<DllImport("user32.dll")>
+	Public Shared Function GetUpdateRect(ByVal hWnd As IntPtr, ByRef rect As RECT, ByVal bErase As Boolean) As Boolean
+	End Function
+
+	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Auto)>
+	Public Shared Function GetWindow(ByVal hWnd As IntPtr, ByVal uCmd As GetWindowConsts) As IntPtr
+	End Function
+
+	<DllImport("user32.dll", SetLastError:=True)>
 	Public Shared Function GetWindowInfo(ByVal hwnd As IntPtr, ByRef pwi As WINDOWINFO) As Boolean
 	End Function
 
-	<DllImport("user32.dll", SetLastError:=True)> _
+	<DllImport("user32.dll", SetLastError:=True)>
 	Public Shared Function GetWindowThreadProcessId(ByVal hwnd As IntPtr, ByRef lpdwProcessId As IntPtr) As Integer
 	End Function
+
+	'<DllImport("User32.dll")>
+	'Public Shared Function GetWindowDC(ByVal hWnd As IntPtr) As IntPtr
+	'End Function
+
+	'<DllImport("user32.dll")>
+	'Public Shared Function ReleaseDC(ByVal hWnd As IntPtr, ByVal hDC As IntPtr) As Boolean
+	'End Function
 
 	''' <summary>Send message to a window (platform invoke)</summary>
 	''' <param name="hWnd">Window handle to send to</param>
@@ -367,13 +443,17 @@ Public Class Win32Api
 	''' <param name="wParam">wParam</param>
 	''' <param name="lParam">lParam</param>
 	''' <returns>Zero if failure, otherwise non-zero</returns>
-	<DllImport("user32.dll", SetLastError:=True)> _
+	<DllImport("user32.dll", SetLastError:=True)>
 	Public Shared Function PostMessage(ByVal hWnd As IntPtr, ByVal Msg As UInteger, ByVal wParam As IntPtr, ByVal lParam As IntPtr) As Boolean
 	End Function
 
-	'<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)> _
-	'Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal Msg As UInteger, ByVal wParam As IntPtr, ByVal lParam As IntPtr) As IntPtr
-	'End Function
+	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
+	Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal Msg As UInteger, ByVal wParam As IntPtr, ByVal lParam As IntPtr) As IntPtr
+	End Function
+
+	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
+	Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal Msg As EditControlMessage, ByVal wParam As IntPtr, ByVal lParam As IntPtr) As IntPtr
+	End Function
 
 	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
 	Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal Msg As UInteger, ByVal wParam As IntPtr, ByRef lParam As LV_ITEM) As IntPtr
@@ -388,6 +468,22 @@ Public Class Win32Api
 
 	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)> _
 	Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal Msg As UInteger, ByVal wParam As IntPtr, ByVal lParam As System.Text.StringBuilder) As IntPtr
+	End Function
+
+	'<DllImport("user32.dll", EntryPoint:="SendMessageW", CharSet:=CharSet.Unicode)>
+	'Public Shared Function SendMessageCb(ByVal hWnd As IntPtr, ByVal msg As Integer, ByVal wp As IntPtr, <Out> ByRef lp As COMBOBOXINFO) As IntPtr
+	'End Function
+
+	<DllImport("user32.dll", EntryPoint:="SendMessageW", CharSet:=CharSet.Unicode)>
+	Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal msg As Integer, ByVal wp As IntPtr, <Out> ByRef lp As RECT) As IntPtr
+	End Function
+
+	<DllImport("user32.dll")>
+	Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal msg As Integer, ByVal wp As IntPtr, ByVal lp As IntPtr) As IntPtr
+	End Function
+
+	<DllImport("user32.dll")>
+	Public Shared Function MapWindowPoints(ByVal hWndFrom As IntPtr, ByVal hWndTo As IntPtr, ByRef rc As RECT, ByVal points As Integer) As Integer
 	End Function
 
 	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)> _
@@ -682,6 +778,14 @@ Public Class Win32Api
 	' Select all listview items much more quickly than other ways.
 	Public Shared Sub SelectAllItems(ByVal list As ListView)
 		SetItemState(list, -1, 2, 2)
+	End Sub
+
+	Public Shared Sub GetComboBoxInternalControlHandles(ByVal cbHandle As IntPtr, ByRef textBoxHandle As IntPtr, ByRef listBoxHandle As IntPtr)
+		Dim cbInfo As New COMBOBOXINFO()
+		cbInfo.Init()
+		GetComboBoxInfo(cbHandle, cbInfo)
+		textBoxHandle = cbInfo.hwndEdit
+		listBoxHandle = cbInfo.hwndList
 	End Sub
 
 End Class

@@ -64,15 +64,14 @@ Public Class AppSettings
 		Me.theDecompileDebugInfoFilesIsChecked = False
 		Me.theDecompileOverrideMdlVersion = SupportedMdlVersion.DoNotOverride
 
+		Me.theCompileMode = InputOptions.File
 		Me.theCompileQcPathFileName = ""
 		Me.theCompileOutputFolderIsChecked = True
-		'Me.theCompileOutputFolderOption = OutputFolderOptions.SubfolderName
 		Me.theCompileOutputFolderOption = CompileOutputPathOptions.GameModelsFolder
 		Me.SetDefaultCompileOutputSubfolderName()
 		Me.theCompileOutputFullPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
 		Me.theCompileGameSetupSelectedIndex = 0
 		Me.SetDefaultCompileOptions()
-		Me.theCompileMode = InputOptions.File
 
 		Me.thePatchMdlPathFileName = ""
 		Me.thePatchMode = InputOptions.File
@@ -81,6 +80,7 @@ Public Class AppSettings
 		Me.theViewOverrideMdlVersion = SupportedMdlVersion.DoNotOverride
 		Me.theViewGameSetupSelectedIndex = 0
 
+		Me.thePackMode = PackInputOptions.Folder
 		Me.thePackInputPathFileName = ""
 		'Me.theCompileOutputFolderIsChecked = True
 		''Me.theCompileOutputFolderOption = OutputFolderOptions.SubfolderName
@@ -89,7 +89,6 @@ Public Class AppSettings
 		Me.thePackOutputPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
 		Me.thePackGameSetupSelectedIndex = 0
 		Me.SetDefaultPackOptions()
-		'Me.theCompileMode = InputOptions.File
 
 		Me.thePublishGameSelectedIndex = 0
 		Me.thePublishSteamAppUserInfos = New BindingListExAutoSort(Of SteamAppUserInfo)("AppID")
@@ -828,25 +827,29 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	'Public Property CompileOutputFolderIsChecked() As Boolean
-	'	Get
-	'		Return Me.theCompileOutputFolderIsChecked
-	'	End Get
-	'	Set(ByVal value As Boolean)
-	'		Me.theCompileOutputFolderIsChecked = value
-	'		NotifyPropertyChanged("CompileOutputFolderIsChecked")
-	'	End Set
-	'End Property
+	Public Property CompileQcPathFileNameHistory() As BindingListEx(Of String)
+		Get
+			Return Me.theCompileQcPathFileNameHistory
+		End Get
+		Set(ByVal value As BindingListEx(Of String))
+			If Me.theCompileQcPathFileNameHistory IsNot value Then
+				Me.theCompileQcPathFileNameHistory = value
+				NotifyPropertyChanged("CompileQcPathFileNameHistory")
+			End If
+		End Set
+	End Property
 
-	'Public Property CompileOutputFolderOption() As OutputFolderOptions
-	'	Get
-	'		Return Me.theCompileOutputFolderOption
-	'	End Get
-	'	Set(ByVal value As OutputFolderOptions)
-	'		Me.theCompileOutputFolderOption = value
-	'		NotifyPropertyChanged("CompileOutputFolderOption")
-	'	End Set
-	'End Property
+	Public Property CompileQcPathFileNameList() As BindingListEx(Of String)
+		Get
+			Return Me.theCompileQcPathFileNameList
+		End Get
+		Set(ByVal value As BindingListEx(Of String))
+			If Me.theCompileQcPathFileNameList IsNot value Then
+				Me.theCompileQcPathFileNameList = value
+				NotifyPropertyChanged("CompileQcPathFileNameList")
+			End If
+		End Set
+	End Property
 
 	Public Property CompileOutputFolderOption() As CompileOutputPathOptions
 		Get
@@ -878,15 +881,15 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	'Public Property CompileOutputPathName() As String
-	'	Get
-	'		Return Me.theCompileOutputPathName
-	'	End Get
-	'	Set(ByVal value As String)
-	'		Me.theCompileOutputPathName = value
-	'		NotifyPropertyChanged("CompileOutputPathName")
-	'	End Set
-	'End Property
+	Public Property CompileOutputFullPathHistory() As List(Of String)
+		Get
+			Return Me.theCompileOutputFullPathHistory
+		End Get
+		Set(ByVal value As List(Of String))
+			Me.theCompileOutputFullPathHistory = value
+			NotifyPropertyChanged("CompileOutputFullPathHistory")
+		End Set
+	End Property
 
 	Public Property CompileGameSetupSelectedIndex() As Integer
 		Get
@@ -1928,14 +1931,16 @@ Public Class AppSettings
 
 	' Compile tab
 
-	Private theCompileQcPathFileName As String
 	Private theCompileMode As InputOptions
+	Private theCompileQcPathFileName As String
+	Private theCompileQcPathFileNameHistory As BindingListEx(Of String)
+	Private theCompileQcPathFileNameList As BindingListEx(Of String)
 
 	Private theCompileOutputFolderIsChecked As Boolean
-	'Private theCompileOutputFolderOption As OutputFolderOptions
 	Private theCompileOutputFolderOption As CompileOutputPathOptions
 	Private theCompileOutputSubfolderName As String
 	Private theCompileOutputFullPath As String
+	Private theCompileOutputFullPathHistory As List(Of String)
 
 	Private theCompileGameSetupSelectedIndex As Integer
 
