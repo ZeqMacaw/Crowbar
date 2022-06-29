@@ -208,56 +208,58 @@ Public Class SourceQcFile37
 		End If
 	End Sub
 
-	Public Sub WriteModelCommand()
+	Public Sub WriteModelCommand(ByVal aBodyPart As SourceMdlBodyPart37)
 		Dim line As String = ""
-		Dim aBodyPart As SourceMdlBodyPart37
+		'Dim aBodyPart As SourceMdlBodyPart37
+		Dim bodyPartIndex As Integer
 		Dim aBodyModel As SourceMdlModel37
-		'Dim referenceSmdFileName As String
-		'Dim aBone As SourceMdlBone
 		Dim eyeballNames As List(Of String)
-
-		eyeballNames = New List(Of String)()
 
 		'$model "producer" "producer_model_merged.dmx.smd" {
 		'//-doesn't work     eyeball righteye ValveBiped.Bip01_Head1 -1.260 -0.086 64.594 eyeball_r 1.050  3.000 producer_head 0.530
 		'//-doesn't work     eyeball lefteye ValveBiped.Bip01_Head1 1.260 -0.086 64.594 eyeball_l 1.050  -3.000 producer_head 0.530
 		'     mouth 0 "mouth"  ValveBiped.Bip01_Head1 0.000 1.000 0.000
 		'}
-		If Me.theMdlFileData.theBodyParts IsNot Nothing AndAlso Me.theMdlFileData.theBodyParts.Count > 0 Then
-			line = ""
-			Me.theOutputFileStreamWriter.WriteLine(line)
+		'If Me.theMdlFileData.theBodyParts IsNot Nothing AndAlso Me.theMdlFileData.theBodyParts.Count > 0 Then
+		'	line = ""
+		'	Me.theOutputFileStreamWriter.WriteLine(line)
 
-			aBodyPart = Me.theMdlFileData.theBodyParts(0)
-			aBodyModel = aBodyPart.theModels(0)
-			'referenceSmdFileName = Me.GetModelPathFileName(Me.theSourceEngineModel.theMdlFileHeader.theBodyParts(0).theModels(0))
-			'referenceSmdFileName = theSourceEngineModel.GetLodSmdFileName(0)
-			aBodyModel.theSmdFileNames(0) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(0), 0, 0, 0, Me.theModelName, Me.theMdlFileData.theBodyParts(0).theModels(0).name)
+		eyeballNames = New List(Of String)()
 
-			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
-				line = "$Model "
-			Else
-				line = "$model "
-			End If
-			line += """"
-			line += aBodyPart.theName
-			line += """ """
-			line += aBodyModel.theSmdFileNames(0)
-			line += """"
+		'aBodyPart = Me.theMdlFileData.theBodyParts(0)
+		aBodyModel = aBodyPart.theModels(0)
+		'aBodyModel.theSmdFileNames(0) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(0), 0, 0, 0, Me.theModelName, Me.theMdlFileData.theBodyParts(0).theModels(0).name)
+		bodyPartIndex = Me.theMdlFileData.theBodyParts.IndexOf(aBodyPart)
+		aBodyModel.theSmdFileNames(0) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(0), bodyPartIndex, 0, 0, Me.theModelName, aBodyPart.theModels(0).name)
 
-			line += " {"
-			Me.theOutputFileStreamWriter.WriteLine(line)
-
-			'NOTE: Must call WriteEyeballLines() before WriteEyelidLines(), because eyeballNames are created in first and sent to other.
-			Me.WriteEyeballLines(eyeballNames)
-			Me.WriteEyelidLines(eyeballNames)
-
-			Me.WriteMouthLines()
-
-			Me.WriteGroup("flex", AddressOf WriteGroupFlex, False, True)
-
-			line = "}"
-			Me.theOutputFileStreamWriter.WriteLine(line)
+		If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+			line = "$Model "
+		Else
+			line = "$model "
 		End If
+		line += """"
+		line += aBodyPart.theName
+		line += """ """
+		line += aBodyModel.theSmdFileNames(0)
+		line += """"
+
+		line += " {"
+		Me.theOutputFileStreamWriter.WriteLine(line)
+
+		'NOTE: Must call WriteEyeballLines() before WriteEyelidLines(), because eyeballNames are created in first and sent to other.
+		Me.WriteEyeballLines(eyeballNames)
+		Me.WriteEyelidLines(aBodyPart, eyeballNames)
+
+		If bodyPartIndex = 0 Then
+			Me.WriteMouthLines()
+		End If
+
+		Me.theBodyPartForFlexWriting = aBodyPart
+		Me.WriteGroup("flex", AddressOf WriteGroupFlex, False, True)
+
+		line = "}"
+		Me.theOutputFileStreamWriter.WriteLine(line)
+		'End If
 	End Sub
 
 	Private Sub WriteEyeballLines(ByRef eyeballNames As List(Of String))
@@ -386,51 +388,57 @@ Public Class SourceQcFile37
 			Dim debug As Integer = 4242
 		End Try
 
-		Me.CreateListOfEyelidFlexFrameIndexes()
+		'Me.CreateListOfEyelidFlexFrameIndexes()
 	End Sub
 
-	Private Sub CreateListOfEyelidFlexFrameIndexes()
-		Dim aFlexFrame As FlexFrame37
+	'Private Sub CreateListOfEyelidFlexFrameIndexes()
+	'	Dim aFlexFrame As FlexFrame37
 
-		Me.theMdlFileData.theEyelidFlexFrameIndexes = New List(Of Integer)()
-		For frameIndex As Integer = 1 To Me.theMdlFileData.theFlexFrames.Count - 1
-			aFlexFrame = Me.theMdlFileData.theFlexFrames(frameIndex)
-			If Not Me.theMdlFileData.theEyelidFlexFrameIndexes.Contains(frameIndex) Then
-				If Me.theMdlFileData.theFlexDescs(aFlexFrame.flexes(0).flexDescIndex).theDescIsUsedByEyelid Then
-					Me.theMdlFileData.theEyelidFlexFrameIndexes.Add(frameIndex)
-				End If
-			End If
-		Next
-	End Sub
+	'	Me.theMdlFileData.theEyelidFlexFrameIndexes = New List(Of Integer)()
+	'	For frameIndex As Integer = 1 To Me.theMdlFileData.theFlexFrames.Count - 1
+	'		aFlexFrame = Me.theMdlFileData.theFlexFrames(frameIndex)
+	'		If Not Me.theMdlFileData.theEyelidFlexFrameIndexes.Contains(frameIndex) Then
+	'			If Me.theMdlFileData.theFlexDescs(aFlexFrame.flexes(0).flexDescIndex).theDescIsUsedByEyelid Then
+	'				Me.theMdlFileData.theEyelidFlexFrameIndexes.Add(frameIndex)
+	'			End If
+	'		End If
+	'	Next
+	'End Sub
 
-	Private Sub WriteEyelidLines(ByVal eyeballNames As List(Of String))
+	Private Sub WriteEyelidLines(ByVal aBodyPart As SourceMdlBodyPart37, ByVal eyeballNames As List(Of String))
 		Dim line As String = ""
-		Dim aBodyPart As SourceMdlBodyPart37
+		'Dim aBodyPart As SourceMdlBodyPart37
+		Dim bodyPartIndex As Integer
 		Dim aModel As SourceMdlModel37
 		Dim anEyeball As SourceMdlEyeball37
 		Dim frameIndex As Integer
 		Dim eyelidName As String
+		Dim aFlexFrame As FlexFrame37
 
 		Try
+			bodyPartIndex = Me.theMdlFileData.theBodyParts.IndexOf(aBodyPart)
 			' Write eyelid options.
 			'$definevariable expressions "zoeyp.vta"
 			'eyelid  upper_right $expressions$ lowerer 1 -0.19 neutral 0 0.13 raiser 2 0.27 split 0.1 eyeball righteye
 			'eyelid  lower_right $expressions$ lowerer 3 -0.32 neutral 0 -0.19 raiser 4 -0.02 split 0.1 eyeball righteye
 			'eyelid  upper_left $expressions$ lowerer 1 -0.19 neutral 0 0.13 raiser 2 0.27 split -0.1 eyeball lefteye
 			'eyelid  lower_left $expressions$ lowerer 3 -0.32 neutral 0 -0.19 raiser 4 -0.02 split -0.1 eyeball lefteye
-			aBodyPart = Me.theMdlFileData.theBodyParts(0)
-			If aBodyPart.theModels IsNot Nothing AndAlso aBodyPart.theModels.Count > 0 AndAlso Me.theMdlFileData.theEyelidFlexFrameIndexes.Count > 0 Then
+			'aBodyPart = Me.theMdlFileData.theBodyParts(0)
+			'If aBodyPart.theModels IsNot Nothing AndAlso aBodyPart.theModels.Count > 0 AndAlso Me.theMdlFileData.theEyelidFlexFrameIndexes.Count > 0 Then
+			If aBodyPart.theModels IsNot Nothing AndAlso aBodyPart.theModels.Count > 0 Then
 				aModel = aBodyPart.theModels(0)
 				If aModel.theEyeballs IsNot Nothing AndAlso aModel.theEyeballs.Count > 0 Then
 					line = ""
 					Me.theOutputFileStreamWriter.WriteLine(line)
 
-					frameIndex = 0
+					'frameIndex = 0
 					For eyeballIndex As Integer = 0 To aModel.theEyeballs.Count - 1
 						anEyeball = aModel.theEyeballs(eyeballIndex)
 
-						If frameIndex + 3 >= Me.theMdlFileData.theEyelidFlexFrameIndexes.Count Then
-							frameIndex = 0
+						If anEyeball.upperLidFlexDesc = anEyeball.upperFlexDesc(0) Then
+							'NOTE: This means the eyeball uses "dummy_eyelid", made via DMX file.
+							'      Comparing the two flexDescs seemed better than comparing flexDesc.theName with "dummy_eyelid", because the flexDescs can't be faked without hex-editing the MDL.
+							Continue For
 						End If
 						eyelidName = Me.theMdlFileData.theFlexDescs(anEyeball.upperLidFlexDesc).theName
 
@@ -441,7 +449,7 @@ Public Class SourceQcFile37
 						'line += Path.GetFileNameWithoutExtension(CStr(Me.theSourceEngineModel.theMdlFileHeader.theBodyParts(0).theModels(0).name).Trim(Chr(0)))
 						'line += ".vta"" "
 						line += " """
-						line += SourceFileNamesModule.GetVtaFileName(Me.theModelName, 0)
+						line += SourceFileNamesModule.GetVtaFileName(Me.theModelName, bodyPartIndex)
 						line += """ "
 						line += "lowerer "
 						'TODO: The frame indexes here and for raiser need correcting.
@@ -449,8 +457,22 @@ Public Class SourceQcFile37
 						'TEST:
 						'line += anEyeball.upperFlexDesc(0).ToString()
 						'TEST:
-						line += Me.theMdlFileData.theEyelidFlexFrameIndexes(frameIndex).ToString(TheApp.InternalNumberFormat)
-						frameIndex += 1
+						'line += Me.theMdlFileData.theEyelidFlexFrameIndexes(frameIndex).ToString(TheApp.InternalNumberFormat)
+						'frameIndex += 1
+						'NOTE: Start at index 1 because defaultflex frame is at index 0.
+						frameIndex = 0
+						'For flexFrameIndex As Integer = 1 To Me.theMdlFileData.theFlexFrames.Count - 1
+						'	aFlexFrame = Me.theMdlFileData.theFlexFrames(flexFrameIndex)
+						For flexFrameIndex As Integer = 1 To aBodyPart.theFlexFrames.Count - 1
+							aFlexFrame = aBodyPart.theFlexFrames(flexFrameIndex)
+							If aFlexFrame.flexName = eyelidName Then
+								If aFlexFrame.flexes(0).target0 = -11 Then
+									frameIndex = flexFrameIndex
+									Exit For
+								End If
+							End If
+						Next
+						line += frameIndex.ToString(TheApp.InternalNumberFormat)
 						line += " "
 						line += anEyeball.upperTarget(0).ToString("0.##", TheApp.InternalNumberFormat)
 						line += " "
@@ -464,8 +486,22 @@ Public Class SourceQcFile37
 						'TEST:
 						'line += anEyeball.upperFlexDesc(2).ToString()
 						'TEST:
-						line += Me.theMdlFileData.theEyelidFlexFrameIndexes(frameIndex).ToString(TheApp.InternalNumberFormat)
-						frameIndex += 1
+						'line += Me.theMdlFileData.theEyelidFlexFrameIndexes(frameIndex).ToString(TheApp.InternalNumberFormat)
+						'frameIndex += 1
+						'NOTE: Start at index 1 because defaultflex frame is at index 0.
+						frameIndex = 0
+						'For flexFrameIndex As Integer = 1 To Me.theMdlFileData.theFlexFrames.Count - 1
+						'	aFlexFrame = Me.theMdlFileData.theFlexFrames(flexFrameIndex)
+						For flexFrameIndex As Integer = 1 To aBodyPart.theFlexFrames.Count - 1
+							aFlexFrame = aBodyPart.theFlexFrames(flexFrameIndex)
+							If aFlexFrame.flexName = eyelidName Then
+								If aFlexFrame.flexes(0).target3 = 11 Then
+									frameIndex = flexFrameIndex
+									Exit For
+								End If
+							End If
+						Next
+						line += frameIndex.ToString(TheApp.InternalNumberFormat)
 						line += " "
 						line += anEyeball.upperTarget(2).ToString("0.##", TheApp.InternalNumberFormat)
 						line += " "
@@ -491,15 +527,29 @@ Public Class SourceQcFile37
 						'line += Path.GetFileNameWithoutExtension(CStr(Me.theSourceEngineModel.theMdlFileHeader.theBodyParts(0).theModels(0).name).Trim(Chr(0)))
 						'line += ".vta"" "
 						line += " """
-						line += SourceFileNamesModule.GetVtaFileName(Me.theModelName, 0)
+						line += SourceFileNamesModule.GetVtaFileName(Me.theModelName, bodyPartIndex)
 						line += """ "
 						line += "lowerer "
 						'line += theSourceEngineModel.theMdlFileHeader.theFlexDescs(anEyeball.lowerFlexDesc(0)).theVtaFrameIndex.ToString()
 						'TEST:
 						'line += anEyeball.lowerFlexDesc(0).ToString()
 						'TEST:
-						line += Me.theMdlFileData.theEyelidFlexFrameIndexes(frameIndex).ToString(TheApp.InternalNumberFormat)
-						frameIndex += 1
+						'line += Me.theMdlFileData.theEyelidFlexFrameIndexes(frameIndex).ToString(TheApp.InternalNumberFormat)
+						'frameIndex += 1
+						'NOTE: Start at index 1 because defaultflex frame is at index 0.
+						frameIndex = 0
+						'For flexFrameIndex As Integer = 1 To Me.theMdlFileData.theFlexFrames.Count - 1
+						'	aFlexFrame = Me.theMdlFileData.theFlexFrames(flexFrameIndex)
+						For flexFrameIndex As Integer = 1 To aBodyPart.theFlexFrames.Count - 1
+							aFlexFrame = aBodyPart.theFlexFrames(flexFrameIndex)
+							If aFlexFrame.flexName = eyelidName Then
+								If aFlexFrame.flexes(0).target0 = -11 Then
+									frameIndex = flexFrameIndex
+									Exit For
+								End If
+							End If
+						Next
+						line += frameIndex.ToString(TheApp.InternalNumberFormat)
 						line += " "
 						line += anEyeball.lowerTarget(0).ToString("0.##", TheApp.InternalNumberFormat)
 						line += " "
@@ -513,8 +563,22 @@ Public Class SourceQcFile37
 						'TEST:
 						'line += anEyeball.lowerFlexDesc(2).ToString()
 						'TEST:
-						line += Me.theMdlFileData.theEyelidFlexFrameIndexes(frameIndex).ToString(TheApp.InternalNumberFormat)
-						frameIndex += 1
+						'line += Me.theMdlFileData.theEyelidFlexFrameIndexes(frameIndex).ToString(TheApp.InternalNumberFormat)
+						'frameIndex += 1
+						'NOTE: Start at index 1 because defaultflex frame is at index 0.
+						frameIndex = 0
+						'For flexFrameIndex As Integer = 1 To Me.theMdlFileData.theFlexFrames.Count - 1
+						'	aFlexFrame = Me.theMdlFileData.theFlexFrames(flexFrameIndex)
+						For flexFrameIndex As Integer = 1 To aBodyPart.theFlexFrames.Count - 1
+							aFlexFrame = aBodyPart.theFlexFrames(flexFrameIndex)
+							If aFlexFrame.flexName = eyelidName Then
+								If aFlexFrame.flexes(0).target3 = 11 Then
+									frameIndex = flexFrameIndex
+									Exit For
+								End If
+							End If
+						Next
+						line += frameIndex.ToString(TheApp.InternalNumberFormat)
 						line += " "
 						line += anEyeball.lowerTarget(2).ToString("0.##", TheApp.InternalNumberFormat)
 						line += " "
@@ -587,152 +651,160 @@ Public Class SourceQcFile37
 	End Sub
 
 	Private Sub WriteGroupFlex()
-		Me.WriteFlexLines()
-		Me.WriteFlexControllerLines()
-		Me.WriteFlexRuleLines()
+		If Me.theBodyPartForFlexWriting.theFlexFrames IsNot Nothing AndAlso Me.theBodyPartForFlexWriting.theFlexFrames.Count > 1 Then
+			Me.WriteFlexLines()
+			Me.WriteFlexControllerLines()
+			Me.WriteFlexRuleLines()
+		End If
 	End Sub
 
 	Private Sub WriteFlexLines()
 		Dim line As String = ""
 
 		' Write flexfile (contains flexDescs).
-		If Me.theMdlFileData.theFlexFrames IsNot Nothing AndAlso Me.theMdlFileData.theFlexFrames.Count > 0 Then
-			line = ""
-			Me.theOutputFileStreamWriter.WriteLine(line)
+		'If Me.theMdlFileData.theFlexFrames IsNot Nothing AndAlso Me.theMdlFileData.theFlexFrames.Count > 0 Then
+		'NOTE: Count > 1 to avoid writing just a defaultflex frame.
+		'If Me.theBodyPartForFlexWriting.theFlexFrames IsNot Nothing AndAlso Me.theBodyPartForFlexWriting.theFlexFrames.Count > 1 Then
+		Dim bodyPartIndex As Integer
+		bodyPartIndex = Me.theMdlFileData.theBodyParts.IndexOf(Me.theBodyPartForFlexWriting)
 
-			line = vbTab
-			line += "flexfile"
-			'line += Path.GetFileNameWithoutExtension(CStr(Me.theSourceEngineModel.theMdlFileHeader.theBodyParts(0).theModels(0).name).Trim(Chr(0)))
-			'line += ".vta"""
-			line += " """
-			line += SourceFileNamesModule.GetVtaFileName(Me.theModelName, 0)
-			line += """ "
-			Me.theOutputFileStreamWriter.WriteLine(line)
+		line = ""
+		Me.theOutputFileStreamWriter.WriteLine(line)
 
-			line = vbTab
-			line += "{"
-			Me.theOutputFileStreamWriter.WriteLine(line)
+		line = vbTab
+		line += "flexfile"
+		'line += Path.GetFileNameWithoutExtension(CStr(Me.theSourceEngineModel.theMdlFileHeader.theBodyParts(0).theModels(0).name).Trim(Chr(0)))
+		'line += ".vta"""
+		line += " """
+		line += SourceFileNamesModule.GetVtaFileName(Me.theModelName, bodyPartIndex)
+		line += """ "
+		Me.theOutputFileStreamWriter.WriteLine(line)
 
-			'======
+		line = vbTab
+		line += "{"
+		Me.theOutputFileStreamWriter.WriteLine(line)
+
+		'======
+		line = vbTab
+		line += vbTab
+		line += "defaultflex frame 0"
+		Me.theOutputFileStreamWriter.WriteLine(line)
+
+		'NOTE: Start at index 1 because defaultflex frame is at index 0.
+		Dim aFlexFrame As FlexFrame37
+		'For frameIndex As Integer = 1 To Me.theMdlFileData.theFlexFrames.Count - 1
+		'	aFlexFrame = Me.theMdlFileData.theFlexFrames(frameIndex)
+		For frameIndex As Integer = 1 To Me.theBodyPartForFlexWriting.theFlexFrames.Count - 1
+			aFlexFrame = Me.theBodyPartForFlexWriting.theFlexFrames(frameIndex)
 			line = vbTab
 			line += vbTab
-			line += "defaultflex frame 0"
+			If Me.theMdlFileData.theFlexDescs(aFlexFrame.flexes(0).flexDescIndex).theDescIsUsedByEyelid Then
+				line += "// Already in eyelid lines: "
+			End If
+			'If aFlexFrame.flexHasPartner Then
+			'	line += "flexpair """
+			'	line += aFlexFrame.flexName.Substring(0, aFlexFrame.flexName.Length - 1)
+			'Else
+			line += "flex """
+			line += aFlexFrame.flexName
+			'End If
+			line += """"
+			'If aFlexFrame.flexHasPartner Then
+			'	line += " "
+			'	line += aFlexFrame.flexSplit.ToString("0.######", TheApp.InternalNumberFormat)
+			'End If
+			line += " frame "
+			line += CStr(frameIndex)
 			Me.theOutputFileStreamWriter.WriteLine(line)
+		Next
+		'======
+		'Dim aBodyPart As SourceMdlBodyPart
+		'Dim aModel As SourceMdlModel
+		'Dim frameIndex As Integer
+		'Dim flexDescHasBeenWritten As List(Of Integer)
+		'Dim meshVertexIndexStart As Integer
+		'frameIndex = 0
+		'flexDescHasBeenWritten = New List(Of Integer)
 
-			'NOTE: Start at index 1 because defaultflex frame is at index 0.
-			Dim aFlexFrame As FlexFrame37
-			For frameIndex As Integer = 1 To Me.theMdlFileData.theFlexFrames.Count - 1
-				aFlexFrame = Me.theMdlFileData.theFlexFrames(frameIndex)
-				line = vbTab
-				line += vbTab
-				If Me.theMdlFileData.theFlexDescs(aFlexFrame.flexes(0).flexDescIndex).theDescIsUsedByEyelid Then
-					line += "// Already in eyelid lines: "
-				End If
-				'If aFlexFrame.flexHasPartner Then
-				'	line += "flexpair """
-				'	line += aFlexFrame.flexName.Substring(0, aFlexFrame.flexName.Length - 1)
-				'Else
-				line += "flex """
-				line += aFlexFrame.flexName
-				'End If
-				line += """"
-				'If aFlexFrame.flexHasPartner Then
-				'	line += " "
-				'	line += aFlexFrame.flexSplit.ToString("0.######", TheApp.InternalNumberFormat)
-				'End If
-				line += " frame "
-				line += CStr(frameIndex)
-				Me.theOutputFileStreamWriter.WriteLine(line)
-			Next
-			'======
-			'Dim aBodyPart As SourceMdlBodyPart
-			'Dim aModel As SourceMdlModel
-			'Dim frameIndex As Integer
-			'Dim flexDescHasBeenWritten As List(Of Integer)
-			'Dim meshVertexIndexStart As Integer
-			'frameIndex = 0
-			'flexDescHasBeenWritten = New List(Of Integer)
+		'line = vbTab
+		'line += "defaultflex frame "
+		'line += frameIndex.ToString()
+		'Me.theOutputFileStreamWriter.WriteLine(line)
 
-			'line = vbTab
-			'line += "defaultflex frame "
-			'line += frameIndex.ToString()
-			'Me.theOutputFileStreamWriter.WriteLine(line)
+		'For bodyPartIndex As Integer = 0 To theSourceEngineModel.theMdlFileHeader.theBodyParts.Count - 1
+		'	aBodyPart = theSourceEngineModel.theMdlFileHeader.theBodyParts(bodyPartIndex)
 
-			'For bodyPartIndex As Integer = 0 To theSourceEngineModel.theMdlFileHeader.theBodyParts.Count - 1
-			'	aBodyPart = theSourceEngineModel.theMdlFileHeader.theBodyParts(bodyPartIndex)
+		'	If aBodyPart.theModels IsNot Nothing AndAlso aBodyPart.theModels.Count > 0 Then
+		'		For modelIndex As Integer = 0 To aBodyPart.theModels.Count - 1
+		'			aModel = aBodyPart.theModels(modelIndex)
 
-			'	If aBodyPart.theModels IsNot Nothing AndAlso aBodyPart.theModels.Count > 0 Then
-			'		For modelIndex As Integer = 0 To aBodyPart.theModels.Count - 1
-			'			aModel = aBodyPart.theModels(modelIndex)
+		'			If aModel.theMeshes IsNot Nothing AndAlso aModel.theMeshes.Count > 0 Then
+		'				For meshIndex As Integer = 0 To aModel.theMeshes.Count - 1
+		'					Dim aMesh As SourceMdlMesh
+		'					aMesh = aModel.theMeshes(meshIndex)
 
-			'			If aModel.theMeshes IsNot Nothing AndAlso aModel.theMeshes.Count > 0 Then
-			'				For meshIndex As Integer = 0 To aModel.theMeshes.Count - 1
-			'					Dim aMesh As SourceMdlMesh
-			'					aMesh = aModel.theMeshes(meshIndex)
+		'					meshVertexIndexStart = Me.theSourceEngineModel.theMdlFileHeader.theBodyParts(bodyPartIndex).theModels(modelIndex).theMeshes(meshIndex).vertexIndexStart
 
-			'					meshVertexIndexStart = Me.theSourceEngineModel.theMdlFileHeader.theBodyParts(bodyPartIndex).theModels(modelIndex).theMeshes(meshIndex).vertexIndexStart
+		'					If aMesh.theFlexes IsNot Nothing AndAlso aMesh.theFlexes.Count > 0 Then
+		'						For flexIndex As Integer = 0 To aMesh.theFlexes.Count - 1
+		'							Dim aFlex As SourceMdlFlex
+		'							aFlex = aMesh.theFlexes(flexIndex)
 
-			'					If aMesh.theFlexes IsNot Nothing AndAlso aMesh.theFlexes.Count > 0 Then
-			'						For flexIndex As Integer = 0 To aMesh.theFlexes.Count - 1
-			'							Dim aFlex As SourceMdlFlex
-			'							aFlex = aMesh.theFlexes(flexIndex)
+		'							If flexDescHasBeenWritten.Contains(aFlex.flexDescIndex) Then
+		'								Continue For
+		'							Else
+		'								flexDescHasBeenWritten.Add(aFlex.flexDescIndex)
+		'							End If
 
-			'							If flexDescHasBeenWritten.Contains(aFlex.flexDescIndex) Then
-			'								Continue For
-			'							Else
-			'								flexDescHasBeenWritten.Add(aFlex.flexDescIndex)
-			'							End If
+		'							line = vbTab
+		'							Dim aFlexDescPartnerIndex As Integer
+		'							'Dim aFlexPartner As SourceMdlFlex
+		'							aFlexDescPartnerIndex = aMesh.theFlexes(flexIndex).flexDescPartnerIndex
+		'							If aFlexDescPartnerIndex > 0 Then
+		'								'aFlexPartner = theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlexDescPartnerIndex)
+		'								If Not flexDescHasBeenWritten.Contains(aFlex.flexDescPartnerIndex) Then
+		'									flexDescHasBeenWritten.Add(aFlex.flexDescPartnerIndex)
+		'								End If
+		'								line += "flexpair """
+		'								Dim flexName As String
+		'								flexName = theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theName
+		'								line += flexName.Remove(flexName.Length - 1, 1)
+		'								line += """"
+		'								line += " "
+		'								line += Me.GetSplit(aFlex, meshVertexIndexStart).ToString("0.######", TheApp.InternalNumberFormat)
 
-			'							line = vbTab
-			'							Dim aFlexDescPartnerIndex As Integer
-			'							'Dim aFlexPartner As SourceMdlFlex
-			'							aFlexDescPartnerIndex = aMesh.theFlexes(flexIndex).flexDescPartnerIndex
-			'							If aFlexDescPartnerIndex > 0 Then
-			'								'aFlexPartner = theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlexDescPartnerIndex)
-			'								If Not flexDescHasBeenWritten.Contains(aFlex.flexDescPartnerIndex) Then
-			'									flexDescHasBeenWritten.Add(aFlex.flexDescPartnerIndex)
-			'								End If
-			'								line += "flexpair """
-			'								Dim flexName As String
-			'								flexName = theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theName
-			'								line += flexName.Remove(flexName.Length - 1, 1)
-			'								line += """"
-			'								line += " "
-			'								line += Me.GetSplit(aFlex, meshVertexIndexStart).ToString("0.######", TheApp.InternalNumberFormat)
+		'								theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theDescIsUsedByFlex = True
+		'								theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescPartnerIndex).theDescIsUsedByFlex = True
+		'							Else
+		'								line += "flex """
+		'								line += theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theName
+		'								line += """"
 
-			'								theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theDescIsUsedByFlex = True
-			'								theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescPartnerIndex).theDescIsUsedByFlex = True
-			'							Else
-			'								line += "flex """
-			'								line += theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theName
-			'								line += """"
+		'								theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theDescIsUsedByFlex = True
+		'							End If
+		'							line += " frame "
+		'							'NOTE: Start at second frame because first frame is "basis" frame.
+		'							frameIndex += 1
+		'							line += frameIndex.ToString()
+		'							'line += theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theVtaFrameIndex.ToString()
+		'							Me.theOutputFileStreamWriter.WriteLine(line)
+		'						Next
+		'					End If
+		'				Next
+		'			End If
+		'		Next
+		'	End If
+		'Next
 
-			'								theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theDescIsUsedByFlex = True
-			'							End If
-			'							line += " frame "
-			'							'NOTE: Start at second frame because first frame is "basis" frame.
-			'							frameIndex += 1
-			'							line += frameIndex.ToString()
-			'							'line += theSourceEngineModel.theMdlFileHeader.theFlexDescs(aFlex.flexDescIndex).theVtaFrameIndex.ToString()
-			'							Me.theOutputFileStreamWriter.WriteLine(line)
-			'						Next
-			'					End If
-			'				Next
-			'			End If
-			'		Next
-			'	End If
-			'Next
-
-			line = vbTab
-			line += "}"
-			Me.theOutputFileStreamWriter.WriteLine(line)
-		End If
+		line = vbTab
+		line += "}"
+		Me.theOutputFileStreamWriter.WriteLine(line)
+		'End If
 	End Sub
 
 	Private Sub WriteFlexControllerLines()
 		Dim line As String = ""
 
-		'NOTE: Writes out flexcontrollers correctly for teenangst zoey.
 		If Me.theMdlFileData.theFlexControllers IsNot Nothing AndAlso Me.theMdlFileData.theFlexControllers.Count > 0 Then
 			Dim aFlexController As SourceMdlFlexController
 
@@ -741,6 +813,12 @@ Public Class SourceQcFile37
 
 			For i As Integer = 0 To Me.theMdlFileData.theFlexControllers.Count - 1
 				aFlexController = Me.theMdlFileData.theFlexControllers(i)
+
+				If aFlexController.theType = "eyes" AndAlso (aFlexController.theName = "eyes_updown" OrElse aFlexController.theName = "eyes_rightleft") Then
+					If Not Me.theBodyPartForFlexWriting.theEyeballOptionIsUsed Then
+						Continue For
+					End If
+				End If
 
 				line = vbTab
 				line += "flexcontroller "
@@ -761,7 +839,6 @@ Public Class SourceQcFile37
 	Private Sub WriteFlexRuleLines()
 		Dim line As String = ""
 
-		'NOTE: All flex rules are correct for teenangst zoey.
 		If Me.theMdlFileData.theFlexRules IsNot Nothing AndAlso Me.theMdlFileData.theFlexRules.Count > 0 Then
 			Dim aFlexRule As SourceMdlFlexRule
 
@@ -782,7 +859,8 @@ Public Class SourceQcFile37
 
 			For i As Integer = 0 To Me.theMdlFileData.theFlexRules.Count - 1
 				aFlexRule = Me.theMdlFileData.theFlexRules(i)
-				line = Me.GetFlexRule(aFlexRule)
+				'line = Me.GetFlexRule(aFlexRule)
+				line = Common.GetFlexRule(Me.theMdlFileData.theFlexDescs, Me.theMdlFileData.theFlexControllers, aFlexRule)
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
 		End If
@@ -3549,7 +3627,8 @@ Public Class SourceQcFile37
 		Next
 	End Sub
 
-	Public Sub WriteBodyGroupCommand(ByVal startIndex As Integer)
+	'Public Sub WriteBodyGroupCommand(ByVal startIndex As Integer)
+	Public Sub WriteBodyGroupCommand()
 		Dim line As String = ""
 		Dim aBodyPart As SourceMdlBodyPart37
 		Dim aVtxBodyPart As SourceVtxBodyPart06
@@ -3573,13 +3652,24 @@ Public Class SourceQcFile37
 		'	studio "laser_dot.smd"
 		'	blank
 		'}
-		If Me.theMdlFileData.theBodyParts IsNot Nothing AndAlso Me.theMdlFileData.theBodyParts.Count > startIndex Then
+		'If Me.theMdlFileData.theBodyParts IsNot Nothing AndAlso Me.theMdlFileData.theBodyParts.Count > startIndex Then
+		If Me.theMdlFileData.theBodyParts IsNot Nothing AndAlso Me.theMdlFileData.theBodyParts.Count > 0 Then
 			line = ""
 			Me.theOutputFileStreamWriter.WriteLine(line)
 
-			For bodyPartIndex As Integer = startIndex To Me.theMdlFileData.theBodyParts.Count - 1
+			For bodyPartIndex As Integer = 0 To Me.theMdlFileData.theBodyParts.Count - 1
 				aBodyPart = Me.theMdlFileData.theBodyParts(bodyPartIndex)
-				aVtxBodyPart = Me.theVtxFileData.theVtxBodyParts(bodyPartIndex)
+				If aBodyPart.theModelCommandIsUsed Then
+					Me.WriteModelCommand(aBodyPart)
+					Continue For
+				End If
+
+				'aVtxBodyPart = Me.theVtxFileData.theVtxBodyParts(bodyPartIndex)
+				If Me.theVtxFileData IsNot Nothing AndAlso Me.theVtxFileData.theVtxBodyParts IsNot Nothing AndAlso Me.theVtxFileData.theVtxBodyParts.Count > 0 Then
+					aVtxBodyPart = Me.theVtxFileData.theVtxBodyParts(bodyPartIndex)
+				Else
+					aVtxBodyPart = Nothing
+				End If
 
 				If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
 					line = "$BodyGroup "
@@ -3597,14 +3687,18 @@ Public Class SourceQcFile37
 				If aBodyPart.theModels IsNot Nothing AndAlso aBodyPart.theModels.Count > 0 Then
 					For modelIndex As Integer = 0 To aBodyPart.theModels.Count - 1
 						aBodyModel = aBodyPart.theModels(modelIndex)
-						aVtxModel = aVtxBodyPart.theVtxModels(modelIndex)
+
+						If aVtxBodyPart IsNot Nothing AndAlso aVtxBodyPart.theVtxModels IsNot Nothing AndAlso aVtxBodyPart.theVtxModels.Count > 0 Then
+							aVtxModel = aVtxBodyPart.theVtxModels(modelIndex)
+						Else
+							aVtxModel = Nothing
+						End If
 
 						line = vbTab
-						'If aModel.name(0) = ChrW(0) Then
-						If aBodyModel.name(0) = ChrW(0) AndAlso aVtxModel.theVtxModelLods(0).theVtxMeshes Is Nothing Then
+						If aBodyModel.name(0) = ChrW(0) AndAlso (aVtxModel IsNot Nothing AndAlso aVtxModel.theVtxModelLods(0).theVtxMeshes Is Nothing) Then
 							line += "blank"
 						Else
-							aBodyModel.theSmdFileNames(0) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(0), bodyPartIndex, modelIndex, 0, Me.theModelName, Me.theMdlFileData.theBodyParts(bodyPartIndex).theModels(modelIndex).name)
+							aBodyModel.theSmdFileNames(0) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(0), bodyPartIndex, modelIndex, 0, Me.theModelName, aBodyModel.name)
 							line += "studio "
 							line += """"
 							line += aBodyModel.theSmdFileNames(0)
@@ -3909,6 +4003,8 @@ Public Class SourceQcFile37
 
 	Private theOutputPath As String
 	Private theOutputFileNameWithoutExtension As String
+
+	Private theBodyPartForFlexWriting As SourceMdlBodyPart37
 
 #End Region
 

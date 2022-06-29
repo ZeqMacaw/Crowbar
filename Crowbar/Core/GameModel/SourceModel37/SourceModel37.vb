@@ -269,6 +269,63 @@ Public Class SourceModel37
 		Return status
 	End Function
 
+	Public Overrides Function WriteVertexAnimationVtaFiles(ByVal modelOutputPath As String) As AppEnums.StatusMessage
+		Dim status As AppEnums.StatusMessage = StatusMessage.Success
+
+		Dim aBodyPart As SourceMdlBodyPart37
+		Dim vtaFileName As String
+		Dim vtaPath As String
+		Dim vtaPathFileName As String
+
+		Try
+			For aBodyPartIndex As Integer = 0 To Me.theMdlFileData.theBodyParts.Count - 1
+				aBodyPart = Me.theMdlFileData.theBodyParts(aBodyPartIndex)
+
+				If aBodyPart.theFlexFrames Is Nothing OrElse aBodyPart.theFlexFrames.Count <= 1 Then
+					Continue For
+				End If
+
+				vtaFileName = SourceFileNamesModule.GetVtaFileName(Me.Name, aBodyPartIndex)
+				vtaPathFileName = Path.Combine(modelOutputPath, vtaFileName)
+				vtaPath = FileManager.GetPath(vtaPathFileName)
+				If FileManager.PathExistsAfterTryToCreate(vtaPath) Then
+					Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, vtaPathFileName)
+					'NOTE: Check here in case writing is canceled in the above event.
+					If Me.theWritingIsCanceled Then
+						status = StatusMessage.Canceled
+						Return status
+					ElseIf Me.theWritingSingleFileIsCanceled Then
+						Me.theWritingSingleFileIsCanceled = False
+						Continue For
+					End If
+
+					'Me.WriteVertexAnimationVtaFile(vtaPathFileName, aBodyPart)
+					Try
+						Me.theOutputFileTextWriter = File.CreateText(vtaPathFileName)
+
+						Me.WriteVertexAnimationVtaFile37(aBodyPart)
+					Catch ex As PathTooLongException
+						Dim debug As Integer = 4242
+						'status = "ERROR: Crowbar tried to create """ + vtaPathFileName + """ but the system gave this message: " + ex.Message
+					Catch ex As Exception
+						Dim debug As Integer = 4242
+					Finally
+						If Me.theOutputFileTextWriter IsNot Nothing Then
+							Me.theOutputFileTextWriter.Flush()
+							Me.theOutputFileTextWriter.Close()
+						End If
+					End Try
+
+					Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, vtaPathFileName)
+				End If
+			Next
+		Catch ex As Exception
+			Dim debug As Integer = 4242
+		End Try
+
+		Return status
+	End Function
+
 	Public Overrides Function WriteVrdFile(ByVal vrdPathFileName As String) As AppEnums.StatusMessage
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
 
@@ -391,6 +448,7 @@ Public Class SourceModel37
 		mdlFile.ReadUnreadBytes()
 
 		' Post-processing.
+		mdlFile.PostProcess()
 		mdlFile.CreateFlexFrameList()
 		'mdlFile.BuildBoneTransforms()
 	End Sub
@@ -439,12 +497,13 @@ Public Class SourceModel37
 
 			qcFile.WriteStaticPropCommand()
 
-			If Me.theMdlFileData.theModelCommandIsUsed Then
-				qcFile.WriteModelCommand()
-				qcFile.WriteBodyGroupCommand(1)
-			Else
-				qcFile.WriteBodyGroupCommand(0)
-			End If
+			'If Me.theMdlFileData.theModelCommandIsUsed Then
+			'	qcFile.WriteModelCommand()
+			'	qcFile.WriteBodyGroupCommand(1)
+			'Else
+			'	qcFile.WriteBodyGroupCommand(0)
+			'End If
+			qcFile.WriteBodyGroupCommand()
 			qcFile.WriteGroup("lod", AddressOf qcFile.WriteGroupLod, False, False)
 
 			qcFile.WriteSurfacePropCommand()
@@ -596,8 +655,8 @@ Public Class SourceModel37
 		End Try
 	End Sub
 
-	Protected Overrides Sub WriteVertexAnimationVtaFile(ByVal bodyPart As SourceMdlBodyPart)
-		Dim vertexAnimationVtaFile As New SourceVtaFile37(Me.theOutputFileTextWriter, Me.theMdlFileData)
+	Protected Sub WriteVertexAnimationVtaFile37(ByVal bodyPart As SourceMdlBodyPart37)
+		Dim vertexAnimationVtaFile As New SourceVtaFile37(Me.theOutputFileTextWriter, Me.theMdlFileData, bodyPart)
 
 		Try
 			vertexAnimationVtaFile.WriteHeaderComment()

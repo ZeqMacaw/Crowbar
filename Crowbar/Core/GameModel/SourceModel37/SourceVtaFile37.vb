@@ -4,9 +4,10 @@ Public Class SourceVtaFile37
 
 #Region "Creation and Destruction"
 
-	Public Sub New(ByVal outputFileStream As StreamWriter, ByVal mdlFileData As SourceMdlFileData37)
+	Public Sub New(ByVal outputFileStream As StreamWriter, ByVal mdlFileData As SourceMdlFileData37, ByVal bodyPart As SourceMdlBodyPart37)
 		Me.theOutputFileStreamWriter = outputFileStream
 		Me.theMdlFileData = mdlFileData
+		Me.theBodyPart = bodyPart
 	End Sub
 
 #End Region
@@ -69,8 +70,8 @@ Public Class SourceVtaFile37
 
 		timeIndex = 1
 		'NOTE: The first frame was written in code above.
-		For flexTimeIndex = 1 To Me.theMdlFileData.theFlexFrames.Count - 1
-			aFlexFrame = Me.theMdlFileData.theFlexFrames(flexTimeIndex)
+		For flexTimeIndex = 1 To Me.theBodyPart.theFlexFrames.Count - 1
+			aFlexFrame = Me.theBodyPart.theFlexFrames(flexTimeIndex)
 
 			If TheApp.Settings.DecompileStricterFormatIsChecked Then
 				line = "time "
@@ -104,6 +105,31 @@ Public Class SourceVtaFile37
 		End If
 		Me.theOutputFileStreamWriter.WriteLine(line)
 
+		Dim beginVertexIndex As Integer = 0
+		Dim endVertexIndex As Integer = 0
+		Dim bodyVertexCount As Integer = 0
+		Dim aBodyPart As SourceMdlBodyPart37
+		Dim aModel As SourceMdlModel37
+		For bodyPartIndex As Integer = 0 To Me.theMdlFileData.theBodyParts.Count - 1
+			aBodyPart = Me.theMdlFileData.theBodyParts(bodyPartIndex)
+
+			If Me.theBodyPart Is aBodyPart Then
+				beginVertexIndex = bodyVertexCount
+				endVertexIndex = bodyVertexCount
+			End If
+
+			If aBodyPart.theModels IsNot Nothing AndAlso aBodyPart.theModels.Count > 0 Then
+				For modelIndex As Integer = 0 To aBodyPart.theModels.Count - 1
+					aModel = aBodyPart.theModels(modelIndex)
+					bodyVertexCount += aModel.vertexCount
+				Next
+			End If
+
+			If Me.theBodyPart Is aBodyPart Then
+				endVertexIndex = bodyVertexCount - 1
+			End If
+		Next
+
 		Try
 			For vertexIndex As Integer = 0 To Me.theMdlFileData.theVertexes.Count - 1
 				aVertex = Me.theMdlFileData.theVertexes(vertexIndex)
@@ -134,8 +160,8 @@ Public Class SourceVtaFile37
 
 		timeIndex = 1
 		'NOTE: The first frame was written in code above.
-		For flexTimeIndex = 1 To Me.theMdlFileData.theFlexFrames.Count - 1
-			aFlexFrame = Me.theMdlFileData.theFlexFrames(flexTimeIndex)
+		For flexTimeIndex = 1 To Me.theBodyPart.theFlexFrames.Count - 1
+			aFlexFrame = Me.theBodyPart.theFlexFrames(flexTimeIndex)
 
 			If TheApp.Settings.DecompileStricterFormatIsChecked Then
 				line = "time "
@@ -229,6 +255,7 @@ Public Class SourceVtaFile37
 
 	Private theOutputFileStreamWriter As StreamWriter
 	Private theMdlFileData As SourceMdlFileData37
+	Private theBodyPart As SourceMdlBodyPart37
 
 #End Region
 
