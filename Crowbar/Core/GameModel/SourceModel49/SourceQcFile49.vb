@@ -2584,7 +2584,7 @@ Public Class SourceQcFile49
 		If (aSequenceDesc.flags And SourceMdlAnimationDesc.STUDIO_CYCLEPOSE) > 0 Then
 			line = vbTab
 			line += "posecycle "
-			line += aSequenceDesc.cyclePoseIndex.ToString(TheApp.InternalNumberFormat)
+			line += Me.theMdlFileData.thePoseParamDescs(aSequenceDesc.cyclePoseIndex).theName
 			Me.theOutputFileStreamWriter.WriteLine(line)
 		End If
 
