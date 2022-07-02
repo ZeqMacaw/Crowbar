@@ -4973,51 +4973,15 @@ Public Class SourceQcFile49
 				End If
 				text = text.TrimStart()
 
-				'lengthToRemove = 0
-				'While True
-				'	stopIndex = text.IndexOf(openBraceText)
-				'	If stopIndex > -1 Then
-				'		If stopIndex > 0 Then
-				'			line = text.Substring(0, stopIndex)
-				'			Me.theOutputFileStreamWriter.WriteLine(line)
-				'		End If
+				If text(0) <> "{" Then
+					text = "{" + text
+					text += "}" + vbLf
+				End If
 
-				'		line = "{"
-				'		lengthToRemove = stopIndex + openBraceText.Length
-				'	Else
-				'		stopIndex = text.IndexOf(closeBraceText)
-				'		If stopIndex > -1 Then
-				'			If stopIndex > 0 Then
-				'				line = text.Substring(0, stopIndex)
-				'				Me.theOutputFileStreamWriter.WriteLine(line)
-				'			End If
-
-				'			line = "}"
-				'			lengthToRemove = stopIndex + closeBraceText.Length
-				'		Else
-				'			stopIndex = text.IndexOf(linefeedCharText)
-				'			If stopIndex > -1 Then
-				'				line = text.Substring(0, stopIndex)
-				'				lengthToRemove = stopIndex + linefeedCharText.Length
-				'			Else
-				'				line = text
-				'			End If
-				'		End If
-				'	End If
-				'	Me.theOutputFileStreamWriter.WriteLine(line)
-
-				'	If stopIndex > -1 Then
-				'		text = text.Remove(0, lengthToRemove)
-				'		If text = "" Then
-				'			Exit While
-				'		End If
-				'	End If
-				'End While
-
-				Me.WriteTextLines(text, 0)
+				Me.WriteTextLines(text, indentCount)
 			End If
 		Catch ex As Exception
-
+			Dim debug As Integer = 4242
 		End Try
 	End Sub
 
