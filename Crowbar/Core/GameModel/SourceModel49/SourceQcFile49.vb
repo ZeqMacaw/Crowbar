@@ -2575,7 +2575,7 @@ Public Class SourceQcFile49
 			Next
 		End If
 
-		Me.WriteKeyValues(aSequenceDesc.theKeyValues, "keyvalues")
+		Me.WriteKeyValues(aSequenceDesc.theKeyValues, "keyvalues", False, 1)
 
 		Me.WriteSequenceLayerInfo(aSequenceDesc)
 
@@ -4907,60 +4907,45 @@ Public Class SourceQcFile49
 		End Try
 	End Sub
 
-	Public Sub WriteKeyValues(ByVal keyValuesText As String, ByVal commandOrOptionText As String)
+	'$keyvalues
+	'{
+	'	"particles"
+	'	{
+	'		"effect"
+	'		{
+	'			name("sparks_head")
+	'			attachment_type("follow_attachment")
+	'			attachment_point("Head_sparks")
+	'		}
+	'		"effect"
+	'		{
+	'			name("sparks_head_wire1")
+	'			attachment_type("follow_attachment")
+	'			attachment_point("Head_Wire_1")
+	'		}
+	'	}
+	'}
+	Public Sub WriteKeyValues(ByVal keyValuesText As String, ByVal commandOrOptionText As String, Optional ByVal blankStartingLineIsWritten As Boolean = True, Optional ByVal indentCount As Integer = 0)
 		Dim line As String = ""
 		Dim startText As String = "mdlkeyvalue" + vbLf
 		Dim startText2 As String = """mdlkeyvalue"""
 		Dim text As String
+		Dim indentText As String
 
-		'$keyvalues
-		'{
-		'	"particles"
-		'	{
-		'		"effect"
-		'		{
-		'		name("sparks_head")
-		'		attachment_type("follow_attachment")
-		'		attachment_point("Head_sparks")
-		'		}
-		'		"effect"
-		'		{
-		'		name("sparks_head_wire1")
-		'		attachment_type("follow_attachment")
-		'		attachment_point("Head_Wire_1")
-		'		}
-		'		"effect"
-		'		{
-		'		name("sparks_knee_wire1")
-		'		attachment_type("follow_attachment")
-		'		attachment_point("R_Knee_Wire_1")
-		'		}
-		'		"effect"
-		'		{
-		'		name("sparks_knee_wire2")
-		'		attachment_type("follow_attachment")
-		'		attachment_point("R_Knee_Wire_2")
-		'		}
-		'		"effect"
-		'		{
-		'		name("sparks_ankle_wire1")
-		'		attachment_type("follow_attachment")
-		'		attachment_point("L_Ankle_Wire_1")
-		'		}
-		'		"effect"
-		'		{
-		'		name("sparks_ankle_wire2")
-		'		attachment_type("follow_attachment")
-		'		attachment_point("L_Ankle_Wire_2")
-		'		}			
-		'	}
-		'}
 		Try
 			If keyValuesText IsNot Nothing AndAlso keyValuesText.Length > 0 Then
-				line = ""
-				Me.theOutputFileStreamWriter.WriteLine(line)
+				If blankStartingLineIsWritten Then
+					line = ""
+					Me.theOutputFileStreamWriter.WriteLine(line)
+				End If
 
-				line = commandOrOptionText
+				indentText = ""
+				For j As Integer = 1 To indentCount
+					indentText += vbTab
+				Next
+
+				line = indentText
+				line += commandOrOptionText
 				Me.theOutputFileStreamWriter.WriteLine(line)
 
 				keyValuesText = keyValuesText.TrimStart()
@@ -4993,6 +4978,8 @@ Public Class SourceQcFile49
 		Dim lineQuoteCount As Integer
 		Dim lineWordCount As Integer
 		Dim beforeCloseBraceText As String
+		Dim untrimmedSectionName As String = ""
+		Dim sectionName As String = ""
 
 		indentText = ""
 		For j As Integer = 1 To indentCount
@@ -5006,12 +4993,31 @@ Public Class SourceQcFile49
 			textChar = text(i)
 			If textChar = "{" Then
 				If i > startIndex Then
-					line = indentText
-					line += text.Substring(startIndex, i - startIndex)
+					untrimmedSectionName = text.Substring(startIndex, i - startIndex)
+					sectionName = untrimmedSectionName.Trim()
+					'If key = "qc_path" Then
+					'	startIndex = i + 1
+					'	lineQuoteCount = 0
+					'	Continue For
+					'End If
+
+					If sectionName = "qc_path" Or sectionName = "animset_version 2 qc_path" Then
+						line = "// CSGO compiler adds the " + sectionName + " keyvalue section automatically."
+						Me.theOutputFileStreamWriter.WriteLine(line)
+						line = "//" + indentText
+					Else
+						sectionName = ""
+						line = indentText
+					End If
+					line += untrimmedSectionName
 					Me.theOutputFileStreamWriter.WriteLine(line)
 				End If
 
-				line = indentText
+				If sectionName <> "" Then
+					line = "//" + indentText
+				Else
+					line = indentText
+				End If
 				line += "{"
 				Me.theOutputFileStreamWriter.WriteLine(line)
 
@@ -5024,10 +5030,17 @@ Public Class SourceQcFile49
 				startIndex = i + 1
 				lineQuoteCount = 0
 			ElseIf textChar = "}" Then
+				'If key = "qc_path" Then
+				'	key = ""
+				'Else
 				If i > startIndex Then
 					beforeCloseBraceText = text.Substring(startIndex, i - startIndex).Trim()
 					If beforeCloseBraceText <> "" Then
-						line = indentText
+						If sectionName <> "" Then
+							line = "//" + indentText
+						Else
+							line = indentText
+						End If
 						line += beforeCloseBraceText
 						Me.theOutputFileStreamWriter.WriteLine(line)
 					End If
@@ -5039,28 +5052,42 @@ Public Class SourceQcFile49
 					indentText += vbTab
 				Next
 
-				line = indentText
+				If sectionName <> "" Then
+					line = "//" + indentText
+					sectionName = ""
+				Else
+					line = indentText
+				End If
 				line += "}"
 				Me.theOutputFileStreamWriter.WriteLine(line)
+				'End If
 
 				startIndex = i + 1
 				lineQuoteCount = 0
 			ElseIf textChar = """" Then
 				lineQuoteCount += 1
 				If lineQuoteCount = 2 Then
+					'If key <> "qc_path" Then
 					If i > startIndex Then
-						line = indentText
+						If sectionName <> "" Then
+							line = "//" + indentText
+						Else
+							line = indentText
+						End If
 						line += text.Substring(startIndex, i - startIndex + 1).Trim()
 						Me.theOutputFileStreamWriter.Write(line)
 					End If
+					'End If
 					startIndex = i + 1
 					'lineQuoteCount = 0
 				ElseIf lineQuoteCount = 4 Then
+					'If key <> "qc_path" Then
 					If i > startIndex Then
-						line = indentText
+						line = " "
 						line += text.Substring(startIndex, i - startIndex + 1).Trim()
 						Me.theOutputFileStreamWriter.WriteLine(line)
 					End If
+					'End If
 					startIndex = i + 1
 					lineQuoteCount = 0
 				End If
