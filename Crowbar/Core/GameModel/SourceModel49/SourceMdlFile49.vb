@@ -3499,38 +3499,42 @@ Public Class SourceMdlFile49
 			Dim fileOffsetStart2 As Long
 			Dim fileOffsetEnd2 As Long
 
-			Me.theInputFileReader.BaseStream.Seek(Me.theMdlFileData.texturePathOffset, SeekOrigin.Begin)
-			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+			Try
+				Me.theInputFileReader.BaseStream.Seek(Me.theMdlFileData.texturePathOffset, SeekOrigin.Begin)
+				fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-			Me.theMdlFileData.theTexturePaths = New List(Of String)(Me.theMdlFileData.texturePathCount)
-			Dim texturePathOffset As Integer
-			For i As Integer = 0 To Me.theMdlFileData.texturePathCount - 1
-				texturePathInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-				Dim aTexturePath As String
-				texturePathOffset = Me.theInputFileReader.ReadInt32()
+				Me.theMdlFileData.theTexturePaths = New List(Of String)(Me.theMdlFileData.texturePathCount)
+				Dim texturePathOffset As Integer
+				For i As Integer = 0 To Me.theMdlFileData.texturePathCount - 1
+					texturePathInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+					Dim aTexturePath As String
+					texturePathOffset = Me.theInputFileReader.ReadInt32()
 
-				inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+					inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 
-				If texturePathOffset <> 0 Then
-					Me.theInputFileReader.BaseStream.Seek(texturePathOffset, SeekOrigin.Begin)
-					fileOffsetStart2 = Me.theInputFileReader.BaseStream.Position
+					If texturePathOffset <> 0 Then
+						Me.theInputFileReader.BaseStream.Seek(texturePathOffset, SeekOrigin.Begin)
+						fileOffsetStart2 = Me.theInputFileReader.BaseStream.Position
 
-					aTexturePath = FileManager.ReadNullTerminatedString(Me.theInputFileReader)
+						aTexturePath = FileManager.ReadNullTerminatedString(Me.theInputFileReader)
 
-					'TEST: Convert all forward slashes to backward slashes.
-					aTexturePath = FileManager.GetNormalizedPathFileName(aTexturePath)
+						'TEST: Convert all forward slashes to backward slashes.
+						aTexturePath = FileManager.GetNormalizedPathFileName(aTexturePath)
 
-					fileOffsetEnd2 = Me.theInputFileReader.BaseStream.Position - 1
-					'If Not Me.theMdlFileData.theFileSeekLog.ContainsKey(fileOffsetStart2) Then
-					Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart2, fileOffsetEnd2, "aTexturePath = " + aTexturePath)
-					'End If
-				Else
-					aTexturePath = ""
-				End If
-				Me.theMdlFileData.theTexturePaths.Add(aTexturePath)
+						fileOffsetEnd2 = Me.theInputFileReader.BaseStream.Position - 1
+						'If Not Me.theMdlFileData.theFileSeekLog.ContainsKey(fileOffsetStart2) Then
+						Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart2, fileOffsetEnd2, "aTexturePath = " + aTexturePath)
+						'End If
+					Else
+						aTexturePath = ""
+					End If
+					Me.theMdlFileData.theTexturePaths.Add(aTexturePath)
 
-				Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
-			Next
+					Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
+				Next
+			Catch ex As Exception
+				Dim mightBeIntentionalDecompilePrevention As Integer = 4242
+			End Try
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theMdlFileData.theTexturePaths " + Me.theMdlFileData.theTexturePaths.Count.ToString())
