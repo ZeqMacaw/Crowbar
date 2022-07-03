@@ -18,6 +18,8 @@ Public Module CrowbarSteamPipe
 		pipeClient.Connect()
 		Console.WriteLine("... Connected to pipe.")
 
+		Console.WriteLine("Current folder: " + Directory.GetCurrentDirectory())
+
 		sw = New StreamWriter(pipeClient)
 		sw.AutoFlush = True
 		sr = New StreamReader(pipeClient)

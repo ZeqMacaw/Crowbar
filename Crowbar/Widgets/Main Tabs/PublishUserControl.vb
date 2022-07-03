@@ -824,7 +824,7 @@ Public Class PublishUserControl
 
 		Me.theSteamAppInfo = TheApp.SteamAppInfos(TheApp.Settings.PublishGameSelectedIndex)
 		Me.theSteamAppId = Me.theSteamAppInfo.ID
-		TheApp.WriteSteamAppIdFile(Me.theSteamAppId.m_AppId)
+		TheApp.SetSteamAppId(Me.theSteamAppId.m_AppId)
 
 		Me.theSteamAppUserInfo = Nothing
 		Try

@@ -229,15 +229,13 @@ Public Class App
 		End Try
 	End Sub
 
-	Public Sub WriteSteamAppIdFile(ByVal appID As UInteger)
-		Me.WriteSteamAppIdFile(appID.ToString())
+	Public Sub SetSteamAppId(ByVal appID As UInteger)
+		Me.SetSteamAppId(appID.ToString())
 	End Sub
 
-	Public Sub WriteSteamAppIdFile(ByVal appID_text As String)
-		Dim steamAppIDPathFileName As String = Path.Combine(Me.GetCustomDataPath(), App.theSteamAppIDFileName)
-		Using sw As StreamWriter = File.CreateText(steamAppIDPathFileName)
-			sw.WriteLine(appID_text)
-		End Using
+	Public Sub SetSteamAppId(ByVal appID_text As String)
+		Environment.SetEnvironmentVariable("SteamAppId", appID_text)
+		Environment.SetEnvironmentVariable("SteamGameId", appID_text)
 	End Sub
 
 	Public Function GetDebugPath(ByVal outputPath As String, ByVal modelName As String) As String
