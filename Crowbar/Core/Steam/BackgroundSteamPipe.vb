@@ -58,7 +58,7 @@ Public Class BackgroundSteamPipe
 
 		If inputInfo.AppID = 0 Then
 			'NOTE: Use appID for "Source SDK" when item's appID is unknown.
-			TheApp.WriteSteamAppIdFile(211)
+			TheApp.SetSteamAppId(211)
 
 			Dim steamPipeToGetAppID As New SteamPipe()
 			Me.theActiveSteamPipes.Add(steamPipeToGetAppID)
@@ -95,7 +95,7 @@ Public Class BackgroundSteamPipe
 			Me.theActiveSteamPipes.Remove(steamPipeToGetAppID)
 
 			If appID_text <> "" Then
-				TheApp.WriteSteamAppIdFile(CUInt(appID_text))
+				TheApp.SetSteamAppId(CUInt(appID_text))
 			Else
 				'NOTE: Error message is stored in publishedItem.Title.
 				bw.ReportProgress(0, "ERROR: " + publishedItem.Title + vbCrLf)
@@ -105,7 +105,7 @@ Public Class BackgroundSteamPipe
 				Exit Sub
 			End If
 		Else
-			TheApp.WriteSteamAppIdFile(inputInfo.AppID)
+			TheApp.SetSteamAppId(inputInfo.AppID)
 		End If
 		outputInfo.AppID = inputInfo.AppID
 
@@ -152,7 +152,7 @@ Public Class BackgroundSteamPipe
 		Dim inputInfo As DownloadItemInputInfo = CType(e.Argument, DownloadItemInputInfo)
 		Dim outputInfo As New BackgroundSteamPipe.DownloadItemOutputInfo()
 
-		TheApp.WriteSteamAppIdFile(inputInfo.AppID)
+		TheApp.SetSteamAppId(inputInfo.AppID)
 
 		Dim steamPipe As New SteamPipe()
 		Me.theActiveSteamPipes.Add(steamPipe)
@@ -194,6 +194,10 @@ Public Class BackgroundSteamPipe
 		Dim bw As BackgroundWorkerEx = CType(sender, BackgroundWorkerEx)
 		Me.theActiveBackgroundWorkers.Add(bw)
 		Dim appID_text As String = CType(e.Argument, String)
+
+		'Dim currentFolder As String
+		'currentFolder = Directory.GetCurrentDirectory()
+		'Directory.SetCurrentDirectory(FileManager.GetPath(TheApp.ErrorPathFileName))
 
 		Dim steamPipe As New SteamPipe()
 		Me.theActiveSteamPipes.Add(steamPipe)
@@ -241,6 +245,7 @@ Public Class BackgroundSteamPipe
 
 		steamPipe.Shut()
 		Me.theActiveSteamPipes.Remove(steamPipe)
+		'Directory.SetCurrentDirectory(currentFolder)
 		Me.theActiveBackgroundWorkers.Remove(bw)
 	End Sub
 
@@ -452,9 +457,9 @@ Public Class BackgroundSteamPipe
 		End If
 
 		If inputInfo.Item.CreatorAppID = "0" Then
-			TheApp.WriteSteamAppIdFile(inputInfo.AppInfo.ID.m_AppId)
+			TheApp.SetSteamAppId(inputInfo.AppInfo.ID.m_AppId)
 		Else
-			TheApp.WriteSteamAppIdFile(inputInfo.Item.CreatorAppID)
+			TheApp.SetSteamAppId(inputInfo.Item.CreatorAppID)
 		End If
 
 		Dim steamPipe As New SteamPipe()
