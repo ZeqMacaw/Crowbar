@@ -110,6 +110,16 @@ Public Class SourceMdlSequenceDesc
 	'	int					numactivitymodifiers;
 	'	inline mstudioactivitymodifier_t *pActivityModifier( int i ) const { Assert( i >= 0 && i < numactivitymodifiers); return activitymodifierindex != 0 ? (mstudioactivitymodifier_t *)(((byte *)this) + activitymodifierindex) + i : NULL; };
 	'	int					unused[5];		// remove/add as appropriate (grow back to 8 ints on version change!)
+	'======
+	'FROM: VERSION 49 (CSGO)
+	'	int					activitymodifierindex;
+	'	int					numactivitymodifiers;
+	'	inline mstudioactivitymodifier_t *pActivityModifier( int i ) const { Assert( i >= 0 && i < numactivitymodifiers); return activitymodifierindex != 0 ? (mstudioactivitymodifier_t *)(((byte *)this) + activitymodifierindex) + i : NULL; };
+	'	int					animtagindex;
+	'	int					numanimtags;
+	'	inline mstudioanimtag_t *pAnimTag( int i ) const { Assert( i >= 0 && i < numanimtags); return (mstudioanimtag_t *)(((byte *)this) + animtagindex) + i; };
+	'	int					rootDriverIndex;
+	'	int					unused[2];		// remove/add as appropriate (grow back to 8 ints on version change!)
 
 	'	mstudioseqdesc_t(){}
 	'private:
@@ -230,6 +240,7 @@ Public Class SourceMdlSequenceDesc
 	Public cyclePoseIndex As Integer
 
 	'	int					unused[7];		// remove/add as appropriate (grow back to 8 ints on version change!)
+	Public unused(6) As Integer
 	'======
 	' Some Version 48 (such as Team Fortress 2 and Source SDK Base Multiplayer 2013, but not Garry's Mod)
 	'FROM: VERSION 49
@@ -239,7 +250,11 @@ Public Class SourceMdlSequenceDesc
 	'	int					unused[5];		// remove/add as appropriate (grow back to 8 ints on version change!)
 	Public activityModifierOffset As Integer
 	Public activityModifierCount As Integer
-	Public unused(6) As Integer
+	'======
+	'FROM: VERSION 49 (CSGO)
+	Public animTagOffset As Integer
+	Public animTagCount As Integer
+	Public rootDriverBoneIndex As Integer
 
 
 	Public theName As String
@@ -254,6 +269,7 @@ Public Class SourceMdlSequenceDesc
 	Public theAnimDescIndexes As List(Of Short)
 	Public theKeyValues As String
 	Public theActivityModifiers As List(Of SourceMdlActivityModifier)
+	Public theAnimTags As List(Of SourceMdlAnimTag)
 
 
 	Public theBoneWeightsAreDefault As Boolean

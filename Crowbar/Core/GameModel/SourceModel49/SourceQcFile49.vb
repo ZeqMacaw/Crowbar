@@ -2484,8 +2484,20 @@ Public Class SourceQcFile49
 		If aSequenceDesc.theActivityModifiers IsNot Nothing Then
 			For Each activityModifier As SourceMdlActivityModifier In aSequenceDesc.theActivityModifiers
 				line = vbTab
-				line += "activitymodifier "
+				line += "activitymodifier """
 				line += activityModifier.theName
+				line += """"
+				Me.theOutputFileStreamWriter.WriteLine(line)
+			Next
+		End If
+
+		If aSequenceDesc.theAnimTags IsNot Nothing Then
+			For Each animTag As SourceMdlAnimTag In aSequenceDesc.theAnimTags
+				line = vbTab
+				line += "animtag """
+				line += animTag.theName
+				line += """ "
+				line += animTag.cycle.ToString(TheApp.InternalNumberFormat)
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
 		End If
@@ -2594,9 +2606,23 @@ Public Class SourceQcFile49
 			Me.theOutputFileStreamWriter.WriteLine(line)
 		End If
 
+		If (aSequenceDesc.flags And SourceMdlAnimationDesc.STUDIO_ROOTXFORM) > 0 Then
+			line = vbTab
+			line += "rootdriver """
+			line += Me.theMdlFileData.theBones(aSequenceDesc.rootDriverBoneIndex).theName
+			line += """"
+			Me.theOutputFileStreamWriter.WriteLine(line)
+		End If
+
 		If (aSequenceDesc.flags And SourceMdlAnimationDesc.STUDIO_SNAP) > 0 Then
 			line = vbTab
 			line += "snap"
+			Me.theOutputFileStreamWriter.WriteLine(line)
+		End If
+
+		If (aSequenceDesc.flags And SourceMdlAnimationDesc.STUDIO_WORLD_AND_RELATIVE) > 0 Then
+			line = vbTab
+			line += "worldrelative"
 			Me.theOutputFileStreamWriter.WriteLine(line)
 		End If
 
@@ -2605,12 +2631,6 @@ Public Class SourceQcFile49
 			line += "worldspace"
 			Me.theOutputFileStreamWriter.WriteLine(line)
 		End If
-
-		'If blah Then
-		'	line = vbTab
-		'	line += ""
-		'	Me.theOutputFileStreamWriter.WriteLine(line)
-		'End If
 
 		Dim firstAnimDesc As SourceMdlAnimationDesc49
 		firstAnimDesc = Me.theMdlFileData.theAnimationDescs(aSequenceDesc.theAnimDescIndexes(0))

@@ -172,6 +172,10 @@ Public Class SourceMdlAnimationDesc
 	'#define STUDIO_FRAMEANIM 0x0040		// animation is encoded as by frame x bone instead of RLE bone x frame
 	'#define STUDIO_NOFORCELOOP 0x8000	// do not force the animation loop
 	'#define STUDIO_EVENT_CLIENT 0x10000	// Has been updated at runtime to event index on client
+	'FROM: [49] csgo_studiomdl\public\studio.h
+	'      Adds these to above.
+	'#define STUDIO_WORLD_AND_RELATIVE 0x20000 // do worldspace blend, then do normal blend on top
+	'#define STUDIO_ROOTXFORM 0x40000	// sequence wants to derive a root re-xform from a given bone
 
 
 	Public Const STUDIO_LOOPING As Integer = &H1
@@ -197,5 +201,7 @@ Public Class SourceMdlAnimationDesc
 	Public Const STUDIO_FRAMEANIM As Integer = &H40
 	Public Const STUDIO_NOFORCELOOP As Integer = &H8000
 	Public Const STUDIO_EVENT_CLIENT As Integer = &H10000
+	Public Const STUDIO_WORLD_AND_RELATIVE As Integer = &H20000
+	Public Const STUDIO_ROOTXFORM As Integer = &H40000
 
 End Class

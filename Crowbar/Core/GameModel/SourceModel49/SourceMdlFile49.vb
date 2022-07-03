@@ -2169,7 +2169,10 @@ Public Class SourceMdlFile49
 					If Me.theMdlFileData.version = 48 OrElse Me.theMdlFileData.version = 49 Then
 						aSeqDesc.activityModifierOffset = Me.theInputFileReader.ReadInt32()
 						aSeqDesc.activityModifierCount = Me.theInputFileReader.ReadInt32()
-						For x As Integer = 0 To 4
+						aSeqDesc.animTagOffset = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.animTagCount = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.rootDriverBoneIndex = Me.theInputFileReader.ReadInt32()
+						For x As Integer = 0 To 1
 							aSeqDesc.unused(x) = Me.theInputFileReader.ReadInt32()
 						Next
 					Else
@@ -2229,6 +2232,9 @@ Public Class SourceMdlFile49
 					End If
 					If aSeqDesc.activityModifierCount <> 0 AndAlso aSeqDesc.activityModifierOffset <> 0 Then
 						Me.ReadActivityModifiers(seqInputFileStreamPosition, aSeqDesc)
+					End If
+					If aSeqDesc.animTagCount <> 0 AndAlso aSeqDesc.animTagOffset <> 0 Then
+						Me.ReadAnimTags(seqInputFileStreamPosition, aSeqDesc)
 					End If
 
 					Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
@@ -2535,6 +2541,52 @@ Public Class SourceMdlFile49
 
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aSeqDesc.theActivityModifiers [" + aSeqDesc.theName + "] " + aSeqDesc.theActivityModifiers.Count.ToString())
+	End Sub
+
+	Private Sub ReadAnimTags(ByVal seqInputFileStreamPosition As Long, ByVal aSeqDesc As SourceMdlSequenceDesc)
+		Dim animTagCount As Integer
+		Dim animTagInputFileStreamPosition As Long
+		Dim inputFileStreamPosition As Long
+		Dim fileOffsetStart As Long
+		Dim fileOffsetEnd As Long
+		Dim fileOffsetStart2 As Long
+		Dim fileOffsetEnd2 As Long
+
+		Me.theInputFileReader.BaseStream.Seek(seqInputFileStreamPosition + aSeqDesc.animTagOffset, SeekOrigin.Begin)
+		fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+
+		animTagCount = aSeqDesc.animTagCount
+		aSeqDesc.theAnimTags = New List(Of SourceMdlAnimTag)(animTagCount)
+		For j As Integer = 0 To animTagCount - 1
+			animTagInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+
+			Dim anAnimTag As New SourceMdlAnimTag()
+			anAnimTag.tagIndex = Me.theInputFileReader.ReadInt32()
+			anAnimTag.cycle = Me.theInputFileReader.ReadSingle()
+			anAnimTag.nameOffset = Me.theInputFileReader.ReadInt32()
+			aSeqDesc.theAnimTags.Add(anAnimTag)
+
+			inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+
+			If anAnimTag.nameOffset <> 0 Then
+				Me.theInputFileReader.BaseStream.Seek(animTagInputFileStreamPosition + anAnimTag.nameOffset, SeekOrigin.Begin)
+				fileOffsetStart2 = Me.theInputFileReader.BaseStream.Position
+
+				anAnimTag.theName = FileManager.ReadNullTerminatedString(Me.theInputFileReader)
+
+				fileOffsetEnd2 = Me.theInputFileReader.BaseStream.Position - 1
+				'If Not Me.theMdlFileData.theFileSeekLog.ContainsKey(fileOffsetStart2) Then
+				Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart2, fileOffsetEnd2, "anAnimTag.theName = " + anAnimTag.theName)
+				'End If
+			Else
+				anAnimTag.theName = ""
+			End If
+
+			Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
+		Next
+
+		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
+		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aSeqDesc.theAnimTags [" + aSeqDesc.theName + "] " + aSeqDesc.theAnimTags.Count.ToString())
 	End Sub
 
 	Public Sub ReadLocalNodeNames()
