@@ -790,6 +790,8 @@ Public Class SourceQcFile52
 		'NOTE: Writes out flexcontrollers correctly for teenangst zoey.
 		If Me.theMdlFileData.theFlexControllers IsNot Nothing AndAlso Me.theMdlFileData.theFlexControllers.Count > 0 Then
 			Dim aFlexController As SourceMdlFlexController
+			Dim flexControllerNames As New List(Of String)()
+			Dim commentOperatorText As String
 
 			line = ""
 			Me.theOutputFileStreamWriter.WriteLine(line)
@@ -797,7 +799,18 @@ Public Class SourceQcFile52
 			For i As Integer = 0 To Me.theMdlFileData.theFlexControllers.Count - 1
 				aFlexController = Me.theMdlFileData.theFlexControllers(i)
 
+				If flexControllerNames.Contains(aFlexController.theName) Then
+					line = vbTab
+					line += "// Although in the original model, the line below is a duplicate of a line above and is commented-out to avoid problems in Source Filmmaker (and possibly other tools)."
+					Me.theOutputFileStreamWriter.WriteLine(line)
+					commentOperatorText = "//"
+				Else
+					flexControllerNames.Add(aFlexController.theName)
+					commentOperatorText = ""
+				End If
+
 				line = vbTab
+				line += commentOperatorText
 				line += "flexcontroller "
 				line += aFlexController.theType
 				line += " "
