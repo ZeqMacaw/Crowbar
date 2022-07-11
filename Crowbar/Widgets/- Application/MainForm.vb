@@ -9,6 +9,10 @@ Public Class MainForm
 	Public Sub New()
 		MyBase.New()
 
+		WidgetConstants.Windows10GlobalAccentColor = Win32Api.GetWindowColorizationColor(True)
+		Dim temp As Color = SystemColors.Highlight
+		Dim debug As Integer = 4242
+
 		''DEBUG: Be sure to comment this out before release.
 		'' Set the culture and UI culture before 
 		'' the call to InitializeComponent.
@@ -21,6 +25,10 @@ Public Class MainForm
 		' Add any initialization after the InitializeComponent() call.
 		'Me.InitWidgets(Me)
 		'Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+
+		'Me.BackColor = WidgetBackColor
+		'Me.UpdateChildControls(Me)
+
 	End Sub
 
 #End Region
@@ -87,8 +95,13 @@ Public Class MainForm
 		Dim commandLineValues As New ReadOnlyCollection(Of String)(System.Environment.GetCommandLineArgs())
 		Me.Startup(commandLineValues)
 
-		Me.PreviewViewUserControl.RunDataViewer()
-		Me.ViewViewUserControl.RunDataViewer()
+		Me.PreviewViewUserControl.Init()
+		Me.ViewViewUserControl.Init()
+		Me.PublishUserControl1.Init()
+		Me.OptionsUserControl1.Init()
+
+		'Me.PreviewViewUserControl.RunDataViewer()
+		'Me.ViewViewUserControl.RunDataViewer()
 
 		AddHandler Me.SetUpGamesUserControl1.GoBackButton.Click, AddressOf Me.SetUpGamesGoBackButton_Click
 		AddHandler Me.DownloadUserControl1.UseInUnpackButton.Click, AddressOf Me.DownloadUserControl1_UseInUnpackButton_Click
@@ -136,6 +149,11 @@ Public Class MainForm
 		RemoveHandler Me.PublishUserControl1.UseInDownloadToolStripMenuItem.Click, AddressOf Me.PublishUserControl1_UseInDownloadToolStripMenuItem_Click
 		RemoveHandler Me.UpdateUserControl1.UpdateAvailable, AddressOf Me.UpdateUserControl1_UpdateAvailable
 
+		Me.PreviewViewUserControl.Free()
+		Me.ViewViewUserControl.Free()
+		Me.PublishUserControl1.Free()
+		Me.OptionsUserControl1.Free()
+
 		If Me.WindowState = FormWindowState.Normal Then
 			TheApp.Settings.WindowLocation = Me.Location
 			TheApp.Settings.WindowSize = Me.Size
@@ -176,7 +194,9 @@ Public Class MainForm
 #Region "Widget Event Handlers"
 
 	Private Sub MainForm_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-		Me.Init()
+		If Not Me.DesignMode Then
+			Me.Init()
+		End If
 
 		'TEST [UNHANDLED EXCEPTION] Use these lines to raise an exception and show the unhandled exception window.
 		'Dim documentsPath As String
@@ -184,7 +204,11 @@ Public Class MainForm
 	End Sub
 
 	Private Sub MainForm_FormClosed(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosedEventArgs) Handles Me.FormClosed
-		Me.Free()
+		'NOTE: Not sure if DesignMode is valid here, but probably does not matter because you can not "delete" a Form from the VS Designer.
+		'      Tested by accessing TheApp.Settings outside of 'if' block, with no problems.
+		If Not Me.DesignMode Then
+			Me.Free()
+		End If
 	End Sub
 
 	Private Sub MainForm_DragEnter(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DragEventArgs) Handles MyBase.DragEnter
@@ -326,6 +350,118 @@ Public Class MainForm
 #End Region
 
 #Region "Private Methods"
+
+	'Protected Sub UpdateChildControls(ByVal parentControl As Control)
+
+	'	For Each aChild As Control In parentControl.Controls
+	'		If TypeOf aChild Is ButtonEx Then
+	'			Dim widget As ButtonEx = CType(aChild, ButtonEx)
+	'			widget.ForeColor = WidgetTextColor
+	'			widget.BackColor = WidgetHighBackColor
+	'		ElseIf TypeOf aChild Is CheckBox Then
+	'			Dim widget As CheckBox = CType(aChild, CheckBox)
+	'			widget.ForeColor = WidgetTextColor
+	'			widget.BackColor = WidgetBackColor
+	'		ElseIf TypeOf aChild Is ComboBoxEx Then
+	'			Dim widget As ComboBoxEx = CType(aChild, ComboBoxEx)
+	'			widget.ForeColor = WidgetTextColor
+	'			widget.BackColor = WidgetHighBackColor
+	'		ElseIf TypeOf aChild Is DataGridView Then
+	'			Dim widget As DataGridView = CType(aChild, DataGridView)
+	'			widget.ForeColor = WidgetTextColor
+	'			widget.BackColor = WidgetDeepBackColor
+	'		ElseIf TypeOf aChild Is Label Then
+	'			Dim widget As Label = CType(aChild, Label)
+	'			widget.ForeColor = WidgetTextColor
+	'			widget.BackColor = WidgetBackColor
+	'			'ElseIf TypeOf aChild Is DataGridViewEx Then
+	'			'	Dim widget As DataGridViewEx = CType(aChild, DataGridViewEx)
+	'		ElseIf TypeOf aChild Is GroupBox Then
+	'			Dim widget As Control = CType(aChild, Control)
+	'			widget.ForeColor = WidgetTextColor
+	'			widget.BackColor = WidgetBackColor
+	'			Me.UpdateChildControls(aChild)
+	'		ElseIf TypeOf aChild Is ListView Then
+	'			Dim widget As ListView = CType(aChild, ListView)
+	'			widget.ForeColor = WidgetTextColor
+	'			widget.BackColor = WidgetDeepBackColor
+	'			'ElseIf TypeOf aChild Is NumericChooser Then
+	'			'	Dim widget As NumericChooser = CType(aChild, NumericChooser)
+	'			'ElseIf TypeOf aChild Is RadioButton Then
+	'			'	Dim widget As RadioButton = CType(aChild, RadioButton)
+	'		ElseIf TypeOf aChild Is Panel Then
+	'			Dim widget As Control = CType(aChild, Control)
+	'			widget.ForeColor = WidgetTextColor
+	'			widget.BackColor = WidgetBackColor
+	'			Me.UpdateChildControls(aChild)
+	'		ElseIf TypeOf aChild Is ProgressBarEx Then
+	'			Dim widget As ProgressBarEx = CType(aChild, ProgressBarEx)
+	'			widget.ForeColor = WidgetTextColor
+	'			widget.BackColor = WidgetDeepBackColor
+	'		ElseIf TypeOf aChild Is RichTextBox Then
+	'			Dim widget As RichTextBox = CType(aChild, RichTextBox)
+	'			widget.ForeColor = WidgetTextColor
+	'			widget.BackColor = WidgetDeepBackColor
+	'		ElseIf TypeOf aChild Is SplitContainer Then
+	'			Dim widget As SplitContainer = CType(aChild, SplitContainer)
+	'			widget.ForeColor = WidgetTextColor
+	'			widget.BackColor = WidgetHighBackColor
+	'			Me.UpdateChildControls(widget.Panel1)
+	'			Me.UpdateChildControls(widget.Panel2)
+	'		ElseIf TypeOf aChild Is TabControlEx Then
+	'			Dim widget As TabControlEx = CType(aChild, TabControlEx)
+	'			widget.TabPageForeColor = WidgetTextColor
+	'			widget.BackColor = WidgetBackColor
+	'			'For i As Integer = 0 To widget.TabPages.Count - 1
+	'			'	widget.TabPages(i).ForeColor = Color.Red
+	'			'Next
+	'			Me.UpdateChildControls(aChild)
+	'		ElseIf TypeOf aChild Is TabPage Then
+	'			Me.UpdateChildControls(aChild)
+	'		ElseIf TypeOf aChild Is TextBox Then
+	'			Dim widget As Crowbar.RichTextBoxEx = CType(aChild, TextBox)
+	'			widget.ForeColor = WidgetTextColor
+	'			widget.BackColor = WidgetDeepBackColor
+	'			'ElseIf TypeOf aChild Is ToolStrip Then
+	'			'	Dim theToolStrip As ToolStrip = CType(aChild, ToolStrip)
+	'			'	For Each toolStripChild As ToolStripItem In theToolStrip.Items
+	'			'		If TypeOf toolStripChild Is ToolStripCheckBox Then
+	'			'			Dim theToolStripCheckBox As ToolStripCheckBox = CType(toolStripChild, ToolStripCheckBox)
+	'			'		End If
+	'			'	Next
+	'		ElseIf TypeOf aChild Is ToolStrip Then
+	'			Dim widget As ToolStrip = CType(aChild, ToolStrip)
+	'			widget.ForeColor = WidgetTextColor
+	'			widget.BackColor = WidgetBackColor
+	'			For Each toolStripWidget As ToolStripItem In widget.Items
+	'				If TypeOf toolStripWidget Is ToolStripComboBox Then
+	'					toolStripWidget.ForeColor = WidgetTextColor
+	'					toolStripWidget.BackColor = WidgetHighBackColor
+	'				ElseIf TypeOf toolStripWidget Is ToolStripButton Then
+	'					toolStripWidget.ForeColor = WidgetTextColor
+	'					toolStripWidget.BackColor = WidgetHighBackColor
+	'				ElseIf TypeOf toolStripWidget Is ToolStripLabel Then
+	'					toolStripWidget.ForeColor = WidgetTextColor
+	'					toolStripWidget.BackColor = WidgetBackColor
+	'				ElseIf TypeOf toolStripWidget Is ToolStripSeparator Then
+	'					toolStripWidget.ForeColor = WidgetDisabledTextColor
+	'					toolStripWidget.BackColor = WidgetBackColor
+	'				ElseIf TypeOf toolStripWidget Is ToolStripSpringTextBox Then
+	'					toolStripWidget.ForeColor = WidgetTextColor
+	'					toolStripWidget.BackColor = WidgetHighBackColor
+	'				End If
+	'			Next
+	'			Me.UpdateChildControls(aChild)
+	'		ElseIf TypeOf aChild Is TreeView Then
+	'			Dim widget As TreeView = CType(aChild, TreeView)
+	'			widget.ForeColor = WidgetTextColor
+	'			widget.BackColor = WidgetDeepBackColor
+	'		ElseIf TypeOf aChild Is UserControl Then
+	'			'UserControl is last so that descendant ones can be handled in their own ways above.
+	'			Me.UpdateChildControls(aChild)
+	'		End If
+	'	Next
+	'End Sub
 
 	Private Sub SetDroppedPathFileName(ByVal setViaAutoOpen As Boolean, ByVal pathFileName As String)
 		Dim extension As String = ""
@@ -519,7 +655,7 @@ Public Class MainForm
 					folderAction = ActionType.Decompile
 				ElseIf selectedTab Is Me.CompileTabPage Then
 					folderAction = ActionType.Compile
-				ElseIf selectedTab Is Me.packTabPage Then
+				ElseIf selectedTab Is Me.PackTabPage Then
 					folderAction = ActionType.Pack
 				Else
 					selectedTab = Nothing

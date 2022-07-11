@@ -5,6 +5,13 @@
 Public Class ToolStripSpringTextBox
 	Inherits ToolStripTextBox
 
+	Public Sub New()
+		MyBase.New()
+
+		Me.ForeColor = WidgetTextColor
+		Me.BackColor = WidgetDeepBackColor
+	End Sub
+
 	'IMPORTANT: The control must have AutoSize = True for this to be called.
 	Public Overrides Function GetPreferredSize(ByVal constrainingSize As Size) As Size
 

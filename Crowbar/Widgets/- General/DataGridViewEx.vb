@@ -1,3 +1,5 @@
+Imports System.ComponentModel
+
 Public Class DataGridViewEx
 	Inherits DataGridView
 
@@ -5,6 +7,38 @@ Public Class DataGridViewEx
 
 	Public Sub New()
 		MyBase.New()
+
+		'NOTE: Disable to use custom.
+		MyBase.ScrollBars = Windows.Forms.ScrollBars.None
+
+		'NOTE: Need these settings so that ColumnHeadersDefaultCellStyle, DefaultCellStyle, and GridColor properties are used.
+		'      Might affect other properties, too.
+		Me.EnableHeadersVisualStyles = False
+		Me.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single
+		Me.CellBorderStyle = DataGridViewCellBorderStyle.Single
+		Me.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single
+
+		Me.ForeColor = WidgetConstants.WidgetTextColor
+		Me.BackgroundColor = WidgetConstants.WidgetBackColor
+
+		Me.ColumnHeadersDefaultCellStyle.ForeColor = WidgetConstants.WidgetTextColor
+		Me.ColumnHeadersDefaultCellStyle.BackColor = WidgetConstants.WidgetBackColor
+		Me.ColumnHeadersDefaultCellStyle.SelectionForeColor = WidgetConstants.WidgetTextColor
+		Me.ColumnHeadersDefaultCellStyle.SelectionBackColor = WidgetConstants.WidgetSelectedBackColor
+
+		Me.DefaultCellStyle.ForeColor = WidgetConstants.WidgetTextColor
+		Me.DefaultCellStyle.BackColor = WidgetConstants.WidgetBackColor
+		Me.DefaultCellStyle.SelectionForeColor = WidgetConstants.WidgetTextColor
+		Me.DefaultCellStyle.SelectionBackColor = WidgetConstants.WidgetSelectedBackColor
+
+		Me.RowHeadersDefaultCellStyle.ForeColor = WidgetConstants.WidgetTextColor
+		Me.RowHeadersDefaultCellStyle.BackColor = WidgetConstants.WidgetBackColor
+		Me.RowHeadersDefaultCellStyle.SelectionForeColor = WidgetConstants.WidgetTextColor
+		Me.RowHeadersDefaultCellStyle.SelectionBackColor = WidgetConstants.WidgetSelectedBackColor
+
+		Me.GridColor = WidgetConstants.WidgetDisabledTextColor
+		'Me.GridColor = Color.Green
+		Me.BorderStyle = BorderStyle.None
 
 		Me.theCurrentCellIsChangingBecauseOfMe = False
 		Me.theSelectionIsChangingBecauseOfMe = False
@@ -33,6 +67,7 @@ Public Class DataGridViewEx
 		End Set
 	End Property
 
+	<Browsable(False)>
 	Public Overloads ReadOnly Property HorizontalScrollBar() As ScrollBar
 		Get
 			Return MyBase.HorizontalScrollBar
@@ -48,11 +83,23 @@ Public Class DataGridViewEx
 				MyBase.ReadOnly = value
 
 				If MyBase.ReadOnly Then
-					Me.DefaultCellStyle.BackColor = SystemColors.Control
+					Me.DefaultCellStyle.BackColor = WidgetConstants.WidgetBackColor
 				Else
-					Me.DefaultCellStyle.BackColor = SystemColors.Window
+					Me.DefaultCellStyle.BackColor = WidgetConstants.WidgetDisabledTextColor
 				End If
 			End If
+		End Set
+	End Property
+
+	<Browsable(True)>
+	<Category("Layout")>
+	<Description("Colorable scrollbars.")>
+	Public Overloads Property ScrollBars As ScrollBars
+		Get
+			Return Me.theScrollBars
+		End Get
+		Set
+			Me.theScrollBars = Value
 		End Set
 	End Property
 
@@ -64,8 +111,20 @@ Public Class DataGridViewEx
 
 #Region "Widget Event Handlers"
 
+	Protected Overrides Sub OnPaint(e As PaintEventArgs)
+		MyBase.OnPaint(e)
+
+		' Draw outer border.
+		Using backColorPen As New Pen(WidgetConstants.WidgetDisabledTextColor)
+			Dim aRect As Rectangle = Me.ClientRectangle
+			aRect.Width -= 1
+			aRect.Height -= 1
+			e.Graphics.DrawRectangle(backColorPen, aRect)
+		End Using
+	End Sub
+
 	Protected Overrides Sub OnCellClick(ByVal e As DataGridViewCellEventArgs)
-		If (e.RowIndex > -1) AndAlso (e.ColumnIndex > -1) Then
+		If Not Me.ReadOnly AndAlso Me.Enabled AndAlso (e.RowIndex > -1) AndAlso (e.ColumnIndex > -1) Then
 			Dim cell As DataGridViewCell = Me(e.ColumnIndex, e.RowIndex)
 			If TypeOf cell.OwningColumn Is DataGridViewRadioButtonColumn Then
 				If cell.FormattedValue.ToString().Length = 0 Then
@@ -217,11 +276,11 @@ Public Class DataGridViewEx
 			MyProcessTabKey(keysPressed)
 			Return True
 		End If
-		If e.KeyCode = Keys.Enter Then
-			' Instead of moving down to next row, begin editing of cell.
-			Me.BeginEdit(True)
-			Return True
-		End If
+		'If e.KeyCode = Keys.Enter Then
+		'	' Instead of moving down to next row, begin editing of cell.
+		'	Me.BeginEdit(True)
+		'	Return True
+		'End If
 		Return MyBase.ProcessDataGridViewKey(e)
 	End Function
 
@@ -255,6 +314,8 @@ Public Class DataGridViewEx
 #End Region
 
 #Region "Data"
+
+	Private theScrollBars As ScrollBars
 
 	Private theCurrentCellIsChangingBecauseOfMe As Boolean
 	Private theSelectionIsChangingBecauseOfMe As Boolean

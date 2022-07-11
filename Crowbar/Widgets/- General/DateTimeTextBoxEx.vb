@@ -1,7 +1,7 @@
 Imports System.ComponentModel
 
 Public Class DateTimeTextBoxEx
-	Inherits TextBoxEx
+	Inherits RichTextBoxEx
 
 #Region "Create and Destroy"
 

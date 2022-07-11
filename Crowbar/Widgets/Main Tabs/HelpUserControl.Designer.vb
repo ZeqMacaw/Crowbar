@@ -26,14 +26,14 @@ Partial Class HelpUserControl
 		Me.ContentsLinkLabel = New System.Windows.Forms.LinkLabel()
 		Me.IndexLinkLabel = New System.Windows.Forms.LinkLabel()
 		Me.TipsLinkLabel = New System.Windows.Forms.LinkLabel()
-		Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+		Me.GroupBox1 = New GroupBoxEx()
 		Me.Label4 = New System.Windows.Forms.Label()
 		Me.Label3 = New System.Windows.Forms.Label()
 		Me.Label2 = New System.Windows.Forms.Label()
 		Me.Label1 = New System.Windows.Forms.Label()
 		Me.Label5 = New System.Windows.Forms.Label()
 		Me.Label6 = New System.Windows.Forms.Label()
-		Me.CrowbarGuideButton = New System.Windows.Forms.Button()
+		Me.CrowbarGuideButton = New ButtonEx()
 		Me.GroupBox1.SuspendLayout()
 		Me.SuspendLayout()
 		'
@@ -158,7 +158,7 @@ Partial Class HelpUserControl
 		Me.Label5.Name = "Label5"
 		Me.Label5.Size = New System.Drawing.Size(577, 16)
 		Me.Label5.TabIndex = 7
-		Me.Label5.Text = "Crowbar allows you to quickly access many tools for modding models for Source-eng" & _
+		Me.Label5.Text = "Crowbar allows you to quickly access many tools for modding models for Source-eng" &
 	"ine games."
 		Me.Label5.Visible = False
 		'
@@ -203,13 +203,13 @@ Partial Class HelpUserControl
 	Friend WithEvents ContentsLinkLabel As System.Windows.Forms.LinkLabel
 	Friend WithEvents IndexLinkLabel As System.Windows.Forms.LinkLabel
 	Friend WithEvents TipsLinkLabel As System.Windows.Forms.LinkLabel
-	Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+	Friend WithEvents GroupBox1 As GroupBoxEx
 	Friend WithEvents Label4 As System.Windows.Forms.Label
 	Friend WithEvents Label3 As System.Windows.Forms.Label
 	Friend WithEvents Label2 As System.Windows.Forms.Label
 	Friend WithEvents Label1 As System.Windows.Forms.Label
 	Friend WithEvents Label5 As System.Windows.Forms.Label
 	Friend WithEvents Label6 As System.Windows.Forms.Label
-	Friend WithEvents CrowbarGuideButton As System.Windows.Forms.Button
+	Friend WithEvents CrowbarGuideButton As ButtonEx
 
 End Class

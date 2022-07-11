@@ -22,20 +22,21 @@ Partial Class AboutUserControl
 	'Do not modify it using the code editor.
 	<System.Diagnostics.DebuggerStepThrough()>
 	Private Sub InitializeComponent()
-		Me.ProductInfoTextBox = New System.Windows.Forms.TextBox()
-		Me.ProductDescriptionTextBox = New System.Windows.Forms.TextBox()
-		Me.ProductLogoButton = New System.Windows.Forms.Button()
-		Me.AuthorIconButton = New System.Windows.Forms.Button()
-		Me.CreditsTextBox = New System.Windows.Forms.TextBox()
+		Me.components = New System.ComponentModel.Container()
+		Me.ProductInfoTextBox = New Crowbar.RichTextBoxEx()
+		Me.ProductDescriptionTextBox = New Crowbar.RichTextBoxEx()
+		Me.ProductLogoButton = New Crowbar.ButtonEx()
+		Me.AuthorIconButton = New Crowbar.ButtonEx()
+		Me.CreditsTextBox = New Crowbar.RichTextBoxEx()
 		Me.AuthorLinkLabel = New System.Windows.Forms.LinkLabel()
 		Me.ProductNameLinkLabel = New System.Windows.Forms.LinkLabel()
-		Me.Panel1 = New System.Windows.Forms.Panel()
+		Me.Panel1 = New Crowbar.PanelEx()
 		Me.GotoSteamGroupLinkLabel = New System.Windows.Forms.LinkLabel()
 		Me.GotoSteamProfileLinkLabel = New System.Windows.Forms.LinkLabel()
 		Me.PayPalPictureBox = New System.Windows.Forms.PictureBox()
-		Me.SpecialThanksGroupBox = New System.Windows.Forms.GroupBox()
-		Me.Credits2TextBox = New System.Windows.Forms.TextBox()
-		Me.Credits3TextBox = New System.Windows.Forms.TextBox()
+		Me.SpecialThanksGroupBox = New Crowbar.GroupBoxEx()
+		Me.Credits2TextBox = New Crowbar.RichTextBoxEx()
+		Me.Credits3TextBox = New Crowbar.RichTextBoxEx()
 		Me.Panel1.SuspendLayout()
 		CType(Me.PayPalPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SpecialThanksGroupBox.SuspendLayout()
@@ -84,19 +85,6 @@ Partial Class AboutUserControl
 		Me.AuthorIconButton.Size = New System.Drawing.Size(128, 128)
 		Me.AuthorIconButton.TabIndex = 4
 		Me.AuthorIconButton.UseVisualStyleBackColor = True
-		'
-		'CreditsTextBox
-		'
-		Me.CreditsTextBox.Location = New System.Drawing.Point(6, 20)
-		Me.CreditsTextBox.Multiline = True
-		Me.CreditsTextBox.Name = "CreditsTextBox"
-		Me.CreditsTextBox.ReadOnly = True
-		Me.CreditsTextBox.Size = New System.Drawing.Size(191, 206)
-		Me.CreditsTextBox.TabIndex = 0
-		Me.CreditsTextBox.TabStop = False
-		Me.CreditsTextBox.Text = "arby26" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Artfunkel" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "atrblizzard" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Avengito" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "BANG!" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "BinaryRifle" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Cra0kalo" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "CrazyBubb" &
-	"a" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "da1barker" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Doktor haus" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Drsalvador" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "E7ajamy" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Funreal" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Game Zombie" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "GeckoN"
-		Me.CreditsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
 		'
 		'AuthorLinkLabel
 		'
@@ -195,6 +183,19 @@ Partial Class AboutUserControl
 		Me.SpecialThanksGroupBox.TabStop = False
 		Me.SpecialThanksGroupBox.Text = "Special Thanks"
 		'
+		'CreditsTextBox
+		'
+		Me.CreditsTextBox.Location = New System.Drawing.Point(6, 20)
+		Me.CreditsTextBox.Multiline = True
+		Me.CreditsTextBox.Name = "CreditsTextBox"
+		Me.CreditsTextBox.ReadOnly = True
+		Me.CreditsTextBox.Size = New System.Drawing.Size(191, 206)
+		Me.CreditsTextBox.TabIndex = 0
+		Me.CreditsTextBox.TabStop = False
+		Me.CreditsTextBox.Text = "arby26" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Artfunkel" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "atrblizzard" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Avengito" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "BANG!" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "BinaryRifle" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Cra0kalo" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "CrazyBubb" &
+	"a" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "da1barker" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Doktor haus" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Drsalvador" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "E7ajamy" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Funreal" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Game Zombie" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "GeckoN"
+		Me.CreditsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+		'
 		'Credits2TextBox
 		'
 		Me.Credits2TextBox.Location = New System.Drawing.Point(203, 20)
@@ -231,25 +232,23 @@ Partial Class AboutUserControl
 		Me.Name = "AboutUserControl"
 		Me.Size = New System.Drawing.Size(776, 536)
 		Me.Panel1.ResumeLayout(False)
-		Me.Panel1.PerformLayout()
 		CType(Me.PayPalPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.SpecialThanksGroupBox.ResumeLayout(False)
-		Me.SpecialThanksGroupBox.PerformLayout()
 		Me.ResumeLayout(False)
 
 	End Sub
-	Friend WithEvents ProductInfoTextBox As System.Windows.Forms.TextBox
-	Friend WithEvents ProductDescriptionTextBox As System.Windows.Forms.TextBox
-	Friend WithEvents ProductLogoButton As System.Windows.Forms.Button
-	Friend WithEvents AuthorIconButton As System.Windows.Forms.Button
-	Friend WithEvents CreditsTextBox As System.Windows.Forms.TextBox
+	Friend WithEvents ProductInfoTextBox As Crowbar.RichTextBoxEx
+	Friend WithEvents ProductDescriptionTextBox As Crowbar.RichTextBoxEx
+	Friend WithEvents ProductLogoButton As ButtonEx
+	Friend WithEvents AuthorIconButton As ButtonEx
+	Friend WithEvents CreditsTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents AuthorLinkLabel As System.Windows.Forms.LinkLabel
 	Friend WithEvents ProductNameLinkLabel As System.Windows.Forms.LinkLabel
-	Friend WithEvents Panel1 As System.Windows.Forms.Panel
+	Friend WithEvents Panel1 As PanelEx
 	Friend WithEvents GotoSteamProfileLinkLabel As System.Windows.Forms.LinkLabel
 	Friend WithEvents GotoSteamGroupLinkLabel As System.Windows.Forms.LinkLabel
-	Friend WithEvents SpecialThanksGroupBox As System.Windows.Forms.GroupBox
-	Friend WithEvents Credits3TextBox As System.Windows.Forms.TextBox
-	Friend WithEvents Credits2TextBox As System.Windows.Forms.TextBox
+	Friend WithEvents SpecialThanksGroupBox As GroupBoxEx
+	Friend WithEvents Credits3TextBox As Crowbar.RichTextBoxEx
+	Friend WithEvents Credits2TextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents PayPalPictureBox As PictureBox
 End Class

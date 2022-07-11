@@ -22,20 +22,20 @@ Partial Class BlackMesaTagsUserControl
 	'Do not modify it using the code editor.
 	<System.Diagnostics.DebuggerStepThrough()> _
 	Private Sub InitializeComponent()
-		Me.MapTagsGroupBox = New System.Windows.Forms.GroupBox()
+		Me.MapTagsGroupBox = New GroupBoxEx()
 		Me.MultiplayerTagCheckBox = New Crowbar.CheckBoxEx()
 		Me.SingleplayerTagCheckBox = New Crowbar.CheckBoxEx()
-		Me.ModelTagsGroupBox = New System.Windows.Forms.GroupBox()
+		Me.ModelTagsGroupBox = New GroupBoxEx()
 		Me.WeaponTagCheckBox = New Crowbar.CheckBoxEx()
 		Me.NPCTagCheckBox = New Crowbar.CheckBoxEx()
 		Me.EnvironmentTagCheckBox = New Crowbar.CheckBoxEx()
 		Me.CreatureTagCheckBox = New Crowbar.CheckBoxEx()
-		Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-		Me.ExtraTag1TextBox = New System.Windows.Forms.TextBox()
-		Me.ExtraTag2TextBox = New System.Windows.Forms.TextBox()
-		Me.ExtraTag3TextBox = New System.Windows.Forms.TextBox()
-		Me.ExtraTag4TextBox = New System.Windows.Forms.TextBox()
-		Me.ExtraTag5TextBox = New System.Windows.Forms.TextBox()
+		Me.GroupBox1 = New GroupBoxEx()
+		Me.ExtraTag1TextBox = New Crowbar.RichTextBoxEx()
+		Me.ExtraTag2TextBox = New Crowbar.RichTextBoxEx()
+		Me.ExtraTag3TextBox = New Crowbar.RichTextBoxEx()
+		Me.ExtraTag4TextBox = New Crowbar.RichTextBoxEx()
+		Me.ExtraTag5TextBox = New Crowbar.RichTextBoxEx()
 		Me.Label5 = New System.Windows.Forms.Label()
 		Me.Label4 = New System.Windows.Forms.Label()
 		Me.Label3 = New System.Windows.Forms.Label()
@@ -265,20 +265,20 @@ Partial Class BlackMesaTagsUserControl
 
 	End Sub
 
-	Friend WithEvents MapTagsGroupBox As GroupBox
+	Friend WithEvents MapTagsGroupBox As GroupBoxEx
 	Friend WithEvents MultiplayerTagCheckBox As CheckBoxEx
 	Friend WithEvents SingleplayerTagCheckBox As CheckBoxEx
-	Friend WithEvents ModelTagsGroupBox As GroupBox
+	Friend WithEvents ModelTagsGroupBox As GroupBoxEx
 	Friend WithEvents WeaponTagCheckBox As CheckBoxEx
 	Friend WithEvents NPCTagCheckBox As CheckBoxEx
 	Friend WithEvents EnvironmentTagCheckBox As CheckBoxEx
 	Friend WithEvents CreatureTagCheckBox As CheckBoxEx
-	Friend WithEvents GroupBox1 As GroupBox
-	Friend WithEvents ExtraTag5TextBox As TextBox
-	Friend WithEvents ExtraTag4TextBox As TextBox
-	Friend WithEvents ExtraTag3TextBox As TextBox
-	Friend WithEvents ExtraTag2TextBox As TextBox
-	Friend WithEvents ExtraTag1TextBox As TextBox
+	Friend WithEvents GroupBox1 As GroupBoxEx
+	Friend WithEvents ExtraTag5TextBox As Crowbar.RichTextBoxEx
+	Friend WithEvents ExtraTag4TextBox As Crowbar.RichTextBoxEx
+	Friend WithEvents ExtraTag3TextBox As Crowbar.RichTextBoxEx
+	Friend WithEvents ExtraTag2TextBox As Crowbar.RichTextBoxEx
+	Friend WithEvents ExtraTag1TextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents Label5 As Label
 	Friend WithEvents Label4 As Label
 	Friend WithEvents Label3 As Label

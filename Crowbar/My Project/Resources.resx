@@ -257,4 +257,28 @@
   <data name="lzham_x86" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\lzham_x86.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="scrollbar_arrow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\scrollbar_arrow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="scrollbar_arrow_clicked" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\scrollbar_arrow_clicked.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="scrollbar_arrow_hot" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\scrollbar_arrow_hot.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="scrollbar_arrow_small_clicked" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\scrollbar_arrow_small_clicked.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="scrollbar_arrow_small_hot" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\scrollbar_arrow_small_hot.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="scrollbar_arrow_small_standard" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\scrollbar_arrow_small_standard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="scrollbar_arrow_standard" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\scrollbar_arrow_standard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="scrollbar_arrow_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\scrollbar_arrow_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

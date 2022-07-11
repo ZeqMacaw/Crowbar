@@ -184,7 +184,7 @@ Public Class TreeViewEx
 				'e.DrawDefault = False
 			Else
 				e.Graphics.FillRectangle(SystemBrushes.ControlDark, e.Bounds)
-				TextRenderer.DrawText(e.Graphics, e.Node.Text, e.Node.NodeFont, e.Bounds, e.Node.ForeColor, e.Node.BackColor, TextFormatFlags.GlyphOverhangPadding)
+				TextRenderer.DrawText(e.Graphics, e.Node.Text, e.Node.NodeFont, e.Bounds, WidgetTextColor, WidgetDeepBackColor, TextFormatFlags.GlyphOverhangPadding)
 				e.DrawDefault = False
 			End If
 		End If

@@ -23,32 +23,35 @@ Partial Class ViewUserControl
 	<System.Diagnostics.DebuggerStepThrough()> _
 	Private Sub InitializeComponent()
 		Me.components = New System.ComponentModel.Container()
-		Me.ViewButton = New System.Windows.Forms.Button()
-		Me.MdlPathFileNameTextBox = New Crowbar.TextBoxEx()
-		Me.BrowseForMdlFileButton = New System.Windows.Forms.Button()
+		Me.ViewButton = New Crowbar.ButtonEx()
+		Me.MdlPathFileNameTextBox = New Crowbar.RichTextBoxEx()
+		Me.BrowseForMdlFileButton = New Crowbar.ButtonEx()
 		Me.Label1 = New System.Windows.Forms.Label()
-		Me.Panel2 = New System.Windows.Forms.Panel()
+		Me.Panel2 = New Crowbar.PanelEx()
+		Me.RefreshButton = New Crowbar.ButtonEx()
 		Me.OverrideMdlVersionLabel = New System.Windows.Forms.Label()
-		Me.OverrideMdlVersionComboBox = New System.Windows.Forms.ComboBox()
-		Me.GotoMdlFileButton = New System.Windows.Forms.Button()
+		Me.OverrideMdlVersionComboBox = New Crowbar.ComboBoxEx()
+		Me.GotoMdlFileButton = New Crowbar.ButtonEx()
 		Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
-		Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+		Me.GroupBox1 = New Crowbar.GroupBoxEx()
+		Me.Panel1 = New System.Windows.Forms.Panel()
 		Me.InfoRichTextBox = New Crowbar.RichTextBoxEx()
 		Me.GameLabel = New System.Windows.Forms.Label()
-		Me.GameSetupComboBox = New System.Windows.Forms.ComboBox()
-		Me.SetUpGameButton = New System.Windows.Forms.Button()
-		Me.ViewAsReplacementButton = New System.Windows.Forms.Button()
-		Me.UseInDecompileButton = New System.Windows.Forms.Button()
-		Me.OpenViewerButton = New System.Windows.Forms.Button()
-		Me.OpenMappingToolButton = New System.Windows.Forms.Button()
-		Me.RunGameButton = New System.Windows.Forms.Button()
-		Me.MessageTextBox = New Crowbar.TextBoxEx()
+		Me.GameSetupComboBox = New Crowbar.ComboBoxEx()
+		Me.SetUpGameButton = New Crowbar.ButtonEx()
+		Me.ViewAsReplacementButton = New Crowbar.ButtonEx()
+		Me.UseInDecompileButton = New Crowbar.ButtonEx()
+		Me.OpenViewerButton = New Crowbar.ButtonEx()
+		Me.OpenMappingToolButton = New Crowbar.ButtonEx()
+		Me.RunGameButton = New Crowbar.ButtonEx()
+		Me.MessageTextBox = New Crowbar.RichTextBoxEx()
 		Me.Panel2.SuspendLayout()
 		CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SplitContainer1.Panel1.SuspendLayout()
 		Me.SplitContainer1.Panel2.SuspendLayout()
 		Me.SplitContainer1.SuspendLayout()
 		Me.GroupBox1.SuspendLayout()
+		Me.Panel1.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'ViewButton
@@ -65,11 +68,19 @@ Partial Class ViewUserControl
 		'
 		Me.MdlPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.MdlPathFileNameTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.MdlPathFileNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.MdlPathFileNameTextBox.CueBannerText = ""
-		Me.MdlPathFileNameTextBox.Location = New System.Drawing.Point(58, 3)
+		Me.MdlPathFileNameTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.MdlPathFileNameTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		Me.MdlPathFileNameTextBox.Location = New System.Drawing.Point(58, 4)
+		Me.MdlPathFileNameTextBox.Margin = New System.Windows.Forms.Padding(3, 3, 0, 3)
+		Me.MdlPathFileNameTextBox.Multiline = False
 		Me.MdlPathFileNameTextBox.Name = "MdlPathFileNameTextBox"
-		Me.MdlPathFileNameTextBox.Size = New System.Drawing.Size(596, 22)
+		Me.MdlPathFileNameTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
+		Me.MdlPathFileNameTextBox.Size = New System.Drawing.Size(573, 22)
 		Me.MdlPathFileNameTextBox.TabIndex = 1
+		Me.MdlPathFileNameTextBox.Text = ""
 		'
 		'BrowseForMdlFileButton
 		'
@@ -92,6 +103,8 @@ Partial Class ViewUserControl
 		'
 		'Panel2
 		'
+		Me.Panel2.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
+		Me.Panel2.Controls.Add(Me.RefreshButton)
 		Me.Panel2.Controls.Add(Me.OverrideMdlVersionLabel)
 		Me.Panel2.Controls.Add(Me.Label1)
 		Me.Panel2.Controls.Add(Me.MdlPathFileNameTextBox)
@@ -100,11 +113,28 @@ Partial Class ViewUserControl
 		Me.Panel2.Controls.Add(Me.GotoMdlFileButton)
 		Me.Panel2.Controls.Add(Me.SplitContainer1)
 		Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.Panel2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.Panel2.Location = New System.Drawing.Point(0, 0)
 		Me.Panel2.Margin = New System.Windows.Forms.Padding(2)
 		Me.Panel2.Name = "Panel2"
+		Me.Panel2.SelectedIndex = -1
+		Me.Panel2.SelectedValue = Nothing
 		Me.Panel2.Size = New System.Drawing.Size(776, 536)
 		Me.Panel2.TabIndex = 8
+		'
+		'RefreshButton
+		'
+		Me.RefreshButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.RefreshButton.FlatAppearance.BorderSize = 0
+		Me.RefreshButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+		Me.RefreshButton.Image = Global.Crowbar.My.Resources.Resources.Refresh
+		Me.RefreshButton.Location = New System.Drawing.Point(631, 4)
+		Me.RefreshButton.Margin = New System.Windows.Forms.Padding(0, 3, 3, 3)
+		Me.RefreshButton.Name = "RefreshButton"
+		Me.RefreshButton.Padding = New System.Windows.Forms.Padding(0, 0, 1, 2)
+		Me.RefreshButton.Size = New System.Drawing.Size(23, 22)
+		Me.RefreshButton.TabIndex = 49
+		Me.RefreshButton.UseVisualStyleBackColor = True
 		'
 		'OverrideMdlVersionLabel
 		'
@@ -117,11 +147,15 @@ Partial Class ViewUserControl
 		'
 		'OverrideMdlVersionComboBox
 		'
+		Me.OverrideMdlVersionComboBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+		Me.OverrideMdlVersionComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
 		Me.OverrideMdlVersionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.OverrideMdlVersionComboBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.OverrideMdlVersionComboBox.FormattingEnabled = True
+		Me.OverrideMdlVersionComboBox.IsReadOnly = False
 		Me.OverrideMdlVersionComboBox.Location = New System.Drawing.Point(123, 32)
 		Me.OverrideMdlVersionComboBox.Name = "OverrideMdlVersionComboBox"
-		Me.OverrideMdlVersionComboBox.Size = New System.Drawing.Size(110, 21)
+		Me.OverrideMdlVersionComboBox.Size = New System.Drawing.Size(110, 23)
 		Me.OverrideMdlVersionComboBox.TabIndex = 47
 		'
 		'GotoMdlFileButton
@@ -167,22 +201,40 @@ Partial Class ViewUserControl
 		'
 		'GroupBox1
 		'
-		Me.GroupBox1.Controls.Add(Me.InfoRichTextBox)
+		Me.GroupBox1.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
+		Me.GroupBox1.Controls.Add(Me.Panel1)
 		Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.GroupBox1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		Me.GroupBox1.IsReadOnly = False
 		Me.GroupBox1.Location = New System.Drawing.Point(0, 0)
 		Me.GroupBox1.Name = "GroupBox1"
+		Me.GroupBox1.SelectedValue = Nothing
 		Me.GroupBox1.Size = New System.Drawing.Size(770, 363)
 		Me.GroupBox1.TabIndex = 4
 		Me.GroupBox1.TabStop = False
 		Me.GroupBox1.Text = "Info"
 		'
+		'Panel1
+		'
+		Me.Panel1.Controls.Add(Me.InfoRichTextBox)
+		Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.Panel1.Location = New System.Drawing.Point(3, 18)
+		Me.Panel1.Name = "Panel1"
+		Me.Panel1.Size = New System.Drawing.Size(764, 342)
+		Me.Panel1.TabIndex = 1
+		'
 		'InfoRichTextBox
 		'
+		Me.InfoRichTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.InfoRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.InfoRichTextBox.CueBannerText = ""
 		Me.InfoRichTextBox.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.InfoRichTextBox.Location = New System.Drawing.Point(3, 18)
+		Me.InfoRichTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.InfoRichTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		Me.InfoRichTextBox.Location = New System.Drawing.Point(0, 0)
 		Me.InfoRichTextBox.Name = "InfoRichTextBox"
 		Me.InfoRichTextBox.ReadOnly = True
+		Me.InfoRichTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.InfoRichTextBox.Size = New System.Drawing.Size(764, 342)
 		Me.InfoRichTextBox.TabIndex = 0
 		Me.InfoRichTextBox.Text = ""
@@ -201,11 +253,15 @@ Partial Class ViewUserControl
 		'
 		Me.GameSetupComboBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.GameSetupComboBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+		Me.GameSetupComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
 		Me.GameSetupComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.GameSetupComboBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.GameSetupComboBox.FormattingEnabled = True
+		Me.GameSetupComboBox.IsReadOnly = False
 		Me.GameSetupComboBox.Location = New System.Drawing.Point(181, 4)
 		Me.GameSetupComboBox.Name = "GameSetupComboBox"
-		Me.GameSetupComboBox.Size = New System.Drawing.Size(493, 21)
+		Me.GameSetupComboBox.Size = New System.Drawing.Size(493, 23)
 		Me.GameSetupComboBox.TabIndex = 6
 		'
 		'SetUpGameButton
@@ -273,13 +329,18 @@ Partial Class ViewUserControl
 		Me.MessageTextBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.MessageTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.MessageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.MessageTextBox.CueBannerText = ""
+		Me.MessageTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.MessageTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.MessageTextBox.Location = New System.Drawing.Point(0, 61)
-		Me.MessageTextBox.Multiline = True
 		Me.MessageTextBox.Name = "MessageTextBox"
 		Me.MessageTextBox.ReadOnly = True
+		Me.MessageTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.MessageTextBox.Size = New System.Drawing.Size(770, 45)
 		Me.MessageTextBox.TabIndex = 12
+		Me.MessageTextBox.Text = ""
 		'
 		'ViewUserControl
 		'
@@ -296,27 +357,30 @@ Partial Class ViewUserControl
 		CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.SplitContainer1.ResumeLayout(False)
 		Me.GroupBox1.ResumeLayout(False)
+		Me.Panel1.ResumeLayout(False)
 		Me.ResumeLayout(False)
 
 	End Sub
-	Friend WithEvents ViewButton As System.Windows.Forms.Button
-	Friend WithEvents MdlPathFileNameTextBox As TextBoxEx
-	Friend WithEvents BrowseForMdlFileButton As System.Windows.Forms.Button
+	Friend WithEvents ViewButton As ButtonEx
+	Friend WithEvents MdlPathFileNameTextBox As Crowbar.RichTextBoxEx
+	Friend WithEvents BrowseForMdlFileButton As ButtonEx
 	Friend WithEvents Label1 As System.Windows.Forms.Label
-	Friend WithEvents Panel2 As System.Windows.Forms.Panel
+	Friend WithEvents Panel2 As PanelEx
 	Friend WithEvents GameLabel As System.Windows.Forms.Label
-	Friend WithEvents SetUpGameButton As System.Windows.Forms.Button
-	Friend WithEvents GameSetupComboBox As System.Windows.Forms.ComboBox
-	Friend WithEvents GotoMdlFileButton As System.Windows.Forms.Button
-	Friend WithEvents ViewAsReplacementButton As System.Windows.Forms.Button
-	Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+	Friend WithEvents SetUpGameButton As ButtonEx
+	Friend WithEvents GameSetupComboBox As ComboBoxEx
+	Friend WithEvents GotoMdlFileButton As ButtonEx
+	Friend WithEvents ViewAsReplacementButton As ButtonEx
+	Friend WithEvents GroupBox1 As GroupBoxEx
 	Friend WithEvents InfoRichTextBox As Crowbar.RichTextBoxEx
-	Friend WithEvents UseInDecompileButton As System.Windows.Forms.Button
-	Friend WithEvents OpenViewerButton As System.Windows.Forms.Button
-	Friend WithEvents MessageTextBox As Crowbar.TextBoxEx
+	Friend WithEvents UseInDecompileButton As ButtonEx
+	Friend WithEvents OpenViewerButton As ButtonEx
+	Friend WithEvents MessageTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents SplitContainer1 As System.Windows.Forms.SplitContainer
-	Friend WithEvents RunGameButton As System.Windows.Forms.Button
-	Friend WithEvents OpenMappingToolButton As System.Windows.Forms.Button
+	Friend WithEvents RunGameButton As ButtonEx
+	Friend WithEvents OpenMappingToolButton As ButtonEx
 	Friend WithEvents OverrideMdlVersionLabel As Label
-	Friend WithEvents OverrideMdlVersionComboBox As ComboBox
+	Friend WithEvents OverrideMdlVersionComboBox As ComboBoxEx
+	Friend WithEvents RefreshButton As ButtonEx
+	Friend WithEvents Panel1 As Panel
 End Class
