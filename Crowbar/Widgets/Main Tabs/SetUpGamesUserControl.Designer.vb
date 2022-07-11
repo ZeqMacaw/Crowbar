@@ -23,50 +23,55 @@ Partial Class SetUpGamesUserControl
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
 		Me.components = New System.ComponentModel.Container()
-		Me.AddLibraryPathButton = New System.Windows.Forms.Button()
-		Me.DeleteLibraryPathButton = New System.Windows.Forms.Button()
+		Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Me.AddLibraryPathButton = New Crowbar.ButtonEx()
+		Me.DeleteLibraryPathButton = New Crowbar.ButtonEx()
 		Me.Label11 = New System.Windows.Forms.Label()
 		Me.Label10 = New System.Windows.Forms.Label()
-		Me.BrowseForSteamAppPathFileNameButton = New System.Windows.Forms.Button()
-		Me.SteamAppPathFileNameTextBox = New System.Windows.Forms.TextBox()
-		Me.AddGameSetupButton = New System.Windows.Forms.Button()
-		Me.GameSetupComboBox = New System.Windows.Forms.ComboBox()
-		Me.GameGroupBox = New System.Windows.Forms.GroupBox()
+		Me.BrowseForSteamAppPathFileNameButton = New Crowbar.ButtonEx()
+		Me.SteamAppPathFileNameTextBox = New Crowbar.RichTextBoxEx()
+		Me.AddGameSetupButton = New Crowbar.ButtonEx()
+		Me.GameSetupComboBox = New Crowbar.ComboBoxEx()
+		Me.GameGroupBox = New Crowbar.GroupBoxEx()
 		Me.EngineLabel = New System.Windows.Forms.Label()
-		Me.EngineComboBox = New System.Windows.Forms.ComboBox()
-		Me.CreateModelsFolderTreeButton = New System.Windows.Forms.Button()
-		Me.BrowseForMappingToolPathFileNameButton = New System.Windows.Forms.Button()
-		Me.MappingToolPathFileNameTextBox = New System.Windows.Forms.TextBox()
+		Me.EngineComboBox = New Crowbar.ComboBoxEx()
+		Me.CreateModelsFolderTreeButton = New Crowbar.ButtonEx()
+		Me.BrowseForMappingToolPathFileNameButton = New Crowbar.ButtonEx()
+		Me.MappingToolPathFileNameTextBox = New Crowbar.RichTextBoxEx()
 		Me.MappingToolLabel = New System.Windows.Forms.Label()
-		Me.GameAppOptionsTextBox = New System.Windows.Forms.TextBox()
 		Me.ExecutableOptionsLabel = New System.Windows.Forms.Label()
-		Me.ClearGameAppOptionsButton = New System.Windows.Forms.Button()
-		Me.BrowseForGameAppPathFileNameButton = New System.Windows.Forms.Button()
-		Me.GameAppPathFileNameTextBox = New System.Windows.Forms.TextBox()
+		Me.ClearGameAppOptionsButton = New Crowbar.ButtonEx()
+		Me.BrowseForGameAppPathFileNameButton = New Crowbar.ButtonEx()
+		Me.GameAppPathFileNameTextBox = New Crowbar.RichTextBoxEx()
 		Me.ExecutableLabel = New System.Windows.Forms.Label()
 		Me.PackerLabel = New System.Windows.Forms.Label()
-		Me.BrowseForUnpackerPathFileNameButton = New System.Windows.Forms.Button()
-		Me.PackerPathFileNameTextBox = New System.Windows.Forms.TextBox()
+		Me.BrowseForUnpackerPathFileNameButton = New Crowbar.ButtonEx()
+		Me.PackerPathFileNameTextBox = New Crowbar.RichTextBoxEx()
 		Me.ModelViewerLabel = New System.Windows.Forms.Label()
-		Me.BrowseForViewerPathFileNameButton = New System.Windows.Forms.Button()
-		Me.ViewerPathFileNameTextBox = New System.Windows.Forms.TextBox()
-		Me.CloneGameSetupButton = New System.Windows.Forms.Button()
-		Me.GameNameTextBox = New Crowbar.TextBoxEx()
+		Me.BrowseForViewerPathFileNameButton = New Crowbar.ButtonEx()
+		Me.ViewerPathFileNameTextBox = New Crowbar.RichTextBoxEx()
+		Me.CloneGameSetupButton = New Crowbar.ButtonEx()
+		Me.GameNameTextBox = New Crowbar.RichTextBoxEx()
 		Me.NameLabel = New System.Windows.Forms.Label()
-		Me.DeleteGameSetupButton = New System.Windows.Forms.Button()
-		Me.BrowseForGamePathFileNameButton = New System.Windows.Forms.Button()
-		Me.GamePathFileNameTextBox = New System.Windows.Forms.TextBox()
+		Me.DeleteGameSetupButton = New Crowbar.ButtonEx()
+		Me.BrowseForGamePathFileNameButton = New Crowbar.ButtonEx()
+		Me.GamePathFileNameTextBox = New Crowbar.RichTextBoxEx()
 		Me.ModelCompilerLabel = New System.Windows.Forms.Label()
-		Me.BrowseForCompilerPathFileNameButton = New System.Windows.Forms.Button()
-		Me.CompilerPathFileNameTextBox = New System.Windows.Forms.TextBox()
+		Me.BrowseForCompilerPathFileNameButton = New Crowbar.ButtonEx()
+		Me.CompilerPathFileNameTextBox = New Crowbar.RichTextBoxEx()
 		Me.GamePathLabel = New System.Windows.Forms.Label()
-		Me.GoBackButton = New System.Windows.Forms.Button()
+		Me.GameAppOptionsTextBox = New Crowbar.RichTextBoxEx()
+		Me.GoBackButton = New Crowbar.ButtonEx()
 		Me.SteamLibraryPathsDataGridView = New Crowbar.MacroDataGridView()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-		Me.Panel1 = New System.Windows.Forms.Panel()
+		Me.Panel1 = New Crowbar.PanelEx()
+		Me.GameAppOptionsRichTextBoxExIncorrectTextSpacingWorkaroundPanel = New System.Windows.Forms.Panel()
 		Me.GameGroupBox.SuspendLayout()
 		CType(Me.SteamLibraryPathsDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.Panel1.SuspendLayout()
+		Me.GameAppOptionsRichTextBoxExIncorrectTextSpacingWorkaroundPanel.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'AddLibraryPathButton
@@ -124,10 +129,19 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.SteamAppPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.SteamAppPathFileNameTextBox.Location = New System.Drawing.Point(3, 364)
+		Me.SteamAppPathFileNameTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.SteamAppPathFileNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.SteamAppPathFileNameTextBox.CueBannerText = ""
+		Me.SteamAppPathFileNameTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.SteamAppPathFileNameTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		Me.SteamAppPathFileNameTextBox.Location = New System.Drawing.Point(3, 365)
+		Me.SteamAppPathFileNameTextBox.Multiline = False
 		Me.SteamAppPathFileNameTextBox.Name = "SteamAppPathFileNameTextBox"
+		Me.SteamAppPathFileNameTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.SteamAppPathFileNameTextBox.Size = New System.Drawing.Size(604, 22)
 		Me.SteamAppPathFileNameTextBox.TabIndex = 46
+		Me.SteamAppPathFileNameTextBox.Text = ""
+		Me.SteamAppPathFileNameTextBox.WordWrap = False
 		'
 		'AddGameSetupButton
 		'
@@ -143,24 +157,29 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.GameSetupComboBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.GameSetupComboBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+		Me.GameSetupComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
 		Me.GameSetupComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.GameSetupComboBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.GameSetupComboBox.FormattingEnabled = True
-		Me.GameSetupComboBox.Location = New System.Drawing.Point(3, 4)
+		Me.GameSetupComboBox.IsReadOnly = False
+		Me.GameSetupComboBox.Location = New System.Drawing.Point(3, 3)
 		Me.GameSetupComboBox.Name = "GameSetupComboBox"
-		Me.GameSetupComboBox.Size = New System.Drawing.Size(697, 21)
+		Me.GameSetupComboBox.Size = New System.Drawing.Size(697, 23)
 		Me.GameSetupComboBox.TabIndex = 42
 		'
 		'GameGroupBox
 		'
 		Me.GameGroupBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.GameGroupBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.GameGroupBox.Controls.Add(Me.EngineLabel)
 		Me.GameGroupBox.Controls.Add(Me.EngineComboBox)
 		Me.GameGroupBox.Controls.Add(Me.CreateModelsFolderTreeButton)
 		Me.GameGroupBox.Controls.Add(Me.BrowseForMappingToolPathFileNameButton)
 		Me.GameGroupBox.Controls.Add(Me.MappingToolPathFileNameTextBox)
 		Me.GameGroupBox.Controls.Add(Me.MappingToolLabel)
-		Me.GameGroupBox.Controls.Add(Me.GameAppOptionsTextBox)
+		Me.GameGroupBox.Controls.Add(Me.GameAppOptionsRichTextBoxExIncorrectTextSpacingWorkaroundPanel)
 		Me.GameGroupBox.Controls.Add(Me.ExecutableOptionsLabel)
 		Me.GameGroupBox.Controls.Add(Me.ClearGameAppOptionsButton)
 		Me.GameGroupBox.Controls.Add(Me.BrowseForGameAppPathFileNameButton)
@@ -182,8 +201,11 @@ Partial Class SetUpGamesUserControl
 		Me.GameGroupBox.Controls.Add(Me.BrowseForCompilerPathFileNameButton)
 		Me.GameGroupBox.Controls.Add(Me.CompilerPathFileNameTextBox)
 		Me.GameGroupBox.Controls.Add(Me.GamePathLabel)
+		Me.GameGroupBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		Me.GameGroupBox.IsReadOnly = False
 		Me.GameGroupBox.Location = New System.Drawing.Point(3, 32)
 		Me.GameGroupBox.Name = "GameGroupBox"
+		Me.GameGroupBox.SelectedValue = Nothing
 		Me.GameGroupBox.Size = New System.Drawing.Size(778, 304)
 		Me.GameGroupBox.TabIndex = 44
 		Me.GameGroupBox.TabStop = False
@@ -200,11 +222,16 @@ Partial Class SetUpGamesUserControl
 		'
 		'EngineComboBox
 		'
+		Me.EngineComboBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+		Me.EngineComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+		Me.EngineComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.EngineComboBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.EngineComboBox.FormattingEnabled = True
+		Me.EngineComboBox.IsReadOnly = False
 		Me.EngineComboBox.Items.AddRange(New Object() {"GoldSource", "Source"})
 		Me.EngineComboBox.Location = New System.Drawing.Point(55, 45)
 		Me.EngineComboBox.Name = "EngineComboBox"
-		Me.EngineComboBox.Size = New System.Drawing.Size(121, 21)
+		Me.EngineComboBox.Size = New System.Drawing.Size(121, 23)
 		Me.EngineComboBox.TabIndex = 42
 		'
 		'CreateModelsFolderTreeButton
@@ -232,10 +259,19 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.MappingToolPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.MappingToolPathFileNameTextBox.Location = New System.Drawing.Point(102, 217)
+		Me.MappingToolPathFileNameTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.MappingToolPathFileNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.MappingToolPathFileNameTextBox.CueBannerText = ""
+		Me.MappingToolPathFileNameTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.MappingToolPathFileNameTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		Me.MappingToolPathFileNameTextBox.Location = New System.Drawing.Point(102, 218)
+		Me.MappingToolPathFileNameTextBox.Multiline = False
 		Me.MappingToolPathFileNameTextBox.Name = "MappingToolPathFileNameTextBox"
+		Me.MappingToolPathFileNameTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.MappingToolPathFileNameTextBox.Size = New System.Drawing.Size(589, 22)
 		Me.MappingToolPathFileNameTextBox.TabIndex = 38
+		Me.MappingToolPathFileNameTextBox.Text = ""
+		Me.MappingToolPathFileNameTextBox.WordWrap = False
 		'
 		'MappingToolLabel
 		'
@@ -246,15 +282,6 @@ Partial Class SetUpGamesUserControl
 		Me.MappingToolLabel.Size = New System.Drawing.Size(81, 13)
 		Me.MappingToolLabel.TabIndex = 37
 		Me.MappingToolLabel.Text = "Mapping tool:"
-		'
-		'GameAppOptionsTextBox
-		'
-		Me.GameAppOptionsTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.GameAppOptionsTextBox.Location = New System.Drawing.Point(112, 101)
-		Me.GameAppOptionsTextBox.Name = "GameAppOptionsTextBox"
-		Me.GameAppOptionsTextBox.Size = New System.Drawing.Size(579, 22)
-		Me.GameAppOptionsTextBox.TabIndex = 32
 		'
 		'ExecutableOptionsLabel
 		'
@@ -289,10 +316,19 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.GameAppPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.GameAppPathFileNameTextBox.Location = New System.Drawing.Point(112, 72)
+		Me.GameAppPathFileNameTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.GameAppPathFileNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.GameAppPathFileNameTextBox.CueBannerText = ""
+		Me.GameAppPathFileNameTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.GameAppPathFileNameTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		Me.GameAppPathFileNameTextBox.Location = New System.Drawing.Point(112, 73)
+		Me.GameAppPathFileNameTextBox.Multiline = False
 		Me.GameAppPathFileNameTextBox.Name = "GameAppPathFileNameTextBox"
+		Me.GameAppPathFileNameTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.GameAppPathFileNameTextBox.Size = New System.Drawing.Size(579, 22)
 		Me.GameAppPathFileNameTextBox.TabIndex = 29
+		Me.GameAppPathFileNameTextBox.Text = ""
+		Me.GameAppPathFileNameTextBox.WordWrap = False
 		'
 		'ExecutableLabel
 		'
@@ -328,10 +364,19 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.PackerPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.PackerPathFileNameTextBox.Location = New System.Drawing.Point(102, 246)
+		Me.PackerPathFileNameTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.PackerPathFileNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.PackerPathFileNameTextBox.CueBannerText = ""
+		Me.PackerPathFileNameTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.PackerPathFileNameTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		Me.PackerPathFileNameTextBox.Location = New System.Drawing.Point(102, 247)
+		Me.PackerPathFileNameTextBox.Multiline = False
 		Me.PackerPathFileNameTextBox.Name = "PackerPathFileNameTextBox"
+		Me.PackerPathFileNameTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.PackerPathFileNameTextBox.Size = New System.Drawing.Size(589, 22)
 		Me.PackerPathFileNameTextBox.TabIndex = 17
+		Me.PackerPathFileNameTextBox.Text = ""
+		Me.PackerPathFileNameTextBox.WordWrap = False
 		'
 		'ModelViewerLabel
 		'
@@ -357,10 +402,19 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.ViewerPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ViewerPathFileNameTextBox.Location = New System.Drawing.Point(102, 188)
+		Me.ViewerPathFileNameTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.ViewerPathFileNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.ViewerPathFileNameTextBox.CueBannerText = ""
+		Me.ViewerPathFileNameTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.ViewerPathFileNameTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		Me.ViewerPathFileNameTextBox.Location = New System.Drawing.Point(102, 189)
+		Me.ViewerPathFileNameTextBox.Multiline = False
 		Me.ViewerPathFileNameTextBox.Name = "ViewerPathFileNameTextBox"
+		Me.ViewerPathFileNameTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.ViewerPathFileNameTextBox.Size = New System.Drawing.Size(589, 22)
 		Me.ViewerPathFileNameTextBox.TabIndex = 14
+		Me.ViewerPathFileNameTextBox.Text = ""
+		Me.ViewerPathFileNameTextBox.WordWrap = False
 		'
 		'CloneGameSetupButton
 		'
@@ -375,16 +429,24 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.GameNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.GameNameTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.GameNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.GameNameTextBox.CueBannerText = ""
-		Me.GameNameTextBox.Location = New System.Drawing.Point(55, 19)
+		Me.GameNameTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.GameNameTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		Me.GameNameTextBox.Location = New System.Drawing.Point(55, 17)
+		Me.GameNameTextBox.Multiline = False
 		Me.GameNameTextBox.Name = "GameNameTextBox"
+		Me.GameNameTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.GameNameTextBox.Size = New System.Drawing.Size(717, 22)
 		Me.GameNameTextBox.TabIndex = 1
+		Me.GameNameTextBox.Text = ""
+		Me.GameNameTextBox.WordWrap = False
 		'
 		'NameLabel
 		'
 		Me.NameLabel.AutoSize = True
-		Me.NameLabel.Location = New System.Drawing.Point(6, 24)
+		Me.NameLabel.Location = New System.Drawing.Point(6, 22)
 		Me.NameLabel.Name = "NameLabel"
 		Me.NameLabel.Size = New System.Drawing.Size(39, 13)
 		Me.NameLabel.TabIndex = 0
@@ -413,10 +475,19 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.GamePathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.GamePathFileNameTextBox.Location = New System.Drawing.Point(102, 130)
+		Me.GamePathFileNameTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.GamePathFileNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.GamePathFileNameTextBox.CueBannerText = ""
+		Me.GamePathFileNameTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.GamePathFileNameTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		Me.GamePathFileNameTextBox.Location = New System.Drawing.Point(102, 131)
+		Me.GamePathFileNameTextBox.Multiline = False
 		Me.GamePathFileNameTextBox.Name = "GamePathFileNameTextBox"
+		Me.GamePathFileNameTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.GamePathFileNameTextBox.Size = New System.Drawing.Size(589, 22)
 		Me.GamePathFileNameTextBox.TabIndex = 3
+		Me.GamePathFileNameTextBox.Text = ""
+		Me.GamePathFileNameTextBox.WordWrap = False
 		'
 		'ModelCompilerLabel
 		'
@@ -442,10 +513,19 @@ Partial Class SetUpGamesUserControl
 		'
 		Me.CompilerPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.CompilerPathFileNameTextBox.Location = New System.Drawing.Point(102, 159)
+		Me.CompilerPathFileNameTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.CompilerPathFileNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.CompilerPathFileNameTextBox.CueBannerText = ""
+		Me.CompilerPathFileNameTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.CompilerPathFileNameTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		Me.CompilerPathFileNameTextBox.Location = New System.Drawing.Point(102, 160)
+		Me.CompilerPathFileNameTextBox.Multiline = False
 		Me.CompilerPathFileNameTextBox.Name = "CompilerPathFileNameTextBox"
+		Me.CompilerPathFileNameTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.CompilerPathFileNameTextBox.Size = New System.Drawing.Size(589, 22)
 		Me.CompilerPathFileNameTextBox.TabIndex = 6
+		Me.CompilerPathFileNameTextBox.Text = ""
+		Me.CompilerPathFileNameTextBox.WordWrap = False
 		'
 		'GamePathLabel
 		'
@@ -455,6 +535,23 @@ Partial Class SetUpGamesUserControl
 		Me.GamePathLabel.Size = New System.Drawing.Size(76, 13)
 		Me.GamePathLabel.TabIndex = 2
 		Me.GamePathLabel.Text = "GameInfo.txt:"
+		'
+		'GameAppOptionsTextBox
+		'
+		Me.GameAppOptionsTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.GameAppOptionsTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.GameAppOptionsTextBox.CueBannerText = ""
+		Me.GameAppOptionsTextBox.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.GameAppOptionsTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.GameAppOptionsTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		Me.GameAppOptionsTextBox.Location = New System.Drawing.Point(0, 0)
+		Me.GameAppOptionsTextBox.Multiline = False
+		Me.GameAppOptionsTextBox.Name = "GameAppOptionsTextBox"
+		Me.GameAppOptionsTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
+		Me.GameAppOptionsTextBox.Size = New System.Drawing.Size(579, 22)
+		Me.GameAppOptionsTextBox.TabIndex = 32
+		Me.GameAppOptionsTextBox.Text = ""
+		Me.GameAppOptionsTextBox.WordWrap = False
 		'
 		'GoBackButton
 		'
@@ -476,20 +573,52 @@ Partial Class SetUpGamesUserControl
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.SteamLibraryPathsDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-		Me.SteamLibraryPathsDataGridView.BackgroundColor = System.Drawing.SystemColors.ControlDark
+		Me.SteamLibraryPathsDataGridView.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
+		Me.SteamLibraryPathsDataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.SteamLibraryPathsDataGridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText
+		Me.SteamLibraryPathsDataGridView.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
+		DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+		DataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
+		DataGridViewCellStyle4.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		DataGridViewCellStyle4.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		DataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(124, Byte), Integer), CType(CType(16, Byte), Integer))
+		DataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+		Me.SteamLibraryPathsDataGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
 		Me.SteamLibraryPathsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+		DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+		DataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
+		DataGridViewCellStyle5.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		DataGridViewCellStyle5.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		DataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(124, Byte), Integer), CType(CType(16, Byte), Integer))
+		DataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+		Me.SteamLibraryPathsDataGridView.DefaultCellStyle = DataGridViewCellStyle5
+		Me.SteamLibraryPathsDataGridView.EnableHeadersVisualStyles = False
+		Me.SteamLibraryPathsDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
 		Me.SteamLibraryPathsDataGridView.Location = New System.Drawing.Point(3, 412)
 		Me.SteamLibraryPathsDataGridView.MultiSelect = False
 		Me.SteamLibraryPathsDataGridView.Name = "SteamLibraryPathsDataGridView"
+		Me.SteamLibraryPathsDataGridView.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
+		DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+		DataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
+		DataGridViewCellStyle6.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		DataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		DataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(124, Byte), Integer), CType(CType(16, Byte), Integer))
+		DataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+		Me.SteamLibraryPathsDataGridView.RowHeadersDefaultCellStyle = DataGridViewCellStyle6
 		Me.SteamLibraryPathsDataGridView.RowHeadersVisible = False
 		Me.SteamLibraryPathsDataGridView.RowHeadersWidth = 25
 		Me.SteamLibraryPathsDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+		Me.SteamLibraryPathsDataGridView.ScrollBars = System.Windows.Forms.ScrollBars.None
+		Me.SteamLibraryPathsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
 		Me.SteamLibraryPathsDataGridView.Size = New System.Drawing.Size(604, 131)
 		Me.SteamLibraryPathsDataGridView.TabIndex = 49
 		'
 		'Panel1
 		'
+		Me.Panel1.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.Panel1.Controls.Add(Me.GoBackButton)
 		Me.Panel1.Controls.Add(Me.GameSetupComboBox)
 		Me.Panel1.Controls.Add(Me.AddLibraryPathButton)
@@ -502,10 +631,23 @@ Partial Class SetUpGamesUserControl
 		Me.Panel1.Controls.Add(Me.AddGameSetupButton)
 		Me.Panel1.Controls.Add(Me.GameGroupBox)
 		Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.Panel1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.Panel1.Location = New System.Drawing.Point(0, 0)
 		Me.Panel1.Name = "Panel1"
+		Me.Panel1.SelectedIndex = -1
+		Me.Panel1.SelectedValue = Nothing
 		Me.Panel1.Size = New System.Drawing.Size(784, 546)
 		Me.Panel1.TabIndex = 17
+		'
+		'GameAppOptionsRichTextBoxExIncorrectTextSpacingWorkaroundPanel
+		'
+		Me.GameAppOptionsRichTextBoxExIncorrectTextSpacingWorkaroundPanel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.GameAppOptionsRichTextBoxExIncorrectTextSpacingWorkaroundPanel.Controls.Add(Me.GameAppOptionsTextBox)
+		Me.GameAppOptionsRichTextBoxExIncorrectTextSpacingWorkaroundPanel.Location = New System.Drawing.Point(112, 102)
+		Me.GameAppOptionsRichTextBoxExIncorrectTextSpacingWorkaroundPanel.Name = "GameAppOptionsRichTextBoxExIncorrectTextSpacingWorkaroundPanel"
+		Me.GameAppOptionsRichTextBoxExIncorrectTextSpacingWorkaroundPanel.Size = New System.Drawing.Size(579, 22)
+		Me.GameAppOptionsRichTextBoxExIncorrectTextSpacingWorkaroundPanel.TabIndex = 44
 		'
 		'SetUpGamesUserControl
 		'
@@ -519,48 +661,50 @@ Partial Class SetUpGamesUserControl
 		CType(Me.SteamLibraryPathsDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.Panel1.ResumeLayout(False)
 		Me.Panel1.PerformLayout()
+		Me.GameAppOptionsRichTextBoxExIncorrectTextSpacingWorkaroundPanel.ResumeLayout(False)
 		Me.ResumeLayout(False)
 
 	End Sub
-	Friend WithEvents AddLibraryPathButton As System.Windows.Forms.Button
-	Friend WithEvents DeleteLibraryPathButton As System.Windows.Forms.Button
+	Friend WithEvents AddLibraryPathButton As ButtonEx
+	Friend WithEvents DeleteLibraryPathButton As ButtonEx
 	Friend WithEvents SteamLibraryPathsDataGridView As Crowbar.MacroDataGridView
 	Friend WithEvents Label11 As System.Windows.Forms.Label
 	Friend WithEvents Label10 As System.Windows.Forms.Label
-	Friend WithEvents BrowseForSteamAppPathFileNameButton As System.Windows.Forms.Button
-	Friend WithEvents SteamAppPathFileNameTextBox As System.Windows.Forms.TextBox
-	Friend WithEvents AddGameSetupButton As System.Windows.Forms.Button
-	Friend WithEvents GameSetupComboBox As System.Windows.Forms.ComboBox
-	Friend WithEvents GameGroupBox As System.Windows.Forms.GroupBox
-	Friend WithEvents CreateModelsFolderTreeButton As System.Windows.Forms.Button
-	Friend WithEvents BrowseForMappingToolPathFileNameButton As System.Windows.Forms.Button
-	Friend WithEvents MappingToolPathFileNameTextBox As System.Windows.Forms.TextBox
+	Friend WithEvents BrowseForSteamAppPathFileNameButton As ButtonEx
+	Friend WithEvents SteamAppPathFileNameTextBox As Crowbar.RichTextBoxEx
+	Friend WithEvents AddGameSetupButton As ButtonEx
+	Friend WithEvents GameSetupComboBox As ComboBoxEx
+	Friend WithEvents GameGroupBox As GroupBoxEx
+	Friend WithEvents CreateModelsFolderTreeButton As ButtonEx
+	Friend WithEvents BrowseForMappingToolPathFileNameButton As ButtonEx
+	Friend WithEvents MappingToolPathFileNameTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents MappingToolLabel As System.Windows.Forms.Label
-	Friend WithEvents GameAppOptionsTextBox As System.Windows.Forms.TextBox
+	Friend WithEvents GameAppOptionsTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents ExecutableOptionsLabel As System.Windows.Forms.Label
-	Friend WithEvents ClearGameAppOptionsButton As System.Windows.Forms.Button
-	Friend WithEvents BrowseForGameAppPathFileNameButton As System.Windows.Forms.Button
-	Friend WithEvents GameAppPathFileNameTextBox As System.Windows.Forms.TextBox
+	Friend WithEvents ClearGameAppOptionsButton As ButtonEx
+	Friend WithEvents BrowseForGameAppPathFileNameButton As ButtonEx
+	Friend WithEvents GameAppPathFileNameTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents ExecutableLabel As System.Windows.Forms.Label
 	Friend WithEvents PackerLabel As System.Windows.Forms.Label
-	Friend WithEvents BrowseForUnpackerPathFileNameButton As System.Windows.Forms.Button
-	Friend WithEvents PackerPathFileNameTextBox As System.Windows.Forms.TextBox
+	Friend WithEvents BrowseForUnpackerPathFileNameButton As ButtonEx
+	Friend WithEvents PackerPathFileNameTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents ModelViewerLabel As System.Windows.Forms.Label
-	Friend WithEvents BrowseForViewerPathFileNameButton As System.Windows.Forms.Button
-	Friend WithEvents ViewerPathFileNameTextBox As System.Windows.Forms.TextBox
-	Friend WithEvents CloneGameSetupButton As System.Windows.Forms.Button
-	Friend WithEvents GameNameTextBox As Crowbar.TextBoxEx
+	Friend WithEvents BrowseForViewerPathFileNameButton As ButtonEx
+	Friend WithEvents ViewerPathFileNameTextBox As Crowbar.RichTextBoxEx
+	Friend WithEvents CloneGameSetupButton As ButtonEx
+	Friend WithEvents GameNameTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents NameLabel As System.Windows.Forms.Label
-	Friend WithEvents DeleteGameSetupButton As System.Windows.Forms.Button
-	Friend WithEvents BrowseForGamePathFileNameButton As System.Windows.Forms.Button
-	Friend WithEvents GamePathFileNameTextBox As System.Windows.Forms.TextBox
+	Friend WithEvents DeleteGameSetupButton As ButtonEx
+	Friend WithEvents BrowseForGamePathFileNameButton As ButtonEx
+	Friend WithEvents GamePathFileNameTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents ModelCompilerLabel As System.Windows.Forms.Label
-	Friend WithEvents BrowseForCompilerPathFileNameButton As System.Windows.Forms.Button
-	Friend WithEvents CompilerPathFileNameTextBox As System.Windows.Forms.TextBox
+	Friend WithEvents BrowseForCompilerPathFileNameButton As ButtonEx
+	Friend WithEvents CompilerPathFileNameTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents GamePathLabel As System.Windows.Forms.Label
-	Friend WithEvents EngineComboBox As System.Windows.Forms.ComboBox
+	Friend WithEvents EngineComboBox As ComboBoxEx
 	Friend WithEvents EngineLabel As System.Windows.Forms.Label
-	Friend WithEvents GoBackButton As System.Windows.Forms.Button
+	Friend WithEvents GoBackButton As ButtonEx
 	Friend WithEvents ToolTip1 As ToolTip
-	Friend WithEvents Panel1 As Panel
+	Friend WithEvents Panel1 As PanelEx
+	Friend WithEvents GameAppOptionsRichTextBoxExIncorrectTextSpacingWorkaroundPanel As Panel
 End Class

@@ -9,6 +9,10 @@ Public Class GroupBoxEx
 		MyBase.New()
 
 		'Me.theSelectedIndex = -1
+		Me.ForeColor = WidgetTextColor
+		Me.BackColor = WidgetBackColor
+
+		'Me.SetStyle(ControlStyles.UserPaint, True)
 	End Sub
 
 	Public Event SelectedValueChanged As EventHandler
@@ -62,9 +66,9 @@ Public Class GroupBoxEx
 				Me.theControlIsReadOnly = value
 
 				If Me.theControlIsReadOnly Then
-					Me.ForeColor = SystemColors.GrayText
+					Me.ForeColor = WidgetDisabledTextColor
 				Else
-					Me.ForeColor = SystemColors.ControlText
+					Me.ForeColor = WidgetTextColor
 				End If
 			End If
 		End Set
@@ -153,6 +157,38 @@ Public Class GroupBoxEx
 			RemoveHandler radioButton.CheckedChanged, AddressOf Me.RadioButton_CheckedChanged
 		End If
 		MyBase.OnControlRemoved(e)
+	End Sub
+
+	Protected Overrides Sub OnHandleCreated(e As EventArgs)
+		MyBase.OnHandleCreated(e)
+		'SetStyle(ControlStyles.AllPaintingInWmPaint, True)
+		'SetStyle(ControlStyles.DoubleBuffer, True)
+		SetStyle(ControlStyles.UserPaint, True)
+	End Sub
+
+	Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
+		'MyBase.OnPaint(e)
+
+		Dim g As Graphics = e.Graphics
+		Dim clientRectangle As Rectangle = Me.ClientRectangle
+
+		' Draw background.
+		Using backColorBrush As New SolidBrush(WidgetBackColor)
+			g.FillRectangle(backColorBrush, clientRectangle)
+		End Using
+
+		Dim stringSize As SizeF = TextRenderer.MeasureText(Me.Text, Me.Font)
+
+		' Draw groupbox border.
+		Using borderPen As New Pen(WidgetDisabledTextColor)
+			Dim borderRect As New Rectangle(0, CInt(stringSize.Height / 2), clientRectangle.Width - 1, clientRectangle.Height - CInt(stringSize.Height / 2) - 1)
+			g.DrawRectangle(borderPen, borderRect)
+		End Using
+
+		' Draw text background and text.
+		Dim textIndent As Integer = 6
+		Dim textRect As New Rectangle(clientRectangle.X + textIndent, clientRectangle.Y, clientRectangle.Width - (textIndent * 2), CInt(stringSize.Height))
+		TextRenderer.DrawText(g, Me.Text, Me.Font, textRect, WidgetTextColor, WidgetBackColor, TextFormatFlags.Left Or TextFormatFlags.VerticalCenter Or TextFormatFlags.WordEllipsis Or TextFormatFlags.LeftAndRightPadding)
 	End Sub
 
 	Protected Overridable Sub OnSelectedValueChanged(ByVal e As EventArgs)

@@ -22,9 +22,9 @@ Partial Class SourceFilmmakerTagsUserControl
 	'Do not modify it using the code editor.
 	<System.Diagnostics.DebuggerStepThrough()> _
 	Private Sub InitializeComponent()
-		Me.ComboBox1 = New System.Windows.Forms.ComboBox()
-		Me.ComboBox2 = New System.Windows.Forms.ComboBox()
-		Me.ComboBox3 = New System.Windows.Forms.ComboBox()
+		Me.ComboBox1 = New ComboBoxEx()
+		Me.ComboBox2 = New ComboBoxEx()
+		Me.ComboBox3 = New ComboBoxEx()
 		Me.SuspendLayout()
 		'
 		'ComboBox1
@@ -64,7 +64,7 @@ Partial Class SourceFilmmakerTagsUserControl
 
 	End Sub
 
-	Friend WithEvents ComboBox1 As ComboBox
-	Friend WithEvents ComboBox2 As ComboBox
-	Friend WithEvents ComboBox3 As ComboBox
+	Friend WithEvents ComboBox1 As ComboBoxEx
+	Friend WithEvents ComboBox2 As ComboBoxEx
+	Friend WithEvents ComboBox3 As ComboBoxEx
 End Class

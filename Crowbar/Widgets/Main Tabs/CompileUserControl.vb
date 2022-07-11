@@ -765,13 +765,15 @@ Public Class CompileUserControl
 		'NOTE: Available in Framework 4.0:
 		'TheApp.Settings.CompilerOptionsText = String.Join(" ", Me.compilerOptions)
 		'------
-		For Each compilerOption As String In Me.theSelectedCompilerOptions
-			TheApp.Settings.CompileOptionsText += " "
-			TheApp.Settings.CompileOptionsText += compilerOption
-		Next
-		If Me.DirectCompilerOptionsTextBox.Text.Trim() <> "" Then
-			TheApp.Settings.CompileOptionsText += " "
-			TheApp.Settings.CompileOptionsText += Me.DirectCompilerOptionsTextBox.Text
+		If Me.theSelectedCompilerOptions IsNot Nothing Then
+			For Each compilerOption As String In Me.theSelectedCompilerOptions
+				TheApp.Settings.CompileOptionsText += " "
+				TheApp.Settings.CompileOptionsText += compilerOption
+			Next
+			If Me.DirectCompilerOptionsTextBox.Text.Trim() <> "" Then
+				TheApp.Settings.CompileOptionsText += " "
+				TheApp.Settings.CompileOptionsText += Me.DirectCompilerOptionsTextBox.Text
+			End If
 		End If
 
 		Me.CompilerOptionsTextBox.Text = """"

@@ -22,20 +22,21 @@ Partial Class AboutUserControl
 	'Do not modify it using the code editor.
 	<System.Diagnostics.DebuggerStepThrough()>
 	Private Sub InitializeComponent()
-		Me.ProductInfoTextBox = New System.Windows.Forms.TextBox()
-		Me.ProductDescriptionTextBox = New System.Windows.Forms.TextBox()
-		Me.ProductLogoButton = New System.Windows.Forms.Button()
-		Me.AuthorIconButton = New System.Windows.Forms.Button()
-		Me.CreditsTextBox = New System.Windows.Forms.TextBox()
+		Me.components = New System.ComponentModel.Container()
+		Me.ProductInfoTextBox = New Crowbar.RichTextBoxEx()
+		Me.ProductDescriptionTextBox = New Crowbar.RichTextBoxEx()
+		Me.ProductLogoButton = New Crowbar.ButtonEx()
+		Me.AuthorIconButton = New Crowbar.ButtonEx()
+		Me.CreditsTextBox = New Crowbar.RichTextBoxEx()
 		Me.AuthorLinkLabel = New System.Windows.Forms.LinkLabel()
 		Me.ProductNameLinkLabel = New System.Windows.Forms.LinkLabel()
-		Me.Panel1 = New System.Windows.Forms.Panel()
+		Me.Panel1 = New Crowbar.PanelEx()
 		Me.GotoSteamGroupLinkLabel = New System.Windows.Forms.LinkLabel()
 		Me.GotoSteamProfileLinkLabel = New System.Windows.Forms.LinkLabel()
 		Me.PayPalPictureBox = New System.Windows.Forms.PictureBox()
-		Me.SpecialThanksGroupBox = New System.Windows.Forms.GroupBox()
-		Me.Credits3TextBox = New System.Windows.Forms.TextBox()
-		Me.Credits2TextBox = New System.Windows.Forms.TextBox()
+		Me.SpecialThanksGroupBox = New Crowbar.GroupBoxEx()
+		Me.Credits2TextBox = New Crowbar.RichTextBoxEx()
+		Me.Credits3TextBox = New Crowbar.RichTextBoxEx()
 		Me.Panel1.SuspendLayout()
 		CType(Me.PayPalPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SpecialThanksGroupBox.SuspendLayout()
@@ -43,27 +44,37 @@ Partial Class AboutUserControl
 		'
 		'ProductInfoTextBox
 		'
+		Me.ProductInfoTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
 		Me.ProductInfoTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.ProductInfoTextBox.CueBannerText = ""
+		Me.ProductInfoTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.ProductInfoTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.ProductInfoTextBox.Location = New System.Drawing.Point(3, 183)
 		Me.ProductInfoTextBox.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
-		Me.ProductInfoTextBox.Multiline = True
 		Me.ProductInfoTextBox.Name = "ProductInfoTextBox"
 		Me.ProductInfoTextBox.ReadOnly = True
+		Me.ProductInfoTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.ProductInfoTextBox.Size = New System.Drawing.Size(165, 48)
 		Me.ProductInfoTextBox.TabIndex = 3
-		Me.ProductInfoTextBox.Text = "Version" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Copyright" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Company Name"
+		Me.ProductInfoTextBox.Text = "Version" & Global.Microsoft.VisualBasic.ChrW(10) & "Copyright" & Global.Microsoft.VisualBasic.ChrW(10) & "Company Name"
 		Me.ProductInfoTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
 		Me.ProductInfoTextBox.WordWrap = False
 		'
 		'ProductDescriptionTextBox
 		'
+		Me.ProductDescriptionTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.ProductDescriptionTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.ProductDescriptionTextBox.CueBannerText = ""
+		Me.ProductDescriptionTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.ProductDescriptionTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.ProductDescriptionTextBox.Location = New System.Drawing.Point(175, 3)
-		Me.ProductDescriptionTextBox.Multiline = True
 		Me.ProductDescriptionTextBox.Name = "ProductDescriptionTextBox"
 		Me.ProductDescriptionTextBox.ReadOnly = True
+		Me.ProductDescriptionTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.ProductDescriptionTextBox.Size = New System.Drawing.Size(598, 136)
 		Me.ProductDescriptionTextBox.TabIndex = 7
 		Me.ProductDescriptionTextBox.TabStop = False
+		Me.ProductDescriptionTextBox.Text = ""
 		'
 		'ProductLogoButton
 		'
@@ -84,6 +95,25 @@ Partial Class AboutUserControl
 		Me.AuthorIconButton.Size = New System.Drawing.Size(128, 128)
 		Me.AuthorIconButton.TabIndex = 4
 		Me.AuthorIconButton.UseVisualStyleBackColor = True
+		'
+		'CreditsTextBox
+		'
+		Me.CreditsTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.CreditsTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.CreditsTextBox.CueBannerText = ""
+		Me.CreditsTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.CreditsTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		Me.CreditsTextBox.Location = New System.Drawing.Point(6, 20)
+		Me.CreditsTextBox.Name = "CreditsTextBox"
+		Me.CreditsTextBox.ReadOnly = True
+		Me.CreditsTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
+		Me.CreditsTextBox.Size = New System.Drawing.Size(191, 206)
+		Me.CreditsTextBox.TabIndex = 0
+		Me.CreditsTextBox.TabStop = False
+		Me.CreditsTextBox.Text = "arby26" & Global.Microsoft.VisualBasic.ChrW(10) & "Artfunkel" & Global.Microsoft.VisualBasic.ChrW(10) & "atrblizzard" & Global.Microsoft.VisualBasic.ChrW(10) & "Avengito" & Global.Microsoft.VisualBasic.ChrW(10) & "BANG!" & Global.Microsoft.VisualBasic.ChrW(10) & "BinaryRifle" & Global.Microsoft.VisualBasic.ChrW(10) & "Cra0kalo" & Global.Microsoft.VisualBasic.ChrW(10) & "CrazyBubba" & Global.Microsoft.VisualBasic.ChrW(10) & "da1ba" &
+	"rker" & Global.Microsoft.VisualBasic.ChrW(10) & "Doktor haus" & Global.Microsoft.VisualBasic.ChrW(10) & "Drsalvador" & Global.Microsoft.VisualBasic.ChrW(10) & "E7ajamy" & Global.Microsoft.VisualBasic.ChrW(10) & "Funreal" & Global.Microsoft.VisualBasic.ChrW(10) & "Game Zombie" & Global.Microsoft.VisualBasic.ChrW(10) & "GeckoN"
+		Me.CreditsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+		Me.CreditsTextBox.WordWrap = False
 		'
 		'AuthorLinkLabel
 		'
@@ -115,6 +145,7 @@ Partial Class AboutUserControl
 		'
 		'Panel1
 		'
+		Me.Panel1.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.Panel1.Controls.Add(Me.ProductLogoButton)
 		Me.Panel1.Controls.Add(Me.ProductNameLinkLabel)
 		Me.Panel1.Controls.Add(Me.ProductInfoTextBox)
@@ -126,9 +157,12 @@ Partial Class AboutUserControl
 		Me.Panel1.Controls.Add(Me.ProductDescriptionTextBox)
 		Me.Panel1.Controls.Add(Me.SpecialThanksGroupBox)
 		Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.Panel1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.Panel1.Location = New System.Drawing.Point(0, 0)
 		Me.Panel1.Margin = New System.Windows.Forms.Padding(2)
 		Me.Panel1.Name = "Panel1"
+		Me.Panel1.SelectedIndex = -1
+		Me.Panel1.SelectedValue = Nothing
 		Me.Panel1.Size = New System.Drawing.Size(776, 536)
 		Me.Panel1.TabIndex = 0
 		'
@@ -172,54 +206,57 @@ Partial Class AboutUserControl
 		'
 		'SpecialThanksGroupBox
 		'
+		Me.SpecialThanksGroupBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.SpecialThanksGroupBox.Controls.Add(Me.CreditsTextBox)
 		Me.SpecialThanksGroupBox.Controls.Add(Me.Credits2TextBox)
 		Me.SpecialThanksGroupBox.Controls.Add(Me.Credits3TextBox)
+		Me.SpecialThanksGroupBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		Me.SpecialThanksGroupBox.IsReadOnly = False
 		Me.SpecialThanksGroupBox.Location = New System.Drawing.Point(175, 145)
 		Me.SpecialThanksGroupBox.Name = "SpecialThanksGroupBox"
+		Me.SpecialThanksGroupBox.SelectedValue = Nothing
 		Me.SpecialThanksGroupBox.Size = New System.Drawing.Size(598, 232)
 		Me.SpecialThanksGroupBox.TabIndex = 8
 		Me.SpecialThanksGroupBox.TabStop = False
 		Me.SpecialThanksGroupBox.Text = "Special Thanks"
 		'
-		'CreditsTextBox
-		'
-		Me.CreditsTextBox.Location = New System.Drawing.Point(6, 20)
-		Me.CreditsTextBox.Multiline = True
-		Me.CreditsTextBox.Name = "CreditsTextBox"
-		Me.CreditsTextBox.ReadOnly = True
-		Me.CreditsTextBox.Size = New System.Drawing.Size(191, 206)
-		Me.CreditsTextBox.TabIndex = 0
-		Me.CreditsTextBox.TabStop = False
-		Me.CreditsTextBox.Text = "arby26" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Artfunkel" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "atrblizzard" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Avengito" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "BANG!" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "BinaryRifle" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Cra0kalo" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "CrazyBubb" &
-	"a" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "da1barker" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Doktor haus" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Drsalvador" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "E7ajamy" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Funreal" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Game Zombie" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "GeckoN"
-		Me.CreditsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-		'
 		'Credits2TextBox
 		'
+		Me.Credits2TextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.Credits2TextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.Credits2TextBox.CueBannerText = ""
+		Me.Credits2TextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.Credits2TextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.Credits2TextBox.Location = New System.Drawing.Point(203, 20)
-		Me.Credits2TextBox.Multiline = True
 		Me.Credits2TextBox.Name = "Credits2TextBox"
 		Me.Credits2TextBox.ReadOnly = True
+		Me.Credits2TextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.Credits2TextBox.Size = New System.Drawing.Size(191, 206)
 		Me.Credits2TextBox.TabIndex = 1
 		Me.Credits2TextBox.TabStop = False
-		Me.Credits2TextBox.Text = "GPZ" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Kerry [Valve employee]" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "k@rt" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "K1CHWA" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Lt. Rocky" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "MARK2580" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Mayhem" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Mr. Brigh" &
-	"tside" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "mrlanky" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Nicknine" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Pacagma" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Pajama" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "pappaskurtz" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Pte Jack"
+		Me.Credits2TextBox.Text = "GPZ" & Global.Microsoft.VisualBasic.ChrW(10) & "Kerry [Valve employee]" & Global.Microsoft.VisualBasic.ChrW(10) & "k@rt" & Global.Microsoft.VisualBasic.ChrW(10) & "K1CHWA" & Global.Microsoft.VisualBasic.ChrW(10) & "Lt. Rocky" & Global.Microsoft.VisualBasic.ChrW(10) & "MARK2580" & Global.Microsoft.VisualBasic.ChrW(10) & "Mayhem" & Global.Microsoft.VisualBasic.ChrW(10) & "Mr. Brightside" & Global.Microsoft.VisualBasic.ChrW(10) & "m" &
+	"rlanky" & Global.Microsoft.VisualBasic.ChrW(10) & "Nicknine" & Global.Microsoft.VisualBasic.ChrW(10) & "Pacagma" & Global.Microsoft.VisualBasic.ChrW(10) & "Pajama" & Global.Microsoft.VisualBasic.ChrW(10) & "pappaskurtz" & Global.Microsoft.VisualBasic.ChrW(10) & "Pte Jack"
 		Me.Credits2TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+		Me.Credits2TextBox.WordWrap = False
 		'
 		'Credits3TextBox
 		'
+		Me.Credits3TextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.Credits3TextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.Credits3TextBox.CueBannerText = ""
+		Me.Credits3TextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.Credits3TextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.Credits3TextBox.Location = New System.Drawing.Point(400, 20)
-		Me.Credits3TextBox.Multiline = True
 		Me.Credits3TextBox.Name = "Credits3TextBox"
 		Me.Credits3TextBox.ReadOnly = True
+		Me.Credits3TextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.Credits3TextBox.Size = New System.Drawing.Size(191, 206)
 		Me.Credits3TextBox.TabIndex = 2
 		Me.Credits3TextBox.TabStop = False
-		Me.Credits3TextBox.Text = "Rantis" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "RED_EYE" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Sage J. Fox" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Salad" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Seraphim" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "SherlockHolmes9™" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Splinks" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Stiffy360" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Stay Puft" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "The" &
-	" Freakin' Scout's A Spy!" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "The303" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "»»»VanderAGSN«««" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Vincentor" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "YuRaNnNzZZ"
+		Me.Credits3TextBox.Text = "Rantis" & Global.Microsoft.VisualBasic.ChrW(10) & "RED_EYE" & Global.Microsoft.VisualBasic.ChrW(10) & "Sage J. Fox" & Global.Microsoft.VisualBasic.ChrW(10) & "Salad" & Global.Microsoft.VisualBasic.ChrW(10) & "Seraphim" & Global.Microsoft.VisualBasic.ChrW(10) & "SherlockHolmes9™" & Global.Microsoft.VisualBasic.ChrW(10) & "Splinks" & Global.Microsoft.VisualBasic.ChrW(10) & "Stiffy360" & Global.Microsoft.VisualBasic.ChrW(10) & "Stay" &
+	" Puft" & Global.Microsoft.VisualBasic.ChrW(10) & "The Freakin' Scout's A Spy!" & Global.Microsoft.VisualBasic.ChrW(10) & "The303" & Global.Microsoft.VisualBasic.ChrW(10) & "»»»VanderAGSN«««" & Global.Microsoft.VisualBasic.ChrW(10) & "Vincentor" & Global.Microsoft.VisualBasic.ChrW(10) & "YuRaNnNzZZ"
 		Me.Credits3TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+		Me.Credits3TextBox.WordWrap = False
 		'
 		'AboutUserControl
 		'
@@ -229,25 +266,23 @@ Partial Class AboutUserControl
 		Me.Name = "AboutUserControl"
 		Me.Size = New System.Drawing.Size(776, 536)
 		Me.Panel1.ResumeLayout(False)
-		Me.Panel1.PerformLayout()
 		CType(Me.PayPalPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.SpecialThanksGroupBox.ResumeLayout(False)
-		Me.SpecialThanksGroupBox.PerformLayout()
 		Me.ResumeLayout(False)
 
 	End Sub
-	Friend WithEvents ProductInfoTextBox As System.Windows.Forms.TextBox
-	Friend WithEvents ProductDescriptionTextBox As System.Windows.Forms.TextBox
-	Friend WithEvents ProductLogoButton As System.Windows.Forms.Button
-	Friend WithEvents AuthorIconButton As System.Windows.Forms.Button
-	Friend WithEvents CreditsTextBox As System.Windows.Forms.TextBox
+	Friend WithEvents ProductInfoTextBox As Crowbar.RichTextBoxEx
+	Friend WithEvents ProductDescriptionTextBox As Crowbar.RichTextBoxEx
+	Friend WithEvents ProductLogoButton As ButtonEx
+	Friend WithEvents AuthorIconButton As ButtonEx
+	Friend WithEvents CreditsTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents AuthorLinkLabel As System.Windows.Forms.LinkLabel
 	Friend WithEvents ProductNameLinkLabel As System.Windows.Forms.LinkLabel
-	Friend WithEvents Panel1 As System.Windows.Forms.Panel
+	Friend WithEvents Panel1 As PanelEx
 	Friend WithEvents GotoSteamProfileLinkLabel As System.Windows.Forms.LinkLabel
 	Friend WithEvents GotoSteamGroupLinkLabel As System.Windows.Forms.LinkLabel
-	Friend WithEvents SpecialThanksGroupBox As System.Windows.Forms.GroupBox
-	Friend WithEvents Credits3TextBox As System.Windows.Forms.TextBox
-	Friend WithEvents Credits2TextBox As System.Windows.Forms.TextBox
+	Friend WithEvents SpecialThanksGroupBox As GroupBoxEx
+	Friend WithEvents Credits3TextBox As Crowbar.RichTextBoxEx
+	Friend WithEvents Credits2TextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents PayPalPictureBox As PictureBox
 End Class

@@ -430,18 +430,20 @@ Public Class PackUserControl
 		'NOTE: Available in Framework 4.0:
 		'TheApp.Settings.PackOptionsText = String.Join(" ", Me.packerOptions)
 		'------
-		For Each packerOption As String In Me.theSelectedPackerOptions
-			packOptionsText += " "
-			packOptionsText += packerOption
+		If Me.theSelectedPackerOptions IsNot Nothing Then
+			For Each packerOption As String In Me.theSelectedPackerOptions
+				packOptionsText += " "
+				packOptionsText += packerOption
 
-			'TODO: Special case for multi-file VPK option. Need to use "response" file.
-			'If packerOption = "M" AndAlso gamePackerFileName <> "gmad.exe" Then
-			'	'a <vpkfile> @<filename>
-			'	If TheApp.Settings.PackMode = PackInputOptions.ParentFolder Then
-			'	ElseIf TheApp.Settings.PackMode = PackInputOptions.Folder Then
-			'	End If
-			'End If
-		Next
+				'TODO: Special case for multi-file VPK option. Need to use "response" file.
+				'If packerOption = "M" AndAlso gamePackerFileName <> "gmad.exe" Then
+				'	'a <vpkfile> @<filename>
+				'	If TheApp.Settings.PackMode = PackInputOptions.ParentFolder Then
+				'	ElseIf TheApp.Settings.PackMode = PackInputOptions.Folder Then
+				'	End If
+				'End If
+			Next
+		End If
 		If Me.DirectPackerOptionsTextBox.Text.Trim() <> "" Then
 			packOptionsText += " "
 			packOptionsText += Me.DirectPackerOptionsTextBox.Text

@@ -22,8 +22,8 @@ Partial Class ReleaseUserControl
 	'Do not modify it using the code editor.
 	<System.Diagnostics.DebuggerStepThrough()> _
 	Private Sub InitializeComponent()
-		Me.Panel1 = New System.Windows.Forms.Panel()
-		Me.TextBoxEx4 = New Crowbar.TextBoxEx()
+		Me.Panel1 = New PanelEx()
+		Me.TextBoxEx4 = New Crowbar.RichTextBoxEx()
 		Me.Panel1.SuspendLayout()
 		Me.SuspendLayout()
 		'
@@ -57,7 +57,7 @@ Partial Class ReleaseUserControl
 		Me.ResumeLayout(False)
 
 	End Sub
-	Friend WithEvents Panel1 As System.Windows.Forms.Panel
-	Friend WithEvents TextBoxEx4 As Crowbar.TextBoxEx
+	Friend WithEvents Panel1 As PanelEx
+	Friend WithEvents TextBoxEx4 As Crowbar.RichTextBoxEx
 
 End Class

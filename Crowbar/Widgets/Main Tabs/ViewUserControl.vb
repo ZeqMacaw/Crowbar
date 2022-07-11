@@ -15,7 +15,7 @@ Public Class ViewUserControl
 	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
 		Try
 			If disposing Then
-				Me.Free()
+				'Me.Free()
 				If components IsNot Nothing Then
 					components.Dispose()
 				End If
@@ -29,7 +29,7 @@ Public Class ViewUserControl
 
 #Region "Init and Free"
 
-	Private Sub Init()
+	Public Sub Init()
 		Me.theModelViewers = New List(Of Viewer)()
 
 		Me.UpdateDataBindings()
@@ -39,7 +39,7 @@ Public Class ViewUserControl
 		AddHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 	End Sub
 
-	Private Sub Free()
+	Public Sub Free()
 		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 
 		'RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
@@ -100,11 +100,11 @@ Public Class ViewUserControl
 
 	Private Sub UpdateUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
-		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.MdlPathFileNameTextBox, Me.BrowseForMdlFileButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.MdlPathFileNameTextBox, Me.RefreshButton)
 
-		If Not Me.DesignMode Then
-			Me.Init()
-		End If
+		'If Not Me.DesignMode Then
+		'	Me.Init()
+		'End If
 	End Sub
 
 #End Region
@@ -121,6 +121,10 @@ Public Class ViewUserControl
 	'Private Sub MdlPathFileNameTextBox_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MdlPathFileNameTextBox.Validated
 	'	Me.MdlPathFileNameTextBox.Text = FileManager.GetCleanPathFileName(Me.MdlPathFileNameTextBox.Text)
 	'End Sub
+
+	Private Sub RefreshButton_Click(sender As Object, e As EventArgs) Handles RefreshButton.Click
+		Me.RunDataViewer()
+	End Sub
 
 	Private Sub BrowseForMdlFileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BrowseForMdlFileButton.Click
 		Dim openFileWdw As New OpenFileDialog()

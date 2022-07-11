@@ -22,7 +22,7 @@ Partial Class GarrysModTagsUserControl
 	'Do not modify it using the code editor.
 	<System.Diagnostics.DebuggerStepThrough()> _
 	Private Sub InitializeComponent()
-		Me.ComboBox1 = New System.Windows.Forms.ComboBox()
+		Me.ComboBox1 = New ComboBoxEx()
 		Me.Label1 = New System.Windows.Forms.Label()
 		Me.CheckBox1 = New Crowbar.CheckBoxEx()
 		Me.CheckBox2 = New Crowbar.CheckBoxEx()
@@ -226,7 +226,7 @@ Partial Class GarrysModTagsUserControl
 
 	End Sub
 
-	Friend WithEvents ComboBox1 As ComboBox
+	Friend WithEvents ComboBox1 As ComboBoxEx
 	Friend WithEvents Label1 As Label
 	Friend WithEvents CheckBox1 As CheckBoxEx
 	Friend WithEvents CheckBox2 As CheckBoxEx

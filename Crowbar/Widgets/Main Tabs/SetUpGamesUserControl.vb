@@ -6,14 +6,9 @@ Public Class SetUpGamesUserControl
 #Region "Creation and Destruction"
 
 	Public Sub New()
+		MyBase.New()
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
-
-		'NOTE: Try-Catch is needed so that widget will be shown in MainForm without raising exception.
-		Try
-			Me.Init()
-		Catch
-		End Try
 	End Sub
 
 #End Region
@@ -34,7 +29,6 @@ Public Class SetUpGamesUserControl
 		textColumn = New DataGridViewTextBoxColumn()
 		textColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
 		textColumn.DataPropertyName = "Macro"
-		textColumn.DefaultCellStyle.BackColor = SystemColors.Control
 		textColumn.DisplayIndex = 0
 		textColumn.HeaderText = "Macro"
 		textColumn.Name = "Macro"
@@ -44,7 +38,6 @@ Public Class SetUpGamesUserControl
 
 		textColumn = New DataGridViewTextBoxColumn()
 		textColumn.DataPropertyName = "LibraryPath"
-		textColumn.DefaultCellStyle.BackColor = SystemColors.Control
 		textColumn.DisplayIndex = 1
 		textColumn.FillWeight = 100
 		textColumn.HeaderText = "Library Path"
@@ -55,7 +48,6 @@ Public Class SetUpGamesUserControl
 		buttonColumn = New DataGridViewButtonColumn()
 		buttonColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
 		buttonColumn.DisplayIndex = 2
-		buttonColumn.DefaultCellStyle.BackColor = SystemColors.Control
 		buttonColumn.HeaderText = "Browse"
 		buttonColumn.Name = "Browse"
 		buttonColumn.SortMode = DataGridViewColumnSortMode.NotSortable
@@ -66,10 +58,10 @@ Public Class SetUpGamesUserControl
 		textColumn = New DataGridViewTextBoxColumn()
 		textColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
 		textColumn.DataPropertyName = "UseCount"
-		textColumn.DefaultCellStyle.BackColor = SystemColors.Control
 		textColumn.DisplayIndex = 4
 		textColumn.HeaderText = "Use Count"
 		textColumn.Name = "UseCount"
+		textColumn.ReadOnly = True
 		textColumn.SortMode = DataGridViewColumnSortMode.NotSortable
 		Me.SteamLibraryPathsDataGridView.Columns.Add(textColumn)
 
@@ -116,6 +108,12 @@ Public Class SetUpGamesUserControl
 #End Region
 
 #Region "Widget Event Handlers"
+
+	Private Sub SetUpGamesUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
+		If Not Me.DesignMode Then
+			Me.Init()
+		End If
+	End Sub
 
 #End Region
 

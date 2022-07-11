@@ -22,6 +22,10 @@ Public Class PublishUserControl
 			widget.Font = Me.Font
 		Next
 
+		Me.BackColor = WidgetBackColor
+
+		'Me.ItemsPanel.BackColor = Color.Red
+
 		Me.UseInDownloadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.UseInDownloadToolStripMenuItem.Name = "ItemsDataGridViewUseInDownloadToolStripMenuItem"
 		Me.UseInDownloadToolStripMenuItem.Size = New System.Drawing.Size(176, 22)
@@ -72,7 +76,7 @@ Public Class PublishUserControl
 	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
 		Try
 			If disposing Then
-				Me.Free()
+				'Me.Free()
 				If components IsNot Nothing Then
 					components.Dispose()
 				End If
@@ -86,7 +90,7 @@ Public Class PublishUserControl
 
 #Region "Init and Free"
 
-	Private Sub Init()
+	Public Sub Init()
 		TheApp.InitAppInfo()
 
 		If TheApp.Settings.PublishGameSelectedIndex >= TheApp.SteamAppInfos.Count Then
@@ -99,7 +103,7 @@ Public Class PublishUserControl
 
 		Me.theBackgroundSteamPipe = New BackgroundSteamPipe()
 
-		Me.GetUserSteamID()
+		'Me.GetUserSteamID()
 
 		Me.theSelectedItemIsChangingViaMe = True
 		Me.theItemBindingSource = New BindingSource()
@@ -111,11 +115,11 @@ Public Class PublishUserControl
 		AddHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 
 		Me.theSelectedGameIsStillUpdatingInterface = False
-		Me.UpdateSteamAppWidgets()
+		'Me.UpdateSteamAppWidgets()
 	End Sub
 
 	'NOTE: This is called after all child widgets (created via designer) are disposed but before this UserControl is disposed.
-	Private Sub Free()
+	Public Sub Free()
 		If Me.theBackgroundSteamPipe IsNot Nothing Then
 			Me.theBackgroundSteamPipe.Kill()
 		End If
@@ -192,7 +196,6 @@ Public Class PublishUserControl
 		textColumn = New DataGridViewTextBoxColumn()
 		textColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
 		textColumn.DataPropertyName = "IsChanged"
-		textColumn.DefaultCellStyle.BackColor = SystemColors.Control
 		textColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
 		'textColumn.Frozen = True
 		textColumn.HeaderText = "*"
@@ -206,7 +209,6 @@ Public Class PublishUserControl
 		textColumn = New DataGridViewTextBoxColumn()
 		textColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
 		textColumn.DataPropertyName = "ID"
-		textColumn.DefaultCellStyle.BackColor = SystemColors.Control
 		textColumn.HeaderText = "Item ID"
 		textColumn.Name = "ID"
 		textColumn.ReadOnly = True
@@ -217,7 +219,6 @@ Public Class PublishUserControl
 		textColumn = New DataGridViewTextBoxColumn()
 		textColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
 		textColumn.DataPropertyName = "Title"
-		textColumn.DefaultCellStyle.BackColor = SystemColors.Control
 		textColumn.HeaderText = "Title"
 		textColumn.Name = "Title"
 		textColumn.ReadOnly = True
@@ -228,7 +229,6 @@ Public Class PublishUserControl
 		textColumn = New DataGridViewTextBoxColumn()
 		textColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
 		textColumn.DataPropertyName = "Posted"
-		textColumn.DefaultCellStyle.BackColor = SystemColors.Control
 		textColumn.HeaderText = "Posted"
 		textColumn.Name = "Posted"
 		textColumn.ReadOnly = True
@@ -239,7 +239,6 @@ Public Class PublishUserControl
 		textColumn = New DataGridViewTextBoxColumn()
 		textColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
 		textColumn.DataPropertyName = "Updated"
-		textColumn.DefaultCellStyle.BackColor = SystemColors.Control
 		textColumn.HeaderText = "Updated"
 		textColumn.Name = "Updated"
 		textColumn.ReadOnly = True
@@ -250,7 +249,6 @@ Public Class PublishUserControl
 		textColumn = New DataGridViewTextBoxColumn()
 		textColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
 		textColumn.DataPropertyName = "Visibility"
-		textColumn.DefaultCellStyle.BackColor = SystemColors.Control
 		textColumn.HeaderText = "Visibility"
 		textColumn.Name = "Visibility"
 		textColumn.ReadOnly = True
@@ -261,7 +259,6 @@ Public Class PublishUserControl
 		textColumn = New DataGridViewTextBoxColumn()
 		textColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
 		textColumn.DataPropertyName = "OwnerName"
-		textColumn.DefaultCellStyle.BackColor = SystemColors.Control
 		textColumn.HeaderText = "Owner"
 		textColumn.Name = "Owner"
 		textColumn.ReadOnly = True
@@ -271,7 +268,6 @@ Public Class PublishUserControl
 
 		textColumn = New DataGridViewTextBoxColumn()
 		textColumn.DataPropertyName = ""
-		textColumn.DefaultCellStyle.BackColor = SystemColors.Control
 		textColumn.FillWeight = 100
 		textColumn.HeaderText = ""
 		textColumn.Name = ""
@@ -284,7 +280,7 @@ Public Class PublishUserControl
 		Me.SearchItemsToolStripComboBox.ComboBox.ValueMember = "Key"
 		Me.SearchItemsToolStripComboBox.ComboBox.DataSource = EnumHelper.ToList(GetType(PublishSearchFieldOptions))
 		Me.SearchItemsToolStripComboBox.ComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "PublishSearchField", False, DataSourceUpdateMode.OnPropertyChanged)
-		Me.SearchItemsToolStripTextBox.TextBox.DataBindings.Add("Text", TheApp.Settings, "PublishSearchText", False, DataSourceUpdateMode.OnValidation)
+		Me.SearchItemsToolStripTextBox.DataBindings.Add("Text", TheApp.Settings, "PublishSearchText", False, DataSourceUpdateMode.OnValidation)
 	End Sub
 
 	Private Sub InitItemDetailWidgets()
@@ -304,8 +300,8 @@ Public Class PublishUserControl
 		Me.ItemOwnerTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "OwnerName", False, DataSourceUpdateMode.OnValidation)
 		Me.ItemPostedTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Posted", False, DataSourceUpdateMode.OnValidation)
 		Me.ItemUpdatedTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Updated", False, DataSourceUpdateMode.OnValidation)
-		Me.ItemTitleTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Title", False, DataSourceUpdateMode.OnPropertyChanged)
 		'NOTE: For RichTextBox, set the Formatting argument to True when DataSourceUpdateMode.OnPropertyChanged is used, to prevent characters being entered in reverse order.
+		Me.ItemTitleTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Title", True, DataSourceUpdateMode.OnPropertyChanged)
 		Me.ItemDescriptionTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "Description", True, DataSourceUpdateMode.OnPropertyChanged)
 		Me.ItemChangeNoteTextBox.DataBindings.Add("Text", Me.theItemBindingSource, "ChangeNote", True, DataSourceUpdateMode.OnPropertyChanged)
 		Me.UpdateWordWrapButtons()
@@ -334,9 +330,9 @@ Public Class PublishUserControl
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.AppIdComboBox, Me.RefreshGameItemsButton)
 
-		If Not Me.DesignMode Then
-			Me.Init()
-		End If
+		'If Not Me.DesignMode Then
+		'	Me.Init()
+		'End If
 	End Sub
 
 #End Region
@@ -857,6 +853,8 @@ Public Class PublishUserControl
 			TheApp.Settings.PublishSteamAppUserInfos.Add(Me.theSteamAppUserInfo)
 		End If
 
+		Me.AddItemToolStripButton.Enabled = True
+
 		'NOTE: Swap the Tags widget before selecting an item so when item is selected tags will set correctly.
 		Me.SwapSteamAppTagsWidget()
 
@@ -1176,7 +1174,7 @@ Public Class PublishUserControl
 	End Sub
 
 	Private Sub UpdateItemDetailWidgets()
-		If Me.theUserSteamID = 0 Then
+		If Me.theUserSteamID = 0 AndAlso Not Me.theSelectedItem.IsDraft AndAlso Not Me.theSelectedItem.IsTemplate Then
 			Me.GetUserSteamID()
 		End If
 
@@ -1464,7 +1462,7 @@ Public Class PublishUserControl
 	End Sub
 
 	Private Sub UpdateItemDetailButtons()
-		If Me.theUserSteamID = 0 Then
+		If Me.theUserSteamID = 0 AndAlso Not Me.theSelectedItem.IsDraft AndAlso Not Me.theSelectedItem.IsTemplate Then
 			Me.GetUserSteamID()
 		End If
 

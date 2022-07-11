@@ -6,11 +6,33 @@ Public Class Win32Api
 	''' <summary>Windows messages (WM_*, look in winuser.h)</summary>
 	Public Enum WindowsMessages
 		WM_ACTIVATE = &H6
+		WM_SETFOCUS = &H7
+		WM_KILLFOCUS = &H8
+		WM_PAINT = &HF
+		WM_SETCURSOR = &H20
 		WM_COMMAND = &H111
 		WM_ENTERIDLE = &H121
 		WM_MOUSEWHEEL = &H20A
 		WM_NOTIFY = &H4E
 		WM_SHOWWINDOW = &H18
+		WM_NCCALCSIZE = &H83
+		WM_NCPAINT = &H85
+		WM_KEYDOWN = &H100
+		WM_KEYUP = &H101
+		WM_CHAR = &H102
+		WM_MOUSEMOVE = &H200
+		WM_LBUTTONDOWN = &H201
+		WM_LBUTTONDBLCLK = &H203
+		WM_LBUTTONUP = &H202
+		WM_RBUTTONDOWN = &H204
+		WM_RBUTTONUP = &H205
+		WM_RBUTTONDBLCLK = &H206
+		WM_MBUTTONDOWN = &H207
+		WM_MBUTTONUP = &H208
+		WM_MBUTTONDBLCLK = &H209
+		WM_USER = &H400
+		EM_GETSCROLLPOS = WM_USER + 221
+		EM_SETSCROLLPOS = WM_USER + 222
 		'HWND_BROADCAST = &HFFFF
 	End Enum
 
@@ -154,7 +176,7 @@ Public Class Win32Api
 	Public Const RecycleBin As String = "::{645FF040-5081-101B-9F08-00AA002F954E}"
 	Public Const Tasks As String = "::{D6277990-4C6A-11CF-8D87-00AA0060F5BF}"
 
-	<StructLayout(LayoutKind.Sequential)> _
+	<StructLayout(LayoutKind.Sequential)>
 	Public Structure LV_ITEM
 		Public mask As Integer
 		Public iItem As Integer
@@ -166,21 +188,21 @@ Public Class Win32Api
 		Public iImage As Integer
 	End Structure
 
-	<StructLayout(LayoutKind.Sequential)> _
+	<StructLayout(LayoutKind.Sequential)>
 	Public Structure NMHDR
 		Public hwndFrom As IntPtr
 		Public idFrom As UInteger
 		Public code As UInteger
 	End Structure
 
-	<StructLayout(LayoutKind.Sequential)> _
+	<StructLayout(LayoutKind.Sequential)>
 	Public Structure OFNOTIFY
 		Public hdr As NMHDR
 		Public OPENFILENAME As IntPtr
 		Public fileNameShareViolation As IntPtr
 	End Structure
 
-	<StructLayout(LayoutKind.Sequential)> _
+	<StructLayout(LayoutKind.Sequential)>
 	Public Structure RECT
 		Private _Left As Integer, _Top As Integer, _Right As Integer, _Bottom As Integer
 
@@ -308,7 +330,7 @@ Public Class Win32Api
 		End Function
 	End Structure
 
-	<StructLayout(LayoutKind.Sequential)> _
+	<StructLayout(LayoutKind.Sequential)>
 	Public Structure WINDOWINFO
 		Dim cbSize As Integer
 		Dim rcWindow As RECT
@@ -324,39 +346,39 @@ Public Class Win32Api
 
 	Public Delegate Function EnumWindowsProc(ByVal Handle As IntPtr, ByVal Parameter As IntPtr) As Boolean
 
-	<DllImport("kernel32.dll", SetLastError:=True)> _
+	<DllImport("kernel32.dll", SetLastError:=True)>
 	Public Shared Function CloseHandle(ByVal hObject As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
 	End Function
 
-	<DllImport("shell32.dll")> _
+	<DllImport("shell32.dll")>
 	Shared Sub SHChangeNotify(ByVal wEventId As Integer, ByVal uFlags As Integer, ByVal dwItem1 As Integer, ByVal dwItem2 As Integer)
 	End Sub
 
-	<DllImport("shell32.dll")> _
+	<DllImport("shell32.dll")>
 	Private Shared Function SHGetFolderPath(ByVal hwndOwner As IntPtr, ByVal nFolder As Int32, ByVal hToken As IntPtr, ByVal dwFlags As Int32, ByVal pszPath As StringBuilder) As Int32
 	End Function
 
-	<DllImport("user32.dll", CharSet:=CharSet.Unicode)> _
+	<DllImport("user32.dll", CharSet:=CharSet.Unicode)>
 	Public Shared Function EnumChildWindows(ByVal hWndParent As System.IntPtr, ByVal lpEnumFunc As EnumWindowsProc, ByVal lParam As Integer) As Boolean
 	End Function
 
-	<DllImport("user32.dll", CharSet:=CharSet.Unicode)> _
+	<DllImport("user32.dll", CharSet:=CharSet.Unicode)>
 	Public Shared Sub GetClassName(ByVal hWnd As System.IntPtr, ByVal lpClassName As System.Text.StringBuilder, ByVal nMaxCount As Integer)
 	End Sub
 
-	<DllImport("user32.dll")> _
+	<DllImport("user32.dll")>
 	Public Shared Function GetDlgCtrlID(ByVal hwndCtl As System.IntPtr) As Integer
 	End Function
 
-	<DllImport("user32.dll", CharSet:=CharSet.Unicode)> _
+	<DllImport("user32.dll", CharSet:=CharSet.Unicode)>
 	Public Shared Function GetParent(ByVal hWnd As IntPtr) As IntPtr
 	End Function
 
-	<DllImport("user32.dll", SetLastError:=True)> _
+	<DllImport("user32.dll", SetLastError:=True)>
 	Public Shared Function GetWindowInfo(ByVal hwnd As IntPtr, ByRef pwi As WINDOWINFO) As Boolean
 	End Function
 
-	<DllImport("user32.dll", SetLastError:=True)> _
+	<DllImport("user32.dll", SetLastError:=True)>
 	Public Shared Function GetWindowThreadProcessId(ByVal hwnd As IntPtr, ByRef lpdwProcessId As IntPtr) As Integer
 	End Function
 
@@ -366,27 +388,29 @@ Public Class Win32Api
 	''' <param name="wParam">wParam</param>
 	''' <param name="lParam">lParam</param>
 	''' <returns>Zero if failure, otherwise non-zero</returns>
-	<DllImport("user32.dll", SetLastError:=True)> _
+	<DllImport("user32.dll", SetLastError:=True)>
 	Public Shared Function PostMessage(ByVal hWnd As IntPtr, ByVal Msg As UInteger, ByVal wParam As IntPtr, ByVal lParam As IntPtr) As Boolean
 	End Function
 
-	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)> _
+	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
 	Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal Msg As UInteger, ByVal wParam As IntPtr, ByVal lParam As IntPtr) As IntPtr
 	End Function
 
-	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)> _
+	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
 	Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal Msg As UInteger, ByVal wParam As IntPtr, ByVal lParam As LV_ITEM) As IntPtr
 	End Function
 
-	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)> _
+	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
 	Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal Msg As UInteger, ByVal wParam As IntPtr, ByVal lParam As System.Text.StringBuilder) As IntPtr
 	End Function
 
-	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)> _
+	Public Declare Auto Function RtfScroll Lib "user32.dll" Alias "SendMessage" (ByVal hWnd As IntPtr, ByVal Msg As Integer, ByVal wParam As IntPtr, ByRef lParam As System.Drawing.Point) As Integer
+
+	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
 	Public Shared Function FindWindowEx(ByVal parentHandle As IntPtr, ByVal childAfter As IntPtr, ByVal lclassName As String, ByVal windowTitle As String) As IntPtr
 	End Function
 
-	<DllImport("kernel32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)> _
+	<DllImport("kernel32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
 	Public Shared Function CreateHardLink(ByVal lpNewFileName As String, ByVal lpExistingFileName As String, ByVal lpSecurityAttributes As IntPtr) As Boolean
 	End Function
 
@@ -395,7 +419,7 @@ Public Class Win32Api
 		Directory = 1
 	End Enum
 
-	<DllImport("kernel32.dll", SetLastError:=True)> _
+	<DllImport("kernel32.dll", SetLastError:=True)>
 	Public Shared Function CreateSymbolicLink(lpSymlinkFileName As String, lpTargetFileName As String, dwFlags As SymbolicLink) As Boolean
 	End Function
 
@@ -629,11 +653,11 @@ Public Class Win32Api
 		Return True
 	End Function
 
-	<DllImport("kernel32.dll", CharSet:=CharSet.Auto, ExactSpelling:=True)> _
+	<DllImport("kernel32.dll", CharSet:=CharSet.Auto, ExactSpelling:=True)>
 	Public Shared Function GlobalAlloc(uFlags As Integer, dwBytes As Integer) As IntPtr
 	End Function
 
-	<DllImport("kernel32.dll", CharSet:=CharSet.Auto, ExactSpelling:=True)> _
+	<DllImport("kernel32.dll", CharSet:=CharSet.Auto, ExactSpelling:=True)>
 	Public Shared Function GlobalFree(handle As HandleRef) As IntPtr
 	End Function
 
@@ -662,5 +686,357 @@ Public Class Win32Api
 
 	' IDataObject constants
 	Public Const DV_E_TYMED As Int32 = &H80040069
+
+	Public Declare Function GetCaretPos Lib "user32.dll" (ByRef lpPoint As Point) As Int32
+	Public Declare Function SetCaretPos Lib "user32.dll" (x As Int32, y As Int32) As Int32
+
+	Public Shared Sub SetInnerMargins(ByVal textBox As TextBoxBase, ByVal left As Integer, ByVal top As Integer, ByVal right As Integer, ByVal bottom As Integer)
+		Dim rect As Rectangle = GetFormattingRect(textBox)
+		Dim newRect As Rectangle = New Rectangle(left, top, rect.Width - left - right, rect.Height - top - bottom)
+		SetFormattingRect(textBox, newRect)
+	End Sub
+
+	Private Shared Sub SetFormattingRect(ByVal textbox As TextBoxBase, ByVal rect As Rectangle)
+		Dim rc As RECT = New RECT(rect)
+		SendMessageRefRect(textbox.Handle, EmSetrect, 0, rc)
+	End Sub
+
+	Private Shared Function GetFormattingRect(ByVal textbox As TextBoxBase) As Rectangle
+		Dim rect As Rectangle = New Rectangle()
+		SendMessage(textbox.Handle, EmGetrect, CType(0, IntPtr), rect)
+		Return rect
+	End Function
+
+	'<StructLayout(LayoutKind.Sequential)>
+	'Private Structure RECT
+	'	Public ReadOnly Left As Integer
+	'	Public ReadOnly Top As Integer
+	'	Public ReadOnly Right As Integer
+	'	Public ReadOnly Bottom As Integer
+
+	'	Private Sub New(ByVal left As Integer, ByVal top As Integer, ByVal right As Integer, ByVal bottom As Integer)
+	'		left = left
+	'		top = top
+	'		right = right
+	'		bottom = bottom
+	'	End Sub
+
+	'	Public Sub New(ByVal r As Rectangle)
+	'		Me.New(r.Left, r.Top, r.Right, r.Bottom)
+	'	End Sub
+	'End Structure
+
+	<DllImport("User32.dll", EntryPoint:="SendMessage", CharSet:=CharSet.Auto)>
+	Private Shared Function SendMessageRefRect(ByVal hWnd As IntPtr, ByVal msg As UInteger, ByVal wParam As Integer, ByRef rect As RECT) As Integer
+	End Function
+	<DllImport("user32.dll", EntryPoint:="SendMessage", CharSet:=CharSet.Auto)>
+	Private Shared Function SendMessage(ByVal hwnd As IntPtr, ByVal wMsg As Integer, ByVal wParam As IntPtr, ByRef lParam As Rectangle) As Integer
+	End Function
+	Private Const EmGetrect As Integer = &HB2
+	Private Const EmSetrect As Integer = &HB3
+
+	Public Declare Function SetCursor Lib "user32.dll" Alias "SetCursor" (ByVal hCursor As IntPtr) As IntPtr
+
+	<StructLayout(LayoutKind.Sequential)>
+	Public Structure NCCALCSIZE_PARAMS
+		Public rect0 As RECT
+		Public rect1 As RECT
+		Public rect2 As RECT
+		Public lppos As IntPtr
+	End Structure
+
+	Public Declare Function SetWindowPos Lib "user32.dll" Alias "SetWindowPos" (ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As UInteger) As Boolean
+
+	<Flags>
+	Public Enum SWP As UInteger
+		SWP_NOSIZE = &H1
+		SWP_NOMOVE = &H2
+		SWP_NOZORDER = &H4
+		SWP_NOREDRAW = &H8
+		SWP_NOACTIVATE = &H10
+		SWP_FRAMECHANGED = &H20
+		SWP_SHOWWINDOW = &H40
+		SWP_HIDEWINDOW = &H80
+		SWP_NOCOPYBITS = &H100
+		SWP_NOOWNERZORDER = &H200
+		SWP_NOSENDCHANGING = &H400
+		SWP_DRAWFRAME = SWP_FRAMECHANGED
+		SWP_NOREPOSITION = SWP_NOOWNERZORDER
+		SWP_DEFERERASE = &H2000
+		SWP_ASYNCWINDOWPOS = &H4000
+	End Enum
+
+#Region "RichTextBox ScrollInfo"
+
+	Private Const SB_CTL As Integer = 2
+	Private Const SB_HORZ As Integer = 0
+	Private Const SB_VERT As Integer = 1
+
+	'NOTE: This is only usable if the scrollbar is visible.
+	Private Declare Function GetScrollInfo Lib "user32.dll" (ByVal hWnd As IntPtr, ByVal n As Integer, ByRef lpScrollInfo As SCROLLINFO) As Integer
+	'Declare Function GetScrollInfo Lib "user32.dll" (ByVal hWnd As IntPtr, ByVal fnBar As ScrollBarDirection, ByRef lpsi As SCROLLINFO) As Integer
+
+	<StructLayout(LayoutKind.Sequential)>
+	Private Structure SCROLLINFO
+		Public cbSize As Integer
+		Public fMask As Integer
+		Public nMin As Integer
+		Public nMax As Integer
+		Public nPage As Integer
+		Public nPos As Integer
+		Public nTrackPos As Integer
+	End Structure
+
+	Private Const SIF_RANGE As Long = &H1
+	Private Const SIF_PAGE As Long = &H2
+	Private Const SIF_POS As Long = &H4
+	Private Const SIF_DISABLENOSCROLL As Long = &H8
+	Private Const SIF_TRACKPOS As Long = &H10
+	Private Const SIF_ALL As Long = (SIF_RANGE Or SIF_PAGE Or SIF_POS Or SIF_TRACKPOS)
+
+	Public Enum ScrollBarType
+		SB_HORZ = &H0
+		SB_VERT = &H1
+		SB_CTL = &H2 'this is used for the (nBar) parameter of the GetScrollInfo function if the (hwnd) parameter is a handle to a ScrollBar
+	End Enum
+
+	'Public Shared Function GetScrollBarPos(ByVal lHwnd As IntPtr, ByVal ScrollBar As ScrollBarType) As Integer
+	'	Dim lFlag As Integer
+	'	Dim sbInfo As SCROLLINFO
+	'	Dim lRet As Integer
+
+	'	sbInfo.cbSize = Len(sbInfo)
+	'	sbInfo.fMask = SIF_POS
+	'	lFlag = ScrollBar
+
+	'	lRet = GetScrollInfo(lHwnd, lFlag, sbInfo)
+	'	If lRet > 0 Then
+	'		GetScrollBarPos = sbInfo.nPos
+	'	End If
+	'End Function
+
+	Public Shared Function GetScrollBarMax(ByVal lHwnd As IntPtr, ByVal scrollBarType As ScrollBarType) As Integer
+		Dim max As Integer = 0
+
+		Dim sbInfo As SCROLLINFO
+		Dim lRet As Integer
+
+		sbInfo.cbSize = Marshal.SizeOf(sbInfo)
+		sbInfo.fMask = SIF_ALL
+
+		lRet = GetScrollInfo(lHwnd, scrollBarType, sbInfo)
+		If lRet > 0 Then
+			max = sbInfo.nMax
+		End If
+
+		Return max
+	End Function
+
+#End Region
+
+#Region "ScrollBar info - separate functions"
+
+	'NOTE: This is only usable if the scrollbar is visible.
+	<DllImport("user32.dll")>
+	Public Shared Function GetScrollRange(ByVal hWnd As IntPtr, ByVal nBar As Integer, ByRef lpMinPos As Integer, ByRef lpMaxPos As Integer) As Boolean
+	End Function
+
+	'<DllImport("user32.dll")>
+	'Public Function GetScrollPos(ByVal hWnd As Integer,
+	'						 ByVal nBar As Integer) As Integer
+	'End Function
+
+	'Dim scrollMin As Integer = 0
+	'Dim scrollMax As Integer = 0
+
+	'If (GetScrollRange(rtb.Handle, SBS_VERT, scrollMin, scrollMax) Then
+	'Dim pos As Integer = GetScrollPos(rtb.Handle, SBS_VERT)
+	'End If
+
+#End Region
+
+#Region "Win32DarkMode"
+
+	Public Enum PreferredAppMode
+		[Default]
+		AllowDark
+		ForceDark
+		ForceLight
+		Max
+	End Enum
+
+	Public Structure HIGHCONTRASTW
+		Public cbSize As UInteger
+		Public dwFlags As Integer
+		Public lpszDefaultScheme As String
+	End Structure
+
+	<DllImport("UxTheme.dll", EntryPoint:="#133", CallingConvention:=CallingConvention.Winapi)>
+	Public Shared Function AllowDarkModeForWindow(hWnd As IntPtr, allow As Boolean) As Boolean
+	End Function
+
+	<DllImport("UxTheme.dll", EntryPoint:="#135", CallingConvention:=CallingConvention.Winapi)>
+	Public Shared Function _AllowDarkModeForApp(allow As Boolean) As Boolean
+	End Function
+
+	<DllImport("UxTheme.dll", EntryPoint:="#135", CallingConvention:=CallingConvention.Winapi)>
+	Public Shared Function SetPreferredAppMode(appMode As PreferredAppMode) As Boolean
+	End Function
+
+	<DllImport("UxTheme.dll", EntryPoint:="#137", CallingConvention:=CallingConvention.Winapi)>
+	Public Shared Function IsDarkModeAllowedForWindow(hWnd As IntPtr) As Boolean
+	End Function
+
+	'<DllImport("dwmapi.dll", SetLastError:=False, ExactSpelling:=True)>
+	'Public Shared Function DwmSetWindowAttribute(hwnd As IntPtr, dwAttribute As Integer, <[In]> pvAttribute As IntPtr, cbAttribute As Integer) As Integer
+	'End Function
+	'======
+	<DllImport("DwmApi")>
+	Public Shared Function DwmSetWindowAttribute(ByVal hwnd As IntPtr, ByVal attr As Integer, ByVal attrValue As Integer(), ByVal attrSize As Integer) As Integer
+	End Function
+
+	Public Enum DwmWindowAttribute
+		DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19
+		DWMWA_USE_IMMERSIVE_DARK_MODE = 20
+	End Enum
+
+	<DllImport("User32.dll", CharSet:=CharSet.Auto)>
+	Public Shared Function SystemParametersInfo(uiAction As UInteger, uiParam As UInteger, ByRef pvParam As HIGHCONTRASTW, fWinIni As UInteger) As Boolean
+	End Function
+
+	<DllImport("UxTheme.dll", EntryPoint:="#132", CallingConvention:=CallingConvention.Winapi)>
+	Public Shared Function ShouldAppsUseDarkMode() As Boolean
+	End Function
+
+	<DllImport("UxTheme.dll", EntryPoint:="#104", CallingConvention:=CallingConvention.Winapi)>
+	Public Shared Sub RefreshImmersiveColorPolicyState()
+	End Sub
+
+	Public Shared Function IsHighContrast() As Boolean
+		Dim hc As HIGHCONTRASTW = New HIGHCONTRASTW()
+		If SystemParametersInfo(&H42, CUInt(Marshal.SizeOf(hc)), hc, 0) Then
+			Return hc.dwFlags = &H1
+		End If
+		Return False
+	End Function
+
+	'Public Shared Sub RefreshTitleBarThemeColor(hWnd As IntPtr)
+	'	Dim dark As Boolean = False
+	'	If IsDarkModeAllowedForWindow(hWnd) And ShouldAppsUseDarkMode() And Not IsHighContrast() Then
+	'		dark = True
+	'	End If
+
+	'	Dim pvDark As IntPtr = Marshal.AllocHGlobal(Marshal.SizeOf(dark))
+	'	Marshal.StructureToPtr(dark, pvDark, False)
+	'	DwmSetWindowAttribute(hWnd, 20, pvDark, Marshal.SizeOf(dark))
+	'	Marshal.FreeHGlobal(pvDark)
+	'End Sub
+	'======
+	Public Shared Sub RefreshTitleBarThemeColor(hWnd As IntPtr)
+		If IsDarkModeAllowedForWindow(hWnd) And ShouldAppsUseDarkMode() And Not IsHighContrast() Then
+			If DwmSetWindowAttribute(hWnd, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1, {1}, 4) <> 0 Then
+				DwmSetWindowAttribute(hWnd, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, {1}, 4)
+			End If
+		Else
+			DwmSetWindowAttribute(hWnd, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1, {0}, 4)
+			DwmSetWindowAttribute(hWnd, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, {0}, 4)
+		End If
+
+	End Sub
+
+	Public Shared Sub AllowDarkModeForApp(allow As Boolean)
+		If Environment.OSVersion.Version.Build < 18362 Then
+			_AllowDarkModeForApp(allow)
+		Else
+			If allow Then
+				SetPreferredAppMode(PreferredAppMode.AllowDark)
+			Else
+				SetPreferredAppMode(PreferredAppMode.Default)
+			End If
+		End If
+	End Sub
+
+	Public Shared Function EnableWin32DarkMode(hWnd As IntPtr, enable As Boolean) As Boolean
+		AllowDarkModeForApp(True)
+		RefreshImmersiveColorPolicyState()
+		Dim retval As Boolean = AllowDarkModeForWindow(hWnd, enable)
+		RefreshTitleBarThemeColor(hWnd)
+		Return retval
+	End Function
+
+	Public Declare Auto Function SetWindowTheme Lib "uxtheme.dll" (hWnd As IntPtr, pszSubAppName As String, pszSubIdList As String) As Integer
+
+	<DllImport("user32.dll", SetLastError:=True)>
+	Public Shared Function GetWindowDC(hWnd As IntPtr) As IntPtr
+	End Function
+
+	<DllImport("user32.dll", SetLastError:=True)>
+	Public Shared Function ReleaseDC(hWnd As IntPtr, hDc As IntPtr) As Boolean
+	End Function
+
+	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
+	Friend Shared Function GetComboBoxInfo(hWnd As IntPtr, ByRef pcbi As COMBOBOXINFO) As Boolean
+	End Function
+
+	<StructLayout(LayoutKind.Sequential)>
+	Public Structure COMBOBOXINFO
+		Public cbSize As Integer
+		Public rcItem As Rectangle
+		Public rcButton As Rectangle
+		Public buttonState As Integer
+		Public hwndCombo As IntPtr
+		Public hwndEdit As IntPtr
+		Public hwndList As IntPtr
+		Public Sub Init()
+			cbSize = Marshal.SizeOf(Me)
+		End Sub
+	End Structure
+
+	Public Shared Function GetComboBoxListInternal(cboHandle As IntPtr) As IntPtr
+		Dim cbInfo As New COMBOBOXINFO()
+		cbInfo.Init()
+		GetComboBoxInfo(cboHandle, cbInfo)
+		Return cbInfo.hwndList
+	End Function
+
+	Friend NotInheritable Class NativeMethods
+		<DllImport("dwmapi.dll", EntryPoint:="#127")>
+		Friend Shared Sub DwmGetColorizationParameters(ByRef colors As DWMCOLORIZATIONcolors)
+		End Sub
+	End Class
+
+	Public Structure DWMCOLORIZATIONcolors
+		Public ColorizationColor, ColorizationAfterglow, ColorizationColorBalance, ColorizationAfterglowBalance, ColorizationBlurBalance, ColorizationGlassReflectionIntensity, ColorizationOpaqueBlend As UInteger
+	End Structure
+
+	Public Shared Function GetWindowColorizationColor(ByVal opaque As Boolean) As Color
+		Dim colors As DWMCOLORIZATIONcolors
+		NativeMethods.DwmGetColorizationParameters(colors)
+
+		'Dim a As Integer
+		'Dim r As Integer
+		'Dim g As Integer
+		'Dim b As Integer
+		'Return Color.FromArgb((Byte)(opaque ? 255 : colors.ColorizationColor >> 24),
+		'       (byte)(colors.ColorizationColor >> 16), 
+		'       (byte)(colors.ColorizationColor >> 8), 
+		'       (byte)colors.ColorizationColor);		
+		'If opaque Then
+		'	a = 255
+		'Else
+		'	a = CType(colors.ColorizationColor >> 24, Byte)
+		'End If
+		'r = CType(colors.ColorizationColor >> 16, Byte)
+		'g = CType(colors.ColorizationColor >> 8, Byte)
+		'b = CType(colors.ColorizationColor, Byte)
+		Dim result As Byte() = BitConverter.GetBytes(colors.ColorizationColor)
+		If opaque Then
+			result(3) = 255
+		End If
+		Return Color.FromArgb(result(3), result(2), result(1), result(0))
+	End Function
+
+
+#End Region
 
 End Class

@@ -20,11 +20,11 @@ Partial Class UnhandledExceptionWindow
 	<System.Diagnostics.DebuggerStepThrough()> _
 	Private Sub InitializeComponent()
 		Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UnhandledExceptionWindow))
-		Me.ExitButton = New System.Windows.Forms.Button()
-		Me.CopyErrorReportButton = New System.Windows.Forms.Button()
+		Me.ExitButton = New ButtonEx()
+		Me.CopyErrorReportButton = New ButtonEx()
 		Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
 		Me.Label1 = New System.Windows.Forms.Label()
-		Me.ErrorReportTextBox = New TextBoxEx()
+		Me.ErrorReportTextBox = New RichTextBoxEx()
 		Me.SuspendLayout()
 		'
 		'ExitButton
@@ -71,7 +71,7 @@ Partial Class UnhandledExceptionWindow
 		Me.ErrorReportTextBox.Multiline = True
 		Me.ErrorReportTextBox.Name = "ErrorReportTextBox"
 		Me.ErrorReportTextBox.ReadOnly = True
-		Me.ErrorReportTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both
+		Me.ErrorReportTextBox.ScrollBars = RichTextBoxScrollBars.Both
 		Me.ErrorReportTextBox.Size = New System.Drawing.Size(689, 204)
 		Me.ErrorReportTextBox.TabIndex = 2
 		'
@@ -99,10 +99,10 @@ Partial Class UnhandledExceptionWindow
 		Me.PerformLayout()
 
 	End Sub
-	Friend WithEvents ExitButton As System.Windows.Forms.Button
-	Friend WithEvents CopyErrorReportButton As System.Windows.Forms.Button
+	Friend WithEvents ExitButton As ButtonEx
+	Friend WithEvents CopyErrorReportButton As ButtonEx
 	Friend WithEvents LinkLabel1 As System.Windows.Forms.LinkLabel
 	Friend WithEvents Label1 As System.Windows.Forms.Label
-	Friend WithEvents ErrorReportTextBox As TextBoxEx
+	Friend WithEvents ErrorReportTextBox As Crowbar.RichTextBoxEx
 
 End Class

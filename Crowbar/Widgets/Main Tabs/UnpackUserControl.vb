@@ -7,8 +7,12 @@ Public Class UnpackUserControl
 #Region "Creation and Destruction"
 
 	Public Sub New()
+		MyBase.New()
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
+
+		'NOTE: Used as indicator of Refresh or Cancel. Can not use Text, because Text is visible.
+		Me.RefreshListingButton.Tag = "Refresh"
 
 		Me.CustomMenu = New ContextMenuStrip()
 		Me.CustomMenu.Items.Add(Me.DeleteSearchToolStripMenuItem)
@@ -16,13 +20,6 @@ Public Class UnpackUserControl
 		Me.PackageTreeView.ContextMenuStrip = Me.CustomMenu
 
 		Me.theSearchCount = 0
-
-		'NOTE: Try-Catch is needed so that widget will be shown in MainForm Designer without raising exception.
-		Try
-			Me.Init()
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		End Try
 	End Sub
 
 #End Region
@@ -149,8 +146,8 @@ Public Class UnpackUserControl
 		Me.PackageTreeView.Nodes(0).Nodes.Clear()
 		Me.PackageTreeView.Nodes(0).Tag = Nothing
 		Me.PackageListView.Items.Clear()
-		Me.RefreshListingToolStripButton.Image = My.Resources.CancelRefresh
-		Me.RefreshListingToolStripButton.Text = "Cancel"
+		Me.RefreshListingButton.Image = My.Resources.CancelRefresh
+		Me.RefreshListingButton.Tag = "Cancel"
 		Me.SkipCurrentPackageButton.Enabled = False
 		'Me.CancelUnpackButton.Text = "Cancel Listing"
 		Me.CancelUnpackButton.Enabled = False
@@ -177,10 +174,14 @@ Public Class UnpackUserControl
 
 	Private Sub UnpackUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
 		'NOTE: This code prevents Visual Studio often inexplicably extending the right side of these textboxes.
-		Me.PackagePathFileNameTextBox.Size = New System.Drawing.Size(Me.BrowseForPackagePathFolderOrFileNameButton.Left - Me.BrowseForPackagePathFolderOrFileNameButton.Margin.Left - Me.PackagePathFileNameTextBox.Margin.Right - Me.PackagePathFileNameTextBox.Left, 21)
+		Me.PackagePathFileNameTextBox.Size = New System.Drawing.Size(Me.RefreshListingButton.Left - Me.RefreshListingButton.Margin.Left - Me.PackagePathFileNameTextBox.Margin.Right - Me.PackagePathFileNameTextBox.Left, 21)
 		Me.OutputPathTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputPathTextBox.Margin.Right - Me.OutputPathTextBox.Left, 21)
 		Me.OutputSamePathTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputSamePathTextBox.Margin.Right - Me.OutputSamePathTextBox.Left, 21)
 		Me.OutputSubfolderTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputSubfolderTextBox.Margin.Right - Me.OutputSubfolderTextBox.Left, 21)
+
+		If Not Me.DesignMode Then
+			Me.Init()
+		End If
 	End Sub
 
 #End Region
@@ -190,6 +191,14 @@ Public Class UnpackUserControl
 	'Private Sub VpkPathFileNameTextBox_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles VpkPathFileNameTextBox.Validated
 	'	Me.VpkPathFileNameTextBox.Text = FileManager.GetCleanPathFileName(Me.VpkPathFileNameTextBox.Text)
 	'End Sub
+
+	Private Sub RefreshListingButton_Click(sender As Object, e As EventArgs) Handles RefreshListingButton.Click
+		If CStr(Me.RefreshListingButton.Tag) = "Refresh" Then
+			Me.RunUnpackerToGetListOfPackageContents()
+		Else
+			TheApp.Unpacker.CancelAsync()
+		End If
+	End Sub
 
 	Private Sub BrowseForPackagePathFolderOrFileNameButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BrowseForPackagePathFolderOrFileNameButton.Click
 		Dim openFileWdw As New OpenFileDialog()
@@ -390,14 +399,6 @@ Public Class UnpackUserControl
 
 	Private Sub FindToolStripButton_Click(sender As Object, e As EventArgs) Handles FindToolStripButton.Click
 		Me.FindSubstringInFileNames()
-	End Sub
-
-	Private Sub RefreshListingToolStripButton_Click(sender As Object, e As EventArgs) Handles RefreshListingToolStripButton.Click
-		If Me.RefreshListingToolStripButton.Text = "Refresh" Then
-			Me.RunUnpackerToGetListOfPackageContents()
-		Else
-			TheApp.Unpacker.CancelAsync()
-		End If
 	End Sub
 
 	Private Sub UnpackOptionsUseDefaultsButton_Click(sender As Object, e As EventArgs) Handles UnpackOptionsUseDefaultsButton.Click
@@ -665,10 +666,10 @@ Public Class UnpackUserControl
 			Me.ShowFilesInSelectedFolder()
 		End If
 		Me.UpdateSelectionPathText()
-		Me.RefreshListingToolStripButton.Image = My.Resources.Refresh
-		Me.RefreshListingToolStripButton.Text = "Refresh"
-		'IMPORTANT: Update the toolstrip so the Refresh button does not disappear. Not sure why it disappears without this.
-		Me.ToolStrip1.PerformLayout()
+		Me.RefreshListingButton.Image = My.Resources.Refresh
+		Me.RefreshListingButton.Tag = "Refresh"
+		''IMPORTANT: Update the toolstrip so the Refresh button does not disappear. Not sure why it disappears without this.
+		'Me.ToolStrip1.PerformLayout()
 		Me.UpdateWidgets(False)
 	End Sub
 
@@ -1224,7 +1225,7 @@ Public Class UnpackUserControl
 		'Me.UpdateSelectionCountsRecursive(selectedTreeNode, fileCount, sizeTotal)
 
 		'Me.FilesSelectedCountToolStripLabel.Text = Me.PackageListView.SelectedItems.Count.ToString("N0", TheApp.InternalCultureInfo) + "/" + fileCount.ToString("N0", TheApp.InternalCultureInfo)
-		Me.FilesSelectedCountToolStripLabel.Text = selectedFileCount.ToString("N0", TheApp.InternalCultureInfo) + "/" + totalFileCount.ToString("N0", TheApp.InternalCultureInfo)
+		Me.FilesSelectedCountToolStripLabel.Text = selectedFileCount.ToString("N0", TheApp.InternalCultureInfo) + " / " + totalFileCount.ToString("N0", TheApp.InternalCultureInfo)
 		Me.SizeSelectedTotalToolStripLabel.Text = selectedByteCount.ToString("N0", TheApp.InternalCultureInfo)
 
 		'IMPORTANT: Update the toolstrip so the items are resized properly. Needed because of the 'springing' textbox.

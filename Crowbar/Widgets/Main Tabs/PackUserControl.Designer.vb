@@ -23,46 +23,46 @@ Partial Class PackUserControl
 	<System.Diagnostics.DebuggerStepThrough()>
 	Private Sub InitializeComponent()
 		Me.components = New System.ComponentModel.Container()
-		Me.Panel1 = New System.Windows.Forms.Panel()
-		Me.GotoOutputPathButton = New System.Windows.Forms.Button()
-		Me.BrowseForOutputPathButton = New System.Windows.Forms.Button()
-		Me.OutputPathTextBox = New Crowbar.TextBoxEx()
-		Me.OutputParentPathTextBox = New Crowbar.TextBoxEx()
-		Me.OutputPathComboBox = New System.Windows.Forms.ComboBox()
-		Me.InputComboBox = New System.Windows.Forms.ComboBox()
+		Me.Panel1 = New Crowbar.PanelEx()
+		Me.GotoOutputPathButton = New Crowbar.ButtonEx()
+		Me.BrowseForOutputPathButton = New Crowbar.ButtonEx()
+		Me.OutputPathTextBox = New Crowbar.RichTextBoxEx()
+		Me.OutputParentPathTextBox = New Crowbar.RichTextBoxEx()
+		Me.OutputPathComboBox = New Crowbar.ComboBoxEx()
+		Me.InputComboBox = New Crowbar.ComboBoxEx()
 		Me.Label1 = New System.Windows.Forms.Label()
-		Me.GotoInputPathButton = New System.Windows.Forms.Button()
+		Me.GotoInputPathButton = New Crowbar.ButtonEx()
 		Me.Label6 = New System.Windows.Forms.Label()
-		Me.InputPathFileNameTextBox = New Crowbar.TextBoxEx()
-		Me.BrowseForInputFolderOrFileNameButton = New System.Windows.Forms.Button()
+		Me.InputPathFileNameTextBox = New Crowbar.RichTextBoxEx()
+		Me.BrowseForInputFolderOrFileNameButton = New Crowbar.ButtonEx()
 		Me.Options_LogSplitContainer = New System.Windows.Forms.SplitContainer()
-		Me.OptionsGroupBox = New System.Windows.Forms.GroupBox()
-		Me.OptionsGroupBoxFillPanel = New System.Windows.Forms.Panel()
-		Me.PackerOptionsPanel = New System.Windows.Forms.Panel()
+		Me.OptionsGroupBox = New Crowbar.GroupBoxEx()
+		Me.OptionsGroupBoxFillPanel = New Crowbar.PanelEx()
+		Me.PackerOptionsPanel = New Crowbar.PanelEx()
 		Me.MultiFileVpkCheckBox = New System.Windows.Forms.CheckBox()
-		Me.PackOptionsUseDefaultsButton = New System.Windows.Forms.Button()
+		Me.PackOptionsUseDefaultsButton = New Crowbar.ButtonEx()
 		Me.LogFileCheckBox = New System.Windows.Forms.CheckBox()
 		Me.Label3 = New System.Windows.Forms.Label()
-		Me.GameSetupComboBox = New System.Windows.Forms.ComboBox()
-		Me.SetUpGamesButton = New System.Windows.Forms.Button()
-		Me.GmaPanel = New System.Windows.Forms.Panel()
-		Me.GmaTitleTextBox = New Crowbar.TextBoxEx()
+		Me.GameSetupComboBox = New Crowbar.ComboBoxEx()
+		Me.SetUpGamesButton = New Crowbar.ButtonEx()
+		Me.GmaPanel = New Crowbar.PanelEx()
+		Me.GmaTitleTextBox = New Crowbar.RichTextBoxEx()
 		Me.GmaTitleLabel = New System.Windows.Forms.Label()
 		Me.GmaGarrysModTagsUserControl = New Crowbar.GarrysModTagsUserControl()
 		Me.DirectPackerOptionsLabel = New System.Windows.Forms.Label()
-		Me.DirectPackerOptionsTextBox = New System.Windows.Forms.TextBox()
-		Me.PackerOptionsTextBox = New System.Windows.Forms.TextBox()
-		Me.PackerOptionsTextBoxMinScrollPanel = New System.Windows.Forms.Panel()
+		Me.DirectPackerOptionsTextBox = New Crowbar.RichTextBoxEx()
+		Me.PackerOptionsTextBox = New Crowbar.RichTextBoxEx()
+		Me.PackerOptionsTextBoxMinScrollPanel = New Crowbar.PanelEx()
 		Me.LogRichTextBox = New Crowbar.RichTextBoxEx()
-		Me.PackButtonsPanel = New System.Windows.Forms.Panel()
-		Me.PackButton = New System.Windows.Forms.Button()
-		Me.SkipCurrentFolderButton = New System.Windows.Forms.Button()
-		Me.CancelPackButton = New System.Windows.Forms.Button()
-		Me.UseAllInPublishButton = New System.Windows.Forms.Button()
-		Me.PostPackPanel = New System.Windows.Forms.Panel()
-		Me.PackedFilesComboBox = New System.Windows.Forms.ComboBox()
-		Me.UseInPublishButton = New System.Windows.Forms.Button()
-		Me.GotoPackedFileButton = New System.Windows.Forms.Button()
+		Me.PackButtonsPanel = New Crowbar.PanelEx()
+		Me.PackButton = New Crowbar.ButtonEx()
+		Me.SkipCurrentFolderButton = New Crowbar.ButtonEx()
+		Me.CancelPackButton = New Crowbar.ButtonEx()
+		Me.UseAllInPublishButton = New Crowbar.ButtonEx()
+		Me.PostPackPanel = New Crowbar.PanelEx()
+		Me.PackedFilesComboBox = New Crowbar.ComboBoxEx()
+		Me.UseInPublishButton = New Crowbar.ButtonEx()
+		Me.GotoPackedFileButton = New Crowbar.ButtonEx()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
 		Me.Panel1.SuspendLayout()
 		CType(Me.Options_LogSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -79,6 +79,7 @@ Partial Class PackUserControl
 		'
 		'Panel1
 		'
+		Me.Panel1.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.Panel1.Controls.Add(Me.GotoOutputPathButton)
 		Me.Panel1.Controls.Add(Me.BrowseForOutputPathButton)
 		Me.Panel1.Controls.Add(Me.OutputPathTextBox)
@@ -92,8 +93,11 @@ Partial Class PackUserControl
 		Me.Panel1.Controls.Add(Me.BrowseForInputFolderOrFileNameButton)
 		Me.Panel1.Controls.Add(Me.Options_LogSplitContainer)
 		Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.Panel1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.Panel1.Location = New System.Drawing.Point(0, 0)
 		Me.Panel1.Name = "Panel1"
+		Me.Panel1.SelectedIndex = -1
+		Me.Panel1.SelectedValue = Nothing
 		Me.Panel1.Size = New System.Drawing.Size(776, 536)
 		Me.Panel1.TabIndex = 3
 		'
@@ -122,40 +126,62 @@ Partial Class PackUserControl
 		Me.OutputPathTextBox.AllowDrop = True
 		Me.OutputPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.OutputPathTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.OutputPathTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.OutputPathTextBox.CueBannerText = ""
+		Me.OutputPathTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.OutputPathTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.OutputPathTextBox.Location = New System.Drawing.Point(223, 32)
+		Me.OutputPathTextBox.Multiline = False
 		Me.OutputPathTextBox.Name = "OutputPathTextBox"
+		Me.OutputPathTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.OutputPathTextBox.Size = New System.Drawing.Size(431, 22)
 		Me.OutputPathTextBox.TabIndex = 25
+		Me.OutputPathTextBox.Text = ""
 		'
 		'OutputParentPathTextBox
 		'
 		Me.OutputParentPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.OutputParentPathTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.OutputParentPathTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.OutputParentPathTextBox.CueBannerText = ""
+		Me.OutputParentPathTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.OutputParentPathTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.OutputParentPathTextBox.Location = New System.Drawing.Point(223, 32)
+		Me.OutputParentPathTextBox.Multiline = False
 		Me.OutputParentPathTextBox.Name = "OutputParentPathTextBox"
 		Me.OutputParentPathTextBox.ReadOnly = True
+		Me.OutputParentPathTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.OutputParentPathTextBox.Size = New System.Drawing.Size(431, 22)
 		Me.OutputParentPathTextBox.TabIndex = 24
+		Me.OutputParentPathTextBox.Text = ""
 		Me.OutputParentPathTextBox.Visible = False
 		'
 		'OutputPathComboBox
 		'
+		Me.OutputPathComboBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+		Me.OutputPathComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
 		Me.OutputPathComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.OutputPathComboBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.OutputPathComboBox.FormattingEnabled = True
+		Me.OutputPathComboBox.IsReadOnly = False
 		Me.OutputPathComboBox.Location = New System.Drawing.Point(77, 33)
 		Me.OutputPathComboBox.Name = "OutputPathComboBox"
-		Me.OutputPathComboBox.Size = New System.Drawing.Size(140, 21)
+		Me.OutputPathComboBox.Size = New System.Drawing.Size(140, 23)
 		Me.OutputPathComboBox.TabIndex = 23
 		'
 		'InputComboBox
 		'
+		Me.InputComboBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+		Me.InputComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
 		Me.InputComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.InputComboBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.InputComboBox.FormattingEnabled = True
+		Me.InputComboBox.IsReadOnly = False
 		Me.InputComboBox.Location = New System.Drawing.Point(77, 4)
 		Me.InputComboBox.Name = "InputComboBox"
-		Me.InputComboBox.Size = New System.Drawing.Size(140, 21)
+		Me.InputComboBox.Size = New System.Drawing.Size(140, 23)
 		Me.InputComboBox.TabIndex = 0
 		'
 		'Label1
@@ -190,11 +216,18 @@ Partial Class PackUserControl
 		'
 		Me.InputPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.InputPathFileNameTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.InputPathFileNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.InputPathFileNameTextBox.CueBannerText = ""
+		Me.InputPathFileNameTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.InputPathFileNameTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.InputPathFileNameTextBox.Location = New System.Drawing.Point(223, 3)
+		Me.InputPathFileNameTextBox.Multiline = False
 		Me.InputPathFileNameTextBox.Name = "InputPathFileNameTextBox"
+		Me.InputPathFileNameTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.InputPathFileNameTextBox.Size = New System.Drawing.Size(431, 22)
 		Me.InputPathFileNameTextBox.TabIndex = 1
+		Me.InputPathFileNameTextBox.Text = ""
 		'
 		'BrowseForInputFolderOrFileNameButton
 		'
@@ -233,10 +266,14 @@ Partial Class PackUserControl
 		'
 		'OptionsGroupBox
 		'
+		Me.OptionsGroupBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.OptionsGroupBox.Controls.Add(Me.OptionsGroupBoxFillPanel)
 		Me.OptionsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.OptionsGroupBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		Me.OptionsGroupBox.IsReadOnly = False
 		Me.OptionsGroupBox.Location = New System.Drawing.Point(0, 0)
 		Me.OptionsGroupBox.Name = "OptionsGroupBox"
+		Me.OptionsGroupBox.SelectedValue = Nothing
 		Me.OptionsGroupBox.Size = New System.Drawing.Size(770, 260)
 		Me.OptionsGroupBox.TabIndex = 0
 		Me.OptionsGroupBox.TabStop = False
@@ -245,20 +282,25 @@ Partial Class PackUserControl
 		'OptionsGroupBoxFillPanel
 		'
 		Me.OptionsGroupBoxFillPanel.AutoScroll = True
+		Me.OptionsGroupBoxFillPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.PackerOptionsPanel)
 		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.DirectPackerOptionsLabel)
 		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.DirectPackerOptionsTextBox)
 		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.PackerOptionsTextBox)
 		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.PackerOptionsTextBoxMinScrollPanel)
 		Me.OptionsGroupBoxFillPanel.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.OptionsGroupBoxFillPanel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.OptionsGroupBoxFillPanel.Location = New System.Drawing.Point(3, 18)
 		Me.OptionsGroupBoxFillPanel.Name = "OptionsGroupBoxFillPanel"
+		Me.OptionsGroupBoxFillPanel.SelectedIndex = -1
+		Me.OptionsGroupBoxFillPanel.SelectedValue = Nothing
 		Me.OptionsGroupBoxFillPanel.Size = New System.Drawing.Size(764, 239)
 		Me.OptionsGroupBoxFillPanel.TabIndex = 19
 		'
 		'PackerOptionsPanel
 		'
 		Me.PackerOptionsPanel.AutoScroll = True
+		Me.PackerOptionsPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.PackerOptionsPanel.Controls.Add(Me.MultiFileVpkCheckBox)
 		Me.PackerOptionsPanel.Controls.Add(Me.PackOptionsUseDefaultsButton)
 		Me.PackerOptionsPanel.Controls.Add(Me.LogFileCheckBox)
@@ -267,8 +309,11 @@ Partial Class PackUserControl
 		Me.PackerOptionsPanel.Controls.Add(Me.SetUpGamesButton)
 		Me.PackerOptionsPanel.Controls.Add(Me.GmaPanel)
 		Me.PackerOptionsPanel.Dock = System.Windows.Forms.DockStyle.Top
+		Me.PackerOptionsPanel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.PackerOptionsPanel.Location = New System.Drawing.Point(0, 0)
 		Me.PackerOptionsPanel.Name = "PackerOptionsPanel"
+		Me.PackerOptionsPanel.SelectedIndex = -1
+		Me.PackerOptionsPanel.SelectedValue = Nothing
 		Me.PackerOptionsPanel.Size = New System.Drawing.Size(764, 153)
 		Me.PackerOptionsPanel.TabIndex = 0
 		'
@@ -316,11 +361,15 @@ Partial Class PackUserControl
 		'
 		Me.GameSetupComboBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.GameSetupComboBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+		Me.GameSetupComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
 		Me.GameSetupComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.GameSetupComboBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.GameSetupComboBox.FormattingEnabled = True
+		Me.GameSetupComboBox.IsReadOnly = False
 		Me.GameSetupComboBox.Location = New System.Drawing.Point(171, 1)
 		Me.GameSetupComboBox.Name = "GameSetupComboBox"
-		Me.GameSetupComboBox.Size = New System.Drawing.Size(497, 21)
+		Me.GameSetupComboBox.Size = New System.Drawing.Size(497, 23)
 		Me.GameSetupComboBox.TabIndex = 1
 		'
 		'SetUpGamesButton
@@ -335,21 +384,32 @@ Partial Class PackUserControl
 		'
 		'GmaPanel
 		'
+		Me.GmaPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.GmaPanel.Controls.Add(Me.GmaTitleTextBox)
 		Me.GmaPanel.Controls.Add(Me.GmaTitleLabel)
 		Me.GmaPanel.Controls.Add(Me.GmaGarrysModTagsUserControl)
+		Me.GmaPanel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.GmaPanel.Location = New System.Drawing.Point(217, 29)
 		Me.GmaPanel.Name = "GmaPanel"
+		Me.GmaPanel.SelectedIndex = -1
+		Me.GmaPanel.SelectedValue = Nothing
 		Me.GmaPanel.Size = New System.Drawing.Size(423, 122)
 		Me.GmaPanel.TabIndex = 0
 		'
 		'GmaTitleTextBox
 		'
+		Me.GmaTitleTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.GmaTitleTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.GmaTitleTextBox.CueBannerText = ""
+		Me.GmaTitleTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.GmaTitleTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.GmaTitleTextBox.Location = New System.Drawing.Point(42, 1)
+		Me.GmaTitleTextBox.Multiline = False
 		Me.GmaTitleTextBox.Name = "GmaTitleTextBox"
+		Me.GmaTitleTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.GmaTitleTextBox.Size = New System.Drawing.Size(317, 22)
 		Me.GmaTitleTextBox.TabIndex = 14
+		Me.GmaTitleTextBox.Text = ""
 		'
 		'GmaTitleLabel
 		'
@@ -381,39 +441,61 @@ Partial Class PackUserControl
 		'
 		Me.DirectPackerOptionsTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.DirectPackerOptionsTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.DirectPackerOptionsTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.DirectPackerOptionsTextBox.CueBannerText = ""
+		Me.DirectPackerOptionsTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.DirectPackerOptionsTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.DirectPackerOptionsTextBox.Location = New System.Drawing.Point(0, 170)
+		Me.DirectPackerOptionsTextBox.Multiline = False
 		Me.DirectPackerOptionsTextBox.Name = "DirectPackerOptionsTextBox"
+		Me.DirectPackerOptionsTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.DirectPackerOptionsTextBox.Size = New System.Drawing.Size(764, 22)
 		Me.DirectPackerOptionsTextBox.TabIndex = 17
+		Me.DirectPackerOptionsTextBox.Text = ""
 		'
 		'PackerOptionsTextBox
 		'
 		Me.PackerOptionsTextBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.PackerOptionsTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.PackerOptionsTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.PackerOptionsTextBox.CueBannerText = ""
+		Me.PackerOptionsTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.PackerOptionsTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.PackerOptionsTextBox.Location = New System.Drawing.Point(0, 198)
-		Me.PackerOptionsTextBox.Multiline = True
 		Me.PackerOptionsTextBox.Name = "PackerOptionsTextBox"
 		Me.PackerOptionsTextBox.ReadOnly = True
+		Me.PackerOptionsTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.PackerOptionsTextBox.Size = New System.Drawing.Size(764, 37)
 		Me.PackerOptionsTextBox.TabIndex = 18
+		Me.PackerOptionsTextBox.Text = ""
 		'
 		'PackerOptionsTextBoxMinScrollPanel
 		'
+		Me.PackerOptionsTextBoxMinScrollPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
+		Me.PackerOptionsTextBoxMinScrollPanel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.PackerOptionsTextBoxMinScrollPanel.Location = New System.Drawing.Point(0, 198)
 		Me.PackerOptionsTextBoxMinScrollPanel.Name = "PackerOptionsTextBoxMinScrollPanel"
+		Me.PackerOptionsTextBoxMinScrollPanel.SelectedIndex = -1
+		Me.PackerOptionsTextBoxMinScrollPanel.SelectedValue = Nothing
 		Me.PackerOptionsTextBoxMinScrollPanel.Size = New System.Drawing.Size(764, 37)
 		Me.PackerOptionsTextBoxMinScrollPanel.TabIndex = 42
 		'
 		'LogRichTextBox
 		'
+		Me.LogRichTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.LogRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.LogRichTextBox.CueBannerText = ""
 		Me.LogRichTextBox.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.LogRichTextBox.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.LogRichTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.LogRichTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.LogRichTextBox.HideSelection = False
 		Me.LogRichTextBox.Location = New System.Drawing.Point(0, 26)
 		Me.LogRichTextBox.Name = "LogRichTextBox"
 		Me.LogRichTextBox.ReadOnly = True
+		Me.LogRichTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.LogRichTextBox.Size = New System.Drawing.Size(770, 156)
 		Me.LogRichTextBox.TabIndex = 0
 		Me.LogRichTextBox.Text = ""
@@ -421,13 +503,17 @@ Partial Class PackUserControl
 		'
 		'PackButtonsPanel
 		'
+		Me.PackButtonsPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.PackButtonsPanel.Controls.Add(Me.PackButton)
 		Me.PackButtonsPanel.Controls.Add(Me.SkipCurrentFolderButton)
 		Me.PackButtonsPanel.Controls.Add(Me.CancelPackButton)
 		Me.PackButtonsPanel.Controls.Add(Me.UseAllInPublishButton)
 		Me.PackButtonsPanel.Dock = System.Windows.Forms.DockStyle.Top
+		Me.PackButtonsPanel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.PackButtonsPanel.Location = New System.Drawing.Point(0, 0)
 		Me.PackButtonsPanel.Name = "PackButtonsPanel"
+		Me.PackButtonsPanel.SelectedIndex = -1
+		Me.PackButtonsPanel.SelectedValue = Nothing
 		Me.PackButtonsPanel.Size = New System.Drawing.Size(770, 26)
 		Me.PackButtonsPanel.TabIndex = 5
 		'
@@ -473,12 +559,16 @@ Partial Class PackUserControl
 		'
 		'PostPackPanel
 		'
+		Me.PostPackPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.PostPackPanel.Controls.Add(Me.PackedFilesComboBox)
 		Me.PostPackPanel.Controls.Add(Me.UseInPublishButton)
 		Me.PostPackPanel.Controls.Add(Me.GotoPackedFileButton)
 		Me.PostPackPanel.Dock = System.Windows.Forms.DockStyle.Bottom
+		Me.PostPackPanel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.PostPackPanel.Location = New System.Drawing.Point(0, 182)
 		Me.PostPackPanel.Name = "PostPackPanel"
+		Me.PostPackPanel.SelectedIndex = -1
+		Me.PostPackPanel.SelectedValue = Nothing
 		Me.PostPackPanel.Size = New System.Drawing.Size(770, 26)
 		Me.PostPackPanel.TabIndex = 6
 		'
@@ -486,11 +576,15 @@ Partial Class PackUserControl
 		'
 		Me.PackedFilesComboBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.PackedFilesComboBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
+		Me.PackedFilesComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
 		Me.PackedFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.PackedFilesComboBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.PackedFilesComboBox.FormattingEnabled = True
+		Me.PackedFilesComboBox.IsReadOnly = False
 		Me.PackedFilesComboBox.Location = New System.Drawing.Point(0, 4)
 		Me.PackedFilesComboBox.Name = "PackedFilesComboBox"
-		Me.PackedFilesComboBox.Size = New System.Drawing.Size(721, 21)
+		Me.PackedFilesComboBox.Size = New System.Drawing.Size(721, 23)
 		Me.PackedFilesComboBox.TabIndex = 1
 		'
 		'UseInPublishButton
@@ -529,7 +623,6 @@ Partial Class PackUserControl
 		Me.Options_LogSplitContainer.ResumeLayout(False)
 		Me.OptionsGroupBox.ResumeLayout(False)
 		Me.OptionsGroupBoxFillPanel.ResumeLayout(False)
-		Me.OptionsGroupBoxFillPanel.PerformLayout()
 		Me.PackerOptionsPanel.ResumeLayout(False)
 		Me.PackerOptionsPanel.PerformLayout()
 		Me.GmaPanel.ResumeLayout(False)
@@ -539,45 +632,45 @@ Partial Class PackUserControl
 		Me.ResumeLayout(False)
 
 	End Sub
-	Friend WithEvents Panel1 As System.Windows.Forms.Panel
-	Friend WithEvents OutputParentPathTextBox As Crowbar.TextBoxEx
-	Friend WithEvents GotoOutputPathButton As System.Windows.Forms.Button
-	Friend WithEvents BrowseForOutputPathButton As System.Windows.Forms.Button
-	Friend WithEvents OutputPathTextBox As Crowbar.TextBoxEx
-	Friend WithEvents OutputPathComboBox As System.Windows.Forms.ComboBox
-	Friend WithEvents InputComboBox As System.Windows.Forms.ComboBox
+	Friend WithEvents Panel1 As PanelEx
+	Friend WithEvents OutputParentPathTextBox As Crowbar.RichTextBoxEx
+	Friend WithEvents GotoOutputPathButton As ButtonEx
+	Friend WithEvents BrowseForOutputPathButton As ButtonEx
+	Friend WithEvents OutputPathTextBox As Crowbar.RichTextBoxEx
+	Friend WithEvents OutputPathComboBox As ComboBoxEx
+	Friend WithEvents InputComboBox As ComboBoxEx
 	Friend WithEvents Label1 As System.Windows.Forms.Label
-	Friend WithEvents GotoInputPathButton As System.Windows.Forms.Button
+	Friend WithEvents GotoInputPathButton As ButtonEx
 	Friend WithEvents Label6 As System.Windows.Forms.Label
-	Friend WithEvents InputPathFileNameTextBox As Crowbar.TextBoxEx
-	Friend WithEvents BrowseForInputFolderOrFileNameButton As System.Windows.Forms.Button
+	Friend WithEvents InputPathFileNameTextBox As Crowbar.RichTextBoxEx
+	Friend WithEvents BrowseForInputFolderOrFileNameButton As ButtonEx
 	Friend WithEvents Options_LogSplitContainer As System.Windows.Forms.SplitContainer
-	Friend WithEvents UseAllInPublishButton As System.Windows.Forms.Button
-	Friend WithEvents OptionsGroupBox As System.Windows.Forms.GroupBox
-	Friend WithEvents PackerOptionsPanel As System.Windows.Forms.Panel
-	Friend WithEvents PackOptionsUseDefaultsButton As System.Windows.Forms.Button
+	Friend WithEvents UseAllInPublishButton As ButtonEx
+	Friend WithEvents OptionsGroupBox As GroupBoxEx
+	Friend WithEvents PackerOptionsPanel As PanelEx
+	Friend WithEvents PackOptionsUseDefaultsButton As ButtonEx
 	Friend WithEvents LogFileCheckBox As System.Windows.Forms.CheckBox
 	Friend WithEvents Label3 As System.Windows.Forms.Label
-	Friend WithEvents GameSetupComboBox As System.Windows.Forms.ComboBox
-	Friend WithEvents SetUpGamesButton As System.Windows.Forms.Button
-	Friend WithEvents CancelPackButton As System.Windows.Forms.Button
-	Friend WithEvents SkipCurrentFolderButton As System.Windows.Forms.Button
-	Friend WithEvents PackButton As System.Windows.Forms.Button
-	Friend WithEvents UseInPublishButton As System.Windows.Forms.Button
+	Friend WithEvents GameSetupComboBox As ComboBoxEx
+	Friend WithEvents SetUpGamesButton As ButtonEx
+	Friend WithEvents CancelPackButton As ButtonEx
+	Friend WithEvents SkipCurrentFolderButton As ButtonEx
+	Friend WithEvents PackButton As ButtonEx
+	Friend WithEvents UseInPublishButton As ButtonEx
 	Friend WithEvents LogRichTextBox As Crowbar.RichTextBoxEx
-	Friend WithEvents PackedFilesComboBox As System.Windows.Forms.ComboBox
-	Friend WithEvents GotoPackedFileButton As System.Windows.Forms.Button
+	Friend WithEvents PackedFilesComboBox As ComboBoxEx
+	Friend WithEvents GotoPackedFileButton As ButtonEx
 	Friend WithEvents DirectPackerOptionsLabel As Label
-	Friend WithEvents DirectPackerOptionsTextBox As TextBox
-	Friend WithEvents PackerOptionsTextBox As TextBox
+	Friend WithEvents DirectPackerOptionsTextBox As Crowbar.RichTextBoxEx
+	Friend WithEvents PackerOptionsTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents ToolTip1 As ToolTip
 	Friend WithEvents MultiFileVpkCheckBox As CheckBox
-	Friend WithEvents PackButtonsPanel As Panel
-	Friend WithEvents PostPackPanel As Panel
-	Friend WithEvents OptionsGroupBoxFillPanel As Panel
-	Friend WithEvents PackerOptionsTextBoxMinScrollPanel As Panel
 	Friend WithEvents GmaTitleLabel As Label
-	Friend WithEvents GmaTitleTextBox As TextBoxEx
+	Friend WithEvents GmaTitleTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents GmaGarrysModTagsUserControl As GarrysModTagsUserControl
-	Friend WithEvents GmaPanel As Panel
+	Friend WithEvents PackButtonsPanel As PanelEx
+	Friend WithEvents PostPackPanel As PanelEx
+	Friend WithEvents OptionsGroupBoxFillPanel As PanelEx
+	Friend WithEvents PackerOptionsTextBoxMinScrollPanel As PanelEx
+	Friend WithEvents GmaPanel As PanelEx
 End Class

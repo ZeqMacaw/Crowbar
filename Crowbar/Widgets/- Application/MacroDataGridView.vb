@@ -1,7 +1,7 @@
 Imports System.ComponentModel
 
 Public Class MacroDataGridView
-	Inherits DataGridView
+	Inherits DataGridViewEx
 
 #Region "Create and Destroy"
 
@@ -66,7 +66,7 @@ Public Class MacroDataGridView
 		Me.ChangeToThisMacroInSelectedGameSetupToolStripMenuItem.Size = New System.Drawing.Size(176, 22)
 		Me.ChangeToThisMacroInSelectedGameSetupToolStripMenuItem.Text = "Change to this macro in selected game setup(s)"
 
-		Me.MacroMenuToolStripSeparator0 = New System.Windows.Forms.ToolStripSeparator
+		Me.MacroMenuToolStripSeparator0 = New ToolStripSeparatorEx
 		Me.MacroMenuToolStripSeparator0.Name = "MacroMenuToolStripSeparator0"
 
 		Me.SetMacroInAllGameSetupsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -84,7 +84,7 @@ Public Class MacroDataGridView
 		Me.ChangeToThisMacroInAllGameSetupsToolStripMenuItem.Size = New System.Drawing.Size(176, 22)
 		Me.ChangeToThisMacroInAllGameSetupsToolStripMenuItem.Text = "Change to this macro in all game setups"
 
-		Me.MacroMenuToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator
+		Me.MacroMenuToolStripSeparator1 = New ToolStripSeparatorEx
 		Me.MacroMenuToolStripSeparator1.Name = "MacroMenuToolStripSeparator1"
 
 		''
@@ -520,11 +520,11 @@ Public Class MacroDataGridView
 	Friend WithEvents SetMacroInSelectedGameSetupToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents ClearMacroInSelectedGameSetupToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents ChangeToThisMacroInSelectedGameSetupToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-	Protected MacroMenuToolStripSeparator0 As System.Windows.Forms.ToolStripSeparator
+	Protected MacroMenuToolStripSeparator0 As ToolStripSeparatorEx
 	Friend WithEvents SetMacroInAllGameSetupsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents ClearMacroInAllGameSetupsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents ChangeToThisMacroInAllGameSetupsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-	Protected MacroMenuToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
+	Protected MacroMenuToolStripSeparator1 As ToolStripSeparatorEx
 	'Protected WithEvents InsertToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	'Protected WithEvents DeleteToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Protected WithEvents CopyToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem

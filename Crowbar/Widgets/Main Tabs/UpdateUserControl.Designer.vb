@@ -23,30 +23,30 @@ Partial Class UpdateUserControl
 	<System.Diagnostics.DebuggerStepThrough()>
 	Private Sub InitializeComponent()
 		Me.components = New System.ComponentModel.Container()
-		Me.UpdateUserControlFillPanel = New System.Windows.Forms.Panel()
-		Me.CheckForUpdateGroupBox = New System.Windows.Forms.GroupBox()
-		Me.Panel1 = New System.Windows.Forms.Panel()
+		Me.UpdateUserControlFillPanel = New Crowbar.PanelEx()
+		Me.CheckForUpdateGroupBox = New Crowbar.GroupBoxEx()
+		Me.Panel1 = New Crowbar.PanelEx()
 		Me.ChangelogTextBox = New Crowbar.RichTextBoxEx()
 		Me.CurrentVersionLabel = New System.Windows.Forms.Label()
-		Me.CheckForUpdateTopPanel = New System.Windows.Forms.Panel()
-		Me.CheckForUpdateButton = New System.Windows.Forms.Button()
-		Me.CheckForUpdateTextBox = New Crowbar.TextBoxEx()
+		Me.CheckForUpdateTopPanel = New Crowbar.PanelEx()
+		Me.CheckForUpdateButton = New Crowbar.ButtonEx()
+		Me.CheckForUpdateTextBox = New Crowbar.RichTextBoxEx()
 		Me.CheckForUpdateProgressBar = New Crowbar.ProgressBarEx()
-		Me.CancelCheckButton = New System.Windows.Forms.Button()
-		Me.DownloadGroupBox = New System.Windows.Forms.GroupBox()
-		Me.DownloadFolderTextBox = New Crowbar.TextBoxEx()
+		Me.CancelCheckButton = New Crowbar.ButtonEx()
+		Me.DownloadGroupBox = New Crowbar.GroupBoxEx()
+		Me.DownloadFolderTextBox = New Crowbar.RichTextBoxEx()
 		Me.DownloadProgressBarEx = New Crowbar.ProgressBarEx()
-		Me.BrowseForDownloadFolderButton = New System.Windows.Forms.Button()
+		Me.BrowseForDownloadFolderButton = New Crowbar.ButtonEx()
 		Me.DownloadFolderLabel = New System.Windows.Forms.Label()
-		Me.GotoDownloadFileButton = New System.Windows.Forms.Button()
-		Me.CancelDownloadButton = New System.Windows.Forms.Button()
-		Me.DownloadButton = New System.Windows.Forms.Button()
-		Me.UpdateGroupBox = New System.Windows.Forms.GroupBox()
-		Me.CancelUpdateButton = New System.Windows.Forms.Button()
-		Me.BrowseForUpdateFolderButton = New System.Windows.Forms.Button()
-		Me.UpdateFolderTextBox = New Crowbar.TextBoxEx()
+		Me.GotoDownloadFileButton = New Crowbar.ButtonEx()
+		Me.CancelDownloadButton = New Crowbar.ButtonEx()
+		Me.DownloadButton = New Crowbar.ButtonEx()
+		Me.UpdateGroupBox = New Crowbar.GroupBoxEx()
+		Me.CancelUpdateButton = New Crowbar.ButtonEx()
+		Me.BrowseForUpdateFolderButton = New Crowbar.ButtonEx()
+		Me.UpdateFolderTextBox = New Crowbar.RichTextBoxEx()
 		Me.UpdateProgressBarEx = New Crowbar.ProgressBarEx()
-		Me.UpdateButton = New System.Windows.Forms.Button()
+		Me.UpdateButton = New Crowbar.ButtonEx()
 		Me.UpdateToNewPathCheckBox = New System.Windows.Forms.CheckBox()
 		Me.UpdateCopySettingsCheckBox = New System.Windows.Forms.CheckBox()
 		Me.UpdateUserControlFillPanel.SuspendLayout()
@@ -59,23 +59,31 @@ Partial Class UpdateUserControl
 		'
 		'UpdateUserControlFillPanel
 		'
+		Me.UpdateUserControlFillPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.UpdateUserControlFillPanel.Controls.Add(Me.CheckForUpdateGroupBox)
 		Me.UpdateUserControlFillPanel.Controls.Add(Me.DownloadGroupBox)
 		Me.UpdateUserControlFillPanel.Controls.Add(Me.UpdateGroupBox)
 		Me.UpdateUserControlFillPanel.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.UpdateUserControlFillPanel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.UpdateUserControlFillPanel.Location = New System.Drawing.Point(0, 0)
 		Me.UpdateUserControlFillPanel.Name = "UpdateUserControlFillPanel"
+		Me.UpdateUserControlFillPanel.SelectedIndex = -1
+		Me.UpdateUserControlFillPanel.SelectedValue = Nothing
 		Me.UpdateUserControlFillPanel.Size = New System.Drawing.Size(776, 536)
 		Me.UpdateUserControlFillPanel.TabIndex = 17
 		'
 		'CheckForUpdateGroupBox
 		'
+		Me.CheckForUpdateGroupBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.CheckForUpdateGroupBox.Controls.Add(Me.Panel1)
 		Me.CheckForUpdateGroupBox.Controls.Add(Me.CurrentVersionLabel)
 		Me.CheckForUpdateGroupBox.Controls.Add(Me.CheckForUpdateTopPanel)
 		Me.CheckForUpdateGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.CheckForUpdateGroupBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		Me.CheckForUpdateGroupBox.IsReadOnly = False
 		Me.CheckForUpdateGroupBox.Location = New System.Drawing.Point(0, 0)
 		Me.CheckForUpdateGroupBox.Name = "CheckForUpdateGroupBox"
+		Me.CheckForUpdateGroupBox.SelectedValue = Nothing
 		Me.CheckForUpdateGroupBox.Size = New System.Drawing.Size(776, 365)
 		Me.CheckForUpdateGroupBox.TabIndex = 14
 		Me.CheckForUpdateGroupBox.TabStop = False
@@ -83,25 +91,34 @@ Partial Class UpdateUserControl
 		'
 		'Panel1
 		'
+		Me.Panel1.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.Panel1.Controls.Add(Me.ChangelogTextBox)
 		Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.Panel1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.Panel1.Location = New System.Drawing.Point(3, 44)
 		Me.Panel1.Name = "Panel1"
 		Me.Panel1.Padding = New System.Windows.Forms.Padding(3)
+		Me.Panel1.SelectedIndex = -1
+		Me.Panel1.SelectedValue = Nothing
 		Me.Panel1.Size = New System.Drawing.Size(770, 318)
 		Me.Panel1.TabIndex = 16
 		'
 		'ChangelogTextBox
 		'
-		Me.ChangelogTextBox.BackColor = System.Drawing.SystemColors.Control
+		Me.ChangelogTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.ChangelogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.ChangelogTextBox.CueBannerText = ""
 		Me.ChangelogTextBox.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.ChangelogTextBox.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.ChangelogTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.ChangelogTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.ChangelogTextBox.Location = New System.Drawing.Point(3, 3)
 		Me.ChangelogTextBox.Name = "ChangelogTextBox"
+		Me.ChangelogTextBox.ReadOnly = True
+		Me.ChangelogTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.ChangelogTextBox.Size = New System.Drawing.Size(764, 312)
 		Me.ChangelogTextBox.TabIndex = 6
 		Me.ChangelogTextBox.Text = ""
+		Me.ChangelogTextBox.WordWrap = False
 		'
 		'CurrentVersionLabel
 		'
@@ -115,13 +132,17 @@ Partial Class UpdateUserControl
 		'
 		'CheckForUpdateTopPanel
 		'
+		Me.CheckForUpdateTopPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.CheckForUpdateTopPanel.Controls.Add(Me.CheckForUpdateButton)
 		Me.CheckForUpdateTopPanel.Controls.Add(Me.CheckForUpdateTextBox)
 		Me.CheckForUpdateTopPanel.Controls.Add(Me.CheckForUpdateProgressBar)
 		Me.CheckForUpdateTopPanel.Controls.Add(Me.CancelCheckButton)
 		Me.CheckForUpdateTopPanel.Dock = System.Windows.Forms.DockStyle.Top
+		Me.CheckForUpdateTopPanel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.CheckForUpdateTopPanel.Location = New System.Drawing.Point(3, 18)
 		Me.CheckForUpdateTopPanel.Name = "CheckForUpdateTopPanel"
+		Me.CheckForUpdateTopPanel.SelectedIndex = -1
+		Me.CheckForUpdateTopPanel.SelectedValue = Nothing
 		Me.CheckForUpdateTopPanel.Size = New System.Drawing.Size(770, 26)
 		Me.CheckForUpdateTopPanel.TabIndex = 15
 		'
@@ -138,10 +159,16 @@ Partial Class UpdateUserControl
 		'
 		Me.CheckForUpdateTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.CheckForUpdateTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.CheckForUpdateTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.CheckForUpdateTextBox.CueBannerText = ""
+		Me.CheckForUpdateTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.CheckForUpdateTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.CheckForUpdateTextBox.Location = New System.Drawing.Point(78, 0)
+		Me.CheckForUpdateTextBox.Multiline = False
 		Me.CheckForUpdateTextBox.Name = "CheckForUpdateTextBox"
 		Me.CheckForUpdateTextBox.ReadOnly = True
+		Me.CheckForUpdateTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.CheckForUpdateTextBox.Size = New System.Drawing.Size(614, 22)
 		Me.CheckForUpdateTextBox.TabIndex = 9
 		Me.CheckForUpdateTextBox.Text = "[not checked yet]"
@@ -169,6 +196,7 @@ Partial Class UpdateUserControl
 		'
 		'DownloadGroupBox
 		'
+		Me.DownloadGroupBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.DownloadGroupBox.Controls.Add(Me.DownloadFolderTextBox)
 		Me.DownloadGroupBox.Controls.Add(Me.DownloadProgressBarEx)
 		Me.DownloadGroupBox.Controls.Add(Me.BrowseForDownloadFolderButton)
@@ -177,8 +205,11 @@ Partial Class UpdateUserControl
 		Me.DownloadGroupBox.Controls.Add(Me.CancelDownloadButton)
 		Me.DownloadGroupBox.Controls.Add(Me.DownloadButton)
 		Me.DownloadGroupBox.Dock = System.Windows.Forms.DockStyle.Bottom
+		Me.DownloadGroupBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		Me.DownloadGroupBox.IsReadOnly = False
 		Me.DownloadGroupBox.Location = New System.Drawing.Point(0, 365)
 		Me.DownloadGroupBox.Name = "DownloadGroupBox"
+		Me.DownloadGroupBox.SelectedValue = Nothing
 		Me.DownloadGroupBox.Size = New System.Drawing.Size(776, 76)
 		Me.DownloadGroupBox.TabIndex = 8
 		Me.DownloadGroupBox.TabStop = False
@@ -189,11 +220,18 @@ Partial Class UpdateUserControl
 		Me.DownloadFolderTextBox.AllowDrop = True
 		Me.DownloadFolderTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.DownloadFolderTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.DownloadFolderTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.DownloadFolderTextBox.CueBannerText = ""
+		Me.DownloadFolderTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.DownloadFolderTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.DownloadFolderTextBox.Location = New System.Drawing.Point(107, 15)
+		Me.DownloadFolderTextBox.Multiline = False
 		Me.DownloadFolderTextBox.Name = "DownloadFolderTextBox"
+		Me.DownloadFolderTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.DownloadFolderTextBox.Size = New System.Drawing.Size(582, 22)
 		Me.DownloadFolderTextBox.TabIndex = 7
+		Me.DownloadFolderTextBox.Text = ""
 		'
 		'DownloadProgressBarEx
 		'
@@ -256,6 +294,7 @@ Partial Class UpdateUserControl
 		'
 		'UpdateGroupBox
 		'
+		Me.UpdateGroupBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.UpdateGroupBox.Controls.Add(Me.CancelUpdateButton)
 		Me.UpdateGroupBox.Controls.Add(Me.BrowseForUpdateFolderButton)
 		Me.UpdateGroupBox.Controls.Add(Me.UpdateFolderTextBox)
@@ -264,8 +303,11 @@ Partial Class UpdateUserControl
 		Me.UpdateGroupBox.Controls.Add(Me.UpdateToNewPathCheckBox)
 		Me.UpdateGroupBox.Controls.Add(Me.UpdateCopySettingsCheckBox)
 		Me.UpdateGroupBox.Dock = System.Windows.Forms.DockStyle.Bottom
+		Me.UpdateGroupBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
+		Me.UpdateGroupBox.IsReadOnly = False
 		Me.UpdateGroupBox.Location = New System.Drawing.Point(0, 441)
 		Me.UpdateGroupBox.Name = "UpdateGroupBox"
+		Me.UpdateGroupBox.SelectedValue = Nothing
 		Me.UpdateGroupBox.Size = New System.Drawing.Size(776, 95)
 		Me.UpdateGroupBox.TabIndex = 7
 		Me.UpdateGroupBox.TabStop = False
@@ -298,11 +340,18 @@ Partial Class UpdateUserControl
 		Me.UpdateFolderTextBox.AllowDrop = True
 		Me.UpdateFolderTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.UpdateFolderTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+		Me.UpdateFolderTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.UpdateFolderTextBox.CueBannerText = ""
+		Me.UpdateFolderTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		Me.UpdateFolderTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.UpdateFolderTextBox.Location = New System.Drawing.Point(266, 16)
+		Me.UpdateFolderTextBox.Multiline = False
 		Me.UpdateFolderTextBox.Name = "UpdateFolderTextBox"
+		Me.UpdateFolderTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
 		Me.UpdateFolderTextBox.Size = New System.Drawing.Size(423, 22)
 		Me.UpdateFolderTextBox.TabIndex = 9
+		Me.UpdateFolderTextBox.Text = ""
 		'
 		'UpdateProgressBarEx
 		'
@@ -356,7 +405,6 @@ Partial Class UpdateUserControl
 		Me.CheckForUpdateGroupBox.PerformLayout()
 		Me.Panel1.ResumeLayout(False)
 		Me.CheckForUpdateTopPanel.ResumeLayout(False)
-		Me.CheckForUpdateTopPanel.PerformLayout()
 		Me.DownloadGroupBox.ResumeLayout(False)
 		Me.DownloadGroupBox.PerformLayout()
 		Me.UpdateGroupBox.ResumeLayout(False)
@@ -365,30 +413,30 @@ Partial Class UpdateUserControl
 
 	End Sub
 
-	Friend WithEvents UpdateButton As Button
-	Friend WithEvents CheckForUpdateButton As Button
-	Friend WithEvents DownloadButton As Button
+	Friend WithEvents UpdateButton As ButtonEx
+	Friend WithEvents CheckForUpdateButton As ButtonEx
+	Friend WithEvents DownloadButton As ButtonEx
 	Friend WithEvents UpdateCopySettingsCheckBox As CheckBox
 	Friend WithEvents UpdateToNewPathCheckBox As CheckBox
 	Friend WithEvents ChangelogTextBox As RichTextBoxEx
-	Friend WithEvents UpdateGroupBox As GroupBox
+	Friend WithEvents UpdateGroupBox As GroupBoxEx
 	Friend WithEvents UpdateProgressBarEx As ProgressBarEx
-	Friend WithEvents DownloadGroupBox As GroupBox
+	Friend WithEvents DownloadGroupBox As GroupBoxEx
 	Friend WithEvents DownloadProgressBarEx As ProgressBarEx
 	Friend WithEvents DownloadFolderLabel As Label
-	Friend WithEvents BrowseForDownloadFolderButton As Button
-	Friend WithEvents DownloadFolderTextBox As TextBoxEx
-	Friend WithEvents BrowseForUpdateFolderButton As Button
-	Friend WithEvents UpdateFolderTextBox As TextBoxEx
-	Friend WithEvents CheckForUpdateTextBox As TextBoxEx
+	Friend WithEvents BrowseForDownloadFolderButton As ButtonEx
+	Friend WithEvents DownloadFolderTextBox As Crowbar.RichTextBoxEx
+	Friend WithEvents BrowseForUpdateFolderButton As ButtonEx
+	Friend WithEvents UpdateFolderTextBox As Crowbar.RichTextBoxEx
+	Friend WithEvents CheckForUpdateTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents CheckForUpdateProgressBar As ProgressBarEx
-	Friend WithEvents CancelUpdateButton As Button
-	Friend WithEvents CancelDownloadButton As Button
-	Friend WithEvents CancelCheckButton As Button
-	Friend WithEvents CheckForUpdateGroupBox As GroupBox
+	Friend WithEvents CancelUpdateButton As ButtonEx
+	Friend WithEvents CancelDownloadButton As ButtonEx
+	Friend WithEvents CancelCheckButton As ButtonEx
+	Friend WithEvents CheckForUpdateGroupBox As GroupBoxEx
 	Friend WithEvents CurrentVersionLabel As Label
-	Friend WithEvents GotoDownloadFileButton As Button
-	Friend WithEvents UpdateUserControlFillPanel As Panel
-	Friend WithEvents CheckForUpdateTopPanel As Panel
-	Friend WithEvents Panel1 As Panel
+	Friend WithEvents GotoDownloadFileButton As ButtonEx
+	Friend WithEvents UpdateUserControlFillPanel As PanelEx
+	Friend WithEvents CheckForUpdateTopPanel As PanelEx
+	Friend WithEvents Panel1 As PanelEx
 End Class

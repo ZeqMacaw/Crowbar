@@ -4,31 +4,28 @@ Public Class HelpUserControl
 
 #Region "Creation and Destruction"
 
-    Public Sub New()
-        ' This call is required by the Windows Form Designer.
-        InitializeComponent()
+	Public Sub New()
+		MyBase.New()
+		' This call is required by the Windows Form Designer.
+		InitializeComponent()
 
-        'NOTE: Try-Catch is needed so that widget will be shown in MainForm without raising exception.
-        Try
-            Me.Init()
-        Catch
-        End Try
-    End Sub
+		Me.BackColor = WidgetBackColor
+	End Sub
 
 #End Region
 
 #Region "Init and Free"
 
-    Private Sub Init()
+	Private Sub Init()
         Me.TutorialLinkLabel.Links.Add(0, Me.TutorialLinkLabel.Text.Length(), AppConstants.HelpTutorialLink)
         Me.ContentsLinkLabel.Links.Add(0, Me.ContentsLinkLabel.Text.Length(), AppConstants.HelpContentsLink)
         Me.IndexLinkLabel.Links.Add(0, Me.IndexLinkLabel.Text.Length(), AppConstants.HelpIndexLink)
         Me.TipsLinkLabel.Links.Add(0, Me.TipsLinkLabel.Text.Length(), AppConstants.HelpTipsLink)
     End Sub
 
-    'Private Sub Free()
+	'Private Sub Free()
 
-    'End Sub
+	'End Sub
 
 #End Region
 
@@ -37,6 +34,12 @@ Public Class HelpUserControl
 #End Region
 
 #Region "Widget Event Handlers"
+
+	Private Sub HelpUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
+		If Not Me.DesignMode Then
+			Me.Init()
+		End If
+	End Sub
 
 #End Region
 
