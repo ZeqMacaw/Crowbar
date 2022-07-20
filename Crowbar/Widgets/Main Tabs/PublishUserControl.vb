@@ -936,7 +936,7 @@ Public Class PublishUserControl
 		End If
 		'NOTE: This line does not update the widgets connected to the list fields.
 		Me.ItemsDataGridView.Rows(selectedRowIndex).Selected = True
-		'NOTE: This line is required so that the item detail widgets update when the gird selection is changed programmatically.
+		'NOTE: This line is required so that the item detail widgets update when the grid selection is changed programmatically.
 		Me.ItemsDataGridView.CurrentCell = Me.ItemsDataGridView.Rows(selectedRowIndex).Cells(0)
 		Me.ItemsDataGridView.FirstDisplayedScrollingRowIndex = selectedRowIndex
 	End Sub
