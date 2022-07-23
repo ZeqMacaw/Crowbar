@@ -3492,6 +3492,19 @@ Public Class SourceQcFile52
 			If Me.thePhyFileData.theSourcePhyRagdollConstraintDescs.ContainsKey(aSourcePhysCollisionModel.theIndex) Then
 				Dim aConstraint As SourcePhyRagdollConstraint
 				aConstraint = Me.thePhyFileData.theSourcePhyRagdollConstraintDescs(aSourcePhysCollisionModel.theIndex)
+
+				'FROM: [44] SourceEngine2006_source\utils\studiomdl\collisionmodel.cpp
+				'FROM: [48] SourceEngine2007_source se2007_src [VS2017]\src_main\utils\studiomdl\collisionmodel.cpp
+				'FROM: [49] csgo_studiomdl\utils\studiomdl\collisionmodel.cpp
+				'	// In the editor/qc friction values are shown as 5X so 1.0 can be the default.
+				'	CJointConstraint *pConstraint = new CJointConstraint( pJointName, axis, jointType, limitMin, limitMax, friction * (1.0f/5.0f) );
+				Dim xFrictionValue As Double
+				xFrictionValue = aConstraint.theXFriction * 5
+				Dim yFrictionValue As Double
+				yFrictionValue = aConstraint.theYFriction * 5
+				Dim zFrictionValue As Double
+				zFrictionValue = aConstraint.theZFriction * 5
+
 				line = vbTab
 				line += "$jointconstrain """
 				line += aSourcePhysCollisionModel.theName
@@ -3500,7 +3513,7 @@ Public Class SourceQcFile52
 				line += " "
 				line += aConstraint.theXMax.ToString("0.######", TheApp.InternalNumberFormat)
 				line += " "
-				line += aConstraint.theXFriction.ToString("0.######", TheApp.InternalNumberFormat)
+				line += xFrictionValue.ToString("0.######", TheApp.InternalNumberFormat)
 				Me.theOutputFileStreamWriter.WriteLine(line)
 				line = vbTab
 				line += "$jointconstrain """
@@ -3510,7 +3523,7 @@ Public Class SourceQcFile52
 				line += " "
 				line += aConstraint.theYMax.ToString("0.######", TheApp.InternalNumberFormat)
 				line += " "
-				line += aConstraint.theYFriction.ToString("0.######", TheApp.InternalNumberFormat)
+				line += yFrictionValue.ToString("0.######", TheApp.InternalNumberFormat)
 				Me.theOutputFileStreamWriter.WriteLine(line)
 				line = vbTab
 				line += "$jointconstrain """
@@ -3520,7 +3533,7 @@ Public Class SourceQcFile52
 				line += " "
 				line += aConstraint.theZMax.ToString("0.######", TheApp.InternalNumberFormat)
 				line += " "
-				line += aConstraint.theZFriction.ToString("0.######", TheApp.InternalNumberFormat)
+				line += zFrictionValue.ToString("0.######", TheApp.InternalNumberFormat)
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			End If
 		Next
