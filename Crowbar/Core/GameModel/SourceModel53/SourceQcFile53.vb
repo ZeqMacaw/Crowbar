@@ -793,7 +793,8 @@ Public Class SourceQcFile53
 
 			For i As Integer = 0 To Me.theMdlFileData.theFlexRules.Count - 1
 				aFlexRule = Me.theMdlFileData.theFlexRules(i)
-				line = Me.GetFlexRule(aFlexRule)
+				'line = Me.GetFlexRule(aFlexRule)
+				line = Common.GetFlexRule(Me.theMdlFileData.theFlexDescs, Me.theMdlFileData.theFlexControllers, aFlexRule)
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
 		End If

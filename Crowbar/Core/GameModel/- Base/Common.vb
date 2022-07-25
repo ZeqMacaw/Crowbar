@@ -60,11 +60,42 @@ Module Common
 					Dim newExpr As String = Convert.ToString(leftIntermediate.theExpression) + " + " + Convert.ToString(rightIntermediate.theExpression)
 					stack.Push(New IntermediateExpression(newExpr, 1))
 				ElseIf aFlexOp.op = SourceMdlFlexOp.STUDIO_SUB Then
-					Dim rightIntermediate As IntermediateExpression = stack.Pop()
-					Dim leftIntermediate As IntermediateExpression = stack.Pop()
+					'FROM: [48] SourceEngine2007_source se2007_src [VS2017]\src_main\utils\studiomdl\studiomdl.cpp
+					'		else if ( token[0] == '-' )
+					'		{
+					'			stream[i].op = STUDIO_SUB;
+					'			if (i > 0)
+					'			{
+					'				switch( stream[i-1].op )
+					'				{
+					'				case STUDIO_OPEN:
+					'				case STUDIO_ADD:
+					'				case STUDIO_SUB:
+					'				case STUDIO_MUL:
+					'				case STUDIO_DIV:
+					'				case STUDIO_COMMA:
+					'					// it's a unary if it's preceded by a "(+-*/,"?
+					'					stream[i].op = STUDIO_NEG;
+					'					break;
+					'				}
+					'			}
+					'			i++;
+					'		}
+					' The model compiler stores a STUDIO_SUB instead of a STUDIO_NEG when '-' at the start of the line, 
+					'		because the compiler only considers it a STUDIO_NEG only when the '-' is preceded by one of these charcters: (+-*/,
+					'		Thus, Crowbar sees STUDIO_SUB and tries to get the right and left expressions, but there is no left expression on the stack.
+					If stack.Count >= 2 Then
+						Dim rightIntermediate As IntermediateExpression = stack.Pop()
+						Dim leftIntermediate As IntermediateExpression = stack.Pop()
 
-					Dim newExpr As String = Convert.ToString(leftIntermediate.theExpression) + " - " + Convert.ToString(rightIntermediate.theExpression)
-					stack.Push(New IntermediateExpression(newExpr, 1))
+						Dim newExpr As String = Convert.ToString(leftIntermediate.theExpression) + " - " + Convert.ToString(rightIntermediate.theExpression)
+						stack.Push(New IntermediateExpression(newExpr, 1))
+					Else
+						Dim rightIntermediate As IntermediateExpression = stack.Pop()
+
+						Dim newExpr As String = "-(" + rightIntermediate.theExpression + ")"
+						stack.Push(New IntermediateExpression(newExpr, 10))
+					End If
 				ElseIf aFlexOp.op = SourceMdlFlexOp.STUDIO_MUL Then
 					Dim rightIntermediate As IntermediateExpression = stack.Pop()
 					If rightIntermediate.thePrecedence < 2 Then
@@ -102,7 +133,7 @@ Module Common
 				ElseIf aFlexOp.op = SourceMdlFlexOp.STUDIO_NEG Then
 					Dim rightIntermediate As IntermediateExpression = stack.Pop()
 
-					Dim newExpr As String = "-" + rightIntermediate.theExpression
+					Dim newExpr As String = "-(" + rightIntermediate.theExpression + ")"
 					stack.Push(New IntermediateExpression(newExpr, 10))
 				ElseIf aFlexOp.op = SourceMdlFlexOp.STUDIO_EXP Then
 					Dim ignoreThisOpBecauseItIsMistakeToBeHere As Integer = 4242
