@@ -56,6 +56,7 @@ Public Class SourceVtxFile07
 			Me.theFirstMeshWithStripGroupsInputFileStreamPosition = -1
 			Me.theModelLodHasOnlyOneMesh = False
 			Me.theSecondMeshWithStripGroups = Nothing
+			Me.theStartOfStripGroupVtxStrips = -1
 			Me.theExpectedStartOfDataAfterFirstStripGroupList = -1
 			Me.theStripGroupAndStripUseExtraFields = False
 
