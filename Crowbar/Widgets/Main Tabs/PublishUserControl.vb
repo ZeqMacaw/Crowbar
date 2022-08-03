@@ -1501,6 +1501,11 @@ Public Class PublishUserControl
 
 		'NOTE: SteamRemoteStorage_PublishWorkshopFile requires Item to have a Title, a Description, a Content File, and a Preview Image.
 		Me.PublishItemButton.Enabled = (((Me.theSelectedItem.IsDraft) AndAlso (Me.theSelectedItem.Title <> "" AndAlso Me.theSelectedItem.Description <> "" AndAlso Me.theSelectedItem.ContentPathFolderOrFileName <> "" AndAlso Me.theSelectedItem.PreviewImagePathFileName <> "")) OrElse (Me.theSelectedItem.IsChanged AndAlso (Me.theUserSteamID = Me.theSelectedItem.OwnerID)) OrElse (Me.theSelectedItem.IsTemplate))
+		If Me.theSelectedItem.IsPublished Then
+			Me.PublishItemButton.Text = "Update"
+		Else
+			Me.PublishItemButton.Text = "Publish"
+		End If
 	End Sub
 
 	Private Sub SwapBetweenOwnerNameAndID()
