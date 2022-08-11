@@ -525,8 +525,8 @@
 	'	void				*pIndexBase;
 	Public indexBaseP As Integer
 
-	'	// FIXME: Remove when we up the model version. Move all fields of studiohdr2_t into studiohdr_t.
-	'	int					studiohdr2index;
+	' it would be cool to export these strings in a txt but who cares.
+	'	int
 	Public mayaOffset As Integer
 
 	Public sourceBoneTransformCount As Integer

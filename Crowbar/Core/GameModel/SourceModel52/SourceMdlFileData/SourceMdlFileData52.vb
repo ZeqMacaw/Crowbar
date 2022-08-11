@@ -562,7 +562,7 @@
 	Public theAnimBlockRelativePathFileName As String
 	Public theAttachments As List(Of SourceMdlAttachment)
 	Public theBodyParts As List(Of SourceMdlBodyPart)
-	Public theBones As List(Of SourceMdlBone)
+	Public theBones As List(Of SourceMdlBone52)
 	Public theBoneControllers As List(Of SourceMdlBoneController)
 	Public theBoneTableByName As List(Of Integer)
 	Public theFlexDescs As List(Of SourceMdlFlexDesc)

@@ -75,7 +75,7 @@ Public Class SourceSmdFile52
 
 	Public Sub WriteSkeletonSection(ByVal lodIndex As Integer)
 		Dim line As String = ""
-		Dim aBone As SourceMdlBone
+		Dim aBone As SourceMdlBone52
 
 		'skeleton
 		line = "skeleton"
@@ -209,7 +209,7 @@ Public Class SourceSmdFile52
 		Me.theOutputFileStreamWriter.WriteLine(line)
 
 		Dim collisionData As SourcePhyCollisionData
-		Dim aBone As SourceMdlBone
+		Dim aBone As SourceMdlBone52
 		Dim aTriangle As SourcePhyFace
 		Dim faceSection As SourcePhyConvexMesh
 		Dim phyVertex As SourcePhyVertex
@@ -335,7 +335,7 @@ Public Class SourceSmdFile52
 
 	Public Sub WriteSkeletonSectionForAnimation(ByVal aSequenceDescBase As SourceMdlSequenceDescBase, ByVal anAnimationDescBase As SourceMdlAnimationDescBase)
 		Dim line As String = ""
-		Dim aBone As SourceMdlBone
+		Dim aBone As SourceMdlBone52
 		Dim boneIndex As Integer
 		Dim aFrameLine As AnimationFrameLine
 		Dim position As New SourceVector()
@@ -521,7 +521,7 @@ Public Class SourceSmdFile52
 #Region "Private Methods"
 
 	Private Sub AdjustPositionAndRotation(ByVal boneIndex As Integer, ByVal iPosition As SourceVector, ByVal iRotation As SourceVector, ByRef oPosition As SourceVector, ByRef oRotation As SourceVector)
-		Dim aBone As SourceMdlBone
+		Dim aBone As SourceMdlBone52
 		aBone = Me.theMdlFileData.theBones(boneIndex)
 
 		'If iPosition.debug_text = "desc_delta" OrElse iPosition.debug_text.StartsWith("delta") Then
@@ -585,7 +585,7 @@ Public Class SourceSmdFile52
 	End Sub
 
 	Private Sub AdjustPositionAndRotationByPiecewiseMovement(ByVal frameIndex As Integer, ByVal boneIndex As Integer, ByVal movements As List(Of SourceMdlMovement), ByVal iPosition As SourceVector, ByVal iRotation As SourceVector, ByRef oPosition As SourceVector, ByRef oRotation As SourceVector)
-		Dim aBone As SourceMdlBone
+		Dim aBone As SourceMdlBone52
 		aBone = Me.theMdlFileData.theBones(boneIndex)
 
 		oPosition.x = iPosition.x
@@ -808,7 +808,7 @@ Public Class SourceSmdFile52
 	'Dim aBone As SourceMdlBone
 	'aBone = Me.theSourceEngineModel.theMdlFileHeader.theBones(anEyeball.boneIndex)
 	'eyeballPosition = MathModule.VectorITransform(anEyeball.org, aBone.poseToBoneColumn0, aBone.poseToBoneColumn1, aBone.poseToBoneColumn2, aBone.poseToBoneColumn3)
-	Private Function TransformPhyVertex(ByVal aBone As SourceMdlBone, ByVal vertex As SourceVector) As SourceVector
+	Private Function TransformPhyVertex(ByVal aBone As SourceMdlBone52, ByVal vertex As SourceVector) As SourceVector
 		Dim aVectorTransformed As New SourceVector
 		Dim aVector As New SourceVector()
 
@@ -1461,7 +1461,7 @@ Public Class SourceSmdFile52
 	Private Sub CalcAnimation(ByVal aSequenceDesc As SourceMdlSequenceDesc, ByVal anAnimationDesc As SourceMdlAnimationDesc52, ByVal frameIndex As Integer)
 		Dim s As Double
 		Dim animIndex As Integer
-		Dim aBone As SourceMdlBone
+		Dim aBone As SourceMdlBone52
 		Dim aWeight As Double
 		Dim anAnimation As SourceMdlAnimation
 		Dim rot As SourceVector
@@ -1882,7 +1882,7 @@ Public Class SourceSmdFile52
 
 	'	Return rot
 	'End Function
-	Private Function CalcBoneRotation(ByVal frameIndex As Integer, ByVal s As Double, ByVal aBone As SourceMdlBone, ByVal anAnimation As SourceMdlAnimation, ByRef rotationQuat As SourceQuaternion) As SourceVector
+	Private Function CalcBoneRotation(ByVal frameIndex As Integer, ByVal s As Double, ByVal aBone As SourceMdlBone52, ByVal anAnimation As SourceMdlAnimation, ByRef rotationQuat As SourceQuaternion) As SourceVector
 		Dim rot As New SourceQuaternion()
 		Dim angleVector As New SourceVector()
 
@@ -2037,7 +2037,7 @@ Public Class SourceSmdFile52
 
 	'	Assert( pos.IsValid() );
 	'}
-	Private Function CalcBonePosition(ByVal frameIndex As Integer, ByVal s As Double, ByVal aBone As SourceMdlBone, ByVal anAnimation As SourceMdlAnimation) As SourceVector
+	Private Function CalcBonePosition(ByVal frameIndex As Integer, ByVal s As Double, ByVal aBone As SourceMdlBone52, ByVal anAnimation As SourceMdlAnimation) As SourceVector
 		Dim pos As New SourceVector()
 
 		If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_RAWPOS) > 0 Then

@@ -340,10 +340,10 @@ Public Class SourceMdlFile52
 				Me.theInputFileReader.BaseStream.Seek(Me.theMdlFileData.boneOffset, SeekOrigin.Begin)
 				fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-				Me.theMdlFileData.theBones = New List(Of SourceMdlBone)(Me.theMdlFileData.boneCount)
+				Me.theMdlFileData.theBones = New List(Of SourceMdlBone52)(Me.theMdlFileData.boneCount)
 				For i As Integer = 0 To Me.theMdlFileData.boneCount - 1
 					boneInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-					Dim aBone As New SourceMdlBone()
+					Dim aBone As New SourceMdlBone52()
 
 					'If Me.theMdlFileData.version = 10 Then
 					'	aBone.name = Me.theInputFileReader.ReadChars(32)
@@ -386,10 +386,12 @@ Public Class SourceMdlFile52
 					aBone.rotation.x = Me.theInputFileReader.ReadSingle()
 					aBone.rotation.y = Me.theInputFileReader.ReadSingle()
 					aBone.rotation.z = Me.theInputFileReader.ReadSingle()
-					aBone.positionScale = New SourceVector()
-					aBone.positionScale.x = Me.theInputFileReader.ReadSingle()
-					aBone.positionScale.y = Me.theInputFileReader.ReadSingle()
-					aBone.positionScale.z = Me.theInputFileReader.ReadSingle()
+
+					aBone.unkVector = New SourceVector()
+					aBone.unkVector.x = Me.theInputFileReader.ReadSingle()
+					aBone.unkVector.y = Me.theInputFileReader.ReadSingle()
+					aBone.unkVector.z = Me.theInputFileReader.ReadSingle()
+
 					aBone.rotationScale = New SourceVector()
 					aBone.rotationScale.x = Me.theInputFileReader.ReadSingle()
 					aBone.rotationScale.y = Me.theInputFileReader.ReadSingle()
@@ -419,30 +421,6 @@ Public Class SourceMdlFile52
 					aBone.qAlignment.w = Me.theInputFileReader.ReadSingle()
 
 					aBone.flags = Me.theInputFileReader.ReadInt32()
-					'If (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD0) <> 0 Then
-					'	Dim debug As Integer = 4242
-					'End If
-					'If (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD1) <> 0 Then
-					'	Dim debug As Integer = 4242
-					'End If
-					'If (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD2) <> 0 Then
-					'	Dim debug As Integer = 4242
-					'End If
-					'If (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD3) <> 0 Then
-					'	Dim debug As Integer = 4242
-					'End If
-					'If (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD4) <> 0 Then
-					'	Dim debug As Integer = 4242
-					'End If
-					'If (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD5) <> 0 Then
-					'	Dim debug As Integer = 4242
-					'End If
-					'If (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD6) <> 0 Then
-					'	Dim debug As Integer = 4242
-					'End If
-					'If (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD7) <> 0 Then
-					'	Dim debug As Integer = 4242
-					'End If
 
 					aBone.proceduralRuleType = Me.theInputFileReader.ReadInt32()
 					aBone.proceduralRuleOffset = Me.theInputFileReader.ReadInt32()
@@ -450,12 +428,19 @@ Public Class SourceMdlFile52
 					aBone.surfacePropNameOffset = Me.theInputFileReader.ReadInt32()
 					aBone.contents = Me.theInputFileReader.ReadInt32()
 
-					'If Me.theMdlFileData.version <> 2531 Then
-					For k As Integer = 0 To 7
-						aBone.unused(k) = Me.theInputFileReader.ReadInt32()
-					Next
-					'End If
-					'End If
+					aBone.unk = Me.theInputFileReader.ReadInt32()
+
+					aBone.positionScale = New SourceVector()
+					aBone.positionScale.x = Me.theInputFileReader.ReadSingle()
+					aBone.positionScale.y = Me.theInputFileReader.ReadSingle()
+					aBone.positionScale.z = Me.theInputFileReader.ReadSingle()
+
+					aBone.unkVector1 = New SourceVector()
+					aBone.unkVector1.x = Me.theInputFileReader.ReadSingle()
+					aBone.unkVector1.y = Me.theInputFileReader.ReadSingle()
+					aBone.unkVector1.z = Me.theInputFileReader.ReadSingle()
+
+					aBone.unused = Me.theInputFileReader.ReadInt32()
 
 					Me.theMdlFileData.theBones.Add(aBone)
 
@@ -475,12 +460,12 @@ Public Class SourceMdlFile52
 						aBone.theName = ""
 					End If
 					If aBone.proceduralRuleOffset <> 0 Then
-						If aBone.proceduralRuleType = SourceMdlBone.STUDIO_PROC_AXISINTERP Then
+						If aBone.proceduralRuleType = SourceMdlBone52.STUDIO_PROC_AXISINTERP Then
 							Me.ReadAxisInterpBone(boneInputFileStreamPosition, aBone)
-						ElseIf aBone.proceduralRuleType = SourceMdlBone.STUDIO_PROC_QUATINTERP Then
+						ElseIf aBone.proceduralRuleType = SourceMdlBone52.STUDIO_PROC_QUATINTERP Then
 							Me.theMdlFileData.theProceduralBonesCommandIsUsed = True
 							Me.ReadQuatInterpBone(boneInputFileStreamPosition, aBone)
-						ElseIf aBone.proceduralRuleType = SourceMdlBone.STUDIO_PROC_JIGGLE Then
+						ElseIf aBone.proceduralRuleType = SourceMdlBone52.STUDIO_PROC_JIGGLE Then
 							Me.ReadJiggleBone(boneInputFileStreamPosition, aBone)
 						End If
 					End If
@@ -512,7 +497,7 @@ Public Class SourceMdlFile52
 	End Sub
 
 	'TODO: VERIFY ReadAxisInterpBone()
-	Private Sub ReadAxisInterpBone(ByVal boneInputFileStreamPosition As Long, ByVal aBone As SourceMdlBone)
+	Private Sub ReadAxisInterpBone(ByVal boneInputFileStreamPosition As Long, ByVal aBone As SourceMdlBone52)
 		Dim axisInterpBoneInputFileStreamPosition As Long
 		Dim inputFileStreamPosition As Long
 		Dim fileOffsetStart As Long
@@ -551,7 +536,7 @@ Public Class SourceMdlFile52
 		End Try
 	End Sub
 
-	Private Sub ReadQuatInterpBone(ByVal boneInputFileStreamPosition As Long, ByVal aBone As SourceMdlBone)
+	Private Sub ReadQuatInterpBone(ByVal boneInputFileStreamPosition As Long, ByVal aBone As SourceMdlBone52)
 		Dim quatInterpBoneInputFileStreamPosition As Long
 		Dim inputFileStreamPosition As Long
 		Dim fileOffsetStart As Long
@@ -621,7 +606,7 @@ Public Class SourceMdlFile52
 		End Try
 	End Sub
 
-	Private Sub ReadJiggleBone(ByVal boneInputFileStreamPosition As Long, ByVal aBone As SourceMdlBone)
+	Private Sub ReadJiggleBone(ByVal boneInputFileStreamPosition As Long, ByVal aBone As SourceMdlBone52)
 		Dim fileOffsetStart As Long
 		Dim fileOffsetEnd As Long
 
@@ -1226,18 +1211,18 @@ Public Class SourceMdlFile52
 			'NOTE: This code is reached by DoI's doi_models_dir_vpk\models\weapons\v_g43.mdl and v_vickers.mdl.
 			fileOffsetStart = animInputFileStreamPosition + anAnimationDesc.spanOffset
 			fileOffsetEnd = animInputFileStreamPosition + anAnimationDesc.spanOffset - 1
-			Dim aBone As SourceMdlBone
+			Dim aBone As SourceMdlBone52
 			For boneIndex As Integer = 0 To Me.theMdlFileData.theBones.Count - 1
 				aBone = Me.theMdlFileData.theBones(boneIndex)
-				If (aBone.flags And SourceMdlBone.BONE_HAS_SAVEFRAME_POS) > 0 Then
+				If (aBone.flags And SourceMdlBone52.BONE_HAS_SAVEFRAME_POS) > 0 Then
 					'SourceVector48bits (6 bytes)
 					fileOffsetEnd += anAnimationDesc.spanCount * 6
 				End If
-				If (aBone.flags And SourceMdlBone.BONE_HAS_SAVEFRAME_ROT) > 0 Then
+				If (aBone.flags And SourceMdlBone52.BONE_HAS_SAVEFRAME_ROT) > 0 Then
 					'SourceQuaternion64bits (8 bytes)
 					fileOffsetEnd += anAnimationDesc.spanCount * 8
 				End If
-				If (aBone.flags And SourceMdlBone.BONE_HAS_SAVEFRAME_ROT32) > 0 Then
+				If (aBone.flags And SourceMdlBone52.BONE_HAS_SAVEFRAME_ROT32) > 0 Then
 					'SourceQuaternion32bits (4 bytes)
 					fileOffsetEnd += anAnimationDesc.spanCount * 4
 				End If
