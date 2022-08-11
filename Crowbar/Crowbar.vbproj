@@ -13,7 +13,7 @@
     <MyType>WindowsFormsWithCustomSubMain</MyType>
     <OptionStrict>On</OptionStrict>
     <ApplicationIcon>Resources\crowbar_icon.ico</ApplicationIcon>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -127,6 +127,7 @@
     <Compile Include="Core\GameModel\CompiledFiles\VvdFile\VvdFile04\SourceVvdExtraData04.vb" />
     <Compile Include="Core\GameModel\SourceCommon\SourceMdlFileData\SourceMdlAnimTag.vb" />
     <Compile Include="Core\GameModel\SourceGlobal\SourceTextureCoordinates.vb" />
+    <Compile Include="Core\GameModel\SourceModel53\SourceMdlFileData\SourceMdlBone53.vb" />
     <Compile Include="Core\GamePackage\- Base\SourcePackage.vb" />
     <Compile Include="Core\GamePackage\ApkFile\ApkDirectoryEntry.vb" />
     <Compile Include="Core\GamePackage\ApkFile\ApkFile.vb" />

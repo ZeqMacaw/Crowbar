@@ -360,7 +360,7 @@ Public Class SourceModel53
 
 		mdlFile.ReadHitboxSets()
 
-		'mdlFile.ReadBoneTableByName()
+		mdlFile.ReadBoneTableByName()
 
 		If Me.theMdlFileData.localAnimationCount > 0 Then
 			Try
@@ -385,7 +385,7 @@ Public Class SourceModel53
 		'mdlFile.ReadIkChains()
 		'mdlFile.ReadIkLocks()
 		'mdlFile.ReadMouths()
-		'mdlFile.ReadPoseParamDescs()
+		mdlFile.ReadPoseParamDescs()
 		mdlFile.ReadModelGroups()
 		''TODO: Me.ReadAnimBlocks()
 		''TODO: Me.ReadAnimBlockName()
@@ -397,8 +397,8 @@ Public Class SourceModel53
 
 		mdlFile.ReadKeyValues()
 
-		'mdlFile.ReadBoneTransforms()
-		'mdlFile.ReadLinearBoneTable()
+		mdlFile.ReadBoneTransforms()
+		mdlFile.ReadLinearBoneTable()
 
 		''TODO: ReadLocalIkAutoPlayLocks()
 		'mdlFile.ReadFlexControllerUis()
@@ -417,6 +417,11 @@ Public Class SourceModel53
 			Me.ReadVvdFile_Internal()
 		End If
 
+		If Me.theMdlFileData.vvdOffset > 0 Then
+			mdlFile.SetReaderToVvdOffset()
+			Me.ReadVvdFile_Internal()
+		End If
+
 		mdlFile.ReadUnreadBytes()
 
 		' Post-processing.
@@ -429,7 +434,7 @@ Public Class SourceModel53
 			Me.thePhyFileDataGeneric = New SourcePhyFileData()
 		End If
 
-		Dim phyFile As New SourcePhyFile(Me.theInputFileReader, Me.thePhyFileDataGeneric, Me.theMdlFileData.vtxOffset)
+		Dim phyFile As New SourcePhyFile(Me.theInputFileReader, Me.thePhyFileDataGeneric, Me.theMdlFileData.phyOffset + Me.theMdlFileData.phySize)
 
 		phyFile.ReadSourcePhyHeader()
 		If Me.thePhyFileDataGeneric.solidCount > 0 Then
@@ -441,7 +446,7 @@ Public Class SourceModel53
 			phyFile.ReadSourcePhyEditParamsSection()
 			phyFile.ReadCollisionTextSection()
 		End If
-		phyFile.ReadUnreadBytes()
+		'phyFile.ReadUnreadBytes()
 	End Sub
 
 	Protected Overrides Sub ReadVtxFile_Internal()
@@ -501,7 +506,7 @@ Public Class SourceModel53
 			qcFile.WriteIllumPositionCommand()
 
 			qcFile.WriteEyePositionCommand()
-			qcFile.WriteMaxEyeDeflectionCommand()
+			'qcFile.WriteMaxEyeDeflectionCommand()
 			qcFile.WriteNoForcedFadeCommand()
 			qcFile.WriteForcePhonemeCrossfadeCommand()
 
@@ -769,11 +774,11 @@ Public Class SourceModel53
 		mdlFile.WriteInternalMdlFileName(internalMdlFileName)
 	End Sub
 
-	Protected Overrides Sub WriteAniFileNameToMdlFile(ByVal internalAniFileName As String)
-		Dim mdlFile As New SourceMdlFile53(Me.theOutputFileBinaryWriter, Me.theMdlFileData)
+	'Protected Overrides Sub WriteAniFileNameToMdlFile(ByVal internalAniFileName As String)
+	'	Dim mdlFile As New SourceMdlFile53(Me.theOutputFileBinaryWriter, Me.theMdlFileData)
 
-		mdlFile.WriteInternalAniFileName(internalAniFileName)
-	End Sub
+		'mdlFile.WriteInternalAniFileName(internalAniFileName)
+	'End Sub
 
 #End Region
 

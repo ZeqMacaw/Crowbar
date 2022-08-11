@@ -314,7 +314,7 @@ Public Class SourceQcFile53
 						'VectorITransform( tmp, pmodel->source->boneToPose[eyeball->bone], eyeball->org );
 						'------
 						' WORKS!
-						Dim aBone As SourceMdlBone
+						Dim aBone As SourceMdlBone53
 						aBone = Me.theMdlFileData.theBones(anEyeball.boneIndex)
 						'AngleMatrix(aBone.rotationX, aBone.rotationY, aBone.rotationZ, poseToBone0, poseToBone1, poseToBone2)
 						'poseToBone3.x = -aBone.positionX
@@ -1231,15 +1231,15 @@ Public Class SourceQcFile53
 			Dim debug As Integer = 4242
 		End Try
 
-		For Each aBone As SourceMdlBone In Me.theMdlFileData.theBones
+		For Each aBone As SourceMdlBone53 In Me.theMdlFileData.theBones
 			If aBone.parentBoneIndex >= 0 _
-				AndAlso ((lodIndex = 1 AndAlso (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD1) = 0) _
-				OrElse (lodIndex = 2 AndAlso (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD2) = 0) _
-				OrElse (lodIndex = 3 AndAlso (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD3) = 0) _
-				OrElse (lodIndex = 4 AndAlso (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD4) = 0) _
-				OrElse (lodIndex = 5 AndAlso (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD5) = 0) _
-				OrElse (lodIndex = 6 AndAlso (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD6) = 0) _
-				OrElse (lodIndex = 7 AndAlso (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD7) = 0)) Then
+				AndAlso ((lodIndex = 1 AndAlso (aBone.flags And SourceMdlBone53.BONE_USED_BY_VERTEX_LOD1) = 0) _
+				OrElse (lodIndex = 2 AndAlso (aBone.flags And SourceMdlBone53.BONE_USED_BY_VERTEX_LOD2) = 0) _
+				OrElse (lodIndex = 3 AndAlso (aBone.flags And SourceMdlBone53.BONE_USED_BY_VERTEX_LOD3) = 0) _
+				OrElse (lodIndex = 4 AndAlso (aBone.flags And SourceMdlBone53.BONE_USED_BY_VERTEX_LOD4) = 0) _
+				OrElse (lodIndex = 5 AndAlso (aBone.flags And SourceMdlBone53.BONE_USED_BY_VERTEX_LOD5) = 0) _
+				OrElse (lodIndex = 6 AndAlso (aBone.flags And SourceMdlBone53.BONE_USED_BY_VERTEX_LOD6) = 0) _
+				OrElse (lodIndex = 7 AndAlso (aBone.flags And SourceMdlBone53.BONE_USED_BY_VERTEX_LOD7) = 0)) Then
 				'replacebone "ValveBiped.Bip01_Neck1" "ValveBiped.Bip01_Head1"
 				line = vbTab
 				line += "replacebone "
@@ -1674,7 +1674,7 @@ Public Class SourceQcFile53
 		'$jointsurfaceprop <bone name> <surfaceprop>
 		'$jointsurfaceprop "ValveBiped.Bip01_L_Toe0"	 "flesh"
 		If Me.theMdlFileData.theBones IsNot Nothing Then
-			Dim aBone As SourceMdlBone
+			Dim aBone As SourceMdlBone53
 			Dim emptyLineIsAlreadyWritten As Boolean
 
 			emptyLineIsAlreadyWritten = False
@@ -1729,7 +1729,7 @@ Public Class SourceQcFile53
 
 		'$jointcontents "<bone_name>" "<content_type_1>" "<content_type_2>" "<content_type_3>"
 		If Me.theMdlFileData.theBones IsNot Nothing Then
-			Dim aBone As SourceMdlBone
+			Dim aBone As SourceMdlBone53
 			Dim emptyLineIsAlreadyWritten As Boolean
 
 			emptyLineIsAlreadyWritten = False
@@ -1795,25 +1795,25 @@ Public Class SourceQcFile53
 	Private Function GetContentsFlags(ByVal contentsFlags As Integer) As String
 		Dim flagNames As String = ""
 
-		If (contentsFlags And SourceMdlBone.CONTENTS_GRATE) > 0 Then
+		If (contentsFlags And SourceMdlBone53.CONTENTS_GRATE) > 0 Then
 			flagNames += " "
 			flagNames += """"
 			flagNames += "grate"
 			flagNames += """"
 		End If
-		If (contentsFlags And SourceMdlBone.CONTENTS_MONSTER) > 0 Then
+		If (contentsFlags And SourceMdlBone53.CONTENTS_MONSTER) > 0 Then
 			flagNames += " "
 			flagNames += """"
 			flagNames += "monster"
 			flagNames += """"
 		End If
-		If (contentsFlags And SourceMdlBone.CONTENTS_LADDER) > 0 Then
+		If (contentsFlags And SourceMdlBone53.CONTENTS_LADDER) > 0 Then
 			flagNames += " "
 			flagNames += """"
 			flagNames += "ladder"
 			flagNames += """"
 		End If
-		If (contentsFlags And SourceMdlBone.CONTENTS_SOLID) > 0 Then
+		If (contentsFlags And SourceMdlBone53.CONTENTS_SOLID) > 0 Then
 			flagNames += " "
 			flagNames += """"
 			flagNames += "solid"
@@ -1866,27 +1866,27 @@ Public Class SourceQcFile53
 		Me.theOutputFileStreamWriter.WriteLine(line)
 	End Sub
 
-	Public Sub WriteMaxEyeDeflectionCommand()
-		If Me.theMdlFileData.maxEyeDeflection < -0.0000001 OrElse Me.theMdlFileData.maxEyeDeflection > 0.0000001 Then
-			Dim line As String = ""
-			Dim deflection As Double
+	'Public Sub WriteMaxEyeDeflectionCommand()
+	'	If Me.theMdlFileData.maxEyeDeflection < -0.0000001 OrElse Me.theMdlFileData.maxEyeDeflection > 0.0000001 Then
+	'		Dim line As String = ""
+	'		Dim deflection As Double
 
-			deflection = Math.Acos(Me.theMdlFileData.maxEyeDeflection)
-			deflection = MathModule.RadiansToDegrees(deflection)
-			deflection = Math.Round(deflection, 3)
+	'		deflection = Math.Acos(Me.theMdlFileData.maxEyeDeflection)
+	'		deflection = MathModule.RadiansToDegrees(deflection)
+	'		deflection = Math.Round(deflection, 3)
 
-			line = ""
-			Me.theOutputFileStreamWriter.WriteLine(line)
+	'		line = ""
+	'		Me.theOutputFileStreamWriter.WriteLine(line)
 
-			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
-				line = "$MaxEyeDeflection "
-			Else
-				line = "$maxeyedeflection "
-			End If
-			line += deflection.ToString("0.######", TheApp.InternalNumberFormat)
-			Me.theOutputFileStreamWriter.WriteLine(line)
-		End If
-	End Sub
+	'		If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+	'			line = "$MaxEyeDeflection "
+	'		Else
+	'			line = "$maxeyedeflection "
+	'		End If
+	'		line += deflection.ToString("0.######", TheApp.InternalNumberFormat)
+	'		Me.theOutputFileStreamWriter.WriteLine(line)
+	'	End If
+	'End Sub
 
 	Public Sub WriteIllumPositionCommand()
 		Dim line As String
@@ -1916,7 +1916,7 @@ Public Class SourceQcFile53
 	End Sub
 
 	Public Sub WriteGroupAnimation()
-		Me.WriteAnimBlockSizeCommand()
+		'Me.WriteAnimBlockSizeCommand()
 		Me.WriteBoneSaveFrameCommand()
 		Me.WriteSectionFramesCommand()
 		Me.WritePoseParameterCommand()
@@ -1939,30 +1939,30 @@ Public Class SourceQcFile53
 		Me.WriteIncludeModelCommand()
 	End Sub
 
-	Private Sub WriteAnimBlockSizeCommand()
-		Dim line As String = ""
+	'Private Sub WriteAnimBlockSizeCommand()
+	'	Dim line As String = ""
 
 		'$animblocksize 32 nostall highres
-		If Me.theMdlFileData.animBlockCount > 0 Then
-			Me.theOutputFileStreamWriter.WriteLine()
+		'If Me.theMdlFileData.animBlockCount > 0 Then
+		'	Me.theOutputFileStreamWriter.WriteLine()
 
-			line = "// The 32 below is a guess until further is known about the format."
-			Me.theOutputFileStreamWriter.WriteLine(line)
+		'	line = "// The 32 below is a guess until further is known about the format."
+		'	Me.theOutputFileStreamWriter.WriteLine(line)
 
-			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
-				line = "$AnimBlockSize"
-			Else
-				line = "$animblocksize"
-			End If
-			line += " "
-			line += "32"
+		'	If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+		'		line = "$AnimBlockSize"
+		'	Else
+		'		line = "$animblocksize"
+		'	End If
+		'	line += " "
+		'	line += "32"
 			'line += " "
 			'line += "nostall"
 			'line += " "
 			'line += "highres"
-			Me.theOutputFileStreamWriter.WriteLine(line)
-		End If
-	End Sub
+		'	Me.theOutputFileStreamWriter.WriteLine(line)
+		'End If
+	'End Sub
 
 	Private Sub WriteSectionFramesCommand()
 		Dim line As String = ""
@@ -2888,14 +2888,14 @@ Public Class SourceQcFile53
 		'$BoneSaveFrame "Dog_Model.Leg1_L" rotation
 		Try
 			If Me.theMdlFileData.theBones IsNot Nothing Then
-				Dim aBone As SourceMdlBone
+				Dim aBone As SourceMdlBone53
 				Dim emptyLineIsAlreadyWritten As Boolean
 
 				emptyLineIsAlreadyWritten = False
 				For i As Integer = 0 To Me.theMdlFileData.theBones.Count - 1
 					aBone = Me.theMdlFileData.theBones(i)
 
-					If (aBone.flags And SourceMdlBone.BONE_HAS_SAVEFRAME_POS) > 0 OrElse (aBone.flags And SourceMdlBone.BONE_HAS_SAVEFRAME_ROT) > 0 Then
+					If (aBone.flags And SourceMdlBone53.BONE_HAS_SAVEFRAME_POS) > 0 OrElse (aBone.flags And SourceMdlBone53.BONE_HAS_SAVEFRAME_ROT) > 0 Then
 						If Not emptyLineIsAlreadyWritten Then
 							line = ""
 							Me.theOutputFileStreamWriter.WriteLine(line)
@@ -2910,11 +2910,11 @@ Public Class SourceQcFile53
 						line += """"
 						line += aBone.theName
 						line += """"
-						If (aBone.flags And SourceMdlBone.BONE_HAS_SAVEFRAME_POS) > 0 Then
+						If (aBone.flags And SourceMdlBone53.BONE_HAS_SAVEFRAME_POS) > 0 Then
 							line += " "
 							line += "position"
 						End If
-						If (aBone.flags And SourceMdlBone.BONE_HAS_SAVEFRAME_ROT) > 0 Then
+						If (aBone.flags And SourceMdlBone53.BONE_HAS_SAVEFRAME_ROT) > 0 Then
 							line += " "
 							line += "rotation"
 						End If
@@ -3327,7 +3327,7 @@ Public Class SourceQcFile53
 
 		'$definebone "ValveBiped.root" "" 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000
 		If Me.theMdlFileData.theBones IsNot Nothing Then
-			Dim aBone As SourceMdlBone
+			Dim aBone As SourceMdlBone53
 			Dim aParentBoneName As String
 			Dim aFixupPosition As New SourceVector()
 			Dim aFixupRotation As New SourceVector()
@@ -3455,14 +3455,14 @@ Public Class SourceQcFile53
 
 		'$bonemerge "ValveBiped.Bip01_R_Hand"
 		If Me.theMdlFileData.theBones IsNot Nothing Then
-			Dim aBone As SourceMdlBone
+			Dim aBone As SourceMdlBone53
 			Dim emptyLineIsAlreadyWritten As Boolean
 
 			emptyLineIsAlreadyWritten = False
 			For i As Integer = 0 To Me.theMdlFileData.theBones.Count - 1
 				aBone = Me.theMdlFileData.theBones(i)
 
-				If (aBone.flags And SourceMdlBone.BONE_USED_BY_BONE_MERGE) > 0 Then
+				If (aBone.flags And SourceMdlBone53.BONE_USED_BY_BONE_MERGE) > 0 Then
 					If Not emptyLineIsAlreadyWritten Then
 						Me.theOutputFileStreamWriter.WriteLine()
 						emptyLineIsAlreadyWritten = True
@@ -3493,9 +3493,9 @@ Public Class SourceQcFile53
 		Me.theOutputFileStreamWriter.WriteLine(line)
 
 		For i As Integer = 0 To Me.theMdlFileData.theBones.Count - 1
-			Dim aBone As SourceMdlBone
+			Dim aBone As SourceMdlBone53
 			aBone = Me.theMdlFileData.theBones(i)
-			If aBone.proceduralRuleType = SourceMdlBone.STUDIO_PROC_JIGGLE AndAlso aBone.proceduralRuleOffset <> 0 Then
+			If aBone.proceduralRuleType = SourceMdlBone53.STUDIO_PROC_JIGGLE AndAlso aBone.proceduralRuleOffset <> 0 Then
 				If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
 					line = "$JiggleBone "
 				Else
@@ -3677,7 +3677,7 @@ Public Class SourceQcFile53
 		Next
 	End Sub
 
-	Private Sub WriteJiggleBoneConstraints(ByVal aBone As SourceMdlBone)
+	Private Sub WriteJiggleBoneConstraints(ByVal aBone As SourceMdlBone53)
 		Dim line As String = ""
 
 		If (aBone.theJiggleBone.flags And SourceMdlJiggleBone.JIGGLE_HAS_PITCH_CONSTRAINT) > 0 Then
@@ -4095,14 +4095,14 @@ Public Class SourceQcFile53
 		'$screenalign <bone name> <"sphere" or "cylinder">
 		Try
 			If Me.theMdlFileData.theBones IsNot Nothing Then
-				Dim aBone As SourceMdlBone
+				Dim aBone As SourceMdlBone53
 				Dim emptyLineIsAlreadyWritten As Boolean
 
 				emptyLineIsAlreadyWritten = False
 				For i As Integer = 0 To Me.theMdlFileData.theBones.Count - 1
 					aBone = Me.theMdlFileData.theBones(i)
 
-					If (aBone.flags And SourceMdlBone.BONE_SCREEN_ALIGN_SPHERE) > 0 Then
+					If (aBone.flags And SourceMdlBone53.BONE_SCREEN_ALIGN_SPHERE) > 0 Then
 						If Not emptyLineIsAlreadyWritten Then
 							Me.theOutputFileStreamWriter.WriteLine()
 							emptyLineIsAlreadyWritten = True
@@ -4116,7 +4116,7 @@ Public Class SourceQcFile53
 						line += aBone.theName
 						line += " ""sphere"""
 						Me.theOutputFileStreamWriter.WriteLine(line)
-					ElseIf (aBone.flags And SourceMdlBone.BONE_SCREEN_ALIGN_CYLINDER) > 0 Then
+					ElseIf (aBone.flags And SourceMdlBone53.BONE_SCREEN_ALIGN_CYLINDER) > 0 Then
 						If Not emptyLineIsAlreadyWritten Then
 							Me.theOutputFileStreamWriter.WriteLine()
 							emptyLineIsAlreadyWritten = True
