@@ -605,6 +605,7 @@
 	Public theEyelidFlexFrameIndexes As List(Of Integer)
 	'Public theUpperEyelidFlexFrameIndexes As List(Of Integer)
 
+	Public theBoneNameToBoneIndexMap As New SortedList(Of String, Integer)()
 	Public theFirstAnimationDesc As SourceMdlAnimationDesc52
 	Public theFirstAnimationDescFrameLines As SortedList(Of Integer, AnimationFrameLine)
 	'Public theMdlFileOnlyHasAnimations As Boolean
