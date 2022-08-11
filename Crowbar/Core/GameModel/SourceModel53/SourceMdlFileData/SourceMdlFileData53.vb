@@ -578,7 +578,7 @@
 	Public theFlexControllerUis As List(Of SourceMdlFlexControllerUi)
 	Public theFlexRules As List(Of SourceMdlFlexRule)
 	Public theHitboxSets As List(Of SourceMdlHitboxSet)
-	Public theIkChains As List(Of SourceMdlIkChain)
+	Public theIkChains As List(Of SourceMdlIkChain53)
 	Public theIkLocks As List(Of SourceMdlIkLock)
 	Public theKeyValuesText As String
 	Public theLocalNodeNames As List(Of String)

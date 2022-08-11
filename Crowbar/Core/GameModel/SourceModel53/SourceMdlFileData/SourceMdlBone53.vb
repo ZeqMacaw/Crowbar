@@ -85,14 +85,15 @@ Public Class SourceMdlBone53
 	Public surfacePropNameOffset As Integer
 	'	int					contents;		// See BSPFlags.h for the contents flags
 	Public contents As Integer
-
+	'	int					surfacepropLookup; (this is in normal V49s)
 	Public unk As Integer
+	'	int					unknown offset for something.
 	Public unk1 As Integer
 
-	'	int					unused[8];		// remove as appropriate
+	'	int					unused[7];		// remove as appropriate
 	Public unused(6) As Integer
 
-	'54 words = 54 * 4 bytes = 216 (0xD8) bytes
+	'61 words = 61 * 4 bytes = 244 (0xF4) bytes
 
 	Public theName As String
 	Public theAxisInterpBone As SourceMdlAxisInterpBone

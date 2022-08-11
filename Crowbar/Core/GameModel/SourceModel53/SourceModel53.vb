@@ -382,7 +382,7 @@ Public Class SourceModel53
 		mdlFile.ReadFlexControllers()
 		'NOTE: This must be after flex descs are read so that flex desc usage can be saved in flex desc.
 		mdlFile.ReadFlexRules()
-		'mdlFile.ReadIkChains()
+		mdlFile.ReadIkChains()
 		'mdlFile.ReadIkLocks()
 		'mdlFile.ReadMouths()
 		mdlFile.ReadPoseParamDescs()
@@ -432,7 +432,7 @@ Public Class SourceModel53
 			Me.thePhyFileDataGeneric = New SourcePhyFileData()
 		End If
 
-		Dim phyFile As New SourcePhyFile(Me.theInputFileReader, Me.thePhyFileDataGeneric, Me.theMdlFileData.phyOffset)
+		Dim phyFile As New SourcePhyFile(Me.theInputFileReader, Me.thePhyFileDataGeneric, Me.theMdlFileData.phyOffset + Me.theMdlFileData.phySize)
 
 		phyFile.ReadSourcePhyHeader()
 		If Me.thePhyFileDataGeneric.solidCount > 0 Then
@@ -495,7 +495,7 @@ Public Class SourceModel53
 			'End If
 			qcFile.WriteBodyGroupCommand()
 			'TODO: LOD option "replacebone" is wrong because bone.flags is read-in incorrectly.
-			'qcFile.WriteGroup("lod", AddressOf qcFile.WriteGroupLod, False, False)
+			qcFile.WriteGroup("lod", AddressOf qcFile.WriteGroupLod, False, False)
 
 			qcFile.WriteSurfacePropCommand()
 			qcFile.WriteJointSurfacePropCommand()

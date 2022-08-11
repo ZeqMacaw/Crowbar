@@ -271,7 +271,7 @@ Public Class SourceMdlFile53
 		Me.theMdlFileData.unused = Me.theInputFileReader.ReadByte()
 
 		' In v52 and v53 this is actually used for something, as a float.
-		Me.theMdlFileData.unkfloat = Me.theInputFileReader.ReadInt32()
+		Me.theMdlFileData.unkfloat = Me.theInputFileReader.ReadSingle()
 
 		Me.theMdlFileData.flexControllerUiCount = Me.theInputFileReader.ReadInt32()
 		Me.theMdlFileData.flexControllerUiOffset = Me.theInputFileReader.ReadInt32()
@@ -344,7 +344,7 @@ Public Class SourceMdlFile53
 					aBone.parentBoneIndex = Me.theInputFileReader.ReadInt32()
 
 					'' Skip some fields.
-					'Me.theInputFileReader.ReadBytes(208)
+					'Me.theInputFileReader.ReadBytes(244)
 					'------
 					For j As Integer = 0 To aBone.boneControllerIndex.Length - 1
 						aBone.boneControllerIndex(j) = Me.theInputFileReader.ReadInt32()
@@ -421,11 +421,6 @@ Public Class SourceMdlFile53
 					For k As Integer = 0 To 6
 						aBone.unused(k) = Me.theInputFileReader.ReadInt32()
 					Next
-
-					'TODO: Add to data structure.
-					'For x As Integer = 1 To 7
-					'	Me.theInputFileReader.ReadInt32()
-					'Next
 
 					Me.theMdlFileData.theBones.Add(aBone)
 
@@ -3217,14 +3212,22 @@ Public Class SourceMdlFile53
 			Me.theInputFileReader.BaseStream.Seek(Me.theMdlFileData.ikChainOffset, SeekOrigin.Begin)
 			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-			Me.theMdlFileData.theIkChains = New List(Of SourceMdlIkChain)(Me.theMdlFileData.ikChainCount)
+			Me.theMdlFileData.theIkChains = New List(Of SourceMdlIkChain53)(Me.theMdlFileData.ikChainCount)
 			For i As Integer = 0 To Me.theMdlFileData.ikChainCount - 1
 				ikChainInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-				Dim anIkChain As New SourceMdlIkChain()
+				Dim anIkChain As New SourceMdlIkChain53()
 				anIkChain.nameOffset = Me.theInputFileReader.ReadInt32()
 				anIkChain.linkType = Me.theInputFileReader.ReadInt32()
 				anIkChain.linkCount = Me.theInputFileReader.ReadInt32()
 				anIkChain.linkOffset = Me.theInputFileReader.ReadInt32()
+
+				anIkChain.idealBendingDirection = New SourceVector
+				anIkChain.idealBendingDirection.x = Me.theInputFileReader.ReadSingle()
+				anIkChain.idealBendingDirection.y = Me.theInputFileReader.ReadSingle()
+				anIkChain.idealBendingDirection.z = Me.theInputFileReader.ReadSingle()
+
+				anIkChain.unk = Me.theInputFileReader.ReadInt32()
+
 				Me.theMdlFileData.theIkChains.Add(anIkChain)
 
 				inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
@@ -3252,7 +3255,7 @@ Public Class SourceMdlFile53
 		End If
 	End Sub
 
-	Private Sub ReadIkLinks(ByVal ikChainInputFileStreamPosition As Long, ByVal anIkChain As SourceMdlIkChain)
+	Private Sub ReadIkLinks(ByVal ikChainInputFileStreamPosition As Long, ByVal anIkChain As SourceMdlIkChain53)
 		If anIkChain.linkCount > 0 Then
 			'Dim ikLinkInputFileStreamPosition As Long
 			'Dim inputFileStreamPosition As Long
@@ -3264,14 +3267,15 @@ Public Class SourceMdlFile53
 			Me.theInputFileReader.BaseStream.Seek(ikChainInputFileStreamPosition + anIkChain.linkOffset, SeekOrigin.Begin)
 			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-			anIkChain.theLinks = New List(Of SourceMdlIkLink)(anIkChain.linkCount)
+			anIkChain.theLinks = New List(Of SourceMdlIkLink53)(anIkChain.linkCount)
+
 			For j As Integer = 0 To anIkChain.linkCount - 1
 				'ikLinkInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-				Dim anIkLink As New SourceMdlIkLink()
+				Dim anIkLink As New SourceMdlIkLink53()
 				anIkLink.boneIndex = Me.theInputFileReader.ReadInt32()
-				anIkLink.idealBendingDirection.x = Me.theInputFileReader.ReadSingle()
-				anIkLink.idealBendingDirection.y = Me.theInputFileReader.ReadSingle()
-				anIkLink.idealBendingDirection.z = Me.theInputFileReader.ReadSingle()
+				anIkLink.unkVector.x = Me.theInputFileReader.ReadSingle()
+				anIkLink.unkVector.y = Me.theInputFileReader.ReadSingle()
+				anIkLink.unkVector.z = Me.theInputFileReader.ReadSingle()
 				anIkLink.unused0.x = Me.theInputFileReader.ReadSingle()
 				anIkLink.unused0.y = Me.theInputFileReader.ReadSingle()
 				anIkLink.unused0.z = Me.theInputFileReader.ReadSingle()
@@ -3284,6 +3288,7 @@ Public Class SourceMdlFile53
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "anIkChain.theLinks " + anIkChain.theLinks.Count.ToString())
+
 		End If
 	End Sub
 

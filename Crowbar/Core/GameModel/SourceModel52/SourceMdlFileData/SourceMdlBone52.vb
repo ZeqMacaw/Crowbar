@@ -54,7 +54,7 @@ Public Class SourceMdlBone52
 	'NOTE: Changed to Double, so that the values will be properly written to file with 6 decimal digits.
 	'	RadianEuler			rot;
 	Public rotation As SourceVector
-
+	'	Vector
 	Public unkVector As SourceVector
 	'	Vector				rotscale;
 	Public rotationScale As SourceVector
@@ -80,12 +80,11 @@ Public Class SourceMdlBone52
 	Public surfacePropNameOffset As Integer
 	'	int					contents;		// See BSPFlags.h for the contents flags
 	Public contents As Integer
-
+	'	int					surfacepropLookup; (this is in normal V49s)
 	Public unk As Integer
-
 	'	Vector				posscale;
 	Public positionScale As SourceVector
-
+	'	Vector
 	Public unkVector1 As SourceVector
 
 	'	int					unused[8];		// remove as appropriate

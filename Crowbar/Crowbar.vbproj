@@ -129,6 +129,8 @@
     <Compile Include="Core\GameModel\SourceGlobal\SourceTextureCoordinates.vb" />
     <Compile Include="Core\GameModel\SourceModel52\SourceMdlFileData\SourceMdlBone52.vb" />
     <Compile Include="Core\GameModel\SourceModel53\SourceMdlFileData\SourceMdlBone53.vb" />
+    <Compile Include="Core\GameModel\SourceModel53\SourceMdlFileData\SourceMdlIkChain53.vb" />
+    <Compile Include="Core\GameModel\SourceModel53\SourceMdlFileData\SourceMdlIkLink53.vb" />
     <Compile Include="Core\GamePackage\- Base\SourcePackage.vb" />
     <Compile Include="Core\GamePackage\ApkFile\ApkDirectoryEntry.vb" />
     <Compile Include="Core\GamePackage\ApkFile\ApkFile.vb" />
