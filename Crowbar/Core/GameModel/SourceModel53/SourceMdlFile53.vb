@@ -864,15 +864,9 @@ Public Class SourceMdlFile53
 				aHitbox.boundingBoxMax.z = Me.theInputFileReader.ReadSingle()
 				aHitbox.nameOffset = Me.theInputFileReader.ReadInt32()
 
-				aHitbox.unused(0) = Me.theInputFileReader.ReadInt32()
-				' This is actually an index into a KV if it has one, unsure how it works tbh.
-				aHitbox.unused(1) = Me.theInputFileReader.ReadInt32()
-				aHitbox.unused(2) = Me.theInputFileReader.ReadInt32()
-				aHitbox.unused(3) = Me.theInputFileReader.ReadInt32()
-				aHitbox.unused(4) = Me.theInputFileReader.ReadInt32()
-				aHitbox.unused(5) = Me.theInputFileReader.ReadInt32()
-				aHitbox.unused(6) = Me.theInputFileReader.ReadInt32()
-				aHitbox.unused(7) = Me.theInputFileReader.ReadInt32()
+				For k As Integer = 0 To 7
+					aHitbox.unused(k) = Me.theInputFileReader.ReadInt32()
+				Next
 
 				aHitboxSet.theHitboxes.Add(aHitbox)
 
