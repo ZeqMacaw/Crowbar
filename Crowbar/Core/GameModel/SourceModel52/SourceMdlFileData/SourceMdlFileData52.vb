@@ -517,7 +517,7 @@
 	'	byte				unused[1];
 	Public unused As Byte
 	'	int					unused4; // zero out if version < 47
-	Public unused4 As Integer
+	Public unkFloat As Single
 
 	'	int					numflexcontrollerui;
 	Public flexControllerUiCount As Integer
@@ -534,7 +534,7 @@
 	'	int					studiohdr2index;
 	Public studioHeader2Offset As Integer
 	'	int					unused2[1];
-	Public unused2 As Integer
+	Public mayaOffset As Integer
 
 	' sutdiohdr2:
 	Public sourceBoneTransformCount As Integer
@@ -547,8 +547,18 @@
 	Public boneFlexDriverCount As Integer
 	Public boneFlexDriverOffset As Integer
 
+	' Both V52 and V53 have this section.
+	' Related to some block that appears when linear bone data is not present.
+	Public unknownOffset01 As Integer
+	Public unknown01 As Integer
+	Public unknown02 As Integer
+	Public unknown03 As Integer
+	' Points to byte just before string table.
+	Public unknownOffset02 As Integer
+
 	'NOTE: Just skip reading these bytes, because it unknown if any are used.
-	'Public reserved(55) As Integer
+	'NOTE: These are unused in V52 as far as I can tell.
+	'Public reserved(56) As Integer
 	'======
 	'Public studiohdr2(63) As Integer
 

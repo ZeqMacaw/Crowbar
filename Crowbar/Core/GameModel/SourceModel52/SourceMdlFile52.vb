@@ -263,7 +263,7 @@ Public Class SourceMdlFile52
 
 		Me.theMdlFileData.unused = Me.theInputFileReader.ReadByte()
 
-		Me.theMdlFileData.unused4 = Me.theInputFileReader.ReadInt32()
+		Me.theMdlFileData.unkFloat = Me.theInputFileReader.ReadSingle()
 
 		Me.theMdlFileData.flexControllerUiCount = Me.theInputFileReader.ReadInt32()
 		Me.theMdlFileData.flexControllerUiOffset = Me.theInputFileReader.ReadInt32()
@@ -273,7 +273,7 @@ Public Class SourceMdlFile52
 
 		Me.theMdlFileData.studioHeader2Offset = Me.theInputFileReader.ReadInt32()
 
-		Me.theMdlFileData.unused2 = Me.theInputFileReader.ReadInt32()
+		Me.theMdlFileData.mayaOffset = Me.theInputFileReader.ReadInt32()
 
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, logDescription)
@@ -318,6 +318,14 @@ Public Class SourceMdlFile52
 
 		Me.theMdlFileData.boneFlexDriverCount = Me.theInputFileReader.ReadInt32()
 		Me.theMdlFileData.boneFlexDriverOffset = Me.theInputFileReader.ReadInt32()
+
+		Me.theMdlFileData.unknownOffset01 = Me.theInputFileReader.ReadInt32()
+		Me.theMdlFileData.unknown01 = Me.theInputFileReader.ReadInt32()
+		Me.theMdlFileData.unknown02 = Me.theInputFileReader.ReadInt32()
+		Me.theMdlFileData.unknown03 = Me.theInputFileReader.ReadInt32()
+		Me.theMdlFileData.unknownOffset02 = Me.theInputFileReader.ReadInt32()
+
+		'NOTE: In V52 the subheader is 208 bytes instead of 256.
 
 		'For x As Integer = 0 To Me.theMdlFileData.reserved.Length - 1
 		'	Me.theMdlFileData.reserved(x) = Me.theInputFileReader.ReadInt32()

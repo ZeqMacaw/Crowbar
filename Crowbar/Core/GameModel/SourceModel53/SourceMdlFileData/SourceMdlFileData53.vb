@@ -539,11 +539,15 @@
 	Public boneFlexDriverCount As Integer
 	Public boneFlexDriverOffset As Integer
 
+	' Both V52 and V53 have this section.
+	' Related to some block that appears when linear bone data is not present.
 	Public unknownOffset01 As Integer
 	Public unknown01 As Integer
 	Public unknown02 As Integer
 	Public unknown03 As Integer
+	' Points to byte just before string table.
 	Public unknownOffset02 As Integer
+
 	Public vtxOffset As Integer
 	Public vvdOffset As Integer
 	Public vvcOffset As Integer
@@ -559,7 +563,7 @@
 	Public unknownOffset06 As Integer
 	Public unknown(60) As Integer
 
-
+	'NOTE: Header is 716 bytes.
 
 	'Public theID As String
 	'Public theName As String
