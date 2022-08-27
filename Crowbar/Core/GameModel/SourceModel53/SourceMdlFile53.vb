@@ -1828,7 +1828,7 @@ Public Class SourceMdlFile53
 
 				anIkRule.attachmentNameOffset = Me.theInputFileReader.ReadInt32()
 
-				For x As Integer = 0 To anIkRule.unused.Length - 1
+				For x As Integer = 0 To 3
 					anIkRule.unused(x) = Me.theInputFileReader.ReadInt32()
 				Next
 
@@ -2154,11 +2154,8 @@ Public Class SourceMdlFile53
 					aSeqDesc.activityModifierCount = 0
 					aSeqDesc.activityModifierOffset = Me.theInputFileReader.ReadInt32()
 					aSeqDesc.activityModifierCount = Me.theInputFileReader.ReadInt32()
-					For x As Integer = 0 To 4
+					For x As Integer = 0 To 9
 						aSeqDesc.unused(x) = Me.theInputFileReader.ReadInt32()
-					Next
-					For x As Integer = 0 To 4
-						Me.theInputFileReader.ReadInt32()
 					Next
 
 					Me.theMdlFileData.theSequenceDescs.Add(aSeqDesc)

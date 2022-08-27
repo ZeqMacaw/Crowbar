@@ -32,6 +32,22 @@ Public Class SourceMdlAnimation
 	'	short				nextoffset;
 	Public nextSourceMdlAnimationOffset As Short
 
+	'MDL 53 stuff
+	Public TranslationScale As Double
+	Public Flags2 As Byte
+	Public Flags3 As Byte
+	'Public OffsetX As Short
+	'Public OffsetY As Short
+	'Public OffsetZ As Short
+	'Public OffsetL As Short
+	Public TranslationX As SourceFloat16bits
+	Public TranslationY As SourceFloat16bits
+	Public TranslationZ As SourceFloat16bits
+	Public ScaleX As SourceFloat16bits
+	Public ScaleY As SourceFloat16bits
+	Public ScaleZ As SourceFloat16bits
+	Public nextTitanfall2MdlAnimationOffset As Integer
+
 
 	' Values for the field, flags:
 	'#define STUDIO_ANIM_RAWPOS	0x01 // Vector48
