@@ -3189,12 +3189,17 @@ Public Class SourceMdlFile53
 				anIkChain.linkCount = Me.theInputFileReader.ReadInt32()
 				anIkChain.linkOffset = Me.theInputFileReader.ReadInt32()
 
-				anIkChain.idealBendingDirection = New SourceVector
-				anIkChain.idealBendingDirection.x = Me.theInputFileReader.ReadSingle()
-				anIkChain.idealBendingDirection.y = Me.theInputFileReader.ReadSingle()
-				anIkChain.idealBendingDirection.z = Me.theInputFileReader.ReadSingle()
+				anIkChain.unk = Me.theInputFileReader.ReadSingle()
 
-				anIkChain.unk = Me.theInputFileReader.ReadInt32()
+
+				'anIkChain.idealBendingDirection = New SourceVector
+				'anIkChain.idealBendingDirection.x = Me.theInputFileReader.ReadSingle()
+				'anIkChain.idealBendingDirection.y = Me.theInputFileReader.ReadSingle()
+				'anIkChain.idealBendingDirection.z = Me.theInputFileReader.ReadSingle()
+
+				For j As Integer = 0 To 2
+					anIkChain.unk = Me.theInputFileReader.ReadInt32()
+				Next
 
 				Me.theMdlFileData.theIkChains.Add(anIkChain)
 
@@ -3241,12 +3246,13 @@ Public Class SourceMdlFile53
 				'ikLinkInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim anIkLink As New SourceMdlIkLink53()
 				anIkLink.boneIndex = Me.theInputFileReader.ReadInt32()
-				anIkLink.unkVector.x = Me.theInputFileReader.ReadSingle()
-				anIkLink.unkVector.y = Me.theInputFileReader.ReadSingle()
-				anIkLink.unkVector.z = Me.theInputFileReader.ReadSingle()
+				anIkLink.idealBendingDirection.x = Me.theInputFileReader.ReadSingle()
+				anIkLink.idealBendingDirection.y = Me.theInputFileReader.ReadSingle()
+				anIkLink.idealBendingDirection.z = Me.theInputFileReader.ReadSingle()
 				anIkLink.unused0.x = Me.theInputFileReader.ReadSingle()
 				anIkLink.unused0.y = Me.theInputFileReader.ReadSingle()
 				anIkLink.unused0.z = Me.theInputFileReader.ReadSingle()
+				anIkChain.theLinks.Add(anIkLink)
 				anIkChain.theLinks.Add(anIkLink)
 
 				'inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position

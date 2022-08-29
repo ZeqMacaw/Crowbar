@@ -18,7 +18,7 @@ Public Class SourceMdlIkLink53
 	'	int		bone;
 	Public boneIndex As Integer
 	'	Vector
-	Public unkVector As New SourceVector()
+	Public idealBendingDirection As New SourceVector()
 	'	Vector	unused0;	// unused
 	Public unused0 As New SourceVector()
 
