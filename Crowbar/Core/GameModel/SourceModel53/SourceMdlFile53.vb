@@ -3279,7 +3279,6 @@ Public Class SourceMdlFile53
 				anIkLink.unused0.y = Me.theInputFileReader.ReadSingle()
 				anIkLink.unused0.z = Me.theInputFileReader.ReadSingle()
 				anIkChain.theLinks.Add(anIkLink)
-				anIkChain.theLinks.Add(anIkLink)
 
 				'inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 
