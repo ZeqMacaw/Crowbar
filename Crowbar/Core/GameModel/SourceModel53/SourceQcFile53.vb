@@ -2820,9 +2820,9 @@ Public Class SourceQcFile53
 
 				For i As Integer = 0 To Me.theMdlFileData.theIkChains.Count - 1
 					Dim boneIndex As Integer = Me.theMdlFileData.theIkChains(i).theLinks(Me.theMdlFileData.theIkChains(i).theLinks.Count - 1).boneIndex
-					offsetX = Math.Round(Me.theMdlFileData.theIkChains(i).idealBendingDirection.x, 3)
-					offsetY = Math.Round(Me.theMdlFileData.theIkChains(i).idealBendingDirection.y, 3)
-					offsetZ = Math.Round(Me.theMdlFileData.theIkChains(i).idealBendingDirection.z, 3)
+					offsetX = Math.Round(Me.theMdlFileData.theIkChains(i).theLinks(0).idealBendingDirection.x, 3)
+					offsetY = Math.Round(Me.theMdlFileData.theIkChains(i).theLinks(0).idealBendingDirection.y, 3)
+					offsetZ = Math.Round(Me.theMdlFileData.theIkChains(i).theLinks(0).idealBendingDirection.z, 3)
 
 					If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
 						line = "$IKChain """
