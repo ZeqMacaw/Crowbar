@@ -3973,6 +3973,8 @@ Public Class SourceQcFile49
 		Me.WriteBoneMergeCommand()
 		Me.WriteLimitRotationCommand()
 
+		Me.WriteWorldAlignCommand()
+
 		Me.WriteProceduralBonesCommand()
 		Me.WriteJiggleBoneCommand()
 	End Sub
@@ -4170,6 +4172,39 @@ Public Class SourceQcFile49
 						line = "$BoneMerge "
 					Else
 						line = "$bonemerge "
+					End If
+					line += """"
+					line += aBone.theName
+					line += """"
+					Me.theOutputFileStreamWriter.WriteLine(line)
+				End If
+			Next
+		End If
+	End Sub
+
+	Private Sub WriteWorldAlignCommand()
+		Dim line As String = ""
+
+		' used in CS:GO
+		'$worldalign "ValveBiped.Bip01_R_Hand"
+		If Me.theMdlFileData.theBones IsNot Nothing Then
+			Dim aBone As SourceMdlBone
+			Dim emptyLineIsAlreadyWritten As Boolean
+
+			emptyLineIsAlreadyWritten = False
+			For i As Integer = 0 To Me.theMdlFileData.theBones.Count - 1
+				aBone = Me.theMdlFileData.theBones(i)
+
+				If (aBone.flags And SourceMdlBone.BONE_WORLD_ALIGN) > 0 Then
+					If Not emptyLineIsAlreadyWritten Then
+						Me.theOutputFileStreamWriter.WriteLine()
+						emptyLineIsAlreadyWritten = True
+					End If
+
+					If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+						line = "$WorldAlign "
+					Else
+						line = "$worldalign "
 					End If
 					line += """"
 					line += aBone.theName
