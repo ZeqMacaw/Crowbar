@@ -3198,7 +3198,7 @@ Public Class SourceMdlFile53
 				'anIkChain.idealBendingDirection.z = Me.theInputFileReader.ReadSingle()
 
 				For j As Integer = 0 To 2
-					anIkChain.unk = Me.theInputFileReader.ReadInt32()
+					anIkChain.unused(j) = Me.theInputFileReader.ReadInt32()
 				Next
 
 				Me.theMdlFileData.theIkChains.Add(anIkChain)
