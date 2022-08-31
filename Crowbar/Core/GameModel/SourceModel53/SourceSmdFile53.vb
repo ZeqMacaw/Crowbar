@@ -398,10 +398,17 @@ Public Class SourceSmdFile53
 					boneIndex = Me.theAnimationFrameLines.Keys(i)
 					aFrameLine = Me.theAnimationFrameLines.Values(i)
 
+					'position = aFrameLine.position
+					'rotation = aFrameLine.rotation
+					'------
 					Dim adjustedPosition As New SourceVector()
 					Dim adjustedRotation As New SourceVector()
-					Me.AdjustPositionAndRotationByPiecewiseMovement(frameIndex, boneIndex, anAnimationDesc.theMovements, aFrameLine.position, aFrameLine.rotation, adjustedPosition, adjustedRotation)
-					Me.AdjustPositionAndRotation(boneIndex, adjustedPosition, adjustedRotation, position, rotation)
+					Me.AdjustPositionAndRotation(boneIndex, aFrameLine.position, aFrameLine.rotation, position, rotation)
+					'------
+					'Dim adjustedPosition As New SourceVector()
+					'Dim adjustedRotation As New SourceVector()
+					'Me.AdjustPositionAndRotationByPiecewiseMovement(frameIndex, boneIndex, anAnimationDesc.theMovements, aFrameLine.position, aFrameLine.rotation, adjustedPosition, adjustedRotation)
+					'Me.AdjustPositionAndRotation(boneIndex, adjustedPosition, adjustedRotation, position, rotation)
 
 					line = "    "
 					line += boneIndex.ToString(TheApp.InternalNumberFormat)
@@ -458,15 +465,15 @@ Public Class SourceSmdFile53
 		'	oPosition.y = iPosition.y + aFirstAnimationDescFrameLine.position.y
 		'	oPosition.z = iPosition.z + aFirstAnimationDescFrameLine.position.z
 		'Else
-		If aBone.parentBoneIndex = -1 Then
-			oPosition.x = iPosition.y
-			oPosition.y = -iPosition.x
-			oPosition.z = iPosition.z
-		Else
-			oPosition.x = iPosition.x
-			oPosition.y = iPosition.y
-			oPosition.z = iPosition.z
-		End If
+		'If aBone.parentBoneIndex = -1 Then
+		'	oPosition.x = iPosition.y
+		'	oPosition.y = -iPosition.x
+		'	oPosition.z = iPosition.z
+		'Else
+		oPosition.x = iPosition.x
+		oPosition.y = iPosition.y
+		oPosition.z = iPosition.z
+		'End If
 
 		'If iRotation.debug_text = "desc_delta" OrElse iRotation.debug_text.StartsWith("delta") Then
 		'	Dim aFirstAnimationDescFrameLine As AnimationFrameLine
@@ -499,15 +506,33 @@ Public Class SourceSmdFile53
 		'	oRotation.y = tempRotation.z
 		'	oRotation.z = tempRotation.x
 		'Else
-		If aBone.parentBoneIndex = -1 Then
-			oRotation.x = iRotation.x
-			oRotation.y = iRotation.y
-			oRotation.z = iRotation.z + MathModule.DegreesToRadians(-90)
-		Else
-			oRotation.x = iRotation.x
-			oRotation.y = iRotation.y
-			oRotation.z = iRotation.z
-		End If
+		'If aBone.parentBoneIndex = -1 Then
+		'	oRotation.x = iRotation.x
+		'	oRotation.y = iRotation.y
+		'	oRotation.z = iRotation.z + MathModule.DegreesToRadians(-90)
+		'Else
+		'	oRotation.x = iRotation.x
+		'	oRotation.y = iRotation.y
+		'	oRotation.z = iRotation.z
+		'End If
+		'------
+		oRotation.x = iRotation.x
+		oRotation.y = iRotation.y
+		oRotation.z = iRotation.z
+		'------
+		'oRotation.x = iRotation.y
+		'oRotation.y = iRotation.x
+		'oRotation.z = iRotation.z
+		'------
+		'If aBone.parentBoneIndex = -1 Then
+		'	oRotation.x = iRotation.x
+		'	oRotation.y = iRotation.y
+		'	oRotation.z = iRotation.z
+		'Else
+		'	oRotation.x = iRotation.y
+		'	oRotation.y = iRotation.x
+		'	oRotation.z = iRotation.z
+		'End If
 	End Sub
 
 	Private Sub AdjustPositionAndRotationByPiecewiseMovement(ByVal frameIndex As Integer, ByVal boneIndex As Integer, ByVal movements As List(Of SourceMdlMovement), ByVal iPosition As SourceVector, ByVal iRotation As SourceVector, ByRef oPosition As SourceVector, ByRef oRotation As SourceVector)
@@ -1205,8 +1230,8 @@ Public Class SourceSmdFile53
 		Dim aBone As SourceMdlBone53
 		Dim aWeight As Double
 		Dim anAnimation As SourceMdlAnimation
-		Dim rot As SourceQuaternion
-		'Dim pos As SourceVector
+		Dim rot As SourceVector
+		Dim pos As SourceVector
 		Dim aFrameLine As AnimationFrameLine
 		Dim sectionFrameIndex As Integer
 
@@ -1254,41 +1279,53 @@ Public Class SourceSmdFile53
 
 					aFrameLine.rotationQuat = New SourceQuaternion()
 
-					'rot = CalcBoneRotation(sectionFrameIndex, s, aBone, anAnimation, aFrameLine.rotationQuat)
-					Dim angleVector As New SourceVector()
-					If (anAnimation.flags And &H4) > 0 Then
-						rot = New SourceQuaternion()
-						rot.x = anAnimation.theRot64bits.x
-						rot.y = anAnimation.theRot64bits.y
-						rot.z = anAnimation.theRot64bits.z
-						rot.w = anAnimation.theRot64bits.w
-						angleVector = MathModule.ToEulerAngles(rot)
-						angleVector.debug_text = "raw64 (" + rot.x.ToString() + ", " + rot.y.ToString() + ", " + rot.z.ToString() + ", " + rot.w.ToString() + ")"
-					Else
-						angleVector.x = aBone.rotation.x
-						angleVector.y = aBone.rotation.y
-						angleVector.z = aBone.rotation.z
-						angleVector.debug_text = "bone"
-					End If
+					rot = CalcBoneRotation(sectionFrameIndex, s, aBone, anAnimation, aFrameLine.rotationQuat)
 					aFrameLine.rotation = New SourceVector()
-					aFrameLine.rotation.x = angleVector.x
-					aFrameLine.rotation.y = angleVector.y
-					aFrameLine.rotation.z = angleVector.z
-					aFrameLine.rotation.debug_text = angleVector.debug_text
+					aFrameLine.rotation.x = rot.x
+					aFrameLine.rotation.y = rot.y
+					aFrameLine.rotation.z = rot.z
+					aFrameLine.rotation.debug_text = rot.debug_text
+					'------
+					'Dim angleVector As New SourceVector()
+					'If (anAnimation.flags And SourceMdlAnimation.MDL53_ANIM_ROTATION) > 0 Then
+					'	rot = New SourceQuaternion()
+					'	rot.x = anAnimation.theRot64bits.x
+					'	rot.y = anAnimation.theRot64bits.y
+					'	rot.z = anAnimation.theRot64bits.z
+					'	rot.w = anAnimation.theRot64bits.w
+					'	angleVector = MathModule.ToEulerAngles(rot)
+					'	angleVector.debug_text = "raw64 (" + rot.x.ToString() + ", " + rot.y.ToString() + ", " + rot.z.ToString() + ", " + rot.w.ToString() + ")"
+					'Else
+					'	angleVector.x = aBone.rotation.x
+					'	angleVector.y = aBone.rotation.y
+					'	angleVector.z = aBone.rotation.z
+					'	angleVector.debug_text = "bone"
+					'End If
+					'aFrameLine.rotation = New SourceVector()
+					'aFrameLine.rotation.x = angleVector.x
+					'aFrameLine.rotation.y = angleVector.y
+					'aFrameLine.rotation.z = angleVector.z
+					'aFrameLine.rotation.debug_text = angleVector.debug_text
 
-					'pos = Me.CalcBonePosition(sectionFrameIndex, s, aBone, anAnimation)
+					pos = Me.CalcBonePosition(sectionFrameIndex, s, aBone, anAnimation)
 					aFrameLine.position = New SourceVector()
-					If (anAnimation.flags And &H2) > 0 Then
-						aFrameLine.position.x = anAnimation.TranslationX.TheFloatValue
-						aFrameLine.position.y = anAnimation.TranslationY.TheFloatValue
-						aFrameLine.position.z = anAnimation.TranslationZ.TheFloatValue
-						aFrameLine.position.debug_text = "anim"
-					Else
-						aFrameLine.position.x = aBone.position.x
-						aFrameLine.position.y = aBone.position.y
-						aFrameLine.position.z = aBone.position.z
-						aFrameLine.position.debug_text = "bone"
-					End If
+					aFrameLine.position.x = pos.x
+					aFrameLine.position.y = pos.y
+					aFrameLine.position.z = pos.z
+					aFrameLine.position.debug_text = pos.debug_text
+					'------
+					'aFrameLine.position = New SourceVector()
+					'If (anAnimation.flags And SourceMdlAnimation.MDL53_ANIM_TRANSLATION) > 0 Then
+					'	aFrameLine.position.x = anAnimation.TranslationX.TheFloatValue
+					'	aFrameLine.position.y = anAnimation.TranslationY.TheFloatValue
+					'	aFrameLine.position.z = anAnimation.TranslationZ.TheFloatValue
+					'	aFrameLine.position.debug_text = "anim"
+					'Else
+					'	aFrameLine.position.x = aBone.position.x
+					'	aFrameLine.position.y = aBone.position.y
+					'	aFrameLine.position.z = aBone.position.z
+					'	aFrameLine.position.debug_text = "bone"
+					'End If
 				End If
 
 				animIndex += 1
@@ -1528,7 +1565,7 @@ Public Class SourceSmdFile53
 		Dim rot As New SourceQuaternion()
 		Dim angleVector As New SourceVector()
 
-		If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_RAWROT2) > 0 Then
+		If (anAnimation.flags And SourceMdlAnimation.MDL53_ANIM_ROTATION) > 0 Then
 			rot.x = anAnimation.theRot64bits.x
 			rot.y = anAnimation.theRot64bits.y
 			rot.z = anAnimation.theRot64bits.z
@@ -1543,16 +1580,37 @@ Public Class SourceSmdFile53
 			Return angleVector
 		End If
 
-		If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_ANIMROT) = 0 Then
-			If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_DELTA) > 0 Then
-				angleVector.x = 0
-				angleVector.y = 0
-				angleVector.z = 0
-				rotationQuat.x = 0
-				rotationQuat.y = 0
-				rotationQuat.z = 0
-				rotationQuat.w = 0
-				angleVector.debug_text = "delta"
+		Try
+			If anAnimation.theRotV IsNot Nothing Then
+				Dim rotV As SourceMdlAnimationValuePointer = anAnimation.theRotV
+				If anAnimation.theRot64bits.XOffset <= 0 Then
+					angleVector.x = 0
+				Else
+					angleVector.x = Me.ExtractAnimValue(frameIndex, rotV.theAnimXValues, aBone.rotationScale.x)
+					angleVector.x += aBone.rotation.x
+				End If
+				If anAnimation.theRot64bits.YOffset <= 0 Then
+					angleVector.y = 0
+				Else
+					angleVector.y = Me.ExtractAnimValue(frameIndex, rotV.theAnimYValues, aBone.rotationScale.y)
+					angleVector.y += aBone.rotation.y
+				End If
+				If anAnimation.theRot64bits.ZOffset <= 0 Then
+					angleVector.z = 0
+				Else
+					angleVector.z = Me.ExtractAnimValue(frameIndex, rotV.theAnimZValues, aBone.rotationScale.z)
+					angleVector.z += aBone.rotation.z
+				End If
+				angleVector.debug_text = "anim"
+				'ElseIf (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_DELTA) > 0 Then
+				'	angleVector.x = 0
+				'	angleVector.y = 0
+				'	angleVector.z = 0
+				'	rotationQuat.x = 0
+				'	rotationQuat.y = 0
+				'	rotationQuat.z = 0
+				'	rotationQuat.w = 0
+				'	angleVector.debug_text = "delta"
 			Else
 				angleVector.x = aBone.rotation.x
 				angleVector.y = aBone.rotation.y
@@ -1563,15 +1621,9 @@ Public Class SourceSmdFile53
 				rotationQuat.w = 0
 				angleVector.debug_text = "bone"
 			End If
-			Return angleVector
-		End If
-
-		If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_DELTA) = 0 Then
-			angleVector.x += aBone.rotation.x
-			angleVector.y += aBone.rotation.y
-			angleVector.z += aBone.rotation.z
-			angleVector.debug_text += "+bone"
-		End If
+		Catch ex As Exception
+			Dim debug As Integer = 4242
+		End Try
 
 		rotationQuat = MathModule.EulerAnglesToQuaternion(angleVector)
 		Return angleVector
@@ -1639,72 +1691,45 @@ Public Class SourceSmdFile53
 	Private Function CalcBonePosition(ByVal frameIndex As Integer, ByVal s As Double, ByVal aBone As SourceMdlBone53, ByVal anAnimation As SourceMdlAnimation) As SourceVector
 		Dim pos As New SourceVector()
 
-		If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_RAWPOS) > 0 Then
-			'If aBone.parentBoneIndex = -1 Then
-			'	pos.x = anAnimation.thePos.y
-			'	pos.y = -anAnimation.thePos.x
-			'	pos.z = anAnimation.thePos.z
-			'Else
-			pos.x = anAnimation.thePos.x
-			pos.y = anAnimation.thePos.y
-			pos.z = anAnimation.thePos.z
-			'	'------
-			'	'pos.y = anAnimation.thePos.z
-			'	'pos.z = anAnimation.thePos.y
-			'	'------
-			'	'pos.x = anAnimation.thePos.y
-			'	'pos.y = -anAnimation.thePos.x
-			'	'pos.z = anAnimation.thePos.z
-			'End If
-
+		If (anAnimation.flags And SourceMdlAnimation.MDL53_ANIM_TRANSLATION) > 0 Then
+			pos.x = anAnimation.TranslationX.TheFloatValue
+			pos.y = anAnimation.TranslationY.TheFloatValue
+			pos.z = anAnimation.TranslationZ.TheFloatValue
 			pos.debug_text = "raw"
 			Return pos
-		ElseIf (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_ANIMPOS) = 0 Then
-			If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_DELTA) > 0 Then
+		End If
+
+		If anAnimation.thePosV IsNot Nothing Then
+			Dim posV As SourceMdlAnimationValuePointer = anAnimation.thePosV
+			If anAnimation.TranslationX.the16BitValue <= 0 Then
 				pos.x = 0
-				pos.y = 0
-				pos.z = 0
-				pos.debug_text = "delta"
 			Else
-				pos.x = aBone.position.x
-				pos.y = aBone.position.y
-				pos.z = aBone.position.z
-				'pos.y = aBone.positionZ
-				'pos.z = -aBone.positionY
-				pos.debug_text = "bone"
+				pos.x = Me.ExtractAnimValue(frameIndex, posV.theAnimXValues, anAnimation.TranslationScale)
+				pos.x += aBone.position.x
 			End If
-			Return pos
-		End If
-
-		Dim posV As SourceMdlAnimationValuePointer
-
-		posV = anAnimation.thePosV
-
-		If posV.animXValueOffset <= 0 Then
-			pos.x = 0
+			If anAnimation.TranslationY.the16BitValue <= 0 Then
+				pos.y = 0
+			Else
+				pos.y = Me.ExtractAnimValue(frameIndex, posV.theAnimYValues, anAnimation.TranslationScale)
+				pos.y += aBone.position.y
+			End If
+			If anAnimation.TranslationZ.the16BitValue <= 0 Then
+				pos.z = 0
+			Else
+				pos.z = Me.ExtractAnimValue(frameIndex, posV.theAnimZValues, anAnimation.TranslationScale)
+				pos.z += aBone.position.z
+			End If
+			pos.debug_text = "anim"
+			'ElseIf (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_DELTA) > 0 Then
+			'	pos.x = 0
+			'	pos.y = 0
+			'	pos.z = 0
+			'	pos.debug_text = "delta"
 		Else
-			pos.x = Me.ExtractAnimValue(frameIndex, posV.theAnimXValues, aBone.positionScale.x)
-		End If
-
-		If posV.animYValueOffset <= 0 Then
-			pos.y = 0
-		Else
-			pos.y = Me.ExtractAnimValue(frameIndex, posV.theAnimYValues, aBone.positionScale.y)
-		End If
-
-		If posV.animZValueOffset <= 0 Then
-			pos.z = 0
-		Else
-			pos.z = Me.ExtractAnimValue(frameIndex, posV.theAnimZValues, aBone.positionScale.z)
-		End If
-
-		pos.debug_text = "anim"
-
-		If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_DELTA) = 0 Then
-			pos.x += aBone.position.x
-			pos.y += aBone.position.y
-			pos.z += aBone.position.z
-			pos.debug_text += "+bone"
+			pos.x = aBone.position.x
+			pos.y = aBone.position.y
+			pos.z = aBone.position.z
+			pos.debug_text = "bone"
 		End If
 
 		Return pos

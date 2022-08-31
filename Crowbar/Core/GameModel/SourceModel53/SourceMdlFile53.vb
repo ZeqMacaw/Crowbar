@@ -1315,8 +1315,8 @@ Public Class SourceMdlFile53
 		Dim animationInputFileStreamPosition As Long
 		Dim nextAnimationInputFileStreamPosition As Long
 		'Dim animValuePointerInputFileStreamPosition As Long
-		'Dim rotValuePointerInputFileStreamPosition As Long
-		'Dim posValuePointerInputFileStreamPosition As Long
+		Dim rotValuePointerInputFileStreamPosition As Long
+		Dim posValuePointerInputFileStreamPosition As Long
 		Dim fileOffsetStart As Long
 		Dim fileOffsetEnd As Long
 		Dim anAnimation As SourceMdlAnimation
@@ -1346,9 +1346,11 @@ Public Class SourceMdlFile53
 			'anAnimation.OffsetY = Me.theInputFileReader.ReadInt16()
 			'anAnimation.OffsetZ = Me.theInputFileReader.ReadInt16()
 			'anAnimation.OffsetL = Me.theInputFileReader.ReadInt16()
+			rotValuePointerInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 			anAnimation.theRot64bits = New SourceQuaternion64bits()
 			anAnimation.theRot64bits.theBytes = Me.theInputFileReader.ReadBytes(8)
 
+			posValuePointerInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 			anAnimation.TranslationX = New SourceFloat16bits()
 			anAnimation.TranslationY = New SourceFloat16bits()
 			anAnimation.TranslationZ = New SourceFloat16bits()
@@ -1364,7 +1366,6 @@ Public Class SourceMdlFile53
 			anAnimation.ScaleZ.the16BitValue = Me.theInputFileReader.ReadUInt16()
 
 			anAnimation.nextTitanfall2MdlAnimationOffset = Me.theInputFileReader.ReadInt32()
-			'TODO: Read in rest of struct.
 
 			'NOTE: If the offset is 0 then there are no more bone animation structures, so end the loop.
 			If anAnimation.nextTitanfall2MdlAnimationOffset = 0 Then
@@ -1377,9 +1378,47 @@ Public Class SourceMdlFile53
 					Exit For
 				End If
 
+				If anAnimation.nextTitanfall2MdlAnimationOffset > 32 Then
+					If (anAnimation.flags And SourceMdlAnimation.MDL53_ANIM_ROTATION) = 0 Then
+						anAnimation.theRotV = New SourceMdlAnimationValuePointer()
+						If anAnimation.theRot64bits.XOffset > 0 Then
+							anAnimation.theRotV.theAnimXValues = New List(Of SourceMdlAnimationValue)()
+							Me.ReadMdlAnimValues(rotValuePointerInputFileStreamPosition + anAnimation.theRot64bits.XOffset, sectionFrameCount, lastSectionIsBeingRead, anAnimation.theRotV.theAnimXValues, "anAnimation.theRotV.theAnimXValues")
+						End If
+						If anAnimation.theRot64bits.YOffset > 0 Then
+							anAnimation.theRotV.theAnimYValues = New List(Of SourceMdlAnimationValue)()
+							Me.ReadMdlAnimValues(rotValuePointerInputFileStreamPosition + anAnimation.theRot64bits.YOffset, sectionFrameCount, lastSectionIsBeingRead, anAnimation.theRotV.theAnimYValues, "anAnimation.theRotV.theAnimYValues")
+						End If
+						If anAnimation.theRot64bits.ZOffset > 0 Then
+							anAnimation.theRotV.theAnimZValues = New List(Of SourceMdlAnimationValue)()
+							Me.ReadMdlAnimValues(rotValuePointerInputFileStreamPosition + anAnimation.theRot64bits.ZOffset, sectionFrameCount, lastSectionIsBeingRead, anAnimation.theRotV.theAnimZValues, "anAnimation.theRotV.theAnimZValues")
+						End If
+					End If
+
+					If (anAnimation.flags And SourceMdlAnimation.MDL53_ANIM_TRANSLATION) = 0 Then
+						anAnimation.thePosV = New SourceMdlAnimationValuePointer()
+						If anAnimation.TranslationX.the16BitValue > 0 Then
+							anAnimation.thePosV.theAnimXValues = New List(Of SourceMdlAnimationValue)()
+							Me.ReadMdlAnimValues(posValuePointerInputFileStreamPosition + anAnimation.TranslationX.the16BitValue, sectionFrameCount, lastSectionIsBeingRead, anAnimation.thePosV.theAnimXValues, "anAnimation.thePosV.theAnimXValues")
+						End If
+						If anAnimation.TranslationY.the16BitValue > 0 Then
+							anAnimation.thePosV.theAnimYValues = New List(Of SourceMdlAnimationValue)()
+							Me.ReadMdlAnimValues(posValuePointerInputFileStreamPosition + anAnimation.TranslationY.the16BitValue, sectionFrameCount, lastSectionIsBeingRead, anAnimation.thePosV.theAnimXValues, "anAnimation.thePosV.theAnimXValues")
+						End If
+						If anAnimation.TranslationZ.the16BitValue > 0 Then
+							anAnimation.thePosV.theAnimZValues = New List(Of SourceMdlAnimationValue)()
+							Me.ReadMdlAnimValues(posValuePointerInputFileStreamPosition + anAnimation.TranslationZ.the16BitValue, sectionFrameCount, lastSectionIsBeingRead, anAnimation.thePosV.theAnimXValues, "anAnimation.thePosV.theAnimXValues")
+						End If
+					End If
+				End If
+
 				Me.theInputFileReader.BaseStream.Seek(nextAnimationInputFileStreamPosition, SeekOrigin.Begin)
 			End If
 		Next
+
+		'NOTE: There is always an unused empty data structure at the end of the list.
+		fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+		Me.theInputFileReader.ReadBytes(32)
 
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "anAnimationDesc.anAnimation [" + anAnimationDesc.theName + "] (boneChangeCount = " + CStr(boneChangeCount) + ")")
