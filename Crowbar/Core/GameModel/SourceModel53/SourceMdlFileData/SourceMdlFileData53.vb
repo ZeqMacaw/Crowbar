@@ -513,7 +513,7 @@
 	'	byte				unused[1];
 	Public unused As Byte
 	'	int					unused4; // zero out if version < 47
-	Public unkfloat As Single
+	Public fadeDistance As Single
 
 	'	int					numflexcontrollerui;
 	Public flexControllerUiCount As Integer
@@ -541,7 +541,7 @@
 
 	' Both V52 and V53 have this section.
 	' Related to some block that appears when linear bone data is not present.
-	Public unknownOffset01 As Integer
+	Public aabbOffset As Integer
 	Public unknown01 As Integer
 	Public unknown02 As Integer
 	Public unknown03 As Integer
@@ -569,7 +569,7 @@
 	'Public theName As String
 	Public theNameCopy As String
 
-	Public theAnimationDescs As List(Of SourceMdlAnimationDesc52)
+	Public theAnimationDescs As List(Of SourceMdlAnimationDesc53)
 	Public theAnimBlocks As List(Of SourceMdlAnimBlock)
 	Public theAnimBlockRelativePathFileName As String
 	Public theAttachments As List(Of SourceMdlAttachment)
@@ -594,6 +594,7 @@
 	Public theSurfacePropName As String
 	Public theTexturePaths As List(Of String)
 	Public theTextures As List(Of SourceMdlTexture)
+	Public theAABB As RSourceAABBHeader52
 
 	Public theSectionFrameCount As Integer
 	Public theSectionFrameMinFrameCount As Integer
@@ -606,7 +607,7 @@
 	'Public theUpperEyelidFlexFrameIndexes As List(Of Integer)
 
 	Public theBoneNameToBoneIndexMap As New SortedList(Of String, Integer)()
-	Public theFirstAnimationDesc As SourceMdlAnimationDesc52
+	Public theFirstAnimationDesc As SourceMdlAnimationDesc53
 	Public theFirstAnimationDescFrameLines As SortedList(Of Integer, AnimationFrameLine)
 	'Public theMdlFileOnlyHasAnimations As Boolean
 	Public theProceduralBonesCommandIsUsed As Boolean

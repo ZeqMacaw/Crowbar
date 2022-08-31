@@ -127,10 +127,14 @@
     <Compile Include="Core\GameModel\CompiledFiles\VvdFile\VvdFile04\SourceVvdExtraData04.vb" />
     <Compile Include="Core\GameModel\SourceCommon\SourceMdlFileData\SourceMdlAnimTag.vb" />
     <Compile Include="Core\GameModel\SourceGlobal\SourceTextureCoordinates.vb" />
+    <Compile Include="Core\GameModel\SourceModel52\SourceMdlFileData\RSourceAABBHeader52.vb" />
     <Compile Include="Core\GameModel\SourceModel52\SourceMdlFileData\SourceMdlBone52.vb" />
+    <Compile Include="Core\GameModel\SourceModel53\SourceMdlFileData\SourceMdlAnimation53.vb" />
+    <Compile Include="Core\GameModel\SourceModel53\SourceMdlFileData\SourceMdlAnimationDesc53.vb" />
     <Compile Include="Core\GameModel\SourceModel53\SourceMdlFileData\SourceMdlBone53.vb" />
     <Compile Include="Core\GameModel\SourceModel53\SourceMdlFileData\SourceMdlIkChain53.vb" />
     <Compile Include="Core\GameModel\SourceModel53\SourceMdlFileData\SourceMdlIkLink53.vb" />
+    <Compile Include="Core\GameModel\SourceModel53\SourceSmdFile53.vb" />
     <Compile Include="Core\GamePackage\- Base\SourcePackage.vb" />
     <Compile Include="Core\GamePackage\ApkFile\ApkDirectoryEntry.vb" />
     <Compile Include="Core\GamePackage\ApkFile\ApkFile.vb" />
@@ -360,7 +364,6 @@
     <Compile Include="Core\GameModel\SourceModel53\SourceMdlFileData\SourceMdlFileData53.vb" />
     <Compile Include="Core\GameModel\SourceModel53\SourceModel53.vb" />
     <Compile Include="Core\GameModel\SourceModel53\SourceQcFile53.vb" />
-    <Compile Include="Core\GameModel\SourceModel53\SourceSmdFile53.vb" />
     <Compile Include="Core\GameModel\SourceModel53\SourceVrdFile53.vb" />
     <Compile Include="Core\GameModel\SourceModel53\SourceVtaFile53.vb" />
     <Compile Include="Core\GameModel\CompiledFiles\VtxFile\VtxFile06\SourceVtxMaterialReplacement06.vb" />

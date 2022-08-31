@@ -1,6 +1,6 @@
 Imports System.Runtime.InteropServices
 
-Public Class SourceMdlAnimation
+Public Class SourceMdlAnimation53
 
 	'FROM: SourceEngineXXXX_source\public\studio.h
 	'// per bone per animation DOF and weight pointers
@@ -24,29 +24,24 @@ Public Class SourceMdlAnimation
 	'	inline mstudioanim_t	*pNext( void ) const { if (nextoffset != 0) return  (mstudioanim_t *)(((byte *)this) + nextoffset); else return NULL; };
 	'};
 
+	Public translationScale As Single
 
 	'	byte				bone;
 	Public boneIndex As Byte
 	'	byte				flags;		// weighing options
 	Public flags As Byte
-	'	short				nextoffset;
-	Public nextSourceMdlAnimationOffset As Short
 
-	'MDL 53 stuff
-	Public TranslationScale As Double
-	Public Flags2 As Byte
-	Public Flags3 As Byte
-	'Public OffsetX As Short
-	'Public OffsetY As Short
-	'Public OffsetZ As Short
-	'Public OffsetL As Short
-	Public TranslationX As SourceFloat16bits
-	Public TranslationY As SourceFloat16bits
-	Public TranslationZ As SourceFloat16bits
-	Public ScaleX As SourceFloat16bits
-	Public ScaleY As SourceFloat16bits
-	Public ScaleZ As SourceFloat16bits
-	Public nextTitanfall2MdlAnimationOffset As Integer
+	Public unk As Short
+
+	' if (flags & STUDIO_ANIM_RAWROT2) <> 0 then this field is filled
+	Public theRot64bits As SourceQuaternion64bits
+	' if (flags & STUDIO_ANIM_RAWPOS) <> 0 then this field is filled
+	Public thePos As SourceVector48bits
+
+	Public theScale As SourceVector48bits
+
+	'	short				nextoffset;
+	Public nextSourceMdlAnimationOffset As Integer
 
 
 	' Values for the field, flags:
@@ -73,17 +68,5 @@ Public Class SourceMdlAnimation
 	'	<FieldOffset(0)> Public theQuat64 As SourceQuaternion64
 	'	<FieldOffset(8)> Public thePosV2 As SourceMdlAnimationValuePointer
 	'End Structure
-
-
-	' if (flags & STUDIO_ANIM_ANIMROT) <> 0 then this field is filled
-	Public theRotV As SourceMdlAnimationValuePointer
-	' if (flags & STUDIO_ANIM_ANIMPOS) <> 0 then this field is filled
-	Public thePosV As SourceMdlAnimationValuePointer
-	' if (flags & STUDIO_ANIM_RAWROT) <> 0 then this field is filled
-	Public theRot48bits As SourceQuaternion48bits
-	' if (flags & STUDIO_ANIM_RAWROT2) <> 0 then this field is filled
-	Public theRot64bits As SourceQuaternion64bits
-	' if (flags & STUDIO_ANIM_RAWPOS) <> 0 then this field is filled
-	Public thePos As SourceVector48bits
 
 End Class

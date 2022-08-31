@@ -2104,7 +2104,7 @@ Public Class SourceQcFile53
 	Private Sub WriteAnimationOrDeclareAnimationCommand()
 		If Me.theMdlFileData.theAnimationDescs IsNot Nothing Then
 			For i As Integer = 0 To Me.theMdlFileData.theAnimationDescs.Count - 1
-				Dim anAnimationDesc As SourceMdlAnimationDesc52
+				Dim anAnimationDesc As SourceMdlAnimationDesc53
 				anAnimationDesc = Me.theMdlFileData.theAnimationDescs(i)
 
 				If anAnimationDesc.theName(0) <> "@" Then
@@ -2114,7 +2114,7 @@ Public Class SourceQcFile53
 		End If
 	End Sub
 
-	Private Sub WriteAnimationLine(ByVal anAnimationDesc As SourceMdlAnimationDesc52)
+	Private Sub WriteAnimationLine(ByVal anAnimationDesc As SourceMdlAnimationDesc53)
 		Dim line As String = ""
 
 		Me.theOutputFileStreamWriter.WriteLine()
@@ -2242,9 +2242,9 @@ Public Class SourceQcFile53
 	Private Sub WriteSequenceOptions(ByVal aSequenceDesc As SourceMdlSequenceDesc)
 		Dim line As String = ""
 		Dim valueString As String
-		Dim impliedAnimDesc As SourceMdlAnimationDesc52 = Nothing
+		Dim impliedAnimDesc As SourceMdlAnimationDesc53 = Nothing
 
-		Dim anAnimationDesc As SourceMdlAnimationDesc52
+		Dim anAnimationDesc As SourceMdlAnimationDesc53
 		Dim name As String
 		For j As Integer = 0 To aSequenceDesc.theAnimDescIndexes.Count - 1
 			anAnimationDesc = Me.theMdlFileData.theAnimationDescs(aSequenceDesc.theAnimDescIndexes(j))
@@ -2405,7 +2405,7 @@ Public Class SourceQcFile53
 		'	Me.theOutputFileStreamWriter.WriteLine(line)
 		'End If
 
-		Dim firstAnimDesc As SourceMdlAnimationDesc52
+		Dim firstAnimDesc As SourceMdlAnimationDesc53
 		firstAnimDesc = Me.theMdlFileData.theAnimationDescs(aSequenceDesc.theAnimDescIndexes(0))
 		Me.WriteAnimationOptions(aSequenceDesc, firstAnimDesc, impliedAnimDesc)
 	End Sub
@@ -2432,7 +2432,7 @@ Public Class SourceQcFile53
 	'ParseCmdlistToken( panim->numcmds, panim->cmds )
 	'TODO: All these options (LX, LY, etc.) seem to be baked-in, but might need to be calculated for anims that have movement.
 	'lookupControl( token )       
-	Private Sub WriteAnimationOptions(ByVal aSequenceDesc As SourceMdlSequenceDesc, ByVal anAnimationDesc As SourceMdlAnimationDesc52, ByVal impliedAnimDesc As SourceMdlAnimationDesc52)
+	Private Sub WriteAnimationOptions(ByVal aSequenceDesc As SourceMdlSequenceDesc, ByVal anAnimationDesc As SourceMdlAnimationDesc53, ByVal impliedAnimDesc As SourceMdlAnimationDesc53)
 		Dim line As String = ""
 
 		line = vbTab
@@ -2484,7 +2484,7 @@ Public Class SourceQcFile53
 	'weightlist         // done
 	'worldspaceblend       //
 	'worldspaceblendloop   // 
-	Private Sub WriteCmdListOptions(ByVal aSequenceDesc As SourceMdlSequenceDesc, ByVal anAnimationDesc As SourceMdlAnimationDesc52, ByVal impliedAnimDesc As SourceMdlAnimationDesc52)
+	Private Sub WriteCmdListOptions(ByVal aSequenceDesc As SourceMdlSequenceDesc, ByVal anAnimationDesc As SourceMdlAnimationDesc53, ByVal impliedAnimDesc As SourceMdlAnimationDesc53)
 		Dim line As String = ""
 
 		If anAnimationDesc.theIkRules IsNot Nothing Then
@@ -2760,7 +2760,7 @@ Public Class SourceQcFile53
 		End If
 	End Sub
 
-	Private Sub WriteCmdListLocalHierarchyOption(ByVal anAnimationDesc As SourceMdlAnimationDesc52)
+	Private Sub WriteCmdListLocalHierarchyOption(ByVal anAnimationDesc As SourceMdlAnimationDesc53)
 		Dim line As String = ""
 
 		If anAnimationDesc.theLocalHierarchies IsNot Nothing Then
@@ -2804,6 +2804,8 @@ Public Class SourceQcFile53
 
 	Private Sub WriteIkChainCommand()
 		Dim line As String = ""
+		Dim lineComment As String = ""
+		Dim unkFloat As Double
 		Dim offsetX As Double
 		Dim offsetY As Double
 		Dim offsetZ As Double
@@ -2819,10 +2821,18 @@ Public Class SourceQcFile53
 				Me.theOutputFileStreamWriter.WriteLine(line)
 
 				For i As Integer = 0 To Me.theMdlFileData.theIkChains.Count - 1
+
 					Dim boneIndex As Integer = Me.theMdlFileData.theIkChains(i).theLinks(Me.theMdlFileData.theIkChains(i).theLinks.Count - 1).boneIndex
+
+					unkFloat = Math.Round(Me.theMdlFileData.theIkChains(i).unk, 3)
+
 					offsetX = Math.Round(Me.theMdlFileData.theIkChains(i).theLinks(0).idealBendingDirection.x, 3)
 					offsetY = Math.Round(Me.theMdlFileData.theIkChains(i).theLinks(0).idealBendingDirection.y, 3)
 					offsetZ = Math.Round(Me.theMdlFileData.theIkChains(i).theLinks(0).idealBendingDirection.z, 3)
+
+					lineComment = "// extra float value "
+					lineComment += unkFloat.ToString("0.######", TheApp.InternalNumberFormat)
+					Me.theOutputFileStreamWriter.WriteLine(lineComment)
 
 					If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
 						line = "$IKChain """
@@ -3313,6 +3323,8 @@ Public Class SourceQcFile53
 
 		Me.WriteProceduralBonesCommand()
 		Me.WriteJiggleBoneCommand()
+
+		Me.WriteIkFlagInfo()
 	End Sub
 
 	Private Sub WriteDefineBoneCommand()
@@ -3726,6 +3738,39 @@ Public Class SourceQcFile53
 			line += "angle_constraint "
 			line += MathModule.RadiansToDegrees(aBone.theJiggleBone.angleLimit).ToString("0.######", TheApp.InternalNumberFormat)
 			Me.theOutputFileStreamWriter.WriteLine(line)
+			Me.theOutputFileStreamWriter.WriteLine()
+		End If
+	End Sub
+
+	Public Sub WriteIkFlagInfo()
+		Dim lineHeader As String = ""
+		Dim line As String = ""
+
+		If Me.theMdlFileData.theBones IsNot Nothing Then
+			'lineHeader = "// bones using flag 0x20"
+			'Me.theOutputFileStreamWriter.WriteLine(lineHeader)
+
+			Dim aBone As SourceMdlBone53
+			Dim emptyLineIsAlreadyWritten As Boolean
+
+			emptyLineIsAlreadyWritten = False
+			For i As Integer = 0 To Me.theMdlFileData.theBones.Count - 1
+				aBone = Me.theMdlFileData.theBones(i)
+
+				If (aBone.flags And SourceMdlBone53.BONE_USED_BY_IKCHAIN) > 0 Then
+					If Not emptyLineIsAlreadyWritten Then
+						Me.theOutputFileStreamWriter.WriteLine()
+						emptyLineIsAlreadyWritten = True
+					End If
+
+					line = "// bone "
+					line += """"
+					line += aBone.theName
+					line += """"
+					line += " has ik flag (0x20)"
+					Me.theOutputFileStreamWriter.WriteLine(line)
+				End If
+			Next
 		End If
 	End Sub
 
