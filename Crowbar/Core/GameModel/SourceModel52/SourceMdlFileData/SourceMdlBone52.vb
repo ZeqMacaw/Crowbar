@@ -1,4 +1,5 @@
 Public Class SourceMdlBone52
+	'Inherits SourceMdlBone
 
 	'FROM: SourceEngineXXXX_source\public\studio.h
 	'// bones
@@ -55,7 +56,7 @@ Public Class SourceMdlBone52
 	'	RadianEuler			rot;
 	Public rotation As SourceVector
 	'	Vector
-	Public unkVector As SourceVector
+	Public positionScale As SourceVector
 	'	Vector				rotscale;
 	Public rotationScale As SourceVector
 
@@ -81,9 +82,9 @@ Public Class SourceMdlBone52
 	'	int					contents;		// See BSPFlags.h for the contents flags
 	Public contents As Integer
 	'	int					surfacepropLookup; (this is in normal V49s)
-	Public unk As Integer
+	Public surfacepropLookup As Integer
 	'	Vector				posscale;
-	Public positionScale As SourceVector
+	Public unkVector As SourceVector
 	'	Vector
 	Public unkVector1 As SourceVector
 

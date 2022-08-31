@@ -86,7 +86,7 @@ Public Class SourceMdlBone53
 	'	int					contents;		// See BSPFlags.h for the contents flags
 	Public contents As Integer
 	'	int					surfacepropLookup; (this is in normal V49s)
-	Public unk As Integer
+	Public surfacepropLookup As Integer
 	'	int					unknown offset for something.
 	Public unk1 As Integer
 

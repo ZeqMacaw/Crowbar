@@ -414,8 +414,8 @@ Public Class SourceMdlFile53
 					aBone.physicsBoneIndex = Me.theInputFileReader.ReadInt32()
 					aBone.surfacePropNameOffset = Me.theInputFileReader.ReadInt32()
 					aBone.contents = Me.theInputFileReader.ReadInt32()
+					aBone.surfacepropLookup = Me.theInputFileReader.ReadInt32()
 
-					aBone.unk = Me.theInputFileReader.ReadInt32()
 					aBone.unk1 = Me.theInputFileReader.ReadInt32()
 
 					For k As Integer = 0 To 6
