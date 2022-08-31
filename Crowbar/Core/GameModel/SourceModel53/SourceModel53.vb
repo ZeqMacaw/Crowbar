@@ -350,9 +350,6 @@ Public Class SourceModel53
 
 		mdlFile.ReadMdlHeader00("MDL File Header 00")
 		mdlFile.ReadMdlHeader01("MDL File Header 01")
-		'If Me.theMdlFileData.studioHeader2Offset > 0 Then
-		'	mdlFile.ReadMdlHeader02("MDL File Header 02")
-		'End If
 
 		mdlFile.ReadBones()
 		mdlFile.ReadBoneControllers()
@@ -379,9 +376,9 @@ Public Class SourceModel53
 		'NOTE: Read flex descs before body parts so that flexes (within body parts) can add info to flex descs.
 		mdlFile.ReadFlexDescs()
 		mdlFile.ReadBodyParts()
-		mdlFile.ReadFlexControllers()
+		'mdlFile.ReadFlexControllers()
 		'NOTE: This must be after flex descs are read so that flex desc usage can be saved in flex desc.
-		mdlFile.ReadFlexRules()
+		'mdlFile.ReadFlexRules()
 		mdlFile.ReadIkChains()
 		'mdlFile.ReadIkLocks()
 		'mdlFile.ReadMouths()
@@ -390,7 +387,7 @@ Public Class SourceModel53
 		''TODO: Me.ReadAnimBlocks()
 		''TODO: Me.ReadAnimBlockName()
 
-		'NOTE: V53 MDLs shouldn't really have more than one texture path due to how RPak materials work.
+		'NOTE: V53 MDLs normally don't have more than one texture path due to how RPak materials work.
 		mdlFile.ReadTexturePaths()
 		'NOTE: ReadTextures must be after ReadTexturePaths(), so it can compare with the texture paths.
 		mdlFile.ReadTextures()
@@ -400,6 +397,8 @@ Public Class SourceModel53
 
 		mdlFile.ReadBoneTransforms()
 		mdlFile.ReadLinearBoneTable()
+
+		mdlFile.ReadAABBHeader()
 
 		''TODO: ReadLocalIkAutoPlayLocks()
 		'mdlFile.ReadFlexControllerUis()

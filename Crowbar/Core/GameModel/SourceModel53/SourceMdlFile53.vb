@@ -271,7 +271,7 @@ Public Class SourceMdlFile53
 		Me.theMdlFileData.unused = Me.theInputFileReader.ReadByte()
 
 		' In v52 and v53 this is actually used for something, as a float.
-		Me.theMdlFileData.unkfloat = Me.theInputFileReader.ReadSingle()
+		Me.theMdlFileData.fadeDistance = Me.theInputFileReader.ReadSingle()
 
 		Me.theMdlFileData.flexControllerUiCount = Me.theInputFileReader.ReadInt32()
 		Me.theMdlFileData.flexControllerUiOffset = Me.theInputFileReader.ReadInt32()
@@ -294,7 +294,7 @@ Public Class SourceMdlFile53
 		'Me.theMdlFileData.vertAnimFixedPointScale = Me.theInputFileReader.ReadSingle()
 		'Me.theMdlFileData.surfacePropLookup = Me.theInputFileReader.ReadInt32()
 
-		Me.theMdlFileData.unknownOffset01 = Me.theInputFileReader.ReadInt32()
+		Me.theMdlFileData.aabbOffset = Me.theInputFileReader.ReadInt32()
 		Me.theMdlFileData.unknown01 = Me.theInputFileReader.ReadInt32()
 		Me.theMdlFileData.unknown02 = Me.theInputFileReader.ReadInt32()
 		Me.theMdlFileData.unknown03 = Me.theInputFileReader.ReadInt32()
@@ -4037,6 +4037,36 @@ Public Class SourceMdlFile53
 				Dim debug As Integer = 4242
 			End Try
 		End If
+	End Sub
+
+	' TODO: this doesn't actually work lol.
+	Public Sub ReadAABBHeader()
+		'Dim inputFileStreamPosition As Long
+		'Dim fileOffsetStart As Long
+
+		Me.theInputFileReader.BaseStream.Seek(Me.theMdlFileData.aabbOffset, SeekOrigin.Begin)
+		'fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+
+		Dim theAABB As New RSourceAABBHeader52
+
+		theAABB.version = Me.theInputFileReader.ReadInt32()
+
+		theAABB.bbMin = New SourceVector()
+		theAABB.bbMin.x = Me.theInputFileReader.ReadSingle()
+		theAABB.bbMin.y = Me.theInputFileReader.ReadSingle()
+		theAABB.bbMin.z = Me.theInputFileReader.ReadSingle()
+
+		theAABB.bbMax = New SourceVector()
+		theAABB.bbMax.x = Me.theInputFileReader.ReadSingle()
+		theAABB.bbMax.y = Me.theInputFileReader.ReadSingle()
+		theAABB.bbMax.z = Me.theInputFileReader.ReadSingle()
+
+		For k As Integer = 0 To 7
+			theAABB.unused(k) = Me.theInputFileReader.ReadInt32()
+		Next
+
+		'inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+
 	End Sub
 
 	'Public Sub ReadFinalBytesAlignment()
