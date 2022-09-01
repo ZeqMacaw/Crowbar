@@ -1424,11 +1424,11 @@ Public Class SourceMdlFile53
 			End If
 			If anAnimation.TranslationY.the16BitValue > 0 Then
 				anAnimation.thePosV.theAnimYValues = New List(Of SourceMdlAnimationValue)()
-				Me.ReadMdlAnimValues(posValuePointerInputFileStreamPosition + anAnimation.TranslationY.the16BitValue, frameCount, lastSectionIsBeingRead, anAnimation.thePosV.theAnimXValues, "anAnimation.thePosV.theAnimXValues")
+				Me.ReadMdlAnimValues(posValuePointerInputFileStreamPosition + anAnimation.TranslationY.the16BitValue, frameCount, lastSectionIsBeingRead, anAnimation.thePosV.theAnimYValues, "anAnimation.thePosV.theAnimYValues")
 			End If
 			If anAnimation.TranslationZ.the16BitValue > 0 Then
 				anAnimation.thePosV.theAnimZValues = New List(Of SourceMdlAnimationValue)()
-				Me.ReadMdlAnimValues(posValuePointerInputFileStreamPosition + anAnimation.TranslationZ.the16BitValue, frameCount, lastSectionIsBeingRead, anAnimation.thePosV.theAnimXValues, "anAnimation.thePosV.theAnimXValues")
+				Me.ReadMdlAnimValues(posValuePointerInputFileStreamPosition + anAnimation.TranslationZ.the16BitValue, frameCount, lastSectionIsBeingRead, anAnimation.thePosV.theAnimZValues, "anAnimation.thePosV.theAnimZValues")
 			End If
 		End If
 	End Sub
