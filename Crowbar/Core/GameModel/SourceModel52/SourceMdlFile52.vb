@@ -263,7 +263,7 @@ Public Class SourceMdlFile52
 
 		Me.theMdlFileData.unused = Me.theInputFileReader.ReadByte()
 
-		Me.theMdlFileData.unkFloat = Me.theInputFileReader.ReadSingle()
+		Me.theMdlFileData.fadeDistance = Me.theInputFileReader.ReadSingle()
 
 		Me.theMdlFileData.flexControllerUiCount = Me.theInputFileReader.ReadInt32()
 		Me.theMdlFileData.flexControllerUiOffset = Me.theInputFileReader.ReadInt32()

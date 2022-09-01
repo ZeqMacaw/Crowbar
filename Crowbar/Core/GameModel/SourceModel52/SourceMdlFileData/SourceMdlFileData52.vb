@@ -517,7 +517,7 @@
 	'	byte				unused[1];
 	Public unused As Byte
 	'	int					unused4; // zero out if version < 47
-	Public unkFloat As Single
+	Public fadeDistance As Single
 
 	'	int					numflexcontrollerui;
 	Public flexControllerUiCount As Integer
