@@ -465,15 +465,15 @@ Public Class SourceSmdFile53
 		'	oPosition.y = iPosition.y + aFirstAnimationDescFrameLine.position.y
 		'	oPosition.z = iPosition.z + aFirstAnimationDescFrameLine.position.z
 		'Else
-		'If aBone.parentBoneIndex = -1 Then
-		'	oPosition.x = iPosition.y
-		'	oPosition.y = -iPosition.x
-		'	oPosition.z = iPosition.z
-		'Else
-		oPosition.x = iPosition.x
-		oPosition.y = iPosition.y
-		oPosition.z = iPosition.z
-		'End If
+		If aBone.parentBoneIndex = -1 Then
+			oPosition.x = iPosition.y
+			oPosition.y = -iPosition.x
+			oPosition.z = iPosition.z
+		Else
+			oPosition.x = iPosition.x
+			oPosition.y = iPosition.y
+			oPosition.z = iPosition.z
+		End If
 
 		'If iRotation.debug_text = "desc_delta" OrElse iRotation.debug_text.StartsWith("delta") Then
 		'	Dim aFirstAnimationDescFrameLine As AnimationFrameLine
@@ -516,23 +516,23 @@ Public Class SourceSmdFile53
 		'	oRotation.z = iRotation.z
 		'End If
 		'------
-		oRotation.x = iRotation.x
-		oRotation.y = iRotation.y
-		oRotation.z = iRotation.z
+		'oRotation.x = iRotation.x
+		'oRotation.y = iRotation.y
+		'oRotation.z = iRotation.z
 		'------
 		'oRotation.x = iRotation.y
 		'oRotation.y = iRotation.x
 		'oRotation.z = iRotation.z
 		'------
-		'If aBone.parentBoneIndex = -1 Then
-		'	oRotation.x = iRotation.x
-		'	oRotation.y = iRotation.y
-		'	oRotation.z = iRotation.z
-		'Else
-		'	oRotation.x = iRotation.y
-		'	oRotation.y = iRotation.x
-		'	oRotation.z = iRotation.z
-		'End If
+		If aBone.parentBoneIndex = -1 Then
+			oRotation.x = iRotation.x
+			oRotation.y = iRotation.y
+			oRotation.z = iRotation.z + MathModule.DegreesToRadians(-90)
+		Else
+			oRotation.x = iRotation.x
+			oRotation.y = iRotation.y
+			oRotation.z = iRotation.z
+		End If
 	End Sub
 
 	Private Sub AdjustPositionAndRotationByPiecewiseMovement(ByVal frameIndex As Integer, ByVal boneIndex As Integer, ByVal movements As List(Of SourceMdlMovement), ByVal iPosition As SourceVector, ByVal iRotation As SourceVector, ByRef oPosition As SourceVector, ByRef oRotation As SourceVector)
@@ -1794,6 +1794,7 @@ Public Class SourceSmdFile53
 				v1 = animValues(animValueIndex + animValues(animValueIndex).valid).value * scale
 			End If
 		Catch ex As Exception
+			Dim debug As Integer = 4242
 		End Try
 
 		Return v1
