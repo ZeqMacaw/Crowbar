@@ -191,7 +191,7 @@ Public Class SourceModel53
 	Public Overrides Function WriteBoneAnimationSmdFiles(ByVal modelOutputPath As String) As AppEnums.StatusMessage
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
 
-		Dim anAnimationDesc As SourceMdlAnimationDesc52
+		Dim anAnimationDesc As SourceMdlAnimationDesc53
 		Dim smdPath As String
 		'Dim smdFileName As String
 		Dim smdPathFileName As String

@@ -569,7 +569,7 @@
 	'Public theName As String
 	Public theNameCopy As String
 
-	Public theAnimationDescs As List(Of SourceMdlAnimationDesc52)
+	Public theAnimationDescs As List(Of SourceMdlAnimationDesc53)
 	Public theAnimBlocks As List(Of SourceMdlAnimBlock)
 	Public theAnimBlockRelativePathFileName As String
 	Public theAttachments As List(Of SourceMdlAttachment)
@@ -606,7 +606,7 @@
 	'Public theUpperEyelidFlexFrameIndexes As List(Of Integer)
 
 	Public theBoneNameToBoneIndexMap As New SortedList(Of String, Integer)()
-	Public theFirstAnimationDesc As SourceMdlAnimationDesc52
+	Public theFirstAnimationDesc As SourceMdlAnimationDesc53
 	Public theFirstAnimationDescFrameLines As SortedList(Of Integer, AnimationFrameLine)
 	'Public theMdlFileOnlyHasAnimations As Boolean
 	Public theProceduralBonesCommandIsUsed As Boolean

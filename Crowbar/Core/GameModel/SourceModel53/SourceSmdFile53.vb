@@ -310,7 +310,7 @@ Public Class SourceSmdFile53
 		Dim aFrameLine As AnimationFrameLine
 		Dim frameIndex As Integer
 		Dim aSequenceDesc As SourceMdlSequenceDesc
-		Dim anAnimationDesc As SourceMdlAnimationDesc52
+		Dim anAnimationDesc As SourceMdlAnimationDesc53
 
 		aSequenceDesc = Nothing
 		anAnimationDesc = Me.theMdlFileData.theFirstAnimationDesc
@@ -370,10 +370,10 @@ Public Class SourceSmdFile53
 		Dim rotation As New SourceVector()
 		'Dim tempRotation As New SourceVector()
 		Dim aSequenceDesc As SourceMdlSequenceDesc
-		Dim anAnimationDesc As SourceMdlAnimationDesc52
+		Dim anAnimationDesc As SourceMdlAnimationDesc53
 
 		aSequenceDesc = CType(aSequenceDescBase, SourceMdlSequenceDesc)
-		anAnimationDesc = CType(anAnimationDescBase, SourceMdlAnimationDesc52)
+		anAnimationDesc = CType(anAnimationDescBase, SourceMdlAnimationDesc53)
 
 		'skeleton
 		line = "skeleton"
@@ -594,7 +594,7 @@ Public Class SourceSmdFile53
 		Dim frameIndex As Integer
 		Dim frameLineIndex As Integer
 		Dim aSequenceDesc As SourceMdlSequenceDesc
-		Dim anAnimationDesc As SourceMdlAnimationDesc52
+		Dim anAnimationDesc As SourceMdlAnimationDesc53
 
 		aSequenceDesc = Nothing
 		anAnimationDesc = Me.theMdlFileData.theAnimationDescs(0)
@@ -1224,7 +1224,7 @@ Public Class SourceSmdFile53
 		Return aVectorTransformed
 	End Function
 
-	Private Sub CalcAnimation(ByVal aSequenceDesc As SourceMdlSequenceDesc, ByVal anAnimationDesc As SourceMdlAnimationDesc52, ByVal frameIndex As Integer)
+	Private Sub CalcAnimation(ByVal aSequenceDesc As SourceMdlSequenceDesc, ByVal anAnimationDesc As SourceMdlAnimationDesc53, ByVal frameIndex As Integer)
 		Dim s As Double
 		Dim animIndex As Integer
 		Dim aBone As SourceMdlBone53

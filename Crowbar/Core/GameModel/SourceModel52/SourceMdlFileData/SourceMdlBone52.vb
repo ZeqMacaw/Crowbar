@@ -55,7 +55,7 @@ Public Class SourceMdlBone52
 	'	RadianEuler			rot;
 	Public rotation As SourceVector
 	'	Vector
-	Public unkVector As SourceVector
+	Public positionScale As SourceVector
 	'	Vector				rotscale;
 	Public rotationScale As SourceVector
 
@@ -83,7 +83,7 @@ Public Class SourceMdlBone52
 	'	int					surfacepropLookup; (this is in normal V49s)
 	Public unk As Integer
 	'	Vector				posscale;
-	Public positionScale As SourceVector
+	Public unkVector As SourceVector
 	'	Vector
 	Public unkVector1 As SourceVector
 

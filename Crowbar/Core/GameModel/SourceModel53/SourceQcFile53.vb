@@ -2104,7 +2104,7 @@ Public Class SourceQcFile53
 	Private Sub WriteAnimationOrDeclareAnimationCommand()
 		If Me.theMdlFileData.theAnimationDescs IsNot Nothing Then
 			For i As Integer = 0 To Me.theMdlFileData.theAnimationDescs.Count - 1
-				Dim anAnimationDesc As SourceMdlAnimationDesc52
+				Dim anAnimationDesc As SourceMdlAnimationDesc53
 				anAnimationDesc = Me.theMdlFileData.theAnimationDescs(i)
 
 				If anAnimationDesc.theName(0) <> "@" Then
@@ -2114,7 +2114,7 @@ Public Class SourceQcFile53
 		End If
 	End Sub
 
-	Private Sub WriteAnimationLine(ByVal anAnimationDesc As SourceMdlAnimationDesc52)
+	Private Sub WriteAnimationLine(ByVal anAnimationDesc As SourceMdlAnimationDesc53)
 		Dim line As String = ""
 
 		Me.theOutputFileStreamWriter.WriteLine()
@@ -2242,9 +2242,9 @@ Public Class SourceQcFile53
 	Private Sub WriteSequenceOptions(ByVal aSequenceDesc As SourceMdlSequenceDesc)
 		Dim line As String = ""
 		Dim valueString As String
-		Dim impliedAnimDesc As SourceMdlAnimationDesc52 = Nothing
+		Dim impliedAnimDesc As SourceMdlAnimationDesc53 = Nothing
 
-		Dim anAnimationDesc As SourceMdlAnimationDesc52
+		Dim anAnimationDesc As SourceMdlAnimationDesc53
 		Dim name As String
 		For j As Integer = 0 To aSequenceDesc.theAnimDescIndexes.Count - 1
 			anAnimationDesc = Me.theMdlFileData.theAnimationDescs(aSequenceDesc.theAnimDescIndexes(j))
@@ -2405,7 +2405,7 @@ Public Class SourceQcFile53
 		'	Me.theOutputFileStreamWriter.WriteLine(line)
 		'End If
 
-		Dim firstAnimDesc As SourceMdlAnimationDesc52
+		Dim firstAnimDesc As SourceMdlAnimationDesc53
 		firstAnimDesc = Me.theMdlFileData.theAnimationDescs(aSequenceDesc.theAnimDescIndexes(0))
 		Me.WriteAnimationOptions(aSequenceDesc, firstAnimDesc, impliedAnimDesc)
 	End Sub
@@ -2432,7 +2432,7 @@ Public Class SourceQcFile53
 	'ParseCmdlistToken( panim->numcmds, panim->cmds )
 	'TODO: All these options (LX, LY, etc.) seem to be baked-in, but might need to be calculated for anims that have movement.
 	'lookupControl( token )       
-	Private Sub WriteAnimationOptions(ByVal aSequenceDesc As SourceMdlSequenceDesc, ByVal anAnimationDesc As SourceMdlAnimationDesc52, ByVal impliedAnimDesc As SourceMdlAnimationDesc52)
+	Private Sub WriteAnimationOptions(ByVal aSequenceDesc As SourceMdlSequenceDesc, ByVal anAnimationDesc As SourceMdlAnimationDesc53, ByVal impliedAnimDesc As SourceMdlAnimationDesc53)
 		Dim line As String = ""
 
 		line = vbTab
@@ -2484,17 +2484,17 @@ Public Class SourceQcFile53
 	'weightlist         // done
 	'worldspaceblend       //
 	'worldspaceblendloop   // 
-	Private Sub WriteCmdListOptions(ByVal aSequenceDesc As SourceMdlSequenceDesc, ByVal anAnimationDesc As SourceMdlAnimationDesc52, ByVal impliedAnimDesc As SourceMdlAnimationDesc52)
+	Private Sub WriteCmdListOptions(ByVal aSequenceDesc As SourceMdlSequenceDesc, ByVal anAnimationDesc As SourceMdlAnimationDesc53, ByVal impliedAnimDesc As SourceMdlAnimationDesc53)
 		Dim line As String = ""
 
 		If anAnimationDesc.theIkRules IsNot Nothing Then
-			For Each anIkRule As SourceMdlIkRule In anAnimationDesc.theIkRules
+			For Each anIkRule As SourceMdlIkRule53 In anAnimationDesc.theIkRules
 				line = vbTab
 				line += "ikrule"
 				line += " """
 				line += Me.theMdlFileData.theIkChains(anIkRule.chain).theName
 				line += """"
-				If anIkRule.type = SourceMdlIkRule.IK_SELF Then
+				If anIkRule.type = SourceMdlIkRule53.IK_SELF Then
 					line += " "
 					line += "touch"
 					line += " """
@@ -2502,22 +2502,22 @@ Public Class SourceQcFile53
 						line += Me.theMdlFileData.theBones(anIkRule.bone).theName
 					End If
 					line += """"
-					'ElseIf anIkRule.type = SourceMdlIkRule.IK_WORLD Then
+					'ElseIf anIkRule.type = SourceMdlIkRule53.IK_WORLD Then
 					'line += " "
 					'line += "world"
-				ElseIf anIkRule.type = SourceMdlIkRule.IK_GROUND Then
+				ElseIf anIkRule.type = SourceMdlIkRule53.IK_GROUND Then
 					line += " "
 					line += "footstep"
-				ElseIf anIkRule.type = SourceMdlIkRule.IK_RELEASE Then
+				ElseIf anIkRule.type = SourceMdlIkRule53.IK_RELEASE Then
 					line += " "
 					line += "release"
-				ElseIf anIkRule.type = SourceMdlIkRule.IK_ATTACHMENT Then
+				ElseIf anIkRule.type = SourceMdlIkRule53.IK_ATTACHMENT Then
 					line += " "
 					line += "attachment"
 					line += " """
 					line += anIkRule.theAttachmentName
 					line += """"
-				ElseIf anIkRule.type = SourceMdlIkRule.IK_UNLATCH Then
+				ElseIf anIkRule.type = SourceMdlIkRule53.IK_UNLATCH Then
 					line += " "
 					line += "unlatch"
 				End If
@@ -2760,7 +2760,7 @@ Public Class SourceQcFile53
 		End If
 	End Sub
 
-	Private Sub WriteCmdListLocalHierarchyOption(ByVal anAnimationDesc As SourceMdlAnimationDesc52)
+	Private Sub WriteCmdListLocalHierarchyOption(ByVal anAnimationDesc As SourceMdlAnimationDesc53)
 		Dim line As String = ""
 
 		If anAnimationDesc.theLocalHierarchies IsNot Nothing Then
