@@ -925,51 +925,55 @@ Public Class SourceMdlFile53
 		Me.theInputFileReader.BaseStream.Seek(Me.theMdlFileData.localAnimationOffset, SeekOrigin.Begin)
 		fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-		Me.theMdlFileData.theAnimationDescs = New List(Of SourceMdlAnimationDesc53)(Me.theMdlFileData.localAnimationCount)
-		For i As Integer = 0 To Me.theMdlFileData.localAnimationCount - 1
-			animInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-			Dim anAnimationDesc As New SourceMdlAnimationDesc53()
+		Try
+			Me.theMdlFileData.theAnimationDescs = New List(Of SourceMdlAnimationDesc53)(Me.theMdlFileData.localAnimationCount)
+			For i As Integer = 0 To Me.theMdlFileData.localAnimationCount - 1
+				animInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+				Dim anAnimationDesc As New SourceMdlAnimationDesc53()
 
-			anAnimationDesc.theOffsetStart = Me.theInputFileReader.BaseStream.Position
+				anAnimationDesc.theOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-			anAnimationDesc.baseHeaderOffset = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.nameOffset = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.fps = Me.theInputFileReader.ReadSingle()
-			anAnimationDesc.flags = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.frameCount = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.movementCount = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.movementOffset = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.baseHeaderOffset = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.nameOffset = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.fps = Me.theInputFileReader.ReadSingle()
+				anAnimationDesc.flags = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.frameCount = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.movementCount = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.movementOffset = Me.theInputFileReader.ReadInt32()
 
-			'anAnimationDesc.ikRuleZeroFrameOffset = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.compressedIkErrorOffset = Me.theInputFileReader.ReadInt32()
 
-			anAnimationDesc.animBlock = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.animOffset = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.ikRuleCount = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.ikRuleOffset = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.animblockIkRuleOffset = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.localHierarchyCount = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.localHierarchyOffset = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.sectionOffset = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.sectionFrameCount = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.animOffset = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.ikRuleCount = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.ikRuleOffset = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.localHierarchyCount = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.localHierarchyOffset = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.sectionOffset = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.sectionFrameCount = Me.theInputFileReader.ReadInt32()
 
-			anAnimationDesc.spanFrameCount = Me.theInputFileReader.ReadInt16()
-			anAnimationDesc.spanCount = Me.theInputFileReader.ReadInt16()
-			anAnimationDesc.spanOffset = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.spanStallTime = Me.theInputFileReader.ReadSingle()
+				anAnimationDesc.spanFrameCount = Me.theInputFileReader.ReadInt16()
+				anAnimationDesc.spanCount = Me.theInputFileReader.ReadInt16()
+				anAnimationDesc.spanOffset = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.spanStallTime = Me.theInputFileReader.ReadSingle()
 
-			For x As Integer = 0 To 3
-				anAnimationDesc.unused1(x) = Me.theInputFileReader.ReadInt32()
+				'anAnimationDesc.ikRuleZeroFrameOffset = Me.theInputFileReader.ReadInt32()
+
+				For x As Integer = 0 To anAnimationDesc.unused1.Length - 1
+					anAnimationDesc.unused1(x) = Me.theInputFileReader.ReadInt32()
+				Next
+
+				Me.theMdlFileData.theAnimationDescs.Add(anAnimationDesc)
+
+				inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+
+				Me.ReadAnimationDescName(animInputFileStreamPosition, anAnimationDesc)
+				'Me.ReadAnimationDescSpanData(animInputFileStreamPosition, anAnimationDesc)
+
+				Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
 			Next
-
-			Me.theMdlFileData.theAnimationDescs.Add(anAnimationDesc)
-
-			inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-
-			Me.ReadAnimationDescName(animInputFileStreamPosition, anAnimationDesc)
-			'Me.ReadAnimationDescSpanData(animInputFileStreamPosition, anAnimationDesc)
-
-			Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
-		Next
+		Catch ex As Exception
+			Dim debug As Integer = 4242
+		End Try
 
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theMdlFileData.theAnimationDescs " + Me.theMdlFileData.theAnimationDescs.Count.ToString())
@@ -1007,8 +1011,7 @@ Public Class SourceMdlFile53
 		If Me.theMdlFileData.theAnimationDescs IsNot Nothing Then
 			Dim animInputFileStreamPosition As Long
 			Dim anAnimationDesc As SourceMdlAnimationDesc53
-			Dim aSectionOfAnimation As List(Of SourceMdlAnimation53)
-			Dim aSectionOfFrameAnimation As SourceAniFrameAnim52
+			Dim aSectionOfAnimation As List(Of SourceMdlAnimation)
 
 			For anAnimDescIndex As Integer = 0 To Me.theMdlFileData.theAnimationDescs.Count - 1
 				anAnimationDesc = Me.theMdlFileData.theAnimationDescs(anAnimDescIndex)
@@ -1019,113 +1022,15 @@ Public Class SourceMdlFile53
 					Me.theMdlFileData.theFirstAnimationDesc = anAnimationDesc
 				End If
 
-				If ((anAnimationDesc.flags And SourceMdlAnimationDesc.STUDIO_FRAMEANIM) <> 0) Then
-					anAnimationDesc.theSectionsOfFrameAnim = New List(Of SourceAniFrameAnim52)()
-					aSectionOfFrameAnimation = New SourceAniFrameAnim52()
-					anAnimationDesc.theSectionsOfFrameAnim.Add(aSectionOfFrameAnimation)
+				anAnimationDesc.theSectionsOfAnimations = New List(Of List(Of SourceMdlAnimation))()
+				aSectionOfAnimation = New List(Of SourceMdlAnimation)()
+				anAnimationDesc.theSectionsOfAnimations.Add(aSectionOfAnimation)
+				Me.ReadMdlAnimation(animInputFileStreamPosition + anAnimationDesc.animOffset, anAnimationDesc, anAnimationDesc.frameCount, anAnimationDesc.theSectionsOfAnimations(0), True)
 
-					Dim sectionIndex As Integer
-					If anAnimationDesc.sectionOffset <> 0 AndAlso anAnimationDesc.sectionFrameCount > 0 Then
-						Dim sectionFrameCount As Integer
-						Dim sectionCount As Integer
-
-						'TODO: Shouldn't this be set to largest sectionFrameCount?
-						Me.theMdlFileData.theSectionFrameCount = anAnimationDesc.sectionFrameCount
-						If Me.theMdlFileData.theSectionFrameMinFrameCount >= anAnimationDesc.frameCount Then
-							Me.theMdlFileData.theSectionFrameMinFrameCount = anAnimationDesc.frameCount - 1
-						End If
-
-						''FROM: simplify.cpp:
-						''      panim->numsections = (int)(panim->numframes / panim->sectionframes) + 2;
-						''NOTE: It is unclear why "+ 2" is used in studiomdl.
-						sectionCount = CInt(Math.Truncate(anAnimationDesc.frameCount / anAnimationDesc.sectionFrameCount)) + 2
-
-						'NOTE: First sectionOfAnimation was created above.
-						For sectionIndex = 1 To sectionCount - 1
-							aSectionOfFrameAnimation = New SourceAniFrameAnim52()
-							anAnimationDesc.theSectionsOfFrameAnim.Add(aSectionOfFrameAnimation)
-						Next
-
-						'TODO: Is this "if" check correct? Should it be removed? 
-						'      Maybe when there are sections, the section.animBlock determines which file the data is in.
-						If anAnimationDesc.animBlock = 0 Then
-							For sectionIndex = 0 To sectionCount - 1
-								If anAnimationDesc.theSections(sectionIndex).animBlock = 0 Then
-									aSectionOfFrameAnimation = anAnimationDesc.theSectionsOfFrameAnim(sectionIndex)
-
-									If sectionIndex < sectionCount - 2 Then
-										sectionFrameCount = anAnimationDesc.sectionFrameCount
-									Else
-										'NOTE: Due to the weird calculation of sectionCount in studiomdl, this line is called twice, which means there are two "last" sections.
-										'      This also likely means that the last section is bogus unused data.
-										sectionFrameCount = anAnimationDesc.frameCount - ((sectionCount - 2) * anAnimationDesc.sectionFrameCount)
-									End If
-
-									Me.ReadAnimationFrameByBone(animInputFileStreamPosition + anAnimationDesc.theSections(sectionIndex).animOffset, anAnimationDesc, sectionFrameCount, sectionIndex, (sectionIndex >= sectionCount - 2) Or (anAnimationDesc.frameCount = (sectionIndex + 1) * anAnimationDesc.sectionFrameCount))
-								End If
-							Next
-						End If
-					ElseIf anAnimationDesc.animBlock = 0 Then
-						'NOTE: This code is reached by L4D2's pak01_dir.vpk\models\v_models\v_huntingrifle.mdl.
-						sectionIndex = 0
-						Me.ReadAnimationFrameByBone(animInputFileStreamPosition + anAnimationDesc.animOffset, anAnimationDesc, anAnimationDesc.frameCount, sectionIndex, True)
-					End If
-				Else
-					anAnimationDesc.theSectionsOfAnimations = New List(Of List(Of SourceMdlAnimation53))()
-					aSectionOfAnimation = New List(Of SourceMdlAnimation53)()
-					anAnimationDesc.theSectionsOfAnimations.Add(aSectionOfAnimation)
-
-					If anAnimationDesc.sectionOffset <> 0 AndAlso anAnimationDesc.sectionFrameCount > 0 Then
-						Dim sectionFrameCount As Integer
-						Dim sectionCount As Integer
-
-						'TODO: Shouldn't this be set to largest sectionFrameCount?
-						Me.theMdlFileData.theSectionFrameCount = anAnimationDesc.sectionFrameCount
-						If Me.theMdlFileData.theSectionFrameMinFrameCount >= anAnimationDesc.frameCount Then
-							Me.theMdlFileData.theSectionFrameMinFrameCount = anAnimationDesc.frameCount - 1
-						End If
-
-						''FROM: simplify.cpp:
-						''      panim->numsections = (int)(panim->numframes / panim->sectionframes) + 2;
-						''NOTE: It is unclear why "+ 2" is used in studiomdl.
-						sectionCount = CInt(Math.Truncate(anAnimationDesc.frameCount / anAnimationDesc.sectionFrameCount)) + 2
-
-						'NOTE: First sectionOfAnimation was created above.
-						For sectionIndex As Integer = 1 To sectionCount - 1
-							aSectionOfAnimation = New List(Of SourceMdlAnimation53)()
-							anAnimationDesc.theSectionsOfAnimations.Add(aSectionOfAnimation)
-						Next
-
-						Dim adjustedAnimOffset As Long
-						If anAnimationDesc.animBlock = 0 Then
-							For sectionIndex As Integer = 0 To sectionCount - 1
-								If anAnimationDesc.theSections(sectionIndex).animBlock = 0 Then
-									'NOTE: This is weird, but it fits with a few oddball models (such as L4D2 "left4dead2\ghostanim.mdl") while not messing up the normal ones.
-									adjustedAnimOffset = anAnimationDesc.theSections(sectionIndex).animOffset + (anAnimationDesc.animOffset - anAnimationDesc.theSections(0).animOffset)
-
-									aSectionOfAnimation = anAnimationDesc.theSectionsOfAnimations(sectionIndex)
-
-									If sectionIndex < sectionCount - 2 Then
-										sectionFrameCount = anAnimationDesc.sectionFrameCount
-									Else
-										'NOTE: Due to the weird calculation of sectionCount in studiomdl, this line is called twice, which means there are two "last" sections.
-										'      This also likely means that the last section is bogus unused data.
-										sectionFrameCount = anAnimationDesc.frameCount - ((sectionCount - 2) * anAnimationDesc.sectionFrameCount)
-									End If
-
-									Me.ReadMdlAnimation(animInputFileStreamPosition + adjustedAnimOffset, anAnimationDesc, sectionFrameCount, aSectionOfAnimation, (sectionIndex >= sectionCount - 2) Or (anAnimationDesc.frameCount = (sectionIndex + 1) * anAnimationDesc.sectionFrameCount))
-								End If
-							Next
-						End If
-					ElseIf anAnimationDesc.animBlock = 0 Then
-						Me.ReadMdlAnimation(animInputFileStreamPosition + anAnimationDesc.animOffset, anAnimationDesc, anAnimationDesc.frameCount, anAnimationDesc.theSectionsOfAnimations(0), True)
-					End If
-				End If
-
-				If anAnimationDesc.animBlock = 0 Then
-					Me.ReadMdlIkRules(animInputFileStreamPosition, anAnimationDesc)
-					Me.ReadLocalHierarchies(animInputFileStreamPosition, anAnimationDesc)
-				End If
+				'If anAnimationDesc.animBlock = 0 Then
+				Me.ReadMdlIkRules(animInputFileStreamPosition, anAnimationDesc)
+				'	Me.ReadLocalHierarchies(animInputFileStreamPosition, anAnimationDesc)
+				'End If
 
 				Me.ReadMdlMovements(animInputFileStreamPosition, anAnimationDesc)
 			Next
@@ -1157,28 +1062,7 @@ Public Class SourceMdlFile53
 			anAnimationDesc.theName = ""
 		End If
 	End Sub
-
-	'			for (j = 0; j < g_numbones; j++)
-	'			{
-	'				if (g_bonetable[j].flags & BONE_HAS_SAVEFRAME_POS)
-	'				{
-	'					for (int n = 0; n < panimdesc[i].zeroframecount; n++)
-	'					{
-	'						*(Vector48 *)pData = anim->sanim[panimdesc[i].zeroframespan*n][j].pos;
-	'						pData += sizeof( Vector48 );
-	'					}
-	'				}
-	'				if (g_bonetable[j].flags & BONE_HAS_SAVEFRAME_ROT)
-	'				{
-	'					for (int n = 0; n < panimdesc[i].zeroframecount; n++)
-	'					{
-	'						Quaternion q;
-	'						AngleQuaternion( anim->sanim[panimdesc[i].zeroframespan*n][j].rot, q );
-	'						*((Quaternion64 *)pData) = q;
-	'						pData += sizeof( Quaternion64 );
-	'					}
-	'				}
-	'			}
+  
 	Protected Function ReadAnimationDescSpanData(ByVal animInputFileStreamPosition As Long, ByVal anAnimationDesc As SourceMdlAnimationDesc53) As Long
 		Dim fileOffsetStart As Long
 		Dim fileOffsetEnd As Long = 0
@@ -1225,6 +1109,41 @@ Public Class SourceMdlFile53
 		Return fileOffsetEnd
 	End Function
 
+	'TODO: Should this be the same as SourceAniFile49.ReadAniAnimation()?
+	'Protected Sub ReadAnimationFrameByBone(ByVal animInputFileStreamPosition As Long, ByVal anAnimationDesc As SourceMdlAnimationDesc53, ByVal sectionFrameCount As Integer, ByVal aSectionOfAnimation As List(Of SourceMdlAnimation))
+	'	Dim animationInputFileStreamPosition As Long
+	'	'Dim inputFileStreamPosition As Long
+	'	'Dim fileOffsetStart As Long
+	'	'Dim fileOffsetEnd As Long
+	'	'Dim fileOffsetStart2 As Long
+	'	'Dim fileOffsetEnd2 As Long
+	'	Dim boneCount As Integer
+
+	'	Me.theInputFileReader.BaseStream.Seek(animInputFileStreamPosition, SeekOrigin.Begin)
+	'	'fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+
+	'	For frameIndex As Integer = 0 To sectionFrameCount - 1
+	'		animationInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+	'		'Dim anAnimation As New SourceMdlAnimation()
+
+	'		'boneCount = Me.theMdlFileData.theBones.Count
+	'		'For boneIndex As Integer = 0 To boneCount - 1
+	'		'	anAnimation.flags = Me.theInputFileReader.ReadByte()
+	'		'Next
+
+	'		'aSectionOfAnimation.Add(anAnimation)
+
+	'		''inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+
+	'		''Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
+
+	'		Me.theMdlFileData.theFileSeekLog.Add(animationInputFileStreamPosition, Me.theInputFileReader.BaseStream.Position - 1, "anAnimationDesc.anAnimation [ReadAnimationFrameByBone()] (frameCount = " + CStr(anAnimationDesc.frameCount) + "; sectionFrameCount = " + CStr(sectionFrameCount) + ")")
+	'	Next
+
+	'	'Me.theMdlFileData.theFileSeekLog.LogToEndAndAlignToNextStart(Me.theInputFileReader, fileOffsetEnd, 4, "anAnimationDesc.anAnimation [ReadAnimationFrameByBone()] alignment")
+	'End Sub
+	'======
+  
 	Protected Sub ReadAnimationFrameByBone(ByVal animInputFileStreamPosition As Long, ByVal anAnimationDesc As SourceMdlAnimationDesc53, ByVal sectionFrameCount As Integer, ByVal sectionIndex As Integer, ByVal lastSectionIsBeingRead As Boolean)
 		Me.theInputFileReader.BaseStream.Seek(animInputFileStreamPosition, SeekOrigin.Begin)
 
@@ -1431,122 +1350,126 @@ Public Class SourceMdlFile53
 		End Try
 	End Sub
 
-	Protected Sub ReadMdlAnimation(ByVal animInputFileStreamPosition As Long, ByVal anAnimationDesc As SourceMdlAnimationDesc53, ByVal sectionFrameCount As Integer, ByVal aSectionOfAnimation As List(Of SourceMdlAnimation53), ByVal lastSectionIsBeingRead As Boolean)
+	Protected Sub ReadMdlAnimation(ByVal animInputFileStreamPosition As Long, ByVal anAnimationDesc As SourceMdlAnimationDesc53, ByVal sectionFrameCount As Integer, ByVal aSectionOfAnimation As List(Of SourceMdlAnimation), ByVal lastSectionIsBeingRead As Boolean)
 		Dim animationInputFileStreamPosition As Long
 		Dim nextAnimationInputFileStreamPosition As Long
-		Dim animValuePointerInputFileStreamPosition As Long
-		'Dim rotValuePointerInputFileStreamPosition As Long
-		'Dim posValuePointerInputFileStreamPosition As Long
+		'Dim animValuePointerInputFileStreamPosition As Long
+		Dim rotValuePointerInputFileStreamPosition As Long
+		Dim posValuePointerInputFileStreamPosition As Long
 		Dim fileOffsetStart As Long
 		Dim fileOffsetEnd As Long
 		Dim anAnimation As SourceMdlAnimation53
 		Dim boneCount As Integer
-		Dim boneIndex As Byte
+		'Dim boneIndex As Byte
+		Dim boneChangeCount As Integer
 
 		Me.theInputFileReader.BaseStream.Seek(animInputFileStreamPosition, SeekOrigin.Begin)
+		'fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-		If Me.theMdlFileData.theBones Is Nothing Then
-			boneCount = 1
-		Else
-			boneCount = Me.theMdlFileData.theBones.Count
-		End If
+		boneCount = Me.theMdlFileData.theBones.Count
+		boneChangeCount = 0
 		For j As Integer = 0 To boneCount - 1
 			animationInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-
-			boneIndex = Me.theInputFileReader.ReadByte()
-			If boneIndex = 255 Then
-				Me.theInputFileReader.ReadByte()
-				Me.theInputFileReader.ReadInt16()
-
-				fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-				Me.theMdlFileData.theFileSeekLog.Add(animationInputFileStreamPosition, fileOffsetEnd, "anAnimationDesc.anAnimation (boneIndex = 255)")
-
-				'Continue For
-				Exit For
-			End If
-			'DEBUG:
-			If boneIndex >= boneCount Then
-				' L4D2 "left4dead2\ghostanim.mdl" reaches here.
-				Dim badIfGetsHere As Integer = 42
-				Exit For
-			End If
+			boneChangeCount += 1
 
 			anAnimation = New SourceMdlAnimation53()
 			aSectionOfAnimation.Add(anAnimation)
 
-			anAnimation.translationScale = Me.theInputFileReader.ReadSingle()
-
-			anAnimation.boneIndex = boneIndex
+			anAnimation.TranslationScale = Me.theInputFileReader.ReadSingle()
+			anAnimation.boneIndex = Me.theInputFileReader.ReadByte()
 			anAnimation.flags = Me.theInputFileReader.ReadByte()
+			anAnimation.Flags2 = Me.theInputFileReader.ReadByte()
+			anAnimation.Flags3 = Me.theInputFileReader.ReadByte()
 
-			anAnimation.unk = Me.theInputFileReader.ReadInt16()
-
+			'anAnimation.OffsetX = Me.theInputFileReader.ReadInt16()
+			'anAnimation.OffsetY = Me.theInputFileReader.ReadInt16()
+			'anAnimation.OffsetZ = Me.theInputFileReader.ReadInt16()
+			'anAnimation.OffsetL = Me.theInputFileReader.ReadInt16()
+			rotValuePointerInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 			anAnimation.theRot64bits = New SourceQuaternion64bits()
 			anAnimation.theRot64bits.theBytes = Me.theInputFileReader.ReadBytes(8)
 
-			'Me.DebugQuaternion(anAnimation.theRot64)
-			anAnimation.thePos = New SourceVector48bits()
-			anAnimation.thePos.theXInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
-			anAnimation.thePos.theYInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
-			anAnimation.thePos.theZInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+			posValuePointerInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+			anAnimation.TranslationX = New SourceFloat16bits()
+			anAnimation.TranslationY = New SourceFloat16bits()
+			anAnimation.TranslationZ = New SourceFloat16bits()
+			anAnimation.TranslationX.the16BitValue = Me.theInputFileReader.ReadUInt16()
+			anAnimation.TranslationY.the16BitValue = Me.theInputFileReader.ReadUInt16()
+			anAnimation.TranslationZ.the16BitValue = Me.theInputFileReader.ReadUInt16()
 
-			anAnimation.theScale = New SourceVector48bits()
-			anAnimation.theScale.theXInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
-			anAnimation.theScale.theYInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
-			anAnimation.theScale.theZInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+			anAnimation.ScaleX = New SourceFloat16bits()
+			anAnimation.ScaleY = New SourceFloat16bits()
+			anAnimation.ScaleZ = New SourceFloat16bits()
+			anAnimation.ScaleX.the16BitValue = Me.theInputFileReader.ReadUInt16()
+			anAnimation.ScaleY.the16BitValue = Me.theInputFileReader.ReadUInt16()
+			anAnimation.ScaleZ.the16BitValue = Me.theInputFileReader.ReadUInt16()
 
-			anAnimation.nextSourceMdlAnimationOffset = Me.theInputFileReader.ReadInt32()
+			anAnimation.nextTitanfall2MdlAnimationOffset = Me.theInputFileReader.ReadInt32()
 
-			animValuePointerInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-
-			' First, read both sets of offsets.
-
-			Me.theMdlFileData.theFileSeekLog.Add(animationInputFileStreamPosition, Me.theInputFileReader.BaseStream.Position - 1, "anAnimationDesc.anAnimation (frameCount = " + CStr(anAnimationDesc.frameCount) + "; sectionFrameCount = " + CStr(sectionFrameCount) + ")")
-
-			' Second, read the anim values using the offsets.
-			'inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-
-			'Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
+			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
+			Me.theMdlFileData.theFileSeekLog.Add(animationInputFileStreamPosition, fileOffsetEnd, "anAnimationDesc.anAnimation [" + anAnimationDesc.theName + "] (boneIndex = " + CStr(anAnimation.boneIndex) + ")")
 
 			'NOTE: If the offset is 0 then there are no more bone animation structures, so end the loop.
-			If anAnimation.nextSourceMdlAnimationOffset = 0 Then
-				'j = boneCount
-				'lastFullAnimDataWasFound = True
+			If anAnimation.nextTitanfall2MdlAnimationOffset = 0 Then
+				ReadMdlAnimationAnimValues(anAnimation, rotValuePointerInputFileStreamPosition, posValuePointerInputFileStreamPosition, sectionFrameCount, lastSectionIsBeingRead)
 				Exit For
 			Else
-				' Skip to next anim, just in case not all data is being read in.
-				nextAnimationInputFileStreamPosition = animationInputFileStreamPosition + anAnimation.nextSourceMdlAnimationOffset
-				''TEST: Use this with ANI file, to see if it extracts better.
-				'nextAnimationInputFileStreamPosition = animationInputFileStreamPosition + CType(anAnimation.nextSourceMdlAnimationOffset, UShort)
+				nextAnimationInputFileStreamPosition = animationInputFileStreamPosition + anAnimation.nextTitanfall2MdlAnimationOffset  
 				If nextAnimationInputFileStreamPosition < Me.theInputFileReader.BaseStream.Position Then
 					'PROBLEM! Should not be going backwards in file.
 					Dim i As Integer = 42
 					Exit For
-				ElseIf nextAnimationInputFileStreamPosition > Me.theInputFileReader.BaseStream.Position Then
-					'PROBLEM! Should not be skipping ahead. Crowbar has skipped some data, but continue decompiling.
-					Dim i As Integer = 42
+				End If
+
+				If anAnimation.nextTitanfall2MdlAnimationOffset > 32 Then
+					ReadMdlAnimationAnimValues(anAnimation, rotValuePointerInputFileStreamPosition, posValuePointerInputFileStreamPosition, sectionFrameCount, lastSectionIsBeingRead)
 				End If
 
 				Me.theInputFileReader.BaseStream.Seek(nextAnimationInputFileStreamPosition, SeekOrigin.Begin)
 			End If
 		Next
 
-		If boneIndex <> 255 Then
-			'NOTE: There is always an unused empty data structure at the end of the list.
-			'prevanim					= destanim;
-			'destanim->nextoffset		= pData - (byte *)destanim;
-			'destanim					= (mstudioanim_t *)pData;
-			'pData						+= sizeof( *destanim );
-			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
-			Me.theInputFileReader.ReadByte()
-			Me.theInputFileReader.ReadByte()
-			Me.theInputFileReader.ReadInt16()
+		'NOTE: There is always an unused empty data structure at the end of the list.
+		fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+		Me.theInputFileReader.ReadBytes(32)
+		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
+		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "anAnimationDesc.anAnimation [" + anAnimationDesc.theName + "] (Empty last struct; boneChangeCount = " + CStr(boneChangeCount) + ")")
 
-			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
-			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "anAnimationDesc.anAnimation [" + anAnimationDesc.theName + "] (unused empty data structure at the end of the list)")
+		'Me.theMdlFileData.theFileSeekLog.LogToEndAndAlignToNextStart(Me.theInputFileReader, fileOffsetEnd, 4, "anAnimationDesc.anAnimation [" + anAnimationDesc.theName + "] alignment")
+	End Sub
+
+	Private Sub ReadMdlAnimationAnimValues(ByVal anAnimation As SourceMdlAnimation, ByVal rotValuePointerInputFileStreamPosition As Long, ByVal posValuePointerInputFileStreamPosition As Long, ByVal frameCount As Integer, ByVal lastSectionIsBeingRead As Boolean)
+		If (anAnimation.flags And SourceMdlAnimation.MDL53_ANIM_ROTATION) = 0 Then
+			anAnimation.theRotV = New SourceMdlAnimationValuePointer()
+			If anAnimation.theRot64bits.XOffset > 0 Then
+				anAnimation.theRotV.theAnimXValues = New List(Of SourceMdlAnimationValue)()
+				Me.ReadMdlAnimValues(rotValuePointerInputFileStreamPosition + anAnimation.theRot64bits.XOffset, frameCount, lastSectionIsBeingRead, anAnimation.theRotV.theAnimXValues, "anAnimation.theRotV.theAnimXValues")
+			End If
+			If anAnimation.theRot64bits.YOffset > 0 Then
+				anAnimation.theRotV.theAnimYValues = New List(Of SourceMdlAnimationValue)()
+				Me.ReadMdlAnimValues(rotValuePointerInputFileStreamPosition + anAnimation.theRot64bits.YOffset, frameCount, lastSectionIsBeingRead, anAnimation.theRotV.theAnimYValues, "anAnimation.theRotV.theAnimYValues")
+			End If
+			If anAnimation.theRot64bits.ZOffset > 0 Then
+				anAnimation.theRotV.theAnimZValues = New List(Of SourceMdlAnimationValue)()
+				Me.ReadMdlAnimValues(rotValuePointerInputFileStreamPosition + anAnimation.theRot64bits.ZOffset, frameCount, lastSectionIsBeingRead, anAnimation.theRotV.theAnimZValues, "anAnimation.theRotV.theAnimZValues")
+			End If
 		End If
 
-		Me.theMdlFileData.theFileSeekLog.LogToEndAndAlignToNextStart(Me.theInputFileReader, fileOffsetEnd, 4, "anAnimationDesc.anAnimation [" + anAnimationDesc.theName + "] alignment")
+		If (anAnimation.flags And SourceMdlAnimation.MDL53_ANIM_TRANSLATION) = 0 Then
+			anAnimation.thePosV = New SourceMdlAnimationValuePointer()
+			If anAnimation.TranslationX.the16BitValue > 0 Then
+				anAnimation.thePosV.theAnimXValues = New List(Of SourceMdlAnimationValue)()
+				Me.ReadMdlAnimValues(posValuePointerInputFileStreamPosition + anAnimation.TranslationX.the16BitValue, frameCount, lastSectionIsBeingRead, anAnimation.thePosV.theAnimXValues, "anAnimation.thePosV.theAnimXValues")
+			End If
+			If anAnimation.TranslationY.the16BitValue > 0 Then
+				anAnimation.thePosV.theAnimYValues = New List(Of SourceMdlAnimationValue)()
+				Me.ReadMdlAnimValues(posValuePointerInputFileStreamPosition + anAnimation.TranslationY.the16BitValue, frameCount, lastSectionIsBeingRead, anAnimation.thePosV.theAnimYValues, "anAnimation.thePosV.theAnimYValues")
+			End If
+			If anAnimation.TranslationZ.the16BitValue > 0 Then
+				anAnimation.thePosV.theAnimZValues = New List(Of SourceMdlAnimationValue)()
+				Me.ReadMdlAnimValues(posValuePointerInputFileStreamPosition + anAnimation.TranslationZ.the16BitValue, frameCount, lastSectionIsBeingRead, anAnimation.thePosV.theAnimZValues, "anAnimation.thePosV.theAnimZValues")
+			End If
+		End If
 	End Sub
 
 	'==========================================================
@@ -1762,7 +1685,7 @@ Public Class SourceMdlFile53
 
 	'End Sub
 
-	Protected Function ReadMdlIkRules(ByVal animInputFileStreamPosition As Long, ByVal anAnimationDesc As SourceMdlAnimationDesc53) As Long
+	Protected Sub ReadMdlIkRules(ByVal animInputFileStreamPosition As Long, ByVal anAnimationDesc As SourceMdlAnimationDesc53)
 		If anAnimationDesc.ikRuleCount > 0 Then
 			Dim ikRuleInputFileStreamPosition As Long
 			Dim inputFileStreamPosition As Long
@@ -1773,19 +1696,16 @@ Public Class SourceMdlFile53
 			Dim fileOffsetEndOfIkRuleExtraData As Long
 			Dim fileOffsetOfLastEndOfIkRuleExtraData As Long
 
-			If anAnimationDesc.animBlock > 0 AndAlso anAnimationDesc.animblockIkRuleOffset = 0 Then
-				'Return 0
-			Else
-				Me.theInputFileReader.BaseStream.Seek(animInputFileStreamPosition + anAnimationDesc.ikRuleOffset, SeekOrigin.Begin)
-			End If
+
+			Me.theInputFileReader.BaseStream.Seek(animInputFileStreamPosition + anAnimationDesc.ikRuleOffset, SeekOrigin.Begin)
 			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
 			fileOffsetOfLastEndOfIkRuleExtraData = 0
 
-			anAnimationDesc.theIkRules = New List(Of SourceMdlIkRule)(anAnimationDesc.ikRuleCount)
+			anAnimationDesc.theIkRules = New List(Of SourceMdlIkRule53)(anAnimationDesc.ikRuleCount)
 			For ikRuleIndex As Integer = 0 To anAnimationDesc.ikRuleCount - 1
 				ikRuleInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-				Dim anIkRule As New SourceMdlIkRule()
+				Dim anIkRule As New SourceMdlIkRule53()
 
 				anIkRule.index = Me.theInputFileReader.ReadInt32()
 				anIkRule.type = Me.theInputFileReader.ReadInt32()
@@ -1808,7 +1728,7 @@ Public Class SourceMdlFile53
 				anIkRule.q.w = Me.theInputFileReader.ReadSingle()
 
 				anIkRule.compressedIkErrorOffset = Me.theInputFileReader.ReadInt32()
-				anIkRule.unused2 = Me.theInputFileReader.ReadInt32()
+
 				anIkRule.ikErrorIndexStart = Me.theInputFileReader.ReadInt32()
 				anIkRule.ikErrorOffset = Me.theInputFileReader.ReadInt32()
 
@@ -1817,14 +1737,9 @@ Public Class SourceMdlFile53
 				anIkRule.influenceTail = Me.theInputFileReader.ReadSingle()
 				anIkRule.influenceEnd = Me.theInputFileReader.ReadSingle()
 
-				anIkRule.unused3 = Me.theInputFileReader.ReadSingle()
 				anIkRule.contact = Me.theInputFileReader.ReadSingle()
 				anIkRule.drop = Me.theInputFileReader.ReadSingle()
 				anIkRule.top = Me.theInputFileReader.ReadSingle()
-
-				anIkRule.unused6 = Me.theInputFileReader.ReadInt32()
-				anIkRule.unused7 = Me.theInputFileReader.ReadInt32()
-				anIkRule.unused8 = Me.theInputFileReader.ReadInt32()
 
 				anIkRule.attachmentNameOffset = Me.theInputFileReader.ReadInt32()
 
@@ -1882,9 +1797,7 @@ Public Class SourceMdlFile53
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Dim description As String
 			description = "anAnimationDesc.theIkRules " + anAnimationDesc.theIkRules.Count.ToString()
-			If anAnimationDesc.animBlock > 0 AndAlso anAnimationDesc.animblockIkRuleOffset = 0 Then
-				description += "   [animblockIkRuleOffset = 0]"
-			End If
+
 			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, description)
 
 			Me.theMdlFileData.theFileSeekLog.LogToEndAndAlignToNextStart(Me.theInputFileReader, fileOffsetEnd, 4, "anAnimationDesc.theIkRules alignment")
@@ -1898,7 +1811,7 @@ Public Class SourceMdlFile53
 	End Function
 
 	Private Function ReadCompressedIkErrors(ByVal ikRuleInputFileStreamPosition As Long, ByVal ikRuleIndex As Integer, ByVal anAnimationDesc As SourceMdlAnimationDesc53) As Long
-		Dim anIkRule As SourceMdlIkRule
+		Dim anIkRule As SourceMdlIkRule53
 		anIkRule = anAnimationDesc.theIkRules(ikRuleIndex)
 
 		Dim compressedIkErrorInputFileStreamPosition As Long
@@ -2000,7 +1913,7 @@ Public Class SourceMdlFile53
 		End Try
 	End Sub
 
-	Protected Function ReadMdlMovements(ByVal animInputFileStreamPosition As Long, ByVal anAnimationDesc As SourceMdlAnimationDesc53) As Long
+	Protected Sub ReadMdlMovements(ByVal animInputFileStreamPosition As Long, ByVal anAnimationDesc As SourceMdlAnimationDesc53)
 		If anAnimationDesc.movementCount > 0 Then
 			Dim movementInputFileStreamPosition As Long
 			Dim fileOffsetStart As Long
@@ -2154,10 +2067,15 @@ Public Class SourceMdlFile53
 					aSeqDesc.activityModifierCount = 0
 					aSeqDesc.activityModifierOffset = Me.theInputFileReader.ReadInt32()
 					aSeqDesc.activityModifierCount = Me.theInputFileReader.ReadInt32()
-					For x As Integer = 0 To 9
+
+					For x As Integer = 0 To 4
 						aSeqDesc.unused(x) = Me.theInputFileReader.ReadInt32()
 					Next
 
+					For x As Integer = 0 To 4
+						Me.theInputFileReader.ReadInt32()
+					Next
+          
 					Me.theMdlFileData.theSequenceDescs.Add(aSeqDesc)
 
 					inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position

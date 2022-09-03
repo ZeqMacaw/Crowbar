@@ -394,10 +394,12 @@ Public Class SourceMdlFile52
 					aBone.rotation.x = Me.theInputFileReader.ReadSingle()
 					aBone.rotation.y = Me.theInputFileReader.ReadSingle()
 					aBone.rotation.z = Me.theInputFileReader.ReadSingle()
+
 					aBone.positionScale = New SourceVector()
 					aBone.positionScale.x = Me.theInputFileReader.ReadSingle()
 					aBone.positionScale.y = Me.theInputFileReader.ReadSingle()
 					aBone.positionScale.z = Me.theInputFileReader.ReadSingle()
+
 					aBone.rotationScale = New SourceVector()
 					aBone.rotationScale.x = Me.theInputFileReader.ReadSingle()
 					aBone.rotationScale.y = Me.theInputFileReader.ReadSingle()
@@ -458,8 +460,6 @@ Public Class SourceMdlFile52
 					aBone.surfacePropNameOffset = Me.theInputFileReader.ReadInt32()
 					aBone.contents = Me.theInputFileReader.ReadInt32()
 					aBone.surfacepropLookup = Me.theInputFileReader.ReadInt32()
-
-					'If Me.theMdlFileData.version <> 2531 Then
 
 					aBone.unkVector = New SourceVector()
 					aBone.unkVector.x = Me.theInputFileReader.ReadSingle()
@@ -994,6 +994,8 @@ Public Class SourceMdlFile52
 			anAnimationDesc.movementOffset = Me.theInputFileReader.ReadInt32()
 
 			anAnimationDesc.ikRuleZeroFrameOffset = Me.theInputFileReader.ReadInt32()
+
+			anAnimationDesc.compressedIkErrorOffset = Me.theInputFileReader.ReadInt32()
 
 			For x As Integer = 0 To anAnimationDesc.unused1.Length - 1
 				anAnimationDesc.unused1(x) = Me.theInputFileReader.ReadInt32()

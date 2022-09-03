@@ -134,6 +134,7 @@
     <Compile Include="Core\GameModel\SourceModel53\SourceMdlFileData\SourceMdlBone53.vb" />
     <Compile Include="Core\GameModel\SourceModel53\SourceMdlFileData\SourceMdlIkChain53.vb" />
     <Compile Include="Core\GameModel\SourceModel53\SourceMdlFileData\SourceMdlIkLink53.vb" />
+    <Compile Include="Core\GameModel\SourceModel53\SourceMdlFileData\SourceMdlIkRule53.vb" />
     <Compile Include="Core\GameModel\SourceModel53\SourceSmdFile53.vb" />
     <Compile Include="Core\GamePackage\- Base\SourcePackage.vb" />
     <Compile Include="Core\GamePackage\ApkFile\ApkDirectoryEntry.vb" />
