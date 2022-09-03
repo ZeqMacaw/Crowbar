@@ -263,7 +263,7 @@ Public Class SourceMdlFile52
 
 		Me.theMdlFileData.unused = Me.theInputFileReader.ReadByte()
 
-		Me.theMdlFileData.unkFloat = Me.theInputFileReader.ReadSingle()
+		Me.theMdlFileData.fadeDistance = Me.theInputFileReader.ReadSingle()
 
 		Me.theMdlFileData.flexControllerUiCount = Me.theInputFileReader.ReadInt32()
 		Me.theMdlFileData.flexControllerUiOffset = Me.theInputFileReader.ReadInt32()
@@ -429,26 +429,51 @@ Public Class SourceMdlFile52
 					aBone.qAlignment.w = Me.theInputFileReader.ReadSingle()
 
 					aBone.flags = Me.theInputFileReader.ReadInt32()
+					'If (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD0) <> 0 Then
+					'	Dim debug As Integer = 4242
+					'End If
+					'If (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD1) <> 0 Then
+					'	Dim debug As Integer = 4242
+					'End If
+					'If (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD2) <> 0 Then
+					'	Dim debug As Integer = 4242
+					'End If
+					'If (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD3) <> 0 Then
+					'	Dim debug As Integer = 4242
+					'End If
+					'If (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD4) <> 0 Then
+					'	Dim debug As Integer = 4242
+					'End If
+					'If (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD5) <> 0 Then
+					'	Dim debug As Integer = 4242
+					'End If
+					'If (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD6) <> 0 Then
+					'	Dim debug As Integer = 4242
+					'End If
+					'If (aBone.flags And SourceMdlBone.BONE_USED_BY_VERTEX_LOD7) <> 0 Then
+					'	Dim debug As Integer = 4242
+					'End If
 
 					aBone.proceduralRuleType = Me.theInputFileReader.ReadInt32()
 					aBone.proceduralRuleOffset = Me.theInputFileReader.ReadInt32()
 					aBone.physicsBoneIndex = Me.theInputFileReader.ReadInt32()
 					aBone.surfacePropNameOffset = Me.theInputFileReader.ReadInt32()
 					aBone.contents = Me.theInputFileReader.ReadInt32()
-
-					aBone.unk = Me.theInputFileReader.ReadInt32()
+					aBone.surfacepropLookup = Me.theInputFileReader.ReadInt32()
 
 					aBone.unkVector = New SourceVector()
 					aBone.unkVector.x = Me.theInputFileReader.ReadSingle()
 					aBone.unkVector.y = Me.theInputFileReader.ReadSingle()
 					aBone.unkVector.z = Me.theInputFileReader.ReadSingle()
-
 					aBone.unkVector1 = New SourceVector()
 					aBone.unkVector1.x = Me.theInputFileReader.ReadSingle()
 					aBone.unkVector1.y = Me.theInputFileReader.ReadSingle()
 					aBone.unkVector1.z = Me.theInputFileReader.ReadSingle()
 
 					aBone.unused = Me.theInputFileReader.ReadInt32()
+
+					'End If
+					'End If
 
 					Me.theMdlFileData.theBones.Add(aBone)
 
@@ -468,12 +493,12 @@ Public Class SourceMdlFile52
 						aBone.theName = ""
 					End If
 					If aBone.proceduralRuleOffset <> 0 Then
-						If aBone.proceduralRuleType = SourceMdlBone52.STUDIO_PROC_AXISINTERP Then
+						If aBone.proceduralRuleType = SourceMdlBone.STUDIO_PROC_AXISINTERP Then
 							Me.ReadAxisInterpBone(boneInputFileStreamPosition, aBone)
-						ElseIf aBone.proceduralRuleType = SourceMdlBone52.STUDIO_PROC_QUATINTERP Then
+						ElseIf aBone.proceduralRuleType = SourceMdlBone.STUDIO_PROC_QUATINTERP Then
 							Me.theMdlFileData.theProceduralBonesCommandIsUsed = True
 							Me.ReadQuatInterpBone(boneInputFileStreamPosition, aBone)
-						ElseIf aBone.proceduralRuleType = SourceMdlBone52.STUDIO_PROC_JIGGLE Then
+						ElseIf aBone.proceduralRuleType = SourceMdlBone.STUDIO_PROC_JIGGLE Then
 							Me.ReadJiggleBone(boneInputFileStreamPosition, aBone)
 						End If
 					End If

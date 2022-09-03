@@ -22,9 +22,9 @@ Public Class SourceMdlIkChain53
 	'	int				linkindex;
 	Public linkOffset As Integer
 	'	Vector	kneeDir;	// ideal bending direction (per link, if applicable)
-	Public idealBendingDirection As New SourceVector()
+	Public unk As Single
 	'	int
-	Public unk As New Integer
+	Public unused(2) As Integer
 
 	'	inline char * const pszName( void ) const { return ((char *)this) + sznameindex; }
 	Public theName As String

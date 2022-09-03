@@ -86,7 +86,7 @@ Public Class SourceMdlBone53
 	'	int					contents;		// See BSPFlags.h for the contents flags
 	Public contents As Integer
 	'	int					surfacepropLookup; (this is in normal V49s)
-	Public unk As Integer
+	Public surfacepropLookup As Integer
 	'	int					unknown offset for something.
 	Public unk1 As Integer
 
@@ -134,6 +134,11 @@ Public Class SourceMdlBone53
 	'#define BONE_HAS_SAVEFRAME_ROT		0x00400000
 	Public Const BONE_SCREEN_ALIGN_SPHERE As Integer = &H8
 	Public Const BONE_SCREEN_ALIGN_CYLINDER As Integer = &H10
+
+	' No idea on the actual name for this one, but it's applied to all bones with IKLinks and their children.
+	' New in V52, CSGO also has a bone flag here, however I don't know if it's the same.
+	Public Const BONE_USED_BY_IKCHAIN As Integer = &H20
+
 	Public Const BONE_USED_BY_VERTEX_LOD0 As Integer = &H400
 	Public Const BONE_USED_BY_VERTEX_LOD1 As Integer = &H800
 	Public Const BONE_USED_BY_VERTEX_LOD2 As Integer = &H1000

@@ -2804,6 +2804,8 @@ Public Class SourceQcFile53
 
 	Private Sub WriteIkChainCommand()
 		Dim line As String = ""
+		Dim lineComment As String = ""
+		Dim unkFloat As Double
 		Dim offsetX As Double
 		Dim offsetY As Double
 		Dim offsetZ As Double
@@ -2819,10 +2821,18 @@ Public Class SourceQcFile53
 				Me.theOutputFileStreamWriter.WriteLine(line)
 
 				For i As Integer = 0 To Me.theMdlFileData.theIkChains.Count - 1
+
 					Dim boneIndex As Integer = Me.theMdlFileData.theIkChains(i).theLinks(Me.theMdlFileData.theIkChains(i).theLinks.Count - 1).boneIndex
-					offsetX = Math.Round(Me.theMdlFileData.theIkChains(i).idealBendingDirection.x, 3)
-					offsetY = Math.Round(Me.theMdlFileData.theIkChains(i).idealBendingDirection.y, 3)
-					offsetZ = Math.Round(Me.theMdlFileData.theIkChains(i).idealBendingDirection.z, 3)
+
+					unkFloat = Math.Round(Me.theMdlFileData.theIkChains(i).unk, 3)
+
+					offsetX = Math.Round(Me.theMdlFileData.theIkChains(i).theLinks(0).idealBendingDirection.x, 3)
+					offsetY = Math.Round(Me.theMdlFileData.theIkChains(i).theLinks(0).idealBendingDirection.y, 3)
+					offsetZ = Math.Round(Me.theMdlFileData.theIkChains(i).theLinks(0).idealBendingDirection.z, 3)
+
+					lineComment = "// extra float value "
+					lineComment += unkFloat.ToString("0.######", TheApp.InternalNumberFormat)
+					Me.theOutputFileStreamWriter.WriteLine(lineComment)
 
 					If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
 						line = "$IKChain """
@@ -3313,6 +3323,8 @@ Public Class SourceQcFile53
 
 		Me.WriteProceduralBonesCommand()
 		Me.WriteJiggleBoneCommand()
+
+		Me.WriteIkFlagInfo()
 	End Sub
 
 	Private Sub WriteDefineBoneCommand()
@@ -3726,6 +3738,39 @@ Public Class SourceQcFile53
 			line += "angle_constraint "
 			line += MathModule.RadiansToDegrees(aBone.theJiggleBone.angleLimit).ToString("0.######", TheApp.InternalNumberFormat)
 			Me.theOutputFileStreamWriter.WriteLine(line)
+			Me.theOutputFileStreamWriter.WriteLine()
+		End If
+	End Sub
+
+	Public Sub WriteIkFlagInfo()
+		Dim lineHeader As String = ""
+		Dim line As String = ""
+
+		If Me.theMdlFileData.theBones IsNot Nothing Then
+			'lineHeader = "// bones using flag 0x20"
+			'Me.theOutputFileStreamWriter.WriteLine(lineHeader)
+
+			Dim aBone As SourceMdlBone53
+			Dim emptyLineIsAlreadyWritten As Boolean
+
+			emptyLineIsAlreadyWritten = False
+			For i As Integer = 0 To Me.theMdlFileData.theBones.Count - 1
+				aBone = Me.theMdlFileData.theBones(i)
+
+				If (aBone.flags And SourceMdlBone53.BONE_USED_BY_IKCHAIN) > 0 Then
+					If Not emptyLineIsAlreadyWritten Then
+						Me.theOutputFileStreamWriter.WriteLine()
+						emptyLineIsAlreadyWritten = True
+					End If
+
+					line = "// bone "
+					line += """"
+					line += aBone.theName
+					line += """"
+					line += " has ik flag (0x20)"
+					Me.theOutputFileStreamWriter.WriteLine(line)
+				End If
+			Next
 		End If
 	End Sub
 
