@@ -1853,8 +1853,6 @@ Public Class SourceMdlFile53
 
 		'Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
 
-			Else
-				Dim animBlock As Integer
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 		aFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "anAnimationDesc.theSections")
 	End Sub
