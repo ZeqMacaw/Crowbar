@@ -1401,6 +1401,38 @@ Public Class SourceQcFile53
 		End If
 	End Sub
 
+	Public Sub WriteCastTextureShadowsCommand()
+		Dim line As String = ""
+
+		'$casttextureshadows
+		If (Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_CAST_TEXTURE_SHADOWS) > 0 Then
+			Me.theOutputFileStreamWriter.WriteLine()
+
+			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+				line = "$CastTextureShadows"
+			Else
+				line = "$casttextureshadows"
+			End If
+			Me.theOutputFileStreamWriter.WriteLine(line)
+		End If
+	End Sub
+
+	Public Sub WriteDoNotCastShadowsCommand()
+		Dim line As String = ""
+
+		'$donotcastshadows
+		If (Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_DO_NOT_CAST_SHADOWS) > 0 Then
+			Me.theOutputFileStreamWriter.WriteLine()
+
+			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+				line = "$DoNotCastShadows"
+			Else
+				line = "$donotcastshadows"
+			End If
+			Me.theOutputFileStreamWriter.WriteLine(line)
+		End If
+	End Sub
+
 	Public Sub WriteCdMaterialsCommand()
 		Dim line As String = ""
 		Dim texturePaths As List(Of String)

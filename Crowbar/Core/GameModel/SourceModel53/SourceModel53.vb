@@ -493,7 +493,6 @@ Public Class SourceModel53
 			'	qcFile.WriteBodyGroupCommand(0)
 			'End If
 			qcFile.WriteBodyGroupCommand()
-			'TODO: LOD option "replacebone" is wrong because bone.flags is read-in incorrectly.
 			qcFile.WriteGroup("lod", AddressOf qcFile.WriteGroupLod, False, False)
 
 			qcFile.WriteSurfacePropCommand()
@@ -503,6 +502,7 @@ Public Class SourceModel53
 			qcFile.WriteIllumPositionCommand()
 
 			qcFile.WriteEyePositionCommand()
+			' Removed in V53
 			'qcFile.WriteMaxEyeDeflectionCommand()
 			qcFile.WriteNoForcedFadeCommand()
 			qcFile.WriteForcePhonemeCrossfadeCommand()
@@ -510,9 +510,8 @@ Public Class SourceModel53
 			qcFile.WriteAmbientBoostCommand()
 			qcFile.WriteOpaqueCommand()
 			qcFile.WriteObsoleteCommand()
-			'TODO: Probably should be just like MDL v52.
-			'qcFile.WriteCastTextureShadowsCommand()
-			'qcFile.WriteDoNotCastShadowsCommand()
+			qcFile.WriteCastTextureShadowsCommand()
+			qcFile.WriteDoNotCastShadowsCommand()
 			qcFile.WriteCdMaterialsCommand()
 			qcFile.WriteTextureGroupCommand()
 			If TheApp.Settings.DecompileDebugInfoFilesIsChecked Then
@@ -770,12 +769,6 @@ Public Class SourceModel53
 
 		mdlFile.WriteInternalMdlFileName(internalMdlFileName)
 	End Sub
-
-	'Protected Overrides Sub WriteAniFileNameToMdlFile(ByVal internalAniFileName As String)
-	'	Dim mdlFile As New SourceMdlFile53(Me.theOutputFileBinaryWriter, Me.theMdlFileData)
-
-		'mdlFile.WriteInternalAniFileName(internalAniFileName)
-	'End Sub
 
 #End Region
 
