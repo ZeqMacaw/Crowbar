@@ -547,21 +547,16 @@
 	Public boneFlexDriverCount As Integer
 	Public boneFlexDriverOffset As Integer
 
-	' Both V52 and V53 have this section.
-	' Related to some block that appears when linear bone data is not present.
-	Public unknownOffset01 As Integer
-	Public unknown01 As Integer
-	Public unknown02 As Integer
-	Public unknown03 As Integer
-	' Points to byte just before string table.
-	Public unknownOffset02 As Integer
+	' High detail collision mesh for static props.
+	Public perTriCollisionOffset As Integer
+	Public perTriCount1 As Integer
+	Public perTriCount2 As Integer
+	Public perTriCount3 As Integer
 
-	'NOTE: Just skip reading these bytes, because it unknown if any are used.
-	'NOTE: These are unused in V52 as far as I can tell.
-	'Public reserved(56) As Integer
-	'======
-	'Public studiohdr2(63) As Integer
+	' When used the string is normally "Titan", only observed on models for animation.
+	Public unkStringOffset As Integer
 
+	Public reserved(38) As Integer
 
 
 	'Public theID As String
@@ -594,6 +589,8 @@
 	Public theSurfacePropName As String
 	Public theTexturePaths As List(Of String)
 	Public theTextures As List(Of SourceMdlTexture)
+	Public theMayaStrings As String
+	Public theDetailedCollision As RSourcePerTriCollisionHeader52
 
 	Public theSectionFrameCount As Integer
 	Public theSectionFrameMinFrameCount As Integer

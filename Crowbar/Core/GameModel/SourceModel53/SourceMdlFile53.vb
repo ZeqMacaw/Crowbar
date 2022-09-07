@@ -270,7 +270,6 @@ Public Class SourceMdlFile53
 
 		Me.theMdlFileData.unused = Me.theInputFileReader.ReadByte()
 
-		' In v52 and v53 this is actually used for something, as a float.
 		Me.theMdlFileData.fadeDistance = Me.theInputFileReader.ReadSingle()
 
 		Me.theMdlFileData.flexControllerUiCount = Me.theInputFileReader.ReadInt32()
@@ -285,7 +284,6 @@ Public Class SourceMdlFile53
 		Me.theMdlFileData.sourceBoneTransformCount = Me.theInputFileReader.ReadInt32()
 		Me.theMdlFileData.sourceBoneTransformOffset = Me.theInputFileReader.ReadInt32()
 		Me.theMdlFileData.illumPositionAttachmentIndex = Me.theInputFileReader.ReadInt32()
-		'Me.theMdlFileData.maxEyeDeflection = Me.theInputFileReader.ReadSingle()
 		Me.theMdlFileData.linearBoneOffset = Me.theInputFileReader.ReadInt32()
 
 		Me.theMdlFileData.boneFlexDriverCount = Me.theInputFileReader.ReadInt32()
@@ -294,11 +292,12 @@ Public Class SourceMdlFile53
 		'Me.theMdlFileData.vertAnimFixedPointScale = Me.theInputFileReader.ReadSingle()
 		'Me.theMdlFileData.surfacePropLookup = Me.theInputFileReader.ReadInt32()
 
-		Me.theMdlFileData.aabbOffset = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.unknown01 = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.unknown02 = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.unknown03 = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.unknownOffset02 = Me.theInputFileReader.ReadInt32()
+		Me.theMdlFileData.perTriCollisionOffset = Me.theInputFileReader.ReadInt32()
+		Me.theMdlFileData.perTriCount1 = Me.theInputFileReader.ReadInt32()
+		Me.theMdlFileData.perTriCount2 = Me.theInputFileReader.ReadInt32()
+		Me.theMdlFileData.perTriCount3 = Me.theInputFileReader.ReadInt32()
+
+		Me.theMdlFileData.unkStringOffset = Me.theInputFileReader.ReadInt32()
 
 		Me.theMdlFileData.vtxOffset = Me.theInputFileReader.ReadInt32()
 		Me.theMdlFileData.vvdOffset = Me.theInputFileReader.ReadInt32()
@@ -311,14 +310,35 @@ Public Class SourceMdlFile53
 		Me.theMdlFileData.vvcSize = Me.theInputFileReader.ReadInt32()
 		Me.theMdlFileData.phySize = Me.theInputFileReader.ReadInt32()
 
-		Me.theMdlFileData.unknownOffset03 = Me.theInputFileReader.ReadInt32()
+		Me.theMdlFileData.unkSectionOffset = Me.theInputFileReader.ReadInt32()
+		Me.theMdlFileData.unkSectionCount = Me.theInputFileReader.ReadInt32()
 
-		For x As Integer = 0 To Me.theMdlFileData.unknown.Length - 1
-			Me.theMdlFileData.unknown(x) = Me.theInputFileReader.ReadInt32()
+		Me.theMdlFileData.unknown05 = Me.theInputFileReader.ReadInt32()
+
+		Me.theMdlFileData.unknownOffset06 = Me.theInputFileReader.ReadInt32()
+
+		For x As Integer = 0 To Me.theMdlFileData.reserved.Length - 1
+			Me.theMdlFileData.reserved(x) = Me.theInputFileReader.ReadInt32()
 		Next
 
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, logDescription)
+	End Sub
+
+	' TODO: write to .txt (maybe), get log formatting better, remove null characters when present.
+	Public Sub ReadMayaStrings()
+		If Me.theMdlFileData.mayaOffset > 0 And Me.theMdlFileData.mayaOffset < Me.theMdlFileData.boneOffset Then
+			Dim fileOffsetStart As Long
+			Dim fileOffsetEnd As Long
+
+			Me.theInputFileReader.BaseStream.Seek(Me.theMdlFileData.mayaOffset, SeekOrigin.Begin)
+			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+
+			theMdlFileData.theMayaStrings = Me.theInputFileReader.ReadChars(Me.theMdlFileData.boneOffset - Me.theMdlFileData.mayaOffset)
+
+			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
+			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theMdlFileData.theMayaStrings " + theMdlFileData.theMayaStrings)
+		End If
 	End Sub
 
 	Public Sub ReadBones()
@@ -2003,8 +2023,6 @@ Public Class SourceMdlFile53
 					aSeqDesc.keyValueSize = Me.theInputFileReader.ReadInt32()
 					aSeqDesc.cyclePoseIndex = Me.theInputFileReader.ReadInt32()
 
-					aSeqDesc.activityModifierOffset = 0
-					aSeqDesc.activityModifierCount = 0
 					aSeqDesc.activityModifierOffset = Me.theInputFileReader.ReadInt32()
 					aSeqDesc.activityModifierCount = Me.theInputFileReader.ReadInt32()
 
@@ -3896,34 +3914,34 @@ Public Class SourceMdlFile53
 		End If
 	End Sub
 
-	' TODO: this doesn't actually work lol.
-	Public Sub ReadAABBHeader()
-		'Dim inputFileStreamPosition As Long
-		'Dim fileOffsetStart As Long
+	' This just reads the bytes for now, will implement reading the mesh at a later date once it's understood.
+	Public Sub ReadPerTriCollisionHeader()
+		Dim fileOffsetStart As Long
+		Dim fileOffsetEnd As Long
 
-		Me.theInputFileReader.BaseStream.Seek(Me.theMdlFileData.aabbOffset, SeekOrigin.Begin)
-		'fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+		Me.theInputFileReader.BaseStream.Seek(Me.theMdlFileData.perTriCollisionOffset, SeekOrigin.Begin)
+		fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-		Dim theAABB As New RSourceAABBHeader52
+		Dim theDetailedCollision As New RSourcePerTriCollisionHeader52
 
-		theAABB.version = Me.theInputFileReader.ReadInt32()
+		theDetailedCollision.version = Me.theInputFileReader.ReadInt32()
 
-		theAABB.bbMin = New SourceVector()
-		theAABB.bbMin.x = Me.theInputFileReader.ReadSingle()
-		theAABB.bbMin.y = Me.theInputFileReader.ReadSingle()
-		theAABB.bbMin.z = Me.theInputFileReader.ReadSingle()
+		theDetailedCollision.bbMin = New SourceVector()
+		theDetailedCollision.bbMin.x = Me.theInputFileReader.ReadSingle()
+		theDetailedCollision.bbMin.y = Me.theInputFileReader.ReadSingle()
+		theDetailedCollision.bbMin.z = Me.theInputFileReader.ReadSingle()
 
-		theAABB.bbMax = New SourceVector()
-		theAABB.bbMax.x = Me.theInputFileReader.ReadSingle()
-		theAABB.bbMax.y = Me.theInputFileReader.ReadSingle()
-		theAABB.bbMax.z = Me.theInputFileReader.ReadSingle()
+		theDetailedCollision.bbMax = New SourceVector()
+		theDetailedCollision.bbMax.x = Me.theInputFileReader.ReadSingle()
+		theDetailedCollision.bbMax.y = Me.theInputFileReader.ReadSingle()
+		theDetailedCollision.bbMax.z = Me.theInputFileReader.ReadSingle()
 
 		For k As Integer = 0 To 7
-			theAABB.unused(k) = Me.theInputFileReader.ReadInt32()
+			theDetailedCollision.unused(k) = Me.theInputFileReader.ReadInt32()
 		Next
 
-		'inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-
+		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
+		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theMdlFileData.theDetailedCollision")
 	End Sub
 
 	'Public Sub ReadFinalBytesAlignment()

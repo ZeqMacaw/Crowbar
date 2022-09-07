@@ -351,6 +351,8 @@ Public Class SourceModel53
 		mdlFile.ReadMdlHeader00("MDL File Header 00")
 		mdlFile.ReadMdlHeader01("MDL File Header 01")
 
+		mdlFile.ReadMayaStrings()
+
 		mdlFile.ReadBones()
 		mdlFile.ReadBoneControllers()
 		mdlFile.ReadAttachments()
@@ -398,7 +400,7 @@ Public Class SourceModel53
 		mdlFile.ReadBoneTransforms()
 		mdlFile.ReadLinearBoneTable()
 
-		mdlFile.ReadAABBHeader()
+		mdlFile.ReadPerTriCollisionHeader()
 
 		''TODO: ReadLocalIkAutoPlayLocks()
 		'mdlFile.ReadFlexControllerUis()
