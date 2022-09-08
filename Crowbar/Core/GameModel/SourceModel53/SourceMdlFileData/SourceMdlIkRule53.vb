@@ -1,4 +1,4 @@
-Public Class SourceMdlIkRule
+Public Class SourceMdlIkRule53
 
 	'FROM: SourceEngine2006+_source\public\studio.h
 	'struct mstudioikrule_t
@@ -67,7 +67,7 @@ Public Class SourceMdlIkRule
 	Public q As SourceQuaternion
 
 	Public compressedIkErrorOffset As Integer
-	Public unused2 As Integer
+
 	Public ikErrorIndexStart As Integer
 	Public ikErrorOffset As Integer
 
@@ -76,18 +76,13 @@ Public Class SourceMdlIkRule
 	Public influenceTail As Double
 	Public influenceEnd As Double
 
-	Public unused3 As Double
 	Public contact As Double
 	Public drop As Double
 	Public top As Double
 
-	Public unused6 As Integer
-	Public unused7 As Integer
-	Public unused8 As Integer
-
 	Public attachmentNameOffset As Integer
 
-	Public unused(6) As Integer
+	Public unused(8) As Integer
 
 
 

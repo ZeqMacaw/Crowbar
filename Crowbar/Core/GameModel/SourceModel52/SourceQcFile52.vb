@@ -3595,6 +3595,8 @@ Public Class SourceQcFile52
 
 		Me.WriteProceduralBonesCommand()
 		Me.WriteJiggleBoneCommand()
+
+		Me.WriteIkFlagInfo()
 	End Sub
 
 	Private Sub WriteDefineBoneCommand()
@@ -3953,8 +3955,41 @@ Public Class SourceQcFile52
 				End If
 				line = "}"
 				Me.theOutputFileStreamWriter.WriteLine(line)
+				Me.theOutputFileStreamWriter.WriteLine()
 			End If
 		Next
+	End Sub
+
+	Public Sub WriteIkFlagInfo()
+		Dim lineHeader As String = ""
+		Dim line As String = ""
+
+		If Me.theMdlFileData.theBones IsNot Nothing Then
+			'lineHeader = "// bones using flag 0x20"
+			'Me.theOutputFileStreamWriter.WriteLine(lineHeader)
+
+			Dim aBone As SourceMdlBone52
+			Dim emptyLineIsAlreadyWritten As Boolean
+
+			emptyLineIsAlreadyWritten = False
+			For i As Integer = 0 To Me.theMdlFileData.theBones.Count - 1
+				aBone = Me.theMdlFileData.theBones(i)
+
+				If (aBone.flags And SourceMdlBone52.BONE_USED_BY_IKCHAIN) > 0 Then
+					If Not emptyLineIsAlreadyWritten Then
+						Me.theOutputFileStreamWriter.WriteLine()
+						emptyLineIsAlreadyWritten = True
+					End If
+
+					line = "// bone "
+					line += """"
+					line += aBone.theName
+					line += """"
+					line += " has ik flag (0x20)"
+					Me.theOutputFileStreamWriter.WriteLine(line)
+				End If
+			Next
+		End If
 	End Sub
 
 	Private Sub WriteJiggleBoneConstraints(ByVal aBone As SourceMdlBone52)
