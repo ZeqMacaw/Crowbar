@@ -87,7 +87,8 @@ Public Class SourceMdlIkRule
 
 	Public attachmentNameOffset As Integer
 
-	Public unused(3) As Integer
+	Public unused(6) As Integer
+	Public unused_MDL53(8) As Integer
 
 
 

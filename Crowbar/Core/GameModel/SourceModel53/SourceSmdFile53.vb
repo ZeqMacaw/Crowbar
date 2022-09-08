@@ -1251,6 +1251,10 @@ Public Class SourceSmdFile53
 		anAnimation = Nothing
 		aSectionOfAnimation = Nothing
 		If anAnimationDesc.theSectionsOfAnimations IsNot Nothing Then
+			If sectionIndex >= anAnimationDesc.theSectionsOfAnimations.Count Then
+				Dim debug As Integer = 4242
+				Exit Sub
+			End If
 			aSectionOfAnimation = anAnimationDesc.theSectionsOfAnimations(sectionIndex)
 			If animIndex >= 0 AndAlso animIndex < aSectionOfAnimation.Count Then
 				anAnimation = aSectionOfAnimation(animIndex)
