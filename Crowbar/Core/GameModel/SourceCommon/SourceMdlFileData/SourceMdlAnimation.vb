@@ -65,6 +65,7 @@ Public Class SourceMdlAnimation
 	'MDL 53 values for flags:
 	Public Const MDL53_ANIM_TRANSLATION As Integer = &H2
 	Public Const MDL53_ANIM_ROTATION As Integer = &H4
+	Public Const MDL53_ANIM_SCALE As Integer = &H8
 
 
 	' Do not use union, because it will have to rely on size of a .NET Framework data type.
