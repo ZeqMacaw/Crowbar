@@ -1775,8 +1775,8 @@ Public Class SourceMdlFile53
 
 				anIkRule.attachmentNameOffset = Me.theInputFileReader.ReadInt32()
 
-				For x As Integer = 0 To anIkRule.unused_MDL53.Length - 1
-					anIkRule.unused_MDL53(x) = Me.theInputFileReader.ReadInt32()
+				For x As Integer = 0 To anIkRule.unused.Length - 1
+					anIkRule.unused(x) = Me.theInputFileReader.ReadInt32()
 				Next
 
 				anAnimationDesc.theIkRules.Add(anIkRule)
