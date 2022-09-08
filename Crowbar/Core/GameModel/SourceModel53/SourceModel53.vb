@@ -376,18 +376,17 @@ Public Class SourceModel53
 		mdlFile.ReadLocalNodes()
 
 		'NOTE: Read flex descs before body parts so that flexes (within body parts) can add info to flex descs.
-		mdlFile.ReadFlexDescs()
+		'mdlFile.ReadFlexDescs()
 		mdlFile.ReadBodyParts()
 		'mdlFile.ReadFlexControllers()
 		'NOTE: This must be after flex descs are read so that flex desc usage can be saved in flex desc.
 		'mdlFile.ReadFlexRules()
 		mdlFile.ReadIkChains()
 		'mdlFile.ReadIkLocks()
-		'mdlFile.ReadMouths()
 		mdlFile.ReadPoseParamDescs()
 		mdlFile.ReadModelGroups()
-		''TODO: Me.ReadAnimBlocks()
-		''TODO: Me.ReadAnimBlockName()
+
+		mdlFile.ReadRui()
 
 		'NOTE: V53 MDLs normally don't have more than one texture path due to how RPak materials work.
 		mdlFile.ReadTexturePaths()

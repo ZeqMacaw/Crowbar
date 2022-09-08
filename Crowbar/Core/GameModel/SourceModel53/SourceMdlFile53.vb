@@ -3044,6 +3044,21 @@ Public Class SourceMdlFile53
 		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aFlexRule.theFlexOps " + aFlexRule.theFlexOps.Count.ToString())
 	End Sub
 
+	Public Sub ReadRui()
+		If Me.theMdlFileData.ruiCount > 0 Then
+			Dim fileOffsetStart As Long
+			Dim fileOffsetEnd As Long
+
+			Me.theInputFileReader.BaseStream.Seek(Me.theMdlFileData.ruiOffset, SeekOrigin.Begin)
+			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+
+			'Me.theInputFileReader.ReadBytes(Me.theMdlFileData.ikChainOffset - Me.theMdlFileData.ruiOffset)
+
+			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
+			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "theMdlFileData.theRuiMeshes")
+		End If
+	End Sub
+
 	Public Sub ReadIkChains()
 		If Me.theMdlFileData.ikChainCount > 0 Then
 			Dim ikChainInputFileStreamPosition As Long
