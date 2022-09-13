@@ -351,6 +351,8 @@ Public Class SourceModel53
 		mdlFile.ReadMdlHeader00("MDL File Header 00")
 		mdlFile.ReadMdlHeader01("MDL File Header 01")
 
+		mdlFile.ReadMayaStrings()
+
 		mdlFile.ReadBones()
 		mdlFile.ReadBoneControllers()
 		mdlFile.ReadAttachments()
@@ -374,18 +376,17 @@ Public Class SourceModel53
 		mdlFile.ReadLocalNodes()
 
 		'NOTE: Read flex descs before body parts so that flexes (within body parts) can add info to flex descs.
-		mdlFile.ReadFlexDescs()
+		'mdlFile.ReadFlexDescs()
 		mdlFile.ReadBodyParts()
 		'mdlFile.ReadFlexControllers()
 		'NOTE: This must be after flex descs are read so that flex desc usage can be saved in flex desc.
 		'mdlFile.ReadFlexRules()
 		mdlFile.ReadIkChains()
 		'mdlFile.ReadIkLocks()
-		'mdlFile.ReadMouths()
 		mdlFile.ReadPoseParamDescs()
 		mdlFile.ReadModelGroups()
-		''TODO: Me.ReadAnimBlocks()
-		''TODO: Me.ReadAnimBlockName()
+
+		mdlFile.ReadRui()
 
 		'NOTE: V53 MDLs normally don't have more than one texture path due to how RPak materials work.
 		mdlFile.ReadTexturePaths()
@@ -398,7 +399,7 @@ Public Class SourceModel53
 		mdlFile.ReadBoneTransforms()
 		mdlFile.ReadLinearBoneTable()
 
-		mdlFile.ReadAABBHeader()
+		mdlFile.ReadPerTriCollisionHeader()
 
 		''TODO: ReadLocalIkAutoPlayLocks()
 		'mdlFile.ReadFlexControllerUis()
@@ -493,7 +494,6 @@ Public Class SourceModel53
 			'	qcFile.WriteBodyGroupCommand(0)
 			'End If
 			qcFile.WriteBodyGroupCommand()
-			'TODO: LOD option "replacebone" is wrong because bone.flags is read-in incorrectly.
 			qcFile.WriteGroup("lod", AddressOf qcFile.WriteGroupLod, False, False)
 
 			qcFile.WriteSurfacePropCommand()
@@ -503,6 +503,7 @@ Public Class SourceModel53
 			qcFile.WriteIllumPositionCommand()
 
 			qcFile.WriteEyePositionCommand()
+			' Removed in V53
 			'qcFile.WriteMaxEyeDeflectionCommand()
 			qcFile.WriteNoForcedFadeCommand()
 			qcFile.WriteForcePhonemeCrossfadeCommand()
@@ -510,9 +511,8 @@ Public Class SourceModel53
 			qcFile.WriteAmbientBoostCommand()
 			qcFile.WriteOpaqueCommand()
 			qcFile.WriteObsoleteCommand()
-			'TODO: Probably should be just like MDL v52.
-			'qcFile.WriteCastTextureShadowsCommand()
-			'qcFile.WriteDoNotCastShadowsCommand()
+			qcFile.WriteCastTextureShadowsCommand()
+			qcFile.WriteDoNotCastShadowsCommand()
 			qcFile.WriteCdMaterialsCommand()
 			qcFile.WriteTextureGroupCommand()
 			If TheApp.Settings.DecompileDebugInfoFilesIsChecked Then
@@ -770,12 +770,6 @@ Public Class SourceModel53
 
 		mdlFile.WriteInternalMdlFileName(internalMdlFileName)
 	End Sub
-
-	'Protected Overrides Sub WriteAniFileNameToMdlFile(ByVal internalAniFileName As String)
-	'	Dim mdlFile As New SourceMdlFile53(Me.theOutputFileBinaryWriter, Me.theMdlFileData)
-
-		'mdlFile.WriteInternalAniFileName(internalAniFileName)
-	'End Sub
 
 #End Region
 

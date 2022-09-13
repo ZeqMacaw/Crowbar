@@ -89,8 +89,10 @@ Public Class SourceMdlAnimationDesc52
 	'	mstudioikrulezeroframe_t *pIKRuleZeroFrame( int i ) const { if (ikrulezeroframeindex) return (mstudioikrulezeroframe_t *)(((byte *)this) + ikrulezeroframeindex) + i; else return NULL; };
 	Public ikRuleZeroFrameOffset As Integer
 
+	Public compressedIkErrorOffset As Integer
+
 	'	int					unused1[5];			// remove as appropriate (and zero if loading older versions)	
-	Public unused1(4) As Integer
+	Public unused1(3) As Integer
 
 	'	int					animblock;
 	Public animBlock As Integer

@@ -1401,6 +1401,38 @@ Public Class SourceQcFile53
 		End If
 	End Sub
 
+	Public Sub WriteCastTextureShadowsCommand()
+		Dim line As String = ""
+
+		'$casttextureshadows
+		If (Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_CAST_TEXTURE_SHADOWS) > 0 Then
+			Me.theOutputFileStreamWriter.WriteLine()
+
+			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+				line = "$CastTextureShadows"
+			Else
+				line = "$casttextureshadows"
+			End If
+			Me.theOutputFileStreamWriter.WriteLine(line)
+		End If
+	End Sub
+
+	Public Sub WriteDoNotCastShadowsCommand()
+		Dim line As String = ""
+
+		'$donotcastshadows
+		If (Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_DO_NOT_CAST_SHADOWS) > 0 Then
+			Me.theOutputFileStreamWriter.WriteLine()
+
+			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+				line = "$DoNotCastShadows"
+			Else
+				line = "$donotcastshadows"
+			End If
+			Me.theOutputFileStreamWriter.WriteLine(line)
+		End If
+	End Sub
+
 	Public Sub WriteCdMaterialsCommand()
 		Dim line As String = ""
 		Dim texturePaths As List(Of String)
@@ -2278,7 +2310,9 @@ Public Class SourceQcFile53
 			For Each activityModifier As SourceMdlActivityModifier In aSequenceDesc.theActivityModifiers
 				line = vbTab
 				line += "activitymodifier "
+				line += """"
 				line += activityModifier.theName
+				line += """"
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
 		End If
@@ -2488,13 +2522,13 @@ Public Class SourceQcFile53
 		Dim line As String = ""
 
 		If anAnimationDesc.theIkRules IsNot Nothing Then
-			For Each anIkRule As SourceMdlIkRule In anAnimationDesc.theIkRules
+			For Each anIkRule As SourceMdlIkRule53 In anAnimationDesc.theIkRules
 				line = vbTab
 				line += "ikrule"
 				line += " """
 				line += Me.theMdlFileData.theIkChains(anIkRule.chain).theName
 				line += """"
-				If anIkRule.type = SourceMdlIkRule.IK_SELF Then
+				If anIkRule.type = SourceMdlIkRule53.IK_SELF Then
 					line += " "
 					line += "touch"
 					line += " """
@@ -2502,22 +2536,22 @@ Public Class SourceQcFile53
 						line += Me.theMdlFileData.theBones(anIkRule.bone).theName
 					End If
 					line += """"
-					'ElseIf anIkRule.type = SourceMdlIkRule.IK_WORLD Then
+					'ElseIf anIkRule.type = SourceMdlIkRule53.IK_WORLD Then
 					'line += " "
 					'line += "world"
-				ElseIf anIkRule.type = SourceMdlIkRule.IK_GROUND Then
+				ElseIf anIkRule.type = SourceMdlIkRule53.IK_GROUND Then
 					line += " "
 					line += "footstep"
-				ElseIf anIkRule.type = SourceMdlIkRule.IK_RELEASE Then
+				ElseIf anIkRule.type = SourceMdlIkRule53.IK_RELEASE Then
 					line += " "
 					line += "release"
-				ElseIf anIkRule.type = SourceMdlIkRule.IK_ATTACHMENT Then
+				ElseIf anIkRule.type = SourceMdlIkRule53.IK_ATTACHMENT Then
 					line += " "
 					line += "attachment"
 					line += " """
 					line += anIkRule.theAttachmentName
 					line += """"
-				ElseIf anIkRule.type = SourceMdlIkRule.IK_UNLATCH Then
+				ElseIf anIkRule.type = SourceMdlIkRule53.IK_UNLATCH Then
 					line += " "
 					line += "unlatch"
 				End If

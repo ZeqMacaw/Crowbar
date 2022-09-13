@@ -488,16 +488,6 @@
 	'	mutable void		*virtualModel;
 	Public virtualModelP As Integer
 
-	'	int					szanimblocknameindex;	
-	'Public animBlockNameOffset As Integer
-	'	int					numanimblocks;
-	'Public animBlockCount As Integer
-	'	int					animblockindex;
-	'Public animBlockOffset As Integer
-	'	mutable void		*animblockModel;
-	'Public animBlockModelP As Integer
-
-	'NOTE: Probably not used or used for something else.
 	'	int					bonetablebynameindex;
 	Public boneTableByNameOffset As Integer
 
@@ -532,21 +522,19 @@
 	Public sourceBoneTransformCount As Integer
 	Public sourceBoneTransformOffset As Integer
 	Public illumPositionAttachmentIndex As Integer
-	'Public maxEyeDeflection As Double
 	Public linearBoneOffset As Integer
 
-	'Public nameOffset As Integer
 	Public boneFlexDriverCount As Integer
 	Public boneFlexDriverOffset As Integer
 
-	' Both V52 and V53 have this section.
-	' Related to some block that appears when linear bone data is not present.
-	Public aabbOffset As Integer
-	Public unknown01 As Integer
-	Public unknown02 As Integer
-	Public unknown03 As Integer
-	' Points to byte just before string table.
-	Public unknownOffset02 As Integer
+	' High detail collision mesh for static props.
+	Public perTriCollisionOffset As Integer
+	Public perTriCount1 As Integer
+	Public perTriCount2 As Integer
+	Public perTriCount3 As Integer
+
+	' When used the string is normally "Titan", only observed on models for animation.
+	Public unkStringOffset As Integer
 
 	Public vtxOffset As Integer
 	Public vvdOffset As Integer
@@ -557,11 +545,16 @@
 	Public vvdSize As Integer
 	Public vvcSize As Integer
 	Public phySize As Integer
-	Public unknownOffset03 As Integer
-	Public unknown04 As Integer
+
+	Public unkSectionOffset As Integer
+	' Only used if PHY has a solid count of "1"
+	Public unkSectionCount As Integer
+
 	Public unknown05 As Integer
 	Public unknownOffset06 As Integer
-	Public unknown(60) As Integer
+
+	' Nothing observed past here, however the first in may be a count for unknownOffset06
+	Public reserved(59) As Integer
 
 	'NOTE: Header is 716 bytes.
 
@@ -594,7 +587,10 @@
 	Public theSurfacePropName As String
 	Public theTexturePaths As List(Of String)
 	Public theTextures As List(Of SourceMdlTexture)
-	Public theAABB As RSourceAABBHeader52
+	Public theMayaStrings As String
+	Public theDetailedCollision As RSourcePerTriCollisionHeader52
+	Public theRuiHeaders As List(Of RSourceRuiHeader53)
+	Public theRuiMeshes As List(Of RSourceRuiMeshHeader53)
 
 	Public theSectionFrameCount As Integer
 	Public theSectionFrameMinFrameCount As Integer

@@ -89,8 +89,14 @@ Public Class SourceMdlAnimationDesc53
 	'	mstudioikrulezeroframe_t *pIKRuleZeroFrame( int i ) const { if (ikrulezeroframeindex) return (mstudioikrulezeroframe_t *)(((byte *)this) + ikrulezeroframeindex) + i; else return NULL; };
 	'Public ikRuleZeroFrameOffset As Integer
 
+	'	int					unused1[5];			// remove as appropriate (and zero if loading older versions)	
+	'Public unused1(4) As Integer
+
 	'	int					animblock;
-	Public animBlock As Integer
+	'Public animBlock As Integer
+
+	Public compressedIkErrorOffset As Integer
+
 	'	int					animindex;	 // non-zero when anim data isn't in sections
 	Public animOffset As Integer
 	'	mstudioanim_t *pAnimBlock( int block, int index ) const; // returns pointer to a specific anim block (local or external)
@@ -102,8 +108,6 @@ Public Class SourceMdlAnimationDesc53
 	'	int					ikruleindex;	// non-zero when IK data is stored in the mdl
 	Public ikRuleOffset As Integer
 	'	int					animblockikruleindex; // non-zero when IK data is stored in animblock file
-	Public animblockIkRuleOffset As Integer
-	'	mstudioikrule_t *pIKRule( int i ) const;
 
 	'	int					numlocalhierarchy;
 	Public localHierarchyCount As Integer
@@ -127,16 +131,15 @@ Public Class SourceMdlAnimationDesc53
 	'	mutable float		zeroframestalltime;		// saved during read stalls
 	Public spanStallTime As Single
 
-	'	int					unused1[5];			// remove as appropriate (and zero if loading older versions)	
-	Public unused1(3) As Integer
+	Public unused1(4) As Integer
 
 	' Moved to SourceMdlAnimationDescBase
 	''	inline char * const pszName( void ) const { return ((char *)this) + sznameindex; }
 	'Public theName As String
 
-	Public theSectionsOfAnimations As List(Of List(Of SourceMdlAnimation53))
+	Public theSectionsOfAnimations As List(Of List(Of SourceMdlAnimation))
 	Public theSectionsOfFrameAnim As List(Of SourceAniFrameAnim52)
-	Public theIkRules As List(Of SourceMdlIkRule)
+	Public theIkRules As List(Of SourceMdlIkRule53)
 	Public theSections As List(Of SourceMdlAnimationSection)
 	Public theMovements As List(Of SourceMdlMovement)
 	Public theLocalHierarchies As List(Of SourceMdlLocalHierarchy)

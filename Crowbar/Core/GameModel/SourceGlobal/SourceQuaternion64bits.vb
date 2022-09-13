@@ -230,4 +230,22 @@ Public Class SourceQuaternion64bits
 		<FieldOffset(0)> Public s As Single
 	End Structure
 
+	Public ReadOnly Property XOffset() As UInt16
+		Get
+			Return BitConverter.ToUInt16(Me.theBytes, 0)
+		End Get
+	End Property
+
+	Public ReadOnly Property YOffset() As UInt16
+		Get
+			Return BitConverter.ToUInt16(Me.theBytes, 2)
+		End Get
+	End Property
+
+	Public ReadOnly Property ZOffset() As UInt16
+		Get
+			Return BitConverter.ToUInt16(Me.theBytes, 4)
+		End Get
+	End Property
+
 End Class
