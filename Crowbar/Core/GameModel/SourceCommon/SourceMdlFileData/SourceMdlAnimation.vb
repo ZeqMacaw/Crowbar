@@ -62,10 +62,12 @@ Public Class SourceMdlAnimation
 	Public Const STUDIO_ANIM_ANIMROT As Integer = &H8
 	Public Const STUDIO_ANIM_DELTA As Integer = &H10
 	Public Const STUDIO_ANIM_RAWROT2 As Integer = &H20
+
 	'MDL 53 values for flags:
-	Public Const MDL53_ANIM_TRANSLATION As Integer = &H2
-	Public Const MDL53_ANIM_ROTATION As Integer = &H4
-	Public Const MDL53_ANIM_SCALE As Integer = &H8
+	Public Const STUDIO_ANIM_RAWPOS_53 As Integer = &H2
+	Public Const STUDIO_ANIM_RAWROT_53 As Integer = &H4
+	Public Const STUDIO_ANIM_RAWSCALE_53 As Integer = &H8
+	Public Const STUDIO_ANIM_UNKFLAG_53 As Integer = &H10
 
 
 	' Do not use union, because it will have to rely on size of a .NET Framework data type.

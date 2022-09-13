@@ -1569,7 +1569,7 @@ Public Class SourceSmdFile53
 		Dim rot As New SourceQuaternion()
 		Dim angleVector As New SourceVector()
 
-		If (anAnimation.flags And SourceMdlAnimation.MDL53_ANIM_ROTATION) > 0 Then
+		If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_RAWROT_53) > 0 Then
 			rot.x = anAnimation.theRot64bits.x
 			rot.y = anAnimation.theRot64bits.y
 			rot.z = anAnimation.theRot64bits.z
@@ -1582,6 +1582,15 @@ Public Class SourceSmdFile53
 
 			angleVector.debug_text = "raw64 (" + rot.x.ToString() + ", " + rot.y.ToString() + ", " + rot.z.ToString() + ", " + rot.w.ToString() + ")"
 			Return angleVector
+		ElseIf (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_UNKFLAG_53) > 0 And SourceMdlAnimation.STUDIO_ANIM_RAWROT_53 = 0 Then
+			angleVector.x = aBone.rotation.x
+			angleVector.y = aBone.rotation.y
+			angleVector.z = aBone.rotation.z
+			rotationQuat.x = 0
+			rotationQuat.y = 0
+			rotationQuat.z = 0
+			rotationQuat.w = 0
+			angleVector.debug_text = "bone"
 		End If
 
 		Try
@@ -1695,7 +1704,7 @@ Public Class SourceSmdFile53
 	Private Function CalcBonePosition(ByVal frameIndex As Integer, ByVal s As Double, ByVal aBone As SourceMdlBone53, ByVal anAnimation As SourceMdlAnimation) As SourceVector
 		Dim pos As New SourceVector()
 
-		If (anAnimation.flags And SourceMdlAnimation.MDL53_ANIM_TRANSLATION) > 0 Then
+		If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_RAWPOS_53) > 0 Then
 			pos.x = anAnimation.TranslationX.TheFloatValue
 			pos.y = anAnimation.TranslationY.TheFloatValue
 			pos.z = anAnimation.TranslationZ.TheFloatValue
@@ -1724,6 +1733,7 @@ Public Class SourceSmdFile53
 				pos.z += aBone.position.z
 			End If
 			pos.debug_text = "anim"
+
 			'ElseIf (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_DELTA) > 0 Then
 			'	pos.x = 0
 			'	pos.y = 0

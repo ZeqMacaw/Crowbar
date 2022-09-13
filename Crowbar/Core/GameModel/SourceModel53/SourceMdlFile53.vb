@@ -1449,7 +1449,7 @@ Public Class SourceMdlFile53
 	End Sub
 
 	Private Sub ReadMdlAnimationAnimValues(ByVal anAnimation As SourceMdlAnimation, ByVal rotValuePointerInputFileStreamPosition As Long, ByVal posValuePointerInputFileStreamPosition As Long, ByVal scaleValuePointerInputFileStreamPosition As Long, ByVal frameCount As Integer, ByVal lastSectionIsBeingRead As Boolean)
-		If (anAnimation.flags And SourceMdlAnimation.MDL53_ANIM_ROTATION) = 0 Then
+		If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_RAWROT_53) = 0 Then
 			anAnimation.theRotV = New SourceMdlAnimationValuePointer()
 			If anAnimation.theRot64bits.XOffset > 0 Then
 				anAnimation.theRotV.theAnimXValues = New List(Of SourceMdlAnimationValue)()
@@ -1465,7 +1465,7 @@ Public Class SourceMdlFile53
 			End If
 		End If
 
-		If (anAnimation.flags And SourceMdlAnimation.MDL53_ANIM_TRANSLATION) = 0 Then
+		If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_RAWPOS_53) = 0 Then
 			anAnimation.thePosV = New SourceMdlAnimationValuePointer()
 			If anAnimation.TranslationX.the16BitValue > 0 Then
 				anAnimation.thePosV.theAnimXValues = New List(Of SourceMdlAnimationValue)()
@@ -1481,7 +1481,7 @@ Public Class SourceMdlFile53
 			End If
 		End If
 
-		If (anAnimation.flags And SourceMdlAnimation.MDL53_ANIM_SCALE) = 0 Then
+		If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_RAWSCALE_53) = 0 Then
 			Dim scaleVector As New SourceMdlAnimationValuePointer()
 			If anAnimation.ScaleX.the16BitValue > 0 Then
 				scaleVector.theAnimXValues = New List(Of SourceMdlAnimationValue)()
