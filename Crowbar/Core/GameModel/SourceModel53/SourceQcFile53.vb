@@ -3164,9 +3164,10 @@ Public Class SourceQcFile53
 	Private Sub WriteCollisionModelOrCollisionJointsOptions()
 		Dim line As String = ""
 
+		' for some reason it doesn't read this correctly so I am doing a janky fix for now.
 		line = vbTab
 		line += "$mass "
-		line += Me.thePhyFileData.theSourcePhyEditParamsSection.totalMass.ToString("0.######", TheApp.InternalNumberFormat)
+		line += Me.theMdlFileData.mass.ToString("0.######", TheApp.InternalNumberFormat)
 		Me.theOutputFileStreamWriter.WriteLine(line)
 		line = vbTab
 		line += "$inertia "
