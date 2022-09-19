@@ -1715,19 +1715,19 @@ Public Class SourceSmdFile53
 		If anAnimation.thePosV IsNot Nothing Then
 			Dim posV As SourceMdlAnimationValuePointer = anAnimation.thePosV
 			If anAnimation.TranslationX.the16BitValue <= 0 Then
-				pos.x = 0
+				pos.x += aBone.position.x
 			Else
 				pos.x = Me.ExtractAnimValue(frameIndex, posV.theAnimXValues, anAnimation.TranslationScale)
 				pos.x += aBone.position.x
 			End If
 			If anAnimation.TranslationY.the16BitValue <= 0 Then
-				pos.y = 0
+				pos.y += aBone.position.y
 			Else
 				pos.y = Me.ExtractAnimValue(frameIndex, posV.theAnimYValues, anAnimation.TranslationScale)
 				pos.y += aBone.position.y
 			End If
 			If anAnimation.TranslationZ.the16BitValue <= 0 Then
-				pos.z = 0
+				pos.z += aBone.position.z
 			Else
 				pos.z = Me.ExtractAnimValue(frameIndex, posV.theAnimZValues, anAnimation.TranslationScale)
 				pos.z += aBone.position.z
