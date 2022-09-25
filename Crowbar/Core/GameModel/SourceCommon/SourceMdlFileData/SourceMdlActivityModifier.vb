@@ -13,7 +13,7 @@ Public Class SourceMdlActivityModifier
 
 	Public nameOffset As Integer
 
-	' V53 has an int here.
+	' V53 has an int here that needs to be read for proper output. 0 or 1.
 	Public unkV53 As Integer
 
 	Public theName As String

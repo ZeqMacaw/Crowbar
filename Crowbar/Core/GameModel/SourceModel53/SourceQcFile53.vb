@@ -214,6 +214,21 @@ Public Class SourceQcFile53
 	'	Return pathFileName
 	'End Function
 
+	Public Sub WriteFadeDistanceCommand()
+		Dim line As String = ""
+
+		'$fadedist -1.0
+		Me.theOutputFileStreamWriter.WriteLine()
+
+		If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+			line = "//$FadeDist "
+		Else
+			line = "//$fadedist "
+		End If
+		line += Me.theMdlFileData.fadeDistance.ToString("0.######", TheApp.InternalNumberFormat)
+		Me.theOutputFileStreamWriter.WriteLine(line)
+	End Sub
+
 	Public Sub WriteModelCommand()
 		Dim line As String = ""
 		Dim aBodyPart As SourceMdlBodyPart
@@ -2313,6 +2328,8 @@ Public Class SourceQcFile53
 				line += """"
 				line += activityModifier.theName
 				line += """"
+				line += " // "
+				line += activityModifier.unkV53.ToString(TheApp.InternalNumberFormat)
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
 		End If

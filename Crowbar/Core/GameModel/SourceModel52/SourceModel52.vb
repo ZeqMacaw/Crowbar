@@ -470,6 +470,8 @@ Public Class SourceModel52
 			qcFile.WriteStaticPropCommand()
 			qcFile.WriteConstDirectionalLightCommand()
 
+			qcFile.WriteFadeDistanceCommand()
+
 			'If Me.theMdlFileData.theModelCommandIsUsed Then
 			'	qcFile.WriteModelCommand()
 			'	qcFile.WriteBodyGroupCommand(1)

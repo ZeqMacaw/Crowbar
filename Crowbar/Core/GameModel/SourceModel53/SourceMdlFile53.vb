@@ -1384,11 +1384,10 @@ Public Class SourceMdlFile53
 			anAnimation = New SourceMdlAnimation()
 			aSectionOfAnimation.Add(anAnimation)
 
-			anAnimation.TranslationScale = Me.theInputFileReader.ReadSingle()
+			anAnimation.positionScale = Me.theInputFileReader.ReadSingle()
 			anAnimation.boneIndex = Me.theInputFileReader.ReadByte()
 			anAnimation.flags = Me.theInputFileReader.ReadByte()
-			anAnimation.Flags2 = Me.theInputFileReader.ReadByte()
-			anAnimation.Flags3 = Me.theInputFileReader.ReadByte()
+			anAnimation.unk = Me.theInputFileReader.ReadInt16()
 
 			'anAnimation.OffsetX = Me.theInputFileReader.ReadInt16()
 			'anAnimation.OffsetY = Me.theInputFileReader.ReadInt16()
@@ -1399,12 +1398,12 @@ Public Class SourceMdlFile53
 			anAnimation.theRot64bits.theBytes = Me.theInputFileReader.ReadBytes(8)
 
 			posValuePointerInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-			anAnimation.TranslationX = New SourceFloat16bits()
-			anAnimation.TranslationY = New SourceFloat16bits()
-			anAnimation.TranslationZ = New SourceFloat16bits()
-			anAnimation.TranslationX.the16BitValue = Me.theInputFileReader.ReadUInt16()
-			anAnimation.TranslationY.the16BitValue = Me.theInputFileReader.ReadUInt16()
-			anAnimation.TranslationZ.the16BitValue = Me.theInputFileReader.ReadUInt16()
+			anAnimation.PosX = New SourceFloat16bits()
+			anAnimation.PosY = New SourceFloat16bits()
+			anAnimation.PosZ = New SourceFloat16bits()
+			anAnimation.PosX.the16BitValue = Me.theInputFileReader.ReadUInt16()
+			anAnimation.PosY.the16BitValue = Me.theInputFileReader.ReadUInt16()
+			anAnimation.PosZ.the16BitValue = Me.theInputFileReader.ReadUInt16()
 
 			scaleValuePointerInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 			anAnimation.ScaleX = New SourceFloat16bits()
@@ -1467,17 +1466,17 @@ Public Class SourceMdlFile53
 
 		If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_RAWPOS_53) = 0 Then
 			anAnimation.thePosV = New SourceMdlAnimationValuePointer()
-			If anAnimation.TranslationX.the16BitValue > 0 Then
+			If anAnimation.PosX.the16BitValue > 0 Then
 				anAnimation.thePosV.theAnimXValues = New List(Of SourceMdlAnimationValue)()
-				Me.ReadMdlAnimValues(posValuePointerInputFileStreamPosition + anAnimation.TranslationX.the16BitValue, frameCount, lastSectionIsBeingRead, anAnimation.thePosV.theAnimXValues, "anAnimation.thePosV.theAnimXValues")
+				Me.ReadMdlAnimValues(posValuePointerInputFileStreamPosition + anAnimation.PosX.the16BitValue, frameCount, lastSectionIsBeingRead, anAnimation.thePosV.theAnimXValues, "anAnimation.thePosV.theAnimXValues")
 			End If
-			If anAnimation.TranslationY.the16BitValue > 0 Then
+			If anAnimation.PosY.the16BitValue > 0 Then
 				anAnimation.thePosV.theAnimYValues = New List(Of SourceMdlAnimationValue)()
-				Me.ReadMdlAnimValues(posValuePointerInputFileStreamPosition + anAnimation.TranslationY.the16BitValue, frameCount, lastSectionIsBeingRead, anAnimation.thePosV.theAnimYValues, "anAnimation.thePosV.theAnimYValues")
+				Me.ReadMdlAnimValues(posValuePointerInputFileStreamPosition + anAnimation.PosY.the16BitValue, frameCount, lastSectionIsBeingRead, anAnimation.thePosV.theAnimYValues, "anAnimation.thePosV.theAnimYValues")
 			End If
-			If anAnimation.TranslationZ.the16BitValue > 0 Then
+			If anAnimation.PosZ.the16BitValue > 0 Then
 				anAnimation.thePosV.theAnimZValues = New List(Of SourceMdlAnimationValue)()
-				Me.ReadMdlAnimValues(posValuePointerInputFileStreamPosition + anAnimation.TranslationZ.the16BitValue, frameCount, lastSectionIsBeingRead, anAnimation.thePosV.theAnimZValues, "anAnimation.thePosV.theAnimZValues")
+				Me.ReadMdlAnimValues(posValuePointerInputFileStreamPosition + anAnimation.PosZ.the16BitValue, frameCount, lastSectionIsBeingRead, anAnimation.thePosV.theAnimZValues, "anAnimation.thePosV.theAnimZValues")
 			End If
 		End If
 
