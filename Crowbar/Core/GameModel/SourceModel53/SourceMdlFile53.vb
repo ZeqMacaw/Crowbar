@@ -1217,9 +1217,9 @@ Public Class SourceMdlFile53
 			aSectionOfAnimation.constantsOffset = Me.theInputFileReader.ReadInt32()
 			aSectionOfAnimation.frameOffset = Me.theInputFileReader.ReadInt32()
 			aSectionOfAnimation.frameLength = Me.theInputFileReader.ReadInt32()
-			For x As Integer = 0 To aSectionOfAnimation.unused.Length - 1
-				aSectionOfAnimation.unused(x) = Me.theInputFileReader.ReadInt32()
-			Next
+			aSectionOfAnimation.oldBoneFlags = Me.theInputFileReader.ReadInt32()
+			aSectionOfAnimation.unkDataIndex = Me.theInputFileReader.ReadInt32()
+			aSectionOfAnimation.unused = Me.theInputFileReader.ReadInt32()
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "anAnimationDesc.aSectionOfAnimation [" + anAnimationDesc.theName + "] (frameCount = " + CStr(anAnimationDesc.frameCount) + "; sectionFrameCount = " + CStr(sectionFrameCount) + ")")
