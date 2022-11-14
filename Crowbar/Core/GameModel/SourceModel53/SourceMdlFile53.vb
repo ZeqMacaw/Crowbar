@@ -2415,7 +2415,7 @@ Public Class SourceMdlFile53
 			activityModifierInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 			Dim anActivityModifier As New SourceMdlActivityModifier()
 			anActivityModifier.nameOffset = Me.theInputFileReader.ReadInt32()
-			anActivityModifier.unkV53 = Me.theInputFileReader.ReadInt32()
+			anActivityModifier.unk = Me.theInputFileReader.ReadInt32()
 			aSeqDesc.theActivityModifiers.Add(anActivityModifier)
 
 			inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position

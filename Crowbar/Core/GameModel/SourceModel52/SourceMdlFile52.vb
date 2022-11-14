@@ -1341,10 +1341,10 @@ Public Class SourceMdlFile52
 				aSectionOfAnimation.theBoneFlags.Add(boneFlag)
 
 				'DEBUG:
-				If (boneFlag And &H20) > 0 Then
-					'TODO: Titanfall models get here.
-					Dim unknownFlagIsUsed As Integer = 4242
-				End If
+				'If (boneFlag And &H20) > 0 Then
+				'	'TODO: Titanfall models get here.
+				'	Dim unknownFlagIsUsed As Integer = 4242
+				'End If
 				If boneFlag > &HFF Then
 					Dim unknownFlagIsUsed As Integer = 4242
 				End If
@@ -2621,7 +2621,7 @@ Public Class SourceMdlFile52
 			activityModifierInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 			Dim anActivityModifier As New SourceMdlActivityModifier()
 			anActivityModifier.nameOffset = Me.theInputFileReader.ReadInt32()
-			anActivityModifier.unkV53 = Me.theInputFileReader.ReadInt32()
+			anActivityModifier.unk = Me.theInputFileReader.ReadInt32()
 			aSeqDesc.theActivityModifiers.Add(anActivityModifier)
 
 			inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position

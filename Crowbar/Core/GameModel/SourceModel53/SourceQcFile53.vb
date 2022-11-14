@@ -2325,11 +2325,9 @@ Public Class SourceQcFile53
 			For Each activityModifier As SourceMdlActivityModifier In aSequenceDesc.theActivityModifiers
 				line = vbTab
 				line += "activitymodifier "
-				line += """"
 				line += activityModifier.theName
-				line += """"
-				line += " // "
-				line += activityModifier.unkV53.ToString(TheApp.InternalNumberFormat)
+				'line += " // "
+				'line += activityModifier.unk.ToString(TheApp.InternalNumberFormat)
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
 		End If
