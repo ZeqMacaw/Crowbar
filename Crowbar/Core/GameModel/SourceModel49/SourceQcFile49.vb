@@ -2317,7 +2317,7 @@ Public Class SourceQcFile49
 				Dim anAnimationDesc As SourceMdlAnimationDesc49
 				anAnimationDesc = Me.theMdlFileData.theAnimationDescs(i)
 
-				If anAnimationDesc.theName(0) <> "@" Then
+				If anAnimationDesc.theName = "" OrElse anAnimationDesc.theName(0) <> "@" Then
 					Me.WriteAnimationLine(anAnimationDesc)
 				End If
 			Next
@@ -2462,7 +2462,7 @@ Public Class SourceQcFile49
 
 			line = vbTab
 			line += """"
-			If name(0) = "@" Then
+			If name = "" OrElse name(0) = "@" Then
 				'NOTE: There should only be one implied anim desc.
 				impliedAnimDesc = anAnimationDesc
 				anAnimationDesc.theSmdRelativePathFileName = SourceFileNamesModule.CreateAnimationSmdRelativePathFileName(anAnimationDesc.theSmdRelativePathFileName, Me.theModelName, anAnimationDesc.theName)

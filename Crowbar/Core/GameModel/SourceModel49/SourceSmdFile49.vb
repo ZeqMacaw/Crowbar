@@ -403,7 +403,7 @@ Public Class SourceSmdFile49
 		aSequenceDesc = CType(aSequenceDescBase, SourceMdlSequenceDesc)
 		anAnimationDesc = CType(anAnimationDescBase, SourceMdlAnimationDesc49)
 
-		thisIsForFirstSequence = anAnimationDesc.theName(0) = "@" AndAlso anAnimationDesc.theAnimIsLinkedToSequence AndAlso (anAnimationDesc.theLinkedSequences(0) Is Me.theMdlFileData.theSequenceDescs(0))
+		thisIsForFirstSequence = (anAnimationDesc.theName = "" OrElse anAnimationDesc.theName(0) = "@") AndAlso anAnimationDesc.theAnimIsLinkedToSequence AndAlso (anAnimationDesc.theLinkedSequences(0) Is Me.theMdlFileData.theSequenceDescs(0))
 
 		'skeleton
 		line = "skeleton"

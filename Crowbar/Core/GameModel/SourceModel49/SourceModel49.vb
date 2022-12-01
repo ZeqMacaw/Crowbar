@@ -907,7 +907,7 @@ Public Class SourceModel49
 							anAnimationDesc = Me.theMdlFileData.theAnimationDescs(aSequenceDesc.theAnimDescIndexes(j))
 							name = anAnimationDesc.theName
 
-							If name(0) = "@" Then
+							If name = "" OrElse name(0) = "@" Then
 								'NOTE: There should only be one implied anim desc.
 								'aSequenceDesc.theCorrectiveSubtractAnimationOptionIsUsed = True
 								aSequenceDesc.theCorrectiveAnimationName = SourceFileNamesModule.CreateCorrectiveAnimationName(name)
