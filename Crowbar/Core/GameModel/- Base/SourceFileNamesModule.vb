@@ -139,6 +139,7 @@ Module SourceFileNamesModule
 				bodyGroupSmdFileName += lodIndex.ToString()
 			End If
 
+			bodyGroupSmdFileName = FileManager.GetCleanFileNameWithoutExtension(bodyGroupSmdFileName)
 			bodyGroupSmdFileName = SourceFileNamesModule.GetUniqueSmdFileName(bodyGroupSmdFileName)
 
 			bodyGroupSmdFileName += ".smd"

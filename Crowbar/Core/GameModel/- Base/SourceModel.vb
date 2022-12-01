@@ -464,6 +464,10 @@ Public MustInherit Class SourceModel
 			Me.WriteMeshSmdFile(lodIndex, aVtxModel, aModel, bodyPartVertexIndexStart)
 		Catch ex As PathTooLongException
 			status = "ERROR: Crowbar tried to create """ + smdPathFileName + """ but the system gave this message: " + ex.Message
+		Catch ex As ArgumentException
+			Dim debug As Integer = 4242
+		Catch ex As NotSupportedException
+			Dim debug As Integer = 4242
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		Finally

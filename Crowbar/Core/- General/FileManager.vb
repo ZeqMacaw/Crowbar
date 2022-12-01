@@ -687,6 +687,30 @@ Public Class FileManager
 
 #End Region
 
+#Region "File name"
+
+	'FROM: https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file
+	'Do not use the following reserved names for the name of a file:
+	'CON, PRN, AUX, NUL, COM0, COM1, COM2, COM3, COM4, COM5, COM6, COM7, COM8, COM9, LPT0, LPT1, LPT2, LPT3, LPT4, LPT5, LPT6, LPT7, LPT8, and LPT9. 
+	'Also avoid these names followed immediately by an extension; for example, NUL.txt is not recommended.
+	Public Shared Function GetCleanFileNameWithoutExtension(ByVal fileName As String) As String
+		Dim ReservedWords() As String = {"con", "prn", "aux", "nul", "com0", "com1", "com2", "com3", "com4", "com5", "com6", "com7", "com8", "com9", "lpt0", "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "lpt7", "lpt8", "lpt9"}
+
+		Try
+			For Each reservedWord As String In ReservedWords
+				If fileName.ToLower() = reservedWord Then
+					fileName = "temp"
+				End If
+			Next
+			Return fileName
+		Catch ex As Exception
+			Return String.Empty
+		End Try
+	End Function
+
+
+#End Region
+
 #Region "XML Serialization"
 
 	Public Shared Function ReadXml(ByVal theType As Type, ByVal rootElementName As String, ByVal fileName As String) As Object
