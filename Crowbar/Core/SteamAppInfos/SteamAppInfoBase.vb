@@ -57,6 +57,8 @@ Public Class SteamAppInfoBase
 		steamAppInfos.Add(anAppInfo)
 		anAppInfo = New Left4Dead2SteamAppInfo()
 		steamAppInfos.Add(anAppInfo)
+		anAppInfo = New MilitaryConflictVietnamSteamAppInfo()
+		steamAppInfos.Add(anAppInfo)
 		'anAppInfo = New SteamAppInfo("Source Filmmaker")
 		'steamAppInfos.Add(anAppInfo)
 		'anAppInfo = New SteamAppInfo("Team Fortress 2")
