@@ -57,6 +57,8 @@ Public Class SteamAppInfoBase
 		'steamAppInfos.Add(anAppInfo)
 		anAppInfo = New GarrysModSteamAppInfo()
 		steamAppInfos.Add(anAppInfo)
+		anAppInfo = New HuntDownTheFreemanSteamAppInfo()
+		steamAppInfos.Add(anAppInfo)
 		anAppInfo = New Left4Dead2SteamAppInfo()
 		steamAppInfos.Add(anAppInfo)
 		anAppInfo = New MilitaryConflictVietnamSteamAppInfo()
