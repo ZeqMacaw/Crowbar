@@ -1,4 +1,5 @@
-Public Class SourceMdlBone
+Public Class SourceMdlBone52
+	'Inherits SourceMdlBone
 
 	'FROM: SourceEngineXXXX_source\public\studio.h
 	'// bones
@@ -37,11 +38,6 @@ Public Class SourceMdlBone
 	'	mstudiobone_t(const mstudiobone_t& vOther);
 	'};
 
-	' VERSION 10: 
-	'	char				name[32];	// bone name for symbolic links
-	Public name(31) As Char
-	'------------
-	' VERSION > 10: 
 	'	int					sznameindex;
 	Public nameOffset As Integer
 
@@ -50,30 +46,16 @@ Public Class SourceMdlBone
 	'	int					bonecontroller[6];	// bone controller index, -1 == none
 	Public boneControllerIndex(5) As Integer
 
-	' VERSION 10: 
-	'	float				value[6];	// default DoF values
-	'	float				scale[6];   // scale for delta DoF values
-	Public value(5) As Double
-	Public scale(5) As Double
-	'------------
-	' VERSION > 10: [All the remainingm except flags.]
-
-	'NOTE: Changed to Double, so that the values will be properly written to file with 6 decimal digits.
 	'	Vector				pos;
 	Public position As SourceVector
 
 	'	Quaternion			quat;
 	Public quat As SourceQuaternion
 
-	' VERSION 2531: 
-	'FROM: MDLConverter for VtMB
-	'	float AnimChannels[NUMANIMCHANNELS];
-	Public animChannels(6) As Double
-
 	'NOTE: Changed to Double, so that the values will be properly written to file with 6 decimal digits.
 	'	RadianEuler			rot;
 	Public rotation As SourceVector
-	'	Vector				posscale;
+	'	Vector
 	Public positionScale As SourceVector
 	'	Vector				rotscale;
 	Public rotationScale As SourceVector
@@ -99,9 +81,15 @@ Public Class SourceMdlBone
 	Public surfacePropNameOffset As Integer
 	'	int					contents;		// See BSPFlags.h for the contents flags
 	Public contents As Integer
+	'	int					surfacepropLookup; (this is in normal V49s)
+	Public surfacepropLookup As Integer
+	'	Vector				posscale;
+	Public unkVector As SourceVector
+	'	Vector
+	Public unkVector1 As SourceVector
 
 	'	int					unused[8];		// remove as appropriate
-	Public unused(7) As Integer
+	Public unused As Integer
 
 	'54 words = 54 * 4 bytes = 216 (0xD8) bytes
 
@@ -144,7 +132,11 @@ Public Class SourceMdlBone
 	'#define BONE_HAS_SAVEFRAME_ROT		0x00400000
 	Public Const BONE_SCREEN_ALIGN_SPHERE As Integer = &H8
 	Public Const BONE_SCREEN_ALIGN_CYLINDER As Integer = &H10
-	Public Const BONE_WORLD_ALIGN As Integer = &H20
+
+	' No idea on the actual name for this one, but it's applied to all bones with IKLinks and their children.
+	' New in V52, CSGO also has a bone flag here, however I don't know if it's the same.
+	Public Const BONE_USED_BY_IKCHAIN As Integer = &H20
+
 	Public Const BONE_USED_BY_VERTEX_LOD0 As Integer = &H400
 	Public Const BONE_USED_BY_VERTEX_LOD1 As Integer = &H800
 	Public Const BONE_USED_BY_VERTEX_LOD2 As Integer = &H1000

@@ -20,10 +20,10 @@ Public Class SourceVrdFile53
 	Public Sub WriteCommands()
 		If Me.theMdlFileData.theBones IsNot Nothing Then
 			Dim line As String = ""
-			Dim aBone As SourceMdlBone
-			Dim aParentBone As SourceMdlBone
-			Dim aControlBone As SourceMdlBone
-			Dim aParentControlBone As SourceMdlBone
+			Dim aBone As SourceMdlBone53
+			Dim aParentBone As SourceMdlBone53
+			Dim aControlBone As SourceMdlBone53
+			Dim aParentControlBone As SourceMdlBone53
 			Dim aTrigger As SourceMdlQuatInterpBoneInfo
 			Dim aTriggerTrigger As SourceVector
 			Dim aTriggerQuat As SourceVector
@@ -36,8 +36,8 @@ Public Class SourceVrdFile53
 				aBone = Me.theMdlFileData.theBones(i)
 
 				If aBone.proceduralRuleOffset <> 0 Then
-					If aBone.proceduralRuleType = SourceMdlBone.STUDIO_PROC_AXISINTERP Then
-					ElseIf aBone.proceduralRuleType = SourceMdlBone.STUDIO_PROC_QUATINTERP Then
+					If aBone.proceduralRuleType = SourceMdlBone53.STUDIO_PROC_AXISINTERP Then
+					ElseIf aBone.proceduralRuleType = SourceMdlBone53.STUDIO_PROC_QUATINTERP Then
 						'<helper> Bip01_L_Elbow Bip01_L_UpperArm Bip01_L_UpperArm Bip01_L_Forearm
 						'<display> 1.5 3 3 100
 						'<basepos> 0 0 0

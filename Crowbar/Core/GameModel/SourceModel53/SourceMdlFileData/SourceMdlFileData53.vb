@@ -452,10 +452,10 @@
 	'0120	int					ikchainindex;
 	Public ikChainOffset As Integer
 
-	'0124	int					nummouths;
-	Public mouthCount As Integer
-	'0128	int					mouthindex;
-	Public mouthOffset As Integer
+	'0124	int					numrui;
+	Public ruiCount As Integer
+	'0128	int					ruiindex;
+	Public ruiOffset As Integer
 
 	'012C	int					numlocalposeparameters;
 	Public localPoseParamaterCount As Integer
@@ -488,23 +488,8 @@
 	'	mutable void		*virtualModel;
 	Public virtualModelP As Integer
 
-	'	int					szanimblocknameindex;	
-	Public animBlockNameOffset As Integer
-	'	int					numanimblocks;
-	Public animBlockCount As Integer
-	'	int					animblockindex;
-	Public animBlockOffset As Integer
-	'	mutable void		*animblockModel;
-	Public animBlockModelP As Integer
-
-	'NOTE: Probably not used or used for something else.
 	'	int					bonetablebynameindex;
 	Public boneTableByNameOffset As Integer
-
-	'	void				*pVertexBase;
-	Public vertexBaseP As Integer
-	'	void				*pIndexBase;
-	Public indexBaseP As Integer
 
 	'	byte				constdirectionallightdot;
 	Public directionalLightDot As Byte
@@ -518,68 +503,71 @@
 	'	byte				unused[1];
 	Public unused As Byte
 	'	int					unused4; // zero out if version < 47
-	Public unused4 As Integer
+	Public fadeDistance As Single
 
 	'	int					numflexcontrollerui;
 	Public flexControllerUiCount As Integer
 	'	int					flexcontrolleruiindex;
 	Public flexControllerUiOffset As Integer
 
-	'	float				flVertAnimFixedPointScale;
-	'	inline float		VertAnimFixedPointScale() const { return ( flags & STUDIOHDR_FLAGS_VERT_ANIM_FIXED_POINT_SCALE ) ? flVertAnimFixedPointScale : 1.0f / 4096.0f; }
-	Public vertAnimFixedPointScale As Double
-	'	mutable int			surfacepropLookup;	// this index must be cached by the loader, not saved in the file
-	Public surfacePropLookup As Integer
+	'	void				*pVertexBase;
+	Public vertexBaseP As Integer
+	'	void				*pIndexBase;
+	Public indexBaseP As Integer
 
-	'	// FIXME: Remove when we up the model version. Move all fields of studiohdr2_t into studiohdr_t.
-	'	int					studiohdr2index;
-	Public studioHeader2Offset As Integer
-	'	int					unused2[1];
-	Public unknownOffset01 As Integer
+	' it would be cool to export these strings in a txt but who cares.
+	'	int
+	Public mayaOffset As Integer
 
-	' sutdiohdr2:
 	Public sourceBoneTransformCount As Integer
 	Public sourceBoneTransformOffset As Integer
 	Public illumPositionAttachmentIndex As Integer
-	Public maxEyeDeflection As Double
 	Public linearBoneOffset As Integer
 
-	Public nameOffset As Integer
 	Public boneFlexDriverCount As Integer
 	Public boneFlexDriverOffset As Integer
 
-	'Public reserved(55) As Integer
-	'======
-	'Public studiohdr2(63) As Integer
-	'======
-	Public unknown01 As Integer
-	Public unknown02 As Integer
-	Public unknown03 As Integer
-	Public unknown04 As Integer
+	' High detail collision mesh for static props.
+	Public perTriCollisionOffset As Integer
+	Public perTriCount1 As Integer
+	Public perTriCount2 As Integer
+	Public perTriCount3 As Integer
+
+	' When used the string is normally "Titan", only observed on models for animation.
+	Public unkStringOffset As Integer
+
 	Public vtxOffset As Integer
 	Public vvdOffset As Integer
-	Public unknown05 As Integer
+	Public vvcOffset As Integer
 	Public phyOffset As Integer
 
-	Public unknown06 As Integer
-	Public unknown07 As Integer
-	Public unknown08 As Integer
-	Public unknown09 As Integer
-	Public unknownOffset02 As Integer
-	Public unknown(58) As Integer
+	Public vtxSize As Integer
+	Public vvdSize As Integer
+	Public vvcSize As Integer
+	Public phySize As Integer
 
+	Public unkSectionOffset As Integer
+	' Only used if PHY has a solid count of "1"
+	Public unkSectionCount As Integer
 
+	Public unknown05 As Integer
+	Public unknownOffset06 As Integer
+
+	' Nothing observed past here, however the first in may be a count for unknownOffset06
+	Public reserved(59) As Integer
+
+	'NOTE: Header is 716 bytes.
 
 	'Public theID As String
 	'Public theName As String
 	Public theNameCopy As String
 
-	Public theAnimationDescs As List(Of SourceMdlAnimationDesc52)
+	Public theAnimationDescs As List(Of SourceMdlAnimationDesc53)
 	Public theAnimBlocks As List(Of SourceMdlAnimBlock)
 	Public theAnimBlockRelativePathFileName As String
 	Public theAttachments As List(Of SourceMdlAttachment)
 	Public theBodyParts As List(Of SourceMdlBodyPart)
-	Public theBones As List(Of SourceMdlBone)
+	Public theBones As List(Of SourceMdlBone53)
 	Public theBoneControllers As List(Of SourceMdlBoneController)
 	Public theBoneTableByName As List(Of Integer)
 	Public theFlexDescs As List(Of SourceMdlFlexDesc)
@@ -587,7 +575,7 @@
 	Public theFlexControllerUis As List(Of SourceMdlFlexControllerUi)
 	Public theFlexRules As List(Of SourceMdlFlexRule)
 	Public theHitboxSets As List(Of SourceMdlHitboxSet)
-	Public theIkChains As List(Of SourceMdlIkChain)
+	Public theIkChains As List(Of SourceMdlIkChain53)
 	Public theIkLocks As List(Of SourceMdlIkLock)
 	Public theKeyValuesText As String
 	Public theLocalNodeNames As List(Of String)
@@ -599,6 +587,10 @@
 	Public theSurfacePropName As String
 	Public theTexturePaths As List(Of String)
 	Public theTextures As List(Of SourceMdlTexture)
+	Public theMayaStrings As String
+	Public theDetailedCollision As RSourcePerTriCollisionHeader52
+	Public theRuiHeaders As List(Of RSourceRuiHeader53)
+	Public theRuiMeshes As List(Of RSourceRuiMeshHeader53)
 
 	Public theSectionFrameCount As Integer
 	Public theSectionFrameMinFrameCount As Integer
@@ -610,7 +602,8 @@
 	Public theEyelidFlexFrameIndexes As List(Of Integer)
 	'Public theUpperEyelidFlexFrameIndexes As List(Of Integer)
 
-	Public theFirstAnimationDesc As SourceMdlAnimationDesc52
+	Public theBoneNameToBoneIndexMap As New SortedList(Of String, Integer)()
+	Public theFirstAnimationDesc As SourceMdlAnimationDesc53
 	Public theFirstAnimationDescFrameLines As SortedList(Of Integer, AnimationFrameLine)
 	'Public theMdlFileOnlyHasAnimations As Boolean
 	Public theProceduralBonesCommandIsUsed As Boolean

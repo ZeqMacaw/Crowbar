@@ -517,7 +517,7 @@
 	'	byte				unused[1];
 	Public unused As Byte
 	'	int					unused4; // zero out if version < 47
-	Public unused4 As Integer
+	Public fadeDistance As Single
 
 	'	int					numflexcontrollerui;
 	Public flexControllerUiCount As Integer
@@ -534,7 +534,7 @@
 	'	int					studiohdr2index;
 	Public studioHeader2Offset As Integer
 	'	int					unused2[1];
-	Public unused2 As Integer
+	Public mayaOffset As Integer
 
 	' sutdiohdr2:
 	Public sourceBoneTransformCount As Integer
@@ -547,11 +547,16 @@
 	Public boneFlexDriverCount As Integer
 	Public boneFlexDriverOffset As Integer
 
-	'NOTE: Just skip reading these bytes, because it unknown if any are used.
-	'Public reserved(55) As Integer
-	'======
-	'Public studiohdr2(63) As Integer
+	' High detail collision mesh for static props.
+	Public perTriCollisionOffset As Integer
+	Public perTriCount1 As Integer
+	Public perTriCount2 As Integer
+	Public perTriCount3 As Integer
 
+	' When used the string is normally "Titan", only observed on models for animation.
+	Public unkStringOffset As Integer
+
+	Public reserved(38) As Integer
 
 
 	'Public theID As String
@@ -562,7 +567,7 @@
 	Public theAnimBlockRelativePathFileName As String
 	Public theAttachments As List(Of SourceMdlAttachment)
 	Public theBodyParts As List(Of SourceMdlBodyPart)
-	Public theBones As List(Of SourceMdlBone)
+	Public theBones As List(Of SourceMdlBone52)
 	Public theBoneControllers As List(Of SourceMdlBoneController)
 	Public theBoneTableByName As List(Of Integer)
 	Public theFlexDescs As List(Of SourceMdlFlexDesc)
@@ -584,6 +589,8 @@
 	Public theSurfacePropName As String
 	Public theTexturePaths As List(Of String)
 	Public theTextures As List(Of SourceMdlTexture)
+	Public theMayaStrings As String
+	Public theDetailedCollision As RSourcePerTriCollisionHeader52
 
 	Public theSectionFrameCount As Integer
 	Public theSectionFrameMinFrameCount As Integer

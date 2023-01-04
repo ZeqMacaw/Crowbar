@@ -349,6 +349,8 @@ Public Class SourceModel52
 			mdlFile.ReadMdlHeader02("MDL File Header 02")
 		End If
 
+		mdlFile.ReadMayaStrings()
+
 		mdlFile.ReadBones()
 		mdlFile.ReadBoneControllers()
 		mdlFile.ReadAttachments()
@@ -394,6 +396,8 @@ Public Class SourceModel52
 
 		mdlFile.ReadBoneTransforms()
 		mdlFile.ReadLinearBoneTable()
+
+		mdlFile.ReadPerTriCollisionHeader()
 
 		'TODO: ReadLocalIkAutoPlayLocks()
 		mdlFile.ReadFlexControllerUis()
@@ -465,6 +469,8 @@ Public Class SourceModel52
 
 			qcFile.WriteStaticPropCommand()
 			qcFile.WriteConstDirectionalLightCommand()
+
+			qcFile.WriteFadeDistanceCommand()
 
 			'If Me.theMdlFileData.theModelCommandIsUsed Then
 			'	qcFile.WriteModelCommand()
