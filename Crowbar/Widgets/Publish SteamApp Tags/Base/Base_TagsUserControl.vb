@@ -82,6 +82,7 @@ Public Class Base_TagsUserControl
 
 #Region "Properties"
 
+	<Browsable(False)>
 	Public Overridable Property ItemTags As BindingListEx(Of String)
 		Get
 			'NOTE: Prevent Visual Studio Designer from complaining about changes to tag widgets.
