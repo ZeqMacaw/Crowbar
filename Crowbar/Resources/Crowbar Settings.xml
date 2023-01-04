@@ -585,6 +585,17 @@
       <PackerPathFileName>&lt;library1&gt;\steamapps\common\Source SDK Base 2013 Multiplayer\bin\vpk.exe</PackerPathFileName>
     </GameSetup>
     <GameSetup>
+      <GameName>Jabroni Brawl: Episode 3</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Jabroni Brawl Episode 3\jbep3\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Jabroni Brawl Episode 3\launcher.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Jabroni Brawl Episode 3\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Jabroni Brawl Episode 3\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Jabroni Brawl Episode 3\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Jabroni Brawl Episode 3\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
       <GameName>Lambda Wars Beta</GameName>
       <GameEngine>Source</GameEngine>
       <GamePathFileName>&lt;library1&gt;\steamapps\common\Lambda Wars\lambdawars\GameInfo.txt</GamePathFileName>
