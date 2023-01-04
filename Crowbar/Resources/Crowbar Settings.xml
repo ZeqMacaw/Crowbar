@@ -563,6 +563,17 @@
       <PackerPathFileName>&lt;library1&gt;\steamapps\common\Half-Life 2\bin\vpk.exe</PackerPathFileName>
     </GameSetup>
     <GameSetup>
+      <GameName>Hunt Down The Freeman</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Hunt Down The Freeman\HDtF\GameInfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Hunt Down The Freeman\hdtf.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Hunt Down The Freeman\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Hunt Down The Freeman\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Hunt Down The Freeman\bin\hammer.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Hunt Down The Freeman\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
       <GameName>INFRA</GameName>
       <GameEngine>Source</GameEngine>
       <GamePathFileName>&lt;library1&gt;\steamapps\common\infra\infra\gameinfo.txt</GamePathFileName>
