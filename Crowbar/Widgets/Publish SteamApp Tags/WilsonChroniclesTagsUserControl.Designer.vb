@@ -22,99 +22,99 @@ Partial Class WilsonChroniclesTagsUserControl
 	'Do not modify it using the code editor.
 	<System.Diagnostics.DebuggerStepThrough()>
 	Private Sub InitializeComponent()
-		Me.MultiplayerTagCheckBox = New Crowbar.CheckBoxEx()
-		Me.SingleplayerTagCheckBox = New Crowbar.CheckBoxEx()
-		Me.WeaponTagCheckBox = New Crowbar.CheckBoxEx()
-		Me.NPCTagCheckBox = New Crowbar.CheckBoxEx()
-		Me.EnvironmentTagCheckBox = New Crowbar.CheckBoxEx()
-		Me.CreatureTagCheckBox = New Crowbar.CheckBoxEx()
-		Me.FixesCheckBoxEx = New Crowbar.CheckBoxEx()
+		Me.ParticlesCheckBox = New Crowbar.CheckBoxEx()
+		Me.PropsCheckBox = New Crowbar.CheckBoxEx()
+		Me.WeaponsCheckBox = New Crowbar.CheckBoxEx()
+		Me.NPCsCheckBox = New Crowbar.CheckBoxEx()
+		Me.CampaignCheckBox = New Crowbar.CheckBoxEx()
+		Me.MapCheckBox = New Crowbar.CheckBoxEx()
+		Me.FixesCheckBox = New Crowbar.CheckBoxEx()
 		Me.CheckBoxEx1 = New Crowbar.CheckBoxEx()
 		Me.SuspendLayout()
 		'
-		'MultiplayerTagCheckBox
+		'ParticlesCheckBox
 		'
-		Me.MultiplayerTagCheckBox.AutoSize = True
-		Me.MultiplayerTagCheckBox.IsReadOnly = False
-		Me.MultiplayerTagCheckBox.Location = New System.Drawing.Point(3, 72)
-		Me.MultiplayerTagCheckBox.Name = "MultiplayerTagCheckBox"
-		Me.MultiplayerTagCheckBox.Size = New System.Drawing.Size(68, 17)
-		Me.MultiplayerTagCheckBox.TabIndex = 1
-		Me.MultiplayerTagCheckBox.Tag = "Particles"
-		Me.MultiplayerTagCheckBox.Text = "Particles"
-		Me.MultiplayerTagCheckBox.UseVisualStyleBackColor = True
+		Me.ParticlesCheckBox.AutoSize = True
+		Me.ParticlesCheckBox.IsReadOnly = False
+		Me.ParticlesCheckBox.Location = New System.Drawing.Point(3, 72)
+		Me.ParticlesCheckBox.Name = "ParticlesCheckBox"
+		Me.ParticlesCheckBox.Size = New System.Drawing.Size(68, 17)
+		Me.ParticlesCheckBox.TabIndex = 1
+		Me.ParticlesCheckBox.Tag = "Particles"
+		Me.ParticlesCheckBox.Text = "Particles"
+		Me.ParticlesCheckBox.UseVisualStyleBackColor = True
 		'
-		'SingleplayerTagCheckBox
+		'PropsCheckBox
 		'
-		Me.SingleplayerTagCheckBox.AutoSize = True
-		Me.SingleplayerTagCheckBox.IsReadOnly = False
-		Me.SingleplayerTagCheckBox.Location = New System.Drawing.Point(3, 49)
-		Me.SingleplayerTagCheckBox.Name = "SingleplayerTagCheckBox"
-		Me.SingleplayerTagCheckBox.Size = New System.Drawing.Size(55, 17)
-		Me.SingleplayerTagCheckBox.TabIndex = 0
-		Me.SingleplayerTagCheckBox.Tag = "Props"
-		Me.SingleplayerTagCheckBox.Text = "Props"
-		Me.SingleplayerTagCheckBox.UseVisualStyleBackColor = True
+		Me.PropsCheckBox.AutoSize = True
+		Me.PropsCheckBox.IsReadOnly = False
+		Me.PropsCheckBox.Location = New System.Drawing.Point(3, 49)
+		Me.PropsCheckBox.Name = "PropsCheckBox"
+		Me.PropsCheckBox.Size = New System.Drawing.Size(55, 17)
+		Me.PropsCheckBox.TabIndex = 0
+		Me.PropsCheckBox.Tag = "Props"
+		Me.PropsCheckBox.Text = "Props"
+		Me.PropsCheckBox.UseVisualStyleBackColor = True
 		'
-		'WeaponTagCheckBox
+		'WeaponsCheckBox
 		'
-		Me.WeaponTagCheckBox.AutoSize = True
-		Me.WeaponTagCheckBox.IsReadOnly = False
-		Me.WeaponTagCheckBox.Location = New System.Drawing.Point(3, 3)
-		Me.WeaponTagCheckBox.Name = "WeaponTagCheckBox"
-		Me.WeaponTagCheckBox.Size = New System.Drawing.Size(75, 17)
-		Me.WeaponTagCheckBox.TabIndex = 3
-		Me.WeaponTagCheckBox.Tag = "Weapons"
-		Me.WeaponTagCheckBox.Text = "Weapons"
-		Me.WeaponTagCheckBox.UseVisualStyleBackColor = True
+		Me.WeaponsCheckBox.AutoSize = True
+		Me.WeaponsCheckBox.IsReadOnly = False
+		Me.WeaponsCheckBox.Location = New System.Drawing.Point(3, 3)
+		Me.WeaponsCheckBox.Name = "WeaponsCheckBox"
+		Me.WeaponsCheckBox.Size = New System.Drawing.Size(75, 17)
+		Me.WeaponsCheckBox.TabIndex = 3
+		Me.WeaponsCheckBox.Tag = "Weapons"
+		Me.WeaponsCheckBox.Text = "Weapons"
+		Me.WeaponsCheckBox.UseVisualStyleBackColor = True
 		'
-		'NPCTagCheckBox
+		'NPCsCheckBox
 		'
-		Me.NPCTagCheckBox.AutoSize = True
-		Me.NPCTagCheckBox.IsReadOnly = False
-		Me.NPCTagCheckBox.Location = New System.Drawing.Point(3, 26)
-		Me.NPCTagCheckBox.Name = "NPCTagCheckBox"
-		Me.NPCTagCheckBox.Size = New System.Drawing.Size(52, 17)
-		Me.NPCTagCheckBox.TabIndex = 2
-		Me.NPCTagCheckBox.Tag = "NPCs"
-		Me.NPCTagCheckBox.Text = "NPCs"
-		Me.NPCTagCheckBox.UseVisualStyleBackColor = True
+		Me.NPCsCheckBox.AutoSize = True
+		Me.NPCsCheckBox.IsReadOnly = False
+		Me.NPCsCheckBox.Location = New System.Drawing.Point(3, 26)
+		Me.NPCsCheckBox.Name = "NPCsCheckBox"
+		Me.NPCsCheckBox.Size = New System.Drawing.Size(52, 17)
+		Me.NPCsCheckBox.TabIndex = 2
+		Me.NPCsCheckBox.Tag = "NPCs"
+		Me.NPCsCheckBox.Text = "NPCs"
+		Me.NPCsCheckBox.UseVisualStyleBackColor = True
 		'
-		'EnvironmentTagCheckBox
+		'CampaignCheckBox
 		'
-		Me.EnvironmentTagCheckBox.AutoSize = True
-		Me.EnvironmentTagCheckBox.IsReadOnly = False
-		Me.EnvironmentTagCheckBox.Location = New System.Drawing.Point(3, 118)
-		Me.EnvironmentTagCheckBox.Name = "EnvironmentTagCheckBox"
-		Me.EnvironmentTagCheckBox.Size = New System.Drawing.Size(78, 17)
-		Me.EnvironmentTagCheckBox.TabIndex = 1
-		Me.EnvironmentTagCheckBox.Tag = "Campaign"
-		Me.EnvironmentTagCheckBox.Text = "Campaign"
-		Me.EnvironmentTagCheckBox.UseVisualStyleBackColor = True
+		Me.CampaignCheckBox.AutoSize = True
+		Me.CampaignCheckBox.IsReadOnly = False
+		Me.CampaignCheckBox.Location = New System.Drawing.Point(3, 118)
+		Me.CampaignCheckBox.Name = "CampaignCheckBox"
+		Me.CampaignCheckBox.Size = New System.Drawing.Size(78, 17)
+		Me.CampaignCheckBox.TabIndex = 1
+		Me.CampaignCheckBox.Tag = "Campaign"
+		Me.CampaignCheckBox.Text = "Campaign"
+		Me.CampaignCheckBox.UseVisualStyleBackColor = True
 		'
-		'CreatureTagCheckBox
+		'MapCheckBox
 		'
-		Me.CreatureTagCheckBox.AutoSize = True
-		Me.CreatureTagCheckBox.IsReadOnly = False
-		Me.CreatureTagCheckBox.Location = New System.Drawing.Point(3, 95)
-		Me.CreatureTagCheckBox.Name = "CreatureTagCheckBox"
-		Me.CreatureTagCheckBox.Size = New System.Drawing.Size(49, 17)
-		Me.CreatureTagCheckBox.TabIndex = 0
-		Me.CreatureTagCheckBox.Tag = "Map"
-		Me.CreatureTagCheckBox.Text = "Map"
-		Me.CreatureTagCheckBox.UseVisualStyleBackColor = True
+		Me.MapCheckBox.AutoSize = True
+		Me.MapCheckBox.IsReadOnly = False
+		Me.MapCheckBox.Location = New System.Drawing.Point(3, 95)
+		Me.MapCheckBox.Name = "MapCheckBox"
+		Me.MapCheckBox.Size = New System.Drawing.Size(49, 17)
+		Me.MapCheckBox.TabIndex = 0
+		Me.MapCheckBox.Tag = "Map"
+		Me.MapCheckBox.Text = "Map"
+		Me.MapCheckBox.UseVisualStyleBackColor = True
 		'
-		'FixesCheckBoxEx
+		'FixesCheckBox
 		'
-		Me.FixesCheckBoxEx.AutoSize = True
-		Me.FixesCheckBoxEx.IsReadOnly = False
-		Me.FixesCheckBoxEx.Location = New System.Drawing.Point(3, 141)
-		Me.FixesCheckBoxEx.Name = "FixesCheckBoxEx"
-		Me.FixesCheckBoxEx.Size = New System.Drawing.Size(51, 17)
-		Me.FixesCheckBoxEx.TabIndex = 4
-		Me.FixesCheckBoxEx.Tag = "Fixes"
-		Me.FixesCheckBoxEx.Text = "Fixes"
-		Me.FixesCheckBoxEx.UseVisualStyleBackColor = True
+		Me.FixesCheckBox.AutoSize = True
+		Me.FixesCheckBox.IsReadOnly = False
+		Me.FixesCheckBox.Location = New System.Drawing.Point(3, 141)
+		Me.FixesCheckBox.Name = "FixesCheckBox"
+		Me.FixesCheckBox.Size = New System.Drawing.Size(51, 17)
+		Me.FixesCheckBox.TabIndex = 4
+		Me.FixesCheckBox.Tag = "Fixes"
+		Me.FixesCheckBox.Text = "Fixes"
+		Me.FixesCheckBox.UseVisualStyleBackColor = True
 		'
 		'CheckBoxEx1
 		'
@@ -132,25 +132,25 @@ Partial Class WilsonChroniclesTagsUserControl
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-		Me.Controls.Add(Me.FixesCheckBoxEx)
-		Me.Controls.Add(Me.WeaponTagCheckBox)
-		Me.Controls.Add(Me.MultiplayerTagCheckBox)
-		Me.Controls.Add(Me.NPCTagCheckBox)
-		Me.Controls.Add(Me.SingleplayerTagCheckBox)
-		Me.Controls.Add(Me.EnvironmentTagCheckBox)
-		Me.Controls.Add(Me.CreatureTagCheckBox)
+		Me.Controls.Add(Me.FixesCheckBox)
+		Me.Controls.Add(Me.WeaponsCheckBox)
+		Me.Controls.Add(Me.ParticlesCheckBox)
+		Me.Controls.Add(Me.NPCsCheckBox)
+		Me.Controls.Add(Me.PropsCheckBox)
+		Me.Controls.Add(Me.CampaignCheckBox)
+		Me.Controls.Add(Me.MapCheckBox)
 		Me.Name = "WilsonChroniclesTagsUserControl"
 		Me.Size = New System.Drawing.Size(87, 166)
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
 
 	End Sub
-	Friend WithEvents MultiplayerTagCheckBox As CheckBoxEx
-	Friend WithEvents SingleplayerTagCheckBox As CheckBoxEx
-	Friend WithEvents WeaponTagCheckBox As CheckBoxEx
-	Friend WithEvents NPCTagCheckBox As CheckBoxEx
-	Friend WithEvents EnvironmentTagCheckBox As CheckBoxEx
-	Friend WithEvents CreatureTagCheckBox As CheckBoxEx
-	Friend WithEvents FixesCheckBoxEx As CheckBoxEx
+	Friend WithEvents ParticlesCheckBox As CheckBoxEx
+	Friend WithEvents PropsCheckBox As CheckBoxEx
+	Friend WithEvents WeaponsCheckBox As CheckBoxEx
+	Friend WithEvents NPCsCheckBox As CheckBoxEx
+	Friend WithEvents CampaignCheckBox As CheckBoxEx
+	Friend WithEvents MapCheckBox As CheckBoxEx
+	Friend WithEvents FixesCheckBox As CheckBoxEx
 	Friend WithEvents CheckBoxEx1 As CheckBoxEx
 End Class
