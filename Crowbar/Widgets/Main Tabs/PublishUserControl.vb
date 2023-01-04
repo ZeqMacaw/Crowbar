@@ -17,8 +17,8 @@ Public Class PublishUserControl
 
 		' Set the ToolStrip and its child controls to use same default FontSize as the other controls. 
 		'    Inexplicably, the default FontSize for them is 9 instead of 8.25 like all other controls.
-		Me.ToolStrip1.Font = Me.Font
-		For Each widget As Control In Me.ToolStrip1.Controls
+		Me.ItemListToolStrip.Font = Me.Font
+		For Each widget As Control In Me.ItemListToolStrip.Controls
 			widget.Font = Me.Font
 		Next
 
@@ -275,6 +275,8 @@ Public Class PublishUserControl
 	End Sub
 
 	Private Sub InitItemDetailWidgets()
+		Me.ItemGroupBox.Enabled = False
+
 		Me.ItemTitleTextBox.MaxLength = CInt(Steamworks.Constants.k_cchPublishedDocumentTitleMax)
 		Me.ItemDescriptionTextBox.MaxLength = CInt(Steamworks.Constants.k_cchPublishedDocumentDescriptionMax)
 		Me.ItemChangeNoteTextBox.MaxLength = CInt(Steamworks.Constants.k_cchPublishedDocumentChangeDescriptionMax)
@@ -303,6 +305,8 @@ Public Class PublishUserControl
 		Me.ItemVisibilityComboBox.ValueMember = "Key"
 		Me.ItemVisibilityComboBox.DataSource = EnumHelper.ToList(GetType(WorkshopItem.SteamUGCPublishedItemVisibility))
 		Me.ItemVisibilityComboBox.DataBindings.Add("SelectedValue", Me.theItemBindingSource, "Visibility", False, DataSourceUpdateMode.OnPropertyChanged)
+
+		Me.PublishItemButton.Enabled = False
 	End Sub
 
 #End Region
@@ -829,7 +833,7 @@ Public Class PublishUserControl
 	End Sub
 
 	Private Sub UpdateSteamAppWidgets()
-		'NOTE: If this has not been created, then app is in not far enough in Init() and not ready for update.
+		'NOTE: If this has not been created, then app is not far enough in Init() and not ready for update.
 		If Me.theEntireListOfItems Is Nothing OrElse Me.theSelectedGameIsStillUpdatingInterface Then
 			Exit Sub
 		End If
@@ -1110,8 +1114,17 @@ Public Class PublishUserControl
 		End If
 
 		If Me.theSelectedGameNeedsRefresh OrElse Me.theUserSteamID = 0 Then
-			Me.ItemCountsToolStripLabel.Text = "Refresh to see list"
+			'Me.ItemsDataGridView.Enabled = False
+			'Me.ItemsDataGridView.ReadOnly = True
+			'Me.ItemListToolStrip.Enabled = False
+			'Me.ItemCountsToolStripLabel.Text = "Refresh to see list"
+			Me.ExplanationTextBox.Visible = True
 		Else
+			'Me.ItemsDataGridView.Enabled = True
+			'Me.ItemsDataGridView.ReadOnly = False
+			'Me.ItemListToolStrip.Enabled = True
+			Me.ExplanationTextBox.Visible = False
+
 			Dim draftItemsDisplayedCount As UInteger = Me.theDisplayedItems.DraftItemCount
 			Dim publishedItemsDisplayedCount As UInteger = Me.theDisplayedItems.PublishedItemCount
 			Dim draftItemsTotalCount As UInteger = Me.theEntireListOfItems.DraftItemCount

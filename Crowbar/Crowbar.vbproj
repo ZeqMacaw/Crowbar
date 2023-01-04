@@ -545,6 +545,10 @@
     <Compile Include="Widgets\- General\CheckBoxEx.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Widgets\- General\DataGridViewEx.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Widgets\- General\DataGridViewRadioButtonColumn.vb" />
     <Compile Include="Widgets\- General\DateTimeTextBoxEx.vb">
       <SubType>Component</SubType>
     </Compile>
@@ -794,6 +798,9 @@
     <EmbeddedResource Include="Widgets\- Application\MacroDataGridView.resx">
       <DependentUpon>MacroDataGridView.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\- General\DataGridViewEx.resx">
+      <DependentUpon>DataGridViewEx.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Widgets\- General\TreeViewEx.resx">
       <DependentUpon>TreeViewEx.vb</DependentUpon>
     </EmbeddedResource>
@@ -912,7 +919,9 @@
     <Content Include="Resources\CrowbarLauncher.exe" />
     <Content Include="Resources\Steamworks.NET.dll" />
     <Content Include="Resources\steam_api.dll" />
-    <None Include="Resources\Crowbar Settings.xml" />
+    <None Include="Resources\Crowbar Settings.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Resources\CancelRefresh.png" />
     <None Include="Resources\CancelSearch.png" />
     <Content Include="Resources\CrowbarGuideBanner.png" />
