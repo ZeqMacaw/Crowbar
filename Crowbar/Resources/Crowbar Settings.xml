@@ -618,6 +618,28 @@
       <PackerPathFileName>&lt;library1&gt;\steamapps\common\Left 4 Dead 2\bin\vpk.exe</PackerPathFileName>
     </GameSetup>
     <GameSetup>
+      <GameName>Military Conflict: Vietnam</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Military Conflict - Vietnam\vietnam\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Military Conflict - Vietnam\mcv.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Military Conflict - Vietnam\bin\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Military Conflict - Vietnam\bin\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Military Conflict - Vietnam\bin\hammerplusplus.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Military Conflict - Vietnam\bin\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
+      <GameName>Military Conflict: Vietnam (64-bit)</GameName>
+      <GameEngine>Source</GameEngine>
+      <GamePathFileName>&lt;library1&gt;\steamapps\common\Military Conflict - Vietnam\vietnam\gameinfo.txt</GamePathFileName>
+      <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Military Conflict - Vietnam\mcv_x64.exe</GameAppPathFileName>
+      <GameAppOptions />
+      <CompilerPathFileName>&lt;library1&gt;\steamapps\common\Military Conflict - Vietnam\bin\win64\studiomdl.exe</CompilerPathFileName>
+      <ViewerPathFileName>&lt;library1&gt;\steamapps\common\Military Conflict - Vietnam\bin\win64\hlmv.exe</ViewerPathFileName>
+      <MappingToolPathFileName>&lt;library1&gt;\steamapps\common\Military Conflict - Vietnam\bin\win64\hammerplusplus.exe</MappingToolPathFileName>
+      <PackerPathFileName>&lt;library1&gt;\steamapps\common\Military Conflict - Vietnam\bin\win64\vpk.exe</PackerPathFileName>
+    </GameSetup>
+    <GameSetup>
       <GameName>MINERVA: Metastasis</GameName>
       <GameEngine>Source</GameEngine>
       <GamePathFileName>&lt;library1&gt;\steamapps\common\MINERVA\metastasis\gameinfo.txt</GamePathFileName>
