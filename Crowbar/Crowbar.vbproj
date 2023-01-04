@@ -889,6 +889,9 @@
     <EmbeddedResource Include="Widgets\Publish SteamApp Tags\Base\Base_TagsUserControl.resx">
       <DependentUpon>Base_TagsUserControl.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\Publish SteamApp Tags\MilitaryConflictVietnamTagsUserControl.resx">
+      <DependentUpon>MilitaryConflictVietnamTagsUserControl.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Widgets\Publish SteamApp Tags\WilsonChroniclesTagsUserControl.resx">
       <DependentUpon>WilsonChroniclesTagsUserControl.vb</DependentUpon>
     </EmbeddedResource>
