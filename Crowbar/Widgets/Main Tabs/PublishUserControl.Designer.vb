@@ -11,6 +11,7 @@ Partial Class PublishUserControl
 	<System.Diagnostics.DebuggerStepThrough()>
 	Private Sub InitializeComponent()
 		Me.components = New System.ComponentModel.Container()
+		Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
 		Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PublishUserControl))
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
 		Me.RefreshGameItemsButton = New System.Windows.Forms.Button()
@@ -20,8 +21,8 @@ Partial Class PublishUserControl
 		Me.QuotaProgressBar = New Crowbar.ProgressBarEx()
 		Me.TopMiddleSplitContainer = New Crowbar.SplitContainerEx()
 		Me.ItemsPanel = New System.Windows.Forms.Panel()
-		Me.ItemsDataGridView = New System.Windows.Forms.DataGridView()
-		Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
+		Me.ItemsDataGridView = New Crowbar.DataGridViewEx()
+		Me.ItemListToolStrip = New System.Windows.Forms.ToolStrip()
 		Me.AddItemToolStripButton = New System.Windows.Forms.ToolStripButton()
 		Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
 		Me.SearchItemsToolStripComboBox = New System.Windows.Forms.ToolStripComboBox()
@@ -74,13 +75,14 @@ Partial Class PublishUserControl
 		Me.LogTextBox = New Crowbar.RichTextBoxEx()
 		Me.PublishItemButton = New System.Windows.Forms.Button()
 		Me.QueueListView = New System.Windows.Forms.ListView()
+		Me.ExplanationTextBox = New Crowbar.TextBoxEx()
 		CType(Me.TopMiddleSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.TopMiddleSplitContainer.Panel1.SuspendLayout()
 		Me.TopMiddleSplitContainer.Panel2.SuspendLayout()
 		Me.TopMiddleSplitContainer.SuspendLayout()
 		Me.ItemsPanel.SuspendLayout()
 		CType(Me.ItemsDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
-		Me.ToolStrip1.SuspendLayout()
+		Me.ItemListToolStrip.SuspendLayout()
 		Me.GamePanel.SuspendLayout()
 		CType(Me.MiddleBottomSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.MiddleBottomSplitContainer.Panel1.SuspendLayout()
@@ -169,6 +171,7 @@ Partial Class PublishUserControl
 		'
 		'TopMiddleSplitContainer.Panel1
 		'
+		Me.TopMiddleSplitContainer.Panel1.Controls.Add(Me.ExplanationTextBox)
 		Me.TopMiddleSplitContainer.Panel1.Controls.Add(Me.ItemsPanel)
 		Me.TopMiddleSplitContainer.Panel1.Controls.Add(Me.GamePanel)
 		Me.TopMiddleSplitContainer.Panel1.Padding = New System.Windows.Forms.Padding(3, 0, 3, 3)
@@ -185,7 +188,7 @@ Partial Class PublishUserControl
 		'
 		Me.ItemsPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
 		Me.ItemsPanel.Controls.Add(Me.ItemsDataGridView)
-		Me.ItemsPanel.Controls.Add(Me.ToolStrip1)
+		Me.ItemsPanel.Controls.Add(Me.ItemListToolStrip)
 		Me.ItemsPanel.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.ItemsPanel.Location = New System.Drawing.Point(3, 26)
 		Me.ItemsPanel.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
@@ -201,6 +204,14 @@ Partial Class PublishUserControl
 		Me.ItemsDataGridView.AllowUserToResizeRows = False
 		Me.ItemsDataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.ItemsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+		DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+		DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+		DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+		DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+		DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+		DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+		DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+		Me.ItemsDataGridView.DefaultCellStyle = DataGridViewCellStyle1
 		Me.ItemsDataGridView.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.ItemsDataGridView.Location = New System.Drawing.Point(0, 0)
 		Me.ItemsDataGridView.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
@@ -214,18 +225,18 @@ Partial Class PublishUserControl
 		Me.ItemsDataGridView.Size = New System.Drawing.Size(760, 81)
 		Me.ItemsDataGridView.TabIndex = 3
 		'
-		'ToolStrip1
+		'ItemListToolStrip
 		'
-		Me.ToolStrip1.CanOverflow = False
-		Me.ToolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom
-		Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-		Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddItemToolStripButton, Me.ToolStripSeparator1, Me.SearchItemsToolStripComboBox, Me.SearchItemsToolStripTextBox, Me.SearchItemsToolStripButton, Me.ToolStripSeparator2, Me.ItemCountsToolStripLabel, Me.FindItemToolStripTextBox})
-		Me.ToolStrip1.Location = New System.Drawing.Point(0, 81)
-		Me.ToolStrip1.Name = "ToolStrip1"
-		Me.ToolStrip1.Size = New System.Drawing.Size(760, 25)
-		Me.ToolStrip1.Stretch = True
-		Me.ToolStrip1.TabIndex = 30
-		Me.ToolStrip1.Text = "ToolStrip1"
+		Me.ItemListToolStrip.CanOverflow = False
+		Me.ItemListToolStrip.Dock = System.Windows.Forms.DockStyle.Bottom
+		Me.ItemListToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+		Me.ItemListToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddItemToolStripButton, Me.ToolStripSeparator1, Me.SearchItemsToolStripComboBox, Me.SearchItemsToolStripTextBox, Me.SearchItemsToolStripButton, Me.ToolStripSeparator2, Me.ItemCountsToolStripLabel, Me.FindItemToolStripTextBox})
+		Me.ItemListToolStrip.Location = New System.Drawing.Point(0, 81)
+		Me.ItemListToolStrip.Name = "ItemListToolStrip"
+		Me.ItemListToolStrip.Size = New System.Drawing.Size(760, 25)
+		Me.ItemListToolStrip.Stretch = True
+		Me.ItemListToolStrip.TabIndex = 30
+		Me.ItemListToolStrip.Text = "ToolStrip1"
 		'
 		'AddItemToolStripButton
 		'
@@ -808,6 +819,18 @@ Partial Class PublishUserControl
 		Me.QueueListView.UseCompatibleStateImageBehavior = False
 		Me.QueueListView.Visible = False
 		'
+		'ExplanationTextBox
+		'
+		Me.ExplanationTextBox.CueBannerText = ""
+		Me.ExplanationTextBox.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.ExplanationTextBox.Location = New System.Drawing.Point(3, 26)
+		Me.ExplanationTextBox.Multiline = True
+		Me.ExplanationTextBox.Name = "ExplanationTextBox"
+		Me.ExplanationTextBox.ReadOnly = True
+		Me.ExplanationTextBox.Size = New System.Drawing.Size(764, 110)
+		Me.ExplanationTextBox.TabIndex = 38
+		Me.ExplanationTextBox.Text = resources.GetString("ExplanationTextBox.Text")
+		'
 		'PublishUserControl
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -817,14 +840,15 @@ Partial Class PublishUserControl
 		Me.Name = "PublishUserControl"
 		Me.Size = New System.Drawing.Size(770, 534)
 		Me.TopMiddleSplitContainer.Panel1.ResumeLayout(False)
+		Me.TopMiddleSplitContainer.Panel1.PerformLayout()
 		Me.TopMiddleSplitContainer.Panel2.ResumeLayout(False)
 		CType(Me.TopMiddleSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.TopMiddleSplitContainer.ResumeLayout(False)
 		Me.ItemsPanel.ResumeLayout(False)
 		Me.ItemsPanel.PerformLayout()
 		CType(Me.ItemsDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
-		Me.ToolStrip1.ResumeLayout(False)
-		Me.ToolStrip1.PerformLayout()
+		Me.ItemListToolStrip.ResumeLayout(False)
+		Me.ItemListToolStrip.PerformLayout()
 		Me.GamePanel.ResumeLayout(False)
 		Me.MiddleBottomSplitContainer.Panel1.ResumeLayout(False)
 		Me.MiddleBottomSplitContainer.Panel2.ResumeLayout(False)
@@ -852,7 +876,7 @@ Partial Class PublishUserControl
 	End Sub
 
 	Friend WithEvents TopMiddleSplitContainer As SplitContainerEx
-	Friend WithEvents ItemsDataGridView As DataGridView
+	Friend WithEvents ItemsDataGridView As DataGridViewEx
 	Friend WithEvents PublishRequiresSteamLabel As Label
 	Friend WithEvents OpenSteamSubscriberAgreementButton As Button
 	Friend WithEvents AppIdComboBox As ComboBox
@@ -886,7 +910,7 @@ Partial Class PublishUserControl
 	Friend WithEvents QueueListView As ListView
 	Friend WithEvents LogTextBox As RichTextBoxEx
 	Friend WithEvents PublishItemButton As Button
-	Friend WithEvents ToolStrip1 As ToolStrip
+	Friend WithEvents ItemListToolStrip As ToolStrip
 	Friend WithEvents ItemCountsToolStripLabel As ToolStripLabel
 	Friend WithEvents FindItemToolStripTextBox As ToolStripSpringTextBox
 	Friend WithEvents SearchItemsToolStripButton As ToolStripButton
@@ -913,4 +937,5 @@ Partial Class PublishUserControl
 	Friend WithEvents ItemDescriptionTopPanel As Panel
 	Friend WithEvents ItemChangeNoteTopPanel As Panel
 	Friend WithEvents ToggleWordWrapForChangeNotePanel As Panel
+	Friend WithEvents ExplanationTextBox As TextBoxEx
 End Class

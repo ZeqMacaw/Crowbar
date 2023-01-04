@@ -557,6 +557,10 @@
     <Compile Include="Widgets\- General\CheckBoxEx.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Widgets\- General\DataGridViewEx.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Widgets\- General\DataGridViewRadioButtonColumn.vb" />
     <Compile Include="Widgets\- General\DateTimeTextBoxEx.vb">
       <SubType>Component</SubType>
     </Compile>
@@ -823,6 +827,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\- Application\MacroDataGridView.resx">
       <DependentUpon>MacroDataGridView.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\- General\DataGridViewEx.resx">
+      <DependentUpon>DataGridViewEx.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\- General\TreeViewEx.resx">
       <DependentUpon>TreeViewEx.vb</DependentUpon>
