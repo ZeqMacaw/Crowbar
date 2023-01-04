@@ -14,7 +14,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Source Engine Modding Tool")> 
 <Assembly: AssemblyCompany("ZeqMacaw")> 
 <Assembly: AssemblyProduct("Crowbar")>
-<Assembly: AssemblyCopyright("Copyright 2022")>
+<Assembly: AssemblyCopyright("Copyright 2023")>
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)> 
