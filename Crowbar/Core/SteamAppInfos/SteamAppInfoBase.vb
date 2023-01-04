@@ -51,6 +51,8 @@ Public Class SteamAppInfoBase
 		'steamAppInfos.Add(anAppInfo)
 		anAppInfo = New ContagionSteamAppInfo()
 		steamAppInfos.Add(anAppInfo)
+		anAppInfo = New EntropyZero2SteamAppInfo()
+		steamAppInfos.Add(anAppInfo)
 		'anAppInfo = New SteamAppInfo("Estranged: Act I")
 		'steamAppInfos.Add(anAppInfo)
 		anAppInfo = New GarrysModSteamAppInfo()
