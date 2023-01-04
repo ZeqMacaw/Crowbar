@@ -441,6 +441,7 @@
     <Compile Include="Core\SteamAppInfos\BlackMesaSteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\ContagionSteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\GarrysModSteamAppInfo.vb" />
+    <Compile Include="Core\SteamAppInfos\EntropyZero2SteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\Left4Dead2SteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\SteamAppInfoBase.vb" />
     <Compile Include="Core\SteamAppInfos\GarrysMod_AddonJson.vb" />
@@ -752,6 +753,12 @@
     <Compile Include="Widgets\Publish SteamApp Tags\GarrysModTagsUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Widgets\Publish SteamApp Tags\EntropyZero2TagsUserControl.Designer.vb">
+      <DependentUpon>EntropyZero2TagsUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Widgets\Publish SteamApp Tags\EntropyZero2TagsUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Widgets\Publish SteamApp Tags\Left4Dead2TagsUserControl.Designer.vb">
       <DependentUpon>Left4Dead2TagsUserControl.vb</DependentUpon>
     </Compile>
@@ -867,6 +874,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\Publish SteamApp Tags\GarrysModTagsUserControl.resx">
       <DependentUpon>GarrysModTagsUserControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\Publish SteamApp Tags\EntropyZero2TagsUserControl.resx">
+      <DependentUpon>EntropyZero2TagsUserControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\Publish SteamApp Tags\Left4Dead2TagsUserControl.resx">
       <DependentUpon>Left4Dead2TagsUserControl.vb</DependentUpon>
