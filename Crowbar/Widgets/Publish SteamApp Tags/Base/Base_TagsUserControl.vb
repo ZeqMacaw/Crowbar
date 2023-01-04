@@ -84,6 +84,11 @@ Public Class Base_TagsUserControl
 
 	Public Overridable Property ItemTags As BindingListEx(Of String)
 		Get
+			'NOTE: Prevent Visual Studio Designer from complaining about changes to tag widgets.
+			If Me.DesignMode OrElse Me.theControlIsInDesignMode Then
+				Return Nothing
+			End If
+
 			Dim aCheckBox As CheckBoxEx
 			Dim aComboBox As ComboBox
 			Dim aTextBox As TextBox
@@ -117,6 +122,11 @@ Public Class Base_TagsUserControl
 			Return itemTagsList
 		End Get
 		Set
+			'NOTE: Prevent Visual Studio Designer from complaining about changes to tag widgets.
+			If Me.DesignMode OrElse Me.theControlIsInDesignMode Then
+				Exit Property
+			End If
+
 			Me.theCheckBoxesAreChangingViaMe = True
 			Me.theComboBoxesAreChangingViaMe = True
 			Me.theTextBoxesAreChangingViaMe = True

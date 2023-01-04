@@ -34,9 +34,10 @@
 	End Sub
 
 	Private Sub BaseUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
-		If Not Me.DesignMode Then
-			Me.Init()
+		If Me.DesignMode Then
 			Me.theControlIsInDesignMode = True
+		Else
+			Me.Init()
 		End If
 	End Sub
 
