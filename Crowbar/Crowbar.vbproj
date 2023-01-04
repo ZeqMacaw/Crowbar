@@ -447,6 +447,7 @@
     <Compile Include="Core\GamePackage\HfsFile\HfsMainDirectoryEntry.vb" />
     <Compile Include="Core\GamePackage\- Base\SourcePackageEventArgs.vb" />
     <Compile Include="Core\SteamAppInfos\AnarchyArcadeSteamAppInfo.vb" />
+    <Compile Include="Core\SteamAppInfos\WilsonChroniclesSteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\MilitaryConflictVietnamSteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\BlackMesaSteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\ContagionSteamAppInfo.vb" />
@@ -738,6 +739,12 @@
     <Compile Include="Widgets\Publish SteamApp Tags\Base\Base_TagsUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Widgets\Publish SteamApp Tags\WilsonChroniclesTagsUserControl.Designer.vb">
+      <DependentUpon>WilsonChroniclesTagsUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Widgets\Publish SteamApp Tags\WilsonChroniclesTagsUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Widgets\Publish SteamApp Tags\MilitaryConflictVietnamTagsUserControl.Designer.vb">
       <DependentUpon>MilitaryConflictVietnamTagsUserControl.vb</DependentUpon>
     </Compile>
@@ -875,6 +882,9 @@
     <EmbeddedResource Include="Widgets\Publish SteamApp Tags\Base\Base_TagsUserControl.resx">
       <DependentUpon>Base_TagsUserControl.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\Publish SteamApp Tags\WilsonChroniclesTagsUserControl.resx">
+      <DependentUpon>WilsonChroniclesTagsUserControl.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Widgets\Publish SteamApp Tags\BlackMesaTagsUserControl.resx">
       <DependentUpon>BlackMesaTagsUserControl.vb</DependentUpon>
     </EmbeddedResource>
@@ -921,7 +931,9 @@
     <Content Include="Resources\CrowbarLauncher.exe" />
     <Content Include="Resources\Steamworks.NET.dll" />
     <Content Include="Resources\steam_api.dll" />
-    <None Include="Resources\Crowbar Settings.xml" />
+    <None Include="Resources\Crowbar Settings.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Resources\CancelRefresh.png" />
     <None Include="Resources\CancelSearch.png" />
     <Content Include="Resources\CrowbarGuideBanner.png" />
