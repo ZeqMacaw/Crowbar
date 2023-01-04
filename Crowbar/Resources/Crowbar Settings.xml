@@ -970,7 +970,7 @@
       <PackerPathFileName>&lt;library1&gt;\steamapps\common\Transmissions Element 120\bin\vpk.exe</PackerPathFileName>
     </GameSetup>
     <GameSetup>
-      <GameName>Wilson Chronicles - Beta</GameName>
+      <GameName>Wilson Chronicles</GameName>
       <GameEngine>Source</GameEngine>
       <GamePathFileName>&lt;library1&gt;\steamapps\common\Wilson Chronicles\wilson_chronicles\gameinfo.txt</GamePathFileName>
       <GameAppPathFileName>&lt;library1&gt;\steamapps\common\Wilson Chronicles\hl2.exe</GameAppPathFileName>
