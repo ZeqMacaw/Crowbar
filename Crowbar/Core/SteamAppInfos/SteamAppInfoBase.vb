@@ -49,6 +49,8 @@ Public Class SteamAppInfoBase
 		steamAppInfos.Add(anAppInfo)
 		'anAppInfo = New SteamAppInfo("Blade Symphony")
 		'steamAppInfos.Add(anAppInfo)
+		anAppInfo = New CodenameCureSteamAppInfo()
+		steamAppInfos.Add(anAppInfo)
 		anAppInfo = New ContagionSteamAppInfo()
 		steamAppInfos.Add(anAppInfo)
 		anAppInfo = New EntropyZero2SteamAppInfo()
