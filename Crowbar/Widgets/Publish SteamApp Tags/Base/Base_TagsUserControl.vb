@@ -25,6 +25,7 @@ Public Class Base_TagsUserControl
 
 		Me.theCheckBoxesAreChangingViaMe = False
 		Me.theComboBoxesAreChangingViaMe = False
+		Me.theRadioButtonsAreChangingViaMe = False
 		Me.theTextBoxesAreChangingViaMe = False
 	End Sub
 
@@ -38,6 +39,8 @@ Public Class Base_TagsUserControl
 					If aComboBoxTag = "TagsEnabled" Then
 						Me.theWidgets.Add(widget)
 					End If
+				ElseIf TypeOf widget Is RadioButton Then
+					Me.theWidgets.Add(widget)
 				ElseIf TypeOf widget Is TextBox Then
 					Dim aTextBoxTag As String = CType(widget.Tag, String)
 					If aTextBoxTag = "TagsEnabled" Then
@@ -53,6 +56,7 @@ Public Class Base_TagsUserControl
 	Protected Overrides Sub Free()
 		Dim aCheckBox As CheckBoxEx
 		Dim aComboBox As ComboBox
+		Dim aRadioButton As RadioButton
 		Dim aTextBox As TextBox
 		If Me.theWidgets IsNot Nothing Then
 			For Each widget As Control In Me.theWidgets
@@ -66,6 +70,9 @@ Public Class Base_TagsUserControl
 							aComboBox = CType(widget, ComboBox)
 							RemoveHandler aComboBox.SelectedIndexChanged, AddressOf Me.ComboBox_SelectedIndexChanged
 						End If
+					ElseIf TypeOf widget Is RadioButton Then
+						aRadioButton = CType(widget, RadioButton)
+						RemoveHandler aRadioButton.CheckedChanged, AddressOf Me.RadioButton_CheckedChanged
 					ElseIf TypeOf widget Is TextBox Then
 						Dim aTextBoxTag As String = CType(widget.Tag, String)
 						If aTextBoxTag = "TagsEnabled" Then
@@ -92,6 +99,7 @@ Public Class Base_TagsUserControl
 
 			Dim aCheckBox As CheckBoxEx
 			Dim aComboBox As ComboBox
+			Dim aRadioButton As RadioButton
 			Dim aTextBox As TextBox
 			Dim anEnumList As IList
 			Dim itemTagsList As New BindingListEx(Of String)()
@@ -110,6 +118,11 @@ Public Class Base_TagsUserControl
 								anEnumList = CType(aComboBox.DataSource, IList)
 								itemTagsList.Add(aComboBox.SelectedValue.ToString())
 							End If
+						End If
+					ElseIf TypeOf widget Is RadioButton Then
+						aRadioButton = CType(widget, RadioButton)
+						If aRadioButton.Checked Then
+							itemTagsList.Add(CType(aRadioButton.Tag, String))
 						End If
 					ElseIf TypeOf widget Is TextBox Then
 						aTextBox = CType(widget, TextBox)
@@ -130,10 +143,12 @@ Public Class Base_TagsUserControl
 
 			Me.theCheckBoxesAreChangingViaMe = True
 			Me.theComboBoxesAreChangingViaMe = True
+			Me.theRadioButtonsAreChangingViaMe = True
 			Me.theTextBoxesAreChangingViaMe = True
 
 			Dim aCheckBox As CheckBoxEx
 			Dim aComboBox As ComboBox
+			Dim aRadioButton As RadioButton
 			Dim aTextBox As TextBox
 
 			For Each widget As Control In Me.theWidgets
@@ -150,6 +165,11 @@ Public Class Base_TagsUserControl
 							RemoveHandler aComboBox.SelectedIndexChanged, AddressOf Me.ComboBox_SelectedIndexChanged
 							AddHandler aComboBox.SelectedIndexChanged, AddressOf Me.ComboBox_SelectedIndexChanged
 						End If
+					ElseIf TypeOf widget Is RadioButton Then
+						aRadioButton = CType(widget, RadioButton)
+						aRadioButton.Checked = False
+						RemoveHandler aRadioButton.CheckedChanged, AddressOf Me.RadioButton_CheckedChanged
+						AddHandler aRadioButton.CheckedChanged, AddressOf Me.RadioButton_CheckedChanged
 					ElseIf TypeOf widget Is TextBox Then
 						Dim aTextBoxTag As String = CType(widget.Tag, String)
 						If aTextBoxTag = "TagsEnabled" Then
@@ -191,6 +211,13 @@ Public Class Base_TagsUserControl
 									End If
 								End If
 							End If
+						ElseIf TypeOf widget Is RadioButton Then
+							aRadioButton = CType(widget, RadioButton)
+							If tag = CType(aRadioButton.Tag, String) Then
+								aRadioButton.Checked = True
+								tagHasBeenAssigned = True
+								Exit For
+							End If
 						End If
 					End If
 				Next
@@ -215,6 +242,7 @@ Public Class Base_TagsUserControl
 
 			Me.theCheckBoxesAreChangingViaMe = False
 			Me.theComboBoxesAreChangingViaMe = False
+			Me.theRadioButtonsAreChangingViaMe = False
 			Me.theTextBoxesAreChangingViaMe = False
 		End Set
 	End Property
@@ -241,6 +269,10 @@ Public Class Base_TagsUserControl
 		End If
 	End Sub
 
+	Private Sub RadioButton_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs)
+		Me.OnRadioButton_CheckedChanged(sender, e)
+	End Sub
+
 	Private Sub TextBox_TextChanged(ByVal sender As Object, ByVal e As EventArgs)
 		If Not Me.theTextBoxesAreChangingViaMe Then
 			RaiseEvent TagsPropertyChanged(Me, New EventArgs())
@@ -263,6 +295,12 @@ Public Class Base_TagsUserControl
 		End If
 	End Sub
 
+	Protected Overridable Sub OnRadioButton_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs)
+		If Not Me.theRadioButtonsAreChangingViaMe Then
+			RaiseEvent TagsPropertyChanged(Me, New EventArgs())
+		End If
+	End Sub
+
 	Protected Sub RaiseTagsPropertyChanged()
 		RaiseEvent TagsPropertyChanged(Me, New EventArgs())
 	End Sub
@@ -274,6 +312,7 @@ Public Class Base_TagsUserControl
 	Private theWidgets As List(Of Control)
 	Protected theCheckBoxesAreChangingViaMe As Boolean
 	Private theComboBoxesAreChangingViaMe As Boolean
+	Private theRadioButtonsAreChangingViaMe As Boolean
 	Private theTextBoxesAreChangingViaMe As Boolean
 
 #End Region
