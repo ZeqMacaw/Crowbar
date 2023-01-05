@@ -447,6 +447,7 @@
     <Compile Include="Core\GamePackage\HfsFile\HfsMainDirectoryEntry.vb" />
     <Compile Include="Core\GamePackage\- Base\SourcePackageEventArgs.vb" />
     <Compile Include="Core\SteamAppInfos\AnarchyArcadeSteamAppInfo.vb" />
+    <Compile Include="Core\SteamAppInfos\FirefightReloadedSteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\HuntDownTheFreemanSteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\WilsonChroniclesSteamAppInfo.vb" />
     <Compile Include="Core\SteamAppInfos\MilitaryConflictVietnamSteamAppInfo.vb" />
@@ -745,6 +746,12 @@
     <Compile Include="Widgets\Publish SteamApp Tags\Base\Base_TagsUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Widgets\Publish SteamApp Tags\FirefightReloadedTagsUserControl.Designer.vb">
+      <DependentUpon>FirefightReloadedTagsUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Widgets\Publish SteamApp Tags\FirefightReloadedTagsUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Widgets\Publish SteamApp Tags\HuntDownTheFreemanTagsUserControl.Designer.vb">
       <DependentUpon>HuntDownTheFreemanTagsUserControl.vb</DependentUpon>
     </Compile>
@@ -902,6 +909,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\Publish SteamApp Tags\Base\Base_TagsUserControl.resx">
       <DependentUpon>Base_TagsUserControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\Publish SteamApp Tags\FirefightReloadedTagsUserControl.resx">
+      <DependentUpon>FirefightReloadedTagsUserControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\Publish SteamApp Tags\HuntDownTheFreemanTagsUserControl.resx">
       <DependentUpon>HuntDownTheFreemanTagsUserControl.vb</DependentUpon>

@@ -55,6 +55,8 @@ Public Class SteamAppInfoBase
 		steamAppInfos.Add(anAppInfo)
 		'anAppInfo = New SteamAppInfo("Estranged: Act I")
 		'steamAppInfos.Add(anAppInfo)
+		anAppInfo = New FirefightReloadedSteamAppInfo()
+		steamAppInfos.Add(anAppInfo)
 		anAppInfo = New GarrysModSteamAppInfo()
 		steamAppInfos.Add(anAppInfo)
 		anAppInfo = New HuntDownTheFreemanSteamAppInfo()
