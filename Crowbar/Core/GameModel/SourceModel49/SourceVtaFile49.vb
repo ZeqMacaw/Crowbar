@@ -105,35 +105,40 @@ Public Class SourceVtaFile49
 		End If
 		Me.theOutputFileStreamWriter.WriteLine(line)
 
-		Dim beginVertexIndex As Integer = 0
-		Dim endVertexIndex As Integer = 0
-		Dim bodyVertexCount As Integer = 0
-		Dim aBodyPart As SourceMdlBodyPart
-		Dim aModel As SourceMdlModel
-		For bodyPartIndex As Integer = 0 To Me.theMdlFileData.theBodyParts.Count - 1
-			aBodyPart = Me.theMdlFileData.theBodyParts(bodyPartIndex)
+		' Write only the used vertexes of the bodypart in the basis shape key.
+		' [07-Jan-2023] This prevents flexes from working on recompile in a model where the only bodypart 
+		'               that had flexes did not start at the first vertex of the global vertex list.
+		'               SOLUTION: Write all vertexes for every basis shape key.
 
-			If Me.theBodyPart Is aBodyPart Then
-				beginVertexIndex = bodyVertexCount
-				endVertexIndex = bodyVertexCount
-			End If
+		'Dim beginVertexIndex As Integer = 0
+		'Dim endVertexIndex As Integer = 0
+		'Dim bodyVertexCount As Integer = 0
+		'Dim aBodyPart As SourceMdlBodyPart
+		'Dim aModel As SourceMdlModel
+		'For bodyPartIndex As Integer = 0 To Me.theMdlFileData.theBodyParts.Count - 1
+		'	aBodyPart = Me.theMdlFileData.theBodyParts(bodyPartIndex)
 
-			If aBodyPart.theModels IsNot Nothing AndAlso aBodyPart.theModels.Count > 0 Then
-				For modelIndex As Integer = 0 To aBodyPart.theModels.Count - 1
-					aModel = aBodyPart.theModels(modelIndex)
-					bodyVertexCount += aModel.vertexCount
-				Next
-			End If
+		'	If Me.theBodyPart Is aBodyPart Then
+		'		beginVertexIndex = bodyVertexCount
+		'		endVertexIndex = bodyVertexCount
+		'	End If
 
-			If Me.theBodyPart Is aBodyPart Then
-				endVertexIndex = bodyVertexCount - 1
-			End If
-		Next
+		'	If aBodyPart.theModels IsNot Nothing AndAlso aBodyPart.theModels.Count > 0 Then
+		'		For modelIndex As Integer = 0 To aBodyPart.theModels.Count - 1
+		'			aModel = aBodyPart.theModels(modelIndex)
+		'			bodyVertexCount += aModel.vertexCount
+		'		Next
+		'	End If
+
+		'	If Me.theBodyPart Is aBodyPart Then
+		'		endVertexIndex = bodyVertexCount - 1
+		'	End If
+		'Next
 
 		Try
 			Dim aVertex As SourceVertex
-			'For vertexIndex As Integer = 0 To Me.theVvdFileData.theVertexes.Count - 1
-			For vertexIndex As Integer = beginVertexIndex To endVertexIndex
+			For vertexIndex As Integer = 0 To Me.theVvdFileData.theVertexes.Count - 1
+				'For vertexIndex As Integer = beginVertexIndex To endVertexIndex
 				If Me.theVvdFileData.fixupCount = 0 Then
 					aVertex = Me.theVvdFileData.theVertexes(vertexIndex)
 				Else
