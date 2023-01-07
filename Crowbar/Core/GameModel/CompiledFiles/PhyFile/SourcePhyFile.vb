@@ -615,6 +615,61 @@ Public Class SourcePhyFile
 		End If
 	End Sub
 
+	Public Sub ReadSourcePhyAnimatedFrictionSection()
+		Dim fileOffsetStart As Long
+		Dim fileOffsetEnd As Long
+
+		fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+
+		Try
+			Dim line As String
+			Dim thereIsAValue As Boolean = True
+			Dim key As String = ""
+			Dim value As String = ""
+			Dim tempStreamOffset As Long
+			Me.thePhyFileData.theSourcePhyAnimatedFrictionSection = New SourcePhyAnimatedFrictionSection()
+			Do
+				tempStreamOffset = Me.theInputFileReader.BaseStream.Position
+				line = FileManager.ReadTextLine(Me.theInputFileReader)
+				If line Is Nothing OrElse line <> "animatedfriction {" Then
+					Me.theInputFileReader.BaseStream.Seek(tempStreamOffset, SeekOrigin.Begin)
+					Exit Do
+				End If
+
+				While thereIsAValue
+					thereIsAValue = FileManager.ReadKeyValueLine(Me.theInputFileReader, key, value)
+					If thereIsAValue Then
+						If key = "animfrictionmin" Then
+							Me.thePhyFileData.theSourcePhyAnimatedFrictionSection.animFrictionMin = Single.Parse(value, TheApp.InternalNumberFormat)
+						ElseIf key = "animfrictionmax" Then
+							Me.thePhyFileData.theSourcePhyAnimatedFrictionSection.animFrictionMax = Single.Parse(value, TheApp.InternalNumberFormat)
+						ElseIf key = "animfrictiontimein" Then
+							Me.thePhyFileData.theSourcePhyAnimatedFrictionSection.animFrictionTimeIn = Single.Parse(value, TheApp.InternalNumberFormat)
+						ElseIf key = "animfrictiontimeout" Then
+							Me.thePhyFileData.theSourcePhyAnimatedFrictionSection.animFrictionTimeOut = Single.Parse(value, TheApp.InternalNumberFormat)
+						ElseIf key = "animfrictiontimehold" Then
+							Me.thePhyFileData.theSourcePhyAnimatedFrictionSection.animFrictionTimeHold = Single.Parse(value, TheApp.InternalNumberFormat)
+						End If
+					End If
+				End While
+
+				'NOTE: Above while loop should return the ending brace.
+				If key Is Nothing OrElse key <> "}" Then
+					Exit Do
+				End If
+				thereIsAValue = True
+			Loop Until line Is Nothing
+		Catch ex As Exception
+			Dim debug As Integer = 4242
+		Finally
+		End Try
+
+		If fileOffsetStart < Me.theInputFileReader.BaseStream.Position Then
+			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
+			Me.thePhyFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "Animated Friction")
+		End If
+	End Sub
+
 	Public Sub ReadSourcePhyEditParamsSection()
 		Dim fileOffsetStart As Long
 		Dim fileOffsetEnd As Long

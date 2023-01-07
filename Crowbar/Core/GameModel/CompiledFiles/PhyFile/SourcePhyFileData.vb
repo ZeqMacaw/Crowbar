@@ -31,6 +31,7 @@ Public Class SourcePhyFileData
 	Public theSourcePhyRagdollConstraintDescs As SortedList(Of Integer, SourcePhyRagdollConstraint)
 	Public theSourcePhyCollisionPairs As List(Of SourcePhyCollisionPair)
 	Public theSourcePhySelfCollides As Boolean = True
+	Public theSourcePhyAnimatedFrictionSection As SourcePhyAnimatedFrictionSection
 	Public theSourcePhyEditParamsSection As SourcePhyEditParamsSection
 	Public theSourcePhyPhysCollisionModelMostUsedValues As SourcePhyPhysCollisionModel
 	Public theSourcePhyCollisionText As String
