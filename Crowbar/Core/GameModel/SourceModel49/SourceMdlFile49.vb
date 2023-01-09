@@ -3212,6 +3212,26 @@ Public Class SourceMdlFile49
 
 					aFlexController.theName = FileManager.ReadNullTerminatedString(Me.theInputFileReader)
 
+					' Clean flex controller names for QC. QC does not allow "-" character in name, but DMX does.
+					Dim cleanFlexControllerNames As New List(Of String)()
+					Dim newName As String
+					Dim nameNumber As Integer
+					For flexControllerIndex As Integer = 0 To Me.theMdlFileData.theFlexControllers.Count - 1
+						aFlexController = Me.theMdlFileData.theFlexControllers(flexControllerIndex)
+						newName = aFlexController.theName
+
+						newName = newName.Replace("-", "")
+						'NOTE: Starting this at 1 means the name will not have a number and the second name will have a 2.
+						nameNumber = 1
+						While cleanFlexControllerNames.Contains(newName)
+							nameNumber += 1
+							newName = aFlexController.theName + nameNumber.ToString()
+						End While
+
+						cleanFlexControllerNames.Add(newName)
+						aFlexController.theName = newName
+					Next
+
 					fileOffsetEnd2 = Me.theInputFileReader.BaseStream.Position - 1
 					'If Not Me.theMdlFileData.theFileSeekLog.ContainsKey(fileOffsetStart2) Then
 					Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart2, fileOffsetEnd2, "aFlexController.theName = " + aFlexController.theName)

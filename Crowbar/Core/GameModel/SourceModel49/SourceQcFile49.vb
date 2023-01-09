@@ -837,8 +837,8 @@ Public Class SourceQcFile49
 			line = ""
 			Me.theOutputFileStreamWriter.WriteLine(line)
 
-			For i As Integer = 0 To Me.theMdlFileData.theFlexControllers.Count - 1
-				aFlexController = Me.theMdlFileData.theFlexControllers(i)
+			For flexControllerIndex As Integer = 0 To Me.theMdlFileData.theFlexControllers.Count - 1
+				aFlexController = Me.theMdlFileData.theFlexControllers(flexControllerIndex)
 
 				If flexControllerNames.Contains(aFlexController.theName) Then
 					line = vbTab
