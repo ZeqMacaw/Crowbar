@@ -363,7 +363,7 @@ Public Class MainForm
 			If vpkAction = ActionType.Unpack Then
 				TheApp.Settings.UnpackPackagePathFolderOrFileName = pathFileName
 				Me.MainTabControl.SelectTab(Me.UnpackTabPage)
-				Me.UnpackUserControl1.RunUnpackerToGetListOfPackageContents()
+				Me.UnpackUserControl1.ListPackageContents()
 			ElseIf vpkAction = ActionType.Publish Then
 				Me.MainTabControl.SelectTab(Me.PublishTabPage)
 				Me.PublishUserControl1.ItemContentPathFileNameTextBox.Text = pathFileName
@@ -387,7 +387,7 @@ Public Class MainForm
 			If vpkAction = ActionType.Unpack Then
 				TheApp.Settings.UnpackPackagePathFolderOrFileName = pathFileName
 				Me.MainTabControl.SelectTab(Me.UnpackTabPage)
-				Me.UnpackUserControl1.RunUnpackerToGetListOfPackageContents()
+				Me.UnpackUserControl1.ListPackageContents()
 			ElseIf vpkAction = ActionType.Publish Then
 				Me.MainTabControl.SelectTab(Me.PublishTabPage)
 				Me.PublishUserControl1.ItemContentPathFileNameTextBox.Text = pathFileName
@@ -405,7 +405,7 @@ Public Class MainForm
 			If vpkAction = ActionType.Unpack Then
 				TheApp.Settings.UnpackPackagePathFolderOrFileName = pathFileName
 				Me.MainTabControl.SelectTab(Me.UnpackTabPage)
-				Me.UnpackUserControl1.RunUnpackerToGetListOfPackageContents()
+				Me.UnpackUserControl1.ListPackageContents()
 			End If
 		ElseIf extension = ".mdl" Then
 			Me.SetMdlDrop(setViaAutoOpen, pathFileName)
