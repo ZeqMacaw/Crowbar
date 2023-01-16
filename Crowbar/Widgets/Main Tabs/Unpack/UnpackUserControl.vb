@@ -143,8 +143,6 @@ Public Class UnpackUserControl
 		openFileWdw.Title = "Open the file or folder you want to unpack"
 		If File.Exists(TheApp.Settings.UnpackPackagePathFolderOrFileName) Then
 			openFileWdw.InitialDirectory = FileManager.GetPath(TheApp.Settings.UnpackPackagePathFolderOrFileName)
-			'ElseIf Directory.Exists(TheApp.Settings.UnpackPackagePathFolderOrFileName) Then
-			'	openFileWdw.InitialDirectory = TheApp.Settings.UnpackPackagePathFolderOrFileName
 		Else
 			openFileWdw.InitialDirectory = FileManager.GetLongestExtantPath(TheApp.Settings.UnpackPackagePathFolderOrFileName)
 			If openFileWdw.InitialDirectory = "" Then
@@ -153,7 +151,7 @@ Public Class UnpackUserControl
 		End If
 		openFileWdw.FileName = "[Folder Selection]"
 		openFileWdw.Filter = "Source Engine Package Files (*.apk;*.fpx;*.gma;*.vpk)|*.apk;*.fpx;*.gma;*.vpk|Fairy Tale Busters APK Files (*.apk)|*.apk|Tactical Intervention FPX Files (*.fpx)|*.fpx|Garry's Mod GMA Files (*.gma)|*.gma|Source Engine VPK Files (*.vpk)|*.vpk"
-		'openFileWdw.Filter = "Source Engine Package Files (*.vpk;*.fpx;*.gma;*.hfs)|*.vpk;*.fpx;*.gma;*.hfs|Source Engine VPK Files (*.vpk)|*.vpk|Tactical Intervention FPX Files (*.fpx)|*.fpx|Garry's Mod GMA Files (*.gma)|*.gma|Vindictus HFS Files (*.hfs)|*.hfs"
+		'openFileWdw.Filter = "Source Engine Package Files (*.hfs)|*.hfs|Vindictus HFS Files (*.hfs)|*.hfs"
 		openFileWdw.AddExtension = True
 		openFileWdw.CheckFileExists = False
 		openFileWdw.Multiselect = False
@@ -297,33 +295,7 @@ Public Class UnpackUserControl
 		RemoveHandler TheApp.Unpacker.ProgressChanged, AddressOf Me.ListerBackgroundWorker_ProgressChanged
 		RemoveHandler TheApp.Unpacker.RunWorkerCompleted, AddressOf Me.ListerBackgroundWorker_RunWorkerCompleted
 
-		'If Not e.Cancelled Then
-		'	Dim unpackResultInfo As UnpackerOutputInfo
-		'	unpackResultInfo = CType(e.Result, UnpackerOutputInfo)
 
-		'	' Much faster to read all entries and transfer entire list at end of background process rather than transferring each entry.
-		'	Dim entries As List(Of SourcePackageDirectoryEntry) = unpackResultInfo.entries
-		'	Dim GetId As Func(Of SourcePackageDirectoryEntry, String) = (Function(entry) FileManager.GetPath(entry.DisplayPathFileName))
-		'	Dim GetTag As TreeViewEx.GetTagDelegate(Of SourcePackageDirectoryEntry, List(Of SourcePackageDirectoryEntry)) = AddressOf Me.GetTag
-		'	Dim GetDimmedStatus As Func(Of SourcePackageDirectoryEntry, Boolean) = AddressOf Me.GetDimmedStatus
-		'	Me.PackageTreeView.InsertItems(Me.PackageTreeView.Nodes(0), entries, GetId, AddressOf Me.GetDisplayName, AddressOf Me.GetParentItem, GetTag, GetDimmedStatus)
-
-		'	If Me.PackageTreeView.Nodes(0).Nodes.Count = 0 AndAlso Me.PackageTreeView.Nodes(0).Tag Is Nothing Then
-		'		Me.PackageTreeView.Nodes.Clear()
-		'	Else
-		'		Me.PackageTreeView.Nodes(0).Text = "<root>"
-		'	End If
-		'Else
-		'	Me.PackageTreeView.Nodes(0).Text = "<root-incomplete>"
-		'End If
-
-		'If Me.PackageTreeView.Nodes.Count > 0 Then
-		'	Me.PackageTreeView.Nodes(0).Expand()
-		'	Me.PackageTreeView.SelectedNode = Me.PackageTreeView.Nodes(0)
-		'	Me.ShowFilesInSelectedFolder()
-		'End If
-		'Me.UpdateSelectionPathText()
-		'======
 		Dim entries As New List(Of SourcePackageDirectoryEntry)()
 		If Not e.Cancelled Then
 			Dim unpackResultInfo As UnpackerOutputInfo
@@ -336,8 +308,6 @@ Public Class UnpackUserControl
 
 		Me.RefreshPackagesButton.Image = My.Resources.Refresh
 		Me.RefreshPackagesButton.Tag = "Refresh"
-		''IMPORTANT: Update the toolstrip so the Refresh button does not disappear. Not sure why it disappears without this.
-		'Me.ToolStrip1.PerformLayout()
 		Me.UpdateWidgetsBasedOnUnpackerRunning(False)
 	End Sub
 
@@ -593,10 +563,6 @@ Public Class UnpackUserControl
 		Me.PackageContentsUserControl1.Enabled = Not unpackerIsRunning
 		Me.OptionsGroupBox.Enabled = Not unpackerIsRunning
 
-		'Dim selectedEntries As List(Of SourcePackageDirectoryEntry) = Nothing
-		'If Me.PackageTreeView.Nodes.Count > 0 Then
-		'	selectedEntries = CType(Me.PackageTreeView.Nodes(0).Tag, List(Of SourcePackageDirectoryEntry))
-		'End If
 		Dim selectedEntries As List(Of SourcePackageDirectoryEntry) = Me.PackageContentsUserControl1.SelectedEntries
 		Me.UnpackButton.Enabled = (Not unpackerIsRunning) AndAlso (selectedEntries IsNot Nothing) AndAlso (selectedEntries.Count > 0)
 		Me.SkipCurrentPackageButton.Enabled = unpackerIsRunning
@@ -609,23 +575,7 @@ Public Class UnpackUserControl
 		Me.GotoUnpackedFileButton.Enabled = Not unpackerIsRunning AndAlso Me.theUnpackedRelativePathFileNames.Count > 0
 	End Sub
 
-	Private Sub UpdateUnpackedRelativePathFileNames(ByVal iUnpackedRelativePathFileNames As BindingListEx(Of String))
-		If iUnpackedRelativePathFileNames IsNot Nothing Then
-			Me.theUnpackedRelativePathFileNames = iUnpackedRelativePathFileNames
-			Me.theUnpackedRelativePathFileNames.Sort()
-			'NOTE: Need to set to nothing first to force it to update.
-			Me.UnpackedFilesComboBox.DataSource = Nothing
-			Me.UnpackedFilesComboBox.DataSource = Me.theUnpackedRelativePathFileNames
-		End If
-	End Sub
-
 	Private Sub Unpack()
-		'If Me.PackageListView.SelectedIndices.Count > 0 Then
-		'	Me.RunUnpackerToExtractFiles(PackageAction.Unpack, Me.PackageListView.SelectedIndices)
-		'Else
-		'	Me.RunUnpackerToUnpackFilesInternal(PackageAction.Unpack, Nothing)
-		'End If
-		'======
 		'NOTE: [21-Dec-2020] Must unbind this combobox to prevent slowdown on second and subsequent unpacks.
 		Me.UnpackedFilesComboBox.DataSource = Nothing
 
@@ -637,6 +587,15 @@ Public Class UnpackUserControl
 		AddHandler TheApp.Unpacker.ProgressChanged, AddressOf Me.UnpackerBackgroundWorker_ProgressChanged
 		AddHandler TheApp.Unpacker.RunWorkerCompleted, AddressOf Me.UnpackerBackgroundWorker_RunWorkerCompleted
 		TheApp.Unpacker.Run(PackageAction.Unpack, packagePathFileNameToEntriesMap, TheApp.Settings.UnpackFolderForEachPackageIsChecked, selectedRelativeOutputPath)
+
+	Private Sub UpdateUnpackedRelativePathFileNames(ByVal iUnpackedRelativePathFileNames As BindingListEx(Of String))
+		If iUnpackedRelativePathFileNames IsNot Nothing Then
+			Me.theUnpackedRelativePathFileNames = iUnpackedRelativePathFileNames
+			Me.theUnpackedRelativePathFileNames.Sort()
+			'NOTE: Need to set to nothing first to force it to update.
+			Me.UnpackedFilesComboBox.DataSource = Nothing
+			Me.UnpackedFilesComboBox.DataSource = Me.theUnpackedRelativePathFileNames
+		End If
 	End Sub
 
 #End Region
@@ -648,9 +607,6 @@ Public Class UnpackUserControl
 
 	Private theUnpackedRelativePathFileNames As BindingListEx(Of String)
 	Private theOutputPathOrOutputFileName As String
-
-	Private thePackEntries As List(Of Integer)
-	Private theGivenHardLinkFileName As String
 
 #End Region
 
