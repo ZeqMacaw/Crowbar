@@ -94,10 +94,10 @@ Public Class Unpacker
 #Region "Methods"
 
 	Public Sub RefreshUnpackModes()
-		If TheApp.Unpacker.UnpackModes(0) <> "File" Then
+		If Me.theUnpackModes(0) <> "File" Then
 			Me.theUnpackModes.Insert(0, "File")
 		End If
-		If TheApp.Unpacker.UnpackModes(1) <> "Folder" Then
+		If Me.theUnpackModes(1) <> "Folder" Then
 			Me.theUnpackModes.Insert(1, "Folder")
 		End If
 		'Me.theUnpackModes.Add("Folder and subfolders")
@@ -275,7 +275,7 @@ Public Class Unpacker
 		If String.IsNullOrEmpty(TheApp.Settings.UnpackPackagePathFolderOrFileName) Then
 			inputsAreValid = False
 			Me.WriteErrorMessage(1, "Package file or folder has not been selected.")
-		ElseIf TheApp.Settings.UnpackModeIndex = TheApp.Unpacker.UnpackModes.IndexOf("File") AndAlso Not File.Exists(TheApp.Settings.UnpackPackagePathFolderOrFileName) Then
+		ElseIf TheApp.Settings.UnpackModeIndex = Me.theUnpackModes.IndexOf("File") AndAlso Not File.Exists(TheApp.Settings.UnpackPackagePathFolderOrFileName) Then
 			inputsAreValid = False
 			Me.WriteErrorMessage(1, "The package file, """ + TheApp.Settings.UnpackPackagePathFolderOrFileName + """, does not exist.")
 		End If
@@ -530,9 +530,9 @@ Public Class Unpacker
 		Try
 			Me.thePackageDirectoryPathFileNamesAlreadyProcessed = New SortedSet(Of String)()
 
-			If TheApp.Settings.UnpackModeIndex = TheApp.Unpacker.UnpackModes.IndexOf("Folder and subfolders") Then
+			If TheApp.Settings.UnpackModeIndex = Me.theUnpackModes.IndexOf("Folder and subfolders") Then
 				Me.ListPackagesInFolderRecursively(packagePath)
-			ElseIf TheApp.Settings.UnpackModeIndex = TheApp.Unpacker.UnpackModes.IndexOf("Folder") OrElse TheApp.Settings.UnpackModeIndex > TheApp.Unpacker.UnpackModes.IndexOf("------") Then
+			ElseIf TheApp.Settings.UnpackModeIndex = Me.theUnpackModes.IndexOf("Folder") OrElse TheApp.Settings.UnpackModeIndex > Me.theUnpackModes.IndexOf("------") Then
 				Me.ListPackagesInFolder(packagePath)
 			Else
 				Me.ListPackage(packagePathFileName)
