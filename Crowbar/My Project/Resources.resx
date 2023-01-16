@@ -170,20 +170,11 @@
   <data name="ErrorMessageSDKMissingCause" xml:space="preserve">
     <value>Possible causes: The game's SDK or Authoring Tools has not been installed (usually via Steam Library Tools) or the path given to Crowbar (via Set Up Games button) is incorrect.</value>
   </data>
-  <data name="FindNext" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\FindNext.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="FindPrevious" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\FindPrevious.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Unpack_LogFileNameSuffix" xml:space="preserve">
     <value>unpack-log.txt</value>
   </data>
   <data name="EnterArrow" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\EnterArrow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Find" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\Find.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\Refresh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -256,5 +247,14 @@
   </data>
   <data name="lzham_x86" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\lzham_x86.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="NextInSearch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NextInSearch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PreviousInSearch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PreviousInSearch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Search" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Search.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

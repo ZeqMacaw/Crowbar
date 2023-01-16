@@ -531,6 +531,11 @@
     <Compile Include="Core\GamePackage\VpkFile\VpkDirectoryEntry.vb" />
     <Compile Include="Core\GamePackage\VpkFile\VpkFile.vb" />
     <Compile Include="Core\GamePackage\VpkFile\VpkFileData.vb" />
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Widgets\- Application\AgreementRequiresAcceptanceForm.Designer.vb">
       <DependentUpon>AgreementRequiresAcceptanceForm.vb</DependentUpon>
     </Compile>
@@ -622,10 +627,16 @@
     <Compile Include="Widgets\Main Tabs\SetUpGamesUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Widgets\Main Tabs\UnpackUserControl.Designer.vb">
+    <Compile Include="Widgets\Main Tabs\Unpack\PackageContentsUserControl.Designer.vb">
+      <DependentUpon>PackageContentsUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Widgets\Main Tabs\Unpack\PackageContentsUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Widgets\Main Tabs\Unpack\UnpackUserControl.Designer.vb">
       <DependentUpon>UnpackUserControl.vb</DependentUpon>
     </Compile>
-    <Compile Include="Widgets\Main Tabs\UnpackUserControl.vb">
+    <Compile Include="Widgets\Main Tabs\Unpack\UnpackUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Widgets\Main Tabs\PackUserControl.Designer.vb">
@@ -688,11 +699,6 @@
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
-    </Compile>
-    <Compile Include="My Project\Resources.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="My Project\Settings.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -866,7 +872,10 @@
     <EmbeddedResource Include="Widgets\Main Tabs\SetUpGamesUserControl.resx">
       <DependentUpon>SetUpGamesUserControl.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Widgets\Main Tabs\UnpackUserControl.resx">
+    <EmbeddedResource Include="Widgets\Main Tabs\Unpack\PackageContentsUserControl.resx">
+      <DependentUpon>PackageContentsUserControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\Main Tabs\Unpack\UnpackUserControl.resx">
       <DependentUpon>UnpackUserControl.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -907,9 +916,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\- Application\UnhandledExceptionWindow.resx">
       <DependentUpon>UnhandledExceptionWindow.vb</DependentUpon>
@@ -975,6 +984,9 @@
     <Content Include="- Documents\Specifications.txt" />
     <None Include="Resources\26_Grey_PayPal_Pill_Button.png" />
     <Content Include="Resources\lzham_x86.dll" />
+    <None Include="Resources\Search.png" />
+    <None Include="Resources\NextInSearch.png" />
+    <None Include="Resources\PreviousInSearch.png" />
     <Content Include="Resources\WordWrap.png" />
     <None Include="Resources\WordWrapOff.png" />
     <None Include="Resources\CrowbarSteamPipe.exe" />

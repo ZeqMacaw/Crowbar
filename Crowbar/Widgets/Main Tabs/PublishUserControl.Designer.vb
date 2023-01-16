@@ -269,7 +269,7 @@ Partial Class PublishUserControl
 		'SearchItemsToolStripButton
 		'
 		Me.SearchItemsToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-		Me.SearchItemsToolStripButton.Image = Global.Crowbar.My.Resources.Resources.Find
+		Me.SearchItemsToolStripButton.Image = Global.Crowbar.My.Resources.Resources.Search
 		Me.SearchItemsToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
 		Me.SearchItemsToolStripButton.Name = "SearchItemsToolStripButton"
 		Me.SearchItemsToolStripButton.Size = New System.Drawing.Size(23, 22)
