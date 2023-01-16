@@ -71,6 +71,10 @@ Note that it should have the xml:space="preserve" attribute for the data element
 
 #End Region
 
+#Region "Methods"
+
+#End Region
+
 #Region "Widget Event Handlers"
 
 #End Region
