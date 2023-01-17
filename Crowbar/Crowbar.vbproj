@@ -471,9 +471,7 @@
     <Compile Include="Core\Unpacker\UnpackerInputInfo.vb" />
     <Compile Include="Core\Unpacker\SearchOutputInfo.vb" />
     <Compile Include="Core\Unpacker\UnpackerOutputInfo.vb" />
-    <Compile Include="Core\Unpacker\Unpacker.vb">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Core\Unpacker\Unpacker.vb" />
     <Compile Include="Core\Updater\Updater.vb" />
     <Compile Include="Core\Viewer\Viewer.vb">
       <SubType>Component</SubType>
