@@ -77,7 +77,9 @@ Public Class BackgroundWorkerEx
 
 	Private Sub BWE_RunWorkerCompleted(ByVal sender As Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs)
 		Me.Kill()
-		Me.theRunWorkerCompletedHandler(Me, e)
+		If Me.theRunWorkerCompletedHandler IsNot Nothing Then
+			Me.theRunWorkerCompletedHandler(Me, e)
+		End If
 	End Sub
 
 #End Region
