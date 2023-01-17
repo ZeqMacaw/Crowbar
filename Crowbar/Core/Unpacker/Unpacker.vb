@@ -109,7 +109,6 @@ Public Class Unpacker
 		Dim info As New UnpackerInputInfo()
 		info.thePackageAction = unpackerAction
 		info.thePackagePathFileNameToEntriesMap = packagePathFileNameToEntriesMap
-		info.theOutputPathIsExtendedWithPackageName = outputPathIsExtendedWithPackageName
 		info.theSelectedRelativeOutputPath = selectedRelativeOutputPath
 		Me.RunWorkerAsync(info)
 	End Sub
@@ -119,7 +118,6 @@ Public Class Unpacker
 		Dim info As New UnpackerInputInfo()
 		info.thePackageAction = unpackerAction
 		info.thePackagePathFileNameToEntriesMap = packagePathFileNameToEntriesMap
-		info.theOutputPathIsExtendedWithPackageName = outputPathIsExtendedWithPackageName
 		info.theSelectedRelativeOutputPath = selectedRelativeOutputPath
 
 		Me.theRunSynchronousResultMessage = ""
@@ -212,7 +210,6 @@ Public Class Unpacker
 
 		Dim info As UnpackerInputInfo
 		info = CType(e.Argument, UnpackerInputInfo)
-		Me.theOutputPathIsExtendedWithPackageName = info.theOutputPathIsExtendedWithPackageName
 		Me.theSelectedRelativeOutputPath = info.theSelectedRelativeOutputPath
 
 		Me.theUnpackedPathsAreInTempPath = False
