@@ -2,7 +2,6 @@
 Imports System.IO
 
 Public Class Unpacker
-	Inherits BackgroundWorker
 	Implements INotifyPropertyChanged
 
 #Region "Create and Destroy"
@@ -17,9 +16,6 @@ Public Class Unpacker
 		Me.theUnpackedMdlFiles = New BindingListEx(Of String)()
 		Me.theLogFiles = New BindingListEx(Of String)()
 
-		Me.WorkerReportsProgress = True
-		Me.WorkerSupportsCancellation = True
-
 		Me.Init()
 	End Sub
 
@@ -31,7 +27,6 @@ Public Class Unpacker
 		Me.InitUnpackModes()
 
 		AddHandler TheApp.Settings.GameSetups.ListChanged, AddressOf Me.GameSetups_ListChanged
-		AddHandler Me.DoWork, AddressOf Me.Unpacker_DoWork
 	End Sub
 
 	Private Sub InitUnpackModes()
@@ -104,25 +99,46 @@ Public Class Unpacker
 		'Me.theUnpackModes.Add("------")
 	End Sub
 
-	Public Sub Run(ByVal unpackerAction As PackageAction, ByVal packagePathFileNameToEntriesMap As SortedList(Of String, List(Of SourcePackageDirectoryEntry)), ByVal outputPathIsExtendedWithPackageName As Boolean, ByVal selectedRelativeOutputPath As String)
+	Public Sub ListContents(ByVal given_ProgressChanged As ProgressChangedEventHandler, ByVal given_RunWorkerCompleted As RunWorkerCompletedEventHandler)
 		Me.theSynchronousWorkerIsActive = False
-		Dim info As New UnpackerInputInfo()
-		info.thePackageAction = unpackerAction
-		info.thePackagePathFileNameToEntriesMap = packagePathFileNameToEntriesMap
-		info.theSelectedRelativeOutputPath = selectedRelativeOutputPath
-		Me.RunWorkerAsync(info)
+		Dim inputInfo As New UnpackerInputInfo()
+		inputInfo.thePackageAction = PackageAction.List
+		Me.theUnpackerBackgroundWorker = BackgroundWorkerEx.RunBackgroundWorker(Me.theUnpackerBackgroundWorker, AddressOf Me.Unpacker_DoWork, given_ProgressChanged, given_RunWorkerCompleted, inputInfo)
 	End Sub
 
-	Public Function RunSynchronous(ByVal unpackerAction As PackageAction, ByVal packagePathFileNameToEntriesMap As SortedList(Of String, List(Of SourcePackageDirectoryEntry)), ByVal outputPathIsExtendedWithPackageName As Boolean, ByVal selectedRelativeOutputPath As String) As String
+	Public Sub Unpack(ByVal given_ProgressChanged As ProgressChangedEventHandler, ByVal given_RunWorkerCompleted As RunWorkerCompletedEventHandler, ByVal packagePathFileNameToEntriesMap As SortedList(Of String, List(Of SourcePackageDirectoryEntry)), ByVal selectedRelativeOutputPath As String)
+		Me.theSynchronousWorkerIsActive = False
+		Dim inputInfo As New UnpackerInputInfo()
+		inputInfo.thePackageAction = PackageAction.Unpack
+		inputInfo.thePackagePathFileNameToEntriesMap = packagePathFileNameToEntriesMap
+		inputInfo.theSelectedRelativeOutputPath = selectedRelativeOutputPath
+		Me.theUnpackerBackgroundWorker = BackgroundWorkerEx.RunBackgroundWorker(Me.theUnpackerBackgroundWorker, AddressOf Me.Unpacker_DoWork, given_ProgressChanged, given_RunWorkerCompleted, inputInfo)
+	End Sub
+
+	Public Sub UnpackToTempAndOpen(ByVal given_ProgressChanged As ProgressChangedEventHandler, ByVal given_RunWorkerCompleted As RunWorkerCompletedEventHandler, ByVal packagePathFileNameToEntriesMap As SortedList(Of String, List(Of SourcePackageDirectoryEntry)), ByVal selectedRelativeOutputPath As String)
+		Me.theSynchronousWorkerIsActive = False
+		Dim inputInfo As New UnpackerInputInfo()
+		inputInfo.thePackageAction = PackageAction.UnpackToTempAndOpen
+		inputInfo.thePackagePathFileNameToEntriesMap = packagePathFileNameToEntriesMap
+		inputInfo.theSelectedRelativeOutputPath = selectedRelativeOutputPath
+		Me.theUnpackerBackgroundWorker = BackgroundWorkerEx.RunBackgroundWorker(Me.theUnpackerBackgroundWorker, AddressOf Me.Unpacker_DoWork, given_ProgressChanged, given_RunWorkerCompleted, inputInfo)
+	End Sub
+
+	Public Sub CancelUnpack()
+		Me.theUnpackerBackgroundWorker.CancelAsync()
+	End Sub
+
+	'TODO: Why is this synchronous?
+	Public Function UnpackToTemp(ByVal packagePathFileNameToEntriesMap As SortedList(Of String, List(Of SourcePackageDirectoryEntry)), ByVal selectedRelativeOutputPath As String) As String
 		Me.theSynchronousWorkerIsActive = True
 		Dim info As New UnpackerInputInfo()
-		info.thePackageAction = unpackerAction
+		info.thePackageAction = PackageAction.UnpackToTemp
 		info.thePackagePathFileNameToEntriesMap = packagePathFileNameToEntriesMap
 		info.theSelectedRelativeOutputPath = selectedRelativeOutputPath
 
 		Me.theRunSynchronousResultMessage = ""
 		Dim e As New System.ComponentModel.DoWorkEventArgs(info)
-		Me.OnDoWork(e)
+		Me.Unpacker_DoWork(Me, e)
 		Return Me.theRunSynchronousResultMessage
 	End Function
 
@@ -132,7 +148,7 @@ Public Class Unpacker
 		info.thePackageAction = PackageAction.UnpackFolderTree
 		info.theGamePath = gamePath
 		Dim e As New System.ComponentModel.DoWorkEventArgs(info)
-		Me.OnDoWork(e)
+		Me.Unpacker_DoWork(Me, e)
 	End Sub
 
 	Public Function GetTempRelativePathsAndFileNames() As List(Of String)
@@ -205,7 +221,7 @@ Public Class Unpacker
 	Private Sub Unpacker_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs)
 		If Not Me.theSynchronousWorkerIsActive Then
 			'TODO: This indication that work has started in backgroundworker seems unimportant and should probably be removed.
-			Me.ReportProgress(0, "")
+			Me.theUnpackerBackgroundWorker.ReportProgress(0, "")
 		End If
 
 		Dim info As UnpackerInputInfo
@@ -238,7 +254,7 @@ Public Class Unpacker
 
 			e.Result = Me.GetUnpackerOutputInfo(status)
 
-			If Me.CancellationPending Then
+			If Me.theUnpackerBackgroundWorker.CancellationPending Then
 				e.Cancel = True
 			End If
 		End If
@@ -357,7 +373,7 @@ Public Class Unpacker
 
 	Private Sub StopLog(ByVal status As AppEnums.StatusMessage, ByVal packageRelativePathFileName As String)
 		If status <> StatusMessage.Error Then
-			If Me.CancellationPending Then
+			If Me.theUnpackerBackgroundWorker.CancellationPending Then
 				Me.UpdateProgress(1, "... Unpacking from """ + packageRelativePathFileName + """ canceled. Check above for any errors.")
 			Else
 				Me.UpdateProgress(1, "... Unpacking from """ + packageRelativePathFileName + """ finished. Check above for any errors.")
@@ -419,7 +435,7 @@ Public Class Unpacker
 		End If
 
 		If Not Me.theSynchronousWorkerIsActive Then
-			Me.ReportProgress(progressValue, line)
+			Me.theUnpackerBackgroundWorker.ReportProgress(progressValue, line)
 		End If
 	End Sub
 
@@ -450,7 +466,7 @@ Public Class Unpacker
 			For Each aPathSubFolder As String In Directory.GetDirectories(packagePath)
 				Me.UnpackFolderTreeFromPackagesInFolderRecursively(aPathSubFolder)
 
-				If Me.CancellationPending Then
+				If Me.theUnpackerBackgroundWorker.CancellationPending Then
 					Return StatusMessage.Canceled
 				End If
 			Next
@@ -470,7 +486,7 @@ Public Class Unpacker
 			For Each aPackagePathFileName As String In Directory.GetFiles(packagePath, packageFileNameFilter)
 				Me.UnpackFolderTreeFromPackage(aPackagePathFileName)
 
-				If Me.CancellationPending Then
+				If Me.theUnpackerBackgroundWorker.CancellationPending Then
 					Return StatusMessage.Canceled
 				End If
 			Next
@@ -548,7 +564,7 @@ Public Class Unpacker
 			For Each aPathSubFolder As String In Directory.GetDirectories(packagePath)
 				Me.ListPackagesInFolderRecursively(aPathSubFolder)
 
-				If Me.CancellationPending Then
+				If Me.theUnpackerBackgroundWorker.CancellationPending Then
 					Return
 				End If
 			Next
@@ -564,7 +580,7 @@ Public Class Unpacker
 				For Each aPackagePathFileName As String In Directory.GetFiles(packagePath, packageExtension)
 					Me.ListPackage(aPackagePathFileName)
 
-					If Me.CancellationPending Then
+					If Me.theUnpackerBackgroundWorker.CancellationPending Then
 						Return
 					End If
 				Next
@@ -621,7 +637,7 @@ Public Class Unpacker
 			Me.StopLog(status, packageRelativePathFileName)
 		End Try
 
-		If Me.CancellationPending Then
+		If Me.theUnpackerBackgroundWorker.CancellationPending Then
 			Me.UpdateProgressStop("... " + progressDescriptionText + " canceled.")
 		Else
 			Me.UpdateProgressStop("... " + progressDescriptionText + " finished.")
@@ -724,6 +740,8 @@ Public Class Unpacker
 #End Region
 
 #Region "Data"
+
+	Private theUnpackerBackgroundWorker As BackgroundWorkerEx
 
 	Private theUnpackModes As BindingListEx(Of String)
 

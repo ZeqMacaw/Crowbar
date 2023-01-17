@@ -84,15 +84,6 @@ Public Class UnpackUserControl
 #Region "Methods"
 
 	Public Sub ListPackageContents()
-		'NOTE: This is needed to handle when Crowbar is opened by double-clicking a vpk file.
-		'      Every test on my dev computer without this code raised this exception: "This BackgroundWorker is currently busy and cannot run multiple tasks concurrently."
-		If TheApp.Unpacker.IsBusy Then
-			TheApp.Unpacker.CancelAsync()
-			While TheApp.Unpacker.IsBusy
-				Application.DoEvents()
-			End While
-		End If
-
 		If TheApp.Settings.UnpackerIsRunning Then
 			Exit Sub
 		End If
@@ -110,10 +101,7 @@ Public Class UnpackUserControl
 
 		Me.theUnpackedRelativePathFileNames.Clear()
 
-		AddHandler TheApp.Unpacker.ProgressChanged, AddressOf Me.ListerBackgroundWorker_ProgressChanged
-		AddHandler TheApp.Unpacker.RunWorkerCompleted, AddressOf Me.ListerBackgroundWorker_RunWorkerCompleted
-
-		TheApp.Unpacker.Run(PackageAction.List, Nothing, False, "")
+		TheApp.Unpacker.ListContents(AddressOf Me.ListerBackgroundWorker_ProgressChanged, AddressOf Me.ListerBackgroundWorker_RunWorkerCompleted)
 	End Sub
 
 #End Region
@@ -122,7 +110,6 @@ Public Class UnpackUserControl
 
 	Private Sub UnpackUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 		'NOTE: This code prevents Visual Studio often inexplicably extending the right side of these textboxes.
-		'Me.PackagePathFileNameTextBox.Size = New System.Drawing.Size(Me.BrowseForPackagePathFolderOrFileNameButton.Left - Me.BrowseForPackagePathFolderOrFileNameButton.Margin.Left - Me.PackagePathFileNameTextBox.Margin.Right - Me.PackagePathFileNameTextBox.Left, 21)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.PackagePathFileNameTextBox, Me.RefreshPackagesButton, False)
 		Me.OutputPathTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputPathTextBox.Margin.Right - Me.OutputPathTextBox.Left, 21)
 		Me.OutputSamePathTextBox.Size = New System.Drawing.Size(Me.BrowseForOutputPathButton.Left - Me.BrowseForOutputPathButton.Margin.Left - Me.OutputSamePathTextBox.Margin.Right - Me.OutputSamePathTextBox.Left, 21)
@@ -217,7 +204,7 @@ Public Class UnpackUserControl
 		If Me.RefreshPackagesButton.Tag.ToString() = "Refresh" Then
 			Me.ListPackageContents()
 		Else
-			TheApp.Unpacker.CancelAsync()
+			TheApp.Unpacker.CancelUnpack()
 		End If
 	End Sub
 
@@ -234,7 +221,7 @@ Public Class UnpackUserControl
 	End Sub
 
 	Private Sub CancelUnpackButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CancelUnpackButton.Click
-		TheApp.Unpacker.CancelAsync()
+		TheApp.Unpacker.CancelUnpack()
 	End Sub
 
 	Private Sub UseAllInDecompileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UseAllInDecompileButton.Click
@@ -292,10 +279,6 @@ Public Class UnpackUserControl
 	End Sub
 
 	Private Sub ListerBackgroundWorker_RunWorkerCompleted(ByVal sender As System.Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs)
-		RemoveHandler TheApp.Unpacker.ProgressChanged, AddressOf Me.ListerBackgroundWorker_ProgressChanged
-		RemoveHandler TheApp.Unpacker.RunWorkerCompleted, AddressOf Me.ListerBackgroundWorker_RunWorkerCompleted
-
-
 		Dim entries As New List(Of SourcePackageDirectoryEntry)()
 		If Not e.Cancelled Then
 			Dim unpackResultInfo As UnpackerOutputInfo
@@ -330,9 +313,6 @@ Public Class UnpackUserControl
 	End Sub
 
 	Private Sub UnpackerBackgroundWorker_RunWorkerCompleted(ByVal sender As System.Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs)
-		RemoveHandler TheApp.Unpacker.ProgressChanged, AddressOf Me.UnpackerBackgroundWorker_ProgressChanged
-		RemoveHandler TheApp.Unpacker.RunWorkerCompleted, AddressOf Me.UnpackerBackgroundWorker_RunWorkerCompleted
-
 		If Not e.Cancelled AndAlso e.Result IsNot Nothing Then
 			Dim unpackResultInfo As UnpackerOutputInfo
 			unpackResultInfo = CType(e.Result, UnpackerOutputInfo)
@@ -583,10 +563,8 @@ Public Class UnpackUserControl
 		Dim selectedRelativeOutputPath As String = ""
 		Me.PackageContentsUserControl1.GetSelectedEntriesAndOutputPath(packagePathFileNameToEntriesMap, selectedRelativeOutputPath)
 
-		'TODO: Run Unpacker.
-		AddHandler TheApp.Unpacker.ProgressChanged, AddressOf Me.UnpackerBackgroundWorker_ProgressChanged
-		AddHandler TheApp.Unpacker.RunWorkerCompleted, AddressOf Me.UnpackerBackgroundWorker_RunWorkerCompleted
-		TheApp.Unpacker.Run(PackageAction.Unpack, packagePathFileNameToEntriesMap, TheApp.Settings.UnpackFolderForEachPackageIsChecked, selectedRelativeOutputPath)
+		TheApp.Unpacker.Unpack(AddressOf Me.UnpackerBackgroundWorker_ProgressChanged, AddressOf Me.UnpackerBackgroundWorker_RunWorkerCompleted, packagePathFileNameToEntriesMap, selectedRelativeOutputPath)
+	End Sub
 
 	Private Sub UpdateUnpackedRelativePathFileNames(ByVal iUnpackedRelativePathFileNames As BindingListEx(Of String))
 		If iUnpackedRelativePathFileNames IsNot Nothing Then

@@ -179,9 +179,6 @@ Public Class PackageContentsUserControl
 	End Sub
 
 	Private Sub PackageTreeView_ItemDrag(sender As Object, e As ItemDragEventArgs) Handles PackageTreeView.ItemDrag
-		'If Me.PackageTreeView.SelectedNode IsNot Nothing Then
-		'	Me.RunUnpackerToUnpackFilesInternal(PackageAction.UnpackToTemp, Nothing)
-		'End If
 		Me.DoDragAndDrop()
 	End Sub
 
@@ -203,11 +200,7 @@ Public Class PackageContentsUserControl
 		'NOTE: This selects the node before dragging starts; otherwise dragging would use whatever was selected before the mousedown.
 		treeView.SelectedNode = clickedNode
 
-		'Me.UpdateSelectionPathText()
-		'Me.ShowFilesInSelectedFolder()
-
 		' Must use SelectedIndices instead of SelectedItems when using ListView.VirtualMode = True.
-		'Me.PackageListView.SelectedItems.Clear()
 		Me.PackageListView.SelectedIndices.Clear()
 	End Sub
 
@@ -263,9 +256,6 @@ Public Class PackageContentsUserControl
 	End Sub
 
 	Private Sub PackageListView_ItemDrag(sender As Object, e As ItemDragEventArgs) Handles PackageListView.ItemDrag
-		'If Me.PackageListView.SelectedIndices.Count > 0 Then
-		'	Me.RunUnpackerToExtractFiles(PackageAction.UnpackToTemp, Me.PackageListView.SelectedIndices)
-		'End If
 		Me.DoDragAndDrop()
 	End Sub
 
@@ -658,7 +648,7 @@ Public Class PackageContentsUserControl
 			packageEntries.Add(entry)
 			packagePathFileNameToEntriesMap.Add(entry.PackageDataPathFileName, packageEntries)
 			' Extract the file to the user's temp folder and open it as if it were opened in File Explorer.
-			TheApp.Unpacker.Run(PackageAction.UnpackToTempAndOpen, packagePathFileNameToEntriesMap, False, "")
+			TheApp.Unpacker.UnpackToTempAndOpen(Nothing, Nothing, packagePathFileNameToEntriesMap, "")
 		End If
 	End Sub
 
@@ -667,7 +657,7 @@ Public Class PackageContentsUserControl
 		Dim selectedRelativeOutputPath As String = ""
 		Me.GetSelectedEntriesAndOutputPath(packagePathFileNameToEntriesMap, selectedRelativeOutputPath)
 
-		Dim message As String = TheApp.Unpacker.RunSynchronous(PackageAction.UnpackToTemp, packagePathFileNameToEntriesMap, TheApp.Settings.UnpackFolderForEachPackageIsChecked, selectedRelativeOutputPath)
+		Dim message As String = TheApp.Unpacker.UnpackToTemp(packagePathFileNameToEntriesMap, selectedRelativeOutputPath)
 		'If message <> "" Then
 		'	Me.UnpackerLogTextBox.AppendText(message + vbCr)
 		'End If
