@@ -141,6 +141,11 @@ Public Class Base_TagsUserControl
 				Exit Property
 			End If
 
+			' Because tags widget might not be shown (such as when on unseen TabPage), must call Init() here.
+			If Me.theWidgets Is Nothing Then
+				Me.Init()
+			End If
+
 			Me.theCheckBoxesAreChangingViaMe = True
 			Me.theComboBoxesAreChangingViaMe = True
 			Me.theRadioButtonsAreChangingViaMe = True

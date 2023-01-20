@@ -83,6 +83,8 @@ Public Class SteamAppInfoBase
 
 	Public Sub New()
 		Me.ContentFileExtensionsAndDescriptions = New SortedList(Of String, String)()
+		Me.TagsControlType = GetType(Base_TagsUserControl)
+		Me.KeyValuesControlType = GetType(Base_KeyValuesUserControl)
 	End Sub
 
 	Public Overridable Function ProcessFileAfterDownload(ByVal givenPathFileName As String, ByVal bw As BackgroundWorkerEx) As String
@@ -110,6 +112,7 @@ Public Class SteamAppInfoBase
 	Public Property CanUseContentFolderOrFile As Boolean
 	Public Property ContentFileExtensionsAndDescriptions As SortedList(Of String, String)
 	Public Property TagsControlType As Type
+	Public Property KeyValuesControlType As Type
 
 #End Region
 

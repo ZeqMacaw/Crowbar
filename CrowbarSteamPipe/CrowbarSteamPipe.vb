@@ -44,6 +44,8 @@ Public Module CrowbarSteamPipe
 					Crowbar_DownloadContentFolderOrFile()
 				ElseIf command = "Crowbar_DownloadPreviewFile" Then
 					Crowbar_DownloadPreviewFile()
+				ElseIf command = "Crowbar_SetKeyValues" Then
+					Crowbar_SetKeyValues()
 
 				ElseIf command = "SteamApps_BIsSubscribedApp" Then
 					SteamApps_BIsSubscribedApp()
@@ -131,7 +133,7 @@ Public Module CrowbarSteamPipe
 			'For debugging, keep console open until Enter Is pressed.
 			Console.ReadLine()
 #End If
-        End Try
+		End Try
 	End Sub
 
 #Region "Init and Free"
@@ -448,6 +450,49 @@ Public Module CrowbarSteamPipe
 		End Try
 
 		theCallResultIsFinished = True
+	End Sub
+
+#End Region
+
+#Region "Crowbar_SetKeyValues"
+
+	Private Sub Crowbar_SetKeyValues()
+		Console.WriteLine("Crowbar_SetKeyValues")
+		Dim resultIsSuccess As Boolean = True
+		Dim key As String
+		'Dim oldKeyCount As Integer
+		'oldKeyCount = CInt(sr.ReadLine())
+		'For i As Integer = 0 To oldKeyCount - 1
+		'	key = sr.ReadLine()
+		'	'Dim result As Boolean = SteamUGC.RemoveItemKeyValueTags(theUGCUpdateHandle, key)
+		'Next
+		' This function works, so can skip the above.
+		Dim removeAllKeysResultIsSuccess As Boolean = SteamUGC.RemoveAllItemKeyValueTags(theUGCUpdateHandle)
+		Console.WriteLine("Crowbar_SetKeyValues RemoveAllItemKeyValueTags result: " + removeAllKeysResultIsSuccess.ToString())
+		If Not removeAllKeysResultIsSuccess Then
+			resultIsSuccess = False
+		End If
+
+		Dim value As String
+		Dim addKeyValueResultIsSuccess As Boolean
+		Dim newKeyValueCount As Integer
+		newKeyValueCount = CInt(sr.ReadLine())
+		Console.WriteLine("Crowbar_SetKeyValues newKeyValueCount: " + newKeyValueCount.ToString())
+		For i As Integer = 0 To newKeyValueCount - 1
+			key = sr.ReadLine()
+			value = sr.ReadLine()
+			addKeyValueResultIsSuccess = SteamUGC.AddItemKeyValueTag(theUGCUpdateHandle, key, value)
+			Console.WriteLine("Crowbar_SetKeyValues AddItemKeyValueTag keyvalue: " + key + "=" + value + " result: " + addKeyValueResultIsSuccess.ToString())
+			If Not addKeyValueResultIsSuccess Then
+				resultIsSuccess = False
+			End If
+		Next
+
+		If resultIsSuccess Then
+			sw.WriteLine("success")
+		Else
+			sw.WriteLine("error")
+		End If
 	End Sub
 
 #End Region
@@ -1139,8 +1184,10 @@ Public Module CrowbarSteamPipe
 
 		theUGCQueryHandle = SteamUGC.CreateQueryUGCDetailsRequest(publishedFileIDList, 1)
 		If theUGCQueryHandle <> UGCQueryHandle_t.Invalid Then
+			'Console.WriteLine("SteamUGC_CreateQueryUGCDetailsRequest - good UGCQueryHandle_t")
 			sw.WriteLine("success")
 		Else
+			'Console.WriteLine("SteamUGC_CreateQueryUGCDetailsRequest - invalid UGCQueryHandle_t")
 			sw.WriteLine("error")
 		End If
 	End Sub
@@ -1176,24 +1223,9 @@ Public Module CrowbarSteamPipe
 
 		Console.WriteLine("SteamUGC_CreateQueryUserUGCRequest - pageNumber: " + pageNumber.ToString())
 		theUGCQueryHandle = SteamUGC.CreateQueryUserUGCRequest(accountID, EUserUGCList.k_EUserUGCList_Published, EUGCMatchingUGCType.k_EUGCMatchingUGCType_Items_ReadyToUse, EUserUGCListSortOrder.k_EUserUGCListSortOrder_LastUpdatedDesc, nullCreatorAppID, appID, pageNumber)
-
 		If theUGCQueryHandle <> UGCQueryHandle_t.Invalid Then
 			'Console.WriteLine("SteamUGC_CreateQueryUserUGCRequest - good UGCQueryHandle_t")
 			sw.WriteLine("success")
-
-			' Disable getting unwanted fields.
-			'ISteamUGC: SetReturnKeyValueTags -Sets whether to return any key-value tags for the items on a pending UGC Query.
-			'ISteamUGC: SetReturnLongDescription -Sets whether to return the full description for the items on a pending UGC Query.
-			'ISteamUGC: SetReturnMetadata -Sets whether to return the developer specified metadata for the items on a pending UGC Query.
-			'ISteamUGC: SetReturnChildren -Sets whether to return the IDs of the child items of the items on a pending UGC Query.
-			'ISteamUGC: SetReturnAdditionalPreviews -Sets whether to return any additional images/videos attached to the items on a pending UGC Query.
-			'Console.WriteLine("SteamUGC_CreateQueryUserUGCRequest - Disable some fields.")
-			SteamUGC.SetReturnKeyValueTags(theUGCQueryHandle, False)
-			SteamUGC.SetReturnLongDescription(theUGCQueryHandle, False)
-			'SteamUGC.SetReturnLongDescription(theUGCQueryHandle, True)
-			SteamUGC.SetReturnMetadata(theUGCQueryHandle, False)
-			SteamUGC.SetReturnChildren(theUGCQueryHandle, False)
-			SteamUGC.SetReturnAdditionalPreviews(theUGCQueryHandle, False)
 		Else
 			'Console.WriteLine("SteamUGC_CreateQueryUserUGCRequest - invalid UGCQueryHandle_t")
 			sw.WriteLine("error")
@@ -1205,6 +1237,14 @@ Public Module CrowbarSteamPipe
 #Region "SteamUGC_SendQueryUGCRequest"
 
 	Private Sub SteamUGC_SendQueryUGCRequest()
+		Dim fullInfoIsRequested_Text As String
+		fullInfoIsRequested_Text = sr.ReadLine()
+		theFullInfoIsRequested = False
+		If fullInfoIsRequested_Text = "True" Then
+			theFullInfoIsRequested = True
+		End If
+		SetSteamUGCQueryReturns()
+
 		Dim result As SteamAPICall_t = SteamUGC.SendQueryUGCRequest(theUGCQueryHandle)
 		CrowbarSteamPipe.SetResultAndRunCallbacks(Of SteamUGCQueryCompleted_t)(AddressOf OnSteamUGCQueryCompleted, result)
 
@@ -1212,7 +1252,22 @@ Public Module CrowbarSteamPipe
 		SteamUGC.ReleaseQueryUGCRequest(theUGCQueryHandle)
 	End Sub
 
-	'NOTE: Will return max of kNumUGCResultsPerPage pages. Steamworks.Constants.kNumUGCResultsPerPage
+	Private Sub SetSteamUGCQueryReturns()
+		' Disable getting unwanted fields.
+		'ISteamUGC: SetReturnKeyValueTags -Sets whether to return any key-value tags for the items on a pending UGC Query.
+		'ISteamUGC: SetReturnLongDescription -Sets whether to return the full description for the items on a pending UGC Query.
+		'ISteamUGC: SetReturnMetadata -Sets whether to return the developer specified metadata for the items on a pending UGC Query.
+		'ISteamUGC: SetReturnChildren -Sets whether to return the IDs of the child items of the items on a pending UGC Query.
+		'ISteamUGC: SetReturnAdditionalPreviews -Sets whether to return any additional images/videos attached to the items on a pending UGC Query.
+		'Console.WriteLine("SetSteamUGCQueryReturns.")
+		SteamUGC.SetReturnKeyValueTags(theUGCQueryHandle, theFullInfoIsRequested)
+		SteamUGC.SetReturnLongDescription(theUGCQueryHandle, theFullInfoIsRequested)
+		SteamUGC.SetReturnMetadata(theUGCQueryHandle, False)
+		SteamUGC.SetReturnChildren(theUGCQueryHandle, False)
+		SteamUGC.SetReturnAdditionalPreviews(theUGCQueryHandle, False)
+	End Sub
+
+	'NOTE: Will return max of kNumUGCResultsPerPage results. Steamworks.Constants.kNumUGCResultsPerPage
 	'm_eResult   EResult	The result of the operation.
 	'm_unNumResultsReturned  UInt32	The number of items returned.
 	'm_unTotalMatchingResults    UInt32	The total number of items that matched the query.
@@ -1227,6 +1282,9 @@ Public Module CrowbarSteamPipe
 
 					Dim queryResult As Boolean
 					Dim itemDetails As New SteamUGCDetails_t()
+					Dim keyValueCount As UInt32
+					Dim aKey As String = ""
+					Dim aValue As String = ""
 					For resultItemIndex As UInteger = 0 To CUInt(pCallResult.m_unNumResultsReturned - 1)
 						queryResult = SteamUGC.GetQueryUGCResult(theUGCQueryHandle, resultItemIndex, itemDetails)
 
@@ -1241,12 +1299,35 @@ Public Module CrowbarSteamPipe
 						sw.WriteLine(itemDetails.m_rtimeUpdated)
 
 						WriteTextThatMightHaveMultipleLines(itemDetails.m_rgchTitle)
-						'WriteTextThatMightHaveMultipleLines(itemDetails.m_rgchDescription)
+
+						If theFullInfoIsRequested Then
+							WriteTextThatMightHaveMultipleLines(itemDetails.m_rgchDescription)
+						End If
 
 						sw.WriteLine(itemDetails.m_pchFileName)
 						sw.WriteLine(itemDetails.m_hPreviewFile)
+						theUGCHandleForPreviewImageFile = itemDetails.m_hPreviewFile
 						sw.WriteLine(CType(itemDetails.m_eVisibility, Steamworks.ERemoteStoragePublishedFileVisibility).ToString("d"))
 						sw.WriteLine(itemDetails.m_rgchTags)
+
+						If theFullInfoIsRequested Then
+							keyValueCount = SteamUGC.GetQueryUGCNumKeyValueTags(theUGCQueryHandle, resultItemIndex)
+							sw.WriteLine(keyValueCount)
+							If keyValueCount > 0 Then
+								For keyValueTagIndex As UInt32 = 0 To CType(keyValueCount - 1, UInt32)
+									queryResult = SteamUGC.GetQueryUGCKeyValueTag(theUGCQueryHandle, resultItemIndex, keyValueTagIndex, aKey, 256, aValue, 256)
+									If queryResult Then
+										sw.WriteLine(aKey)
+										sw.WriteLine(aValue)
+									Else
+										sw.WriteLine("")
+										sw.WriteLine("")
+									End If
+								Next
+							End If
+						Else
+							sw.WriteLine(0)
+						End If
 
 						'Console.WriteLine("  " + resultItemIndex.ToString())
 						'Console.WriteLine("    OwnerName: " + SteamFriends.GetFriendPersonaName(New CSteamID(itemDetails.m_ulSteamIDOwner)))
@@ -1341,26 +1422,26 @@ Public Module CrowbarSteamPipe
 		If status = EItemUpdateStatus.k_EItemUpdateStatusPreparingConfig Then
 			'           Console.WriteLine("Preparing config")
 			sw.WriteLine("Preparing config")
-        ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusPreparingContent Then
+		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusPreparingContent Then
 			'           Console.WriteLine("Preparing content")
 			sw.WriteLine("Preparing content")
-        ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusUploadingContent Then
+		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusUploadingContent Then
 			'           Console.WriteLine("Uploading content")
 			sw.WriteLine("Uploading content")
-            If totalUploadedByteCount > 0 AndAlso uploadedByteCount = totalUploadedByteCount Then
-                theItemIsUploading = False
-            End If
-        ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusUploadingPreviewFile Then
+			If totalUploadedByteCount > 0 AndAlso uploadedByteCount = totalUploadedByteCount Then
+				theItemIsUploading = False
+			End If
+		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusUploadingPreviewFile Then
 			'           Console.WriteLine("Uploading preview")
 			sw.WriteLine("Uploading preview")
-        ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusCommittingChanges Then
+		ElseIf status = EItemUpdateStatus.k_EItemUpdateStatusCommittingChanges Then
 			'           Console.WriteLine("Committing changes")
 			sw.WriteLine("Committing changes")
-        Else
+		Else
 			'           Console.WriteLine("invalid")
 			sw.WriteLine("invalid")
-            theItemIsUploading = False
-        End If
+			theItemIsUploading = False
+		End If
 		sw.WriteLine(uploadedByteCount)
 		sw.WriteLine(totalUploadedByteCount)
 	End Sub
@@ -1737,6 +1818,7 @@ Public Module CrowbarSteamPipe
 	Private theUGCHandleForContentFile As UGCHandle_t
 	Private theUGCHandleForPreviewImageFile As UGCHandle_t
 	'Private theUGCPreviewImageFileSize As Integer
+	Private theFullInfoIsRequested As Boolean
 
 	Private theAppID As AppId_t
 	Private theItemID As PublishedFileId_t
