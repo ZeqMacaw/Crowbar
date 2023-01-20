@@ -970,7 +970,6 @@
   <ItemGroup>
     <Content Include="- Documents\Development.txt" />
     <Content Include="- Documents\History 2013.txt" />
-    <Content Include="- Documents\License.txt" />
     <Content Include="- Documents\History 2014.txt" />
     <Content Include="- Documents\Specifications.txt" />
     <None Include="Resources\26_Grey_PayPal_Pill_Button.png" />
