@@ -1,3 +1,3 @@
-﻿Public Class JBmodTagsUserControl
+﻿Public Class JBModTagsUserControl
 
 End Class

@@ -63,7 +63,7 @@ Public Class SteamAppInfoBase
 		steamAppInfos.Add(anAppInfo)
 		anAppInfo = New HuntDownTheFreemanSteamAppInfo()
 		steamAppInfos.Add(anAppInfo)
-		anAppInfo = New JBmodSteamAppInfo()
+		anAppInfo = New JBModSteamAppInfo()
 		steamAppInfos.Add(anAppInfo)
 		anAppInfo = New Left4Dead2SteamAppInfo()
 		steamAppInfos.Add(anAppInfo)
