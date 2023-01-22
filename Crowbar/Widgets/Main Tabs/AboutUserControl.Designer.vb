@@ -34,8 +34,8 @@ Partial Class AboutUserControl
 		Me.GotoSteamProfileLinkLabel = New System.Windows.Forms.LinkLabel()
 		Me.PayPalPictureBox = New System.Windows.Forms.PictureBox()
 		Me.SpecialThanksGroupBox = New System.Windows.Forms.GroupBox()
-		Me.Credits3TextBox = New System.Windows.Forms.TextBox()
 		Me.Credits2TextBox = New System.Windows.Forms.TextBox()
+		Me.Credits3TextBox = New System.Windows.Forms.TextBox()
 		Me.Panel1.SuspendLayout()
 		CType(Me.PayPalPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SpecialThanksGroupBox.SuspendLayout()
@@ -84,6 +84,19 @@ Partial Class AboutUserControl
 		Me.AuthorIconButton.Size = New System.Drawing.Size(128, 128)
 		Me.AuthorIconButton.TabIndex = 4
 		Me.AuthorIconButton.UseVisualStyleBackColor = True
+		'
+		'CreditsTextBox
+		'
+		Me.CreditsTextBox.Location = New System.Drawing.Point(6, 20)
+		Me.CreditsTextBox.Multiline = True
+		Me.CreditsTextBox.Name = "CreditsTextBox"
+		Me.CreditsTextBox.ReadOnly = True
+		Me.CreditsTextBox.Size = New System.Drawing.Size(191, 206)
+		Me.CreditsTextBox.TabIndex = 0
+		Me.CreditsTextBox.TabStop = False
+		Me.CreditsTextBox.Text = "arby26" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Artfunkel" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "atrblizzard" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Avengito" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "BANG!" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "BinaryRifle" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Cra0kalo" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "CrazyBubb" &
+	"a" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "da1barker" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Doktor haus" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Drsalvador" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "E7ajamy" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Funreal" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Game Zombie" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "GeckoN"
+		Me.CreditsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
 		'
 		'AuthorLinkLabel
 		'
@@ -182,19 +195,6 @@ Partial Class AboutUserControl
 		Me.SpecialThanksGroupBox.TabStop = False
 		Me.SpecialThanksGroupBox.Text = "Special Thanks"
 		'
-		'CreditsTextBox
-		'
-		Me.CreditsTextBox.Location = New System.Drawing.Point(6, 20)
-		Me.CreditsTextBox.Multiline = True
-		Me.CreditsTextBox.Name = "CreditsTextBox"
-		Me.CreditsTextBox.ReadOnly = True
-		Me.CreditsTextBox.Size = New System.Drawing.Size(191, 206)
-		Me.CreditsTextBox.TabIndex = 0
-		Me.CreditsTextBox.TabStop = False
-		Me.CreditsTextBox.Text = "arby26" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Artfunkel" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "atrblizzard" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Avengito" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "BANG!" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "BinaryRifle" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Cra0kalo" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "CrazyBubb" &
-	"a" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "da1barker" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Doktor haus" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Drsalvador" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "E7ajamy" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Funreal" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Game Zombie" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "GeckoN"
-		Me.CreditsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-		'
 		'Credits2TextBox
 		'
 		Me.Credits2TextBox.Location = New System.Drawing.Point(203, 20)
@@ -204,8 +204,9 @@ Partial Class AboutUserControl
 		Me.Credits2TextBox.Size = New System.Drawing.Size(191, 206)
 		Me.Credits2TextBox.TabIndex = 1
 		Me.Credits2TextBox.TabStop = False
-		Me.Credits2TextBox.Text = "GPZ" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Kerry [Valve employee]" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "k@rt" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "K1CHWA" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Lt. Rocky" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "MARK2580" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Mayhem" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Mr. Brigh" &
-	"tside" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "mrlanky" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Nicknine" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Pacagma" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Pajama" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "pappaskurtz" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Pte Jack"
+		Me.Credits2TextBox.Text = "GPZ" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Insane Black Rock Shooter" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Kerry [Valve employee]" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "k@rt" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "K1CHWA" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Lt. Rocky" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) &
+	"MARK2580" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Mayhem" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Mr. Brightside" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "mrlanky" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Nicknine" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Pacagma" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Pajama" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "pappaskurt" &
+	"z" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Pte Jack"
 		Me.Credits2TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
 		'
 		'Credits3TextBox
