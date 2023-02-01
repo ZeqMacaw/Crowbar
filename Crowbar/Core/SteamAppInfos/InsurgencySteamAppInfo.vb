@@ -11,7 +11,7 @@ Public Class InsurgencySteamAppInfo
 		Me.ID = New AppId_t(222880)
 		Me.Name = "Insurgency"
 		Me.UsesSteamUGC = True
-		Me.CanUseContentFolderOrFile = False
+		Me.CanUseContentFolderOrFile = True
 		'Me.ContentFileExtensionsAndDescriptions.Add("vpk", "Source Engine VPK Files")
 		Me.TagsControlType = GetType(InsurgencyTagsUserControl)
 	End Sub
