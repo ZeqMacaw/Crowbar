@@ -43,6 +43,10 @@ Public Class SourceAniFrameAnim49
 	Public Const STUDIO_FRAME_ANIMROT As Integer = &H8
 	Public Const STUDIO_FRAME_FULLANIMPOS As Integer = &H10
 
+	'FROM: CSGO public\studio.h
+	'#define STUDIO_FRAME_CONST_POS2	0x20 // Vector in constants
+	Public Const STUDIO_FRAME_CONST_POS2 As Integer = &H20
+
 	'Public Const STUDIO_FRAME_UNKNOWN01 As Integer = &H40	' Seems to be 6 rotation bytes in constants based on tests. New format that is not Quaternion48. Maybe Quaternion48Smallest3?
 	'Public Const STUDIO_FRAME_UNKNOWN02 As Integer = &H80	' Seems to be 6 rotation bytes in framedata based on tests. New format that is not Quaternion48. Maybe Quaternion48Smallest3?
 	'FROM: Kerry at Valve via Splinks on 24-Apr-2017

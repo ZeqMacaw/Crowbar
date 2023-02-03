@@ -1304,8 +1304,14 @@ Public Class SourceMdlFile49
 
 					boneFlag = aSectionOfAnimation.theBoneFlags(boneIndex)
 					If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_CONST_ROT2) > 0 Then
-						aBoneConstantInfo.theConstantRotationUnknown = New SourceQuaternion48bitsViaBytes()
-						aBoneConstantInfo.theConstantRotationUnknown.theBytes = Me.theInputFileReader.ReadBytes(6)
+						aBoneConstantInfo.theConstantRotation2 = New SourceQuaternion48bitsViaBytes()
+						aBoneConstantInfo.theConstantRotation2.theBytes = Me.theInputFileReader.ReadBytes(6)
+					End If
+					If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_CONST_POS2) > 0 Then
+						aBoneConstantInfo.theConstantPosition2 = New SourceVector()
+						aBoneConstantInfo.theConstantPosition2.x = Me.theInputFileReader.ReadSingle()
+						aBoneConstantInfo.theConstantPosition2.y = Me.theInputFileReader.ReadSingle()
+						aBoneConstantInfo.theConstantPosition2.z = Me.theInputFileReader.ReadSingle()
 					End If
 					If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_RAWROT) > 0 Then
 						aBoneConstantInfo.theConstantRawRot = New SourceQuaternion48bits()
@@ -1319,10 +1325,6 @@ Public Class SourceMdlFile49
 						aBoneConstantInfo.theConstantRawPos.theYInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
 						aBoneConstantInfo.theConstantRawPos.theZInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
 					End If
-					'If (boneFlag And SourceAniFrameAnim.STUDIO_FRAME_CONST_ROT2) > 0 Then
-					'	aBoneConstantInfo.theConstantRotationUnknown = New SourceQuaternion48bitsViaBytes()
-					'	aBoneConstantInfo.theConstantRotationUnknown.theBytes = Me.theInputFileReader.ReadBytes(6)
-					'End If
 				Next
 
 				If Me.theInputFileReader.BaseStream.Position > fileOffsetStart Then

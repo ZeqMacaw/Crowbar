@@ -419,8 +419,14 @@ Public Class SourceSmdFile52
 								aFrameLine.position.z = aBoneConstantInfo.theConstantRawPos.z
 								aFrameLine.position.debug_text = "RAWPOS"
 							End If
+							If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_CONST_POS2) > 0 Then
+								aFrameLine.position.x = aBoneConstantInfo.theConstantPosition2.x
+								aFrameLine.position.y = aBoneConstantInfo.theConstantPosition2.y
+								aFrameLine.position.z = aBoneConstantInfo.theConstantPosition2.z
+								aFrameLine.position.debug_text = "FRAME_CONST_POS2"
+							End If
 							If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_CONST_ROT2) > 0 Then
-								aFrameLine.rotation = MathModule.ToEulerAngles(aBoneConstantInfo.theConstantRotationUnknown.quaternion)
+								aFrameLine.rotation = MathModule.ToEulerAngles(aBoneConstantInfo.theConstantRotation2.quaternion)
 								aFrameLine.rotation.debug_text = "FRAME_CONST_ROT2"
 							End If
 						End If
