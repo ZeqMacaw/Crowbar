@@ -11,91 +11,6 @@ Public Class TreeViewEx
 
 	' Empty Id means no TreeNode for item. 
 	' Empty parentId means parent node is root node.
-	'Public Sub InsertItems(Of ItemType, TagType)(ByVal rootTreeNode As TreeNode, ByVal items As IEnumerable(Of ItemType), ByVal GetId As Func(Of ItemType, String), ByVal GetDisplayName As Func(Of ItemType, String), ByVal GetParentItem As Func(Of ItemType, ItemType), ByVal GetTag As GetTagDelegate(Of ItemType, TagType), ByVal IsDimmed As Func(Of ItemType, Boolean))
-	'	If items Is Nothing Then
-	'		Exit Sub
-	'	End If
-
-	'	rootTreeNode.Nodes.Clear()
-	'	Me.theTreeNodeMap.Clear()
-
-	'	For Each item As ItemType In items
-	'		Dim id As String = GetId(item)
-	'		Dim node As TreeNode = Nothing
-
-	'		If id <> "" Then
-	'			If Not Me.theTreeNodeMap.ContainsKey(id) Then
-	'				node = New TreeNode()
-	'				With node
-	'					.Name = id
-	'					.Text = GetDisplayName(item)
-	'				End With
-	'				Me.theTreeNodeMap.Add(id, node)
-	'			Else
-	'				node = Me.theTreeNodeMap(id)
-	'			End If
-	'			' True means childItem is a leaf node. False is unused because of the True.
-	'			node.Tag = GetTag(item, item, CType(node.Tag, TagType), True, False)
-	'		End If
-
-	'		Dim childItem As ItemType = item
-	'		Dim childNode As TreeNode = node
-	'		While True
-	'			Dim parentItem As ItemType = GetParentItem(childItem)
-	'			Dim parentId As String = GetId(parentItem)
-	'			Dim parentNode As TreeNode
-
-	'			If parentId <> "" Then
-	'				If Not Me.theTreeNodeMap.ContainsKey(parentId) Then
-	'					parentNode = New TreeNode()
-	'					With parentNode
-	'						.Name = parentId
-	'						.Text = GetDisplayName(parentItem)
-	'					End With
-	'					Me.theTreeNodeMap.Add(parentId, parentNode)
-	'				Else
-	'					parentNode = Me.theTreeNodeMap(parentId)
-	'				End If
-	'			Else
-	'				parentNode = rootTreeNode
-	'			End If
-
-	'			If childNode IsNot Nothing Then
-	'				If parentNode.Nodes.Contains(childNode) Then
-	'					' False means parentItem is not a leaf node. True means parentItem exists.
-	'					parentNode.Tag = GetTag(parentItem, item, CType(parentNode.Tag, TagType), False, True)
-	'				Else
-	'					parentNode.Nodes.Add(childNode)
-	'					' First False means parentItem is not a leaf node. Second False means parentItem is new.
-	'					parentNode.Tag = GetTag(parentItem, item, CType(parentNode.Tag, TagType), False, False)
-	'				End If
-	'				If IsDimmed(parentItem) Then
-	'					childNode.ForeColor = SystemColors.GrayText
-	'					If childNode.Text = "fx" Then
-	'						Dim debug As Int32 = 4242
-	'					End If
-	'				Else
-	'					'FROM: https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.treenode.forecolor?view=netframework-4.0
-	'					' If null, the Color used is the ForeColor property value of the TreeView control that the tree node is assigned to.
-	'					childNode.ForeColor = Nothing
-	'					If childNode.Text = "fx" Then
-	'						Dim debug As Int32 = 4242
-	'					End If
-	'				End If
-	'			ElseIf childNode Is Nothing Then
-	'				' True means childItem is a leaf node. False is unused because of the True.
-	'				parentNode.Tag = GetTag(childItem, item, CType(parentNode.Tag, TagType), True, False)
-	'			End If
-
-	'			If parentId <> "" Then
-	'				childItem = parentItem
-	'				childNode = parentNode
-	'			Else
-	'				Exit While
-	'			End If
-	'		End While
-	'	Next
-	'End Sub
 	Public Sub InsertItems(Of ItemType, TagType)(ByVal rootTreeNode As TreeNode, ByVal items As IEnumerable(Of ItemType), ByVal GetId As Func(Of ItemType, String), ByVal GetDisplayName As Func(Of ItemType, String), ByVal GetParentItem As Func(Of ItemType, ItemType), ByVal GetTag As GetTagDelegate(Of ItemType, TagType), ByVal IsDimmed As Func(Of ItemType, Boolean))
 		If items Is Nothing Then
 			Exit Sub
@@ -144,7 +59,7 @@ Public Class TreeViewEx
 						' If null, the Color used is the ForeColor property value of the TreeView control that the tree node is assigned to.
 						childNode.ForeColor = Nothing
 					End If
-				ElseIf childNode Is Nothing Then
+				Else
 					' True means item is a leaf node. False is unused because of the True.
 					node.Tag = GetTag(item, leafItem, CType(node.Tag, TagType), True, False)
 				End If
