@@ -25,14 +25,14 @@ Public Class Viewer
 	End Sub
 
 	Protected Overloads Sub Dispose(ByVal disposing As Boolean)
-		If Not Me.IsDisposed Then
+		If Not Me.isDisposed Then
 			'Me.Halt(False)
 			If disposing Then
 				Me.Free()
 			End If
 			'NOTE: free shared unmanaged resources
 		End If
-		Me.IsDisposed = True
+		Me.isDisposed = True
 		MyBase.Dispose(disposing)
 	End Sub
 
