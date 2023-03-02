@@ -269,7 +269,7 @@ Public Class Viewer
 		End If
 
 		Dim arguments As String = ""
-		If gameFileName.ToLower() = "gameinfo.txt" Then
+		If gameFileName.ToLowerInvariant() = "gameinfo.txt" Then
 			gamePath = FileManager.GetPath(Me.theGameSetup.GamePathFileName)
 			'NOTE: The -olddialogs param adds "(Steam) Load Model" menu item, which usually means HLMV can then open a model from anywhere in file system via the "Load Model" menu item.
 			'      This also allows some HLMVs to open MDL v49 via the View button.
