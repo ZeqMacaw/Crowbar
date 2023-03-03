@@ -1584,7 +1584,7 @@ Public Class SourceSmdFile53
 			Return angleVector
 		End If
 
-		If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_RAWROT_53) > 0 Then
+		If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_NOROT) > 0 Then
 			If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_DELTA_53) > 0 Then
 				angleVector.x = 0
 				angleVector.y = 0
@@ -1634,15 +1634,15 @@ Public Class SourceSmdFile53
 				angleVector.debug_text += "+bone"
 			End If
 
-		Else
-			angleVector.x = aBone.rotation.x
-			angleVector.y = aBone.rotation.y
-			angleVector.z = aBone.rotation.z
-			rotationQuat.x = 0
-			rotationQuat.y = 0
-			rotationQuat.z = 0
-			rotationQuat.w = 0
-			angleVector.debug_text = "bone"
+			'Else
+			'	angleVector.x = aBone.rotation.x
+			'	angleVector.y = aBone.rotation.y
+			'	angleVector.z = aBone.rotation.z
+			'	rotationQuat.x = 0
+			'	rotationQuat.y = 0
+			'	rotationQuat.z = 0
+			'	rotationQuat.w = 0
+			'	angleVector.debug_text = "bone"
 		End If
 		'Catch ex As Exception
 		'Dim debug As Integer = 4242
@@ -1715,19 +1715,12 @@ Public Class SourceSmdFile53
 		Dim pos As New SourceVector()
 
 		If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_RAWPOS_53) > 0 Then
-			If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_DELTA_53) > 0 Then
-				pos.x = 0
-				pos.y = 0
-				pos.z = 0
-				pos.debug_text = "delta"
-				Return pos
-			Else
-				pos.x = anAnimation.PosX.TheFloatValue
-				pos.y = anAnimation.PosY.TheFloatValue
-				pos.z = anAnimation.PosZ.TheFloatValue
-				pos.debug_text = "raw"
-				Return pos
-			End If
+			pos.x = anAnimation.PosX.TheFloatValue
+			pos.y = anAnimation.PosY.TheFloatValue
+			pos.z = anAnimation.PosZ.TheFloatValue
+
+			pos.debug_text = "raw"
+			Return pos
 		End If
 
 		If anAnimation.thePosV IsNot Nothing Then
@@ -1753,19 +1746,19 @@ Public Class SourceSmdFile53
 
 			pos.debug_text = "anim"
 
-			If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_DELTA_53) = 0 Then
-				pos.x += aBone.position.x
-				pos.y += aBone.position.y
-				pos.z += aBone.position.z
-				pos.debug_text += "+bone"
-			End If
-
 			' never used from what I have seen	
-		Else
-			pos.x = aBone.position.x
-			pos.y = aBone.position.y
-			pos.z = aBone.position.z
-			pos.debug_text = "bone"
+			'Else
+			'	pos.x = aBone.position.x
+			'	pos.y = aBone.position.y
+			'	pos.z = aBone.position.z
+			'	pos.debug_text = "bone"
+		End If
+
+		If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_DELTA_53) = 0 Then
+			pos.x += aBone.position.x
+			pos.y += aBone.position.y
+			pos.z += aBone.position.z
+			pos.debug_text += "+bone"
 		End If
 
 		Return pos
