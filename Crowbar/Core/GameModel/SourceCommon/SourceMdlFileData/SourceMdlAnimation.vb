@@ -62,6 +62,12 @@ Public Class SourceMdlAnimation
 	Public Const STUDIO_ANIM_DELTA As Integer = &H10
 	Public Const STUDIO_ANIM_RAWROT2 As Integer = &H20
 
+	' new to v52:
+	'#define STUDIO_ANIM_RAWSCALE	0x40 // Vector48
+	'#define STUDIO_ANIM_ANIMSCALE	0x80 // mstudioanim_valueptr_t 
+	Public Const STUDIO_ANIM_RAWSCALE As Integer = &H40
+	Public Const STUDIO_ANIM_ANIMSCALE As Integer = &H80
+
 	' MDL 53 values for flags:
 	'#define STUDIO_ANIM_DELTA_53    0x01 // this appears to be delta until proven otherwise
 	'// These work as toggles, flag enabled is raw data, flag disabled is pointers, see 'STUDIO_ANIM_READBONE_53' for exception.

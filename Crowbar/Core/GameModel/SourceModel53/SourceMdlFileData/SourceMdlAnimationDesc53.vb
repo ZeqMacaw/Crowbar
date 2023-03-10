@@ -95,7 +95,7 @@ Public Class SourceMdlAnimationDesc53
 	'	int					animblock;
 	'Public animBlock As Integer
 
-	Public compressedIkErrorOffset As Integer
+	Public frameMovementOffset As Integer
 
 	'	int					animindex;	 // non-zero when anim data isn't in sections
 	Public animOffset As Integer
@@ -142,6 +142,7 @@ Public Class SourceMdlAnimationDesc53
 	Public theIkRules As List(Of SourceMdlIkRule53)
 	Public theSections As List(Of SourceMdlAnimationSection)
 	Public theMovements As List(Of SourceMdlMovement)
+	Public theFrameMovement As RSourceMdlFrameMovement
 	Public theLocalHierarchies As List(Of SourceMdlLocalHierarchy)
 
 	Public theAnimIsLinkedToSequence As Boolean
@@ -200,5 +201,8 @@ Public Class SourceMdlAnimationDesc53
 	Public Const STUDIO_FRAMEANIM As Integer = &H40
 	Public Const STUDIO_NOFORCELOOP As Integer = &H8000
 	Public Const STUDIO_EVENT_CLIENT As Integer = &H10000
+	'------
+	'VERSION 52
+	Public Const STUDIO_FRAMEMOVEMENT As Integer = &H40000
 
 End Class

@@ -89,7 +89,7 @@ Public Class SourceMdlAnimationDesc52
 	'	mstudioikrulezeroframe_t *pIKRuleZeroFrame( int i ) const { if (ikrulezeroframeindex) return (mstudioikrulezeroframe_t *)(((byte *)this) + ikrulezeroframeindex) + i; else return NULL; };
 	Public ikRuleZeroFrameOffset As Integer
 
-	Public compressedIkErrorOffset As Integer
+	Public frameMovementOffset As Integer
 
 	'	int					unused1[5];			// remove as appropriate (and zero if loading older versions)	
 	Public unused1(3) As Integer
@@ -142,6 +142,7 @@ Public Class SourceMdlAnimationDesc52
 	Public theIkRules As List(Of SourceMdlIkRule)
 	Public theSections As List(Of SourceMdlAnimationSection)
 	Public theMovements As List(Of SourceMdlMovement)
+	Public theFrameMovement As RSourceMdlFrameMovement
 	Public theLocalHierarchies As List(Of SourceMdlLocalHierarchy)
 
 	Public theAnimIsLinkedToSequence As Boolean
@@ -200,5 +201,8 @@ Public Class SourceMdlAnimationDesc52
 	Public Const STUDIO_FRAMEANIM As Integer = &H40
 	Public Const STUDIO_NOFORCELOOP As Integer = &H8000
 	Public Const STUDIO_EVENT_CLIENT As Integer = &H10000
+	'------
+	'VERSION 52
+	Public Const STUDIO_FRAMEMOVEMENT As Integer = &H40000
 
 End Class
