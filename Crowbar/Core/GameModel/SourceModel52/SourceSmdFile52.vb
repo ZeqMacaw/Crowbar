@@ -409,57 +409,31 @@ Public Class SourceSmdFile52
 						boneFlag = aSectionOfAnimation.theBoneFlags(boneIndex)
 						If aSectionOfAnimation.theBoneConstantInfos IsNot Nothing Then
 							aBoneConstantInfo = aSectionOfAnimation.theBoneConstantInfos(boneIndex)
-							If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_RAWROT) > 0 Then
+							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWROT) > 0 Then
 								aFrameLine.rotation = MathModule.ToEulerAngles(aBoneConstantInfo.theConstantRawRot.quaternion)
 								aFrameLine.rotation.debug_text = "RAWROT"
 							End If
-							If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_RAWPOS) > 0 Then
+							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWPOS) > 0 Then
 								aFrameLine.position.x = aBoneConstantInfo.theConstantRawPos.x
 								aFrameLine.position.y = aBoneConstantInfo.theConstantRawPos.y
 								aFrameLine.position.z = aBoneConstantInfo.theConstantRawPos.z
 								aFrameLine.position.debug_text = "RAWPOS"
 							End If
-							If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_CONST_POS2) > 0 Then
-								aFrameLine.position.x = aBoneConstantInfo.theConstantPosition2.x
-								aFrameLine.position.y = aBoneConstantInfo.theConstantPosition2.y
-								aFrameLine.position.z = aBoneConstantInfo.theConstantPosition2.z
-								aFrameLine.position.debug_text = "FRAME_CONST_POS2"
-							End If
-							If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_CONST_ROT2) > 0 Then
-								aFrameLine.rotation = MathModule.ToEulerAngles(aBoneConstantInfo.theConstantRotation2.quaternion)
-								aFrameLine.rotation.debug_text = "FRAME_CONST_ROT2"
-							End If
+							' Scale would be read after this but we cannot use it
 						End If
 						If aSectionOfAnimation.theBoneFrameDataInfos IsNot Nothing Then
 							aBoneFrameDataInfo = aSectionOfAnimation.theBoneFrameDataInfos(sectionFrameIndex)(boneIndex)
-							'If (boneFlag And SourceAniFrameAnim.STUDIO_FRAME_ANIMROT) > 0 Then
-							If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_FULLANIMPOS) > 0 Then
+							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMROT) > 0 Then
 								aFrameLine.rotation = MathModule.ToEulerAngles(aBoneFrameDataInfo.theAnimRotation.quaternion)
 								aFrameLine.rotation.debug_text = "ANIMROT"
 							End If
-							If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_ANIMPOS) > 0 Then
+							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMPOS) > 0 Then
 								aFrameLine.position.x = aBoneFrameDataInfo.theAnimPosition.x
 								aFrameLine.position.y = aBoneFrameDataInfo.theAnimPosition.y
 								aFrameLine.position.z = aBoneFrameDataInfo.theAnimPosition.z
 								aFrameLine.position.debug_text = "ANIMPOS"
 							End If
-							'If (boneFlag And SourceAniFrameAnim.STUDIO_FRAME_FULLANIMPOS) > 0 Then
-							If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_ANIMROT) > 0 Then
-								'aFrameLine.position.x = aBoneFrameDataInfo.theFullAnimPosition.x
-								'aFrameLine.position.y = aBoneFrameDataInfo.theFullAnimPosition.y
-								'aFrameLine.position.z = aBoneFrameDataInfo.theFullAnimPosition.z
-								aFrameLine.position.x = aBoneFrameDataInfo.theAnimPosition.x
-								aFrameLine.position.y = aBoneFrameDataInfo.theAnimPosition.y
-								aFrameLine.position.z = aBoneFrameDataInfo.theAnimPosition.z
-								aFrameLine.position.debug_text = "FULLANIMPOS"
-							End If
-							If (boneFlag And &H20) > 0 Then
-								Dim unknownFlagIsUsed As Integer = 4242
-							End If
-							If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_ANIM_ROT2) > 0 Then
-								aFrameLine.rotation = MathModule.ToEulerAngles(aBoneFrameDataInfo.theAnimRotationUnknown.quaternion)
-								aFrameLine.rotation.debug_text = "FRAME_ANIM_ROT2"
-							End If
+							' Scale would be read after this but we cannot use it
 						End If
 					Next
 				Else
