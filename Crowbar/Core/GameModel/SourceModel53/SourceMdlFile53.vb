@@ -962,7 +962,7 @@ Public Class SourceMdlFile53
 				anAnimationDesc.movementCount = Me.theInputFileReader.ReadInt32()
 				anAnimationDesc.movementOffset = Me.theInputFileReader.ReadInt32()
 
-				anAnimationDesc.compressedIkErrorOffset = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.frameMovementOffset = Me.theInputFileReader.ReadInt32()
 
 				anAnimationDesc.animOffset = Me.theInputFileReader.ReadInt32()
 				anAnimationDesc.ikRuleCount = Me.theInputFileReader.ReadInt32()
@@ -988,6 +988,8 @@ Public Class SourceMdlFile53
 
 				Me.ReadAnimationDescName(animInputFileStreamPosition, anAnimationDesc)
 				'Me.ReadAnimationDescSpanData(animInputFileStreamPosition, anAnimationDesc)
+				Me.ReadMdlMovements(animInputFileStreamPosition, anAnimationDesc)
+				Me.ReadMdlFrameMovement(animInputFileStreamPosition, anAnimationDesc)
 
 				Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
 			Next
@@ -1454,7 +1456,7 @@ Public Class SourceMdlFile53
 	End Sub
 
 	Private Sub ReadMdlAnimationAnimValues(ByVal anAnimation As SourceMdlAnimation, ByVal rotValuePointerInputFileStreamPosition As Long, ByVal posValuePointerInputFileStreamPosition As Long, ByVal scaleValuePointerInputFileStreamPosition As Long, ByVal frameCount As Integer, ByVal lastSectionIsBeingRead As Boolean)
-		If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_RAWROT_53) = 0 Then
+		If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_RAWROT_53) = 0 AndAlso (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_NOROT) = 0 Then
 			anAnimation.theRotV = New SourceMdlAnimationValuePointer()
 			If anAnimation.theRot64bits.XOffset > 0 Then
 				anAnimation.theRotV.theAnimXValues = New List(Of SourceMdlAnimationValue)()
@@ -1966,6 +1968,49 @@ Public Class SourceMdlFile53
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "anAnimationDesc.theMovements")
+		End If
+	End Sub
+
+	Protected Sub ReadMdlFrameMovement(ByVal animInputFileStreamPosition As Long, ByVal anAnimationDesc As SourceMdlAnimationDesc53)
+		If (anAnimationDesc.flags And SourceMdlAnimationDesc53.STUDIO_FRAMEMOVEMENT) > 0 And anAnimationDesc.frameMovementOffset > 0 Then
+			Dim fileOffsetStart As Long
+			Dim fileOffsetEnd As Long
+
+			Me.theInputFileReader.BaseStream.Seek(animInputFileStreamPosition + anAnimationDesc.frameMovementOffset, SeekOrigin.Begin)
+			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
+
+			anAnimationDesc.theFrameMovement = New RSourceMdlFrameMovement
+
+			For j As Integer = 0 To 3
+				anAnimationDesc.theFrameMovement.scale(j) = Me.theInputFileReader.ReadSingle()
+			Next
+
+			For j As Integer = 0 To 3
+				anAnimationDesc.theFrameMovement.offset(j) = Me.theInputFileReader.ReadInt16()
+			Next
+
+			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
+			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "anAnimationDesc.theFrameMovement")
+
+			If anAnimationDesc.theFrameMovement.offset(0) > 0 Then
+				anAnimationDesc.theFrameMovement.theAnimXValues = New List(Of SourceMdlAnimationValue)()
+				Me.ReadMdlAnimValues(fileOffsetStart + anAnimationDesc.theFrameMovement.offset(0), anAnimationDesc.frameCount, True, anAnimationDesc.theFrameMovement.theAnimXValues, "anAnimationDesc.theFrameMovement.theAnimXValues")
+			End If
+
+			If anAnimationDesc.theFrameMovement.offset(1) > 0 Then
+				anAnimationDesc.theFrameMovement.theAnimYValues = New List(Of SourceMdlAnimationValue)()
+				Me.ReadMdlAnimValues(fileOffsetStart + anAnimationDesc.theFrameMovement.offset(1), anAnimationDesc.frameCount, True, anAnimationDesc.theFrameMovement.theAnimYValues, "anAnimationDesc.theFrameMovement.theAnimYValues")
+			End If
+
+			If anAnimationDesc.theFrameMovement.offset(2) > 0 Then
+				anAnimationDesc.theFrameMovement.theAnimZValues = New List(Of SourceMdlAnimationValue)()
+				Me.ReadMdlAnimValues(fileOffsetStart + anAnimationDesc.theFrameMovement.offset(2), anAnimationDesc.frameCount, True, anAnimationDesc.theFrameMovement.theAnimZValues, "anAnimationDesc.theFrameMovement.theAnimZValues")
+			End If
+
+			If anAnimationDesc.theFrameMovement.offset(3) > 0 Then
+				anAnimationDesc.theFrameMovement.theAnimYawValues = New List(Of SourceMdlAnimationValue)()
+				Me.ReadMdlAnimValues(fileOffsetStart + anAnimationDesc.theFrameMovement.offset(3), anAnimationDesc.frameCount, True, anAnimationDesc.theFrameMovement.theAnimYawValues, "anAnimationDesc.theFrameMovement.theAnimYawValues")
+			End If
 		End If
 	End Sub
 

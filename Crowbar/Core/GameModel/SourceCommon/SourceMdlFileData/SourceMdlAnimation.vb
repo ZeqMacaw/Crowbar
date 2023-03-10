@@ -62,6 +62,12 @@ Public Class SourceMdlAnimation
 	Public Const STUDIO_ANIM_DELTA As Integer = &H10
 	Public Const STUDIO_ANIM_RAWROT2 As Integer = &H20
 
+	' new to v52:
+	'#define STUDIO_ANIM_RAWSCALE	0x40 // Vector48
+	'#define STUDIO_ANIM_ANIMSCALE	0x80 // mstudioanim_valueptr_t 
+	Public Const STUDIO_ANIM_RAWSCALE As Integer = &H40
+	Public Const STUDIO_ANIM_ANIMSCALE As Integer = &H80
+
 	' MDL 53 values for flags:
 	'#define STUDIO_ANIM_DELTA_53    0x01 // this appears to be delta until proven otherwise
 	'// These work as toggles, flag enabled is raw data, flag disabled is pointers, see 'STUDIO_ANIM_READBONE_53' for exception.
@@ -69,12 +75,12 @@ Public Class SourceMdlAnimation
 	'#define STUDIO_ANIM_RAWROT_53	0x04 // Quaternion48
 	'#define STUDIO_ANIM_RAWSCALE_53	0x08 // Vector48
 	'// if above flag is disabled and below is enabled there is special exceptions
-	'#define STUDIO_ANIM_READBONE_53 0x10 // read bone data if any Of the above are disabled, only observed For rotation
+	'#define STUDIO_ANIM_NOROT 0x10 
 	Public Const STUDIO_ANIM_DELTA_53 As Integer = &H1
 	Public Const STUDIO_ANIM_RAWPOS_53 As Integer = &H2
 	Public Const STUDIO_ANIM_RAWROT_53 As Integer = &H4
 	Public Const STUDIO_ANIM_RAWSCALE_53 As Integer = &H8
-	Public Const STUDIO_ANIM_UNKFLAG_53 As Integer = &H10
+	Public Const STUDIO_ANIM_NOROT As Integer = &H10 ' this flag is used when the animation has no rotation data, it exists because it is not possible to check this as there are not separate flags for static/track rotation data
 
 
 	' Do not use union, because it will have to rely on size of a .NET Framework data type.

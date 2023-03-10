@@ -128,6 +128,7 @@
     <Compile Include="Core\GameModel\CompiledFiles\VvdFile\VvdFile04\SourceVvdExtraData04.vb" />
     <Compile Include="Core\GameModel\SourceCommon\SourceMdlFileData\SourceMdlAnimTag.vb" />
     <Compile Include="Core\GameModel\SourceGlobal\SourceTextureCoordinates.vb" />
+    <Compile Include="Core\GameModel\SourceModel52\SourceMdlFileData\RSourceMdlFrameMovement.vb" />
     <Compile Include="Core\GameModel\SourceModel52\SourceMdlFileData\RSourcePerTriCollisionHeader52.vb" />
     <Compile Include="Core\GameModel\SourceModel52\SourceMdlFileData\SourceMdlBone52.vb" />
     <Compile Include="Core\GameModel\SourceModel53\SourceMdlFileData\RSourceRuiHeader53.vb" />

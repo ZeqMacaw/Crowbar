@@ -409,57 +409,31 @@ Public Class SourceSmdFile52
 						boneFlag = aSectionOfAnimation.theBoneFlags(boneIndex)
 						If aSectionOfAnimation.theBoneConstantInfos IsNot Nothing Then
 							aBoneConstantInfo = aSectionOfAnimation.theBoneConstantInfos(boneIndex)
-							If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_RAWROT) > 0 Then
+							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWROT) > 0 Then
 								aFrameLine.rotation = MathModule.ToEulerAngles(aBoneConstantInfo.theConstantRawRot.quaternion)
 								aFrameLine.rotation.debug_text = "RAWROT"
 							End If
-							If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_RAWPOS) > 0 Then
+							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWPOS) > 0 Then
 								aFrameLine.position.x = aBoneConstantInfo.theConstantRawPos.x
 								aFrameLine.position.y = aBoneConstantInfo.theConstantRawPos.y
 								aFrameLine.position.z = aBoneConstantInfo.theConstantRawPos.z
 								aFrameLine.position.debug_text = "RAWPOS"
 							End If
-							If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_CONST_POS2) > 0 Then
-								aFrameLine.position.x = aBoneConstantInfo.theConstantPosition2.x
-								aFrameLine.position.y = aBoneConstantInfo.theConstantPosition2.y
-								aFrameLine.position.z = aBoneConstantInfo.theConstantPosition2.z
-								aFrameLine.position.debug_text = "FRAME_CONST_POS2"
-							End If
-							If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_CONST_ROT2) > 0 Then
-								aFrameLine.rotation = MathModule.ToEulerAngles(aBoneConstantInfo.theConstantRotation2.quaternion)
-								aFrameLine.rotation.debug_text = "FRAME_CONST_ROT2"
-							End If
+							' Scale would be read after this but we cannot use it
 						End If
 						If aSectionOfAnimation.theBoneFrameDataInfos IsNot Nothing Then
 							aBoneFrameDataInfo = aSectionOfAnimation.theBoneFrameDataInfos(sectionFrameIndex)(boneIndex)
-							'If (boneFlag And SourceAniFrameAnim.STUDIO_FRAME_ANIMROT) > 0 Then
-							If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_FULLANIMPOS) > 0 Then
+							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMROT) > 0 Then
 								aFrameLine.rotation = MathModule.ToEulerAngles(aBoneFrameDataInfo.theAnimRotation.quaternion)
 								aFrameLine.rotation.debug_text = "ANIMROT"
 							End If
-							If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_ANIMPOS) > 0 Then
+							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMPOS) > 0 Then
 								aFrameLine.position.x = aBoneFrameDataInfo.theAnimPosition.x
 								aFrameLine.position.y = aBoneFrameDataInfo.theAnimPosition.y
 								aFrameLine.position.z = aBoneFrameDataInfo.theAnimPosition.z
 								aFrameLine.position.debug_text = "ANIMPOS"
 							End If
-							'If (boneFlag And SourceAniFrameAnim.STUDIO_FRAME_FULLANIMPOS) > 0 Then
-							If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_ANIMROT) > 0 Then
-								'aFrameLine.position.x = aBoneFrameDataInfo.theFullAnimPosition.x
-								'aFrameLine.position.y = aBoneFrameDataInfo.theFullAnimPosition.y
-								'aFrameLine.position.z = aBoneFrameDataInfo.theFullAnimPosition.z
-								aFrameLine.position.x = aBoneFrameDataInfo.theAnimPosition.x
-								aFrameLine.position.y = aBoneFrameDataInfo.theAnimPosition.y
-								aFrameLine.position.z = aBoneFrameDataInfo.theAnimPosition.z
-								aFrameLine.position.debug_text = "FULLANIMPOS"
-							End If
-							If (boneFlag And &H20) > 0 Then
-								Dim unknownFlagIsUsed As Integer = 4242
-							End If
-							If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_ANIM_ROT2) > 0 Then
-								aFrameLine.rotation = MathModule.ToEulerAngles(aBoneFrameDataInfo.theAnimRotationUnknown.quaternion)
-								aFrameLine.rotation.debug_text = "FRAME_ANIM_ROT2"
-							End If
+							' Scale would be read after this but we cannot use it
 						End If
 					Next
 				Else
@@ -480,7 +454,7 @@ Public Class SourceSmdFile52
 
 					Dim adjustedPosition As New SourceVector()
 					Dim adjustedRotation As New SourceVector()
-					Me.AdjustPositionAndRotationByPiecewiseMovement(frameIndex, boneIndex, anAnimationDesc.theMovements, aFrameLine.position, aFrameLine.rotation, adjustedPosition, adjustedRotation)
+					Me.AdjustPositionAndRotationByPiecewiseMovement(frameIndex, boneIndex, anAnimationDesc.theMovements, anAnimationDesc.theFrameMovement, aFrameLine.position, aFrameLine.rotation, adjustedPosition, adjustedRotation)
 					Me.AdjustPositionAndRotation(boneIndex, adjustedPosition, adjustedRotation, position, rotation)
 
 					line = "    "
@@ -590,7 +564,7 @@ Public Class SourceSmdFile52
 		End If
 	End Sub
 
-	Private Sub AdjustPositionAndRotationByPiecewiseMovement(ByVal frameIndex As Integer, ByVal boneIndex As Integer, ByVal movements As List(Of SourceMdlMovement), ByVal iPosition As SourceVector, ByVal iRotation As SourceVector, ByRef oPosition As SourceVector, ByRef oRotation As SourceVector)
+	Private Sub AdjustPositionAndRotationByPiecewiseMovement(ByVal frameIndex As Integer, ByVal boneIndex As Integer, ByVal movements As List(Of SourceMdlMovement), ByVal frameMovement As RSourceMdlFrameMovement, ByVal iPosition As SourceVector, ByVal iRotation As SourceVector, ByRef oPosition As SourceVector, ByRef oRotation As SourceVector)
 		Dim aBone As SourceMdlBone52
 		aBone = Me.theMdlFileData.theBones(boneIndex)
 
@@ -604,7 +578,7 @@ Public Class SourceSmdFile52
 		oRotation.debug_text = iRotation.debug_text
 
 		If aBone.parentBoneIndex = -1 Then
-			If movements IsNot Nothing AndAlso frameIndex > 0 Then
+			If frameIndex > 0 AndAlso (movements IsNot Nothing Or frameMovement IsNot Nothing) Then
 				Dim previousFrameIndex As Integer
 				Dim vecPos As SourceVector
 				Dim vecAngle As SourceVector
@@ -613,32 +587,60 @@ Public Class SourceSmdFile52
 				vecPos = New SourceVector()
 				vecAngle = New SourceVector()
 
-				For Each aMovement As SourceMdlMovement In movements
-					If frameIndex <= aMovement.endframeIndex Then
-						Dim f As Double
-						Dim d As Double
-						f = (frameIndex - previousFrameIndex) / (aMovement.endframeIndex - previousFrameIndex)
-						d = aMovement.v0 * f + 0.5 * (aMovement.v1 - aMovement.v0) * f * f
-						vecPos.x = vecPos.x + d * aMovement.vector.x
-						vecPos.y = vecPos.y + d * aMovement.vector.y
-						vecPos.z = vecPos.z + d * aMovement.vector.z
-						vecAngle.y = vecAngle.y * (1 - f) + MathModule.DegreesToRadians(aMovement.angle) * f
+				If movements IsNot Nothing Then
+					For Each aMovement As SourceMdlMovement In movements
+						If frameIndex <= aMovement.endframeIndex Then
+							Dim f As Double
+							Dim d As Double
+							f = (frameIndex - previousFrameIndex) / (aMovement.endframeIndex - previousFrameIndex)
+							d = aMovement.v0 * f + 0.5 * (aMovement.v1 - aMovement.v0) * f * f
+							vecPos.x = vecPos.x + d * aMovement.vector.x
+							vecPos.y = vecPos.y + d * aMovement.vector.y
+							vecPos.z = vecPos.z + d * aMovement.vector.z
+							vecAngle.y = vecAngle.y * (1 - f) + MathModule.DegreesToRadians(aMovement.angle) * f
 
-						Exit For
+							Exit For
+						Else
+							previousFrameIndex = aMovement.endframeIndex
+							vecPos.x = aMovement.position.x
+							vecPos.y = aMovement.position.y
+							vecPos.z = aMovement.position.z
+							vecAngle.y = MathModule.DegreesToRadians(aMovement.angle)
+						End If
+					Next
+				ElseIf frameMovement IsNot Nothing Then
+					If frameMovement.offset(0) > 0 Then
+						vecPos.x = Me.ExtractAnimValue(frameIndex, frameMovement.theAnimXValues, frameMovement.scale(0))
 					Else
-						previousFrameIndex = aMovement.endframeIndex
-						vecPos.x = aMovement.position.x
-						vecPos.y = aMovement.position.y
-						vecPos.z = aMovement.position.z
-						vecAngle.y = MathModule.DegreesToRadians(aMovement.angle)
+						vecPos.x = 0
 					End If
-				Next
+
+					If frameMovement.offset(1) > 0 Then
+						vecPos.y = Me.ExtractAnimValue(frameIndex, frameMovement.theAnimYValues, frameMovement.scale(1))
+					Else
+						vecPos.y = 0
+					End If
+
+					If frameMovement.offset(2) > 0 Then
+						vecPos.z = Me.ExtractAnimValue(frameIndex, frameMovement.theAnimZValues, frameMovement.scale(2))
+					Else
+						vecPos.z = 0
+					End If
+
+					If frameMovement.offset(3) > 0 Then
+						vecAngle.y = MathModule.DegreesToRadians(Me.ExtractAnimValue(frameIndex, frameMovement.theAnimYawValues, frameMovement.scale(3)))
+					Else
+						vecAngle.y = 0
+					End If
+				End If
 
 				'TEST: UNTESTED on MDL v52 - Works in MDL v49 for translation and maybe rotation on Z, but ignores other axis rotations because the above does not work for rotations.
 				oPosition.x = iPosition.x + vecPos.x
 				oPosition.y = iPosition.y + vecPos.y
 				oPosition.z = iPosition.z + vecPos.z
 				oRotation.z = iRotation.z + vecAngle.y
+				'ElseIf 
+
 			End If
 		End If
 	End Sub
