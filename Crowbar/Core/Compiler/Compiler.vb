@@ -681,12 +681,12 @@ Public Class Compiler
 					Dim debug As Integer = 4242
 				End Try
 				Try
-					File.Move(sourcePathFileName, targetPathFileName)
-					Me.UpdateProgress(2, "CROWBAR: Moved compiled model file """ + sourcePathFileName + """ to """ + targetPath + """")
+					File.Copy(sourcePathFileName, targetPathFileName, true)
+					Me.UpdateProgress(2, "CROWBAR: Copied compiled model file """ + sourcePathFileName + """ to """ + targetPath + """")
 				Catch ex As Exception
 					Me.UpdateProgress()
-					Me.UpdateProgress(2, "WARNING: Crowbar tried to move the file, """ + sourcePathFileName + """, to the output folder, but Windows complained with this message: " + ex.Message.Trim())
-					Me.UpdateProgress(2, "SOLUTION: Compile the model again (and hope Windows does not complain again) or move the file yourself.")
+					Me.UpdateProgress(2, "WARNING: Crowbar tried to copy the file, """ + sourcePathFileName + """, to the output folder, but Windows complained with this message: " + ex.Message.Trim())
+					Me.UpdateProgress(2, "SOLUTION: Compile the model again (and hope Windows does not complain again) or copy the file yourself.")
 					Me.UpdateProgress()
 				End Try
 				'End If
