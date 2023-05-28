@@ -330,6 +330,7 @@ Public Class VpkFile
 					' Never use Text.Encoding.Default because it depends on context.
 					' Text.Encoding.ASCII does not correctly write non-English letters.
 					Me.theOutputFileWriter = New BinaryWriter(outputFileStream, System.Text.Encoding.UTF8)
+					'Me.theOutputFileWriter = New BinaryWriter(outputFileStream, System.Text.Encoding.GetEncoding(1252))
 
 					' The titanfallEntryBlocks are only used by Titanfall and Titanfall 2.
 					If entry.titanfallEntryBlocks IsNot Nothing AndAlso entry.titanfallEntryBlocks.Count > 0 Then

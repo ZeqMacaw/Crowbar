@@ -101,9 +101,18 @@ Public Class SourcePackage
 			inputFileStream = New FileStream(pathFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
 			If inputFileStream IsNot Nothing Then
 				Try
-					' Using Text.Encoding.Default because Text.Encoding.ASCII does not correctly read in non-English letters.
-					' Using Text.Encoding.Default because it is likely what is used by packer tools.
-					Me.thePackageFileReader = New BufferedBinaryReader(inputFileStream, System.Text.Encoding.Default)
+					' Always set the encoding, to make explicit and not rely on default that could change.
+					' Never use Text.Encoding.Default because it depends on context.
+					' Text.Encoding.ASCII does not correctly read in non-English letters.
+					' Works for Windows system locale set to English or Japanese.
+					' Example VPK where this matters: Left 4 Dead 2 "left4dead2_dlc3\pak01_dir.vpk"
+					'    File name in VPK that raises exception on Japanese but not English when opening the VPK for listing (because of accented e): "materials/dons_decals/serviet bugé.vmt"
+					Me.thePackageFileReader = New BufferedBinaryReader(inputFileStream, System.Text.Encoding.GetEncoding(1252))
+					' Does not work.
+					'Me.thePackageFileReader = New BufferedBinaryReader(inputFileStream, System.Text.Encoding.UTF8)
+					' Other possibilities if GetEncoding(1252) does not work for something.
+					'Me.thePackageFileReader = New BufferedBinaryReader(inputFileStream, System.Text.Encoding.GetEncoding(437))
+					'Me.thePackageFileReader = New BufferedBinaryReader(inputFileStream, System.Text.Encoding.GetEncoding(28591))
 
 					readFileAction.Invoke()
 				Catch ex As Exception
