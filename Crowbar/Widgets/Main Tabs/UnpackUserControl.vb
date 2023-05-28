@@ -981,7 +981,13 @@ Public Class UnpackUserControl
 				fileName = entry.DisplayPathFileName
 				fileExtension = ""
 			Else
-				fileName = Path.GetFileName(entry.PathFileName)
+				fileName = ""
+				Try
+					fileName = Path.GetFileName(entry.PathFileName)
+				Catch ex As Exception
+					ex.Data("filename") = """" + entry.PathFileName + """"
+					Throw
+				End Try
 
 				fileExtension = Path.GetExtension(entry.PathFileName)
 				If Not String.IsNullOrEmpty(fileExtension) AndAlso fileExtension(0) = "."c Then
@@ -1013,7 +1019,13 @@ Public Class UnpackUserControl
 				entry.PackageDataPathFileNameExists = True
 			End If
 		Else
-			fileName = Path.GetFileName(entry.DisplayPathFileName)
+			fileName = ""
+			Try
+				fileName = Path.GetFileName(entry.DisplayPathFileName)
+			Catch ex As Exception
+				ex.Data("filename") = """" + entry.DisplayPathFileName + """"
+				Throw
+			End Try
 			entry.Name = fileName
 			entry.Count = 1
 			entry.Size = leafEntry.Size

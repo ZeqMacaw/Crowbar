@@ -326,8 +326,10 @@ Public Class VpkFile
 			outputFileStream = New FileStream(outputPathFileName, FileMode.Create)
 			If outputFileStream IsNot Nothing Then
 				Try
-					'Me.theOutputFileWriter = New BinaryWriter(outputFileStream, System.Text.Encoding.ASCII)
-					Me.theOutputFileWriter = New BinaryWriter(outputFileStream, System.Text.Encoding.Default)
+					' Always set the encoding, to make explicit and not rely on default that could change.
+					' Never use Text.Encoding.Default because it depends on context.
+					' Text.Encoding.ASCII does not correctly write non-English letters.
+					Me.theOutputFileWriter = New BinaryWriter(outputFileStream, System.Text.Encoding.UTF8)
 
 					' The titanfallEntryBlocks are only used by Titanfall and Titanfall 2.
 					If entry.titanfallEntryBlocks IsNot Nothing AndAlso entry.titanfallEntryBlocks.Count > 0 Then

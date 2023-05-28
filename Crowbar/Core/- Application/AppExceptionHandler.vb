@@ -56,6 +56,12 @@ Public Class AppExceptionHandler
 					errorReportText += vbCrLf
 				End If
 			End If
+			If t.Exception.Data.Count > 0 Then
+				For Each de As DictionaryEntry In t.Exception.Data
+					errorReportText += de.Key.ToString() + ": " + de.Value.ToString()
+					errorReportText += vbCrLf
+				Next
+			End If
 			errorReportText += vbCrLf
 			errorReportText += vbCrLf
 
