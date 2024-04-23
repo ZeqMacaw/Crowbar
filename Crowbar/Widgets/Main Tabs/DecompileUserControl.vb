@@ -66,6 +66,7 @@ Public Class DecompileUserControl
 		Me.LogFileCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileLogFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.DebugInfoCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileDebugInfoFilesIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 
+		Me.IsPostal3CheckBox.DataBindings.Add("Checked", TheApp.Settings, "IsPostal3IsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 		Me.DeclareSequenceQciCheckBox.DataBindings.Add("Checked", TheApp.Settings, "DecompileDeclareSequenceQciFileIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
 
 		Dim anEnumList As IList

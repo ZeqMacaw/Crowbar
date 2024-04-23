@@ -24,6 +24,48 @@ Public Class SourceMdlFile49
 
 #Region "Methods"
 
+	' Big endian binary reader functions
+	Public Function ReadInt32BE() As Integer
+		Dim bytes() As Byte = Me.theInputFileReader.ReadBytes(4)
+		Dim b1 As Integer = (bytes(0) >> 0) And &HFF
+		Dim b2 As Integer = (bytes(1) >> 8) And &HFF
+		Dim b3 As Integer = (bytes(2) >> 16) And &HFF
+		Dim b4 As Integer = (bytes(3) >> 24) And &HFF
+
+		Return b1 << 24 Or b2 << 16 Or b3 << 8 Or b4 << 0
+	End Function
+
+	Public Function ReadInt16BE() As Short
+		Dim bytes() As Byte = Me.theInputFileReader.ReadBytes(2)
+		'Dim b1 As Integer = (bytes(0) >> 0) And &HFF
+		'Dim b2 As Integer = (bytes(1) >> 8) And &HFF
+		Array.Reverse(bytes)
+
+		'Return CShort(b1 << 8 Or b2 << 0)
+		Return BitConverter.ToInt16(bytes, 0)
+	End Function
+
+	Public Function ReadUInt16BE() As UShort
+		Dim bytes() As Byte = Me.theInputFileReader.ReadBytes(2)
+		Dim b1 As Integer = (bytes(0) >> 0) And &HFF
+		Dim b2 As Integer = (bytes(1) >> 8) And &HFF
+
+		Return CUShort(b1 << 8 Or b2 << 0)
+	End Function
+
+	Public Function ReadSingleBE() As Single
+		Dim bytes() As Byte = Me.theInputFileReader.ReadBytes(4)
+		'Dim b1 As Integer = (bytes(0) >> 0) And &HFF
+		'Dim b2 As Integer = (bytes(1) >> 8) And &HFF
+		'Dim b3 As Integer = (bytes(2) >> 16) And &HFF
+		'Dim b4 As Integer = (bytes(3) >> 24) And &HFF
+		'Dim num As Single = b1 << 24 Or b2 << 16 Or b3 << 8 Or b4 << 0
+		Array.Reverse(bytes)
+		Dim num As Single = BitConverter.ToSingle(bytes, 0)
+
+		Return num
+	End Function
+
 	Public Sub ReadMdlHeader00(ByVal logDescription As String)
 		Dim fileOffsetStart As Long
 		Dim fileOffsetEnd As Long
@@ -32,14 +74,30 @@ Public Class SourceMdlFile49
 
 		Me.theMdlFileData.id = Me.theInputFileReader.ReadChars(4)
 		Me.theMdlFileData.theID = Me.theMdlFileData.id
-		Me.theMdlFileData.version = Me.theInputFileReader.ReadInt32()
 
-		Me.theMdlFileData.checksum = Me.theInputFileReader.ReadInt32()
+		' Check if this is a Xbox 360 MDL
+		If Me.theMdlFileData.theID = "TSDI" OrElse Me.theMdlFileData.theID = "GADI" Then
+			Me.theMdlFileData.isBigEndian = True
+		End If
+
+		If Me.theMdlFileData.isBigEndian Then
+			Me.theMdlFileData.version = ReadInt32BE()
+
+			Me.theMdlFileData.checksum = ReadInt32BE()
+		Else
+			Me.theMdlFileData.version = Me.theInputFileReader.ReadInt32()
+
+			Me.theMdlFileData.checksum = Me.theInputFileReader.ReadInt32()
+		End If
 
 		Me.theMdlFileData.name = Me.theInputFileReader.ReadChars(64)
 		Me.theMdlFileData.theModelName = CStr(Me.theMdlFileData.name).Trim(Chr(0))
 
-		Me.theMdlFileData.fileSize = Me.theInputFileReader.ReadInt32()
+		If Me.theMdlFileData.isBigEndian Then
+			Me.theMdlFileData.fileSize = ReadInt32BE()
+		Else
+			Me.theMdlFileData.fileSize = Me.theInputFileReader.ReadInt32()
+		End If
 		Me.theMdlFileData.theActualFileSize = Me.theInputFileReader.BaseStream.Length
 
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
@@ -57,93 +115,182 @@ Public Class SourceMdlFile49
 
 		fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-		' Offsets: 0x50, 0x54, 0x58
-		Me.theMdlFileData.eyePosition.x = Me.theInputFileReader.ReadSingle()
-		Me.theMdlFileData.eyePosition.y = Me.theInputFileReader.ReadSingle()
-		Me.theMdlFileData.eyePosition.z = Me.theInputFileReader.ReadSingle()
+		If Me.theMdlFileData.isBigEndian Then
+			' Offsets: 0x50, 0x54, 0x58
+			Me.theMdlFileData.eyePosition.x = ReadSingleBE()
+			Me.theMdlFileData.eyePosition.y = ReadSingleBE()
+			Me.theMdlFileData.eyePosition.z = ReadSingleBE()
 
-		' Offsets: 0x5C, 0x60, 0x64
-		Me.theMdlFileData.illuminationPosition.x = Me.theInputFileReader.ReadSingle()
-		Me.theMdlFileData.illuminationPosition.y = Me.theInputFileReader.ReadSingle()
-		Me.theMdlFileData.illuminationPosition.z = Me.theInputFileReader.ReadSingle()
+			' Offsets: 0x5C, 0x60, 0x64
+			Me.theMdlFileData.illuminationPosition.x = ReadSingleBE()
+			Me.theMdlFileData.illuminationPosition.y = ReadSingleBE()
+			Me.theMdlFileData.illuminationPosition.z = ReadSingleBE()
 
-		' Offsets: 0x68, 0x6C, 0x70
-		Me.theMdlFileData.hullMinPosition.x = Me.theInputFileReader.ReadSingle()
-		Me.theMdlFileData.hullMinPosition.y = Me.theInputFileReader.ReadSingle()
-		Me.theMdlFileData.hullMinPosition.z = Me.theInputFileReader.ReadSingle()
+			' Offsets: 0x68, 0x6C, 0x70
+			Me.theMdlFileData.hullMinPosition.x = ReadSingleBE()
+			Me.theMdlFileData.hullMinPosition.y = ReadSingleBE()
+			Me.theMdlFileData.hullMinPosition.z = ReadSingleBE()
 
-		' Offsets: 0x74, 0x78, 0x7C
-		Me.theMdlFileData.hullMaxPosition.x = Me.theInputFileReader.ReadSingle()
-		Me.theMdlFileData.hullMaxPosition.y = Me.theInputFileReader.ReadSingle()
-		Me.theMdlFileData.hullMaxPosition.z = Me.theInputFileReader.ReadSingle()
+			' Offsets: 0x74, 0x78, 0x7C
+			Me.theMdlFileData.hullMaxPosition.x = ReadSingleBE()
+			Me.theMdlFileData.hullMaxPosition.y = ReadSingleBE()
+			Me.theMdlFileData.hullMaxPosition.z = ReadSingleBE()
 
-		' Offsets: 0x80, 0x84, 0x88
-		Me.theMdlFileData.viewBoundingBoxMinPosition.x = Me.theInputFileReader.ReadSingle()
-		Me.theMdlFileData.viewBoundingBoxMinPosition.y = Me.theInputFileReader.ReadSingle()
-		Me.theMdlFileData.viewBoundingBoxMinPosition.z = Me.theInputFileReader.ReadSingle()
+			' Offsets: 0x80, 0x84, 0x88
+			Me.theMdlFileData.viewBoundingBoxMinPosition.x = ReadSingleBE()
+			Me.theMdlFileData.viewBoundingBoxMinPosition.y = ReadSingleBE()
+			Me.theMdlFileData.viewBoundingBoxMinPosition.z = ReadSingleBE()
 
-		' Offsets: 0x8C, 0x90, 0x94
-		Me.theMdlFileData.viewBoundingBoxMaxPosition.x = Me.theInputFileReader.ReadSingle()
-		Me.theMdlFileData.viewBoundingBoxMaxPosition.y = Me.theInputFileReader.ReadSingle()
-		Me.theMdlFileData.viewBoundingBoxMaxPosition.z = Me.theInputFileReader.ReadSingle()
+			' Offsets: 0x8C, 0x90, 0x94
+			Me.theMdlFileData.viewBoundingBoxMaxPosition.x = ReadSingleBE()
+			Me.theMdlFileData.viewBoundingBoxMaxPosition.y = ReadSingleBE()
+			Me.theMdlFileData.viewBoundingBoxMaxPosition.z = ReadSingleBE()
 
-		' Offsets: 0x98
-		Me.theMdlFileData.flags = Me.theInputFileReader.ReadInt32()
+			' Offsets: 0x98
+			Me.theMdlFileData.flags = ReadInt32BE()
 
-		' Offsets: 0x9C (156), 0xA0
-		Me.theMdlFileData.boneCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.boneOffset = Me.theInputFileReader.ReadInt32()
+			' Offsets: 0x9C (156), 0xA0
+			Me.theMdlFileData.boneCount = ReadInt32BE()
+			Me.theMdlFileData.boneOffset = ReadInt32BE()
 
-		' Offsets: 0xA4, 0xA8
-		Me.theMdlFileData.boneControllerCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.boneControllerOffset = Me.theInputFileReader.ReadInt32()
+			' Offsets: 0xA4, 0xA8
+			Me.theMdlFileData.boneControllerCount = ReadInt32BE()
+			Me.theMdlFileData.boneControllerOffset = ReadInt32BE()
 
-		' Offsets: 0xAC (172), 0xB0
-		Me.theMdlFileData.hitboxSetCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.hitboxSetOffset = Me.theInputFileReader.ReadInt32()
+			' Offsets: 0xAC (172), 0xB0
+			Me.theMdlFileData.hitboxSetCount = ReadInt32BE()
+			Me.theMdlFileData.hitboxSetOffset = ReadInt32BE()
+		Else
+			' Offsets: 0x50, 0x54, 0x58
+			Me.theMdlFileData.eyePosition.x = Me.theInputFileReader.ReadSingle()
+			Me.theMdlFileData.eyePosition.y = Me.theInputFileReader.ReadSingle()
+			Me.theMdlFileData.eyePosition.z = Me.theInputFileReader.ReadSingle()
+
+			' Offsets: 0x5C, 0x60, 0x64
+			Me.theMdlFileData.illuminationPosition.x = Me.theInputFileReader.ReadSingle()
+			Me.theMdlFileData.illuminationPosition.y = Me.theInputFileReader.ReadSingle()
+			Me.theMdlFileData.illuminationPosition.z = Me.theInputFileReader.ReadSingle()
+
+			' Offsets: 0x68, 0x6C, 0x70
+			Me.theMdlFileData.hullMinPosition.x = Me.theInputFileReader.ReadSingle()
+			Me.theMdlFileData.hullMinPosition.y = Me.theInputFileReader.ReadSingle()
+			Me.theMdlFileData.hullMinPosition.z = Me.theInputFileReader.ReadSingle()
+
+			' Offsets: 0x74, 0x78, 0x7C
+			Me.theMdlFileData.hullMaxPosition.x = Me.theInputFileReader.ReadSingle()
+			Me.theMdlFileData.hullMaxPosition.y = Me.theInputFileReader.ReadSingle()
+			Me.theMdlFileData.hullMaxPosition.z = Me.theInputFileReader.ReadSingle()
+
+			' Offsets: 0x80, 0x84, 0x88
+			Me.theMdlFileData.viewBoundingBoxMinPosition.x = Me.theInputFileReader.ReadSingle()
+			Me.theMdlFileData.viewBoundingBoxMinPosition.y = Me.theInputFileReader.ReadSingle()
+			Me.theMdlFileData.viewBoundingBoxMinPosition.z = Me.theInputFileReader.ReadSingle()
+
+			' Offsets: 0x8C, 0x90, 0x94
+			Me.theMdlFileData.viewBoundingBoxMaxPosition.x = Me.theInputFileReader.ReadSingle()
+			Me.theMdlFileData.viewBoundingBoxMaxPosition.y = Me.theInputFileReader.ReadSingle()
+			Me.theMdlFileData.viewBoundingBoxMaxPosition.z = Me.theInputFileReader.ReadSingle()
+
+			' Offsets: 0x98
+			Me.theMdlFileData.flags = Me.theInputFileReader.ReadInt32()
+
+			' Offsets: 0x9C (156), 0xA0
+			Me.theMdlFileData.boneCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.boneOffset = Me.theInputFileReader.ReadInt32()
+
+			' Offsets: 0xA4, 0xA8
+			Me.theMdlFileData.boneControllerCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.boneControllerOffset = Me.theInputFileReader.ReadInt32()
+
+			' Offsets: 0xAC (172), 0xB0
+			Me.theMdlFileData.hitboxSetCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.hitboxSetOffset = Me.theInputFileReader.ReadInt32()
+		End If
+
 		'FROM: StudioMdl for MDL48 and MDL49
 		'#define MAXSTUDIOHITBOXSETNAME 64
 		If Me.theMdlFileData.hitboxSetCount > 64 Then
 			Me.theMdlFileData.hitboxSetCount = 64
 		End If
 
-		' Offsets: 0xB4 (180), 0xB8
-		Me.theMdlFileData.localAnimationCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.localAnimationOffset = Me.theInputFileReader.ReadInt32()
+		If Me.theMdlFileData.isBigEndian Then
+			' Offsets: 0xB4 (180), 0xB8
+			Me.theMdlFileData.localAnimationCount = ReadInt32BE()
+			Me.theMdlFileData.localAnimationOffset = ReadInt32BE()
 
-		' Offsets: 0xBC (188), 0xC0 (192)
-		Me.theMdlFileData.localSequenceCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.localSequenceOffset = Me.theInputFileReader.ReadInt32()
+			' Offsets: 0xBC (188), 0xC0 (192)
+			Me.theMdlFileData.localSequenceCount = ReadInt32BE()
+			Me.theMdlFileData.localSequenceOffset = ReadInt32BE()
 
-		' Offsets: 0xC4, 0xC8
-		Me.theMdlFileData.activityListVersion = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.eventsIndexed = Me.theInputFileReader.ReadInt32()
+			' Offsets: 0xC4, 0xC8
+			Me.theMdlFileData.activityListVersion = ReadInt32BE()
+			Me.theMdlFileData.eventsIndexed = ReadInt32BE()
 
-		' Offsets: 0xCC (204), 0xD0 (208)
-		Me.theMdlFileData.textureCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.textureOffset = Me.theInputFileReader.ReadInt32()
+			' Offsets: 0xCC (204), 0xD0 (208)
+			Me.theMdlFileData.textureCount = ReadInt32BE()
+			Me.theMdlFileData.textureOffset = ReadInt32BE()
 
-		' Offsets: 0xD4 (212), 0xD8
-		Me.theMdlFileData.texturePathCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.texturePathOffset = Me.theInputFileReader.ReadInt32()
+			' Offsets: 0xD4 (212), 0xD8
+			Me.theMdlFileData.texturePathCount = ReadInt32BE()
+			Me.theMdlFileData.texturePathOffset = ReadInt32BE()
 
-		' Offsets: 0xDC, 0xE0 (224), 0xE4 (228)
-		Me.theMdlFileData.skinReferenceCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.skinFamilyCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.skinFamilyOffset = Me.theInputFileReader.ReadInt32()
+			' Offsets: 0xDC, 0xE0 (224), 0xE4 (228)
+			Me.theMdlFileData.skinReferenceCount = ReadInt32BE()
+			Me.theMdlFileData.skinFamilyCount = ReadInt32BE()
+			Me.theMdlFileData.skinFamilyOffset = ReadInt32BE()
 
-		' Offsets: 0xE8 (232), 0xEC (236)
-		Me.theMdlFileData.bodyPartCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.bodyPartOffset = Me.theInputFileReader.ReadInt32()
+			' Offsets: 0xE8 (232), 0xEC (236)
+			Me.theMdlFileData.bodyPartCount = ReadInt32BE()
+			Me.theMdlFileData.bodyPartOffset = ReadInt32BE()
 
-		' Offsets: 0xF0 (240), 0xF4 (244)
-		Me.theMdlFileData.localAttachmentCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.localAttachmentOffset = Me.theInputFileReader.ReadInt32()
+			' Offsets: 0xF0 (240), 0xF4 (244)
+			Me.theMdlFileData.localAttachmentCount = ReadInt32BE()
+			Me.theMdlFileData.localAttachmentOffset = ReadInt32BE()
 
-		' Offsets: 0xF8, 0xFC, 0x0100
-		Me.theMdlFileData.localNodeCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.localNodeOffset = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.localNodeNameOffset = Me.theInputFileReader.ReadInt32()
+			' Offsets: 0xF8, 0xFC, 0x0100
+			Me.theMdlFileData.localNodeCount = ReadInt32BE()
+			Me.theMdlFileData.localNodeOffset = ReadInt32BE()
+			Me.theMdlFileData.localNodeNameOffset = ReadInt32BE()
+		Else
+			' Offsets: 0xB4 (180), 0xB8
+			Me.theMdlFileData.localAnimationCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.localAnimationOffset = Me.theInputFileReader.ReadInt32()
+
+			' Offsets: 0xBC (188), 0xC0 (192)
+			Me.theMdlFileData.localSequenceCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.localSequenceOffset = Me.theInputFileReader.ReadInt32()
+
+			' Offsets: 0xC4, 0xC8
+			Me.theMdlFileData.activityListVersion = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.eventsIndexed = Me.theInputFileReader.ReadInt32()
+
+			' Offsets: 0xCC (204), 0xD0 (208)
+			Me.theMdlFileData.textureCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.textureOffset = Me.theInputFileReader.ReadInt32()
+
+			' Offsets: 0xD4 (212), 0xD8
+			Me.theMdlFileData.texturePathCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.texturePathOffset = Me.theInputFileReader.ReadInt32()
+
+			' Offsets: 0xDC, 0xE0 (224), 0xE4 (228)
+			Me.theMdlFileData.skinReferenceCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.skinFamilyCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.skinFamilyOffset = Me.theInputFileReader.ReadInt32()
+
+			' Offsets: 0xE8 (232), 0xEC (236)
+			Me.theMdlFileData.bodyPartCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.bodyPartOffset = Me.theInputFileReader.ReadInt32()
+
+			' Offsets: 0xF0 (240), 0xF4 (244)
+			Me.theMdlFileData.localAttachmentCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.localAttachmentOffset = Me.theInputFileReader.ReadInt32()
+
+			' Offsets: 0xF8, 0xFC, 0x0100
+			Me.theMdlFileData.localNodeCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.localNodeOffset = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.localNodeNameOffset = Me.theInputFileReader.ReadInt32()
+		End If
+
 		'FROM: StudioMdl for MDL48 and MDL49
 		'EXTERN char *g_xnodename[100];
 		'EXTERN Int g_xnode[100][100];
@@ -151,32 +298,61 @@ Public Class SourceMdlFile49
 			Me.theMdlFileData.localNodeCount = 100
 		End If
 
-		' Offsets: 0x0104 (), 0x0108 ()
-		Me.theMdlFileData.flexDescCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.flexDescOffset = Me.theInputFileReader.ReadInt32()
+		If Me.theMdlFileData.isBigEndian Then
+			' Offsets: 0x0104 (), 0x0108 ()
+			Me.theMdlFileData.flexDescCount = ReadInt32BE()
+			Me.theMdlFileData.flexDescOffset = ReadInt32BE()
 
-		' Offsets: 0x010C (), 0x0110 ()
-		Me.theMdlFileData.flexControllerCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.flexControllerOffset = Me.theInputFileReader.ReadInt32()
+			' Offsets: 0x010C (), 0x0110 ()
+			Me.theMdlFileData.flexControllerCount = ReadInt32BE()
+			Me.theMdlFileData.flexControllerOffset = ReadInt32BE()
 
-		' Offsets: 0x0114 (), 0x0118 ()
-		Me.theMdlFileData.flexRuleCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.flexRuleOffset = Me.theInputFileReader.ReadInt32()
+			' Offsets: 0x0114 (), 0x0118 ()
+			Me.theMdlFileData.flexRuleCount = ReadInt32BE()
+			Me.theMdlFileData.flexRuleOffset = ReadInt32BE()
 
-		' Offsets: 0x011C (), 0x0120 ()
-		Me.theMdlFileData.ikChainCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.ikChainOffset = Me.theInputFileReader.ReadInt32()
+			' Offsets: 0x011C (), 0x0120 ()
+			Me.theMdlFileData.ikChainCount = ReadInt32BE()
+			Me.theMdlFileData.ikChainOffset = ReadInt32BE()
 
-		' Offsets: 0x0124 (), 0x0128 ()
-		Me.theMdlFileData.mouthCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.mouthOffset = Me.theInputFileReader.ReadInt32()
+			' Offsets: 0x0124 (), 0x0128 ()
+			Me.theMdlFileData.mouthCount = ReadInt32BE()
+			Me.theMdlFileData.mouthOffset = ReadInt32BE()
 
-		' Offsets: 0x012C (), 0x0130 ()
-		Me.theMdlFileData.localPoseParamaterCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.localPoseParameterOffset = Me.theInputFileReader.ReadInt32()
+			' Offsets: 0x012C (), 0x0130 ()
+			Me.theMdlFileData.localPoseParamaterCount = ReadInt32BE()
+			Me.theMdlFileData.localPoseParameterOffset = ReadInt32BE()
 
-		' Offsets: 0x0134 ()
-		Me.theMdlFileData.surfacePropOffset = Me.theInputFileReader.ReadInt32()
+			' Offsets: 0x0134 ()
+			Me.theMdlFileData.surfacePropOffset = ReadInt32BE()
+		Else
+			' Offsets: 0x0104 (), 0x0108 ()
+			Me.theMdlFileData.flexDescCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.flexDescOffset = Me.theInputFileReader.ReadInt32()
+
+			' Offsets: 0x010C (), 0x0110 ()
+			Me.theMdlFileData.flexControllerCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.flexControllerOffset = Me.theInputFileReader.ReadInt32()
+
+			' Offsets: 0x0114 (), 0x0118 ()
+			Me.theMdlFileData.flexRuleCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.flexRuleOffset = Me.theInputFileReader.ReadInt32()
+
+			' Offsets: 0x011C (), 0x0120 ()
+			Me.theMdlFileData.ikChainCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.ikChainOffset = Me.theInputFileReader.ReadInt32()
+
+			' Offsets: 0x0124 (), 0x0128 ()
+			Me.theMdlFileData.mouthCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.mouthOffset = Me.theInputFileReader.ReadInt32()
+
+			' Offsets: 0x012C (), 0x0130 ()
+			Me.theMdlFileData.localPoseParamaterCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.localPoseParameterOffset = Me.theInputFileReader.ReadInt32()
+
+			' Offsets: 0x0134 ()
+			Me.theMdlFileData.surfacePropOffset = Me.theInputFileReader.ReadInt32()
+		End If
 
 		'TODO: Same as some lines below. Move to a separate function.
 		If Me.theMdlFileData.surfacePropOffset > 0 Then
@@ -195,25 +371,48 @@ Public Class SourceMdlFile49
 			Me.theMdlFileData.theSurfacePropName = ""
 		End If
 
-		' Offsets: 0x0138 (312), 0x013C (316)
-		Me.theMdlFileData.keyValueOffset = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.keyValueSize = Me.theInputFileReader.ReadInt32()
+		If Me.theMdlFileData.isBigEndian Then
+			' Offsets: 0x0138 (312), 0x013C (316)
+			Me.theMdlFileData.keyValueOffset = ReadInt32BE()
+			Me.theMdlFileData.keyValueSize = ReadInt32BE()
 
-		Me.theMdlFileData.localIkAutoPlayLockCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.localIkAutoPlayLockOffset = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.localIkAutoPlayLockCount = ReadInt32BE()
+			Me.theMdlFileData.localIkAutoPlayLockOffset = ReadInt32BE()
 
-		Me.theMdlFileData.mass = Me.theInputFileReader.ReadSingle()
-		Me.theMdlFileData.contents = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.mass = ReadSingleBE()
+			Me.theMdlFileData.contents = ReadInt32BE()
 
-		Me.theMdlFileData.includeModelCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.includeModelOffset = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.includeModelCount = ReadInt32BE()
+			Me.theMdlFileData.includeModelOffset = ReadInt32BE()
 
-		Me.theMdlFileData.virtualModelP = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.virtualModelP = ReadInt32BE()
 
-		Me.theMdlFileData.animBlockNameOffset = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.animBlockCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.animBlockOffset = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.animBlockModelP = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.animBlockNameOffset = ReadInt32BE()
+			Me.theMdlFileData.animBlockCount = ReadInt32BE()
+			Me.theMdlFileData.animBlockOffset = ReadInt32BE()
+			Me.theMdlFileData.animBlockModelP = ReadInt32BE()
+		Else
+			' Offsets: 0x0138 (312), 0x013C (316)
+			Me.theMdlFileData.keyValueOffset = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.keyValueSize = Me.theInputFileReader.ReadInt32()
+
+			Me.theMdlFileData.localIkAutoPlayLockCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.localIkAutoPlayLockOffset = Me.theInputFileReader.ReadInt32()
+
+			Me.theMdlFileData.mass = Me.theInputFileReader.ReadSingle()
+			Me.theMdlFileData.contents = Me.theInputFileReader.ReadInt32()
+
+			Me.theMdlFileData.includeModelCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.includeModelOffset = Me.theInputFileReader.ReadInt32()
+
+			Me.theMdlFileData.virtualModelP = Me.theInputFileReader.ReadInt32()
+
+			Me.theMdlFileData.animBlockNameOffset = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.animBlockCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.animBlockOffset = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.animBlockModelP = Me.theInputFileReader.ReadInt32()
+		End If
+
 		If Me.theMdlFileData.animBlockCount > 0 Then
 			If Me.theMdlFileData.animBlockNameOffset > 0 Then
 				inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
@@ -236,8 +435,13 @@ Public Class SourceMdlFile49
 				Me.theMdlFileData.theAnimBlocks = New List(Of SourceMdlAnimBlock)(Me.theMdlFileData.animBlockCount)
 				For offset As Integer = 0 To Me.theMdlFileData.animBlockCount - 1
 					Dim anAnimBlock As New SourceMdlAnimBlock()
-					anAnimBlock.dataStart = Me.theInputFileReader.ReadInt32()
-					anAnimBlock.dataEnd = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						anAnimBlock.dataStart = ReadInt32BE()
+						anAnimBlock.dataEnd = ReadInt32BE()
+					Else
+						anAnimBlock.dataStart = Me.theInputFileReader.ReadInt32()
+						anAnimBlock.dataEnd = Me.theInputFileReader.ReadInt32()
+					End If
 					Me.theMdlFileData.theAnimBlocks.Add(anAnimBlock)
 				Next
 
@@ -249,30 +453,57 @@ Public Class SourceMdlFile49
 			End If
 		End If
 
-		Me.theMdlFileData.boneTableByNameOffset = Me.theInputFileReader.ReadInt32()
+		If Me.theMdlFileData.isBigEndian Then
+			Me.theMdlFileData.boneTableByNameOffset = ReadInt32BE()
 
-		Me.theMdlFileData.vertexBaseP = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.indexBaseP = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.vertexBaseP = ReadInt32BE()
+			Me.theMdlFileData.indexBaseP = ReadInt32BE()
 
-		Me.theMdlFileData.directionalLightDot = Me.theInputFileReader.ReadByte()
+			Me.theMdlFileData.directionalLightDot = Me.theInputFileReader.ReadByte()
 
-		Me.theMdlFileData.rootLod = Me.theInputFileReader.ReadByte()
+			Me.theMdlFileData.rootLod = Me.theInputFileReader.ReadByte()
 
-		Me.theMdlFileData.allowedRootLodCount_VERSION48 = Me.theInputFileReader.ReadByte()
+			Me.theMdlFileData.allowedRootLodCount_VERSION48 = Me.theInputFileReader.ReadByte()
 
-		Me.theMdlFileData.unused = Me.theInputFileReader.ReadByte()
+			Me.theMdlFileData.unused = Me.theInputFileReader.ReadByte()
 
-		Me.theMdlFileData.zeroframecacheindex_VERSION44to47 = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.zeroframecacheindex_VERSION44to47 = ReadInt32BE()
 
-		Me.theMdlFileData.flexControllerUiCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.flexControllerUiOffset = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.flexControllerUiCount = ReadInt32BE()
+			Me.theMdlFileData.flexControllerUiOffset = ReadInt32BE()
 
-		Me.theMdlFileData.vertAnimFixedPointScale = Me.theInputFileReader.ReadSingle()
-		Me.theMdlFileData.surfacePropLookup = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.vertAnimFixedPointScale = ReadSingleBE()
+			Me.theMdlFileData.surfacePropLookup = ReadInt32BE()
 
-		Me.theMdlFileData.studioHeader2Offset = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.studioHeader2Offset = ReadInt32BE()
 
-		Me.theMdlFileData.unused2 = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.unused2 = ReadInt32BE()
+		Else
+			Me.theMdlFileData.boneTableByNameOffset = Me.theInputFileReader.ReadInt32()
+
+			Me.theMdlFileData.vertexBaseP = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.indexBaseP = Me.theInputFileReader.ReadInt32()
+
+			Me.theMdlFileData.directionalLightDot = Me.theInputFileReader.ReadByte()
+
+			Me.theMdlFileData.rootLod = Me.theInputFileReader.ReadByte()
+
+			Me.theMdlFileData.allowedRootLodCount_VERSION48 = Me.theInputFileReader.ReadByte()
+
+			Me.theMdlFileData.unused = Me.theInputFileReader.ReadByte()
+
+			Me.theMdlFileData.zeroframecacheindex_VERSION44to47 = Me.theInputFileReader.ReadInt32()
+
+			Me.theMdlFileData.flexControllerUiCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.flexControllerUiOffset = Me.theInputFileReader.ReadInt32()
+
+			Me.theMdlFileData.vertAnimFixedPointScale = Me.theInputFileReader.ReadSingle()
+			Me.theMdlFileData.surfacePropLookup = Me.theInputFileReader.ReadInt32()
+
+			Me.theMdlFileData.studioHeader2Offset = Me.theInputFileReader.ReadInt32()
+
+			Me.theMdlFileData.unused2 = Me.theInputFileReader.ReadInt32()
+		End If
 
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 		Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, logDescription)
@@ -291,41 +522,92 @@ Public Class SourceMdlFile49
 
 		fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-		Me.theMdlFileData.sourceBoneTransformCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.sourceBoneTransformOffset = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.illumPositionAttachmentNumber = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.maxEyeDeflection = Me.theInputFileReader.ReadSingle()
-		Me.theMdlFileData.linearBoneOffset = Me.theInputFileReader.ReadInt32()
+		If Me.theMdlFileData.isBigEndian Then
+			Me.theMdlFileData.sourceBoneTransformCount = ReadInt32BE()
+			Me.theMdlFileData.sourceBoneTransformOffset = ReadInt32BE()
+			Me.theMdlFileData.illumPositionAttachmentNumber = ReadInt32BE()
+			Me.theMdlFileData.maxEyeDeflection = ReadSingleBE()
+			Me.theMdlFileData.linearBoneOffset = ReadInt32BE()
+		Else
+			Me.theMdlFileData.sourceBoneTransformCount = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.sourceBoneTransformOffset = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.illumPositionAttachmentNumber = Me.theInputFileReader.ReadInt32()
+			Me.theMdlFileData.maxEyeDeflection = Me.theInputFileReader.ReadSingle()
+			Me.theMdlFileData.linearBoneOffset = Me.theInputFileReader.ReadInt32()
+		End If
 
 		'TODO: According to MDL v48 source code, the following fields are not used.
 		'      Test various MDL v48 models to see if any use these. 
-
-		Me.theMdlFileData.nameCopyOffset = Me.theInputFileReader.ReadInt32()
-		If Me.theMdlFileData.nameCopyOffset > 0 Then
-			inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-			Me.theInputFileReader.BaseStream.Seek(fileOffsetStart + Me.theMdlFileData.nameCopyOffset, SeekOrigin.Begin)
-			fileOffsetStart2 = Me.theInputFileReader.BaseStream.Position
-
-			Me.theMdlFileData.theNameCopy = FileManager.ReadNullTerminatedString(Me.theInputFileReader)
-			Me.theMdlFileData.theModelName = Me.theMdlFileData.theNameCopy
-
-			fileOffsetEnd2 = Me.theInputFileReader.BaseStream.Position - 1
-			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart2, fileOffsetEnd2, "theMdlFileData.theNameCopy = " + Me.theMdlFileData.theNameCopy)
-			Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
-		Else
+		If TheApp.Settings.IsPostal3IsChecked Then
+			'Just fillers for Crowbar
 			Me.theMdlFileData.theNameCopy = ""
+
+			Me.theMdlFileData.boneFlexDriverCount = 0
+			Me.theMdlFileData.boneFlexDriverOffset = 0
+
+			Me.theMdlFileData.unknownValue = 0
+
+			Me.theMdlFileData.bodygroupPresetCount = 0
+			Me.theMdlFileData.bodygroupPresetOffset = 0
+
+			'Actual Postal III data here
+			If Me.theMdlFileData.isBigEndian Then
+				Me.theMdlFileData.numBoltons = ReadInt32BE()
+				Me.theMdlFileData.boltonIndex = ReadInt32BE()
+				Me.theMdlFileData.numPrefabs = ReadInt32BE()
+				Me.theMdlFileData.prefabIndex = ReadInt32BE()
+			Else
+				Me.theMdlFileData.numBoltons = Me.theInputFileReader.ReadInt32()
+				Me.theMdlFileData.boltonIndex = Me.theInputFileReader.ReadInt32()
+				Me.theMdlFileData.numPrefabs = Me.theInputFileReader.ReadInt32()
+				Me.theMdlFileData.prefabIndex = Me.theInputFileReader.ReadInt32()
+			End If
+		Else
+			If Me.theMdlFileData.isBigEndian Then
+				Me.theMdlFileData.nameCopyOffset = ReadInt32BE()
+			Else
+				Me.theMdlFileData.nameCopyOffset = Me.theInputFileReader.ReadInt32()
+			End If
+			If Me.theMdlFileData.nameCopyOffset > 0 Then
+				inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+				Me.theInputFileReader.BaseStream.Seek(fileOffsetStart + Me.theMdlFileData.nameCopyOffset, SeekOrigin.Begin)
+				fileOffsetStart2 = Me.theInputFileReader.BaseStream.Position
+
+				Me.theMdlFileData.theNameCopy = FileManager.ReadNullTerminatedString(Me.theInputFileReader)
+				Me.theMdlFileData.theModelName = Me.theMdlFileData.theNameCopy
+
+				fileOffsetEnd2 = Me.theInputFileReader.BaseStream.Position - 1
+				Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart2, fileOffsetEnd2, "theMdlFileData.theNameCopy = " + Me.theMdlFileData.theNameCopy)
+				Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
+			Else
+				Me.theMdlFileData.theNameCopy = ""
+			End If
+
+			If Me.theMdlFileData.isBigEndian Then
+				Me.theMdlFileData.boneFlexDriverCount = ReadInt32BE()
+				Me.theMdlFileData.boneFlexDriverOffset = ReadInt32BE()
+
+				Me.theMdlFileData.unknownValue = ReadInt32BE()
+
+				Me.theMdlFileData.bodygroupPresetCount = ReadInt32BE()
+				Me.theMdlFileData.bodygroupPresetOffset = fileOffsetStart + ReadInt32BE()
+			Else
+				Me.theMdlFileData.boneFlexDriverCount = Me.theInputFileReader.ReadInt32()
+				Me.theMdlFileData.boneFlexDriverOffset = Me.theInputFileReader.ReadInt32()
+
+				Me.theMdlFileData.unknownValue = Me.theInputFileReader.ReadInt32()
+
+				Me.theMdlFileData.bodygroupPresetCount = Me.theInputFileReader.ReadInt32()
+				Me.theMdlFileData.bodygroupPresetOffset = fileOffsetStart + Me.theInputFileReader.ReadInt32()
+			End If
 		End If
 
-		Me.theMdlFileData.boneFlexDriverCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.boneFlexDriverOffset = Me.theInputFileReader.ReadInt32()
-
-		Me.theMdlFileData.unknownValue = Me.theInputFileReader.ReadInt32()
-
-		Me.theMdlFileData.bodygroupPresetCount = Me.theInputFileReader.ReadInt32()
-		Me.theMdlFileData.bodygroupPresetOffset = fileOffsetStart + Me.theInputFileReader.ReadInt32()
-
 		For x As Integer = 0 To Me.theMdlFileData.reserved.Length - 1
-			Me.theMdlFileData.reserved(x) = Me.theInputFileReader.ReadInt32()
+			If Me.theMdlFileData.isBigEndian Then
+				Me.theMdlFileData.reserved(x) = ReadInt32BE()
+			Else
+				Me.theMdlFileData.reserved(x) = Me.theInputFileReader.ReadInt32()
+			End If
 		Next
 
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
@@ -350,69 +632,146 @@ Public Class SourceMdlFile49
 					boneInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					Dim aBone As New SourceMdlBone()
 
-					aBone.nameOffset = Me.theInputFileReader.ReadInt32()
-					aBone.parentBoneIndex = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						aBone.nameOffset = ReadInt32BE()
+						aBone.parentBoneIndex = ReadInt32BE()
+					Else
+						aBone.nameOffset = Me.theInputFileReader.ReadInt32()
+						aBone.parentBoneIndex = Me.theInputFileReader.ReadInt32()
+					End If
 
 					For j As Integer = 0 To aBone.boneControllerIndex.Length - 1
-						aBone.boneControllerIndex(j) = Me.theInputFileReader.ReadInt32()
+						If Me.theMdlFileData.isBigEndian Then
+							aBone.boneControllerIndex(j) = ReadInt32BE()
+						Else
+							aBone.boneControllerIndex(j) = Me.theInputFileReader.ReadInt32()
+						End If
 					Next
 					aBone.position = New SourceVector()
-					aBone.position.x = Me.theInputFileReader.ReadSingle()
-					aBone.position.y = Me.theInputFileReader.ReadSingle()
-					aBone.position.z = Me.theInputFileReader.ReadSingle()
+					If Me.theMdlFileData.isBigEndian Then
+						aBone.position.x = ReadSingleBE()
+						aBone.position.y = ReadSingleBE()
+						aBone.position.z = ReadSingleBE()
+					Else
+						aBone.position.x = Me.theInputFileReader.ReadSingle()
+						aBone.position.y = Me.theInputFileReader.ReadSingle()
+						aBone.position.z = Me.theInputFileReader.ReadSingle()
+					End If
 
 					aBone.quat = New SourceQuaternion()
-					aBone.quat.x = Me.theInputFileReader.ReadSingle()
-					aBone.quat.y = Me.theInputFileReader.ReadSingle()
-					aBone.quat.z = Me.theInputFileReader.ReadSingle()
-					aBone.quat.w = Me.theInputFileReader.ReadSingle()
+					If Me.theMdlFileData.isBigEndian Then
+						aBone.quat.x = ReadSingleBE()
+						aBone.quat.y = ReadSingleBE()
+						aBone.quat.z = ReadSingleBE()
+						aBone.quat.w = ReadSingleBE()
+					Else
+						aBone.quat.x = Me.theInputFileReader.ReadSingle()
+						aBone.quat.y = Me.theInputFileReader.ReadSingle()
+						aBone.quat.z = Me.theInputFileReader.ReadSingle()
+						aBone.quat.w = Me.theInputFileReader.ReadSingle()
+					End If
 
 					aBone.rotation = New SourceVector()
-					aBone.rotation.x = Me.theInputFileReader.ReadSingle()
-					aBone.rotation.y = Me.theInputFileReader.ReadSingle()
-					aBone.rotation.z = Me.theInputFileReader.ReadSingle()
+					If Me.theMdlFileData.isBigEndian Then
+						aBone.rotation.x = ReadSingleBE()
+						aBone.rotation.y = ReadSingleBE()
+						aBone.rotation.z = ReadSingleBE()
+					Else
+						aBone.rotation.x = Me.theInputFileReader.ReadSingle()
+						aBone.rotation.y = Me.theInputFileReader.ReadSingle()
+						aBone.rotation.z = Me.theInputFileReader.ReadSingle()
+					End If
+
 					aBone.positionScale = New SourceVector()
-					aBone.positionScale.x = Me.theInputFileReader.ReadSingle()
-					aBone.positionScale.y = Me.theInputFileReader.ReadSingle()
-					aBone.positionScale.z = Me.theInputFileReader.ReadSingle()
+					If Me.theMdlFileData.isBigEndian Then
+						aBone.positionScale.x = ReadSingleBE()
+						aBone.positionScale.y = ReadSingleBE()
+						aBone.positionScale.z = ReadSingleBE()
+					Else
+						aBone.positionScale.x = Me.theInputFileReader.ReadSingle()
+						aBone.positionScale.y = Me.theInputFileReader.ReadSingle()
+						aBone.positionScale.z = Me.theInputFileReader.ReadSingle()
+					End If
+
 					aBone.rotationScale = New SourceVector()
-					aBone.rotationScale.x = Me.theInputFileReader.ReadSingle()
-					aBone.rotationScale.y = Me.theInputFileReader.ReadSingle()
-					aBone.rotationScale.z = Me.theInputFileReader.ReadSingle()
+					If Me.theMdlFileData.isBigEndian Then
+						aBone.rotationScale.x = ReadSingleBE()
+						aBone.rotationScale.y = ReadSingleBE()
+						aBone.rotationScale.z = ReadSingleBE()
+					Else
+						aBone.rotationScale.x = Me.theInputFileReader.ReadSingle()
+						aBone.rotationScale.y = Me.theInputFileReader.ReadSingle()
+						aBone.rotationScale.z = Me.theInputFileReader.ReadSingle()
+					End If
 
 					aBone.poseToBoneColumn0 = New SourceVector()
 					aBone.poseToBoneColumn1 = New SourceVector()
 					aBone.poseToBoneColumn2 = New SourceVector()
 					aBone.poseToBoneColumn3 = New SourceVector()
-					aBone.poseToBoneColumn0.x = Me.theInputFileReader.ReadSingle()
-					aBone.poseToBoneColumn1.x = Me.theInputFileReader.ReadSingle()
-					aBone.poseToBoneColumn2.x = Me.theInputFileReader.ReadSingle()
-					aBone.poseToBoneColumn3.x = Me.theInputFileReader.ReadSingle()
-					aBone.poseToBoneColumn0.y = Me.theInputFileReader.ReadSingle()
-					aBone.poseToBoneColumn1.y = Me.theInputFileReader.ReadSingle()
-					aBone.poseToBoneColumn2.y = Me.theInputFileReader.ReadSingle()
-					aBone.poseToBoneColumn3.y = Me.theInputFileReader.ReadSingle()
-					aBone.poseToBoneColumn0.z = Me.theInputFileReader.ReadSingle()
-					aBone.poseToBoneColumn1.z = Me.theInputFileReader.ReadSingle()
-					aBone.poseToBoneColumn2.z = Me.theInputFileReader.ReadSingle()
-					aBone.poseToBoneColumn3.z = Me.theInputFileReader.ReadSingle()
+					If Me.theMdlFileData.isBigEndian Then
+						aBone.poseToBoneColumn0.x = ReadSingleBE()
+						aBone.poseToBoneColumn1.x = ReadSingleBE()
+						aBone.poseToBoneColumn2.x = ReadSingleBE()
+						aBone.poseToBoneColumn3.x = ReadSingleBE()
+						aBone.poseToBoneColumn0.y = ReadSingleBE()
+						aBone.poseToBoneColumn1.y = ReadSingleBE()
+						aBone.poseToBoneColumn2.y = ReadSingleBE()
+						aBone.poseToBoneColumn3.y = ReadSingleBE()
+						aBone.poseToBoneColumn0.z = ReadSingleBE()
+						aBone.poseToBoneColumn1.z = ReadSingleBE()
+						aBone.poseToBoneColumn2.z = ReadSingleBE()
+						aBone.poseToBoneColumn3.z = ReadSingleBE()
+					Else
+						aBone.poseToBoneColumn0.x = Me.theInputFileReader.ReadSingle()
+						aBone.poseToBoneColumn1.x = Me.theInputFileReader.ReadSingle()
+						aBone.poseToBoneColumn2.x = Me.theInputFileReader.ReadSingle()
+						aBone.poseToBoneColumn3.x = Me.theInputFileReader.ReadSingle()
+						aBone.poseToBoneColumn0.y = Me.theInputFileReader.ReadSingle()
+						aBone.poseToBoneColumn1.y = Me.theInputFileReader.ReadSingle()
+						aBone.poseToBoneColumn2.y = Me.theInputFileReader.ReadSingle()
+						aBone.poseToBoneColumn3.y = Me.theInputFileReader.ReadSingle()
+						aBone.poseToBoneColumn0.z = Me.theInputFileReader.ReadSingle()
+						aBone.poseToBoneColumn1.z = Me.theInputFileReader.ReadSingle()
+						aBone.poseToBoneColumn2.z = Me.theInputFileReader.ReadSingle()
+						aBone.poseToBoneColumn3.z = Me.theInputFileReader.ReadSingle()
+					End If
+
 
 					aBone.qAlignment = New SourceQuaternion()
-					aBone.qAlignment.x = Me.theInputFileReader.ReadSingle()
-					aBone.qAlignment.y = Me.theInputFileReader.ReadSingle()
-					aBone.qAlignment.z = Me.theInputFileReader.ReadSingle()
-					aBone.qAlignment.w = Me.theInputFileReader.ReadSingle()
+					If Me.theMdlFileData.isBigEndian Then
+						aBone.qAlignment.x = ReadSingleBE()
+						aBone.qAlignment.y = ReadSingleBE()
+						aBone.qAlignment.z = ReadSingleBE()
+						aBone.qAlignment.w = ReadSingleBE()
 
-					aBone.flags = Me.theInputFileReader.ReadInt32()
+						aBone.flags = ReadInt32BE()
 
-					aBone.proceduralRuleType = Me.theInputFileReader.ReadInt32()
-					aBone.proceduralRuleOffset = Me.theInputFileReader.ReadInt32()
-					aBone.physicsBoneIndex = Me.theInputFileReader.ReadInt32()
-					aBone.surfacePropNameOffset = Me.theInputFileReader.ReadInt32()
-					aBone.contents = Me.theInputFileReader.ReadInt32()
+						aBone.proceduralRuleType = ReadInt32BE()
+						aBone.proceduralRuleOffset = ReadInt32BE()
+						aBone.physicsBoneIndex = ReadInt32BE()
+						aBone.surfacePropNameOffset = ReadInt32BE()
+						aBone.contents = ReadInt32BE()
+					Else
+						aBone.qAlignment.x = Me.theInputFileReader.ReadSingle()
+						aBone.qAlignment.y = Me.theInputFileReader.ReadSingle()
+						aBone.qAlignment.z = Me.theInputFileReader.ReadSingle()
+						aBone.qAlignment.w = Me.theInputFileReader.ReadSingle()
+
+						aBone.flags = Me.theInputFileReader.ReadInt32()
+
+						aBone.proceduralRuleType = Me.theInputFileReader.ReadInt32()
+						aBone.proceduralRuleOffset = Me.theInputFileReader.ReadInt32()
+						aBone.physicsBoneIndex = Me.theInputFileReader.ReadInt32()
+						aBone.surfacePropNameOffset = Me.theInputFileReader.ReadInt32()
+						aBone.contents = Me.theInputFileReader.ReadInt32()
+					End If
 
 					For k As Integer = 0 To 7
-						aBone.unused(k) = Me.theInputFileReader.ReadInt32()
+						If Me.theMdlFileData.isBigEndian Then
+							aBone.unused(k) = ReadInt32BE()
+						Else
+							aBone.unused(k) = Me.theInputFileReader.ReadInt32()
+						End If
 					Next
 
 					Me.theMdlFileData.theBones.Add(aBone)
@@ -493,17 +852,35 @@ Public Class SourceMdlFile49
 
 			axisInterpBoneInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 			aBone.theAxisInterpBone = New SourceMdlAxisInterpBone()
-			aBone.theAxisInterpBone.control = Me.theInputFileReader.ReadInt32()
+			If Me.theMdlFileData.isBigEndian Then
+				aBone.theAxisInterpBone.control = ReadInt32BE()
+			Else
+				aBone.theAxisInterpBone.control = Me.theInputFileReader.ReadInt32()
+			End If
+
 			For x As Integer = 0 To aBone.theAxisInterpBone.pos.Length - 1
-				aBone.theAxisInterpBone.pos(x).x = Me.theInputFileReader.ReadSingle()
-				aBone.theAxisInterpBone.pos(x).y = Me.theInputFileReader.ReadSingle()
-				aBone.theAxisInterpBone.pos(x).z = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					aBone.theAxisInterpBone.pos(x).x = ReadSingleBE()
+					aBone.theAxisInterpBone.pos(x).y = ReadSingleBE()
+					aBone.theAxisInterpBone.pos(x).z = ReadSingleBE()
+				Else
+					aBone.theAxisInterpBone.pos(x).x = Me.theInputFileReader.ReadSingle()
+					aBone.theAxisInterpBone.pos(x).y = Me.theInputFileReader.ReadSingle()
+					aBone.theAxisInterpBone.pos(x).z = Me.theInputFileReader.ReadSingle()
+				End If
 			Next
 			For x As Integer = 0 To aBone.theAxisInterpBone.quat.Length - 1
-				aBone.theAxisInterpBone.quat(x).x = Me.theInputFileReader.ReadSingle()
-				aBone.theAxisInterpBone.quat(x).y = Me.theInputFileReader.ReadSingle()
-				aBone.theAxisInterpBone.quat(x).z = Me.theInputFileReader.ReadSingle()
-				aBone.theAxisInterpBone.quat(x).z = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					aBone.theAxisInterpBone.quat(x).x = ReadSingleBE()
+					aBone.theAxisInterpBone.quat(x).y = ReadSingleBE()
+					aBone.theAxisInterpBone.quat(x).z = ReadSingleBE()
+					aBone.theAxisInterpBone.quat(x).z = ReadSingleBE()
+				Else
+					aBone.theAxisInterpBone.quat(x).x = Me.theInputFileReader.ReadSingle()
+					aBone.theAxisInterpBone.quat(x).y = Me.theInputFileReader.ReadSingle()
+					aBone.theAxisInterpBone.quat(x).z = Me.theInputFileReader.ReadSingle()
+					aBone.theAxisInterpBone.quat(x).z = Me.theInputFileReader.ReadSingle()
+				End If
 			Next
 
 			inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
@@ -532,9 +909,15 @@ Public Class SourceMdlFile49
 
 			quatInterpBoneInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 			aBone.theQuatInterpBone = New SourceMdlQuatInterpBone()
-			aBone.theQuatInterpBone.controlBoneIndex = Me.theInputFileReader.ReadInt32()
-			aBone.theQuatInterpBone.triggerCount = Me.theInputFileReader.ReadInt32()
-			aBone.theQuatInterpBone.triggerOffset = Me.theInputFileReader.ReadInt32()
+			If Me.theMdlFileData.isBigEndian Then
+				aBone.theQuatInterpBone.controlBoneIndex = ReadInt32BE()
+				aBone.theQuatInterpBone.triggerCount = ReadInt32BE()
+				aBone.theQuatInterpBone.triggerOffset = ReadInt32BE()
+			Else
+				aBone.theQuatInterpBone.controlBoneIndex = Me.theInputFileReader.ReadInt32()
+				aBone.theQuatInterpBone.triggerCount = Me.theInputFileReader.ReadInt32()
+				aBone.theQuatInterpBone.triggerOffset = Me.theInputFileReader.ReadInt32()
+			End If
 
 			inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 
@@ -561,23 +944,46 @@ Public Class SourceMdlFile49
 
 			aimAtBoneInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 			aBone.theAimAtBone = New SourceMdlAimAtBone()
-			aBone.theAimAtBone.parentBoneIndex = Me.theInputFileReader.ReadInt32()
-			aBone.theAimAtBone.aimBoneOrAttachmentIndex = Me.theInputFileReader.ReadInt32()
+			If Me.theMdlFileData.isBigEndian Then
+				aBone.theAimAtBone.parentBoneIndex = ReadInt32BE()
+				aBone.theAimAtBone.aimBoneOrAttachmentIndex = ReadInt32BE()
+			Else
+				aBone.theAimAtBone.parentBoneIndex = Me.theInputFileReader.ReadInt32()
+				aBone.theAimAtBone.aimBoneOrAttachmentIndex = Me.theInputFileReader.ReadInt32()
+			End If
 
 			aBone.theAimAtBone.aim = New SourceVector()
-			aBone.theAimAtBone.aim.x = Me.theInputFileReader.ReadSingle()
-			aBone.theAimAtBone.aim.y = Me.theInputFileReader.ReadSingle()
-			aBone.theAimAtBone.aim.z = Me.theInputFileReader.ReadSingle()
+			If Me.theMdlFileData.isBigEndian Then
+				aBone.theAimAtBone.aim.x = ReadSingleBE()
+				aBone.theAimAtBone.aim.y = ReadSingleBE()
+				aBone.theAimAtBone.aim.z = ReadSingleBE()
+			Else
+				aBone.theAimAtBone.aim.x = Me.theInputFileReader.ReadSingle()
+				aBone.theAimAtBone.aim.y = Me.theInputFileReader.ReadSingle()
+				aBone.theAimAtBone.aim.z = Me.theInputFileReader.ReadSingle()
+			End If
 
 			aBone.theAimAtBone.up = New SourceVector()
-			aBone.theAimAtBone.up.x = Me.theInputFileReader.ReadSingle()
-			aBone.theAimAtBone.up.y = Me.theInputFileReader.ReadSingle()
-			aBone.theAimAtBone.up.z = Me.theInputFileReader.ReadSingle()
+			If Me.theMdlFileData.isBigEndian Then
+				aBone.theAimAtBone.up.x = ReadSingleBE()
+				aBone.theAimAtBone.up.y = ReadSingleBE()
+				aBone.theAimAtBone.up.z = ReadSingleBE()
+			Else
+				aBone.theAimAtBone.up.x = Me.theInputFileReader.ReadSingle()
+				aBone.theAimAtBone.up.y = Me.theInputFileReader.ReadSingle()
+				aBone.theAimAtBone.up.z = Me.theInputFileReader.ReadSingle()
+			End If
 
 			aBone.theAimAtBone.basePos = New SourceVector()
-			aBone.theAimAtBone.basePos.x = Me.theInputFileReader.ReadSingle()
-			aBone.theAimAtBone.basePos.y = Me.theInputFileReader.ReadSingle()
-			aBone.theAimAtBone.basePos.z = Me.theInputFileReader.ReadSingle()
+			If Me.theMdlFileData.isBigEndian Then
+				aBone.theAimAtBone.basePos.x = ReadSingleBE()
+				aBone.theAimAtBone.basePos.y = ReadSingleBE()
+				aBone.theAimAtBone.basePos.z = ReadSingleBE()
+			Else
+				aBone.theAimAtBone.basePos.x = Me.theInputFileReader.ReadSingle()
+				aBone.theAimAtBone.basePos.y = Me.theInputFileReader.ReadSingle()
+				aBone.theAimAtBone.basePos.z = Me.theInputFileReader.ReadSingle()
+			End If
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theMdlFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "aBone.theAimAtBone")
@@ -598,24 +1004,48 @@ Public Class SourceMdlFile49
 			For j As Integer = 0 To aQuatInterpBone.triggerCount - 1
 				Dim aTrigger As New SourceMdlQuatInterpBoneInfo()
 
-				aTrigger.inverseToleranceAngle = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					aTrigger.inverseToleranceAngle = ReadSingleBE()
+				Else
+					aTrigger.inverseToleranceAngle = Me.theInputFileReader.ReadSingle()
+				End If
 
 				aTrigger.trigger = New SourceQuaternion()
-				aTrigger.trigger.x = Me.theInputFileReader.ReadSingle()
-				aTrigger.trigger.y = Me.theInputFileReader.ReadSingle()
-				aTrigger.trigger.z = Me.theInputFileReader.ReadSingle()
-				aTrigger.trigger.w = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					aTrigger.trigger.x = ReadSingleBE()
+					aTrigger.trigger.y = ReadSingleBE()
+					aTrigger.trigger.z = ReadSingleBE()
+					aTrigger.trigger.w = ReadSingleBE()
+				Else
+					aTrigger.trigger.x = Me.theInputFileReader.ReadSingle()
+					aTrigger.trigger.y = Me.theInputFileReader.ReadSingle()
+					aTrigger.trigger.z = Me.theInputFileReader.ReadSingle()
+					aTrigger.trigger.w = Me.theInputFileReader.ReadSingle()
+				End If
 
 				aTrigger.pos = New SourceVector()
-				aTrigger.pos.x = Me.theInputFileReader.ReadSingle()
-				aTrigger.pos.y = Me.theInputFileReader.ReadSingle()
-				aTrigger.pos.z = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					aTrigger.pos.x = ReadSingleBE()
+					aTrigger.pos.y = ReadSingleBE()
+					aTrigger.pos.z = ReadSingleBE()
+				Else
+					aTrigger.pos.x = Me.theInputFileReader.ReadSingle()
+					aTrigger.pos.y = Me.theInputFileReader.ReadSingle()
+					aTrigger.pos.z = Me.theInputFileReader.ReadSingle()
+				End If
 
 				aTrigger.quat = New SourceQuaternion()
-				aTrigger.quat.x = Me.theInputFileReader.ReadSingle()
-				aTrigger.quat.y = Me.theInputFileReader.ReadSingle()
-				aTrigger.quat.z = Me.theInputFileReader.ReadSingle()
-				aTrigger.quat.w = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					aTrigger.quat.x = ReadSingleBE()
+					aTrigger.quat.y = ReadSingleBE()
+					aTrigger.quat.z = ReadSingleBE()
+					aTrigger.quat.w = ReadSingleBE()
+				Else
+					aTrigger.quat.x = Me.theInputFileReader.ReadSingle()
+					aTrigger.quat.y = Me.theInputFileReader.ReadSingle()
+					aTrigger.quat.z = Me.theInputFileReader.ReadSingle()
+					aTrigger.quat.w = Me.theInputFileReader.ReadSingle()
+				End If
 
 				aQuatInterpBone.theTriggers.Add(aTrigger)
 			Next
@@ -634,52 +1064,98 @@ Public Class SourceMdlFile49
 		fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
 		aBone.theJiggleBone = New SourceMdlJiggleBone()
-		aBone.theJiggleBone.flags = Me.theInputFileReader.ReadInt32()
-		aBone.theJiggleBone.length = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.tipMass = Me.theInputFileReader.ReadSingle()
+		If Me.theMdlFileData.isBigEndian Then
+			aBone.theJiggleBone.flags = ReadInt32BE()
+			aBone.theJiggleBone.length = ReadSingleBE()
+			aBone.theJiggleBone.tipMass = ReadSingleBE()
 
-		aBone.theJiggleBone.yawStiffness = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.yawDamping = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.pitchStiffness = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.pitchDamping = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.alongStiffness = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.alongDamping = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.yawStiffness = ReadSingleBE()
+			aBone.theJiggleBone.yawDamping = ReadSingleBE()
+			aBone.theJiggleBone.pitchStiffness = ReadSingleBE()
+			aBone.theJiggleBone.pitchDamping = ReadSingleBE()
+			aBone.theJiggleBone.alongStiffness = ReadSingleBE()
+			aBone.theJiggleBone.alongDamping = ReadSingleBE()
 
-		aBone.theJiggleBone.angleLimit = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.angleLimit = ReadSingleBE()
 
-		aBone.theJiggleBone.minYaw = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.maxYaw = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.yawFriction = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.yawBounce = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.minYaw = ReadSingleBE()
+			aBone.theJiggleBone.maxYaw = ReadSingleBE()
+			aBone.theJiggleBone.yawFriction = ReadSingleBE()
+			aBone.theJiggleBone.yawBounce = ReadSingleBE()
 
-		aBone.theJiggleBone.minPitch = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.maxPitch = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.pitchFriction = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.pitchBounce = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.minPitch = ReadSingleBE()
+			aBone.theJiggleBone.maxPitch = ReadSingleBE()
+			aBone.theJiggleBone.pitchFriction = ReadSingleBE()
+			aBone.theJiggleBone.pitchBounce = ReadSingleBE()
 
-		aBone.theJiggleBone.baseMass = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.baseStiffness = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.baseDamping = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.baseMinLeft = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.baseMaxLeft = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.baseLeftFriction = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.baseMinUp = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.baseMaxUp = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.baseUpFriction = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.baseMinForward = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.baseMaxForward = Me.theInputFileReader.ReadSingle()
-		aBone.theJiggleBone.baseForwardFriction = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.baseMass = ReadSingleBE()
+			aBone.theJiggleBone.baseStiffness = ReadSingleBE()
+			aBone.theJiggleBone.baseDamping = ReadSingleBE()
+			aBone.theJiggleBone.baseMinLeft = ReadSingleBE()
+			aBone.theJiggleBone.baseMaxLeft = ReadSingleBE()
+			aBone.theJiggleBone.baseLeftFriction = ReadSingleBE()
+			aBone.theJiggleBone.baseMinUp = ReadSingleBE()
+			aBone.theJiggleBone.baseMaxUp = ReadSingleBE()
+			aBone.theJiggleBone.baseUpFriction = ReadSingleBE()
+			aBone.theJiggleBone.baseMinForward = ReadSingleBE()
+			aBone.theJiggleBone.baseMaxForward = ReadSingleBE()
+			aBone.theJiggleBone.baseForwardFriction = ReadSingleBE()
+		Else
+			aBone.theJiggleBone.flags = Me.theInputFileReader.ReadInt32()
+			aBone.theJiggleBone.length = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.tipMass = Me.theInputFileReader.ReadSingle()
+
+			aBone.theJiggleBone.yawStiffness = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.yawDamping = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.pitchStiffness = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.pitchDamping = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.alongStiffness = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.alongDamping = Me.theInputFileReader.ReadSingle()
+
+			aBone.theJiggleBone.angleLimit = Me.theInputFileReader.ReadSingle()
+
+			aBone.theJiggleBone.minYaw = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.maxYaw = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.yawFriction = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.yawBounce = Me.theInputFileReader.ReadSingle()
+
+			aBone.theJiggleBone.minPitch = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.maxPitch = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.pitchFriction = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.pitchBounce = Me.theInputFileReader.ReadSingle()
+
+			aBone.theJiggleBone.baseMass = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.baseStiffness = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.baseDamping = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.baseMinLeft = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.baseMaxLeft = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.baseLeftFriction = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.baseMinUp = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.baseMaxUp = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.baseUpFriction = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.baseMinForward = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.baseMaxForward = Me.theInputFileReader.ReadSingle()
+			aBone.theJiggleBone.baseForwardFriction = Me.theInputFileReader.ReadSingle()
+		End If
 
 		'NOTE: How to determine when to read in these bytes that probably are only compiled with Source SDK Base 2013 MP and SP?
 		'      Only read these bytes if aBone.theJiggleBone.flags has "is_boing" set.
 		'      The only disadvantage is decompile-MDL log will show "unread bytes" when the flag is not set for models that have these bytes, 
 		'      but "unread bytes" often show up for alignment bytes anyway.
 		If (aBone.theJiggleBone.flags And SourceMdlJiggleBone.JIGGLE_IS_BOING) > 0 AndAlso (Me.theMdlFileData.version = 48 OrElse Me.theMdlFileData.version = 49) Then
-			aBone.theJiggleBone.boingImpactSpeed = Me.theInputFileReader.ReadSingle()
-			aBone.theJiggleBone.boingImpactAngle = Me.theInputFileReader.ReadSingle()
-			aBone.theJiggleBone.boingDampingRate = Me.theInputFileReader.ReadSingle()
-			aBone.theJiggleBone.boingFrequency = Me.theInputFileReader.ReadSingle()
-			aBone.theJiggleBone.boingAmplitude = Me.theInputFileReader.ReadSingle()
+			If Me.theMdlFileData.isBigEndian Then
+				aBone.theJiggleBone.boingImpactSpeed = ReadSingleBE()
+				aBone.theJiggleBone.boingImpactAngle = ReadSingleBE()
+				aBone.theJiggleBone.boingDampingRate = ReadSingleBE()
+				aBone.theJiggleBone.boingFrequency = ReadSingleBE()
+				aBone.theJiggleBone.boingAmplitude = ReadSingleBE()
+			Else
+				aBone.theJiggleBone.boingImpactSpeed = Me.theInputFileReader.ReadSingle()
+				aBone.theJiggleBone.boingImpactAngle = Me.theInputFileReader.ReadSingle()
+				aBone.theJiggleBone.boingDampingRate = Me.theInputFileReader.ReadSingle()
+				aBone.theJiggleBone.boingFrequency = Me.theInputFileReader.ReadSingle()
+				aBone.theJiggleBone.boingAmplitude = Me.theInputFileReader.ReadSingle()
+			End If
 		End If
 
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
@@ -703,15 +1179,29 @@ Public Class SourceMdlFile49
 				boneControllerInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aBoneController As New SourceMdlBoneController()
 
-				aBoneController.boneIndex = Me.theInputFileReader.ReadInt32()
-				aBoneController.type = Me.theInputFileReader.ReadInt32()
-				aBoneController.startBlah = Me.theInputFileReader.ReadSingle()
-				aBoneController.endBlah = Me.theInputFileReader.ReadSingle()
-				aBoneController.restIndex = Me.theInputFileReader.ReadInt32()
-				aBoneController.inputField = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					aBoneController.boneIndex = ReadInt32BE()
+					aBoneController.type = ReadInt32BE()
+					aBoneController.startBlah = ReadSingleBE()
+					aBoneController.endBlah = ReadSingleBE()
+					aBoneController.restIndex = ReadInt32BE()
+					aBoneController.inputField = ReadInt32BE()
+				Else
+					aBoneController.boneIndex = Me.theInputFileReader.ReadInt32()
+					aBoneController.type = Me.theInputFileReader.ReadInt32()
+					aBoneController.startBlah = Me.theInputFileReader.ReadSingle()
+					aBoneController.endBlah = Me.theInputFileReader.ReadSingle()
+					aBoneController.restIndex = Me.theInputFileReader.ReadInt32()
+					aBoneController.inputField = Me.theInputFileReader.ReadInt32()
+				End If
+
 				If Me.theMdlFileData.version > 10 Then
 					For x As Integer = 0 To aBoneController.unused.Length - 1
-						aBoneController.unused(x) = Me.theInputFileReader.ReadInt32()
+						If Me.theMdlFileData.isBigEndian Then
+							aBoneController.unused(x) = ReadInt32BE()
+						Else
+							aBoneController.unused(x) = Me.theInputFileReader.ReadInt32()
+						End If
 					Next
 				End If
 
@@ -764,37 +1254,78 @@ Public Class SourceMdlFile49
 					anAttachment.name = Me.theInputFileReader.ReadChars(32)
 					anAttachment.theName = anAttachment.name
 					anAttachment.theName = StringClass.ConvertFromNullTerminatedOrFullLengthString(anAttachment.theName)
-					anAttachment.type = Me.theInputFileReader.ReadInt32()
-					anAttachment.bone = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						anAttachment.type = ReadInt32BE()
+						anAttachment.bone = ReadInt32BE()
+					Else
+						anAttachment.type = Me.theInputFileReader.ReadInt32()
+						anAttachment.bone = Me.theInputFileReader.ReadInt32()
+					End If
 
 					anAttachment.attachmentPoint = New SourceVector()
-					anAttachment.attachmentPoint.x = Me.theInputFileReader.ReadSingle()
-					anAttachment.attachmentPoint.y = Me.theInputFileReader.ReadSingle()
-					anAttachment.attachmentPoint.z = Me.theInputFileReader.ReadSingle()
+					If Me.theMdlFileData.isBigEndian Then
+						anAttachment.attachmentPoint.x = ReadSingleBE()
+						anAttachment.attachmentPoint.y = ReadSingleBE()
+						anAttachment.attachmentPoint.z = ReadSingleBE()
+					Else
+						anAttachment.attachmentPoint.x = Me.theInputFileReader.ReadSingle()
+						anAttachment.attachmentPoint.y = Me.theInputFileReader.ReadSingle()
+						anAttachment.attachmentPoint.z = Me.theInputFileReader.ReadSingle()
+					End If
+
 					For x As Integer = 0 To 2
 						anAttachment.vectors(x) = New SourceVector()
-						anAttachment.vectors(x).x = Me.theInputFileReader.ReadSingle()
-						anAttachment.vectors(x).y = Me.theInputFileReader.ReadSingle()
-						anAttachment.vectors(x).z = Me.theInputFileReader.ReadSingle()
+						If Me.theMdlFileData.isBigEndian Then
+							anAttachment.vectors(x).x = ReadSingleBE()
+							anAttachment.vectors(x).y = ReadSingleBE()
+							anAttachment.vectors(x).z = ReadSingleBE()
+						Else
+							anAttachment.vectors(x).x = Me.theInputFileReader.ReadSingle()
+							anAttachment.vectors(x).y = Me.theInputFileReader.ReadSingle()
+							anAttachment.vectors(x).z = Me.theInputFileReader.ReadSingle()
+						End If
 					Next
 				Else
-					anAttachment.nameOffset = Me.theInputFileReader.ReadInt32()
-					anAttachment.flags = Me.theInputFileReader.ReadInt32()
-					anAttachment.localBoneIndex = Me.theInputFileReader.ReadInt32()
-					anAttachment.localM11 = Me.theInputFileReader.ReadSingle()
-					anAttachment.localM12 = Me.theInputFileReader.ReadSingle()
-					anAttachment.localM13 = Me.theInputFileReader.ReadSingle()
-					anAttachment.localM14 = Me.theInputFileReader.ReadSingle()
-					anAttachment.localM21 = Me.theInputFileReader.ReadSingle()
-					anAttachment.localM22 = Me.theInputFileReader.ReadSingle()
-					anAttachment.localM23 = Me.theInputFileReader.ReadSingle()
-					anAttachment.localM24 = Me.theInputFileReader.ReadSingle()
-					anAttachment.localM31 = Me.theInputFileReader.ReadSingle()
-					anAttachment.localM32 = Me.theInputFileReader.ReadSingle()
-					anAttachment.localM33 = Me.theInputFileReader.ReadSingle()
-					anAttachment.localM34 = Me.theInputFileReader.ReadSingle()
+					If Me.theMdlFileData.isBigEndian Then
+						anAttachment.nameOffset = ReadInt32BE()
+						anAttachment.flags = ReadInt32BE()
+						anAttachment.localBoneIndex = ReadInt32BE()
+						anAttachment.localM11 = ReadSingleBE()
+						anAttachment.localM12 = ReadSingleBE()
+						anAttachment.localM13 = ReadSingleBE()
+						anAttachment.localM14 = ReadSingleBE()
+						anAttachment.localM21 = ReadSingleBE()
+						anAttachment.localM22 = ReadSingleBE()
+						anAttachment.localM23 = ReadSingleBE()
+						anAttachment.localM24 = ReadSingleBE()
+						anAttachment.localM31 = ReadSingleBE()
+						anAttachment.localM32 = ReadSingleBE()
+						anAttachment.localM33 = ReadSingleBE()
+						anAttachment.localM34 = ReadSingleBE()
+					Else
+						anAttachment.nameOffset = Me.theInputFileReader.ReadInt32()
+						anAttachment.flags = Me.theInputFileReader.ReadInt32()
+						anAttachment.localBoneIndex = Me.theInputFileReader.ReadInt32()
+						anAttachment.localM11 = Me.theInputFileReader.ReadSingle()
+						anAttachment.localM12 = Me.theInputFileReader.ReadSingle()
+						anAttachment.localM13 = Me.theInputFileReader.ReadSingle()
+						anAttachment.localM14 = Me.theInputFileReader.ReadSingle()
+						anAttachment.localM21 = Me.theInputFileReader.ReadSingle()
+						anAttachment.localM22 = Me.theInputFileReader.ReadSingle()
+						anAttachment.localM23 = Me.theInputFileReader.ReadSingle()
+						anAttachment.localM24 = Me.theInputFileReader.ReadSingle()
+						anAttachment.localM31 = Me.theInputFileReader.ReadSingle()
+						anAttachment.localM32 = Me.theInputFileReader.ReadSingle()
+						anAttachment.localM33 = Me.theInputFileReader.ReadSingle()
+						anAttachment.localM34 = Me.theInputFileReader.ReadSingle()
+					End If
+
 					For x As Integer = 0 To 7
-						anAttachment.unused(x) = Me.theInputFileReader.ReadInt32()
+						If Me.theMdlFileData.isBigEndian Then
+							anAttachment.unused(x) = ReadInt32BE()
+						Else
+							anAttachment.unused(x) = Me.theInputFileReader.ReadInt32()
+						End If
 					Next
 				End If
 
@@ -843,9 +1374,16 @@ Public Class SourceMdlFile49
 				For i As Integer = 0 To Me.theMdlFileData.hitboxSetCount - 1
 					hitboxSetInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					Dim aHitboxSet As New SourceMdlHitboxSet()
-					aHitboxSet.nameOffset = Me.theInputFileReader.ReadInt32()
-					aHitboxSet.hitboxCount = Me.theInputFileReader.ReadInt32()
-					aHitboxSet.hitboxOffset = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						aHitboxSet.nameOffset = ReadInt32BE()
+						aHitboxSet.hitboxCount = ReadInt32BE()
+						aHitboxSet.hitboxOffset = ReadInt32BE()
+					Else
+						aHitboxSet.nameOffset = Me.theInputFileReader.ReadInt32()
+						aHitboxSet.hitboxCount = Me.theInputFileReader.ReadInt32()
+						aHitboxSet.hitboxOffset = Me.theInputFileReader.ReadInt32()
+					End If
+
 					Me.theMdlFileData.theHitboxSets.Add(aHitboxSet)
 
 					inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
@@ -898,22 +1436,44 @@ Public Class SourceMdlFile49
 				hitboxInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aHitbox As New SourceMdlHitbox()
 
-				aHitbox.boneIndex = Me.theInputFileReader.ReadInt32()
-				aHitbox.groupIndex = Me.theInputFileReader.ReadInt32()
-				aHitbox.boundingBoxMin.x = Me.theInputFileReader.ReadSingle()
-				aHitbox.boundingBoxMin.y = Me.theInputFileReader.ReadSingle()
-				aHitbox.boundingBoxMin.z = Me.theInputFileReader.ReadSingle()
-				aHitbox.boundingBoxMax.x = Me.theInputFileReader.ReadSingle()
-				aHitbox.boundingBoxMax.y = Me.theInputFileReader.ReadSingle()
-				aHitbox.boundingBoxMax.z = Me.theInputFileReader.ReadSingle()
-				aHitbox.nameOffset = Me.theInputFileReader.ReadInt32()
-				'NOTE: Roll (z) is first.
-				aHitbox.boundingBoxPitchYawRoll.z = Me.theInputFileReader.ReadSingle()
-				aHitbox.boundingBoxPitchYawRoll.x = Me.theInputFileReader.ReadSingle()
-				aHitbox.boundingBoxPitchYawRoll.y = Me.theInputFileReader.ReadSingle()
-				aHitbox.unknown = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					aHitbox.boneIndex = ReadInt32BE()
+					aHitbox.groupIndex = ReadInt32BE()
+					aHitbox.boundingBoxMin.x = ReadSingleBE()
+					aHitbox.boundingBoxMin.y = ReadSingleBE()
+					aHitbox.boundingBoxMin.z = ReadSingleBE()
+					aHitbox.boundingBoxMax.x = ReadSingleBE()
+					aHitbox.boundingBoxMax.y = ReadSingleBE()
+					aHitbox.boundingBoxMax.z = ReadSingleBE()
+					aHitbox.nameOffset = ReadInt32BE()
+					'NOTE: Roll (z) is first.
+					aHitbox.boundingBoxPitchYawRoll.z = ReadSingleBE()
+					aHitbox.boundingBoxPitchYawRoll.x = ReadSingleBE()
+					aHitbox.boundingBoxPitchYawRoll.y = ReadSingleBE()
+					aHitbox.unknown = ReadSingleBE()
+				Else
+					aHitbox.boneIndex = Me.theInputFileReader.ReadInt32()
+					aHitbox.groupIndex = Me.theInputFileReader.ReadInt32()
+					aHitbox.boundingBoxMin.x = Me.theInputFileReader.ReadSingle()
+					aHitbox.boundingBoxMin.y = Me.theInputFileReader.ReadSingle()
+					aHitbox.boundingBoxMin.z = Me.theInputFileReader.ReadSingle()
+					aHitbox.boundingBoxMax.x = Me.theInputFileReader.ReadSingle()
+					aHitbox.boundingBoxMax.y = Me.theInputFileReader.ReadSingle()
+					aHitbox.boundingBoxMax.z = Me.theInputFileReader.ReadSingle()
+					aHitbox.nameOffset = Me.theInputFileReader.ReadInt32()
+					'NOTE: Roll (z) is first.
+					aHitbox.boundingBoxPitchYawRoll.z = Me.theInputFileReader.ReadSingle()
+					aHitbox.boundingBoxPitchYawRoll.x = Me.theInputFileReader.ReadSingle()
+					aHitbox.boundingBoxPitchYawRoll.y = Me.theInputFileReader.ReadSingle()
+					aHitbox.unknown = Me.theInputFileReader.ReadSingle()
+				End If
+
 				For x As Integer = 0 To aHitbox.unused_VERSION49.Length - 1
-					aHitbox.unused_VERSION49(x) = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						aHitbox.unused_VERSION49(x) = ReadInt32BE()
+					Else
+						aHitbox.unused_VERSION49(x) = Me.theInputFileReader.ReadInt32()
+					End If
 				Next
 
 				aHitboxSet.theHitboxes.Add(aHitbox)
@@ -992,34 +1552,68 @@ Public Class SourceMdlFile49
 
 			anAnimationDesc.theOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-			anAnimationDesc.baseHeaderOffset = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.nameOffset = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.fps = Me.theInputFileReader.ReadSingle()
-			anAnimationDesc.flags = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.frameCount = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.movementCount = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.movementOffset = Me.theInputFileReader.ReadInt32()
+			If Me.theMdlFileData.isBigEndian Then
+				anAnimationDesc.baseHeaderOffset = ReadInt32BE()
+				anAnimationDesc.nameOffset = ReadInt32BE()
+				anAnimationDesc.fps = ReadSingleBE()
+				anAnimationDesc.flags = ReadInt32BE()
+				anAnimationDesc.frameCount = ReadInt32BE()
+				anAnimationDesc.movementCount = ReadInt32BE()
+				anAnimationDesc.movementOffset = ReadInt32BE()
 
-			anAnimationDesc.ikRuleZeroFrameOffset_VERSION49 = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.ikRuleZeroFrameOffset_VERSION49 = ReadInt32BE()
+			Else
+				anAnimationDesc.baseHeaderOffset = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.nameOffset = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.fps = Me.theInputFileReader.ReadSingle()
+				anAnimationDesc.flags = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.frameCount = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.movementCount = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.movementOffset = Me.theInputFileReader.ReadInt32()
+
+				anAnimationDesc.ikRuleZeroFrameOffset_VERSION49 = Me.theInputFileReader.ReadInt32()
+			End If
 
 			For x As Integer = 0 To anAnimationDesc.unused1.Length - 1
-				anAnimationDesc.unused1(x) = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					anAnimationDesc.unused1(x) = ReadInt32BE()
+				Else
+					anAnimationDesc.unused1(x) = Me.theInputFileReader.ReadInt32()
+				End If
 			Next
 
-			anAnimationDesc.animBlock = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.animOffset = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.ikRuleCount = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.ikRuleOffset = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.animblockIkRuleOffset = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.localHierarchyCount = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.localHierarchyOffset = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.sectionOffset = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.sectionFrameCount = Me.theInputFileReader.ReadInt32()
+			If Me.theMdlFileData.isBigEndian Then
+				anAnimationDesc.animBlock = ReadInt32BE()
+				anAnimationDesc.animOffset = ReadInt32BE()
+				anAnimationDesc.ikRuleCount = ReadInt32BE()
+				anAnimationDesc.ikRuleOffset = ReadInt32BE()
+				anAnimationDesc.animblockIkRuleOffset = ReadInt32BE()
+				anAnimationDesc.localHierarchyCount = ReadInt32BE()
+				anAnimationDesc.localHierarchyOffset = ReadInt32BE()
+				anAnimationDesc.sectionOffset = ReadInt32BE()
+				anAnimationDesc.sectionFrameCount = ReadInt32BE()
 
-			anAnimationDesc.spanFrameCount = Me.theInputFileReader.ReadInt16()
-			anAnimationDesc.spanCount = Me.theInputFileReader.ReadInt16()
-			anAnimationDesc.spanOffset = Me.theInputFileReader.ReadInt32()
-			anAnimationDesc.spanStallTime = Me.theInputFileReader.ReadSingle()
+				anAnimationDesc.spanFrameCount = ReadInt16BE()
+				anAnimationDesc.spanCount = ReadInt16BE()
+				anAnimationDesc.spanOffset = ReadInt32BE()
+				anAnimationDesc.spanStallTime = ReadSingleBE()
+			Else
+				anAnimationDesc.animBlock = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.animOffset = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.ikRuleCount = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.ikRuleOffset = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.animblockIkRuleOffset = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.localHierarchyCount = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.localHierarchyOffset = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.sectionOffset = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.sectionFrameCount = Me.theInputFileReader.ReadInt32()
+
+				anAnimationDesc.spanFrameCount = Me.theInputFileReader.ReadInt16()
+				anAnimationDesc.spanCount = Me.theInputFileReader.ReadInt16()
+				anAnimationDesc.spanOffset = Me.theInputFileReader.ReadInt32()
+				anAnimationDesc.spanStallTime = Me.theInputFileReader.ReadSingle()
+			End If
+
 
 			Me.theMdlFileData.theAnimationDescs.Add(anAnimationDesc)
 
@@ -1266,11 +1860,22 @@ Public Class SourceMdlFile49
 
 			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-			aSectionOfAnimation.constantsOffset = Me.theInputFileReader.ReadInt32()
-			aSectionOfAnimation.frameOffset = Me.theInputFileReader.ReadInt32()
-			aSectionOfAnimation.frameLength = Me.theInputFileReader.ReadInt32()
+			If Me.theMdlFileData.isBigEndian Then
+				aSectionOfAnimation.constantsOffset = ReadInt32BE()
+				aSectionOfAnimation.frameOffset = ReadInt32BE()
+				aSectionOfAnimation.frameLength = ReadInt32BE()
+			Else
+				aSectionOfAnimation.constantsOffset = Me.theInputFileReader.ReadInt32()
+				aSectionOfAnimation.frameOffset = Me.theInputFileReader.ReadInt32()
+				aSectionOfAnimation.frameLength = Me.theInputFileReader.ReadInt32()
+			End If
+
 			For x As Integer = 0 To aSectionOfAnimation.unused.Length - 1
-				aSectionOfAnimation.unused(x) = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					aSectionOfAnimation.unused(x) = ReadInt32BE()
+				Else
+					aSectionOfAnimation.unused(x) = Me.theInputFileReader.ReadInt32()
+				End If
 			Next
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
@@ -1306,24 +1911,46 @@ Public Class SourceMdlFile49
 					If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_CONST_ROT2) > 0 Then
 						aBoneConstantInfo.theConstantRotation2 = New SourceQuaternion48bitsViaBytes()
 						aBoneConstantInfo.theConstantRotation2.theBytes = Me.theInputFileReader.ReadBytes(6)
+
+						If Me.theMdlFileData.isBigEndian Then
+							Array.Reverse(aBoneConstantInfo.theConstantRotation2.theBytes)
+						End If
 					End If
 					If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_CONST_POS2) > 0 Then
 						aBoneConstantInfo.theConstantPosition2 = New SourceVector()
-						aBoneConstantInfo.theConstantPosition2.x = Me.theInputFileReader.ReadSingle()
-						aBoneConstantInfo.theConstantPosition2.y = Me.theInputFileReader.ReadSingle()
-						aBoneConstantInfo.theConstantPosition2.z = Me.theInputFileReader.ReadSingle()
+						If Me.theMdlFileData.isBigEndian Then
+							aBoneConstantInfo.theConstantPosition2.x = ReadSingleBE()
+							aBoneConstantInfo.theConstantPosition2.y = ReadSingleBE()
+							aBoneConstantInfo.theConstantPosition2.z = ReadSingleBE()
+						Else
+							aBoneConstantInfo.theConstantPosition2.x = Me.theInputFileReader.ReadSingle()
+							aBoneConstantInfo.theConstantPosition2.y = Me.theInputFileReader.ReadSingle()
+							aBoneConstantInfo.theConstantPosition2.z = Me.theInputFileReader.ReadSingle()
+						End If
 					End If
 					If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_RAWROT) > 0 Then
 						aBoneConstantInfo.theConstantRawRot = New SourceQuaternion48bits()
-						aBoneConstantInfo.theConstantRawRot.theXInput = Me.theInputFileReader.ReadUInt16()
-						aBoneConstantInfo.theConstantRawRot.theYInput = Me.theInputFileReader.ReadUInt16()
-						aBoneConstantInfo.theConstantRawRot.theZWInput = Me.theInputFileReader.ReadUInt16()
+						If Me.theMdlFileData.isBigEndian Then
+							aBoneConstantInfo.theConstantRawRot.theXInput = ReadUInt16BE()
+							aBoneConstantInfo.theConstantRawRot.theYInput = ReadUInt16BE()
+							aBoneConstantInfo.theConstantRawRot.theZWInput = ReadUInt16BE()
+						Else
+							aBoneConstantInfo.theConstantRawRot.theXInput = Me.theInputFileReader.ReadUInt16()
+							aBoneConstantInfo.theConstantRawRot.theYInput = Me.theInputFileReader.ReadUInt16()
+							aBoneConstantInfo.theConstantRawRot.theZWInput = Me.theInputFileReader.ReadUInt16()
+						End If
 					End If
 					If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_RAWPOS) > 0 Then
 						aBoneConstantInfo.theConstantRawPos = New SourceVector48bits()
-						aBoneConstantInfo.theConstantRawPos.theXInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
-						aBoneConstantInfo.theConstantRawPos.theYInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
-						aBoneConstantInfo.theConstantRawPos.theZInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+						If Me.theMdlFileData.isBigEndian Then
+							aBoneConstantInfo.theConstantRawPos.theXInput.the16BitValue = ReadUInt16BE()
+							aBoneConstantInfo.theConstantRawPos.theYInput.the16BitValue = ReadUInt16BE()
+							aBoneConstantInfo.theConstantRawPos.theZInput.the16BitValue = ReadUInt16BE()
+						Else
+							aBoneConstantInfo.theConstantRawPos.theXInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+							aBoneConstantInfo.theConstantRawPos.theYInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+							aBoneConstantInfo.theConstantRawPos.theZInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+						End If
 					End If
 				Next
 
@@ -1365,24 +1992,46 @@ Public Class SourceMdlFile49
 						If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_ANIM_ROT2) > 0 Then
 							aBoneFrameDataInfo.theAnimRotationUnknown = New SourceQuaternion48bitsViaBytes()
 							aBoneFrameDataInfo.theAnimRotationUnknown.theBytes = Me.theInputFileReader.ReadBytes(6)
+
+							If Me.theMdlFileData.isBigEndian Then
+								Array.Reverse(aBoneFrameDataInfo.theAnimRotationUnknown.theBytes)
+							End If
 						End If
 						If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_ANIMROT) > 0 Then
 							aBoneFrameDataInfo.theAnimRotation = New SourceQuaternion48bits()
-							aBoneFrameDataInfo.theAnimRotation.theXInput = Me.theInputFileReader.ReadUInt16()
-							aBoneFrameDataInfo.theAnimRotation.theYInput = Me.theInputFileReader.ReadUInt16()
-							aBoneFrameDataInfo.theAnimRotation.theZWInput = Me.theInputFileReader.ReadUInt16()
+							If Me.theMdlFileData.isBigEndian Then
+								aBoneFrameDataInfo.theAnimRotation.theXInput = ReadUInt16BE()
+								aBoneFrameDataInfo.theAnimRotation.theYInput = ReadUInt16BE()
+								aBoneFrameDataInfo.theAnimRotation.theZWInput = ReadUInt16BE()
+							Else
+								aBoneFrameDataInfo.theAnimRotation.theXInput = Me.theInputFileReader.ReadUInt16()
+								aBoneFrameDataInfo.theAnimRotation.theYInput = Me.theInputFileReader.ReadUInt16()
+								aBoneFrameDataInfo.theAnimRotation.theZWInput = Me.theInputFileReader.ReadUInt16()
+							End If
 						End If
 						If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_ANIMPOS) > 0 Then
 							aBoneFrameDataInfo.theAnimPosition = New SourceVector48bits()
-							aBoneFrameDataInfo.theAnimPosition.theXInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
-							aBoneFrameDataInfo.theAnimPosition.theYInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
-							aBoneFrameDataInfo.theAnimPosition.theZInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+							If Me.theMdlFileData.isBigEndian Then
+								aBoneFrameDataInfo.theAnimPosition.theXInput.the16BitValue = ReadUInt16BE()
+								aBoneFrameDataInfo.theAnimPosition.theYInput.the16BitValue = ReadUInt16BE()
+								aBoneFrameDataInfo.theAnimPosition.theZInput.the16BitValue = ReadUInt16BE()
+							Else
+								aBoneFrameDataInfo.theAnimPosition.theXInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+								aBoneFrameDataInfo.theAnimPosition.theYInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+								aBoneFrameDataInfo.theAnimPosition.theZInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+							End If
 						End If
 						If (boneFlag And SourceAniFrameAnim49.STUDIO_FRAME_FULLANIMPOS) > 0 Then
 							aBoneFrameDataInfo.theFullAnimPosition = New SourceVector()
-							aBoneFrameDataInfo.theFullAnimPosition.x = Me.theInputFileReader.ReadSingle()
-							aBoneFrameDataInfo.theFullAnimPosition.y = Me.theInputFileReader.ReadSingle()
-							aBoneFrameDataInfo.theFullAnimPosition.z = Me.theInputFileReader.ReadSingle()
+							If Me.theMdlFileData.isBigEndian Then
+								aBoneFrameDataInfo.theFullAnimPosition.x = ReadSingleBE()
+								aBoneFrameDataInfo.theFullAnimPosition.y = ReadSingleBE()
+								aBoneFrameDataInfo.theFullAnimPosition.z = ReadSingleBE()
+							Else
+								aBoneFrameDataInfo.theFullAnimPosition.x = Me.theInputFileReader.ReadSingle()
+								aBoneFrameDataInfo.theFullAnimPosition.y = Me.theInputFileReader.ReadSingle()
+								aBoneFrameDataInfo.theFullAnimPosition.z = Me.theInputFileReader.ReadSingle()
+							End If
 						End If
 						'If (boneFlag And SourceAniFrameAnim.STUDIO_FRAME_ANIM_ROT2) > 0 Then
 						'	aBoneFrameDataInfo.theAnimRotationUnknown = New SourceQuaternion48bitsViaBytes()
@@ -1457,7 +2106,12 @@ Public Class SourceMdlFile49
 
 			anAnimation.boneIndex = boneIndex
 			anAnimation.flags = Me.theInputFileReader.ReadByte()
-			anAnimation.nextSourceMdlAnimationOffset = Me.theInputFileReader.ReadInt16()
+			If Me.theMdlFileData.isBigEndian Then
+				anAnimation.nextSourceMdlAnimationOffset = ReadInt16BE()
+			Else
+				anAnimation.nextSourceMdlAnimationOffset = Me.theInputFileReader.ReadInt16()
+			End If
+
 
 			'DEBUG:
 			If (anAnimation.flags And &H40) > 0 Then
@@ -1473,19 +2127,35 @@ Public Class SourceMdlFile49
 				anAnimation.theRot64bits = New SourceQuaternion64bits()
 				anAnimation.theRot64bits.theBytes = Me.theInputFileReader.ReadBytes(8)
 
+				If Me.theMdlFileData.isBigEndian Then
+					Array.Reverse(anAnimation.theRot64bits.theBytes)
+				End If
+
 				'Me.DebugQuaternion(anAnimation.theRot64)
 			End If
 			If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_RAWROT) > 0 Then
 				anAnimation.theRot48bits = New SourceQuaternion48bits()
-				anAnimation.theRot48bits.theXInput = Me.theInputFileReader.ReadUInt16()
-				anAnimation.theRot48bits.theYInput = Me.theInputFileReader.ReadUInt16()
-				anAnimation.theRot48bits.theZWInput = Me.theInputFileReader.ReadUInt16()
+				If Me.theMdlFileData.isBigEndian Then
+					anAnimation.theRot48bits.theXInput = ReadUInt16BE()
+					anAnimation.theRot48bits.theYInput = ReadUInt16BE()
+					anAnimation.theRot48bits.theZWInput = ReadUInt16BE()
+				Else
+					anAnimation.theRot48bits.theXInput = Me.theInputFileReader.ReadUInt16()
+					anAnimation.theRot48bits.theYInput = Me.theInputFileReader.ReadUInt16()
+					anAnimation.theRot48bits.theZWInput = Me.theInputFileReader.ReadUInt16()
+				End If
 			End If
 			If (anAnimation.flags And SourceMdlAnimation.STUDIO_ANIM_RAWPOS) > 0 Then
 				anAnimation.thePos = New SourceVector48bits()
-				anAnimation.thePos.theXInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
-				anAnimation.thePos.theYInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
-				anAnimation.thePos.theZInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+				If Me.theMdlFileData.isBigEndian Then
+					anAnimation.thePos.theXInput.the16BitValue = ReadUInt16BE()
+					anAnimation.thePos.theYInput.the16BitValue = ReadUInt16BE()
+					anAnimation.thePos.theZInput.the16BitValue = ReadUInt16BE()
+				Else
+					anAnimation.thePos.theXInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+					anAnimation.thePos.theYInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+					anAnimation.thePos.theZInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+				End If
 			End If
 
 			animValuePointerInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
@@ -1495,17 +2165,32 @@ Public Class SourceMdlFile49
 				rotValuePointerInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				anAnimation.theRotV = New SourceMdlAnimationValuePointer()
 
-				anAnimation.theRotV.animXValueOffset = Me.theInputFileReader.ReadInt16()
+				If Me.theMdlFileData.isBigEndian Then
+					anAnimation.theRotV.animXValueOffset = ReadInt16BE()
+				Else
+					anAnimation.theRotV.animXValueOffset = Me.theInputFileReader.ReadInt16()
+				End If
+
 				If anAnimation.theRotV.theAnimXValues Is Nothing Then
 					anAnimation.theRotV.theAnimXValues = New List(Of SourceMdlAnimationValue)()
 				End If
 
-				anAnimation.theRotV.animYValueOffset = Me.theInputFileReader.ReadInt16()
+				If Me.theMdlFileData.isBigEndian Then
+					anAnimation.theRotV.animYValueOffset = ReadInt16BE()
+				Else
+					anAnimation.theRotV.animYValueOffset = Me.theInputFileReader.ReadInt16()
+				End If
+
 				If anAnimation.theRotV.theAnimYValues Is Nothing Then
 					anAnimation.theRotV.theAnimYValues = New List(Of SourceMdlAnimationValue)()
 				End If
 
-				anAnimation.theRotV.animZValueOffset = Me.theInputFileReader.ReadInt16()
+				If Me.theMdlFileData.isBigEndian Then
+					anAnimation.theRotV.animZValueOffset = ReadInt16BE()
+				Else
+					anAnimation.theRotV.animZValueOffset = Me.theInputFileReader.ReadInt16()
+				End If
+
 				If anAnimation.theRotV.theAnimZValues Is Nothing Then
 					anAnimation.theRotV.theAnimZValues = New List(Of SourceMdlAnimationValue)()
 				End If
@@ -1514,17 +2199,32 @@ Public Class SourceMdlFile49
 				posValuePointerInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				anAnimation.thePosV = New SourceMdlAnimationValuePointer()
 
-				anAnimation.thePosV.animXValueOffset = Me.theInputFileReader.ReadInt16()
+				If Me.theMdlFileData.isBigEndian Then
+					anAnimation.thePosV.animXValueOffset = ReadInt16BE()
+				Else
+					anAnimation.thePosV.animXValueOffset = Me.theInputFileReader.ReadInt16()
+				End If
+
 				If anAnimation.thePosV.theAnimXValues Is Nothing Then
 					anAnimation.thePosV.theAnimXValues = New List(Of SourceMdlAnimationValue)()
 				End If
 
-				anAnimation.thePosV.animYValueOffset = Me.theInputFileReader.ReadInt16()
+				If Me.theMdlFileData.isBigEndian Then
+					anAnimation.thePosV.animYValueOffset = ReadInt16BE()
+				Else
+					anAnimation.thePosV.animYValueOffset = Me.theInputFileReader.ReadInt16()
+				End If
+
 				If anAnimation.thePosV.theAnimYValues Is Nothing Then
 					anAnimation.thePosV.theAnimYValues = New List(Of SourceMdlAnimationValue)()
 				End If
 
-				anAnimation.thePosV.animZValueOffset = Me.theInputFileReader.ReadInt16()
+				If Me.theMdlFileData.isBigEndian Then
+					anAnimation.thePosV.animZValueOffset = ReadInt16BE()
+				Else
+					anAnimation.thePosV.animZValueOffset = Me.theInputFileReader.ReadInt16()
+				End If
+
 				If anAnimation.thePosV.theAnimZValues Is Nothing Then
 					anAnimation.thePosV.theAnimZValues = New List(Of SourceMdlAnimationValue)()
 				End If
@@ -1769,7 +2469,9 @@ Public Class SourceMdlFile49
 		frameCountRemainingToBeChecked = frameCount
 		accumulatedTotal = 0
 		While (frameCountRemainingToBeChecked > 0)
+			' This value is also little endian on Xbox 360 models
 			animValue.value = Me.theInputFileReader.ReadInt16()
+
 			currentTotal = animValue.total
 			accumulatedTotal += currentTotal
 			If currentTotal = 0 Then
@@ -1781,7 +2483,11 @@ Public Class SourceMdlFile49
 
 			validCount = animValue.valid
 			For i As Integer = 1 To validCount
-				animValue.value = Me.theInputFileReader.ReadInt16()
+				If Me.theMdlFileData.isBigEndian Then
+					animValue.value = ReadInt16BE()
+				Else
+					animValue.value = Me.theInputFileReader.ReadInt16()
+				End If
 				theAnimValues.Add(animValue)
 			Next
 		End While
@@ -1833,49 +2539,100 @@ Public Class SourceMdlFile49
 				ikRuleInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim anIkRule As New SourceMdlIkRule()
 
-				anIkRule.index = Me.theInputFileReader.ReadInt32()
-				anIkRule.type = Me.theInputFileReader.ReadInt32()
-				anIkRule.chain = Me.theInputFileReader.ReadInt32()
-				anIkRule.bone = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					anIkRule.index = ReadInt32BE()
+					anIkRule.type = ReadInt32BE()
+					anIkRule.chain = ReadInt32BE()
+					anIkRule.bone = ReadInt32BE()
 
-				anIkRule.slot = Me.theInputFileReader.ReadInt32()
-				anIkRule.height = Me.theInputFileReader.ReadSingle()
-				anIkRule.radius = Me.theInputFileReader.ReadSingle()
-				anIkRule.floor = Me.theInputFileReader.ReadSingle()
+					anIkRule.slot = ReadInt32BE()
+					anIkRule.height = ReadSingleBE()
+					anIkRule.radius = ReadSingleBE()
+					anIkRule.floor = ReadSingleBE()
+				Else
+					anIkRule.index = Me.theInputFileReader.ReadInt32()
+					anIkRule.type = Me.theInputFileReader.ReadInt32()
+					anIkRule.chain = Me.theInputFileReader.ReadInt32()
+					anIkRule.bone = Me.theInputFileReader.ReadInt32()
+
+					anIkRule.slot = Me.theInputFileReader.ReadInt32()
+					anIkRule.height = Me.theInputFileReader.ReadSingle()
+					anIkRule.radius = Me.theInputFileReader.ReadSingle()
+					anIkRule.floor = Me.theInputFileReader.ReadSingle()
+				End If
 
 				anIkRule.pos = New SourceVector()
-				anIkRule.pos.x = Me.theInputFileReader.ReadSingle()
-				anIkRule.pos.y = Me.theInputFileReader.ReadSingle()
-				anIkRule.pos.z = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					anIkRule.pos.x = ReadSingleBE()
+					anIkRule.pos.y = ReadSingleBE()
+					anIkRule.pos.z = ReadSingleBE()
+				Else
+					anIkRule.pos.x = Me.theInputFileReader.ReadSingle()
+					anIkRule.pos.y = Me.theInputFileReader.ReadSingle()
+					anIkRule.pos.z = Me.theInputFileReader.ReadSingle()
+				End If
+
 				anIkRule.q = New SourceQuaternion()
-				anIkRule.q.x = Me.theInputFileReader.ReadSingle()
-				anIkRule.q.y = Me.theInputFileReader.ReadSingle()
-				anIkRule.q.z = Me.theInputFileReader.ReadSingle()
-				anIkRule.q.w = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					anIkRule.q.x = ReadSingleBE()
+					anIkRule.q.y = ReadSingleBE()
+					anIkRule.q.z = ReadSingleBE()
+					anIkRule.q.w = ReadSingleBE()
 
-				anIkRule.compressedIkErrorOffset = Me.theInputFileReader.ReadInt32()
-				anIkRule.unused2 = Me.theInputFileReader.ReadInt32()
-				anIkRule.ikErrorIndexStart = Me.theInputFileReader.ReadInt32()
-				anIkRule.ikErrorOffset = Me.theInputFileReader.ReadInt32()
+					anIkRule.compressedIkErrorOffset = ReadInt32BE()
+					anIkRule.unused2 = ReadInt32BE()
+					anIkRule.ikErrorIndexStart = ReadInt32BE()
+					anIkRule.ikErrorOffset = ReadInt32BE()
 
-				anIkRule.influenceStart = Me.theInputFileReader.ReadSingle()
-				anIkRule.influencePeak = Me.theInputFileReader.ReadSingle()
-				anIkRule.influenceTail = Me.theInputFileReader.ReadSingle()
-				anIkRule.influenceEnd = Me.theInputFileReader.ReadSingle()
+					anIkRule.influenceStart = ReadSingleBE()
+					anIkRule.influencePeak = ReadSingleBE()
+					anIkRule.influenceTail = ReadSingleBE()
+					anIkRule.influenceEnd = ReadSingleBE()
 
-				anIkRule.unused3 = Me.theInputFileReader.ReadSingle()
-				anIkRule.contact = Me.theInputFileReader.ReadSingle()
-				anIkRule.drop = Me.theInputFileReader.ReadSingle()
-				anIkRule.top = Me.theInputFileReader.ReadSingle()
+					anIkRule.unused3 = ReadSingleBE()
+					anIkRule.contact = ReadSingleBE()
+					anIkRule.drop = ReadSingleBE()
+					anIkRule.top = ReadSingleBE()
 
-				anIkRule.unused6 = Me.theInputFileReader.ReadInt32()
-				anIkRule.unused7 = Me.theInputFileReader.ReadInt32()
-				anIkRule.unused8 = Me.theInputFileReader.ReadInt32()
+					anIkRule.unused6 = ReadInt32BE()
+					anIkRule.unused7 = ReadInt32BE()
+					anIkRule.unused8 = ReadInt32BE()
 
-				anIkRule.attachmentNameOffset = Me.theInputFileReader.ReadInt32()
+					anIkRule.attachmentNameOffset = ReadInt32BE()
+				Else
+					anIkRule.q.x = Me.theInputFileReader.ReadSingle()
+					anIkRule.q.y = Me.theInputFileReader.ReadSingle()
+					anIkRule.q.z = Me.theInputFileReader.ReadSingle()
+					anIkRule.q.w = Me.theInputFileReader.ReadSingle()
+
+					anIkRule.compressedIkErrorOffset = Me.theInputFileReader.ReadInt32()
+					anIkRule.unused2 = Me.theInputFileReader.ReadInt32()
+					anIkRule.ikErrorIndexStart = Me.theInputFileReader.ReadInt32()
+					anIkRule.ikErrorOffset = Me.theInputFileReader.ReadInt32()
+
+					anIkRule.influenceStart = Me.theInputFileReader.ReadSingle()
+					anIkRule.influencePeak = Me.theInputFileReader.ReadSingle()
+					anIkRule.influenceTail = Me.theInputFileReader.ReadSingle()
+					anIkRule.influenceEnd = Me.theInputFileReader.ReadSingle()
+
+					anIkRule.unused3 = Me.theInputFileReader.ReadSingle()
+					anIkRule.contact = Me.theInputFileReader.ReadSingle()
+					anIkRule.drop = Me.theInputFileReader.ReadSingle()
+					anIkRule.top = Me.theInputFileReader.ReadSingle()
+
+					anIkRule.unused6 = Me.theInputFileReader.ReadInt32()
+					anIkRule.unused7 = Me.theInputFileReader.ReadInt32()
+					anIkRule.unused8 = Me.theInputFileReader.ReadInt32()
+
+					anIkRule.attachmentNameOffset = Me.theInputFileReader.ReadInt32()
+				End If
 
 				For x As Integer = 0 To anIkRule.unused.Length - 1
-					anIkRule.unused(x) = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						anIkRule.unused(x) = ReadInt32BE()
+					Else
+						anIkRule.unused(x) = Me.theInputFileReader.ReadInt32()
+					End If
 				Next
 
 				anAnimationDesc.theIkRules.Add(anIkRule)
@@ -1948,7 +2705,11 @@ Public Class SourceMdlFile49
 		' First, read the scale data.
 		For k As Integer = 0 To anIkRule.theCompressedIkError.scale.Length - 1
 			kInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-			anIkRule.theCompressedIkError.scale(k) = Me.theInputFileReader.ReadSingle()
+			If Me.theMdlFileData.isBigEndian Then
+				anIkRule.theCompressedIkError.scale(k) = ReadSingleBE()
+			Else
+				anIkRule.theCompressedIkError.scale(k) = Me.theInputFileReader.ReadSingle()
+			End If
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theMdlFileData.theFileSeekLog.Add(kInputFileStreamPosition, fileOffsetEnd, "anIkRule.theCompressedIkError [ikRuleIndex = " + ikRuleIndex.ToString() + "] [scale = " + anIkRule.theCompressedIkError.scale(k).ToString() + "]")
@@ -1957,7 +2718,11 @@ Public Class SourceMdlFile49
 		' Second, read the offset data.
 		For k As Integer = 0 To anIkRule.theCompressedIkError.offset.Length - 1
 			kInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
-			anIkRule.theCompressedIkError.offset(k) = Me.theInputFileReader.ReadInt16()
+			If Me.theMdlFileData.isBigEndian Then
+				anIkRule.theCompressedIkError.offset(k) = ReadInt16BE()
+			Else
+				anIkRule.theCompressedIkError.offset(k) = Me.theInputFileReader.ReadInt16()
+			End If
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theMdlFileData.theFileSeekLog.Add(kInputFileStreamPosition, fileOffsetEnd, "anIkRule.theCompressedIkError [ikRuleIndex = " + ikRuleIndex.ToString() + "] [offset = " + anIkRule.theCompressedIkError.offset(k).ToString() + "]")
@@ -2006,8 +2771,14 @@ Public Class SourceMdlFile49
 			'animSectionInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 
 			Dim anAnimSection As New SourceMdlAnimationSection()
-			anAnimSection.animBlock = Me.theInputFileReader.ReadInt32()
-			anAnimSection.animOffset = Me.theInputFileReader.ReadInt32()
+			If Me.theMdlFileData.isBigEndian Then
+				anAnimSection.animBlock = ReadInt32BE()
+				anAnimSection.animOffset = ReadInt32BE()
+			Else
+				anAnimSection.animBlock = Me.theInputFileReader.ReadInt32()
+				anAnimSection.animOffset = Me.theInputFileReader.ReadInt32()
+			End If
+
 			anAnimationDesc.theSections.Add(anAnimSection)
 
 			'inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
@@ -2048,20 +2819,41 @@ Public Class SourceMdlFile49
 				movementInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aMovement As New SourceMdlMovement()
 
-				aMovement.endframeIndex = Me.theInputFileReader.ReadInt32()
-				aMovement.motionFlags = Me.theInputFileReader.ReadInt32()
-				aMovement.v0 = Me.theInputFileReader.ReadSingle()
-				aMovement.v1 = Me.theInputFileReader.ReadSingle()
-				aMovement.angle = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					aMovement.endframeIndex = ReadInt32BE()
+					aMovement.motionFlags = ReadInt32BE()
+					aMovement.v0 = ReadSingleBE()
+					aMovement.v1 = ReadSingleBE()
+					aMovement.angle = ReadSingleBE()
+				Else
+					aMovement.endframeIndex = Me.theInputFileReader.ReadInt32()
+					aMovement.motionFlags = Me.theInputFileReader.ReadInt32()
+					aMovement.v0 = Me.theInputFileReader.ReadSingle()
+					aMovement.v1 = Me.theInputFileReader.ReadSingle()
+					aMovement.angle = Me.theInputFileReader.ReadSingle()
+				End If
 
 				aMovement.vector = New SourceVector()
-				aMovement.vector.x = Me.theInputFileReader.ReadSingle()
-				aMovement.vector.y = Me.theInputFileReader.ReadSingle()
-				aMovement.vector.z = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					aMovement.vector.x = ReadSingleBE()
+					aMovement.vector.y = ReadSingleBE()
+					aMovement.vector.z = ReadSingleBE()
+				Else
+					aMovement.vector.x = Me.theInputFileReader.ReadSingle()
+					aMovement.vector.y = Me.theInputFileReader.ReadSingle()
+					aMovement.vector.z = Me.theInputFileReader.ReadSingle()
+				End If
+
 				aMovement.position = New SourceVector()
-				aMovement.position.x = Me.theInputFileReader.ReadSingle()
-				aMovement.position.y = Me.theInputFileReader.ReadSingle()
-				aMovement.position.z = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					aMovement.position.x = ReadSingleBE()
+					aMovement.position.y = ReadSingleBE()
+					aMovement.position.z = ReadSingleBE()
+				Else
+					aMovement.position.x = Me.theInputFileReader.ReadSingle()
+					aMovement.position.y = Me.theInputFileReader.ReadSingle()
+					aMovement.position.z = Me.theInputFileReader.ReadSingle()
+				End If
 
 				anAnimationDesc.theMovements.Add(aMovement)
 			Next
@@ -2085,16 +2877,32 @@ Public Class SourceMdlFile49
 				localHieararchyInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aLocalHierarchy As New SourceMdlLocalHierarchy()
 
-				aLocalHierarchy.boneIndex = Me.theInputFileReader.ReadInt32()
-				aLocalHierarchy.boneNewParentIndex = Me.theInputFileReader.ReadInt32()
-				aLocalHierarchy.startInfluence = Me.theInputFileReader.ReadSingle()
-				aLocalHierarchy.peakInfluence = Me.theInputFileReader.ReadSingle()
-				aLocalHierarchy.tailInfluence = Me.theInputFileReader.ReadSingle()
-				aLocalHierarchy.endInfluence = Me.theInputFileReader.ReadSingle()
-				aLocalHierarchy.startFrameIndex = Me.theInputFileReader.ReadInt32()
-				aLocalHierarchy.localAnimOffset = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					aLocalHierarchy.boneIndex = ReadInt32BE()
+					aLocalHierarchy.boneNewParentIndex = ReadInt32BE()
+					aLocalHierarchy.startInfluence = ReadSingleBE()
+					aLocalHierarchy.peakInfluence = ReadSingleBE()
+					aLocalHierarchy.tailInfluence = ReadSingleBE()
+					aLocalHierarchy.endInfluence = ReadSingleBE()
+					aLocalHierarchy.startFrameIndex = ReadInt32BE()
+					aLocalHierarchy.localAnimOffset = ReadInt32BE()
+				Else
+					aLocalHierarchy.boneIndex = Me.theInputFileReader.ReadInt32()
+					aLocalHierarchy.boneNewParentIndex = Me.theInputFileReader.ReadInt32()
+					aLocalHierarchy.startInfluence = Me.theInputFileReader.ReadSingle()
+					aLocalHierarchy.peakInfluence = Me.theInputFileReader.ReadSingle()
+					aLocalHierarchy.tailInfluence = Me.theInputFileReader.ReadSingle()
+					aLocalHierarchy.endInfluence = Me.theInputFileReader.ReadSingle()
+					aLocalHierarchy.startFrameIndex = Me.theInputFileReader.ReadInt32()
+					aLocalHierarchy.localAnimOffset = Me.theInputFileReader.ReadInt32()
+				End If
+
 				For x As Integer = 0 To aLocalHierarchy.unused.Length - 1
-					aLocalHierarchy.unused(x) = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						aLocalHierarchy.unused(x) = ReadInt32BE()
+					Else
+						aLocalHierarchy.unused(x) = Me.theInputFileReader.ReadInt32()
+					End If
 				Next
 
 				anAnimationDesc.theLocalHierarchies.Add(aLocalHierarchy)
@@ -2127,76 +2935,151 @@ Public Class SourceMdlFile49
 					seqInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					Dim aSeqDesc As New SourceMdlSequenceDesc()
 
-					aSeqDesc.baseHeaderOffset = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.nameOffset = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.activityNameOffset = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.flags = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.activity = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.activityWeight = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.eventCount = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.eventOffset = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						aSeqDesc.baseHeaderOffset = ReadInt32BE()
+						aSeqDesc.nameOffset = ReadInt32BE()
+						aSeqDesc.activityNameOffset = ReadInt32BE()
+						aSeqDesc.flags = ReadInt32BE()
+						aSeqDesc.activity = ReadInt32BE()
+						aSeqDesc.activityWeight = ReadInt32BE()
+						aSeqDesc.eventCount = ReadInt32BE()
+						aSeqDesc.eventOffset = ReadInt32BE()
 
-					aSeqDesc.bbMin.x = Me.theInputFileReader.ReadSingle()
-					aSeqDesc.bbMin.y = Me.theInputFileReader.ReadSingle()
-					aSeqDesc.bbMin.z = Me.theInputFileReader.ReadSingle()
-					aSeqDesc.bbMax.x = Me.theInputFileReader.ReadSingle()
-					aSeqDesc.bbMax.y = Me.theInputFileReader.ReadSingle()
-					aSeqDesc.bbMax.z = Me.theInputFileReader.ReadSingle()
+						aSeqDesc.bbMin.x = ReadSingleBE()
+						aSeqDesc.bbMin.y = ReadSingleBE()
+						aSeqDesc.bbMin.z = ReadSingleBE()
+						aSeqDesc.bbMax.x = ReadSingleBE()
+						aSeqDesc.bbMax.y = ReadSingleBE()
+						aSeqDesc.bbMax.z = ReadSingleBE()
 
-					aSeqDesc.blendCount = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.animIndexOffset = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.movementIndex = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.groupSize(0) = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.groupSize(1) = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.blendCount = ReadInt32BE()
+						aSeqDesc.animIndexOffset = ReadInt32BE()
+						aSeqDesc.movementIndex = ReadInt32BE()
+						aSeqDesc.groupSize(0) = ReadInt32BE()
+						aSeqDesc.groupSize(1) = ReadInt32BE()
 
-					aSeqDesc.paramIndex(0) = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.paramIndex(1) = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.paramStart(0) = Me.theInputFileReader.ReadSingle()
-					aSeqDesc.paramStart(1) = Me.theInputFileReader.ReadSingle()
-					aSeqDesc.paramEnd(0) = Me.theInputFileReader.ReadSingle()
-					aSeqDesc.paramEnd(1) = Me.theInputFileReader.ReadSingle()
-					aSeqDesc.paramParent = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.paramIndex(0) = ReadInt32BE()
+						aSeqDesc.paramIndex(1) = ReadInt32BE()
+						aSeqDesc.paramStart(0) = ReadSingleBE()
+						aSeqDesc.paramStart(1) = ReadSingleBE()
+						aSeqDesc.paramEnd(0) = ReadSingleBE()
+						aSeqDesc.paramEnd(1) = ReadSingleBE()
+						aSeqDesc.paramParent = ReadInt32BE()
 
-					aSeqDesc.fadeInTime = Me.theInputFileReader.ReadSingle()
-					aSeqDesc.fadeOutTime = Me.theInputFileReader.ReadSingle()
+						aSeqDesc.fadeInTime = ReadSingleBE()
+						aSeqDesc.fadeOutTime = ReadSingleBE()
 
-					aSeqDesc.localEntryNodeIndex = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.localExitNodeIndex = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.nodeFlags = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.localEntryNodeIndex = ReadInt32BE()
+						aSeqDesc.localExitNodeIndex = ReadInt32BE()
+						aSeqDesc.nodeFlags = ReadInt32BE()
 
-					aSeqDesc.entryPhase = Me.theInputFileReader.ReadSingle()
-					aSeqDesc.exitPhase = Me.theInputFileReader.ReadSingle()
-					aSeqDesc.lastFrame = Me.theInputFileReader.ReadSingle()
+						aSeqDesc.entryPhase = ReadSingleBE()
+						aSeqDesc.exitPhase = ReadSingleBE()
+						aSeqDesc.lastFrame = ReadSingleBE()
 
-					aSeqDesc.nextSeq = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.pose = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.nextSeq = ReadInt32BE()
+						aSeqDesc.pose = ReadInt32BE()
 
-					aSeqDesc.ikRuleCount = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.autoLayerCount = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.autoLayerOffset = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.weightOffset = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.poseKeyOffset = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.ikRuleCount = ReadInt32BE()
+						aSeqDesc.autoLayerCount = ReadInt32BE()
+						aSeqDesc.autoLayerOffset = ReadInt32BE()
+						aSeqDesc.weightOffset = ReadInt32BE()
+						aSeqDesc.poseKeyOffset = ReadInt32BE()
 
-					aSeqDesc.ikLockCount = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.ikLockOffset = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.keyValueOffset = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.keyValueSize = Me.theInputFileReader.ReadInt32()
-					aSeqDesc.cyclePoseIndex = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.ikLockCount = ReadInt32BE()
+						aSeqDesc.ikLockOffset = ReadInt32BE()
+						aSeqDesc.keyValueOffset = ReadInt32BE()
+						aSeqDesc.keyValueSize = ReadInt32BE()
+						aSeqDesc.cyclePoseIndex = ReadInt32BE()
+					Else
+						aSeqDesc.baseHeaderOffset = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.nameOffset = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.activityNameOffset = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.flags = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.activity = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.activityWeight = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.eventCount = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.eventOffset = Me.theInputFileReader.ReadInt32()
+
+						aSeqDesc.bbMin.x = Me.theInputFileReader.ReadSingle()
+						aSeqDesc.bbMin.y = Me.theInputFileReader.ReadSingle()
+						aSeqDesc.bbMin.z = Me.theInputFileReader.ReadSingle()
+						aSeqDesc.bbMax.x = Me.theInputFileReader.ReadSingle()
+						aSeqDesc.bbMax.y = Me.theInputFileReader.ReadSingle()
+						aSeqDesc.bbMax.z = Me.theInputFileReader.ReadSingle()
+
+						aSeqDesc.blendCount = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.animIndexOffset = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.movementIndex = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.groupSize(0) = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.groupSize(1) = Me.theInputFileReader.ReadInt32()
+
+						aSeqDesc.paramIndex(0) = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.paramIndex(1) = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.paramStart(0) = Me.theInputFileReader.ReadSingle()
+						aSeqDesc.paramStart(1) = Me.theInputFileReader.ReadSingle()
+						aSeqDesc.paramEnd(0) = Me.theInputFileReader.ReadSingle()
+						aSeqDesc.paramEnd(1) = Me.theInputFileReader.ReadSingle()
+						aSeqDesc.paramParent = Me.theInputFileReader.ReadInt32()
+
+						aSeqDesc.fadeInTime = Me.theInputFileReader.ReadSingle()
+						aSeqDesc.fadeOutTime = Me.theInputFileReader.ReadSingle()
+
+						aSeqDesc.localEntryNodeIndex = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.localExitNodeIndex = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.nodeFlags = Me.theInputFileReader.ReadInt32()
+
+						aSeqDesc.entryPhase = Me.theInputFileReader.ReadSingle()
+						aSeqDesc.exitPhase = Me.theInputFileReader.ReadSingle()
+						aSeqDesc.lastFrame = Me.theInputFileReader.ReadSingle()
+
+						aSeqDesc.nextSeq = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.pose = Me.theInputFileReader.ReadInt32()
+
+						aSeqDesc.ikRuleCount = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.autoLayerCount = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.autoLayerOffset = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.weightOffset = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.poseKeyOffset = Me.theInputFileReader.ReadInt32()
+
+						aSeqDesc.ikLockCount = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.ikLockOffset = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.keyValueOffset = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.keyValueSize = Me.theInputFileReader.ReadInt32()
+						aSeqDesc.cyclePoseIndex = Me.theInputFileReader.ReadInt32()
+					End If
 
 					aSeqDesc.activityModifierOffset = 0
 					aSeqDesc.activityModifierCount = 0
 					If Me.theMdlFileData.version = 48 OrElse Me.theMdlFileData.version = 49 Then
-						aSeqDesc.activityModifierOffset = Me.theInputFileReader.ReadInt32()
-						aSeqDesc.activityModifierCount = Me.theInputFileReader.ReadInt32()
-						aSeqDesc.animTagOffset = Me.theInputFileReader.ReadInt32()
-						aSeqDesc.animTagCount = Me.theInputFileReader.ReadInt32()
-						aSeqDesc.rootDriverBoneIndex = Me.theInputFileReader.ReadInt32()
+						If Me.theMdlFileData.isBigEndian Then
+							aSeqDesc.activityModifierOffset = ReadInt32BE()
+							aSeqDesc.activityModifierCount = ReadInt32BE()
+							aSeqDesc.animTagOffset = ReadInt32BE()
+							aSeqDesc.animTagCount = ReadInt32BE()
+							aSeqDesc.rootDriverBoneIndex = ReadInt32BE()
+						Else
+							aSeqDesc.activityModifierOffset = Me.theInputFileReader.ReadInt32()
+							aSeqDesc.activityModifierCount = Me.theInputFileReader.ReadInt32()
+							aSeqDesc.animTagOffset = Me.theInputFileReader.ReadInt32()
+							aSeqDesc.animTagCount = Me.theInputFileReader.ReadInt32()
+							aSeqDesc.rootDriverBoneIndex = Me.theInputFileReader.ReadInt32()
+						End If
+
 						For x As Integer = 0 To 1
-							aSeqDesc.unused(x) = Me.theInputFileReader.ReadInt32()
+							If Me.theMdlFileData.isBigEndian Then
+								aSeqDesc.unused(x) = ReadInt32BE()
+							Else
+								aSeqDesc.unused(x) = Me.theInputFileReader.ReadInt32()
+							End If
 						Next
 					Else
 						For x As Integer = 0 To 6
-							aSeqDesc.unused(x) = Me.theInputFileReader.ReadInt32()
+							If Me.theMdlFileData.isBigEndian Then
+								aSeqDesc.unused(x) = ReadInt32BE()
+							Else
+								aSeqDesc.unused(x) = Me.theInputFileReader.ReadInt32()
+							End If
 						Next
 					End If
 
@@ -2282,7 +3165,11 @@ Public Class SourceMdlFile49
 		For j As Integer = 0 To poseKeyCount - 1
 			poseKeyInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 			Dim aPoseKey As Double
-			aPoseKey = Me.theInputFileReader.ReadSingle()
+			If Me.theMdlFileData.isBigEndian Then
+				aPoseKey = ReadSingleBE()
+			Else
+				aPoseKey = Me.theInputFileReader.ReadSingle()
+			End If
 			aSeqDesc.thePoseKeys.Add(aPoseKey)
 
 			'inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
@@ -2311,13 +3198,25 @@ Public Class SourceMdlFile49
 		For j As Integer = 0 To eventCount - 1
 			eventInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 			Dim anEvent As New SourceMdlEvent()
-			anEvent.cycle = Me.theInputFileReader.ReadSingle()
-			anEvent.eventIndex = Me.theInputFileReader.ReadInt32()
-			anEvent.eventType = Me.theInputFileReader.ReadInt32()
+			If Me.theMdlFileData.isBigEndian Then
+				anEvent.cycle = ReadSingleBE()
+				anEvent.eventIndex = ReadInt32BE()
+				anEvent.eventType = ReadInt32BE()
+			Else
+				anEvent.cycle = Me.theInputFileReader.ReadSingle()
+				anEvent.eventIndex = Me.theInputFileReader.ReadInt32()
+				anEvent.eventType = Me.theInputFileReader.ReadInt32()
+			End If
+
 			For x As Integer = 0 To anEvent.options.Length - 1
 				anEvent.options(x) = Me.theInputFileReader.ReadChar()
 			Next
-			anEvent.nameOffset = Me.theInputFileReader.ReadInt32()
+			If Me.theMdlFileData.isBigEndian Then
+				anEvent.nameOffset = ReadInt32BE()
+			Else
+				anEvent.nameOffset = Me.theInputFileReader.ReadInt32()
+			End If
+
 			aSeqDesc.theEvents.Add(anEvent)
 
 			inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
@@ -2370,13 +3269,24 @@ Public Class SourceMdlFile49
 		For j As Integer = 0 To autoLayerCount - 1
 			autoLayerInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 			Dim anAutoLayer As New SourceMdlAutoLayer()
-			anAutoLayer.sequenceIndex = Me.theInputFileReader.ReadInt16()
-			anAutoLayer.poseIndex = Me.theInputFileReader.ReadInt16()
-			anAutoLayer.flags = Me.theInputFileReader.ReadInt32()
-			anAutoLayer.influenceStart = Me.theInputFileReader.ReadSingle()
-			anAutoLayer.influencePeak = Me.theInputFileReader.ReadSingle()
-			anAutoLayer.influenceTail = Me.theInputFileReader.ReadSingle()
-			anAutoLayer.influenceEnd = Me.theInputFileReader.ReadSingle()
+			If Me.theMdlFileData.isBigEndian Then
+				anAutoLayer.sequenceIndex = ReadInt16BE()
+				anAutoLayer.poseIndex = ReadInt16BE()
+				anAutoLayer.flags = ReadInt32BE()
+				anAutoLayer.influenceStart = ReadSingleBE()
+				anAutoLayer.influencePeak = ReadSingleBE()
+				anAutoLayer.influenceTail = ReadSingleBE()
+				anAutoLayer.influenceEnd = ReadSingleBE()
+			Else
+				anAutoLayer.sequenceIndex = Me.theInputFileReader.ReadInt16()
+				anAutoLayer.poseIndex = Me.theInputFileReader.ReadInt16()
+				anAutoLayer.flags = Me.theInputFileReader.ReadInt32()
+				anAutoLayer.influenceStart = Me.theInputFileReader.ReadSingle()
+				anAutoLayer.influencePeak = Me.theInputFileReader.ReadSingle()
+				anAutoLayer.influenceTail = Me.theInputFileReader.ReadSingle()
+				anAutoLayer.influenceEnd = Me.theInputFileReader.ReadSingle()
+			End If
+
 			aSeqDesc.theAutoLayers.Add(anAutoLayer)
 
 			'NOTE: Change NaN to 0. This is needed for HL2DM\HL2\hl2_misc_dir.vpk\models\combine_soldier_anims.mdl for its "Man_Gun" $sequence.
@@ -2418,7 +3328,12 @@ Public Class SourceMdlFile49
 		For j As Integer = 0 To Me.theMdlFileData.boneCount - 1
 			weightListInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 			Dim anAnimBoneWeight As Double
-			anAnimBoneWeight = Me.theInputFileReader.ReadSingle()
+			If Me.theMdlFileData.isBigEndian Then
+				anAnimBoneWeight = ReadSingleBE()
+			Else
+				anAnimBoneWeight = Me.theInputFileReader.ReadSingle()
+			End If
+
 			aSeqDesc.theBoneWeights.Add(anAnimBoneWeight)
 
 			If anAnimBoneWeight <> 1 Then
@@ -2452,12 +3367,24 @@ Public Class SourceMdlFile49
 		For j As Integer = 0 To lockCount - 1
 			lockInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 			Dim anIkLock As New SourceMdlIkLock()
-			anIkLock.chainIndex = Me.theInputFileReader.ReadInt32()
-			anIkLock.posWeight = Me.theInputFileReader.ReadSingle()
-			anIkLock.localQWeight = Me.theInputFileReader.ReadSingle()
-			anIkLock.flags = Me.theInputFileReader.ReadInt32()
+			If Me.theMdlFileData.isBigEndian Then
+				anIkLock.chainIndex = ReadInt32BE()
+				anIkLock.posWeight = ReadSingleBE()
+				anIkLock.localQWeight = ReadSingleBE()
+				anIkLock.flags = ReadInt32BE()
+			Else
+				anIkLock.chainIndex = Me.theInputFileReader.ReadInt32()
+				anIkLock.posWeight = Me.theInputFileReader.ReadSingle()
+				anIkLock.localQWeight = Me.theInputFileReader.ReadSingle()
+				anIkLock.flags = Me.theInputFileReader.ReadInt32()
+			End If
+
 			For x As Integer = 0 To anIkLock.unused.Length - 1
-				anIkLock.unused(x) = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					anIkLock.unused(x) = ReadInt32BE()
+				Else
+					anIkLock.unused(x) = Me.theInputFileReader.ReadInt32()
+				End If
 			Next
 			aSeqDesc.theIkLocks.Add(anIkLock)
 
@@ -2485,7 +3412,12 @@ Public Class SourceMdlFile49
 		For j As Integer = 0 To animIndexCount - 1
 			animIndexInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 			Dim anAnimIndex As Short
-			anAnimIndex = Me.theInputFileReader.ReadInt16()
+			If Me.theMdlFileData.isBigEndian Then
+				anAnimIndex = ReadInt16BE()
+			Else
+				anAnimIndex = Me.theInputFileReader.ReadInt16()
+			End If
+
 			aSeqDesc.theAnimDescIndexes.Add(anAnimIndex)
 
 			If Me.theMdlFileData.theAnimationDescs IsNot Nothing AndAlso Me.theMdlFileData.theAnimationDescs.Count > anAnimIndex Then
@@ -2536,7 +3468,12 @@ Public Class SourceMdlFile49
 		For j As Integer = 0 To activityModifierCount - 1
 			activityModifierInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 			Dim anActivityModifier As New SourceMdlActivityModifier()
-			anActivityModifier.nameOffset = Me.theInputFileReader.ReadInt32()
+			If Me.theMdlFileData.isBigEndian Then
+				anActivityModifier.nameOffset = ReadInt32BE()
+			Else
+				anActivityModifier.nameOffset = Me.theInputFileReader.ReadInt32()
+			End If
+
 			aSeqDesc.theActivityModifiers.Add(anActivityModifier)
 
 			inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
@@ -2580,9 +3517,16 @@ Public Class SourceMdlFile49
 			animTagInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 
 			Dim anAnimTag As New SourceMdlAnimTag()
-			anAnimTag.tagIndex = Me.theInputFileReader.ReadInt32()
-			anAnimTag.cycle = Me.theInputFileReader.ReadSingle()
-			anAnimTag.nameOffset = Me.theInputFileReader.ReadInt32()
+			If Me.theMdlFileData.isBigEndian Then
+				anAnimTag.tagIndex = ReadInt32BE()
+				anAnimTag.cycle = ReadSingleBE()
+				anAnimTag.nameOffset = ReadInt32BE()
+			Else
+				anAnimTag.tagIndex = Me.theInputFileReader.ReadInt32()
+				anAnimTag.cycle = Me.theInputFileReader.ReadSingle()
+				anAnimTag.nameOffset = Me.theInputFileReader.ReadInt32()
+			End If
+
 			aSeqDesc.theAnimTags.Add(anAnimTag)
 
 			inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
@@ -2637,7 +3581,11 @@ Public Class SourceMdlFile49
 				For i As Integer = 0 To Me.theMdlFileData.localNodeCount - 1
 					localNodeNameInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					Dim aLocalNodeName As String
-					localNodeNameOffset = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						localNodeNameOffset = ReadInt32BE()
+					Else
+						localNodeNameOffset = Me.theInputFileReader.ReadInt32()
+					End If
 
 					inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 
@@ -2739,10 +3687,18 @@ Public Class SourceMdlFile49
 			For bodyPartIndex As Integer = 0 To Me.theMdlFileData.bodyPartCount - 1
 				bodyPartInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aBodyPart As New SourceMdlBodyPart()
-				aBodyPart.nameOffset = Me.theInputFileReader.ReadInt32()
-				aBodyPart.modelCount = Me.theInputFileReader.ReadInt32()
-				aBodyPart.base = Me.theInputFileReader.ReadInt32()
-				aBodyPart.modelOffset = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					aBodyPart.nameOffset = ReadInt32BE()
+					aBodyPart.modelCount = ReadInt32BE()
+					aBodyPart.base = ReadInt32BE()
+					aBodyPart.modelOffset = ReadInt32BE()
+				Else
+					aBodyPart.nameOffset = Me.theInputFileReader.ReadInt32()
+					aBodyPart.modelCount = Me.theInputFileReader.ReadInt32()
+					aBodyPart.base = Me.theInputFileReader.ReadInt32()
+					aBodyPart.modelOffset = Me.theInputFileReader.ReadInt32()
+				End If
+
 				Me.theMdlFileData.theBodyParts.Add(aBodyPart)
 
 				inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
@@ -2796,23 +3752,49 @@ Public Class SourceMdlFile49
 				Dim aModel As New SourceMdlModel()
 
 				aModel.name = Me.theInputFileReader.ReadChars(64)
-				aModel.type = Me.theInputFileReader.ReadInt32()
-				aModel.boundingRadius = Me.theInputFileReader.ReadSingle()
-				aModel.meshCount = Me.theInputFileReader.ReadInt32()
-				aModel.meshOffset = Me.theInputFileReader.ReadInt32()
-				aModel.vertexCount = Me.theInputFileReader.ReadInt32()
-				aModel.vertexOffset = Me.theInputFileReader.ReadInt32()
-				aModel.tangentOffset = Me.theInputFileReader.ReadInt32()
-				aModel.attachmentCount = Me.theInputFileReader.ReadInt32()
-				aModel.attachmentOffset = Me.theInputFileReader.ReadInt32()
-				aModel.eyeballCount = Me.theInputFileReader.ReadInt32()
-				aModel.eyeballOffset = Me.theInputFileReader.ReadInt32()
+
+				If Me.theMdlFileData.isBigEndian Then
+					aModel.type = ReadInt32BE()
+					aModel.boundingRadius = ReadSingleBE()
+					aModel.meshCount = ReadInt32BE()
+					aModel.meshOffset = ReadInt32BE()
+					aModel.vertexCount = ReadInt32BE()
+					aModel.vertexOffset = ReadInt32BE()
+					aModel.tangentOffset = ReadInt32BE()
+					aModel.attachmentCount = ReadInt32BE()
+					aModel.attachmentOffset = ReadInt32BE()
+					aModel.eyeballCount = ReadInt32BE()
+					aModel.eyeballOffset = ReadInt32BE()
+				Else
+					aModel.type = Me.theInputFileReader.ReadInt32()
+					aModel.boundingRadius = Me.theInputFileReader.ReadSingle()
+					aModel.meshCount = Me.theInputFileReader.ReadInt32()
+					aModel.meshOffset = Me.theInputFileReader.ReadInt32()
+					aModel.vertexCount = Me.theInputFileReader.ReadInt32()
+					aModel.vertexOffset = Me.theInputFileReader.ReadInt32()
+					aModel.tangentOffset = Me.theInputFileReader.ReadInt32()
+					aModel.attachmentCount = Me.theInputFileReader.ReadInt32()
+					aModel.attachmentOffset = Me.theInputFileReader.ReadInt32()
+					aModel.eyeballCount = Me.theInputFileReader.ReadInt32()
+					aModel.eyeballOffset = Me.theInputFileReader.ReadInt32()
+				End If
+
 				Dim modelVertexData As New SourceMdlModelVertexData()
-				modelVertexData.vertexDataP = Me.theInputFileReader.ReadInt32()
-				modelVertexData.tangentDataP = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					modelVertexData.vertexDataP = ReadInt32BE()
+					modelVertexData.tangentDataP = ReadInt32BE()
+				Else
+					modelVertexData.vertexDataP = Me.theInputFileReader.ReadInt32()
+					modelVertexData.tangentDataP = Me.theInputFileReader.ReadInt32()
+				End If
+
 				aModel.vertexData = modelVertexData
 				For x As Integer = 0 To 7
-					aModel.unused(x) = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						aModel.unused(x) = ReadInt32BE()
+					Else
+						aModel.unused(x) = Me.theInputFileReader.ReadInt32()
+					End If
 				Next
 
 				aBodyPart.theModels.Add(aModel)
@@ -2852,26 +3834,55 @@ Public Class SourceMdlFile49
 				meshInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aMesh As New SourceMdlMesh()
 
-				aMesh.materialIndex = Me.theInputFileReader.ReadInt32()
-				aMesh.modelOffset = Me.theInputFileReader.ReadInt32()
-				aMesh.vertexCount = Me.theInputFileReader.ReadInt32()
-				aMesh.vertexIndexStart = Me.theInputFileReader.ReadInt32()
-				aMesh.flexCount = Me.theInputFileReader.ReadInt32()
-				aMesh.flexOffset = Me.theInputFileReader.ReadInt32()
-				aMesh.materialType = Me.theInputFileReader.ReadInt32()
-				aMesh.materialParam = Me.theInputFileReader.ReadInt32()
-				aMesh.id = Me.theInputFileReader.ReadInt32()
-				aMesh.centerX = Me.theInputFileReader.ReadSingle()
-				aMesh.centerY = Me.theInputFileReader.ReadSingle()
-				aMesh.centerZ = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					aMesh.materialIndex = ReadInt32BE()
+					aMesh.modelOffset = ReadInt32BE()
+					aMesh.vertexCount = ReadInt32BE()
+					aMesh.vertexIndexStart = ReadInt32BE()
+					aMesh.flexCount = ReadInt32BE()
+					aMesh.flexOffset = ReadInt32BE()
+					aMesh.materialType = ReadInt32BE()
+					aMesh.materialParam = ReadInt32BE()
+					aMesh.id = ReadInt32BE()
+					aMesh.centerX = ReadSingleBE()
+					aMesh.centerY = ReadSingleBE()
+					aMesh.centerZ = ReadSingleBE()
+				Else
+					aMesh.materialIndex = Me.theInputFileReader.ReadInt32()
+					aMesh.modelOffset = Me.theInputFileReader.ReadInt32()
+					aMesh.vertexCount = Me.theInputFileReader.ReadInt32()
+					aMesh.vertexIndexStart = Me.theInputFileReader.ReadInt32()
+					aMesh.flexCount = Me.theInputFileReader.ReadInt32()
+					aMesh.flexOffset = Me.theInputFileReader.ReadInt32()
+					aMesh.materialType = Me.theInputFileReader.ReadInt32()
+					aMesh.materialParam = Me.theInputFileReader.ReadInt32()
+					aMesh.id = Me.theInputFileReader.ReadInt32()
+					aMesh.centerX = Me.theInputFileReader.ReadSingle()
+					aMesh.centerY = Me.theInputFileReader.ReadSingle()
+					aMesh.centerZ = Me.theInputFileReader.ReadSingle()
+				End If
+
 				Dim meshVertexData As New SourceMdlMeshVertexData()
-				meshVertexData.modelVertexDataP = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					meshVertexData.modelVertexDataP = ReadInt32BE()
+				Else
+					meshVertexData.modelVertexDataP = Me.theInputFileReader.ReadInt32()
+				End If
+
 				For x As Integer = 0 To MAX_NUM_LODS - 1
-					meshVertexData.lodVertexCount(x) = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						meshVertexData.lodVertexCount(x) = ReadInt32BE()
+					Else
+						meshVertexData.lodVertexCount(x) = Me.theInputFileReader.ReadInt32()
+					End If
 				Next
 				aMesh.vertexData = meshVertexData
 				For x As Integer = 0 To 7
-					aMesh.unused(x) = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						aMesh.unused(x) = ReadInt32BE()
+					Else
+						aMesh.unused(x) = Me.theInputFileReader.ReadInt32()
+					End If
 				Next
 
 				aModel.theMeshes.Add(aMesh)
@@ -2914,46 +3925,99 @@ Public Class SourceMdlFile49
 				eyeballInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim anEyeball As New SourceMdlEyeball()
 
-				anEyeball.nameOffset = Me.theInputFileReader.ReadInt32()
-				anEyeball.boneIndex = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					anEyeball.nameOffset = ReadInt32BE()
+					anEyeball.boneIndex = ReadInt32BE()
+				Else
+					anEyeball.nameOffset = Me.theInputFileReader.ReadInt32()
+					anEyeball.boneIndex = Me.theInputFileReader.ReadInt32()
+				End If
+
 				anEyeball.org = New SourceVector()
-				anEyeball.org.x = Me.theInputFileReader.ReadSingle()
-				anEyeball.org.y = Me.theInputFileReader.ReadSingle()
-				anEyeball.org.z = Me.theInputFileReader.ReadSingle()
-				anEyeball.zOffset = Me.theInputFileReader.ReadSingle()
-				anEyeball.radius = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					anEyeball.org.x = ReadSingleBE()
+					anEyeball.org.y = ReadSingleBE()
+					anEyeball.org.z = ReadSingleBE()
+					anEyeball.zOffset = ReadSingleBE()
+					anEyeball.radius = ReadSingleBE()
+				Else
+					anEyeball.org.x = Me.theInputFileReader.ReadSingle()
+					anEyeball.org.y = Me.theInputFileReader.ReadSingle()
+					anEyeball.org.z = Me.theInputFileReader.ReadSingle()
+					anEyeball.zOffset = Me.theInputFileReader.ReadSingle()
+					anEyeball.radius = Me.theInputFileReader.ReadSingle()
+				End If
+
 				anEyeball.up = New SourceVector()
-				anEyeball.up.x = Me.theInputFileReader.ReadSingle()
-				anEyeball.up.y = Me.theInputFileReader.ReadSingle()
-				anEyeball.up.z = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					anEyeball.up.x = ReadSingleBE()
+					anEyeball.up.y = ReadSingleBE()
+					anEyeball.up.z = ReadSingleBE()
+				Else
+					anEyeball.up.x = Me.theInputFileReader.ReadSingle()
+					anEyeball.up.y = Me.theInputFileReader.ReadSingle()
+					anEyeball.up.z = Me.theInputFileReader.ReadSingle()
+				End If
+
 				anEyeball.forward = New SourceVector()
-				anEyeball.forward.x = Me.theInputFileReader.ReadSingle()
-				anEyeball.forward.y = Me.theInputFileReader.ReadSingle()
-				anEyeball.forward.z = Me.theInputFileReader.ReadSingle()
-				anEyeball.texture = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					anEyeball.forward.x = ReadSingleBE()
+					anEyeball.forward.y = ReadSingleBE()
+					anEyeball.forward.z = ReadSingleBE()
+					anEyeball.texture = ReadInt32BE()
 
-				anEyeball.unused1 = Me.theInputFileReader.ReadInt32()
-				anEyeball.irisScale = Me.theInputFileReader.ReadSingle()
-				anEyeball.unused2 = Me.theInputFileReader.ReadInt32()
+					anEyeball.unused1 = ReadInt32BE()
+					anEyeball.irisScale = ReadSingleBE()
+					anEyeball.unused2 = ReadInt32BE()
 
-				anEyeball.upperFlexDesc(0) = Me.theInputFileReader.ReadInt32()
-				anEyeball.upperFlexDesc(1) = Me.theInputFileReader.ReadInt32()
-				anEyeball.upperFlexDesc(2) = Me.theInputFileReader.ReadInt32()
-				anEyeball.lowerFlexDesc(0) = Me.theInputFileReader.ReadInt32()
-				anEyeball.lowerFlexDesc(1) = Me.theInputFileReader.ReadInt32()
-				anEyeball.lowerFlexDesc(2) = Me.theInputFileReader.ReadInt32()
-				anEyeball.upperTarget(0) = Me.theInputFileReader.ReadSingle()
-				anEyeball.upperTarget(1) = Me.theInputFileReader.ReadSingle()
-				anEyeball.upperTarget(2) = Me.theInputFileReader.ReadSingle()
-				anEyeball.lowerTarget(0) = Me.theInputFileReader.ReadSingle()
-				anEyeball.lowerTarget(1) = Me.theInputFileReader.ReadSingle()
-				anEyeball.lowerTarget(2) = Me.theInputFileReader.ReadSingle()
+					anEyeball.upperFlexDesc(0) = ReadInt32BE()
+					anEyeball.upperFlexDesc(1) = ReadInt32BE()
+					anEyeball.upperFlexDesc(2) = ReadInt32BE()
+					anEyeball.lowerFlexDesc(0) = ReadInt32BE()
+					anEyeball.lowerFlexDesc(1) = ReadInt32BE()
+					anEyeball.lowerFlexDesc(2) = ReadInt32BE()
+					anEyeball.upperTarget(0) = ReadSingleBE()
+					anEyeball.upperTarget(1) = ReadSingleBE()
+					anEyeball.upperTarget(2) = ReadSingleBE()
+					anEyeball.lowerTarget(0) = ReadSingleBE()
+					anEyeball.lowerTarget(1) = ReadSingleBE()
+					anEyeball.lowerTarget(2) = ReadSingleBE()
 
-				anEyeball.upperLidFlexDesc = Me.theInputFileReader.ReadInt32()
-				anEyeball.lowerLidFlexDesc = Me.theInputFileReader.ReadInt32()
+					anEyeball.upperLidFlexDesc = ReadInt32BE()
+					anEyeball.lowerLidFlexDesc = ReadInt32BE()
+				Else
+					anEyeball.forward.x = Me.theInputFileReader.ReadSingle()
+					anEyeball.forward.y = Me.theInputFileReader.ReadSingle()
+					anEyeball.forward.z = Me.theInputFileReader.ReadSingle()
+					anEyeball.texture = Me.theInputFileReader.ReadInt32()
+
+					anEyeball.unused1 = Me.theInputFileReader.ReadInt32()
+					anEyeball.irisScale = Me.theInputFileReader.ReadSingle()
+					anEyeball.unused2 = Me.theInputFileReader.ReadInt32()
+
+					anEyeball.upperFlexDesc(0) = Me.theInputFileReader.ReadInt32()
+					anEyeball.upperFlexDesc(1) = Me.theInputFileReader.ReadInt32()
+					anEyeball.upperFlexDesc(2) = Me.theInputFileReader.ReadInt32()
+					anEyeball.lowerFlexDesc(0) = Me.theInputFileReader.ReadInt32()
+					anEyeball.lowerFlexDesc(1) = Me.theInputFileReader.ReadInt32()
+					anEyeball.lowerFlexDesc(2) = Me.theInputFileReader.ReadInt32()
+					anEyeball.upperTarget(0) = Me.theInputFileReader.ReadSingle()
+					anEyeball.upperTarget(1) = Me.theInputFileReader.ReadSingle()
+					anEyeball.upperTarget(2) = Me.theInputFileReader.ReadSingle()
+					anEyeball.lowerTarget(0) = Me.theInputFileReader.ReadSingle()
+					anEyeball.lowerTarget(1) = Me.theInputFileReader.ReadSingle()
+					anEyeball.lowerTarget(2) = Me.theInputFileReader.ReadSingle()
+
+					anEyeball.upperLidFlexDesc = Me.theInputFileReader.ReadInt32()
+					anEyeball.lowerLidFlexDesc = Me.theInputFileReader.ReadInt32()
+				End If
 
 				For x As Integer = 0 To anEyeball.unused.Length - 1
-					anEyeball.unused(x) = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						anEyeball.unused(x) = ReadInt32BE()
+					Else
+						anEyeball.unused(x) = Me.theInputFileReader.ReadInt32()
+					End If
 				Next
 
 				anEyeball.eyeballIsNonFacs = Me.theInputFileReader.ReadByte()
@@ -2962,7 +4026,11 @@ Public Class SourceMdlFile49
 					anEyeball.unused3(x) = Me.theInputFileReader.ReadChar()
 				Next
 				For x As Integer = 0 To anEyeball.unused4.Length - 1
-					anEyeball.unused4(x) = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						anEyeball.unused4(x) = ReadInt32BE()
+					Else
+						anEyeball.unused4(x) = Me.theInputFileReader.ReadInt32()
+					End If
 				Next
 
 				aModel.theEyeballs.Add(anEyeball)
@@ -3032,23 +4100,43 @@ Public Class SourceMdlFile49
 			flexInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 			Dim aFlex As New SourceMdlFlex()
 
-			aFlex.flexDescIndex = Me.theInputFileReader.ReadInt32()
+			If Me.theMdlFileData.isBigEndian Then
+				aFlex.flexDescIndex = ReadInt32BE()
 
-			aFlex.target0 = Me.theInputFileReader.ReadSingle()
-			aFlex.target1 = Me.theInputFileReader.ReadSingle()
-			aFlex.target2 = Me.theInputFileReader.ReadSingle()
-			aFlex.target3 = Me.theInputFileReader.ReadSingle()
+				aFlex.target0 = ReadSingleBE()
+				aFlex.target1 = ReadSingleBE()
+				aFlex.target2 = ReadSingleBE()
+				aFlex.target3 = ReadSingleBE()
 
-			aFlex.vertCount = Me.theInputFileReader.ReadInt32()
-			aFlex.vertOffset = Me.theInputFileReader.ReadInt32()
+				aFlex.vertCount = ReadInt32BE()
+				aFlex.vertOffset = ReadInt32BE()
 
-			aFlex.flexDescPartnerIndex = Me.theInputFileReader.ReadInt32()
+				aFlex.flexDescPartnerIndex = ReadInt32BE()
+			Else
+				aFlex.flexDescIndex = Me.theInputFileReader.ReadInt32()
+
+				aFlex.target0 = Me.theInputFileReader.ReadSingle()
+				aFlex.target1 = Me.theInputFileReader.ReadSingle()
+				aFlex.target2 = Me.theInputFileReader.ReadSingle()
+				aFlex.target3 = Me.theInputFileReader.ReadSingle()
+
+				aFlex.vertCount = Me.theInputFileReader.ReadInt32()
+				aFlex.vertOffset = Me.theInputFileReader.ReadInt32()
+
+				aFlex.flexDescPartnerIndex = Me.theInputFileReader.ReadInt32()
+			End If
+
 			aFlex.vertAnimType = Me.theInputFileReader.ReadByte()
+
 			For x As Integer = 0 To aFlex.unusedChar.Length - 1
 				aFlex.unusedChar(x) = Me.theInputFileReader.ReadChar()
 			Next
 			For x As Integer = 0 To aFlex.unused.Length - 1
-				aFlex.unused(x) = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					aFlex.unused(x) = ReadInt32BE()
+				Else
+					aFlex.unused(x) = Me.theInputFileReader.ReadInt32()
+				End If
 			Next
 			aMesh.theFlexes.Add(aFlex)
 
@@ -3093,19 +4181,36 @@ Public Class SourceMdlFile49
 				aVertAnim = New SourceMdlVertAnim()
 			End If
 
-			aVertAnim.index = Me.theInputFileReader.ReadUInt16()
+			If Me.theMdlFileData.isBigEndian Then
+				aVertAnim.index = ReadUInt16BE()
+			Else
+				aVertAnim.index = Me.theInputFileReader.ReadUInt16()
+			End If
+
 			aVertAnim.speed = Me.theInputFileReader.ReadByte()
 			aVertAnim.side = Me.theInputFileReader.ReadByte()
 
 			For x As Integer = 0 To 2
-				aVertAnim.deltaUShort(x) = Me.theInputFileReader.ReadUInt16()
+				If Me.theMdlFileData.isBigEndian Then
+					aVertAnim.deltaUShort(x) = ReadUInt16BE()
+				Else
+					aVertAnim.deltaUShort(x) = Me.theInputFileReader.ReadUInt16()
+				End If
 			Next
 			For x As Integer = 0 To 2
-				aVertAnim.nDeltaUShort(x) = Me.theInputFileReader.ReadUInt16()
+				If Me.theMdlFileData.isBigEndian Then
+					aVertAnim.nDeltaUShort(x) = ReadUInt16BE()
+				Else
+					aVertAnim.nDeltaUShort(x) = Me.theInputFileReader.ReadUInt16()
+				End If
 			Next
 
 			If aFlex.vertAnimType = aFlex.STUDIO_VERT_ANIM_WRINKLE Then
-				CType(aVertAnim, SourceMdlVertAnimWrinkle).wrinkleDelta = Me.theInputFileReader.ReadInt16()
+				If Me.theMdlFileData.isBigEndian Then
+					CType(aVertAnim, SourceMdlVertAnimWrinkle).wrinkleDelta = ReadInt16BE()
+				Else
+					CType(aVertAnim, SourceMdlVertAnimWrinkle).wrinkleDelta = Me.theInputFileReader.ReadInt16()
+				End If
 			End If
 
 			aFlex.theVertAnims.Add(aVertAnim)
@@ -3143,7 +4248,12 @@ Public Class SourceMdlFile49
 			For i As Integer = 0 To Me.theMdlFileData.flexDescCount - 1
 				flexDescInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aFlexDesc As New SourceMdlFlexDesc()
-				aFlexDesc.nameOffset = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					aFlexDesc.nameOffset = ReadInt32BE()
+				Else
+					aFlexDesc.nameOffset = Me.theInputFileReader.ReadInt32()
+				End If
+
 				Me.theMdlFileData.theFlexDescs.Add(aFlexDesc)
 
 				inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
@@ -3186,11 +4296,20 @@ Public Class SourceMdlFile49
 			For i As Integer = 0 To Me.theMdlFileData.flexControllerCount - 1
 				flexControllerInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aFlexController As New SourceMdlFlexController()
-				aFlexController.typeOffset = Me.theInputFileReader.ReadInt32()
-				aFlexController.nameOffset = Me.theInputFileReader.ReadInt32()
-				aFlexController.localToGlobal = Me.theInputFileReader.ReadInt32()
-				aFlexController.min = Me.theInputFileReader.ReadSingle()
-				aFlexController.max = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					aFlexController.typeOffset = ReadInt32BE()
+					aFlexController.nameOffset = ReadInt32BE()
+					aFlexController.localToGlobal = ReadInt32BE()
+					aFlexController.min = ReadSingleBE()
+					aFlexController.max = ReadSingleBE()
+				Else
+					aFlexController.typeOffset = Me.theInputFileReader.ReadInt32()
+					aFlexController.nameOffset = Me.theInputFileReader.ReadInt32()
+					aFlexController.localToGlobal = Me.theInputFileReader.ReadInt32()
+					aFlexController.min = Me.theInputFileReader.ReadSingle()
+					aFlexController.max = Me.theInputFileReader.ReadSingle()
+				End If
+
 				Me.theMdlFileData.theFlexControllers.Add(aFlexController)
 
 				inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
@@ -3270,9 +4389,16 @@ Public Class SourceMdlFile49
 			For i As Integer = 0 To Me.theMdlFileData.flexRuleCount - 1
 				flexRuleInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aFlexRule As New SourceMdlFlexRule()
-				aFlexRule.flexIndex = Me.theInputFileReader.ReadInt32()
-				aFlexRule.opCount = Me.theInputFileReader.ReadInt32()
-				aFlexRule.opOffset = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					aFlexRule.flexIndex = ReadInt32BE()
+					aFlexRule.opCount = ReadInt32BE()
+					aFlexRule.opOffset = ReadInt32BE()
+				Else
+					aFlexRule.flexIndex = Me.theInputFileReader.ReadInt32()
+					aFlexRule.opCount = Me.theInputFileReader.ReadInt32()
+					aFlexRule.opOffset = Me.theInputFileReader.ReadInt32()
+				End If
+
 				Me.theMdlFileData.theFlexRules.Add(aFlexRule)
 
 				inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
@@ -3310,11 +4436,25 @@ Public Class SourceMdlFile49
 		For i As Integer = 0 To aFlexRule.opCount - 1
 			'flexRuleInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 			Dim aFlexOp As New SourceMdlFlexOp()
-			aFlexOp.op = Me.theInputFileReader.ReadInt32()
-			If aFlexOp.op = SourceMdlFlexOp.STUDIO_CONST Then
-				aFlexOp.value = Me.theInputFileReader.ReadSingle()
+			If Me.theMdlFileData.isBigEndian Then
+				aFlexOp.op = ReadInt32BE()
 			Else
-				aFlexOp.index = Me.theInputFileReader.ReadInt32()
+				aFlexOp.op = Me.theInputFileReader.ReadInt32()
+			End If
+
+			If aFlexOp.op = SourceMdlFlexOp.STUDIO_CONST Then
+				If Me.theMdlFileData.isBigEndian Then
+					aFlexOp.value = ReadSingleBE()
+				Else
+					aFlexOp.value = Me.theInputFileReader.ReadSingle()
+				End If
+			Else
+				If Me.theMdlFileData.isBigEndian Then
+					aFlexOp.index = ReadInt32BE()
+				Else
+					aFlexOp.index = Me.theInputFileReader.ReadInt32()
+				End If
+
 				If aFlexOp.op = SourceMdlFlexOp.STUDIO_FETCH2 Then
 					Me.theMdlFileData.theFlexDescs(aFlexOp.index).theDescIsUsedByFlexRule = True
 				End If
@@ -3346,10 +4486,18 @@ Public Class SourceMdlFile49
 			For i As Integer = 0 To Me.theMdlFileData.ikChainCount - 1
 				ikChainInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim anIkChain As New SourceMdlIkChain()
-				anIkChain.nameOffset = Me.theInputFileReader.ReadInt32()
-				anIkChain.linkType = Me.theInputFileReader.ReadInt32()
-				anIkChain.linkCount = Me.theInputFileReader.ReadInt32()
-				anIkChain.linkOffset = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					anIkChain.nameOffset = ReadInt32BE()
+					anIkChain.linkType = ReadInt32BE()
+					anIkChain.linkCount = ReadInt32BE()
+					anIkChain.linkOffset = ReadInt32BE()
+				Else
+					anIkChain.nameOffset = Me.theInputFileReader.ReadInt32()
+					anIkChain.linkType = Me.theInputFileReader.ReadInt32()
+					anIkChain.linkCount = Me.theInputFileReader.ReadInt32()
+					anIkChain.linkOffset = Me.theInputFileReader.ReadInt32()
+				End If
+
 				Me.theMdlFileData.theIkChains.Add(anIkChain)
 
 				inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
@@ -3393,13 +4541,24 @@ Public Class SourceMdlFile49
 			For j As Integer = 0 To anIkChain.linkCount - 1
 				'ikLinkInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim anIkLink As New SourceMdlIkLink()
-				anIkLink.boneIndex = Me.theInputFileReader.ReadInt32()
-				anIkLink.idealBendingDirection.x = Me.theInputFileReader.ReadSingle()
-				anIkLink.idealBendingDirection.y = Me.theInputFileReader.ReadSingle()
-				anIkLink.idealBendingDirection.z = Me.theInputFileReader.ReadSingle()
-				anIkLink.unused0.x = Me.theInputFileReader.ReadSingle()
-				anIkLink.unused0.y = Me.theInputFileReader.ReadSingle()
-				anIkLink.unused0.z = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					anIkLink.boneIndex = ReadInt32BE()
+					anIkLink.idealBendingDirection.x = ReadSingleBE()
+					anIkLink.idealBendingDirection.y = ReadSingleBE()
+					anIkLink.idealBendingDirection.z = ReadSingleBE()
+					anIkLink.unused0.x = ReadSingleBE()
+					anIkLink.unused0.y = ReadSingleBE()
+					anIkLink.unused0.z = ReadSingleBE()
+				Else
+					anIkLink.boneIndex = Me.theInputFileReader.ReadInt32()
+					anIkLink.idealBendingDirection.x = Me.theInputFileReader.ReadSingle()
+					anIkLink.idealBendingDirection.y = Me.theInputFileReader.ReadSingle()
+					anIkLink.idealBendingDirection.z = Me.theInputFileReader.ReadSingle()
+					anIkLink.unused0.x = Me.theInputFileReader.ReadSingle()
+					anIkLink.unused0.y = Me.theInputFileReader.ReadSingle()
+					anIkLink.unused0.z = Me.theInputFileReader.ReadSingle()
+				End If
+
 				anIkChain.theLinks.Add(anIkLink)
 
 				'inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
@@ -3428,12 +4587,24 @@ Public Class SourceMdlFile49
 			For i As Integer = 0 To Me.theMdlFileData.localIkAutoPlayLockCount - 1
 				'ikChainInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim anIkLock As New SourceMdlIkLock()
-				anIkLock.chainIndex = Me.theInputFileReader.ReadInt32()
-				anIkLock.posWeight = Me.theInputFileReader.ReadSingle()
-				anIkLock.localQWeight = Me.theInputFileReader.ReadSingle()
-				anIkLock.flags = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					anIkLock.chainIndex = ReadInt32BE()
+					anIkLock.posWeight = ReadSingleBE()
+					anIkLock.localQWeight = ReadSingleBE()
+					anIkLock.flags = ReadInt32BE()
+				Else
+					anIkLock.chainIndex = Me.theInputFileReader.ReadInt32()
+					anIkLock.posWeight = Me.theInputFileReader.ReadSingle()
+					anIkLock.localQWeight = Me.theInputFileReader.ReadSingle()
+					anIkLock.flags = Me.theInputFileReader.ReadInt32()
+				End If
+
 				For x As Integer = 0 To anIkLock.unused.Length - 1
-					anIkLock.unused(x) = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						anIkLock.unused(x) = ReadInt32BE()
+					Else
+						anIkLock.unused(x) = Me.theInputFileReader.ReadInt32()
+					End If
 				Next
 				Me.theMdlFileData.theIkLocks.Add(anIkLock)
 
@@ -3464,11 +4635,19 @@ Public Class SourceMdlFile49
 				'mouthInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aMouth As New SourceMdlMouth()
 
-				aMouth.boneIndex = Me.theInputFileReader.ReadInt32()
-				aMouth.forward.x = Me.theInputFileReader.ReadSingle()
-				aMouth.forward.y = Me.theInputFileReader.ReadSingle()
-				aMouth.forward.z = Me.theInputFileReader.ReadSingle()
-				aMouth.flexDescIndex = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					aMouth.boneIndex = ReadInt32BE()
+					aMouth.forward.x = ReadSingleBE()
+					aMouth.forward.y = ReadSingleBE()
+					aMouth.forward.z = ReadSingleBE()
+					aMouth.flexDescIndex = ReadInt32BE()
+				Else
+					aMouth.boneIndex = Me.theInputFileReader.ReadInt32()
+					aMouth.forward.x = Me.theInputFileReader.ReadSingle()
+					aMouth.forward.y = Me.theInputFileReader.ReadSingle()
+					aMouth.forward.z = Me.theInputFileReader.ReadSingle()
+					aMouth.flexDescIndex = Me.theInputFileReader.ReadInt32()
+				End If
 
 				Me.theMdlFileData.theMouths.Add(aMouth)
 
@@ -3504,11 +4683,20 @@ Public Class SourceMdlFile49
 			For i As Integer = 0 To Me.theMdlFileData.localPoseParamaterCount - 1
 				poseInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aPoseParamDesc As New SourceMdlPoseParamDesc()
-				aPoseParamDesc.nameOffset = Me.theInputFileReader.ReadInt32()
-				aPoseParamDesc.flags = Me.theInputFileReader.ReadInt32()
-				aPoseParamDesc.startingValue = Me.theInputFileReader.ReadSingle()
-				aPoseParamDesc.endingValue = Me.theInputFileReader.ReadSingle()
-				aPoseParamDesc.loopingRange = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					aPoseParamDesc.nameOffset = ReadInt32BE()
+					aPoseParamDesc.flags = ReadInt32BE()
+					aPoseParamDesc.startingValue = ReadSingleBE()
+					aPoseParamDesc.endingValue = ReadSingleBE()
+					aPoseParamDesc.loopingRange = ReadSingleBE()
+				Else
+					aPoseParamDesc.nameOffset = Me.theInputFileReader.ReadInt32()
+					aPoseParamDesc.flags = Me.theInputFileReader.ReadInt32()
+					aPoseParamDesc.startingValue = Me.theInputFileReader.ReadSingle()
+					aPoseParamDesc.endingValue = Me.theInputFileReader.ReadSingle()
+					aPoseParamDesc.loopingRange = Me.theInputFileReader.ReadSingle()
+				End If
+
 				Me.theMdlFileData.thePoseParamDescs.Add(aPoseParamDesc)
 
 				inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
@@ -3552,14 +4740,28 @@ Public Class SourceMdlFile49
 			For i As Integer = 0 To Me.theMdlFileData.textureCount - 1
 				textureInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aTexture As New SourceMdlTexture()
-				aTexture.nameOffset = Me.theInputFileReader.ReadInt32()
-				aTexture.flags = Me.theInputFileReader.ReadInt32()
-				aTexture.used = Me.theInputFileReader.ReadInt32()
-				aTexture.unused1 = Me.theInputFileReader.ReadInt32()
-				aTexture.materialP = Me.theInputFileReader.ReadInt32()
-				aTexture.clientMaterialP = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					aTexture.nameOffset = ReadInt32BE()
+					aTexture.flags = ReadInt32BE()
+					aTexture.used = ReadInt32BE()
+					aTexture.unused1 = ReadInt32BE()
+					aTexture.materialP = ReadInt32BE()
+					aTexture.clientMaterialP = ReadInt32BE()
+				Else
+					aTexture.nameOffset = Me.theInputFileReader.ReadInt32()
+					aTexture.flags = Me.theInputFileReader.ReadInt32()
+					aTexture.used = Me.theInputFileReader.ReadInt32()
+					aTexture.unused1 = Me.theInputFileReader.ReadInt32()
+					aTexture.materialP = Me.theInputFileReader.ReadInt32()
+					aTexture.clientMaterialP = Me.theInputFileReader.ReadInt32()
+				End If
+
 				For x As Integer = 0 To 9
-					aTexture.unused(x) = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						aTexture.unused(x) = ReadInt32BE()
+					Else
+						aTexture.unused(x) = Me.theInputFileReader.ReadInt32()
+					End If
 				Next
 				Me.theMdlFileData.theTextures.Add(aTexture)
 
@@ -3610,7 +4812,11 @@ Public Class SourceMdlFile49
 				For i As Integer = 0 To Me.theMdlFileData.texturePathCount - 1
 					texturePathInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					Dim aTexturePath As String
-					texturePathOffset = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						texturePathOffset = ReadInt32BE()
+					Else
+						texturePathOffset = Me.theInputFileReader.ReadInt32()
+					End If
 
 					inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 
@@ -3664,7 +4870,11 @@ Public Class SourceMdlFile49
 
 				For j As Integer = 0 To Me.theMdlFileData.skinReferenceCount - 1
 					Dim aSkinRef As Short
-					aSkinRef = Me.theInputFileReader.ReadInt16()
+					If Me.theMdlFileData.isBigEndian Then
+						aSkinRef = ReadInt16BE()
+					Else
+						aSkinRef = Me.theInputFileReader.ReadInt16()
+					End If
 					aSkinFamily.Add(aSkinRef)
 				Next
 
@@ -3725,8 +4935,14 @@ Public Class SourceMdlFile49
 			For i As Integer = 0 To Me.theMdlFileData.includeModelCount - 1
 				includeModelInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aModelGroup As New SourceMdlModelGroup()
-				aModelGroup.labelOffset = Me.theInputFileReader.ReadInt32()
-				aModelGroup.fileNameOffset = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					aModelGroup.labelOffset = ReadInt32BE()
+					aModelGroup.fileNameOffset = ReadInt32BE()
+				Else
+					aModelGroup.labelOffset = Me.theInputFileReader.ReadInt32()
+					aModelGroup.fileNameOffset = Me.theInputFileReader.ReadInt32()
+				End If
+
 				Me.theMdlFileData.theModelGroups.Add(aModelGroup)
 
 				inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
@@ -3782,10 +4998,18 @@ Public Class SourceMdlFile49
 			For i As Integer = 0 To Me.theMdlFileData.flexControllerUiCount - 1
 				flexControllerUiInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aFlexControllerUi As New SourceMdlFlexControllerUi()
-				aFlexControllerUi.nameOffset = Me.theInputFileReader.ReadInt32()
-				aFlexControllerUi.config0 = Me.theInputFileReader.ReadInt32()
-				aFlexControllerUi.config1 = Me.theInputFileReader.ReadInt32()
-				aFlexControllerUi.config2 = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					aFlexControllerUi.nameOffset = ReadInt32BE()
+					aFlexControllerUi.config0 = ReadInt32BE()
+					aFlexControllerUi.config1 = ReadInt32BE()
+					aFlexControllerUi.config2 = ReadInt32BE()
+				Else
+					aFlexControllerUi.nameOffset = Me.theInputFileReader.ReadInt32()
+					aFlexControllerUi.config0 = Me.theInputFileReader.ReadInt32()
+					aFlexControllerUi.config1 = Me.theInputFileReader.ReadInt32()
+					aFlexControllerUi.config2 = Me.theInputFileReader.ReadInt32()
+				End If
+
 				aFlexControllerUi.remapType = Me.theInputFileReader.ReadByte()
 				aFlexControllerUi.controlIsStereo = Me.theInputFileReader.ReadByte()
 				For x As Integer = 0 To aFlexControllerUi.unused.Length - 1
@@ -3914,41 +5138,75 @@ Public Class SourceMdlFile49
 				boneInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aBoneTransform As New SourceMdlBoneTransform()
 
-				aBoneTransform.nameOffset = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					aBoneTransform.nameOffset = ReadInt32BE()
+				Else
+					aBoneTransform.nameOffset = Me.theInputFileReader.ReadInt32()
+				End If
 
 				aBoneTransform.preTransformColumn0 = New SourceVector()
 				aBoneTransform.preTransformColumn1 = New SourceVector()
 				aBoneTransform.preTransformColumn2 = New SourceVector()
 				aBoneTransform.preTransformColumn3 = New SourceVector()
-				aBoneTransform.preTransformColumn0.x = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.preTransformColumn1.x = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.preTransformColumn2.x = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.preTransformColumn3.x = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.preTransformColumn0.y = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.preTransformColumn1.y = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.preTransformColumn2.y = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.preTransformColumn3.y = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.preTransformColumn0.z = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.preTransformColumn1.z = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.preTransformColumn2.z = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.preTransformColumn3.z = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					aBoneTransform.preTransformColumn0.x = ReadSingleBE()
+					aBoneTransform.preTransformColumn1.x = ReadSingleBE()
+					aBoneTransform.preTransformColumn2.x = ReadSingleBE()
+					aBoneTransform.preTransformColumn3.x = ReadSingleBE()
+					aBoneTransform.preTransformColumn0.y = ReadSingleBE()
+					aBoneTransform.preTransformColumn1.y = ReadSingleBE()
+					aBoneTransform.preTransformColumn2.y = ReadSingleBE()
+					aBoneTransform.preTransformColumn3.y = ReadSingleBE()
+					aBoneTransform.preTransformColumn0.z = ReadSingleBE()
+					aBoneTransform.preTransformColumn1.z = ReadSingleBE()
+					aBoneTransform.preTransformColumn2.z = ReadSingleBE()
+					aBoneTransform.preTransformColumn3.z = ReadSingleBE()
+				Else
+					aBoneTransform.preTransformColumn0.x = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.preTransformColumn1.x = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.preTransformColumn2.x = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.preTransformColumn3.x = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.preTransformColumn0.y = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.preTransformColumn1.y = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.preTransformColumn2.y = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.preTransformColumn3.y = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.preTransformColumn0.z = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.preTransformColumn1.z = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.preTransformColumn2.z = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.preTransformColumn3.z = Me.theInputFileReader.ReadSingle()
+				End If
 
 				aBoneTransform.postTransformColumn0 = New SourceVector()
 				aBoneTransform.postTransformColumn1 = New SourceVector()
 				aBoneTransform.postTransformColumn2 = New SourceVector()
 				aBoneTransform.postTransformColumn3 = New SourceVector()
-				aBoneTransform.postTransformColumn0.x = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.postTransformColumn1.x = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.postTransformColumn2.x = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.postTransformColumn3.x = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.postTransformColumn0.y = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.postTransformColumn1.y = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.postTransformColumn2.y = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.postTransformColumn3.y = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.postTransformColumn0.z = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.postTransformColumn1.z = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.postTransformColumn2.z = Me.theInputFileReader.ReadSingle()
-				aBoneTransform.postTransformColumn3.z = Me.theInputFileReader.ReadSingle()
+				If Me.theMdlFileData.isBigEndian Then
+					aBoneTransform.postTransformColumn0.x = ReadSingleBE()
+					aBoneTransform.postTransformColumn1.x = ReadSingleBE()
+					aBoneTransform.postTransformColumn2.x = ReadSingleBE()
+					aBoneTransform.postTransformColumn3.x = ReadSingleBE()
+					aBoneTransform.postTransformColumn0.y = ReadSingleBE()
+					aBoneTransform.postTransformColumn1.y = ReadSingleBE()
+					aBoneTransform.postTransformColumn2.y = ReadSingleBE()
+					aBoneTransform.postTransformColumn3.y = ReadSingleBE()
+					aBoneTransform.postTransformColumn0.z = ReadSingleBE()
+					aBoneTransform.postTransformColumn1.z = ReadSingleBE()
+					aBoneTransform.postTransformColumn2.z = ReadSingleBE()
+					aBoneTransform.postTransformColumn3.z = ReadSingleBE()
+				Else
+					aBoneTransform.postTransformColumn0.x = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.postTransformColumn1.x = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.postTransformColumn2.x = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.postTransformColumn3.x = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.postTransformColumn0.y = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.postTransformColumn1.y = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.postTransformColumn2.y = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.postTransformColumn3.y = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.postTransformColumn0.z = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.postTransformColumn1.z = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.postTransformColumn2.z = Me.theInputFileReader.ReadSingle()
+					aBoneTransform.postTransformColumn3.z = Me.theInputFileReader.ReadSingle()
+				End If
 
 				Me.theMdlFileData.theBoneTransforms.Add(aBoneTransform)
 
@@ -4026,18 +5284,36 @@ Public Class SourceMdlFile49
 				Dim linearBoneTable As SourceMdlLinearBone
 				Me.theMdlFileData.theLinearBoneTable = New SourceMdlLinearBone()
 				linearBoneTable = Me.theMdlFileData.theLinearBoneTable
-				linearBoneTable.boneCount = Me.theInputFileReader.ReadInt32()
-				linearBoneTable.flagsOffset = Me.theInputFileReader.ReadInt32()
-				linearBoneTable.parentOffset = Me.theInputFileReader.ReadInt32()
-				linearBoneTable.posOffset = Me.theInputFileReader.ReadInt32()
-				linearBoneTable.quatOffset = Me.theInputFileReader.ReadInt32()
-				linearBoneTable.rotOffset = Me.theInputFileReader.ReadInt32()
-				linearBoneTable.poseToBoneOffset = Me.theInputFileReader.ReadInt32()
-				linearBoneTable.posScaleOffset = Me.theInputFileReader.ReadInt32()
-				linearBoneTable.rotScaleOffset = Me.theInputFileReader.ReadInt32()
-				linearBoneTable.qAlignmentOffset = Me.theInputFileReader.ReadInt32()
+				If Me.theMdlFileData.isBigEndian Then
+					linearBoneTable.boneCount = ReadInt32BE()
+					linearBoneTable.flagsOffset = ReadInt32BE()
+					linearBoneTable.parentOffset = ReadInt32BE()
+					linearBoneTable.posOffset = ReadInt32BE()
+					linearBoneTable.quatOffset = ReadInt32BE()
+					linearBoneTable.rotOffset = ReadInt32BE()
+					linearBoneTable.poseToBoneOffset = ReadInt32BE()
+					linearBoneTable.posScaleOffset = ReadInt32BE()
+					linearBoneTable.rotScaleOffset = ReadInt32BE()
+					linearBoneTable.qAlignmentOffset = ReadInt32BE()
+				Else
+					linearBoneTable.boneCount = Me.theInputFileReader.ReadInt32()
+					linearBoneTable.flagsOffset = Me.theInputFileReader.ReadInt32()
+					linearBoneTable.parentOffset = Me.theInputFileReader.ReadInt32()
+					linearBoneTable.posOffset = Me.theInputFileReader.ReadInt32()
+					linearBoneTable.quatOffset = Me.theInputFileReader.ReadInt32()
+					linearBoneTable.rotOffset = Me.theInputFileReader.ReadInt32()
+					linearBoneTable.poseToBoneOffset = Me.theInputFileReader.ReadInt32()
+					linearBoneTable.posScaleOffset = Me.theInputFileReader.ReadInt32()
+					linearBoneTable.rotScaleOffset = Me.theInputFileReader.ReadInt32()
+					linearBoneTable.qAlignmentOffset = Me.theInputFileReader.ReadInt32()
+				End If
+
 				For x As Integer = 0 To linearBoneTable.unused.Length - 1
-					linearBoneTable.unused(x) = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						linearBoneTable.unused(x) = ReadInt32BE()
+					Else
+						linearBoneTable.unused(x) = Me.theInputFileReader.ReadInt32()
+					End If
 				Next
 
 				fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
@@ -4047,7 +5323,11 @@ Public Class SourceMdlFile49
 				fileOffsetStart2 = Me.theInputFileReader.BaseStream.Position
 				For i As Integer = 0 To linearBoneTable.boneCount - 1
 					Dim flags As Integer
-					flags = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						flags = ReadInt32BE()
+					Else
+						flags = Me.theInputFileReader.ReadInt32()
+					End If
 					linearBoneTable.theFlags.Add(flags)
 				Next
 				fileOffsetEnd2 = Me.theInputFileReader.BaseStream.Position - 1
@@ -4064,7 +5344,11 @@ Public Class SourceMdlFile49
 				fileOffsetStart2 = Me.theInputFileReader.BaseStream.Position
 				For i As Integer = 0 To linearBoneTable.boneCount - 1
 					Dim parent As Integer
-					parent = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						parent = ReadInt32BE()
+					Else
+						parent = Me.theInputFileReader.ReadInt32()
+					End If
 					linearBoneTable.theParents.Add(parent)
 				Next
 				fileOffsetEnd2 = Me.theInputFileReader.BaseStream.Position - 1
@@ -4081,9 +5365,15 @@ Public Class SourceMdlFile49
 				fileOffsetStart2 = Me.theInputFileReader.BaseStream.Position
 				For i As Integer = 0 To linearBoneTable.boneCount - 1
 					Dim position As New SourceVector
-					position.x = Me.theInputFileReader.ReadSingle()
-					position.y = Me.theInputFileReader.ReadSingle()
-					position.z = Me.theInputFileReader.ReadSingle()
+					If Me.theMdlFileData.isBigEndian Then
+						position.x = ReadSingleBE()
+						position.y = ReadSingleBE()
+						position.z = ReadSingleBE()
+					Else
+						position.x = Me.theInputFileReader.ReadSingle()
+						position.y = Me.theInputFileReader.ReadSingle()
+						position.z = Me.theInputFileReader.ReadSingle()
+					End If
 					linearBoneTable.thePositions.Add(position)
 				Next
 				fileOffsetEnd2 = Me.theInputFileReader.BaseStream.Position - 1
@@ -4100,10 +5390,17 @@ Public Class SourceMdlFile49
 				fileOffsetStart2 = Me.theInputFileReader.BaseStream.Position
 				For i As Integer = 0 To linearBoneTable.boneCount - 1
 					Dim quaternion As New SourceQuaternion
-					quaternion.x = Me.theInputFileReader.ReadSingle()
-					quaternion.y = Me.theInputFileReader.ReadSingle()
-					quaternion.z = Me.theInputFileReader.ReadSingle()
-					quaternion.w = Me.theInputFileReader.ReadSingle()
+					If Me.theMdlFileData.isBigEndian Then
+						quaternion.x = ReadSingleBE()
+						quaternion.y = ReadSingleBE()
+						quaternion.z = ReadSingleBE()
+						quaternion.w = ReadSingleBE()
+					Else
+						quaternion.x = Me.theInputFileReader.ReadSingle()
+						quaternion.y = Me.theInputFileReader.ReadSingle()
+						quaternion.z = Me.theInputFileReader.ReadSingle()
+						quaternion.w = Me.theInputFileReader.ReadSingle()
+					End If
 					linearBoneTable.theQuaternions.Add(quaternion)
 				Next
 				fileOffsetEnd2 = Me.theInputFileReader.BaseStream.Position - 1
@@ -4120,9 +5417,15 @@ Public Class SourceMdlFile49
 				fileOffsetStart2 = Me.theInputFileReader.BaseStream.Position
 				For i As Integer = 0 To linearBoneTable.boneCount - 1
 					Dim rotation As New SourceVector
-					rotation.x = Me.theInputFileReader.ReadSingle()
-					rotation.y = Me.theInputFileReader.ReadSingle()
-					rotation.z = Me.theInputFileReader.ReadSingle()
+					If Me.theMdlFileData.isBigEndian Then
+						rotation.x = ReadSingleBE()
+						rotation.y = ReadSingleBE()
+						rotation.z = ReadSingleBE()
+					Else
+						rotation.x = Me.theInputFileReader.ReadSingle()
+						rotation.y = Me.theInputFileReader.ReadSingle()
+						rotation.z = Me.theInputFileReader.ReadSingle()
+					End If
 					linearBoneTable.theRotations.Add(rotation)
 				Next
 				fileOffsetEnd2 = Me.theInputFileReader.BaseStream.Position - 1
@@ -4142,18 +5445,34 @@ Public Class SourceMdlFile49
 					Dim poseToBoneDataColumn1 As New SourceVector()
 					Dim poseToBoneDataColumn2 As New SourceVector()
 					Dim poseToBoneDataColumn3 As New SourceVector()
-					poseToBoneDataColumn0.x = Me.theInputFileReader.ReadSingle()
-					poseToBoneDataColumn1.x = Me.theInputFileReader.ReadSingle()
-					poseToBoneDataColumn2.x = Me.theInputFileReader.ReadSingle()
-					poseToBoneDataColumn3.x = Me.theInputFileReader.ReadSingle()
-					poseToBoneDataColumn0.y = Me.theInputFileReader.ReadSingle()
-					poseToBoneDataColumn1.y = Me.theInputFileReader.ReadSingle()
-					poseToBoneDataColumn2.y = Me.theInputFileReader.ReadSingle()
-					poseToBoneDataColumn3.y = Me.theInputFileReader.ReadSingle()
-					poseToBoneDataColumn0.z = Me.theInputFileReader.ReadSingle()
-					poseToBoneDataColumn1.z = Me.theInputFileReader.ReadSingle()
-					poseToBoneDataColumn2.z = Me.theInputFileReader.ReadSingle()
-					poseToBoneDataColumn3.z = Me.theInputFileReader.ReadSingle()
+					If Me.theMdlFileData.isBigEndian Then
+						poseToBoneDataColumn0.x = ReadSingleBE()
+						poseToBoneDataColumn1.x = ReadSingleBE()
+						poseToBoneDataColumn2.x = ReadSingleBE()
+						poseToBoneDataColumn3.x = ReadSingleBE()
+						poseToBoneDataColumn0.y = ReadSingleBE()
+						poseToBoneDataColumn1.y = ReadSingleBE()
+						poseToBoneDataColumn2.y = ReadSingleBE()
+						poseToBoneDataColumn3.y = ReadSingleBE()
+						poseToBoneDataColumn0.z = ReadSingleBE()
+						poseToBoneDataColumn1.z = ReadSingleBE()
+						poseToBoneDataColumn2.z = ReadSingleBE()
+						poseToBoneDataColumn3.z = ReadSingleBE()
+					Else
+						poseToBoneDataColumn0.x = Me.theInputFileReader.ReadSingle()
+						poseToBoneDataColumn1.x = Me.theInputFileReader.ReadSingle()
+						poseToBoneDataColumn2.x = Me.theInputFileReader.ReadSingle()
+						poseToBoneDataColumn3.x = Me.theInputFileReader.ReadSingle()
+						poseToBoneDataColumn0.y = Me.theInputFileReader.ReadSingle()
+						poseToBoneDataColumn1.y = Me.theInputFileReader.ReadSingle()
+						poseToBoneDataColumn2.y = Me.theInputFileReader.ReadSingle()
+						poseToBoneDataColumn3.y = Me.theInputFileReader.ReadSingle()
+						poseToBoneDataColumn0.z = Me.theInputFileReader.ReadSingle()
+						poseToBoneDataColumn1.z = Me.theInputFileReader.ReadSingle()
+						poseToBoneDataColumn2.z = Me.theInputFileReader.ReadSingle()
+						poseToBoneDataColumn3.z = Me.theInputFileReader.ReadSingle()
+					End If
+
 					linearBoneTable.thePoseToBoneDataColumn0s.Add(poseToBoneDataColumn0)
 					linearBoneTable.thePoseToBoneDataColumn1s.Add(poseToBoneDataColumn1)
 					linearBoneTable.thePoseToBoneDataColumn2s.Add(poseToBoneDataColumn2)
@@ -4173,9 +5492,15 @@ Public Class SourceMdlFile49
 				fileOffsetStart2 = Me.theInputFileReader.BaseStream.Position
 				For i As Integer = 0 To linearBoneTable.boneCount - 1
 					Dim positionScale As New SourceVector
-					positionScale.x = Me.theInputFileReader.ReadSingle()
-					positionScale.y = Me.theInputFileReader.ReadSingle()
-					positionScale.z = Me.theInputFileReader.ReadSingle()
+					If Me.theMdlFileData.isBigEndian Then
+						positionScale.x = ReadSingleBE()
+						positionScale.y = ReadSingleBE()
+						positionScale.z = ReadSingleBE()
+					Else
+						positionScale.x = Me.theInputFileReader.ReadSingle()
+						positionScale.y = Me.theInputFileReader.ReadSingle()
+						positionScale.z = Me.theInputFileReader.ReadSingle()
+					End If
 					linearBoneTable.thePositionScales.Add(positionScale)
 				Next
 				fileOffsetEnd2 = Me.theInputFileReader.BaseStream.Position - 1
@@ -4192,9 +5517,15 @@ Public Class SourceMdlFile49
 				fileOffsetStart2 = Me.theInputFileReader.BaseStream.Position
 				For i As Integer = 0 To linearBoneTable.boneCount - 1
 					Dim rotationScale As New SourceVector
-					rotationScale.x = Me.theInputFileReader.ReadSingle()
-					rotationScale.y = Me.theInputFileReader.ReadSingle()
-					rotationScale.z = Me.theInputFileReader.ReadSingle()
+					If Me.theMdlFileData.isBigEndian Then
+						rotationScale.x = ReadSingleBE()
+						rotationScale.y = ReadSingleBE()
+						rotationScale.z = ReadSingleBE()
+					Else
+						rotationScale.x = Me.theInputFileReader.ReadSingle()
+						rotationScale.y = Me.theInputFileReader.ReadSingle()
+						rotationScale.z = Me.theInputFileReader.ReadSingle()
+					End If
 					linearBoneTable.theRotationScales.Add(rotationScale)
 				Next
 				fileOffsetEnd2 = Me.theInputFileReader.BaseStream.Position - 1
@@ -4211,10 +5542,17 @@ Public Class SourceMdlFile49
 				fileOffsetStart2 = Me.theInputFileReader.BaseStream.Position
 				For i As Integer = 0 To linearBoneTable.boneCount - 1
 					Dim qAlignment As New SourceQuaternion
-					qAlignment.x = Me.theInputFileReader.ReadSingle()
-					qAlignment.y = Me.theInputFileReader.ReadSingle()
-					qAlignment.z = Me.theInputFileReader.ReadSingle()
-					qAlignment.w = Me.theInputFileReader.ReadSingle()
+					If Me.theMdlFileData.isBigEndian Then
+						qAlignment.x = ReadSingleBE()
+						qAlignment.y = ReadSingleBE()
+						qAlignment.z = ReadSingleBE()
+						qAlignment.w = ReadSingleBE()
+					Else
+						qAlignment.x = Me.theInputFileReader.ReadSingle()
+						qAlignment.y = Me.theInputFileReader.ReadSingle()
+						qAlignment.z = Me.theInputFileReader.ReadSingle()
+						qAlignment.w = Me.theInputFileReader.ReadSingle()
+					End If
 					linearBoneTable.theQAlignments.Add(qAlignment)
 				Next
 				fileOffsetEnd2 = Me.theInputFileReader.BaseStream.Position - 1
@@ -4246,9 +5584,15 @@ Public Class SourceMdlFile49
 					bodygroupPresetInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					Dim aBodygroupPreset As New SourceMdlBodygroupPreset()
 
-					aBodygroupPreset.nameOffset = Me.theInputFileReader.ReadInt32()
-					aBodygroupPreset.value = Me.theInputFileReader.ReadInt32()
-					aBodygroupPreset.mask = Me.theInputFileReader.ReadInt32()
+					If Me.theMdlFileData.isBigEndian Then
+						aBodygroupPreset.nameOffset = ReadInt32BE()
+						aBodygroupPreset.value = ReadInt32BE()
+						aBodygroupPreset.mask = ReadInt32BE()
+					Else
+						aBodygroupPreset.nameOffset = Me.theInputFileReader.ReadInt32()
+						aBodygroupPreset.value = Me.theInputFileReader.ReadInt32()
+						aBodygroupPreset.mask = Me.theInputFileReader.ReadInt32()
+					End If
 
 					Me.theMdlFileData.theBodygroupPresets.Add(aBodygroupPreset)
 
@@ -4277,6 +5621,94 @@ Public Class SourceMdlFile49
 				'Me.theMdlFileData.theFileSeekLog.LogToEndAndAlignToNextStart(Me.theInputFileReader, fileOffsetEnd, 4, "theMdlFileData.theBodygroupPresets alignment")
 			Catch ex As Exception
 				Dim debug As Integer = 4242
+			End Try
+		End If
+	End Sub
+
+	Public Sub ReadBoltons()
+		If Me.theMdlFileData.numBoltons > 0 Then
+			Dim boltonInputFileStreamPosition As Long
+			Dim inputFileStreamPosition As Long
+
+			Try
+				Me.theInputFileReader.BaseStream.Seek(Me.theMdlFileData.boltonIndex, SeekOrigin.Begin)
+
+				Me.theMdlFileData.theBoltons = New List(Of SourceMdlBolton)(Me.theMdlFileData.numBoltons)
+				For i As Integer = 0 To Me.theMdlFileData.numBoltons - 1
+					boltonInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+					Dim aBolton As New SourceMdlBolton()
+
+					If Me.theMdlFileData.isBigEndian Then
+						aBolton.type = ReadInt32BE()
+						aBolton.szmodelnameindex = ReadInt32BE()
+					Else
+						aBolton.type = Me.theInputFileReader.ReadInt32()
+						aBolton.szmodelnameindex = Me.theInputFileReader.ReadInt32()
+					End If
+
+					Me.theMdlFileData.theBoltons.Add(aBolton)
+
+					inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+
+					Me.theInputFileReader.BaseStream.Seek(boltonInputFileStreamPosition + aBolton.szmodelnameindex, SeekOrigin.Begin)
+
+					aBolton.theModelName = FileManager.ReadNullTerminatedString(Me.theInputFileReader)
+
+					Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
+				Next
+			Catch ex As Exception
+
+			End Try
+		End If
+	End Sub
+
+	Public Sub ReadPrefabs()
+		If Me.theMdlFileData.numPrefabs > 0 Then
+			Dim prefabInputFileStreamPosition As Long
+			Dim inputFileStreamPosition As Long
+
+			Try
+				Me.theInputFileReader.BaseStream.Seek(Me.theMdlFileData.prefabIndex, SeekOrigin.Begin)
+
+				Me.theMdlFileData.thePrefabs = New List(Of SourceMdlPrefab)(Me.theMdlFileData.numPrefabs)
+				For i As Integer = 0 To Me.theMdlFileData.numPrefabs - 1
+					prefabInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+					Dim aPrefab As New SourceMdlPrefab()
+
+					If Me.theMdlFileData.isBigEndian Then
+						aPrefab.sznameindex = ReadInt32BE()
+						aPrefab.skin = ReadInt32BE()
+						aPrefab.boltonsmask = ReadInt32BE()
+						aPrefab.bodypartsindex = ReadInt32BE()
+					Else
+						aPrefab.sznameindex = Me.theInputFileReader.ReadInt32()
+						aPrefab.skin = Me.theInputFileReader.ReadInt32()
+						aPrefab.boltonsmask = Me.theInputFileReader.ReadInt32()
+						aPrefab.bodypartsindex = Me.theInputFileReader.ReadInt32()
+					End If
+
+					inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+
+					Me.theInputFileReader.BaseStream.Seek(prefabInputFileStreamPosition + aPrefab.bodypartsindex, SeekOrigin.Begin)
+
+					aPrefab.theBodyParts = New List(Of Byte)(Me.theMdlFileData.bodyPartCount)
+
+					For j As Integer = 0 To Me.theMdlFileData.bodyPartCount - 1
+						aPrefab.theBodyParts.Add(Me.theInputFileReader.ReadByte())
+					Next
+
+					Me.theMdlFileData.thePrefabs.Add(aPrefab)
+
+					'inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
+
+					Me.theInputFileReader.BaseStream.Seek(prefabInputFileStreamPosition + aPrefab.sznameindex, SeekOrigin.Begin)
+
+					aPrefab.theName = FileManager.ReadNullTerminatedString(Me.theInputFileReader)
+
+					Me.theInputFileReader.BaseStream.Seek(inputFileStreamPosition, SeekOrigin.Begin)
+				Next
+			Catch ex As Exception
+
 			End Try
 		End If
 	End Sub

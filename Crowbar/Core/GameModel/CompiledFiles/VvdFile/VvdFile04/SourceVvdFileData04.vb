@@ -47,4 +47,6 @@ Public Class SourceVvdFileData04
 	Public theTangents As List(Of SourceVector4D)
 	Public theVertexes As List(Of SourceVertex)
 
+	Public isBigEndian As Boolean
+
 End Class

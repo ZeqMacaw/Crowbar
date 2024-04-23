@@ -494,6 +494,10 @@
 	Public illumPositionAttachmentNumber As Integer
 	Public maxEyeDeflection As Single
 	Public linearBoneOffset As Integer
+	Public numBoltons As Integer
+	Public boltonIndex As Integer
+	Public numPrefabs As Integer
+	Public prefabIndex As Integer
 	Public nameCopyOffset As Integer
 	Public boneFlexDriverCount As Integer
 	Public boneFlexDriverOffset As Integer
@@ -541,6 +545,8 @@
 	Public theTexturePaths As List(Of String)
 	Public theTextures As List(Of SourceMdlTexture)
 	Public theWeightLists As List(Of SourceMdlWeightList)
+	Public theBoltons As List(Of SourceMdlBolton)
+	Public thePrefabs As List(Of SourceMdlPrefab)
 
 	Public theAnimBlockSizeNoStallOptionIsUsed As Boolean
 	Public theBoneNameToBoneIndexMap As New SortedList(Of String, Integer)()
@@ -549,5 +555,6 @@
 	Public theProceduralBonesCommandIsUsed As Boolean
 	Public theSectionFrameCount As Integer
 	Public theSectionFrameMinFrameCount As Integer
+	Public isBigEndian As Boolean
 
 End Class

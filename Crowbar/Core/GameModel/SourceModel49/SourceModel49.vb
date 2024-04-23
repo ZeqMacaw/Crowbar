@@ -472,6 +472,7 @@ Public Class SourceModel49
 		'Me.theMdlFileData.theModelCommandIsUsed = False
 		Me.theMdlFileData.theProceduralBonesCommandIsUsed = False
 		Me.theMdlFileData.theAnimBlockSizeNoStallOptionIsUsed = False
+		Me.theMdlFileData.isBigEndian = False
 
 		mdlFile.ReadMdlHeader00("MDL File Header 00")
 		mdlFile.ReadMdlHeader01("MDL File Header 01")
@@ -538,6 +539,12 @@ Public Class SourceModel49
 
 		mdlFile.ReadBodygroupPresets()
 
+		'Postal III stuffs
+		If TheApp.Settings.IsPostal3IsChecked Then
+			mdlFile.ReadBoltons()
+			mdlFile.ReadPrefabs()
+		End If
+
 		'mdlFile.ReadFinalBytesAlignment()
 		'mdlFile.ReadUnknownValues(Me.theMdlFileData.theFileSeekLog)
 		mdlFile.ReadUnreadBytes()
@@ -589,6 +596,8 @@ Public Class SourceModel49
 		If Me.theVtxFileData Is Nothing Then
 			Me.theVtxFileData = New SourceVtxFileData07()
 		End If
+
+		Me.theVtxFileData.isBigEndian = False
 
 		'TEST: When a model has a nameCopy, it seems to also use the VTF file strip group topology fields.
 		Dim vtxFile As New SourceVtxFile07(Me.theInputFileReader, Me.theVtxFileData)
@@ -684,6 +693,12 @@ Public Class SourceModel49
 				command = "$keyvalues"
 			End If
 			qcFile.WriteKeyValues(Me.theMdlFileData.theKeyValuesText, command)
+
+			'Postal III stuffs
+			If TheApp.Settings.IsPostal3IsChecked Then
+				qcFile.WriteBoltons()
+				qcFile.WritePrefabs()
+			End If
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		Finally

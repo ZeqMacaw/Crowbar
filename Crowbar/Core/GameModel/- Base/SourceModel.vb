@@ -116,12 +116,25 @@ Public MustInherit Class SourceModel
 
 					Dim id As String
 					id = inputFileReader.ReadChars(4)
-					version = inputFileReader.ReadInt32()
+					If id = "LZMA" Then
+						Throw New FormatException("File with header ID (first 4 bytes of file) of 'LZMA' (without quotes) means it is a compressed model file. Please decompress it first with the QuickBMS script.")
+					End If
+					If id = "TSDI" Then
+						Dim bytes() As Byte = inputFileReader.ReadBytes(4)
+						Dim b1 As Integer = (bytes(0) >> 0) And &HFF
+						Dim b2 As Integer = (bytes(1) >> 8) And &HFF
+						Dim b3 As Integer = (bytes(2) >> 16) And &HFF
+						Dim b4 As Integer = (bytes(3) >> 24) And &HFF
+						version = b1 << 24 Or b2 << 16 Or b3 << 8 Or b4 << 0
+					Else
+						version = inputFileReader.ReadInt32()
+					End If
+
 					If id = "MDLZ" Then
 						If version <> 14 Then
 							Throw New FormatException("File with header ID (first 4 bytes of file) of 'MDLZ' (without quotes) does not have expected MDL version of 14. MDL file is not a GoldSource- or Source-engine MDL file.")
 						End If
-					ElseIf id <> "IDST" Then
+					ElseIf id <> "IDST" And id <> "TSDI" Then
 						Throw New FormatException("File does not have expected MDL header ID (first 4 bytes of file) of 'IDST' or 'MDLZ' (without quotes). MDL file is not a GoldSource- or Source-engine MDL file.")
 					End If
 				Catch ex As FormatException

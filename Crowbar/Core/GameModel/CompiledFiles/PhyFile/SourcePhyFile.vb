@@ -17,9 +17,53 @@ Public Class SourcePhyFile
 
 #Region "Methods"
 
+	' Big endian binary reader functions
+	Public Function ReadInt32BE() As Integer
+		Dim bytes() As Byte = Me.theInputFileReader.ReadBytes(4)
+		Dim b1 As Integer = (bytes(0) >> 0) And &HFF
+		Dim b2 As Integer = (bytes(1) >> 8) And &HFF
+		Dim b3 As Integer = (bytes(2) >> 16) And &HFF
+		Dim b4 As Integer = (bytes(3) >> 24) And &HFF
+
+		Return b1 << 24 Or b2 << 16 Or b3 << 8 Or b4 << 0
+	End Function
+
+	Public Function ReadInt16BE() As Short
+		Dim bytes() As Byte = Me.theInputFileReader.ReadBytes(2)
+		'Dim b1 As Integer = (bytes(0) >> 0) And &HFF
+		'Dim b2 As Integer = (bytes(1) >> 8) And &HFF
+		Array.Reverse(bytes)
+
+		'Return CShort(b1 << 8 Or b2 << 0)
+		Return BitConverter.ToInt16(bytes, 0)
+	End Function
+
+	Public Function ReadUInt16BE() As UShort
+		Dim bytes() As Byte = Me.theInputFileReader.ReadBytes(2)
+		Dim b1 As Integer = (bytes(0) >> 0) And &HFF
+		Dim b2 As Integer = (bytes(1) >> 8) And &HFF
+
+		Return CUShort(b1 << 8 Or b2 << 0)
+	End Function
+
+	Public Function ReadSingleBE() As Single
+		Dim bytes() As Byte = Me.theInputFileReader.ReadBytes(4)
+		'Dim b1 As Integer = (bytes(0) >> 0) And &HFF
+		'Dim b2 As Integer = (bytes(1) >> 8) And &HFF
+		'Dim b3 As Integer = (bytes(2) >> 16) And &HFF
+		'Dim b4 As Integer = (bytes(3) >> 24) And &HFF
+		'Dim num As Single = b1 << 24 Or b2 << 16 Or b3 << 8 Or b4 << 0
+		Array.Reverse(bytes)
+		Dim num As Single = BitConverter.ToSingle(bytes, 0)
+
+		Return num
+	End Function
+
 	Public Sub ReadSourcePhyHeader()
 		Dim fileOffsetStart As Long
 		Dim fileOffsetEnd As Long
+
+		Me.thePhyFileData.isBigEndian = False
 
 		fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
@@ -29,10 +73,34 @@ Public Class SourcePhyFile
 		'00 00 00 00 
 		'12 00 00 00 
 		'1f de 9d 20 
-		Me.thePhyFileData.size = Me.theInputFileReader.ReadInt32()
-		Me.thePhyFileData.id = Me.theInputFileReader.ReadInt32()
-		Me.thePhyFileData.solidCount = Me.theInputFileReader.ReadInt32()
-		Me.thePhyFileData.checksum = Me.theInputFileReader.ReadInt32()
+
+		If Me.theInputFileReader.ReadInt32() > 16 Then
+			' Possibly big endian, let's confirm this
+			Me.theInputFileReader.BaseStream.Seek(-4, SeekOrigin.Current)
+			If ReadInt32BE() = 16 Then
+				' Big endian file
+				Me.thePhyFileData.isBigEndian = True
+				Me.theInputFileReader.BaseStream.Seek(-4, SeekOrigin.Current)
+			Else
+				' Nevermind, continue as normal
+				Me.theInputFileReader.BaseStream.Seek(-4, SeekOrigin.Current)
+			End If
+		Else
+			' Nevermind, continue as normal
+			Me.theInputFileReader.BaseStream.Seek(-4, SeekOrigin.Current)
+		End If
+
+		If Me.thePhyFileData.isBigEndian Then
+			Me.thePhyFileData.size = ReadInt32BE()
+			Me.thePhyFileData.id = ReadInt32BE()
+			Me.thePhyFileData.solidCount = ReadInt32BE()
+			Me.thePhyFileData.checksum = ReadInt32BE()
+		Else
+			Me.thePhyFileData.size = Me.theInputFileReader.ReadInt32()
+			Me.thePhyFileData.id = Me.theInputFileReader.ReadInt32()
+			Me.thePhyFileData.solidCount = Me.theInputFileReader.ReadInt32()
+			Me.thePhyFileData.checksum = Me.theInputFileReader.ReadInt32()
+		End If
 
 		'NOTE: If header size ever increases, this will at least skip over extra stuff.
 		Me.theInputFileReader.BaseStream.Seek(fileOffsetStart + Me.thePhyFileData.size, SeekOrigin.Begin)
@@ -68,7 +136,12 @@ Public Class SourcePhyFile
 			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
 			'b8 01 00 00   size
-			collisionData.size = Me.theInputFileReader.ReadInt32()
+			If Me.thePhyFileData.isBigEndian Then
+				collisionData.size = ReadInt32BE()
+			Else
+				collisionData.size = Me.theInputFileReader.ReadInt32()
+			End If
+
 			nextSolidDataStreamPosition = Me.theInputFileReader.BaseStream.Position + collisionData.size
 
 			phyDataStreamPosition = Me.theInputFileReader.BaseStream.Position
@@ -76,7 +149,7 @@ Public Class SourcePhyFile
 			Dim vphyId(3) As Char
 			vphyId = Me.theInputFileReader.ReadChars(4)
 			Me.theInputFileReader.BaseStream.Seek(phyDataStreamPosition, SeekOrigin.Begin)
-			If vphyId <> "VPHY" Then
+			If vphyId <> "VPHY" And vphyId <> "YHPV" Then
 				Me.ReadPhyData_VERSION37()
 			Else
 				Me.ReadPhyData_VERSION48()
@@ -95,17 +168,37 @@ Public Class SourcePhyFile
 				'd0 00 00 00 
 				'29 00 00 00 
 				'04 15 00 00 
-				vertexDataOffset = Me.theInputFileReader.ReadInt32()
+				If Me.thePhyFileData.isBigEndian Then
+					vertexDataOffset = ReadInt32BE()
+				Else
+					vertexDataOffset = Me.theInputFileReader.ReadInt32()
+				End If
+
 				vertexDataStreamPosition = faceDataStreamPosition + vertexDataOffset
 
-				convexMesh.theBoneIndex = Me.theInputFileReader.ReadInt32() - 1
+				If Me.thePhyFileData.isBigEndian Then
+					convexMesh.theBoneIndex = ReadInt32BE() - 1
+				Else
+					convexMesh.theBoneIndex = Me.theInputFileReader.ReadInt32() - 1
+				End If
+
 				Me.theBoneIndexes.Add(convexMesh.theBoneIndex)
 
-				' flags: has_children: (self.flags >> 0) & 3  ' 0 = false; > 0 true
-				convexMesh.flags = Me.theInputFileReader.ReadInt32()
+				If Me.thePhyFileData.isBigEndian Then
+					' flags: has_children: (self.flags >> 0) & 3  ' 0 = false; > 0 true
+					convexMesh.flags = ReadInt32BE()
 
-				'0c 00 00 00    count of lines after this (00 - 0b)
-				triangleCount = Me.theInputFileReader.ReadInt32()
+					'0c 00 00 00    count of lines after this (00 - 0b)
+					triangleCount = ReadInt16BE()
+					ReadInt16BE()
+				Else
+					' flags: has_children: (self.flags >> 0) & 3  ' 0 = false; > 0 true
+					convexMesh.flags = Me.theInputFileReader.ReadInt32()
+
+					'0c 00 00 00    count of lines after this (00 - 0b)
+					triangleCount = Me.theInputFileReader.ReadInt32()
+				End If
+
 
 				'00 b0 00 00 
 				'	00 00 06 00   ' vertex index 00
@@ -162,12 +255,23 @@ Public Class SourcePhyFile
 				'		de 7f 
 				For i As Integer = 0 To triangleCount - 1
 					Dim phyTriangle As New SourcePhyFace()
-					triangleIndex = Me.theInputFileReader.ReadByte()
-					Me.theInputFileReader.ReadByte()
+					If Me.thePhyFileData.isBigEndian Then
+						Me.theInputFileReader.ReadByte()
+						triangleIndex = Me.theInputFileReader.ReadByte()
+					Else
+						triangleIndex = Me.theInputFileReader.ReadByte()
+						Me.theInputFileReader.ReadByte()
+					End If
+
 					Me.theInputFileReader.ReadUInt16()
 
 					For j As Integer = 0 To 2
-						phyTriangle.vertexIndex(j) = Me.theInputFileReader.ReadUInt16()
+						If Me.thePhyFileData.isBigEndian Then
+							phyTriangle.vertexIndex(j) = ReadUInt16BE()
+						Else
+							phyTriangle.vertexIndex(j) = Me.theInputFileReader.ReadUInt16()
+						End If
+
 						Me.theInputFileReader.ReadUInt16()
 						If Not vertices.Contains(phyTriangle.vertexIndex(j)) Then
 							vertices.Add(phyTriangle.vertexIndex(j))
@@ -200,10 +304,17 @@ Public Class SourcePhyFile
 			For i As Integer = 0 To vertices.Count - 1
 				Dim phyVertex As New SourcePhyVertex()
 
-				phyVertex.vertex.x = Me.theInputFileReader.ReadSingle()
-				phyVertex.vertex.y = Me.theInputFileReader.ReadSingle()
-				phyVertex.vertex.z = Me.theInputFileReader.ReadSingle()
-				w = Me.theInputFileReader.ReadSingle()
+				If Me.thePhyFileData.isBigEndian Then
+					phyVertex.vertex.x = ReadSingleBE()
+					phyVertex.vertex.y = ReadSingleBE()
+					phyVertex.vertex.z = ReadSingleBE()
+					w = ReadSingleBE()
+				Else
+					phyVertex.vertex.x = Me.theInputFileReader.ReadSingle()
+					phyVertex.vertex.y = Me.theInputFileReader.ReadSingle()
+					phyVertex.vertex.z = Me.theInputFileReader.ReadSingle()
+					w = Me.theInputFileReader.ReadSingle()
+				End If
 
 				convexMesh0Vertices.Add(phyVertex)
 			Next
@@ -304,8 +415,13 @@ Public Class SourcePhyFile
 
 		'00 01         version?
 		'00 00         model type?
-		tempInt = Me.theInputFileReader.ReadUInt16()
-		tempInt = Me.theInputFileReader.ReadUInt16()
+		If Me.thePhyFileData.isBigEndian Then
+			tempInt = ReadUInt16BE()
+			tempInt = ReadUInt16BE()
+		Else
+			tempInt = Me.theInputFileReader.ReadUInt16()
+			tempInt = Me.theInputFileReader.ReadUInt16()
+		End If
 
 		'9c 01 00 00   surface size? might be size of remaining solid struct after "axisMapSize?" field
 		'              Seems to be size of data struct from VPHY field to last section of CollisionData.

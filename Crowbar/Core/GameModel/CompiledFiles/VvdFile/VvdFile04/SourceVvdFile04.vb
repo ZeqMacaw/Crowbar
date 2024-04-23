@@ -17,23 +17,92 @@ Public Class SourceVvdFile04
 
 #Region "Methods"
 
+	' Big endian binary reader functions
+	Public Function ReadInt32BE() As Integer
+		Dim bytes() As Byte = Me.theInputFileReader.ReadBytes(4)
+		Dim b1 As Integer = (bytes(0) >> 0) And &HFF
+		Dim b2 As Integer = (bytes(1) >> 8) And &HFF
+		Dim b3 As Integer = (bytes(2) >> 16) And &HFF
+		Dim b4 As Integer = (bytes(3) >> 24) And &HFF
+
+		Return b1 << 24 Or b2 << 16 Or b3 << 8 Or b4 << 0
+	End Function
+
+	Public Function ReadInt16BE() As Short
+		Dim bytes() As Byte = Me.theInputFileReader.ReadBytes(2)
+		'Dim b1 As Integer = (bytes(0) >> 0) And &HFF
+		'Dim b2 As Integer = (bytes(1) >> 8) And &HFF
+		Array.Reverse(bytes)
+
+		'Return CShort(b1 << 8 Or b2 << 0)
+		Return BitConverter.ToInt16(bytes, 0)
+	End Function
+
+	Public Function ReadUInt16BE() As UShort
+		Dim bytes() As Byte = Me.theInputFileReader.ReadBytes(2)
+		Dim b1 As Integer = (bytes(0) >> 0) And &HFF
+		Dim b2 As Integer = (bytes(1) >> 8) And &HFF
+
+		Return CUShort(b1 << 8 Or b2 << 0)
+	End Function
+
+	Public Function ReadSingleBE() As Single
+		Dim bytes() As Byte = Me.theInputFileReader.ReadBytes(4)
+		'Dim b1 As Integer = (bytes(0) >> 0) And &HFF
+		'Dim b2 As Integer = (bytes(1) >> 8) And &HFF
+		'Dim b3 As Integer = (bytes(2) >> 16) And &HFF
+		'Dim b4 As Integer = (bytes(3) >> 24) And &HFF
+		'Dim num As Single = b1 << 24 Or b2 << 16 Or b3 << 8 Or b4 << 0
+		Array.Reverse(bytes)
+		Dim num As Single = BitConverter.ToSingle(bytes, 0)
+
+		Return num
+	End Function
+
 	Public Sub ReadSourceVvdHeader()
 		Dim fileOffsetStart As Long
 		Dim fileOffsetEnd As Long
 
 		fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
+		Me.theVvdFileData.isBigEndian = False
+
 		Me.theVvdFileData.id = Me.theInputFileReader.ReadChars(4)
-		Me.theVvdFileData.version = Me.theInputFileReader.ReadInt32()
-		Me.theVvdFileData.checksum = Me.theInputFileReader.ReadInt32()
-		Me.theVvdFileData.lodCount = Me.theInputFileReader.ReadInt32()
+
+		' Check if this is a Xbox 360 VVD
+		If Me.theVvdFileData.id = "VSDI" Then
+			Me.theVvdFileData.isBigEndian = True
+		End If
+
+		If Me.theVvdFileData.isBigEndian Then
+			Me.theVvdFileData.version = ReadInt32BE()
+			Me.theVvdFileData.checksum = ReadInt32BE()
+			Me.theVvdFileData.lodCount = ReadInt32BE()
+		Else
+			Me.theVvdFileData.version = Me.theInputFileReader.ReadInt32()
+			Me.theVvdFileData.checksum = Me.theInputFileReader.ReadInt32()
+			Me.theVvdFileData.lodCount = Me.theInputFileReader.ReadInt32()
+		End If
+
 		For i As Integer = 0 To MAX_NUM_LODS - 1
-			Me.theVvdFileData.lodVertexCount(i) = Me.theInputFileReader.ReadInt32()
+			If Me.theVvdFileData.isBigEndian Then
+				Me.theVvdFileData.lodVertexCount(i) = ReadInt32BE()
+			Else
+				Me.theVvdFileData.lodVertexCount(i) = Me.theInputFileReader.ReadInt32()
+			End If
 		Next
-		Me.theVvdFileData.fixupCount = Me.theInputFileReader.ReadInt32()
-		Me.theVvdFileData.fixupTableOffset = Me.theInputFileReader.ReadInt32()
-		Me.theVvdFileData.vertexDataOffset = Me.theInputFileReader.ReadInt32()
-		Me.theVvdFileData.tangentDataOffset = Me.theInputFileReader.ReadInt32()
+
+		If Me.theVvdFileData.isBigEndian Then
+			Me.theVvdFileData.fixupCount = ReadInt32BE()
+			Me.theVvdFileData.fixupTableOffset = ReadInt32BE()
+			Me.theVvdFileData.vertexDataOffset = ReadInt32BE()
+			Me.theVvdFileData.tangentDataOffset = ReadInt32BE()
+		Else
+			Me.theVvdFileData.fixupCount = Me.theInputFileReader.ReadInt32()
+			Me.theVvdFileData.fixupTableOffset = Me.theInputFileReader.ReadInt32()
+			Me.theVvdFileData.vertexDataOffset = Me.theInputFileReader.ReadInt32()
+			Me.theVvdFileData.tangentDataOffset = Me.theInputFileReader.ReadInt32()
+		End If
 
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 		Me.theVvdFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "VVD File Header")
@@ -64,7 +133,12 @@ Public Class SourceVvdFile04
 			Dim boneWeight As New SourceBoneWeight()
 			'boneWeightingIsIncorrect = False
 			For x As Integer = 0 To MAX_NUM_BONES_PER_VERT - 1
-				weight = Me.theInputFileReader.ReadSingle()
+				If Me.theVvdFileData.isBigEndian Then
+					weight = ReadSingleBE()
+				Else
+					weight = Me.theInputFileReader.ReadSingle()
+				End If
+
 				boneWeight.weight(x) = weight
 				'If weight > 1 Then
 				'	boneWeightingIsIncorrect = True
@@ -87,14 +161,26 @@ Public Class SourceVvdFile04
 			'End If
 			aStudioVertex.boneWeight = boneWeight
 
-			aStudioVertex.positionX = Me.theInputFileReader.ReadSingle()
-			aStudioVertex.positionY = Me.theInputFileReader.ReadSingle()
-			aStudioVertex.positionZ = Me.theInputFileReader.ReadSingle()
-			aStudioVertex.normalX = Me.theInputFileReader.ReadSingle()
-			aStudioVertex.normalY = Me.theInputFileReader.ReadSingle()
-			aStudioVertex.normalZ = Me.theInputFileReader.ReadSingle()
-			aStudioVertex.texCoordX = Me.theInputFileReader.ReadSingle()
-			aStudioVertex.texCoordY = Me.theInputFileReader.ReadSingle()
+			If Me.theVvdFileData.isBigEndian Then
+				aStudioVertex.positionX = ReadSingleBE()
+				aStudioVertex.positionY = ReadSingleBE()
+				aStudioVertex.positionZ = ReadSingleBE()
+				aStudioVertex.normalX = ReadSingleBE()
+				aStudioVertex.normalY = ReadSingleBE()
+				aStudioVertex.normalZ = ReadSingleBE()
+				aStudioVertex.texCoordX = ReadSingleBE()
+				aStudioVertex.texCoordY = ReadSingleBE()
+			Else
+				aStudioVertex.positionX = Me.theInputFileReader.ReadSingle()
+				aStudioVertex.positionY = Me.theInputFileReader.ReadSingle()
+				aStudioVertex.positionZ = Me.theInputFileReader.ReadSingle()
+				aStudioVertex.normalX = Me.theInputFileReader.ReadSingle()
+				aStudioVertex.normalY = Me.theInputFileReader.ReadSingle()
+				aStudioVertex.normalZ = Me.theInputFileReader.ReadSingle()
+				aStudioVertex.texCoordX = Me.theInputFileReader.ReadSingle()
+				aStudioVertex.texCoordY = Me.theInputFileReader.ReadSingle()
+			End If
+
 			If mdlVersion >= 54 AndAlso mdlVersion <= 59 Then
 				Me.theInputFileReader.ReadSingle()
 				Me.theInputFileReader.ReadSingle()
@@ -127,10 +213,18 @@ Public Class SourceVvdFile04
 		For j As Integer = 0 To vertexCount - 1
 			Dim aSourceVector4D As New SourceVector4D()
 
-			aSourceVector4D.x = Me.theInputFileReader.ReadSingle()
-			aSourceVector4D.y = Me.theInputFileReader.ReadSingle()
-			aSourceVector4D.z = Me.theInputFileReader.ReadSingle()
-			aSourceVector4D.w = Me.theInputFileReader.ReadSingle()
+			If Me.theVvdFileData.isBigEndian Then
+				aSourceVector4D.x = ReadSingleBE()
+				aSourceVector4D.y = ReadSingleBE()
+				aSourceVector4D.z = ReadSingleBE()
+				aSourceVector4D.w = ReadSingleBE()
+			Else
+				aSourceVector4D.x = Me.theInputFileReader.ReadSingle()
+				aSourceVector4D.y = Me.theInputFileReader.ReadSingle()
+				aSourceVector4D.z = Me.theInputFileReader.ReadSingle()
+				aSourceVector4D.w = Me.theInputFileReader.ReadSingle()
+			End If
+
 			Me.theVvdFileData.theTangents.Add(aSourceVector4D)
 		Next
 
@@ -150,9 +244,16 @@ Public Class SourceVvdFile04
 			For fixupIndex As Integer = 0 To Me.theVvdFileData.fixupCount - 1
 				Dim aFixup As New SourceVvdFixup04()
 
-				aFixup.lodIndex = Me.theInputFileReader.ReadInt32()
-				aFixup.vertexIndex = Me.theInputFileReader.ReadInt32()
-				aFixup.vertexCount = Me.theInputFileReader.ReadInt32()
+				If Me.theVvdFileData.isBigEndian Then
+					aFixup.lodIndex = ReadInt32BE()
+					aFixup.vertexIndex = ReadInt32BE()
+					aFixup.vertexCount = ReadInt32BE()
+				Else
+					aFixup.lodIndex = Me.theInputFileReader.ReadInt32()
+					aFixup.vertexIndex = Me.theInputFileReader.ReadInt32()
+					aFixup.vertexCount = Me.theInputFileReader.ReadInt32()
+				End If
+
 				Me.theVvdFileData.theFixups.Add(aFixup)
 			Next
 
@@ -190,8 +291,18 @@ Public Class SourceVvdFile04
 			'FROM: [49] csgo_studiomdl\public\studio.h
 			'	int		m_count; // Number of individual extra attribute chunks
 			'	int		m_totalbytes; // Total size of extra attribute data (all chunks plus header and index)
-			Dim extraDataCount As Integer = Me.theInputFileReader.ReadInt32()
-			Dim extraDataByteCount As Integer = Me.theInputFileReader.ReadInt32()
+			' Dim extraDataCount As Integer = Me.theInputFileReader.ReadInt32()
+			' Dim extraDataByteCount As Integer = Me.theInputFileReader.ReadInt32()
+			Dim extraDataCount As Integer
+			Dim extraDataByteCount As Integer
+
+			If Me.theVvdFileData.isBigEndian Then
+				extraDataCount = ReadInt32BE()
+				extraDataByteCount = ReadInt32BE()
+			Else
+				extraDataCount = Me.theInputFileReader.ReadInt32()
+				extraDataByteCount = Me.theInputFileReader.ReadInt32()
+			End If
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 			Me.theVvdFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "ExtraDataCount = " + extraDataCount.ToString() + "; ExtraDataByteCount = " + extraDataByteCount.ToString())
@@ -204,17 +315,30 @@ Public Class SourceVvdFile04
 			For i As Integer = 0 To extraDataCount - 1
 				Dim anExtraData As New SourceVvdExtraData04()
 
-				anExtraData.type = CType(Me.theInputFileReader.ReadInt32(), SourceVvdExtraData04.ExtraVertexAttributeType)
-				anExtraData.offset = Me.theInputFileReader.ReadInt32()
-				anExtraData.bytesPerVertex = Me.theInputFileReader.ReadInt32()
+				If Me.theVvdFileData.isBigEndian Then
+					anExtraData.type = CType(ReadInt32BE(), SourceVvdExtraData04.ExtraVertexAttributeType)
+					anExtraData.offset = ReadInt32BE()
+					anExtraData.bytesPerVertex = ReadInt32BE()
+				Else
+					anExtraData.type = CType(Me.theInputFileReader.ReadInt32(), SourceVvdExtraData04.ExtraVertexAttributeType)
+					anExtraData.offset = Me.theInputFileReader.ReadInt32()
+					anExtraData.bytesPerVertex = Me.theInputFileReader.ReadInt32()
+				End If
+
 				Me.theVvdFileData.theExtraDatas.Add(anExtraData)
 
 				anExtraData.theTextureCoordinates = New List(Of SourceTextureCoordinates)(vertexCount)
 				For j As Integer = 0 To vertexCount - 1
 					Dim aTextureCoordinates As New SourceTextureCoordinates()
 
-					aTextureCoordinates.X = Me.theInputFileReader.ReadSingle()
-					aTextureCoordinates.Y = Me.theInputFileReader.ReadSingle()
+					If Me.theVvdFileData.isBigEndian Then
+						aTextureCoordinates.X = ReadSingleBE()
+						aTextureCoordinates.Y = ReadSingleBE()
+					Else
+						aTextureCoordinates.X = Me.theInputFileReader.ReadSingle()
+						aTextureCoordinates.Y = Me.theInputFileReader.ReadSingle()
+					End If
+
 					anExtraData.theTextureCoordinates.Add(aTextureCoordinates)
 				Next
 			Next

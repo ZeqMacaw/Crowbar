@@ -36,5 +36,6 @@ Public Class SourcePhyFileData
 	Public theSourcePhyPhysCollisionModelMostUsedValues As SourcePhyPhysCollisionModel
 	Public theSourcePhyCollisionText As String
 	Public theSourcePhyMaxConvexPieces As Integer
+	Public isBigEndian As Boolean
 
 End Class

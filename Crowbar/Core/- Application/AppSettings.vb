@@ -767,6 +767,16 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	Public Property IsPostal3IsChecked() As Boolean
+		Get
+			Return Me.theIsPostal3IsChecked
+		End Get
+		Set(ByVal value As Boolean)
+			Me.theIsPostal3IsChecked = value
+			NotifyPropertyChanged("IsPostal3IsChecked")
+		End Set
+	End Property
+
 	Public Property DecompileRemovePathFromSmdMaterialFileNamesIsChecked() As Boolean
 		Get
 			Return Me.theDecompileRemovePathFromSmdMaterialFileNamesIsChecked
@@ -1913,6 +1923,7 @@ Public Class AppSettings
 	Private theDecompileVertexAnimationVtaFileIsChecked As Boolean
 	Private theDecompileProceduralBonesVrdFileIsChecked As Boolean
 
+	Private theIsPostal3IsChecked As Boolean
 	Private theDecompileDeclareSequenceQciFileIsChecked As Boolean
 
 	Private theDecompileFolderForEachModelIsChecked As Boolean

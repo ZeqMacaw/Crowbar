@@ -17,33 +17,116 @@ Public Class SourceVtxFile07
 
 #Region "Methods"
 
+	' Big endian binary reader functions
+	Public Function ReadInt32BE() As Integer
+		Dim bytes() As Byte = Me.theInputFileReader.ReadBytes(4)
+		Dim b1 As Integer = (bytes(0) >> 0) And &HFF
+		Dim b2 As Integer = (bytes(1) >> 8) And &HFF
+		Dim b3 As Integer = (bytes(2) >> 16) And &HFF
+		Dim b4 As Integer = (bytes(3) >> 24) And &HFF
+
+		Return b1 << 24 Or b2 << 16 Or b3 << 8 Or b4 << 0
+	End Function
+
+	Public Function ReadInt16BE() As Short
+		Dim bytes() As Byte = Me.theInputFileReader.ReadBytes(2)
+		'Dim b1 As Integer = (bytes(0) >> 0) And &HFF
+		'Dim b2 As Integer = (bytes(1) >> 8) And &HFF
+		Array.Reverse(bytes)
+
+		'Return CShort(b1 << 8 Or b2 << 0)
+		Return BitConverter.ToInt16(bytes, 0)
+	End Function
+
+	Public Function ReadUInt16BE() As UShort
+		Dim bytes() As Byte = Me.theInputFileReader.ReadBytes(2)
+		Dim b1 As Integer = (bytes(0) >> 0) And &HFF
+		Dim b2 As Integer = (bytes(1) >> 8) And &HFF
+
+		Return CUShort(b1 << 8 Or b2 << 0)
+	End Function
+
+	Public Function ReadSingleBE() As Single
+		Dim bytes() As Byte = Me.theInputFileReader.ReadBytes(4)
+		'Dim b1 As Integer = (bytes(0) >> 0) And &HFF
+		'Dim b2 As Integer = (bytes(1) >> 8) And &HFF
+		'Dim b3 As Integer = (bytes(2) >> 16) And &HFF
+		'Dim b4 As Integer = (bytes(3) >> 24) And &HFF
+		'Dim num As Single = b1 << 24 Or b2 << 16 Or b3 << 8 Or b4 << 0
+		Array.Reverse(bytes)
+		Dim num As Single = BitConverter.ToSingle(bytes, 0)
+
+		Return num
+	End Function
+
 	Public Sub ReadSourceVtxHeader()
 		Dim fileOffsetStart As Long
 		Dim fileOffsetEnd As Long
 
 		fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-		' Offset: 0x00
-		Me.theVtxFileData.version = Me.theInputFileReader.ReadInt32()
+		If Me.theInputFileReader.ReadInt32() > 7 Then
+			' Possibly big endian, let's confirm this
+			Me.theInputFileReader.BaseStream.Seek(-4, SeekOrigin.Current)
+			If ReadInt32BE() = 7 Then
+				' Big endian file
+				Me.theVtxFileData.isBigEndian = True
+				Me.theInputFileReader.BaseStream.Seek(-4, SeekOrigin.Current)
+			Else
+				' Nevermind, continue as normal
+				Me.theInputFileReader.BaseStream.Seek(-4, SeekOrigin.Current)
+			End If
+		Else
+			' Nevermind, continue as normal
+			Me.theInputFileReader.BaseStream.Seek(-4, SeekOrigin.Current)
+		End If
 
-		' Offsets: 0x04, 0x08, 0x0A (10), 0x0C (12)
-		Me.theVtxFileData.vertexCacheSize = Me.theInputFileReader.ReadInt32()
-		Me.theVtxFileData.maxBonesPerStrip = Me.theInputFileReader.ReadUInt16()
-		Me.theVtxFileData.maxBonesPerTri = Me.theInputFileReader.ReadUInt16()
-		Me.theVtxFileData.maxBonesPerVertex = Me.theInputFileReader.ReadInt32()
+		If Me.theVtxFileData.isBigEndian Then
+			' Offset: 0x00
+			Me.theVtxFileData.version = ReadInt32BE()
 
-		' Offset: 0x10 (16)
-		Me.theVtxFileData.checksum = Me.theInputFileReader.ReadInt32()
+			' Offsets: 0x04, 0x08, 0x0A (10), 0x0C (12)
+			Me.theVtxFileData.vertexCacheSize = ReadInt32BE()
+			Me.theVtxFileData.maxBonesPerStrip = ReadUInt16BE()
+			Me.theVtxFileData.maxBonesPerTri = ReadUInt16BE()
+			Me.theVtxFileData.maxBonesPerVertex = ReadInt32BE()
 
-		' Offset: 0x14 (20)
-		Me.theVtxFileData.lodCount = Me.theInputFileReader.ReadInt32()
+			' Offset: 0x10 (16)
+			Me.theVtxFileData.checksum = ReadInt32BE()
 
-		' Offset: 0x18 (24)
-		Me.theVtxFileData.materialReplacementListOffset = Me.theInputFileReader.ReadInt32()
+			' Offset: 0x14 (20)
+			Me.theVtxFileData.lodCount = ReadInt32BE()
 
-		' Offsets: 0x1C (28), 0x20 (32)
-		Me.theVtxFileData.bodyPartCount = Me.theInputFileReader.ReadInt32()
-		Me.theVtxFileData.bodyPartOffset = Me.theInputFileReader.ReadInt32()
+			' Offset: 0x18 (24)
+			Me.theVtxFileData.materialReplacementListOffset = ReadInt32BE()
+
+			' Offsets: 0x1C (28), 0x20 (32)
+			Me.theVtxFileData.bodyPartCount = ReadInt32BE()
+			Me.theVtxFileData.bodyPartOffset = ReadInt32BE()
+		Else
+			' Offset: 0x00
+			Me.theVtxFileData.version = Me.theInputFileReader.ReadInt32()
+
+			' Offsets: 0x04, 0x08, 0x0A (10), 0x0C (12)
+			Me.theVtxFileData.vertexCacheSize = Me.theInputFileReader.ReadInt32()
+			Me.theVtxFileData.maxBonesPerStrip = Me.theInputFileReader.ReadUInt16()
+			Me.theVtxFileData.maxBonesPerTri = Me.theInputFileReader.ReadUInt16()
+			Me.theVtxFileData.maxBonesPerVertex = Me.theInputFileReader.ReadInt32()
+
+			' Offset: 0x10 (16)
+			Me.theVtxFileData.checksum = Me.theInputFileReader.ReadInt32()
+
+			' Offset: 0x14 (20)
+			Me.theVtxFileData.lodCount = Me.theInputFileReader.ReadInt32()
+
+			' Offset: 0x18 (24)
+			Me.theVtxFileData.materialReplacementListOffset = Me.theInputFileReader.ReadInt32()
+
+			' Offsets: 0x1C (28), 0x20 (32)
+			Me.theVtxFileData.bodyPartCount = Me.theInputFileReader.ReadInt32()
+			Me.theVtxFileData.bodyPartOffset = Me.theInputFileReader.ReadInt32()
+		End If
+
 
 		fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
 		Me.theVtxFileData.theFileSeekLog.Add(fileOffsetStart, fileOffsetEnd, "VTX File Header (Actual version: " + Me.theVtxFileData.version.ToString() + "; override version: 7)")
@@ -107,8 +190,13 @@ Public Class SourceVtxFile07
 					materialReplacementListInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					Dim aMaterialReplacementList As New SourceVtxMaterialReplacementList07()
 
-					aMaterialReplacementList.replacementCount = Me.theInputFileReader.ReadInt32()
-					aMaterialReplacementList.replacementOffset = Me.theInputFileReader.ReadInt32()
+					If Me.theVtxFileData.isBigEndian Then
+						aMaterialReplacementList.replacementCount = ReadInt32BE()
+						aMaterialReplacementList.replacementOffset = ReadInt32BE()
+					Else
+						aMaterialReplacementList.replacementCount = Me.theInputFileReader.ReadInt32()
+						aMaterialReplacementList.replacementOffset = Me.theInputFileReader.ReadInt32()
+					End If
 
 					Me.theVtxFileData.theVtxMaterialReplacementLists.Add(aMaterialReplacementList)
 
@@ -145,8 +233,13 @@ Public Class SourceVtxFile07
 				bodyPartInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aBodyPart As New SourceVtxBodyPart07()
 
-				aBodyPart.modelCount = Me.theInputFileReader.ReadInt32()
-				aBodyPart.modelOffset = Me.theInputFileReader.ReadInt32()
+				If Me.theVtxFileData.isBigEndian Then
+					aBodyPart.modelCount = ReadInt32BE()
+					aBodyPart.modelOffset = ReadInt32BE()
+				Else
+					aBodyPart.modelCount = Me.theInputFileReader.ReadInt32()
+					aBodyPart.modelOffset = Me.theInputFileReader.ReadInt32()
+				End If
 
 				Me.theVtxFileData.theVtxBodyParts.Add(aBodyPart)
 
@@ -179,8 +272,13 @@ Public Class SourceVtxFile07
 					modelInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					Dim aModel As New SourceVtxModel07()
 
-					aModel.lodCount = Me.theInputFileReader.ReadInt32()
-					aModel.lodOffset = Me.theInputFileReader.ReadInt32()
+					If Me.theVtxFileData.isBigEndian Then
+						aModel.lodCount = ReadInt32BE()
+						aModel.lodOffset = ReadInt32BE()
+					Else
+						aModel.lodCount = Me.theInputFileReader.ReadInt32()
+						aModel.lodOffset = Me.theInputFileReader.ReadInt32()
+					End If
 
 					aBodyPart.theVtxModels.Add(aModel)
 
@@ -218,9 +316,16 @@ Public Class SourceVtxFile07
 				modelLodInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aModelLod As New SourceVtxModelLod07()
 
-				aModelLod.meshCount = Me.theInputFileReader.ReadInt32()
-				aModelLod.meshOffset = Me.theInputFileReader.ReadInt32()
-				aModelLod.switchPoint = Me.theInputFileReader.ReadSingle()
+				If Me.theVtxFileData.isBigEndian Then
+					aModelLod.meshCount = ReadInt32BE()
+					aModelLod.meshOffset = ReadInt32BE()
+					aModelLod.switchPoint = ReadSingleBE()
+				Else
+					aModelLod.meshCount = Me.theInputFileReader.ReadInt32()
+					aModelLod.meshOffset = Me.theInputFileReader.ReadInt32()
+					aModelLod.switchPoint = Me.theInputFileReader.ReadSingle()
+				End If
+
 				aModelLod.theVtxModelLodUsesFacial = False
 
 				aModel.theVtxModelLods.Add(aModelLod)
@@ -258,8 +363,14 @@ Public Class SourceVtxFile07
 				meshInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aMesh As New SourceVtxMesh07()
 
-				aMesh.stripGroupCount = Me.theInputFileReader.ReadInt32()
-				aMesh.stripGroupOffset = Me.theInputFileReader.ReadInt32()
+				If Me.theVtxFileData.isBigEndian Then
+					aMesh.stripGroupCount = ReadInt32BE()
+					aMesh.stripGroupOffset = ReadInt32BE()
+				Else
+					aMesh.stripGroupCount = Me.theInputFileReader.ReadInt32()
+					aMesh.stripGroupOffset = Me.theInputFileReader.ReadInt32()
+				End If
+
 				aMesh.flags = Me.theInputFileReader.ReadByte()
 
 				aModelLod.theVtxMeshes.Add(aMesh)
@@ -321,12 +432,22 @@ Public Class SourceVtxFile07
 			aMesh.theVtxStripGroups = New List(Of SourceVtxStripGroup07)(aMesh.stripGroupCount)
 			For j As Integer = 0 To aMesh.stripGroupCount - 1
 				Dim aStripGroup As New SourceVtxStripGroup07()
-				aStripGroup.vertexCount = Me.theInputFileReader.ReadInt32()
-				aStripGroup.vertexOffset = Me.theInputFileReader.ReadInt32()
-				aStripGroup.indexCount = Me.theInputFileReader.ReadInt32()
-				aStripGroup.indexOffset = Me.theInputFileReader.ReadInt32()
-				aStripGroup.stripCount = Me.theInputFileReader.ReadInt32()
-				aStripGroup.stripOffset = Me.theInputFileReader.ReadInt32()
+				If Me.theVtxFileData.isBigEndian Then
+					aStripGroup.vertexCount = ReadInt32BE()
+					aStripGroup.vertexOffset = ReadInt32BE()
+					aStripGroup.indexCount = ReadInt32BE()
+					aStripGroup.indexOffset = ReadInt32BE()
+					aStripGroup.stripCount = ReadInt32BE()
+					aStripGroup.stripOffset = ReadInt32BE()
+				Else
+					aStripGroup.vertexCount = Me.theInputFileReader.ReadInt32()
+					aStripGroup.vertexOffset = Me.theInputFileReader.ReadInt32()
+					aStripGroup.indexCount = Me.theInputFileReader.ReadInt32()
+					aStripGroup.indexOffset = Me.theInputFileReader.ReadInt32()
+					aStripGroup.stripCount = Me.theInputFileReader.ReadInt32()
+					aStripGroup.stripOffset = Me.theInputFileReader.ReadInt32()
+				End If
+
 				aStripGroup.flags = Me.theInputFileReader.ReadByte()
 
 				aMesh.theVtxStripGroups.Add(aStripGroup)
@@ -356,12 +477,22 @@ Public Class SourceVtxFile07
 				stripGroupInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aStripGroup As New SourceVtxStripGroup07()
 
-				aStripGroup.vertexCount = Me.theInputFileReader.ReadInt32()
-				aStripGroup.vertexOffset = Me.theInputFileReader.ReadInt32()
-				aStripGroup.indexCount = Me.theInputFileReader.ReadInt32()
-				aStripGroup.indexOffset = Me.theInputFileReader.ReadInt32()
-				aStripGroup.stripCount = Me.theInputFileReader.ReadInt32()
-				aStripGroup.stripOffset = Me.theInputFileReader.ReadInt32()
+				If Me.theVtxFileData.isBigEndian Then
+					aStripGroup.vertexCount = ReadInt32BE()
+					aStripGroup.vertexOffset = ReadInt32BE()
+					aStripGroup.indexCount = ReadInt32BE()
+					aStripGroup.indexOffset = ReadInt32BE()
+					aStripGroup.stripCount = ReadInt32BE()
+					aStripGroup.stripOffset = ReadInt32BE()
+				Else
+					aStripGroup.vertexCount = Me.theInputFileReader.ReadInt32()
+					aStripGroup.vertexOffset = Me.theInputFileReader.ReadInt32()
+					aStripGroup.indexCount = Me.theInputFileReader.ReadInt32()
+					aStripGroup.indexOffset = Me.theInputFileReader.ReadInt32()
+					aStripGroup.stripCount = Me.theInputFileReader.ReadInt32()
+					aStripGroup.stripOffset = Me.theInputFileReader.ReadInt32()
+				End If
+
 				aStripGroup.flags = Me.theInputFileReader.ReadByte()
 
 				''TEST: Did not work for both Engineeer and doom.
@@ -376,8 +507,13 @@ Public Class SourceVtxFile07
 				'End If
 				'TEST:
 				If Me.theStripGroupAndStripUseExtraFields Then
-					aStripGroup.topologyIndexCount = Me.theInputFileReader.ReadInt32()
-					aStripGroup.topologyIndexOffset = Me.theInputFileReader.ReadInt32()
+					If Me.theVtxFileData.isBigEndian Then
+						aStripGroup.topologyIndexCount = ReadInt32BE()
+						aStripGroup.topologyIndexOffset = ReadInt32BE()
+					Else
+						aStripGroup.topologyIndexCount = Me.theInputFileReader.ReadInt32()
+						aStripGroup.topologyIndexOffset = Me.theInputFileReader.ReadInt32()
+					End If
 				End If
 
 				aMesh.theVtxStripGroups.Add(aStripGroup)
@@ -457,7 +593,12 @@ Public Class SourceVtxFile07
 					aVertex.boneWeightIndex(i) = Me.theInputFileReader.ReadByte()
 				Next
 				aVertex.boneCount = Me.theInputFileReader.ReadByte()
-				aVertex.originalMeshVertexIndex = Me.theInputFileReader.ReadUInt16()
+				If Me.theVtxFileData.isBigEndian Then
+					aVertex.originalMeshVertexIndex = ReadUInt16BE()
+				Else
+					aVertex.originalMeshVertexIndex = Me.theInputFileReader.ReadUInt16()
+				End If
+
 				For i As Integer = 0 To MAX_NUM_BONES_PER_VERT - 1
 					aVertex.boneId(i) = Me.theInputFileReader.ReadByte()
 				Next
@@ -493,7 +634,11 @@ Public Class SourceVtxFile07
 			For j As Integer = 0 To aStripGroup.indexCount - 1
 				'modelInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 
-				aStripGroup.theVtxIndexes.Add(Me.theInputFileReader.ReadUInt16())
+				If Me.theVtxFileData.isBigEndian Then
+					aStripGroup.theVtxIndexes.Add(ReadUInt16BE())
+				Else
+					aStripGroup.theVtxIndexes.Add(Me.theInputFileReader.ReadUInt16())
+				End If
 
 				'inputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 
@@ -528,18 +673,39 @@ Public Class SourceVtxFile07
 				stripInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim aStrip As New SourceVtxStrip07()
 
-				aStrip.indexCount = Me.theInputFileReader.ReadInt32()
-				aStrip.indexMeshIndex = Me.theInputFileReader.ReadInt32()
-				aStrip.vertexCount = Me.theInputFileReader.ReadInt32()
-				aStrip.vertexMeshIndex = Me.theInputFileReader.ReadInt32()
-				aStrip.boneCount = Me.theInputFileReader.ReadInt16()
+				If Me.theVtxFileData.isBigEndian Then
+					aStrip.indexCount = ReadInt32BE()
+					aStrip.indexMeshIndex = ReadInt32BE()
+					aStrip.vertexCount = ReadInt32BE()
+					aStrip.vertexMeshIndex = ReadInt32BE()
+					aStrip.boneCount = ReadInt16BE()
+				Else
+					aStrip.indexCount = Me.theInputFileReader.ReadInt32()
+					aStrip.indexMeshIndex = Me.theInputFileReader.ReadInt32()
+					aStrip.vertexCount = Me.theInputFileReader.ReadInt32()
+					aStrip.vertexMeshIndex = Me.theInputFileReader.ReadInt32()
+					aStrip.boneCount = Me.theInputFileReader.ReadInt16()
+				End If
+
 				aStrip.flags = Me.theInputFileReader.ReadByte()
-				aStrip.boneStateChangeCount = Me.theInputFileReader.ReadInt32()
-				aStrip.boneStateChangeOffset = Me.theInputFileReader.ReadInt32()
+
+				If Me.theVtxFileData.isBigEndian Then
+					aStrip.boneStateChangeCount = ReadInt32BE()
+					aStrip.boneStateChangeOffset = ReadInt32BE()
+				Else
+					aStrip.boneStateChangeCount = Me.theInputFileReader.ReadInt32()
+					aStrip.boneStateChangeOffset = Me.theInputFileReader.ReadInt32()
+				End If
+
 				'TEST:
 				If Me.theStripGroupAndStripUseExtraFields Then
-					aStrip.unknownBytes01 = Me.theInputFileReader.ReadInt32()
-					aStrip.unknownBytes02 = Me.theInputFileReader.ReadInt32()
+					If Me.theVtxFileData.isBigEndian Then
+						aStrip.unknownBytes01 = ReadInt32BE()
+						aStrip.unknownBytes02 = ReadInt32BE()
+					Else
+						aStrip.unknownBytes01 = Me.theInputFileReader.ReadInt32()
+						aStrip.unknownBytes02 = Me.theInputFileReader.ReadInt32()
+					End If
 				End If
 
 				aStripGroup.theVtxStrips.Add(aStrip)
@@ -578,7 +744,11 @@ Public Class SourceVtxFile07
 				'topologyInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 				Dim topologyIndex As UShort
 
-				topologyIndex = Me.theInputFileReader.ReadUInt16()
+				If Me.theVtxFileData.isBigEndian Then
+					topologyIndex = ReadUInt16BE()
+				Else
+					topologyIndex = Me.theInputFileReader.ReadUInt16()
+				End If
 
 				aStripGroup.theVtxTopologyIndexes.Add(topologyIndex)
 
@@ -627,8 +797,13 @@ Public Class SourceVtxFile07
 					'fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 					Dim aBoneStateChange As New SourceVtxBoneStateChange07()
 
-					aBoneStateChange.hardwareId = Me.theInputFileReader.ReadInt32()
-					aBoneStateChange.newBoneId = Me.theInputFileReader.ReadInt32()
+					If Me.theVtxFileData.isBigEndian Then
+						aBoneStateChange.hardwareId = ReadInt32BE()
+						aBoneStateChange.newBoneId = ReadInt32BE()
+					Else
+						aBoneStateChange.hardwareId = Me.theInputFileReader.ReadInt32()
+						aBoneStateChange.newBoneId = Me.theInputFileReader.ReadInt32()
+					End If
 
 					aStrip.theVtxBoneStateChanges.Add(aBoneStateChange)
 
@@ -667,8 +842,13 @@ Public Class SourceVtxFile07
 					materialReplacementInputFileStreamPosition = Me.theInputFileReader.BaseStream.Position
 					Dim aMaterialReplacement As New SourceVtxMaterialReplacement07()
 
-					aMaterialReplacement.materialIndex = Me.theInputFileReader.ReadInt16()
-					aMaterialReplacement.nameOffset = Me.theInputFileReader.ReadInt32()
+					If Me.theVtxFileData.isBigEndian Then
+						aMaterialReplacement.materialIndex = ReadInt16BE()
+						aMaterialReplacement.nameOffset = ReadInt32BE()
+					Else
+						aMaterialReplacement.materialIndex = Me.theInputFileReader.ReadInt16()
+						aMaterialReplacement.nameOffset = Me.theInputFileReader.ReadInt32()
+					End If
 
 					aMaterialReplacementList.theVtxMaterialReplacements.Add(aMaterialReplacement)
 

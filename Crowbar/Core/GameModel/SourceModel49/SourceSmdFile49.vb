@@ -290,93 +290,95 @@ Public Class SourceSmdFile49
 
 		Try
 			If Me.thePhyFileData.theSourcePhyCollisionDatas IsNot Nothing Then
-				Me.ProcessTransformsForPhysics()
+				If Me.theMdlFileData.localAnimationCount > 0 Then
+					Me.ProcessTransformsForPhysics()
+				End If
 
 				For collisionDataIndex As Integer = 0 To Me.thePhyFileData.theSourcePhyCollisionDatas.Count - 1
-					collisionData = Me.thePhyFileData.theSourcePhyCollisionDatas(collisionDataIndex)
+						collisionData = Me.thePhyFileData.theSourcePhyCollisionDatas(collisionDataIndex)
 
-					If collisionDataIndex < Me.thePhyFileData.theSourcePhyPhysCollisionModels.Count Then
-						aSourcePhysCollisionModel = Me.thePhyFileData.theSourcePhyPhysCollisionModels(collisionDataIndex)
-					Else
-						aSourcePhysCollisionModel = Nothing
-					End If
+						If collisionDataIndex < Me.thePhyFileData.theSourcePhyPhysCollisionModels.Count Then
+							aSourcePhysCollisionModel = Me.thePhyFileData.theSourcePhyPhysCollisionModels(collisionDataIndex)
+						Else
+							aSourcePhysCollisionModel = Nothing
+						End If
 
-					For convexMeshIndex As Integer = 0 To collisionData.theConvexMeshes.Count - 1
-						convexMesh = collisionData.theConvexMeshes(convexMeshIndex)
+						For convexMeshIndex As Integer = 0 To collisionData.theConvexMeshes.Count - 1
+							convexMesh = collisionData.theConvexMeshes(convexMeshIndex)
 
 						' [12-Apr-2022] From RED_EYE. (He is using someone else's set of data strutures for PHY file.)
 						'     flags: has_children: (self.flags >> 0) & 3  ' 0 = false; > 0 true
 						'     This seems to be correct way rather than checking Me.thePhyFileData.theSourcePhyIsCollisionModel.
 						'     Example where checking Me.thePhyFileData.theSourcePhyIsCollisionModel is incorrect (because the gib meshes are compiled in): 
 						'         "SourceFilmmaker\game\hl2\models\combine_strider.mdl"
-						If (convexMesh.flags And 3) > 0 Then
+						If Not Me.thePhyFileData.isBigEndian AndAlso (convexMesh.flags And 3) > 0 Then
 							Continue For
 						End If
 
 						If Me.theMdlFileData.theBones.Count = 1 Then
-							boneIndex = 0
-						Else
-							boneIndex = convexMesh.theBoneIndex
-							' MDL36 and MDL37 need this because their PHY does not store bone index.
-							' Model versions above MDL37 can have multiple bones with same name, so this check needs to be last.
-							If boneIndex < 0 Then
-								If aSourcePhysCollisionModel IsNot Nothing AndAlso Me.theMdlFileData.theBoneNameToBoneIndexMap.ContainsKey(aSourcePhysCollisionModel.theName) Then
-									boneIndex = Me.theMdlFileData.theBoneNameToBoneIndexMap(aSourcePhysCollisionModel.theName)
-								Else
-									' Not expected to reach here, but just in case, write a mesh connected to first bone instead of writing an empty mesh.
-									boneIndex = 0
+								boneIndex = 0
+							Else
+								boneIndex = convexMesh.theBoneIndex
+								' MDL36 and MDL37 need this because their PHY does not store bone index.
+								' Model versions above MDL37 can have multiple bones with same name, so this check needs to be last.
+								If boneIndex < 0 Then
+									If aSourcePhysCollisionModel IsNot Nothing AndAlso Me.theMdlFileData.theBoneNameToBoneIndexMap.ContainsKey(aSourcePhysCollisionModel.theName) Then
+										boneIndex = Me.theMdlFileData.theBoneNameToBoneIndexMap(aSourcePhysCollisionModel.theName)
+									Else
+										' Not expected to reach here, but just in case, write a mesh connected to first bone instead of writing an empty mesh.
+										boneIndex = 0
+									End If
 								End If
 							End If
-						End If
-						aBone = Me.theMdlFileData.theBones(boneIndex)
+							aBone = Me.theMdlFileData.theBones(boneIndex)
 
-						For triangleIndex As Integer = 0 To convexMesh.theFaces.Count - 1
-							aTriangle = convexMesh.theFaces(triangleIndex)
+							For triangleIndex As Integer = 0 To convexMesh.theFaces.Count - 1
+								aTriangle = convexMesh.theFaces(triangleIndex)
 
-							line = "  phy"
-							Me.theOutputFileStreamWriter.WriteLine(line)
-
-							'  19 -0.000009 0.000001 0.999953 0.0 0.0 0.0 1 0
-							'  19 -0.000005 1.000002 -0.000043 0.0 0.0 0.0 1 0
-							'  19 -0.008333 0.997005 1.003710 0.0 0.0 0.0 1 0
-							For vertexIndex As Integer = 0 To aTriangle.vertexIndex.Length - 1
-								'phyVertex = collisionData.theVertices(aTriangle.vertexIndex(vertexIndex))
-								phyVertex = convexMesh.theVertices(aTriangle.vertexIndex(vertexIndex))
-
-								aVectorTransformed = Me.TransformPhyVertex(aBone, phyVertex.vertex, aSourcePhysCollisionModel)
-
-								''DEBUG: Move different face sections away from each other.
-								'aVectorTransformed.x += faceSectionIndex * 20
-								'aVectorTransformed.y += faceSectionIndex * 20
-
-								line = "    "
-								line += boneIndex.ToString(TheApp.InternalNumberFormat)
-								line += " "
-								line += aVectorTransformed.x.ToString("0.000000", TheApp.InternalNumberFormat)
-								line += " "
-								line += aVectorTransformed.y.ToString("0.000000", TheApp.InternalNumberFormat)
-								line += " "
-								line += aVectorTransformed.z.ToString("0.000000", TheApp.InternalNumberFormat)
-
-								'line += " 0 0 0"
-								'------
-								line += " "
-								line += phyVertex.Normal.x.ToString("0.000000", TheApp.InternalNumberFormat)
-								line += " "
-								line += phyVertex.Normal.y.ToString("0.000000", TheApp.InternalNumberFormat)
-								line += " "
-								line += phyVertex.Normal.z.ToString("0.000000", TheApp.InternalNumberFormat)
-
-								line += " 0 0"
-								'NOTE: The studiomdl.exe doesn't need the integer values at end.
-								'line += " 1 0"
+								line = "  phy"
 								Me.theOutputFileStreamWriter.WriteLine(line)
+
+								'  19 -0.000009 0.000001 0.999953 0.0 0.0 0.0 1 0
+								'  19 -0.000005 1.000002 -0.000043 0.0 0.0 0.0 1 0
+								'  19 -0.008333 0.997005 1.003710 0.0 0.0 0.0 1 0
+								For vertexIndex As Integer = 0 To aTriangle.vertexIndex.Length - 1
+									'phyVertex = collisionData.theVertices(aTriangle.vertexIndex(vertexIndex))
+									phyVertex = convexMesh.theVertices(aTriangle.vertexIndex(vertexIndex))
+
+									aVectorTransformed = Me.TransformPhyVertex(aBone, phyVertex.vertex, aSourcePhysCollisionModel)
+
+									''DEBUG: Move different face sections away from each other.
+									'aVectorTransformed.x += faceSectionIndex * 20
+									'aVectorTransformed.y += faceSectionIndex * 20
+
+									line = "    "
+									line += boneIndex.ToString(TheApp.InternalNumberFormat)
+									line += " "
+									line += aVectorTransformed.x.ToString("0.000000", TheApp.InternalNumberFormat)
+									line += " "
+									line += aVectorTransformed.y.ToString("0.000000", TheApp.InternalNumberFormat)
+									line += " "
+									line += aVectorTransformed.z.ToString("0.000000", TheApp.InternalNumberFormat)
+
+									'line += " 0 0 0"
+									'------
+									line += " "
+									line += phyVertex.Normal.x.ToString("0.000000", TheApp.InternalNumberFormat)
+									line += " "
+									line += phyVertex.Normal.y.ToString("0.000000", TheApp.InternalNumberFormat)
+									line += " "
+									line += phyVertex.Normal.z.ToString("0.000000", TheApp.InternalNumberFormat)
+
+									line += " 0 0"
+									'NOTE: The studiomdl.exe doesn't need the integer values at end.
+									'line += " 1 0"
+									Me.theOutputFileStreamWriter.WriteLine(line)
+								Next
 							Next
 						Next
 					Next
-				Next
-			End If
-		Catch ex As Exception
+				End If
+        Catch ex As Exception
 			Dim debug As Integer = 4242
 		End Try
 

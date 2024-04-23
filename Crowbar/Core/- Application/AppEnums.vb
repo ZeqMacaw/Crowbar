@@ -189,4 +189,19 @@ Public Module AppEnums
 		<Description("Decimal")> [Decimal]
 	End Enum
 
+	Public Enum BoltonType
+		<Description("Hair")> Hair
+		<Description("Glasses")> Glasses
+		<Description("Masks")> Masks
+		<Description("Bracelet1")> Bracelet1
+		<Description("Bracelet2")> Bracelet2
+		<Description("Earring1")> Earring1
+		<Description("Earring2")> Earring2
+		<Description("Hat")> Hat
+		<Description("Ring1")> Ring1
+		<Description("Ring2")> Ring2
+		<Description("Pin1")> Pin1
+		<Description("Pin2")> Pin2
+	End Enum
+
 End Module

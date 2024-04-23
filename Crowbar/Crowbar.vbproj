@@ -20,6 +20,21 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
     <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -127,6 +142,8 @@
     <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyAnimatedFrictionSection.vb" />
     <Compile Include="Core\GameModel\CompiledFiles\VvdFile\VvdFile04\SourceVvdExtraData04.vb" />
     <Compile Include="Core\GameModel\SourceCommon\SourceMdlFileData\SourceMdlAnimTag.vb" />
+    <Compile Include="Core\GameModel\SourceCommon\SourceMdlFileData\SourceMdlBolton.vb" />
+    <Compile Include="Core\GameModel\SourceCommon\SourceMdlFileData\SourceMdlPrefab.vb" />
     <Compile Include="Core\GameModel\SourceGlobal\SourceTextureCoordinates.vb" />
     <Compile Include="Core\GameModel\SourceModel52\SourceMdlFileData\RSourcePerTriCollisionHeader52.vb" />
     <Compile Include="Core\GameModel\SourceModel52\SourceMdlFileData\SourceMdlBone52.vb" />
@@ -1009,6 +1026,13 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Core\GameModel\UncompiledFiles\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

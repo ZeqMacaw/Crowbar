@@ -260,7 +260,11 @@ Public Class SourceQcFile
 					length = textureFileNameMaxLengths(textureFileNameIndex)
 
 					'NOTE: Need at least "+ 2" to account for the double-quotes.
-					line += LSet("""" + aTextureFileName + """", length + 3)
+					If TheApp.Settings.IsPostal3IsChecked AndAlso textureFileNameIndex = 0 Then
+						line += LSet("""#Skin" + skinFamilyIndex.ToString() + """ """ + aTextureFileName + """", length + 16)
+					Else
+						line += LSet("""" + aTextureFileName + """", length + 3)
+					End If
 				Next
 
 				'line += " "

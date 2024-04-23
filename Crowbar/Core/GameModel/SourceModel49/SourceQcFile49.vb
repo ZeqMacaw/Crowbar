@@ -77,6 +77,10 @@ Public Class SourceQcFile49
 			Try
 				If File.Exists(qciPathFileName) Then
 					Dim qciFileInfo As New FileInfo(qciPathFileName)
+					Dim bodyPartIndex As Integer
+					bodyPartIndex = Me.theMdlFileData.theBodyParts.IndexOf(Me.theBodyPartForFlexWriting)
+					Dim aBodyPart As SourceMdlBodyPart
+					aBodyPart = Me.theMdlFileData.theBodyParts(bodyPartIndex)
 					If qciFileInfo.Length > 0 Then
 						Dim line As String = ""
 
@@ -87,6 +91,9 @@ Public Class SourceQcFile49
 						End If
 						If includeLineIsIndented Then
 							line += vbTab
+							If TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+								line += vbTab
+							End If
 						End If
 						If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
 							line += "$Include "
@@ -230,7 +237,9 @@ Public Class SourceQcFile49
 		'Dim aBodyPart As SourceMdlBodyPart
 		Dim bodyPartIndex As Integer
 		Dim aBodyModel As SourceMdlModel
+		Dim aVtxBodyPart As SourceVtxBodyPart07
 		Dim eyeballNames As List(Of String)
+		Dim aVtxModel As SourceVtxModel07
 
 		'$model "producer" "producer_model_merged.dmx.smd" {
 		'//-doesn't work     eyeball righteye ValveBiped.Bip01_Head1 -1.260 -0.086 64.594 eyeball_r 1.050  3.000 producer_head 0.530
@@ -246,30 +255,101 @@ Public Class SourceQcFile49
 		bodyPartIndex = Me.theMdlFileData.theBodyParts.IndexOf(aBodyPart)
 		aBodyModel.theSmdFileNames(0) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(0), bodyPartIndex, 0, 0, Me.theModelName, aBodyPart.theModels(0).name)
 
-		If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
-			line = "$Model "
+		'Because Postal III supports multiple bodypart meshes with $model features for each studio mesh
+		If TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+				line = "$BodyGroup "
+			Else
+				line = "$bodygroup "
+			End If
 		Else
-			line = "$model "
+			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+				line = "$Model "
+			Else
+				line = "$model "
+			End If
 		End If
 		line += """"
 		line += aBodyPart.theName
-		line += """ """
-		line += aBodyModel.theSmdFileNames(0)
-		line += """"
+		'line += """ """
+		If TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+			line += """"
+			Me.theOutputFileStreamWriter.WriteLine(line)
+			line = "{"
+		Else
+			line += """ """
+			line += aBodyModel.theSmdFileNames(0)
+			line += """"
 
-		line += " {"
-		Me.theOutputFileStreamWriter.WriteLine(line)
+			If TheApp.Settings.IsPostal3IsChecked Then
+				line += " ""#"
+				line += aBodyModel.theSmdFileNames(0).Substring(0, aBodyModel.theSmdFileNames(0).Length - 4)
+				line += """"
+			End If
 
-		'NOTE: Must call WriteEyeballLines() before WriteEyelidLines(), because eyeballNames are created in first and sent to other.
-		Me.WriteEyeballLines(aBodyPart, eyeballNames)
-		Me.WriteEyelidLines(aBodyPart, eyeballNames)
-
-		If bodyPartIndex = 0 Then
-			Me.WriteMouthLines()
+			line += " {"
 		End If
 
-		Me.theBodyPartForFlexWriting = aBodyPart
-		Me.WriteGroup("flex", AddressOf WriteGroupFlex, False, True)
+		Me.theOutputFileStreamWriter.WriteLine(line)
+
+		If TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+			If Me.theVtxFileData IsNot Nothing AndAlso Me.theVtxFileData.theVtxBodyParts IsNot Nothing AndAlso Me.theVtxFileData.theVtxBodyParts.Count > 0 Then
+				aVtxBodyPart = Me.theVtxFileData.theVtxBodyParts(bodyPartIndex)
+			Else
+				aVtxBodyPart = Nothing
+			End If
+
+			If aBodyPart.theModels IsNot Nothing AndAlso aBodyPart.theModels.Count > 0 Then
+				For modelIndex As Integer = 0 To aBodyPart.theModels.Count - 1
+					aBodyModel = aBodyPart.theModels(modelIndex)
+
+					If aVtxBodyPart IsNot Nothing AndAlso aVtxBodyPart.theVtxModels IsNot Nothing AndAlso aVtxBodyPart.theVtxModels.Count > 0 Then
+						aVtxModel = aVtxBodyPart.theVtxModels(modelIndex)
+					Else
+						aVtxModel = Nothing
+					End If
+
+					line = vbTab
+					If aBodyModel.name(0) = ChrW(0) AndAlso (aVtxModel IsNot Nothing AndAlso aVtxModel.theVtxModelLods(0).theVtxMeshes Is Nothing) Then
+						line += "blank"
+					Else
+						aBodyModel.theSmdFileNames(0) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(0), bodyPartIndex, modelIndex, 0, Me.theModelName, aBodyModel.name)
+						line += "studio "
+						line += """"
+						line += aBodyModel.theSmdFileNames(0)
+						line += """ ""#"
+						line += aBodyModel.theSmdFileNames(0).Substring(0, aBodyModel.theSmdFileNames(0).Length - 4)
+						line += """ {"
+						Me.theOutputFileStreamWriter.WriteLine(line)
+
+						'NOTE: Must call WriteEyeballLines() before WriteEyelidLines(), because eyeballNames are created in first and sent to other.
+						Me.WriteEyeballLines(aBodyPart, eyeballNames)
+						Me.WriteEyelidLines(aBodyPart, eyeballNames)
+
+						If bodyPartIndex = 0 Then
+							Me.WriteMouthLines(aBodyPart)
+						End If
+
+						Me.theBodyPartForFlexWriting = aBodyPart
+						Me.WriteGroup("flex", AddressOf WriteGroupFlex, False, True)
+						line = vbTab
+						line += "}"
+					End If
+					Me.theOutputFileStreamWriter.WriteLine(line)
+				Next
+			End If
+		Else
+			'NOTE: Must call WriteEyeballLines() before WriteEyelidLines(), because eyeballNames are created in first and sent to other.
+			Me.WriteEyeballLines(aBodyPart, eyeballNames)
+			Me.WriteEyelidLines(aBodyPart, eyeballNames)
+
+			If bodyPartIndex = 0 Then
+				Me.WriteMouthLines(aBodyPart)
+			End If
+
+			Me.theBodyPartForFlexWriting = aBodyPart
+			Me.WriteGroup("flex", AddressOf WriteGroupFlex, False, True)
+		End If
 
 		line = "}"
 		Me.theOutputFileStreamWriter.WriteLine(line)
@@ -304,8 +384,10 @@ Public Class SourceQcFile49
 			If aBodyPart.theModels IsNot Nothing AndAlso aBodyPart.theModels.Count > 0 Then
 				aModel = aBodyPart.theModels(0)
 				If aModel.theEyeballs IsNot Nothing AndAlso aModel.theEyeballs.Count > 0 Then
-					line = ""
-					Me.theOutputFileStreamWriter.WriteLine(line)
+					If Not TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+						line = ""
+						Me.theOutputFileStreamWriter.WriteLine(line)
+					End If
 
 					For eyeballIndex As Integer = 0 To aModel.theEyeballs.Count - 1
 						anEyeball = aModel.theEyeballs(eyeballIndex)
@@ -372,6 +454,9 @@ Public Class SourceQcFile49
 						End If
 
 						line = vbTab
+						If TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+							line += vbTab
+						End If
 						line += "eyeball """
 						line += eyeballNames(eyeballIndex)
 						line += """ """
@@ -445,8 +530,10 @@ Public Class SourceQcFile49
 			If aBodyPart.theModels IsNot Nothing AndAlso aBodyPart.theModels.Count > 0 Then
 				aModel = aBodyPart.theModels(0)
 				If aModel.theEyeballs IsNot Nothing AndAlso aModel.theEyeballs.Count > 0 Then
-					line = ""
-					Me.theOutputFileStreamWriter.WriteLine(line)
+					If Not TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+						line = ""
+						Me.theOutputFileStreamWriter.WriteLine(line)
+					End If
 
 					'frameIndex = 0
 					For eyeballIndex As Integer = 0 To aModel.theEyeballs.Count - 1
@@ -467,6 +554,9 @@ Public Class SourceQcFile49
 						eyelidName = Me.theMdlFileData.theFlexDescs(anEyeball.upperLidFlexDesc).theName
 
 						line = vbTab
+						If TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+							line += vbTab
+						End If
 						line += "eyelid "
 						line += eyelidName
 						'line += " """
@@ -545,6 +635,9 @@ Public Class SourceQcFile49
 						eyelidName = Me.theMdlFileData.theFlexDescs(anEyeball.lowerLidFlexDesc).theName
 
 						line = vbTab
+						If TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+							line += vbTab
+						End If
 						line += "eyelid "
 						line += eyelidName
 						'line += " """
@@ -636,7 +729,7 @@ Public Class SourceQcFile49
 		End If
 	End Function
 
-	Private Sub WriteMouthLines()
+	Private Sub WriteMouthLines(ByVal aBodyPart As SourceMdlBodyPart)
 		Dim line As String = ""
 		Dim offsetX As Double
 		Dim offsetY As Double
@@ -644,8 +737,10 @@ Public Class SourceQcFile49
 
 		'NOTE: Writes out mouth line correctly for teenangst zoey.
 		If Me.theMdlFileData.theMouths IsNot Nothing AndAlso Me.theMdlFileData.theMouths.Count > 0 Then
-			line = ""
-			Me.theOutputFileStreamWriter.WriteLine(line)
+			If Not TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+				line = ""
+				Me.theOutputFileStreamWriter.WriteLine(line)
+			End If
 
 			For i As Integer = 0 To Me.theMdlFileData.theMouths.Count - 1
 				Dim aMouth As SourceMdlMouth
@@ -655,6 +750,9 @@ Public Class SourceQcFile49
 				offsetZ = Math.Round(aMouth.forward.z, 3)
 
 				line = vbTab
+				If TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+					line += vbTab
+				End If
 				line += "mouth "
 				line += i.ToString(TheApp.InternalNumberFormat)
 				line += " """
@@ -691,11 +789,16 @@ Public Class SourceQcFile49
 		'If Me.theBodyPartForFlexWriting.theFlexFrames IsNot Nothing AndAlso Me.theBodyPartForFlexWriting.theFlexFrames.Count > 1 Then
 		Dim bodyPartIndex As Integer
 		bodyPartIndex = Me.theMdlFileData.theBodyParts.IndexOf(Me.theBodyPartForFlexWriting)
+		Dim aBodyPart As SourceMdlBodyPart
+		aBodyPart = Me.theMdlFileData.theBodyParts(bodyPartIndex)
 
 		line = ""
 		Me.theOutputFileStreamWriter.WriteLine(line)
 
 		line = vbTab
+		If TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+			line += vbTab
+		End If
 		line += "flexfile"
 		'line += Path.GetFileNameWithoutExtension(CStr(Me.theSourceEngineModel.theMdlFileHeader.theBodyParts(0).theModels(0).name).Trim(Chr(0)))
 		'line += ".vta"""
@@ -705,12 +808,18 @@ Public Class SourceQcFile49
 		Me.theOutputFileStreamWriter.WriteLine(line)
 
 		line = vbTab
+		If TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+			line += vbTab
+		End If
 		line += "{"
 		Me.theOutputFileStreamWriter.WriteLine(line)
 
 		'======
 		line = vbTab
 		line += vbTab
+		If TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+			line += vbTab
+		End If
 		line += "defaultflex frame 0"
 		Me.theOutputFileStreamWriter.WriteLine(line)
 
@@ -722,6 +831,9 @@ Public Class SourceQcFile49
 			aFlexFrame = Me.theBodyPartForFlexWriting.theFlexFrames(frameIndex)
 			line = vbTab
 			line += vbTab
+			If TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+				line += vbTab
+			End If
 			If Me.theMdlFileData.theFlexDescs(aFlexFrame.flexes(0).flexDescIndex).theDescIsUsedByEyelid Then
 				line += "// Already in eyelid lines: "
 			End If
@@ -821,6 +933,9 @@ Public Class SourceQcFile49
 		'Next
 
 		line = vbTab
+		If TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+			line += vbTab
+		End If
 		line += "}"
 		Me.theOutputFileStreamWriter.WriteLine(line)
 		'End If
@@ -833,6 +948,10 @@ Public Class SourceQcFile49
 			Dim aFlexController As SourceMdlFlexController
 			Dim flexControllerNames As New List(Of String)()
 			Dim commentOperatorText As String
+			Dim bodyPartIndex As Integer
+			bodyPartIndex = Me.theMdlFileData.theBodyParts.IndexOf(Me.theBodyPartForFlexWriting)
+			Dim aBodyPart As SourceMdlBodyPart
+			aBodyPart = Me.theMdlFileData.theBodyParts(bodyPartIndex)
 
 			line = ""
 			Me.theOutputFileStreamWriter.WriteLine(line)
@@ -842,6 +961,9 @@ Public Class SourceQcFile49
 
 				If flexControllerNames.Contains(aFlexController.theName) Then
 					line = vbTab
+					If TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+						line += vbTab
+					End If
 					line += "// Although in the original model, the line below is a duplicate of a line above and is commented-out to avoid problems in Source Filmmaker (and possibly other tools)."
 					Me.theOutputFileStreamWriter.WriteLine(line)
 					commentOperatorText = "//"
@@ -857,6 +979,9 @@ Public Class SourceQcFile49
 				End If
 
 				line = vbTab
+				If TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+					line += vbTab
+				End If
 				line += commentOperatorText
 				line += "flexcontroller "
 				line += aFlexController.theType
@@ -878,6 +1003,10 @@ Public Class SourceQcFile49
 
 		If Me.theMdlFileData.theFlexRules IsNot Nothing AndAlso Me.theMdlFileData.theFlexRules.Count > 0 Then
 			Dim aFlexRule As SourceMdlFlexRule
+			Dim bodyPartIndex As Integer
+			bodyPartIndex = Me.theMdlFileData.theBodyParts.IndexOf(Me.theBodyPartForFlexWriting)
+			Dim aBodyPart As SourceMdlBodyPart
+			aBodyPart = Me.theMdlFileData.theBodyParts(bodyPartIndex)
 
 			line = ""
 			Me.theOutputFileStreamWriter.WriteLine(line)
@@ -888,6 +1017,9 @@ Public Class SourceQcFile49
 
 				If Not flexDesc.theDescIsUsedByFlex AndAlso flexDesc.theDescIsUsedByFlexRule Then
 					line = vbTab
+					If TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+						line += vbTab
+					End If
 					line += "localvar "
 					line += flexDesc.theName
 					Me.theOutputFileStreamWriter.WriteLine(line)
@@ -897,7 +1029,13 @@ Public Class SourceQcFile49
 			For i As Integer = 0 To Me.theMdlFileData.theFlexRules.Count - 1
 				aFlexRule = Me.theMdlFileData.theFlexRules(i)
 				'line = Me.GetFlexRule(aFlexRule)
-				line = Common.GetFlexRule(Me.theMdlFileData.theFlexDescs, Me.theMdlFileData.theFlexControllers, aFlexRule)
+				If TheApp.Settings.IsPostal3IsChecked AndAlso aBodyPart.modelCount > 1 Then
+					line = vbTab
+					line += Common.GetFlexRule(Me.theMdlFileData.theFlexDescs, Me.theMdlFileData.theFlexControllers, aFlexRule)
+				Else
+					line = Common.GetFlexRule(Me.theMdlFileData.theFlexDescs, Me.theMdlFileData.theFlexControllers, aFlexRule)
+				End If
+
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
 		End If
@@ -4828,11 +4966,21 @@ Public Class SourceQcFile49
 						If aBodyModel.name(0) = ChrW(0) AndAlso (aVtxModel IsNot Nothing AndAlso aVtxModel.theVtxModelLods(0).theVtxMeshes Is Nothing) Then
 							line += "blank"
 						Else
-							aBodyModel.theSmdFileNames(0) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(0), bodyPartIndex, modelIndex, 0, Me.theModelName, aBodyModel.name)
-							line += "studio "
-							line += """"
-							line += aBodyModel.theSmdFileNames(0)
-							line += """"
+							If TheApp.Settings.IsPostal3IsChecked Then
+								aBodyModel.theSmdFileNames(0) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(0), bodyPartIndex, modelIndex, 0, Me.theModelName, aBodyModel.name)
+								line += "studio "
+								line += """"
+								line += aBodyModel.theSmdFileNames(0)
+								line += """ ""#"
+								line += aBodyModel.theSmdFileNames(0).Substring(0, aBodyModel.theSmdFileNames(0).Length - 4)
+								line += """"
+							Else
+								aBodyModel.theSmdFileNames(0) = SourceFileNamesModule.CreateBodyGroupSmdFileName(aBodyModel.theSmdFileNames(0), bodyPartIndex, modelIndex, 0, Me.theModelName, aBodyModel.name)
+								line += "studio "
+								line += """"
+								line += aBodyModel.theSmdFileNames(0)
+								line += """"
+							End If
 						End If
 						Me.theOutputFileStreamWriter.WriteLine(line)
 					Next
@@ -5048,6 +5196,81 @@ Public Class SourceQcFile49
 			End If
 		Catch ex As Exception
 			Dim debug As Integer = 4242
+		End Try
+	End Sub
+
+	Public Sub WriteBoltons()
+		Dim line As String = ""
+
+		Try
+			If Me.theMdlFileData.numBoltons > 0 Then
+				Dim aBolton As SourceMdlBolton
+				Dim m_BoltonType As BoltonType
+
+				For i As Integer = 0 To Me.theMdlFileData.numBoltons - 1
+					aBolton = Me.theMdlFileData.theBoltons(i)
+
+					line = "$bolton ""Bolton" + i.ToString()
+					line += """ """
+
+					m_BoltonType = CType(aBolton.type, BoltonType)
+					line += m_BoltonType.ToString()
+					line += """ """
+					line += aBolton.theModelName
+					line += """"
+
+					Me.theOutputFileStreamWriter.WriteLine(line)
+				Next
+			End If
+		Catch ex As Exception
+
+		End Try
+	End Sub
+
+	Public Sub WritePrefabs()
+		Dim line As String = ""
+
+		Try
+			If Me.theMdlFileData.numPrefabs > 0 Then
+				Dim aPrefab As SourceMdlPrefab
+
+				For i As Integer = 0 To Me.theMdlFileData.numPrefabs - 1
+					aPrefab = Me.theMdlFileData.thePrefabs(i)
+
+					line = "$prefab """
+					line += aPrefab.theName
+					line += """ """
+					line += "#Skin" + aPrefab.skin.ToString()
+					line += """"
+
+					For j As Integer = 0 To Me.theMdlFileData.numBoltons - 1
+						Dim bits As Integer
+						bits = 1 << j
+
+						If (bits And aPrefab.boltonsmask) = bits Then
+							line += " ""Bolton" + j.ToString()
+							line += """"
+						End If
+					Next
+
+					For j As Integer = 0 To Me.theMdlFileData.bodyPartCount - 1
+						Dim aBodyPart As SourceMdlBodyPart
+						aBodyPart = Me.theMdlFileData.theBodyParts(j)
+						Dim aModel As SourceMdlModel
+						aModel = aBodyPart.theModels(aPrefab.theBodyParts(j))
+						Dim bodyPartName As String
+						If Not aModel.theSmdFileNames(0) = "" Then
+							bodyPartName = aModel.theSmdFileNames(0).Substring(0, aModel.theSmdFileNames(0).Length - 4)
+							line += " ""#" + bodyPartName
+							line += """"
+						End If
+					Next
+
+					Me.theOutputFileStreamWriter.WriteLine(line)
+				Next
+            End If
+		Catch ex As Exception
+
 		End Try
 	End Sub
 
