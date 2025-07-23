@@ -1,25 +1,25 @@
 ﻿Module WidgetConstants
 
-	Public WidgetTextColor As Color = Color.FromArgb(241, 241, 241)
-	Public WidgetSelectedTextColor As Color = Color.FromArgb(16, 124, 16)
-	Public WidgetDisabledTextColor As Color = Color.FromArgb(128, 128, 128)
+	Public WidgetTextColor As Color = Color.FromArgb(&HFFF1F1F1)
+	Public WidgetSelectedTextColor As Color = Color.FromArgb(&HFF107C10)
+	Public WidgetDisabledTextColor As Color = Color.FromArgb(&HFF808080)
 
 	' For: Button, ComboBox
-	Public WidgetHighBackColor As Color = Color.FromArgb(75, 75, 75)
-	Public WidgetHighSelectedBackColor As Color = Color.FromArgb(16, 124, 16)
-	Public WidgetHighDisabledBackColor As Color = Color.FromArgb(75, 75, 75)
+	Public WidgetHighBackColor As Color = Color.FromArgb(&HFF4B4B4B)
+	Public WidgetHighSelectedBackColor As Color = Color.FromArgb(&HFF107C10)
+	Public WidgetHighDisabledBackColor As Color = Color.FromArgb(&HFF4B4B4B)
 
-	'For: Label, MenuBar, Panel, TabControl, TabPage
-	Public WidgetBackColor As Color = Color.FromArgb(45, 45, 45)
-	Public WidgetSelectedBackColor As Color = Color.FromArgb(16, 124, 16)
-	Public WidgetDisabledBackColor As Color = Color.FromArgb(45, 45, 45)
+	'For: CheckBox label, LabelEx, MenuBar, Panel, TabControl, TabPage
+	Public WidgetBackColor As Color = Color.FromArgb(&HFF2D2D2D)
+	Public WidgetSelectedBackColor As Color = Color.FromArgb(&HFF107C10)
+	Public WidgetDisabledBackColor As Color = Color.FromArgb(&HFF2D2D2D)
 
 	' For: ListView, Menu, MenuItem, TextBox, TreeView
-	Public WidgetDeepBackColor As Color = Color.FromArgb(30, 30, 30)
-	Public WidgetDeepSelectedBackColor As Color = Color.FromArgb(16, 124, 16)
-	Public WidgetDeepDisabledBackColor As Color = Color.FromArgb(30, 30, 30)
+	Public WidgetDeepBackColor As Color = Color.FromArgb(&HFF1E1E1E)
+	Public WidgetDeepSelectedBackColor As Color = Color.FromArgb(&HFF107C10)
+	Public WidgetDeepDisabledBackColor As Color = Color.FromArgb(&HFF2D2D2D)
 
 
-	Public Windows10GlobalAccentColor As Color = Color.Red
+	Public Windows10GlobalAccentColor As Color = Color.Green
 
 End Module

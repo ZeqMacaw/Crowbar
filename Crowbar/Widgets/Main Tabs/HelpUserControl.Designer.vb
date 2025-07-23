@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class HelpUserControl
 	Inherits BaseUserControl
 
@@ -17,23 +17,24 @@ Partial Class HelpUserControl
 	'Required by the Windows Form Designer
 	Private components As System.ComponentModel.IContainer
 
-    'NOTE: The following procedure is required by the Windows Form Designer
-    'It can be modified using the Windows Form Designer.  
-    'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
-    Private Sub InitializeComponent()
+	'NOTE: The following procedure is required by the Windows Form Designer
+	'It can be modified using the Windows Form Designer.  
+	'Do not modify it using the code editor.
+	<System.Diagnostics.DebuggerStepThrough()>
+	Private Sub InitializeComponent()
 		Me.TutorialLinkLabel = New System.Windows.Forms.LinkLabel()
 		Me.ContentsLinkLabel = New System.Windows.Forms.LinkLabel()
 		Me.IndexLinkLabel = New System.Windows.Forms.LinkLabel()
 		Me.TipsLinkLabel = New System.Windows.Forms.LinkLabel()
-		Me.GroupBox1 = New GroupBoxEx()
-		Me.Label4 = New System.Windows.Forms.Label()
-		Me.Label3 = New System.Windows.Forms.Label()
-		Me.Label2 = New System.Windows.Forms.Label()
-		Me.Label1 = New System.Windows.Forms.Label()
-		Me.Label5 = New System.Windows.Forms.Label()
-		Me.Label6 = New System.Windows.Forms.Label()
-		Me.CrowbarGuideButton = New ButtonEx()
+		Me.GroupBox1 = New Crowbar.GroupBoxEx()
+		Me.Label4 = New Crowbar.LabelEx()
+		Me.Label3 = New Crowbar.LabelEx()
+		Me.Label2 = New Crowbar.LabelEx()
+		Me.Label1 = New Crowbar.LabelEx()
+		Me.Label5 = New Crowbar.LabelEx()
+		Me.Label6 = New Crowbar.LabelEx()
+		Me.CrowbarGuideButton = New Crowbar.ButtonEx()
+		Me.PanelEx1 = New Crowbar.PanelEx()
 		Me.GroupBox1.SuspendLayout()
 		Me.SuspendLayout()
 		'
@@ -103,6 +104,7 @@ Partial Class HelpUserControl
 		Me.GroupBox1.Controls.Add(Me.TipsLinkLabel)
 		Me.GroupBox1.Controls.Add(Me.ContentsLinkLabel)
 		Me.GroupBox1.Controls.Add(Me.IndexLinkLabel)
+		Me.GroupBox1.IsReadOnly = False
 		Me.GroupBox1.Location = New System.Drawing.Point(49, 388)
 		Me.GroupBox1.Name = "GroupBox1"
 		Me.GroupBox1.Size = New System.Drawing.Size(640, 132)
@@ -204,12 +206,12 @@ Partial Class HelpUserControl
 	Friend WithEvents IndexLinkLabel As System.Windows.Forms.LinkLabel
 	Friend WithEvents TipsLinkLabel As System.Windows.Forms.LinkLabel
 	Friend WithEvents GroupBox1 As GroupBoxEx
-	Friend WithEvents Label4 As System.Windows.Forms.Label
-	Friend WithEvents Label3 As System.Windows.Forms.Label
-	Friend WithEvents Label2 As System.Windows.Forms.Label
-	Friend WithEvents Label1 As System.Windows.Forms.Label
-	Friend WithEvents Label5 As System.Windows.Forms.Label
-	Friend WithEvents Label6 As System.Windows.Forms.Label
+	Friend WithEvents Label4 As Crowbar.LabelEx
+	Friend WithEvents Label3 As Crowbar.LabelEx
+	Friend WithEvents Label2 As Crowbar.LabelEx
+	Friend WithEvents Label1 As Crowbar.LabelEx
+	Friend WithEvents Label5 As Crowbar.LabelEx
+	Friend WithEvents Label6 As Crowbar.LabelEx
 	Friend WithEvents CrowbarGuideButton As ButtonEx
-
+	Friend WithEvents PanelEx1 As PanelEx
 End Class

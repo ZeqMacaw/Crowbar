@@ -10,25 +10,51 @@ Public Class ViewUserControl
 		InitializeComponent()
 	End Sub
 
+	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
+		Try
+			If disposing Then
+				Me.Free()
+				If components IsNot Nothing Then
+					components.Dispose()
+				End If
+			End If
+		Finally
+			MyBase.Dispose(disposing)
+		End Try
+	End Sub
+
 #End Region
 
 #Region "Init and Free"
 
 	Protected Overrides Sub Init()
+		MyBase.Init()
+
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If TheApp Is Nothing Then
+			Exit Sub
+		End If
+
 		Me.theModelViewers = New List(Of Viewer)()
 
 		Me.UpdateDataBindings()
 
 		Me.UpdateWidgets(False)
 
+		AddHandler Me.OverrideMdlVersionComboUserControl.SelectedValueChanged, AddressOf Me.OverrideMdlVersionComboUserControl_SelectedValueChanged
 		AddHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
-
-		Me.RunDataViewer()
 	End Sub
 
-	' Needed for closing any active child processes. Only called on program exit.
 	Protected Overrides Sub Free()
-		'RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
+		MyBase.Free()
+
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If Not Me.InitHasBeenCalled OrElse TheApp Is Nothing Then
+			Exit Sub
+		End If
+
+		RemoveHandler Me.OverrideMdlVersionComboUserControl.SelectedValueChanged, AddressOf Me.OverrideMdlVersionComboUserControl_SelectedValueChanged
+		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 
 		''RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
 		'If Me.MdlPathFileNameTextBox.DataBindings("Text") IsNot Nothing Then
@@ -36,7 +62,7 @@ Public Class ViewUserControl
 		'End If
 		'Me.MdlPathFileNameTextBox.DataBindings.Clear()
 
-		'Me.OverrideMdlVersionComboBox.DataBindings.Clear()
+		Me.OverrideMdlVersionComboUserControl.DataBindings.Clear()
 
 		'Me.FreeDataViewer()
 		Me.FreeModelViewerWithModel()
@@ -86,16 +112,14 @@ Public Class ViewUserControl
 
 #Region "Widget Event Handlers"
 
-	'Private Sub ViewUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-	'	If Not Me.DesignMode Then
-	'		Me.Init()
-	'		Me.theControlIsInDesignMode = True
-	'	End If
-	'End Sub
-
-	Private Sub ViewUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
+	Private Sub UpdateUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
-		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.MdlPathFileNameTextBox, Me.BrowseForMdlFileButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.MdlPathFileNameTextBox, Me.RefreshButton)
+
+		' [04-Feb-2026] Me.DesignMode is unreliable in nested widgets.
+		'If Not Me.DesignMode Then
+		Me.Init()
+		'End If
 	End Sub
 
 #End Region
@@ -112,6 +136,10 @@ Public Class ViewUserControl
 	'Private Sub MdlPathFileNameTextBox_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MdlPathFileNameTextBox.Validated
 	'	Me.MdlPathFileNameTextBox.Text = FileManager.GetCleanPathFileName(Me.MdlPathFileNameTextBox.Text)
 	'End Sub
+
+	Private Sub RefreshButton_Click(sender As Object, e As EventArgs) Handles RefreshButton.Click
+		Me.RunDataViewer()
+	End Sub
 
 	Private Sub BrowseForMdlFileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BrowseForMdlFileButton.Click
 		Dim openFileWdw As New OpenFileDialog()
@@ -138,6 +166,16 @@ Public Class ViewUserControl
 
 	Private Sub GotoMdlFileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GotoMdlFileButton.Click
 		FileManager.OpenWindowsExplorer(Me.AppSettingMdlPathFileName)
+	End Sub
+
+	Private Sub OverrideMdlVersionComboUserControl_SelectedValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+		' Because this enum is passed to DataSource as an IList, must manually bind for this direction.
+		Dim selectedValue As SupportedMdlVersion = CType(OverrideMdlVersionComboUserControl.SelectedValue, SupportedMdlVersion)
+		If Me.theViewerType = AppEnums.ViewerType.Preview Then
+			TheApp.Settings.PreviewOverrideMdlVersion = selectedValue
+		Else
+			TheApp.Settings.ViewOverrideMdlVersion = selectedValue
+		End If
 	End Sub
 
 	'Private Sub FromDecompileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
@@ -419,10 +457,10 @@ Public Class ViewUserControl
 	Private Sub UpdateDataBindings()
 		Dim anEnumList As IList
 		anEnumList = EnumHelper.ToList(GetType(SupportedMdlVersion))
-		Me.OverrideMdlVersionComboBox.DisplayMember = "Value"
-		Me.OverrideMdlVersionComboBox.ValueMember = "Key"
-		Me.OverrideMdlVersionComboBox.DataSource = anEnumList
-		Me.OverrideMdlVersionComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, Me.NameOfAppSettingOverrideMdlVersionName, False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.OverrideMdlVersionComboUserControl.DataSource = anEnumList
+		Me.OverrideMdlVersionComboUserControl.ValueMember = "Key"
+		Me.OverrideMdlVersionComboUserControl.DisplayMember = "Value"
+		Me.OverrideMdlVersionComboUserControl.DataBindings.Add("SelectedValue", TheApp.Settings, Me.NameOfAppSettingOverrideMdlVersionName, False, DataSourceUpdateMode.OnPropertyChanged)
 
 		Me.MdlPathFileNameTextBox.DataBindings.Add("Text", TheApp.Settings, Me.NameOfAppSettingMdlPathFileName, False, DataSourceUpdateMode.OnValidation)
 		'AddHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
@@ -431,9 +469,9 @@ Public Class ViewUserControl
 		'NOTE: Prevent changing this combobox's SelectedIndex when another combobox's (which also accesses "SelectedIndex" and TheApp.Settings) SelectedIndex changes.
 		Me.GameSetupComboBox.BindingContext = New BindingContext()
 		'NOTE: The DataSource, DisplayMember, and ValueMember need to be set before DataBindings, or else an exception is raised.
-		Me.GameSetupComboBox.DisplayMember = "GameName"
-		Me.GameSetupComboBox.ValueMember = "GameName"
 		Me.GameSetupComboBox.DataSource = TheApp.Settings.GameSetups
+		Me.GameSetupComboBox.ValueMember = "GameName"
+		Me.GameSetupComboBox.DisplayMember = "GameName"
 		Me.GameSetupComboBox.DataBindings.Add("SelectedIndex", TheApp.Settings, Me.NameOfAppSettingGameSetupSelectedIndex, False, DataSourceUpdateMode.OnPropertyChanged)
 	End Sub
 

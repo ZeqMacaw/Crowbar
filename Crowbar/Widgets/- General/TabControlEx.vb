@@ -1,34 +1,57 @@
+Imports System.ComponentModel
+
 Public Class TabControlEx
 	Inherits System.Windows.Forms.TabControl
 
+#Region "Creation and Destruction"
+
 	Public Sub New()
-		'NOTE: To workaround a bug with TabControl.TabPages.Insert() not inserting, force the handle to be created.
-		Dim h As IntPtr = Me.Handle
+		MyBase.New()
 
-		Me.theBackColor = WidgetBackColor
-		Me.theTabBackColor1 = WidgetHighBackColor
-		Me.theTabBackColor2 = WidgetHighBackColor
-		Me.theSelectedTabBackColor = Windows10GlobalAccentColor
-		Me.theTabPageForeColor = WidgetTextColor
-		Me.theTabPageBackColor = WidgetBackColor
+		' Use the system font instead of Visual Studio's default of Microsoft Sans Serif.
+		Me.Font = New Font(SystemFonts.MessageBoxFont.Name, 8.25)
+
+		''NOTE: To workaround a bug with TabControl.TabPages.Insert() not inserting, force the handle to be created.
+		'Dim h As IntPtr = Me.Handle
+
 		Me.ShowToolTips = True
-
 		Me.HotTrack = True
 		Me.theCursorIsOverTabs = False
-
-		'Me.DrawMode = TabDrawMode.OwnerDrawFixed
-		Me.SetStyle(ControlStyles.UserPaint, True)
 	End Sub
 
-	Public Overrides Property BackColor() As Color
-		Get
-			Return Me.theBackColor
-		End Get
-		Set(ByVal value As Color)
-			Me.theBackColor = value
-		End Set
-	End Property
+#End Region
 
+#Region "Init and Free"
+
+	Private Sub Init()
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If TheApp IsNot Nothing Then
+			Me.UpdateTheme()
+			AddHandler TheApp.Settings.PropertyChanged, AddressOf Me.AppSettings_PropertyChanged
+		End If
+	End Sub
+
+	Private Sub Free()
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If TheApp IsNot Nothing Then
+			RemoveHandler TheApp.Settings.PropertyChanged, AddressOf Me.AppSettings_PropertyChanged
+		End If
+	End Sub
+
+#End Region
+
+#Region "Properties"
+
+	'Public Overrides Property BackColor() As Color
+	'	Get
+	'		Return Me.theBackColor
+	'	End Get
+	'	Set(ByVal value As Color)
+	'		Me.theBackColor = value
+	'	End Set
+	'End Property
+
+	<DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
 	Public Property TabBackColor1() As Color
 		Get
 			Return Me.theTabBackColor1
@@ -38,6 +61,7 @@ Public Class TabControlEx
 		End Set
 	End Property
 
+	<DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
 	Public Property TabBackColor2() As Color
 		Get
 			Return Me.theTabBackColor2
@@ -47,6 +71,7 @@ Public Class TabControlEx
 		End Set
 	End Property
 
+	<DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
 	Public Property SelectedTabBackColor() As Color
 		Get
 			Return Me.theSelectedTabBackColor
@@ -56,6 +81,7 @@ Public Class TabControlEx
 		End Set
 	End Property
 
+	<DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
 	Public Property TabPageForeColor() As Color
 		Get
 			Return Me.theTabPageForeColor
@@ -65,6 +91,7 @@ Public Class TabControlEx
 		End Set
 	End Property
 
+	<DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
 	Public Property TabPageBackColor() As Color
 		Get
 			Return Me.theTabPageBackColor
@@ -83,6 +110,26 @@ Public Class TabControlEx
 	'	End Set
 	'End Property
 
+	Private ReadOnly Property ScrollPosition() As Int32
+		Get
+			Dim multiplier As Int32 = -1
+			Dim tabRect As Rectangle
+			Do
+				tabRect = GetTabRect(multiplier + 1)
+				multiplier += 1
+			Loop While tabRect.Left < 0 AndAlso multiplier < Me.TabCount
+			Return multiplier
+		End Get
+	End Property
+
+#End Region
+
+#Region "Methods"
+
+#End Region
+
+#Region "Widget Event Handlers"
+
 	'	'Protected Overrides Sub OnControlAdded(ByVal e As ControlEventArgs)
 	'	'	If TypeOf e.Control Is TabPage Then
 	'	'		Dim page As TabPage = CType(e.Control, Windows.Forms.TabPage)
@@ -91,10 +138,6 @@ Public Class TabControlEx
 	'	'		page.BackColor = Me.theTabPageBackColor
 	'	'	End If
 	'	'	MyBase.OnControlAdded(e)
-	'	'End Sub
-
-	'	'Private Sub TabControlEx_Disposed(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Disposed
-	'	'	Dim i As Integer = 0
 	'	'End Sub
 
 	'	'Private Sub TabControlEx_ParentChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.ParentChanged
@@ -268,6 +311,26 @@ Public Class TabControlEx
 	'		MyBase.OnDrawItem(e)
 	'	End Sub
 
+	Protected Overrides Sub OnHandleCreated(ByVal e As System.EventArgs)
+		MyBase.OnHandleCreated(e)
+		' [04-Feb-2026] Me.DesignMode is unreliable in nested widgets.
+		'If Not Me.DesignMode Then
+		Me.Init()
+		'End If
+
+		If Me.Multiline = False Then
+			Scroller.Font = New Font("Marlett", Me.Font.Size, FontStyle.Regular, GraphicsUnit.Pixel, Me.Font.GdiCharSet)
+			Win32Api.SetParent(Scroller.Handle, Me.Handle)
+		End If
+
+		Me.OnFontChanged(EventArgs.Empty)
+	End Sub
+
+	Protected Overrides Sub OnHandleDestroyed(e As EventArgs)
+		Me.Free()
+		MyBase.OnHandleDestroyed(e)
+	End Sub
+
 	'	'NOTE: Right-clicking a tab selects it. (OnMouseClick didn't run for right-click.)
 	'	Protected Overrides Sub OnMouseDown(ByVal e As System.Windows.Forms.MouseEventArgs)
 	'		If e.Button = Windows.Forms.MouseButtons.Right Then
@@ -281,9 +344,31 @@ Public Class TabControlEx
 	'		MyBase.OnMouseDown(e)
 	'	End Sub
 
-	'Draw the tab page And the tab items.
+	'Draw the tab page and the tab items.
+	' Need the following line for OnPaint() to be called by Windows:
+	'	Me.SetStyle(ControlStyles.UserPaint, True)
 	Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
 		If Me.TabCount > 0 Then
+			Dim theme As TabControlTheme = Nothing
+			' This check prevents problems with viewing and saving Forms in VS Designer.
+			If TheApp IsNot Nothing Then
+				theme = TheApp.Settings.SelectedAppTheme.TabControlTheme
+			End If
+			If theme IsNot Nothing Then
+				Me.theTabControlBackColor = theme.EnabledBackColor
+				Me.theTabBackColor1 = theme.EnabledBackColor
+				Me.theTabBackColor2 = theme.EnabledBackColor
+				Me.theSelectedTabBackColor = theme.SelectedBackColor
+				Me.theTabPageForeColor = theme.EnabledForeColor
+				Me.theTabPageBackColor = theme.EnabledBackColor
+			End If
+
+			' Draw TabControl background.
+			Using tabControlBackColorBrush As New SolidBrush(Me.theTabControlBackColor)
+				Dim clipRect As Rectangle = e.ClipRectangle
+				e.Graphics.FillRectangle(tabControlBackColorBrush, clipRect)
+			End Using
+
 			Dim redChannel As Byte = 0
 			Dim greenChannel As Byte = 0
 			Dim blueChannel As Byte = 0
@@ -310,13 +395,17 @@ Public Class TabControlEx
 					End Using
 					If tabRect.Contains(Me.PointToClient(Windows.Forms.Cursor.Position)) AndAlso Me.theCursorIsOverTabs AndAlso Me.HotTrack Then
 						' The '+ 30' makes the color slightly brighter.
-						redChannel = CByte(Math.Min(255, Me.theSelectedTabBackColor.R + 30))
-						greenChannel = CByte(Math.Min(255, Me.theSelectedTabBackColor.G + 30))
-						blueChannel = CByte(Math.Min(255, Me.theSelectedTabBackColor.B + 30))
-						Dim trackColor As Color = Color.FromArgb(redChannel, greenChannel, blueChannel)
-						Using tabPageHotTrackBrush As New SolidBrush(trackColor)
-							Dim hotTrackRect As Rectangle = Me.GetTabRect(index)
-							e.Graphics.FillRectangle(tabPageHotTrackBrush, hotTrackRect)
+						'redChannel = CByte(Math.Min(255, Me.theSelectedTabBackColor.R + 30))
+						'greenChannel = CByte(Math.Min(255, Me.theSelectedTabBackColor.G + 30))
+						'blueChannel = CByte(Math.Min(255, Me.theSelectedTabBackColor.B + 30))
+						'Dim trackColor As Color = Color.FromArgb(redChannel, greenChannel, blueChannel)
+						'Using tabPageHotTrackBrush As New SolidBrush(trackColor)
+						'	e.Graphics.FillRectangle(tabPageHotTrackBrush, tabRect)
+						'End Using
+						Using tabPageHotTrackBrush As New Drawing2D.LinearGradientBrush(tabRect, Me.theSelectedTabBackColor, WidgetHighBackColor, Drawing2D.LinearGradientMode.Vertical)
+							'tabRect.Height += 1
+							e.Graphics.FillRectangle(tabPageHotTrackBrush, tabRect)
+							'tabRect.Height -= 1
 						End Using
 					End If
 
@@ -687,9 +776,128 @@ Public Class TabControlEx
 
 	'#End Region
 
+	Protected Overrides Sub OnFontChanged(ByVal e As System.EventArgs)
+		MyBase.OnFontChanged(e)
+
+		' These two lines prevent incorrectly drawn text in the tabs when switching to manually painted TanControl.
+		'FROM: https://stackoverflow.com/questions/7128996/owner-drawn-tabcontrol-has-wider-tabs
+		Dim hFont As IntPtr = Me.Font.ToHfont()
+		Win32Api.SendMessage(Me.Handle, Win32Api.WindowsMessages.WM_SETFONT, hFont, New IntPtr(-1))
+
+		Me.Scroller.Font = New Font("Marlett", Me.Font.SizeInPoints, FontStyle.Regular, GraphicsUnit.Point)
+		' The '-1' prevents writing over the border at bottom of tabs.
+		Me.Scroller.Height = Me.ItemSize.Height - 1
+		Me.Scroller.Width = Me.ItemSize.Height * 2
+		'Me.Scroller.Width = Me.ItemSize.Height * 3
+
+		Me.OnResize(EventArgs.Empty)
+	End Sub
+
+	Protected Overrides Sub OnResize(ByVal e As System.EventArgs)
+		MyBase.OnResize(e)
+		Invalidate(True)
+		If Me.Multiline Then
+			Return
+		End If
+		If Me.Alignment = TabAlignment.Top Then
+			Scroller.Location = New Point(Me.Width - Scroller.Width, 2)
+		Else
+			Scroller.Location = New Point(Me.Width - Scroller.Width, Me.Height - Scroller.Height - 2)
+		End If
+	End Sub
+
+	Protected Overrides Sub WndProc(ByRef m As System.Windows.Forms.Message)
+		If m.Msg = Win32Api.WindowsMessages.WM_PARENTNOTIFY Then
+			If (m.WParam.ToInt32() And &HFFFF) = Win32Api.WindowsMessages.WM_CREATE Then
+				Dim WindowName As New System.Text.StringBuilder(16)
+				Win32Api.RealGetWindowClass(m.LParam, WindowName, 16)
+				If WindowName.ToString = "msctls_updown32" Then
+					'unhook the existing updown control as it will be recreated if 
+					'the tabcontrol is recreated (alignment, visible changed etc..)
+					If UPDown IsNot Nothing Then
+						UPDown.ReleaseHandle()
+					End If
+					'and hook it.
+					UPDown = New NativeUpDown
+					UPDown.AssignHandle(m.LParam)
+				End If
+			End If
+		End If
+
+		MyBase.WndProc(m)
+	End Sub
+
+#End Region
+
+#Region "Child Widget Event Handlers"
+
+#Region "Handle custom scrollbar (updowncontrol)"
+
+	'FROM: Mick Doherty's TabControl Tips
+	'      Add a custom Scroller to Tabcontrol.
+	'      https://dotnetrix.co.uk/tabcontrol.htm#tip15
+
+	Private Sub Scroller_ScrollLeft(ByVal sender As Object, ByVal e As System.EventArgs) Handles Scroller.ScrollLeft
+		If Me.TabCount = 0 Then
+			Return
+		End If
+		Dim scrollPos As Int32 = Math.Max(0, (ScrollPosition - 1) * &H10000)
+		Win32Api.SendMessage(Me.Handle, Win32Api.WindowsMessages.WM_HSCROLL, IntPtr.op_Explicit(scrollPos Or &H4), IntPtr.Zero)
+		Win32Api.SendMessage(Me.Handle, Win32Api.WindowsMessages.WM_HSCROLL, IntPtr.op_Explicit(scrollPos Or &H8), IntPtr.Zero)
+	End Sub
+
+	Private Sub Scroller_ScrollRight(ByVal sender As Object, ByVal e As System.EventArgs) Handles Scroller.ScrollRight
+		If Me.TabCount = 0 Then
+			Return
+		End If
+		If GetTabRect(Me.TabCount - 1).Right <= Me.Scroller.Left Then Return
+		Dim scrollPos As Int32 = Math.Max(0, (ScrollPosition + 1) * &H10000)
+		Win32Api.SendMessage(Me.Handle, Win32Api.WindowsMessages.WM_HSCROLL, IntPtr.op_Explicit(scrollPos Or &H4), IntPtr.Zero)
+		Win32Api.SendMessage(Me.Handle, Win32Api.WindowsMessages.WM_HSCROLL, IntPtr.op_Explicit(scrollPos Or &H8), IntPtr.Zero)
+	End Sub
+
+	'Private Sub Scroller_TabClose(ByVal sender As Object, ByVal e As System.EventArgs) Handles Scroller.TabClose
+	'	If Me.SelectedTab IsNot Nothing Then
+	'		Me.TabPages.Remove(Me.SelectedTab)
+	'	End If
+	'End Sub
+
+#End Region
+
+#End Region
+
+#Region "Core Event Handlers"
+
+	Private Sub AppSettings_PropertyChanged(ByVal sender As Object, ByVal e As System.ComponentModel.PropertyChangedEventArgs)
+		If e.PropertyName = "AppThemeName" Then
+			Me.UpdateTheme()
+			Me.Refresh()
+		End If
+	End Sub
+
+#End Region
+
+#Region "Private Methods"
+
+	Private Sub UpdateTheme()
+		Dim theme As TabControlTheme = Nothing
+		If TheApp IsNot Nothing Then
+			theme = TheApp.Settings.SelectedAppTheme.TabControlTheme
+		End If
+		If theme IsNot Nothing Then
+			Me.SetStyle(ControlStyles.UserPaint, True)
+		Else
+			Me.SetStyle(ControlStyles.UserPaint, False)
+		End If
+	End Sub
+
+#End Region
+
 #Region "Data"
 
-	Private theBackColor As Color
+	'Private theDefaultPadding As Point
+	'Private theBackColor As Color
+	Private theTabControlBackColor As Color
 	Private theTabBackColor1 As Color
 	Private theTabBackColor2 As Color
 	Private theSelectedTabBackColor As Color
@@ -701,6 +909,35 @@ Public Class TabControlEx
 
 	Dim theCursorIsOverTabs As Boolean
 
+	' Most likely this internal widget is needed to allow scrolling via the WM_HSCROLL message.
+	Private UPDown As NativeUpDown
+	Private WithEvents Scroller As New TabScroller
+
 #End Region
+
+	Friend Class NativeUpDown
+		Inherits NativeWindow
+
+		Public Sub New()
+			MyBase.New()
+		End Sub
+
+		Protected Overrides Sub WndProc(ByRef m As System.Windows.Forms.Message)
+			If m.Msg = Win32Api.WindowsMessages.WM_DESTROY OrElse m.Msg = Win32Api.WindowsMessages.WM_NCDESTROY Then
+				Me.ReleaseHandle()
+			ElseIf m.Msg = Win32Api.WindowsMessages.WM_WINDOWPOSCHANGING Then
+				'Move the updown control off the edge so it's not visible
+				Dim wp As Win32Api.WINDOWPOS = DirectCast(m.GetLParam(GetType(Win32Api.WINDOWPOS)), Win32Api.WINDOWPOS)
+				wp.x += wp.cx
+				Runtime.InteropServices.Marshal.StructureToPtr(wp, m.LParam, True)
+				'_bounds = New Rectangle(wp.x, wp.y, wp.cx, wp.cy)
+			End If
+
+			MyBase.WndProc(m)
+		End Sub
+
+		'Private _bounds As Rectangle
+
+	End Class
 
 End Class

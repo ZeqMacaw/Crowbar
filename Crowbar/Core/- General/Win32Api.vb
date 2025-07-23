@@ -5,35 +5,50 @@ Public Class Win32Api
 
 	''' <summary>Windows messages (WM_*, look in winuser.h)</summary>
 	Public Enum WindowsMessages
+		WM_CREATE = &H1
+		WM_DESTROY = &H2
 		WM_ACTIVATE = &H6
 		WM_SETFOCUS = &H7
 		WM_KILLFOCUS = &H8
 		WM_PAINT = &HF
-		WM_SETCURSOR = &H20
-		WM_COMMAND = &H111
-		WM_ENTERIDLE = &H121
-		WM_MOUSEWHEEL = &H20A
-		WM_NOTIFY = &H4E
+		WM_ERASEBKGND = &H14
 		WM_SHOWWINDOW = &H18
+		WM_FONTCHANGE = &H1D
+		WM_SETCURSOR = &H20
+		WM_SETFONT = &H30
+		WM_WINDOWPOSCHANGING = &H46
+		WM_NOTIFY = &H4E
+		WM_NCDESTROY = &H82
 		WM_NCCALCSIZE = &H83
 		WM_NCPAINT = &H85
 		WM_KEYDOWN = &H100
 		WM_KEYUP = &H101
 		WM_CHAR = &H102
+		WM_COMMAND = &H111
+		WM_HSCROLL = &H114
+		WM_VSCROLL = &H115
+		WM_ENTERIDLE = &H121
 		WM_MOUSEMOVE = &H200
 		WM_LBUTTONDOWN = &H201
-		WM_LBUTTONDBLCLK = &H203
 		WM_LBUTTONUP = &H202
+		WM_LBUTTONDBLCLK = &H203
 		WM_RBUTTONDOWN = &H204
 		WM_RBUTTONUP = &H205
 		WM_RBUTTONDBLCLK = &H206
 		WM_MBUTTONDOWN = &H207
 		WM_MBUTTONUP = &H208
 		WM_MBUTTONDBLCLK = &H209
+		WM_MOUSEWHEEL = &H20A
+		WM_PARENTNOTIFY = &H210
 		WM_USER = &H400
 		EM_GETSCROLLPOS = WM_USER + 221
 		EM_SETSCROLLPOS = WM_USER + 222
+		WM_REFLECT = &H2000
 		'HWND_BROADCAST = &HFFFF
+	End Enum
+
+	Public Enum ComboBoxNotifications As Long
+		CBN_DROPDOWN = &H7
 	End Enum
 
 	Public Enum DialogChangeStatus As Long
@@ -58,15 +73,32 @@ Public Class Win32Api
 		CDM_SETDEFEXT = (CDM_FIRST + &H6)
 	End Enum
 
+	Public Enum EditControlMessage
+		EM_REPLACESEL = &HC2
+		EM_CANUNDO = &HC6
+		EM_UNDO = &HC7
+	End Enum
+
+	Public Enum ListBoxMessages
+		LB_GETCURSEL = &H188
+		LB_GETITEMRECT = &H198
+	End Enum
+
 	Public Enum ListViewMessages
 		LVM_FIRST = &H1000
 		LVM_INSERTITEM = (LVM_FIRST + 77)
+		LVM_DELETEITEM = (LVM_FIRST + 8)
 		LVM_DELETEALLITEMS = (LVM_FIRST + 9)
 		'LVM_FINDITEM = (LVM_FIRST + 13)
+		LVM_GETITEMRECT = (LVM_FIRST + 14)
+		LVM_INSERTCOLUMN = (LVM_FIRST + 97)
+		LVM_DELETECOLUMN = (LVM_FIRST + 28)
 		'LVM_SETCOLUMNWIDTH = (LVM_FIRST + 30)
+		LVM_GETHEADER = (LVM_FIRST + 31)
 		LVM_SETITEMSTATE = LVM_FIRST + 43
 		'LVM_GETITEMTEXT = (LVM_FIRST + 45)
 		'LVM_SORTITEMS = (LVM_FIRST + 48)
+		LVM_GETITEMSPACING = (LVM_FIRST + 51)
 		'LVSCW_AUTOSIZE_USEHEADER = -2
 	End Enum
 
@@ -787,18 +819,166 @@ Public Class Win32Api
 		SWP_ASYNCWINDOWPOS = &H4000
 	End Enum
 
+	<StructLayout(LayoutKind.Sequential)>
+	Public Structure WINDOWPOS
+		Implements IDisposable
+		Public hwnd As IntPtr
+		Public hwndInsertAfter As IntPtr
+		Public x As Int32
+		Public y As Int32
+		Public cx As Int32
+		Public cy As Int32
+		Public flags As Int32
+		Public Sub Dispose() Implements System.IDisposable.Dispose
+			hwnd = Nothing
+			hwndInsertAfter = Nothing
+		End Sub
+	End Structure
+
+	Public Const GWL_STYLE As Integer = -16
+	Public Const GWL_EXSTYLE As Integer = -20
+
+	Public Enum WindowsStyles As Integer
+		WS_EX_TOPMOST = &H8
+		WS_HSCROLL = &H100000
+		WS_VSCROLL = &H200000
+		WS_VISIBLE = &H10000000
+	End Enum
+
+	Public Shared Function GetWindowLong(ByVal hWnd As IntPtr, ByVal nIndex As Integer) As Integer
+		If IntPtr.Size = 4 Then
+			Return CInt(GetWindowLong32(hWnd, nIndex))
+		Else
+			Return CInt(CLng(GetWindowLongPtr64(hWnd, nIndex)))
+		End If
+	End Function
+
+	Public Shared Function SetWindowLong(ByVal hWnd As IntPtr, ByVal nIndex As Integer, ByVal dwNewLong As Integer) As Integer
+		If IntPtr.Size = 4 Then
+			Return CInt(SetWindowLongPtr32(hWnd, nIndex, dwNewLong))
+		Else
+			Return CInt(CLng(SetWindowLongPtr64(hWnd, nIndex, dwNewLong)))
+		End If
+	End Function
+
+	Public Declare Function GetWindowLong32 Lib "user32.dll" Alias "GetWindowLongA" (ByVal hWnd As IntPtr, ByVal nIndex As Integer) As IntPtr
+	Public Declare Function GetWindowLongPtr64 Lib "user32.dll" Alias "GetWindowLongPtrA" (ByVal hWnd As IntPtr, ByVal nIndex As Integer) As IntPtr
+	Public Declare Function SetWindowLongPtr32 Lib "user32.dll" Alias "SetWindowLongA" (ByVal hWnd As IntPtr, ByVal nIndex As Integer, ByVal dwNewLong As Integer) As IntPtr
+	Public Declare Function SetWindowLongPtr64 Lib "user32.dll" Alias "SetWindowLongPtrA" (ByVal hWnd As IntPtr, ByVal nIndex As Integer, ByVal dwNewLong As Integer) As IntPtr
+
+	Public Declare Function SetParent Lib "user32.dll" Alias "SetParent" (ByVal hWndChild As IntPtr, ByVal hWndNewParent As IntPtr) As IntPtr
+
+	Public Shared ReadOnly HWND_TOPMOST As IntPtr = New IntPtr(-1)
+	Public Shared ReadOnly HWND_NOTOPMOST As IntPtr = New IntPtr(-2)
+	Public Shared ReadOnly HWND_TOP As IntPtr = New IntPtr(0)
+	Public Shared ReadOnly HWND_BOTTOM As IntPtr = New IntPtr(1)
+
+	Public Shared Function HiWord(lValue As Long) As Integer
+		If (lValue And &H80000000) > 0 Then
+			HiWord = CInt((lValue \ 65535) - 1)
+		Else
+			HiWord = CInt(lValue \ 65535)
+		End If
+	End Function
+
+	Public Shared Function LoWord(lValue As Long) As Integer
+		If (lValue And &H8000) > 0 Then
+			LoWord = CInt(&H8000 Or (lValue And &H7FFF))
+		Else
+			LoWord = CInt(lValue And &HFFFF)
+		End If
+	End Function
+
+	Public Declare Function GetWindowRect Lib "user32" Alias "GetWindowRect" (ByVal hwnd As IntPtr, ByRef lpRect As RECT) As Integer
+
+	Public Declare Function GetUpdateRect Lib "user32" Alias "GetUpdateRect" (ByVal hwnd As IntPtr, ByRef rect As RECT, ByVal [erase] As Boolean) As Integer
+
+	<StructLayout(LayoutKind.Sequential)>
+	Public Structure PAINTSTRUCT
+		Public hdc As IntPtr
+		Public fErase As Integer
+		Public rcPaint As RECT
+		Public fRestore As Integer
+		Public fIncUpdate As Integer
+		Public Reserved1 As Integer
+		Public Reserved2 As Integer
+		Public Reserved3 As Integer
+		Public Reserved4 As Integer
+		Public Reserved5 As Integer
+		Public Reserved6 As Integer
+		Public Reserved7 As Integer
+		Public Reserved8 As Integer
+	End Structure
+
+	Public Declare Function BeginPaint Lib "user32" Alias "BeginPaint" (ByVal hWnd As IntPtr, ByRef paintStruct As PAINTSTRUCT) As IntPtr
+	Public Declare Function EndPaint Lib "user32" Alias "EndPaint" (ByVal hWnd As IntPtr, ByRef paintStruct As PAINTSTRUCT) As Boolean
+
+#Region "ScrollBarInfo"
+
+	Public Const OBJID_WINDOW As Integer = 0
+	Public Const OBJID_SYSMENU As Integer = -1
+	Public Const OBJID_TITLEBAR As Integer = -2
+	Public Const OBJID_MENU As Integer = -3
+	Public Const OBJID_CLIENT As Integer = -4
+	Public Const OBJID_VSCROLL As Integer = -5
+	Public Const OBJID_HSCROLL As Integer = -6
+	Public Const OBJID_SIZEGRIP As Integer = -7
+	Public Const OBJID_CARET As Integer = -8
+	Public Const OBJID_CURSOR As Integer = -9
+	Public Const OBJID_ALERT As Integer = -10
+	Public Const OBJID_SOUND As Integer = -11
+	Public Const OBJID_QUERYCLASSNAMEIDX As Integer = -12
+	Public Const OBJID_NATIVEOM As Integer = -13
+
+
+	'<StructLayout(LayoutKind.Sequential)>
+	'Public Structure SCROLLBARINFO
+	'	Public cbSize As Integer
+	'	Public rcScrollBar As RECT
+	'	Public thumbWidth As Integer
+	'	Public thumbTop As Integer
+	'	Public thumbBottom As Integer
+	'	Public reserved As Integer
+	'	Public rgstate As Integer()
+	'End Structure
+	<StructLayout(LayoutKind.Sequential)>
+	Public Structure SCROLLBARINFO
+		Public cbSize As Int32
+		Public scrollBarRectangle As RECT
+		Public dxyLineButton As Int32
+		Public xyThumbTop As Int32
+		Public xyThumbBottom As Int32
+		Public reserved As Int32
+		Public scrollbar As Int32
+		Public incbtn As Int32
+		Public pgup As Int32
+		Public thumb As Int32
+		Public pgdn As Int32
+		Public decbtn As Int32
+	End Structure
+
+	Public Shared STATE_SYSTEM_UNAVAILABLE As UInteger = &H1
+	Public Shared STATE_SYSTEM_PRESSED As UInteger = &H8
+	Public Shared STATE_SYSTEM_INVISIBLE As UInteger = &H8000
+	Public Shared STATE_SYSTEM_OFFSCREEN As UInteger = &H10000
+
+	'<DllImport("user32.dll", SetLastError:=True)>
+	'Public Shared Function GetScrollBarInfo(ByVal hWnd As IntPtr, ByVal idObject As Integer, ByRef psbi As SCROLLBARINFO) As <MarshalAs(UnmanagedType.Bool)> Boolean
+	'End Function
+	<DllImport("user32.dll", SetLastError:=True)>
+	Public Shared Function GetScrollBarInfo(ByVal hwnd As IntPtr, ByVal idObject As Int32, ByRef psbi As SCROLLBARINFO) As Boolean
+	End Function
+
+#End Region
+
 #Region "RichTextBox ScrollInfo"
 
-	Private Const SB_CTL As Integer = 2
-	Private Const SB_HORZ As Integer = 0
-	Private Const SB_VERT As Integer = 1
-
 	'NOTE: This is only usable if the scrollbar is visible.
-	Private Declare Function GetScrollInfo Lib "user32.dll" (ByVal hWnd As IntPtr, ByVal n As Integer, ByRef lpScrollInfo As SCROLLINFO) As Integer
+	Public Declare Function GetScrollInfo Lib "user32.dll" (ByVal hWnd As IntPtr, ByVal n As Integer, ByRef lpScrollInfo As SCROLLINFO) As Integer
 	'Declare Function GetScrollInfo Lib "user32.dll" (ByVal hWnd As IntPtr, ByVal fnBar As ScrollBarDirection, ByRef lpsi As SCROLLINFO) As Integer
 
 	<StructLayout(LayoutKind.Sequential)>
-	Private Structure SCROLLINFO
+	Public Structure SCROLLINFO
 		Public cbSize As Integer
 		Public fMask As Integer
 		Public nMin As Integer
@@ -813,7 +993,7 @@ Public Class Win32Api
 	Private Const SIF_POS As Long = &H4
 	Private Const SIF_DISABLENOSCROLL As Long = &H8
 	Private Const SIF_TRACKPOS As Long = &H10
-	Private Const SIF_ALL As Long = (SIF_RANGE Or SIF_PAGE Or SIF_POS Or SIF_TRACKPOS)
+	Public Const SIF_ALL As Long = (SIF_RANGE Or SIF_PAGE Or SIF_POS Or SIF_TRACKPOS)
 
 	Public Enum ScrollBarType
 		SB_HORZ = &H0
@@ -874,7 +1054,32 @@ Public Class Win32Api
 	'Dim pos As Integer = GetScrollPos(rtb.Handle, SBS_VERT)
 	'End If
 
+	Public Declare Function GetScrollPos Lib "user32" Alias "GetScrollPos" (ByVal hWnd As IntPtr, ByVal nBar As Integer) As Integer
+	Public Declare Function SetScrollPos Lib "user32" Alias "SetScrollPos" (ByVal hWnd As IntPtr, ByVal nBar As Integer, ByVal nPos As Integer, ByVal bRedraw As Boolean) As Integer
+
 #End Region
+
+	Public Enum SB As UInteger
+		SB_LINEUP = 0
+		SB_LINELEFT = 0
+		SB_LINEDOWN = 1
+		SB_LINERIGHT = 1
+		SB_PAGEUP = 2
+		SB_PAGELEFT = 2
+		SB_PAGEDOWN = 3
+		SB_PAGERIGHT = 3
+		SB_THUMBPOSITION = 4
+		SB_THUMBTRACK = 5
+		SB_TOP = 6
+		SB_LEFT = 6
+		SB_BOTTOM = 7
+		SB_RIGHT = 7
+		SB_ENDSCROLL = 8
+	End Enum
+
+	Public Const SB_BOTH As Integer = 3
+
+	Public Declare Function ShowScrollBar Lib "user32" (ByVal hwnd As IntPtr, ByVal wBar As Integer, ByVal bShow As Boolean) As Boolean
 
 #Region "Win32DarkMode"
 
@@ -977,7 +1182,8 @@ Public Class Win32Api
 		End If
 	End Sub
 
-	Public Shared Function EnableWin32DarkMode(hWnd As IntPtr, enable As Boolean) As Boolean
+	' If on Win10 or later, use the mode that Windows is using.
+	Public Shared Function UseWindowsTitleBarThemeColor(hWnd As IntPtr, enable As Boolean) As Boolean
 		AllowDarkModeForApp(True)
 		RefreshImmersiveColorPolicyState()
 		Dim retval As Boolean = AllowDarkModeForWindow(hWnd, enable)
@@ -993,6 +1199,10 @@ Public Class Win32Api
 
 	<DllImport("user32.dll", SetLastError:=True)>
 	Public Shared Function ReleaseDC(hWnd As IntPtr, hDc As IntPtr) As Boolean
+	End Function
+
+	<DllImport("user32.dll")>
+	Public Shared Function RealGetWindowClass(ByVal hwnd As IntPtr, ByVal pszType As System.Text.StringBuilder, ByVal cchType As Integer) As Integer
 	End Function
 
 	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
@@ -1059,5 +1269,42 @@ Public Class Win32Api
 
 
 #End Region
+
+	Public Shared Function GetHiWord(wParam As Long) As Integer
+		If (wParam And &H80000000) > 0 Then
+			Return CInt((wParam \ 65535) - 1)
+		Else
+			Return CInt(wParam \ 65535)
+		End If
+	End Function
+
+	Public Shared Function GetLoWord(wParam As Long) As Integer
+		If (wParam And &H8000&) > 0 Then
+			Return CInt(&H8000 Or (wParam And &H7FFF&))
+		Else
+			Return CInt(wParam And &HFFFF&)
+		End If
+	End Function
+
+	Public Shared Function SetWParam(ByVal hiWord As Integer, ByVal loWord As Integer) As Long
+		Return hiWord << 16 + loWord
+	End Function
+
+	'Public Shared Function ListView_GetVerticalItemSpacing(handle As IntPtr, ByVal viewIsSmallIcon As Boolean) As Integer
+	'	Dim spacing As Long = 0
+	'	If viewIsSmallIcon Then
+	'		spacing = 1
+	'	End If
+	'	Win32Api.SendMessage(handle, Win32Api.ListViewMessages.LVM_GETITEMSPACING, spacing, IntPtr.Zero)
+	'	Return GetLoWord(spacing)
+	'End Function
+
+	<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
+	Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal Msg As ListViewMessages, ByVal wParam As IntPtr, ByVal lParam As IntPtr) As IntPtr
+	End Function
+
+	'<DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
+	'Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal Msg As ListViewMessages, ByRef wParam As Long, ByVal lParam As IntPtr) As IntPtr
+	'End Function
 
 End Class

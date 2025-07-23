@@ -34,7 +34,7 @@ Public Class Base_TagsUserControl
 			If TypeOf widget.Tag Is String Then
 				If TypeOf widget Is CheckBoxEx Then
 					Me.theWidgets.Add(widget)
-				ElseIf TypeOf widget Is ComboBoxEx Then
+				ElseIf TypeOf widget Is ComboUserControl Then
 					Dim aComboBoxTag As String = CType(widget.Tag, String)
 					If aComboBoxTag = "TagsEnabled" Then
 						Me.theWidgets.Add(widget)
@@ -55,7 +55,7 @@ Public Class Base_TagsUserControl
 
 	Protected Overrides Sub Free()
 		Dim aCheckBox As CheckBoxEx
-		Dim aComboBox As ComboBox
+		Dim aComboBox As ComboUserControl
 		Dim aRadioButton As RadioButton
 		Dim aTextBox As RichTextBoxEx
 		If Me.theWidgets IsNot Nothing Then
@@ -64,10 +64,10 @@ Public Class Base_TagsUserControl
 					If TypeOf widget Is CheckBoxEx Then
 						aCheckBox = CType(widget, CheckBoxEx)
 						RemoveHandler aCheckBox.CheckedChanged, AddressOf Me.CheckBox_CheckedChanged
-					ElseIf TypeOf widget Is ComboBoxEx Then
+					ElseIf TypeOf widget Is ComboUserControl Then
 						Dim aComboBoxTag As String = CType(widget.Tag, String)
 						If aComboBoxTag = "TagsEnabled" Then
-							aComboBox = CType(widget, ComboBoxEx)
+							aComboBox = CType(widget, ComboUserControl)
 							RemoveHandler aComboBox.SelectedIndexChanged, AddressOf Me.ComboBox_SelectedIndexChanged
 						End If
 					ElseIf TypeOf widget Is RadioButton Then
@@ -98,7 +98,7 @@ Public Class Base_TagsUserControl
 			End If
 
 			Dim aCheckBox As CheckBoxEx
-			Dim aComboBox As ComboBox
+			Dim aComboBox As ComboUserControl
 			Dim aRadioButton As RadioButton
 			Dim aTextBox As RichTextBoxEx
 			Dim anEnumList As IList
@@ -110,10 +110,10 @@ Public Class Base_TagsUserControl
 						If aCheckBox.Checked Then
 							itemTagsList.Add(CType(aCheckBox.Tag, String))
 						End If
-					ElseIf TypeOf widget Is ComboBoxEx Then
+					ElseIf TypeOf widget Is ComboUserControl Then
 						Dim aComboBoxTag As String = CType(widget.Tag, String)
 						If aComboBoxTag = "TagsEnabled" Then
-							aComboBox = CType(widget, ComboBoxEx)
+							aComboBox = CType(widget, ComboUserControl)
 							If aComboBox.DataSource IsNot Nothing Then
 								anEnumList = CType(aComboBox.DataSource, IList)
 								itemTagsList.Add(aComboBox.SelectedValue.ToString())
@@ -147,7 +147,7 @@ Public Class Base_TagsUserControl
 			Me.theTextBoxesAreChangingViaMe = True
 
 			Dim aCheckBox As CheckBoxEx
-			Dim aComboBox As ComboBox
+			Dim aComboBox As ComboUserControl
 			Dim aRadioButton As RadioButton
 			Dim aTextBox As RichTextBoxEx
 
@@ -158,10 +158,10 @@ Public Class Base_TagsUserControl
 						aCheckBox.Checked = False
 						RemoveHandler aCheckBox.CheckedChanged, AddressOf Me.CheckBox_CheckedChanged
 						AddHandler aCheckBox.CheckedChanged, AddressOf Me.CheckBox_CheckedChanged
-					ElseIf TypeOf widget Is ComboBoxEx Then
+					ElseIf TypeOf widget Is ComboUserControl Then
 						Dim aComboBoxTag As String = CType(widget.Tag, String)
 						If aComboBoxTag = "TagsEnabled" Then
-							aComboBox = CType(widget, ComboBoxEx)
+							aComboBox = CType(widget, ComboUserControl)
 							RemoveHandler aComboBox.SelectedIndexChanged, AddressOf Me.ComboBox_SelectedIndexChanged
 							AddHandler aComboBox.SelectedIndexChanged, AddressOf Me.ComboBox_SelectedIndexChanged
 						End If
@@ -197,10 +197,10 @@ Public Class Base_TagsUserControl
 								tagHasBeenAssigned = True
 								Exit For
 							End If
-						ElseIf TypeOf widget Is ComboBoxEx Then
+						ElseIf TypeOf widget Is ComboUserControl Then
 							Dim aComboBoxTag As String = CType(widget.Tag, String)
 							If aComboBoxTag = "TagsEnabled" Then
-								aComboBox = CType(widget, ComboBoxEx)
+								aComboBox = CType(widget, ComboUserControl)
 								If aComboBox.DataSource IsNot Nothing Then
 									anEnumList = CType(aComboBox.DataSource, IList)
 									Dim index As Integer = EnumHelper.IndexOfKeyAsCaseInsensitiveString(tag, anEnumList)

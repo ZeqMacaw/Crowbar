@@ -3,7 +3,37 @@ Imports System.ComponentModel
 Imports System.Drawing
 
 Public Class SplitContainerEx
-    Inherits SplitContainer
+	Inherits SplitContainer
+
+#Region "Create and Destroy"
+
+	Public Sub New()
+		MyBase.New()
+
+	End Sub
+
+#End Region
+
+#Region "Init and Free"
+
+	Private Sub Init()
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If TheApp IsNot Nothing Then
+			Me.UpdateTheme()
+			AddHandler TheApp.Settings.PropertyChanged, AddressOf Me.AppSettings_PropertyChanged
+		End If
+	End Sub
+
+	Private Sub Free()
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If TheApp IsNot Nothing Then
+			RemoveHandler TheApp.Settings.PropertyChanged, AddressOf Me.AppSettings_PropertyChanged
+		End If
+	End Sub
+
+#End Region
+
+#Region "Properties"
 
 	''''' <summary>Determines the thickness of the splitter.</summary>
 	''<DefaultValue(GetType(Integer), "5"), Description("Determines the thickness of the splitter.")>
@@ -17,6 +47,31 @@ Public Class SplitContainerEx
 	''        MyBase.SplitterWidth = value
 	''    End Set
 	''End Property
+
+#End Region
+
+#Region "Methods"
+
+#End Region
+
+#Region "Events"
+
+#End Region
+
+#Region "Widget Event Handlers"
+
+	Protected Overrides Sub OnHandleCreated(ByVal e As System.EventArgs)
+		MyBase.OnHandleCreated(e)
+		' [04-Feb-2026] Me.DesignMode is unreliable in nested widgets.
+		'If Not Me.DesignMode Then
+		Me.Init()
+		'End If
+	End Sub
+
+	Protected Overrides Sub OnHandleDestroyed(e As EventArgs)
+		Me.Free()
+		MyBase.OnHandleDestroyed(e)
+	End Sub
 
 	'Protected Overrides Sub OnMouseDown(e As MouseEventArgs)
 	'	MyBase.OnMouseDown(e)
@@ -125,6 +180,62 @@ Public Class SplitContainerEx
 	'	'End If
 	'End Sub
 
+	'' Works without needing to call SetStyle.
+	'Protected Overrides Sub OnPaint(e As PaintEventArgs)
+	'	Dim theme As SplitContainerTheme = Nothing
+	'	' This check prevents problems with viewing and saving Forms in VS Designer.
+	'	If TheApp IsNot Nothing Then
+	'		theme = TheApp.Settings.SelectedAppTheme.SplitContainerTheme
+	'	End If
+	'	If theme IsNot Nothing Then
+	'		Me.ForeColor = theme.EnabledForeColor
+	'		Me.BackColor = theme.EnabledBackColor
+	'	End If
+
+	'	MyBase.OnPaint(e)
+	'End Sub
+
+#End Region
+
+#Region "Child Widget Event Handlers"
+
+#End Region
+
+#Region "Core Event Handlers"
+
+	Private Sub AppSettings_PropertyChanged(ByVal sender As Object, ByVal e As System.ComponentModel.PropertyChangedEventArgs)
+		If e.PropertyName = "AppThemeName" Then
+			Me.UpdateTheme()
+			Me.Refresh()
+		End If
+	End Sub
+
+#End Region
+
+#Region "Private Methods"
+
+	Private Sub UpdateTheme()
+		Dim theme As SplitContainerTheme = Nothing
+		If TheApp IsNot Nothing Then
+			theme = TheApp.Settings.SelectedAppTheme.SplitContainerTheme
+		End If
+		If theme IsNot Nothing Then
+			Me.ForeColor = theme.EnabledForeColor
+			MyBase.BackColor = theme.EnabledBackColor
+			'Me.Panel1.ForeColor = theme.EnabledForeColor
+			'Me.Panel1.BackColor = theme.EnabledBackColor
+			'Me.Panel2.ForeColor = theme.EnabledForeColor
+			'Me.Panel2.BackColor = theme.EnabledBackColor
+		Else
+			Me.ForeColor = Control.DefaultForeColor
+			MyBase.BackColor = Control.DefaultBackColor
+			'Me.Panel1.ForeColor = Control.DefaultForeColor
+			'Me.Panel1.BackColor = Control.DefaultBackColor
+			'Me.Panel2.ForeColor = Control.DefaultForeColor
+			'Me.Panel2.BackColor = Control.DefaultBackColor
+		End If
+	End Sub
+
 	'Private Function FindControlAtScreenPosition(ByVal aForm As Form, p As Point) As Control
 	'	If (Not aForm.Bounds.Contains(p)) Then
 	'		Return Nothing
@@ -140,5 +251,11 @@ Public Class SplitContainerEx
 
 	'Private theSplitterBarDifference As Integer
 	'Private theSplitterBarIsBeingMoved As Boolean = False
+
+#End Region
+
+#Region "Data"
+
+#End Region
 
 End Class

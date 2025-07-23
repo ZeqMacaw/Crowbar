@@ -23,7 +23,7 @@ Partial Class UnhandledExceptionWindow
 		Me.ExitButton = New ButtonEx()
 		Me.CopyErrorReportButton = New ButtonEx()
 		Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
-		Me.Label1 = New System.Windows.Forms.Label()
+		Me.Label1 = New Crowbar.LabelEx()
 		Me.ErrorReportTextBox = New RichTextBoxEx()
 		Me.SuspendLayout()
 		'
@@ -102,7 +102,7 @@ Partial Class UnhandledExceptionWindow
 	Friend WithEvents ExitButton As ButtonEx
 	Friend WithEvents CopyErrorReportButton As ButtonEx
 	Friend WithEvents LinkLabel1 As System.Windows.Forms.LinkLabel
-	Friend WithEvents Label1 As System.Windows.Forms.Label
+	Friend WithEvents Label1 As Crowbar.LabelEx
 	Friend WithEvents ErrorReportTextBox As Crowbar.RichTextBoxEx
 
 End Class

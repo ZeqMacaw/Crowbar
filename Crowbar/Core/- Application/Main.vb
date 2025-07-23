@@ -32,7 +32,7 @@ Module Main
 		'Else
 		'NOTE: Use the Windows Vista and later visual styles (such as rounded buttons).
 		Application.EnableVisualStyles()
-		'NOTE: Needed for keeping Label and Button text rendering correctly.
+		'NOTE: Needed for keeping LabelEx and Button text rendering correctly.
 		Application.SetCompatibleTextRenderingDefault(False)
 
 		AddHandler AppDomain.CurrentDomain.AssemblyResolve, AddressOf ResolveAssemblies

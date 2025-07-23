@@ -18,11 +18,31 @@ Public Class DownloadUserControl
 		InitializeComponent()
 	End Sub
 
+	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
+		Try
+			If disposing Then
+				Me.Free()
+				If components IsNot Nothing Then
+					components.Dispose()
+				End If
+			End If
+		Finally
+			MyBase.Dispose(disposing)
+		End Try
+	End Sub
+
 #End Region
 
 #Region "Init and Free"
 
 	Protected Overrides Sub Init()
+		MyBase.Init()
+
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If TheApp Is Nothing Then
+			Exit Sub
+		End If
+
 		TheApp.InitAppInfo()
 
 		Me.ItemIdTextBox.DataBindings.Add("Text", TheApp.Settings, "DownloadItemIdOrLink", False, DataSourceUpdateMode.OnValidation)
@@ -37,45 +57,52 @@ Public Class DownloadUserControl
 
 		Me.theBackgroundSteamPipe = New BackgroundSteamPipe()
 
+		AddHandler TheApp.Settings.PropertyChanged, AddressOf Me.AppSettings_PropertyChanged
 		AddHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
-
-		AddHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 	End Sub
 
-	' Needed for closing any active child processes. Only called on program exit.
 	Protected Overrides Sub Free()
+		MyBase.Free()
+
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If Not Me.InitHasBeenCalled OrElse TheApp Is Nothing Then
+			Exit Sub
+		End If
+
 		'Me.CancelDownload()
 
 		If Me.theBackgroundSteamPipe IsNot Nothing Then
 			Me.theBackgroundSteamPipe.Kill()
 		End If
 
-		'RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
+		RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
 
-		'RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
+		Me.FreeDownloadOptions()
 
-		'Me.FreeDownloadOptions()
+		Me.OutputPathTextBox.DataBindings.Clear()
+		Me.FreeOutputPathComboBox()
 
-		'Me.FreeOutputPathComboBox()
-
-		'Me.ItemIdTextBox.DataBindings.Clear()
+		Me.ItemIdTextBox.DataBindings.Clear()
 	End Sub
 
 	Private Sub InitOutputPathComboBox()
-		Dim anEnumList As IList
-
-		anEnumList = EnumHelper.ToList(GetType(DownloadOutputPathOptions))
+		Me.OutputPathComboBox.DataBindings.Clear()
+		Dim anEnumList As IList = EnumHelper.ToList(GetType(DownloadOutputPathOptions))
 		Try
-			Me.OutputPathComboBox.DisplayMember = "Value"
-			Me.OutputPathComboBox.ValueMember = "Key"
 			Me.OutputPathComboBox.DataSource = anEnumList
+			Me.OutputPathComboBox.ValueMember = "Key"
+			Me.OutputPathComboBox.DisplayMember = "Value"
 			Me.OutputPathComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "DownloadOutputFolderOption", False, DataSourceUpdateMode.OnPropertyChanged)
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		End Try
+
+		AddHandler Me.OutputPathComboBox.SelectedValueChanged, AddressOf Me.OutputPathComboBox_SelectedValueChanged
 	End Sub
 
 	Private Sub FreeOutputPathComboBox()
+		RemoveHandler Me.OutputPathComboBox.SelectedValueChanged, AddressOf Me.OutputPathComboBox_SelectedValueChanged
 		Me.OutputPathComboBox.DataBindings.Clear()
 	End Sub
 
@@ -99,12 +126,17 @@ Public Class DownloadUserControl
 
 #Region "Widget Event Handlers"
 
-	Private Sub DownloadUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
+	Private Sub DownloadUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.ItemIdTextBox, Me.OpenWorkshopPageButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputPathTextBox, Me.BrowseForOutputPathButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DocumentsOutputPathTextBox, Me.BrowseForOutputPathButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DownloadProgressBar, Me.DownloadProgressBar.Parent, True)
+
+		' [04-Feb-2026] Me.DesignMode is unreliable in nested widgets.
+		'If Not Me.DesignMode Then
+		Me.Init()
+		'End If
 	End Sub
 
 #End Region
@@ -113,6 +145,11 @@ Public Class DownloadUserControl
 
 	Private Sub OpenWorkshopPageButton_Click(sender As Object, e As EventArgs) Handles OpenWorkshopPageButton.Click
 		Me.OpenWorkshopPage()
+	End Sub
+
+	Private Sub OutputPathComboBox_SelectedValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+		' Because DownloadOutputPathOptions is passed to DataSource as an IList, must manually bind for this direction.
+		TheApp.Settings.DownloadOutputFolderOption = CType(Me.OutputPathComboBox.SelectedValue, DownloadOutputPathOptions)
 	End Sub
 
 	Private Sub OutputPathTextBox_DragDrop(sender As Object, e As DragEventArgs) Handles OutputPathTextBox.DragDrop
@@ -381,7 +418,7 @@ Public Class DownloadUserControl
 
 	Private Sub OpenWorkshopPage()
 		Dim itemIdOrLink As String = Me.ItemIdTextBox.Text
-		Dim itemlink As String = ""
+		Dim itemlink As String
 		If itemIdOrLink.StartsWith(AppConstants.WorkshopLinkStart) Then
 			itemlink = itemIdOrLink
 		Else
@@ -611,7 +648,7 @@ Public Class DownloadUserControl
 			reader = New StreamReader(dataStream)
 			Dim responseFromServer As String = reader.ReadToEnd()
 
-			Dim jss As JavaScriptSerializer = New JavaScriptSerializer()
+			Dim jss As New JavaScriptSerializer()
 			Dim root As SteamRemoteStorage_PublishedFileDetails_Json = jss.Deserialize(Of SteamRemoteStorage_PublishedFileDetails_Json)(responseFromServer)
 			Dim file_url As String = root.response.publishedfiledetails(0).file_url
 			If file_url IsNot Nothing AndAlso file_url <> "" Then
@@ -657,7 +694,7 @@ Public Class DownloadUserControl
 	End Function
 
 	Private Sub DownloadViaWeb(ByVal link As String, ByVal givenFileName As String)
-		Dim uri As Uri = New Uri(link)
+		Dim uri As New Uri(link)
 
 		Dim outputPath As String
 		outputPath = Me.GetOutputPath()
@@ -748,8 +785,7 @@ Public Class DownloadUserControl
 			outputFileNameSuffix = ""
 		End If
 
-		Dim fileExtension As String = ""
-		fileExtension = Path.GetExtension(givenFileName)
+		Dim fileExtension As [String] = Path.GetExtension(givenFileName)
 
 		Dim outputFileName As String
 		outputFileName = outputFileNamePrefix + outputFileNameBase + outputFileNameSuffix + fileExtension

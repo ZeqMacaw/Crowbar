@@ -7,11 +7,31 @@ Public Class AboutUserControl
 		InitializeComponent()
 	End Sub
 
+	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
+		Try
+			If disposing Then
+				Me.Free()
+				If components IsNot Nothing Then
+					components.Dispose()
+				End If
+			End If
+		Finally
+			MyBase.Dispose(disposing)
+		End Try
+	End Sub
+
 #End Region
 
 #Region "Init and Free"
 
 	Protected Overrides Sub Init()
+		MyBase.Init()
+
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If TheApp Is Nothing Then
+			Exit Sub
+		End If
+
 		'NOTE: Customize the application's assembly information in the "Application" pane of the project 
 		'    properties dialog (under the "Project" menu).
 
@@ -21,10 +41,12 @@ Public Class AboutUserControl
 		Me.GotoSteamGroupLinkLabel.Text = My.Resources.About_GotoSteamGroupText
 		Me.GotoSteamGroupLinkLabel.Links.Add(0, My.Resources.About_GotoSteamGroupText.Length(), My.Resources.About_ProductLink)
 
-		'Me.ProductInfoTextBox.SelectionAlignment = HorizontalAlignment.Center
 		Me.ProductInfoTextBox.Text = "Version " + My.Application.Info.Version.ToString(2) + vbCr
 		Me.ProductInfoTextBox.AppendText(My.Application.Info.Copyright + vbCr)
 		Me.ProductInfoTextBox.AppendText(My.Application.Info.CompanyName)
+		Me.ProductInfoTextBox.SelectAll()
+		Me.ProductInfoTextBox.SelectionAlignment = HorizontalAlignment.Center
+		Me.ProductInfoTextBox.SelectionLength = 0
 
 		Me.AuthorLinkLabel.Text = My.Application.Info.CompanyName
 		Me.AuthorLinkLabel.Links.Add(0, My.Application.Info.CompanyName.Length(), My.Resources.About_AuthorLink)
@@ -37,9 +59,14 @@ Public Class AboutUserControl
 		'Me.Panel1.DataBindings.Add("BackColor", TheApp.Settings, "AboutTabBackgroundColor", False, DataSourceUpdateMode.OnPropertyChanged)
 	End Sub
 
-	'Protected Overrides Sub Free()
+	Protected Overrides Sub Free()
+		MyBase.Free()
 
-	'End Sub
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If Not Me.InitHasBeenCalled OrElse TheApp Is Nothing Then
+			Exit Sub
+		End If
+	End Sub
 
 #End Region
 
@@ -48,6 +75,13 @@ Public Class AboutUserControl
 #End Region
 
 #Region "Widget Event Handlers"
+
+	Private Sub AboutUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
+		' [04-Feb-2026] Me.DesignMode is unreliable in nested widgets.
+		'If Not Me.DesignMode Then
+		Me.Init()
+		'End If
+	End Sub
 
 #End Region
 

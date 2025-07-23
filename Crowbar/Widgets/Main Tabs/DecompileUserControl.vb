@@ -11,11 +11,31 @@ Public Class DecompileUserControl
 		InitializeComponent()
 	End Sub
 
+	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
+		Try
+			If disposing Then
+				Me.Free()
+				If components IsNot Nothing Then
+					components.Dispose()
+				End If
+			End If
+		Finally
+			MyBase.Dispose(disposing)
+		End Try
+	End Sub
+
 #End Region
 
 #Region "Init and Free"
 
 	Protected Overrides Sub Init()
+		MyBase.Init()
+
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If TheApp Is Nothing Then
+			Exit Sub
+		End If
+
 		Me.MdlPathFileNameTextBox.DataBindings.Add("Text", TheApp.Settings, "DecompileMdlPathFileName", False, DataSourceUpdateMode.OnValidation)
 
 		Me.OutputPathTextBox.DataBindings.Add("Text", TheApp.Settings, "DecompileOutputFullPath", False, DataSourceUpdateMode.OnValidation)
@@ -26,13 +46,16 @@ Public Class DecompileUserControl
 		Me.InitDecompilerOptions()
 
 		Me.theDecompiledRelativePathFileNames = New BindingListEx(Of String)
-		Me.DecompiledFilesComboBox.DataSource = Me.theDecompiledRelativePathFileNames
+		Me.DecompiledFilesComboUserControl.DataSource = Me.theDecompiledRelativePathFileNames
 
 		Me.UpdateDecompileMode()
 		Me.UpdateWidgets(False)
 
+		AddHandler Me.DecompileInputComboUserControl.SelectedValueChanged, AddressOf Me.DecompileInputComboUserControl_SelectedValueChanged
 		AddHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		AddHandler Me.OutputPathComboUserControl.SelectedValueChanged, AddressOf Me.OutputPathComboUserControl_SelectedValueChanged
 		AddHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		AddHandler Me.OverrideMdlVersionComboUserControl.SelectedValueChanged, AddressOf Me.OverrideMdlVersionComboUserControl_SelectedValueChanged
 		AddHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 		AddHandler TheApp.Decompiler.ProgressChanged, AddressOf Me.DecompilerBackgroundWorker_ProgressChanged
 		AddHandler TheApp.Decompiler.RunWorkerCompleted, AddressOf Me.DecompilerBackgroundWorker_RunWorkerCompleted
@@ -70,30 +93,39 @@ Public Class DecompileUserControl
 
 		Dim anEnumList As IList
 		anEnumList = EnumHelper.ToList(GetType(SupportedMdlVersion))
-		Me.OverrideMdlVersionComboBox.DisplayMember = "Value"
-		Me.OverrideMdlVersionComboBox.ValueMember = "Key"
-		Me.OverrideMdlVersionComboBox.DataSource = anEnumList
-		Me.OverrideMdlVersionComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "DecompileOverrideMdlVersion", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.OverrideMdlVersionComboUserControl.DataSource = anEnumList
+		Me.OverrideMdlVersionComboUserControl.ValueMember = "Key"
+		Me.OverrideMdlVersionComboUserControl.DisplayMember = "Value"
+		Me.OverrideMdlVersionComboUserControl.DataBindings.Add("SelectedValue", TheApp.Settings, "DecompileOverrideMdlVersion", False, DataSourceUpdateMode.OnPropertyChanged)
 	End Sub
 
-	' Do not need Free() because this widget is destroyed only on program exit.
-	'Protected Overrides Sub Free()
-	'	RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
-	'	RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
-	'	RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
-	'	RemoveHandler TheApp.Decompiler.ProgressChanged, AddressOf Me.DecompilerBackgroundWorker_ProgressChanged
-	'	RemoveHandler TheApp.Decompiler.RunWorkerCompleted, AddressOf Me.DecompilerBackgroundWorker_RunWorkerCompleted
+	Protected Overrides Sub Free()
+		MyBase.Free()
 
-	'	Me.DecompileComboBox.DataBindings.Clear()
-	'	Me.MdlPathFileNameTextBox.DataBindings.Clear()
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If Not Me.InitHasBeenCalled OrElse TheApp Is Nothing Then
+			Exit Sub
+		End If
 
-	'	Me.OutputPathTextBox.DataBindings.Clear()
-	'	Me.OutputSubfolderTextBox.DataBindings.Clear()
+		RemoveHandler Me.DecompileInputComboUserControl.SelectedValueChanged, AddressOf Me.DecompileInputComboUserControl_SelectedValueChanged
+		RemoveHandler Me.MdlPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		RemoveHandler Me.OutputPathComboUserControl.SelectedValueChanged, AddressOf Me.OutputPathComboUserControl_SelectedValueChanged
+		RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		RemoveHandler Me.OverrideMdlVersionComboUserControl.SelectedValueChanged, AddressOf Me.OverrideMdlVersionComboUserControl_SelectedValueChanged
+		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
+		RemoveHandler TheApp.Decompiler.ProgressChanged, AddressOf Me.DecompilerBackgroundWorker_ProgressChanged
+		RemoveHandler TheApp.Decompiler.RunWorkerCompleted, AddressOf Me.DecompilerBackgroundWorker_RunWorkerCompleted
 
-	'	Me.FreeDecompilerOptions()
+		Me.DecompileInputComboUserControl.DataBindings.Clear()
+		Me.MdlPathFileNameTextBox.DataBindings.Clear()
 
-	'	Me.DecompiledFilesComboBox.DataSource = Nothing
-	'End Sub
+		Me.OutputPathTextBox.DataBindings.Clear()
+		Me.OutputSubfolderTextBox.DataBindings.Clear()
+
+		Me.FreeDecompilerOptions()
+
+		Me.DecompiledFilesComboUserControl.DataSource = Nothing
+	End Sub
 
 	Private Sub FreeDecompilerOptions()
 		Me.QcFileCheckBox.DataBindings.Clear()
@@ -122,7 +154,7 @@ Public Class DecompileUserControl
 
 		Me.DeclareSequenceQciCheckBox.DataBindings.Clear()
 
-		Me.OverrideMdlVersionComboBox.DataBindings.Clear()
+		Me.OverrideMdlVersionComboUserControl.DataBindings.Clear()
 	End Sub
 
 #End Region
@@ -133,22 +165,27 @@ Public Class DecompileUserControl
 
 #Region "Widget Event Handlers"
 
-	'Private Sub DecompileUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
-	'	If Not Me.DesignMode Then
-	'		Me.Init()
-	'	End If
-	'End Sub
-
-	Private Sub DecompileUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
+	Private Sub DecompileUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.MdlPathFileNameTextBox, Me.BrowseForMdlPathFolderOrFileNameButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputPathTextBox, Me.BrowseForOutputPathButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputSubfolderTextBox, Me.BrowseForOutputPathButton)
+
+		' [04-Feb-2026] Me.DesignMode is unreliable in nested widgets.
+		'If Not Me.DesignMode Then
+		Me.Init()
+		'End If
 	End Sub
 
 #End Region
 
 #Region "Child Widget Event Handlers"
+
+	Private Sub DecompileInputComboUserControl_SelectedValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+		' Because this enum is passed to DataSource as an IList, must manually bind for this direction.
+		TheApp.Settings.DecompileMode = CType(DecompileInputComboUserControl.SelectedValue, InputOptions)
+		'Me.UpdateDecompileMode()
+	End Sub
 
 	'Private Sub MdlPathFileNameTextBox_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MdlPathFileNameTextBox.Validated
 	'	Me.MdlPathFileNameTextBox.Text = FileManager.GetCleanPathFileName(Me.MdlPathFileNameTextBox.Text)
@@ -195,6 +232,12 @@ Public Class DecompileUserControl
 
 	Private Sub GotoMdlButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GotoMdlButton.Click
 		FileManager.OpenWindowsExplorer(TheApp.Settings.DecompileMdlPathFileName)
+	End Sub
+
+	Private Sub OutputPathComboUserControl_SelectedValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+		' Because this enum is passed to DataSource as an IList, must manually bind for this direction.
+		TheApp.Settings.DecompileOutputFolderOption = CType(OutputPathComboUserControl.SelectedValue, DecompileOutputPathOptions)
+		'Me.UpdateOutputPathWidgets()
 	End Sub
 
 	'Private Sub OutputSubfolderNameRadioButton_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
@@ -288,6 +331,11 @@ Public Class DecompileUserControl
 		TheApp.Settings.SetDefaultDecompileReCreateFilesOptions()
 	End Sub
 
+	Private Sub OverrideMdlVersionComboUserControl_SelectedValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+		' Because this enum is passed to DataSource as an IList, must manually bind for this direction.
+		TheApp.Settings.DecompileOverrideMdlVersion = CType(OverrideMdlVersionComboUserControl.SelectedValue, SupportedMdlVersion)
+	End Sub
+
 	Private Sub DecompileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DecompileButton.Click
 		Me.RunDecompiler()
 	End Sub
@@ -310,13 +358,13 @@ Public Class DecompileUserControl
 	End Sub
 
 	Private Sub UseInCompileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UseInCompileButton.Click
-		TheApp.Settings.CompileQcPathFileName = TheApp.Decompiler.GetOutputPathFileName(Me.theDecompiledRelativePathFileNames(Me.DecompiledFilesComboBox.SelectedIndex))
+		TheApp.Settings.CompileQcPathFileName = TheApp.Decompiler.GetOutputPathFileName(Me.theDecompiledRelativePathFileNames(Me.DecompiledFilesComboUserControl.SelectedIndex))
 		TheApp.Settings.CompileMode = InputOptions.File
 	End Sub
 
 	Private Sub GotoDecompiledFileButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GotoDecompiledFileButton.Click
 		Dim pathFileName As String
-		pathFileName = TheApp.Decompiler.GetOutputPathFileName(Me.theDecompiledRelativePathFileNames(Me.DecompiledFilesComboBox.SelectedIndex))
+		pathFileName = TheApp.Decompiler.GetOutputPathFileName(Me.theDecompiledRelativePathFileNames(Me.DecompiledFilesComboUserControl.SelectedIndex))
 		FileManager.OpenWindowsExplorer(pathFileName)
 	End Sub
 
@@ -383,12 +431,12 @@ Public Class DecompileUserControl
 		Dim anEnumList As IList
 
 		anEnumList = EnumHelper.ToList(GetType(DecompileOutputPathOptions))
-		Me.OutputPathComboBox.DataBindings.Clear()
+		Me.OutputPathComboUserControl.DataBindings.Clear()
 		Try
-			Me.OutputPathComboBox.DisplayMember = "Value"
-			Me.OutputPathComboBox.ValueMember = "Key"
-			Me.OutputPathComboBox.DataSource = anEnumList
-			Me.OutputPathComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "DecompileOutputFolderOption", False, DataSourceUpdateMode.OnPropertyChanged)
+			Me.OutputPathComboUserControl.DataSource = anEnumList
+			Me.OutputPathComboUserControl.ValueMember = "Key"
+			Me.OutputPathComboUserControl.DisplayMember = "Value"
+			Me.OutputPathComboUserControl.DataBindings.Add("SelectedValue", TheApp.Settings, "DecompileOutputFolderOption", False, DataSourceUpdateMode.OnPropertyChanged)
 
 			' Do not use this line because it will override the value automatically assigned by the data bindings above.
 			'Me.OutputPathComboBox.SelectedIndex = 0
@@ -466,7 +514,7 @@ Public Class DecompileUserControl
 	Private Sub UpdateWidgets(ByVal decompilerIsRunning As Boolean)
 		TheApp.Settings.DecompilerIsRunning = decompilerIsRunning
 
-		Me.DecompileComboBox.Enabled = Not decompilerIsRunning
+		Me.DecompileInputComboUserControl.Enabled = Not decompilerIsRunning
 		Me.MdlPathFileNameTextBox.Enabled = Not decompilerIsRunning
 		Me.BrowseForMdlPathFolderOrFileNameButton.Enabled = Not decompilerIsRunning
 
@@ -476,7 +524,7 @@ Public Class DecompileUserControl
 		'Me.OutputFullPathRadioButton.Enabled = Not decompilerIsRunning
 		'Me.OutputFullPathTextBox.Enabled = Not decompilerIsRunning
 		'Me.BrowseForOutputPathNameButton.Enabled = Not decompilerIsRunning
-		Me.OutputPathComboBox.Enabled = Not decompilerIsRunning
+		Me.OutputPathComboUserControl.Enabled = Not decompilerIsRunning
 		Me.OutputPathTextBox.Enabled = Not decompilerIsRunning
 		Me.OutputSubfolderTextBox.Enabled = Not decompilerIsRunning
 		Me.BrowseForOutputPathButton.Enabled = Not decompilerIsRunning
@@ -512,9 +560,9 @@ Public Class DecompileUserControl
 		Me.CancelDecompileButton.Enabled = decompilerIsRunning
 		Me.UseAllInCompileButton.Enabled = Not decompilerIsRunning AndAlso Me.theDecompiledRelativePathFileNames.Count > 0
 
-		Me.DecompiledFilesComboBox.Enabled = Not decompilerIsRunning AndAlso Me.theDecompiledRelativePathFileNames.Count > 0
+		Me.DecompiledFilesComboUserControl.Enabled = Not decompilerIsRunning AndAlso Me.theDecompiledRelativePathFileNames.Count > 0
 		Me.UseInEditButton.Enabled = Not decompilerIsRunning AndAlso Me.theDecompiledRelativePathFileNames.Count > 0
-		Me.UseInCompileButton.Enabled = Not decompilerIsRunning AndAlso Me.theDecompiledRelativePathFileNames.Count > 0 AndAlso (Path.GetExtension(Me.theDecompiledRelativePathFileNames(Me.DecompiledFilesComboBox.SelectedIndex)) = ".qc")
+		Me.UseInCompileButton.Enabled = Not decompilerIsRunning AndAlso Me.theDecompiledRelativePathFileNames.Count > 0 AndAlso (Path.GetExtension(Me.theDecompiledRelativePathFileNames(Me.DecompiledFilesComboUserControl.SelectedIndex)) = ".qc")
 		Me.GotoDecompiledFileButton.Enabled = Not decompilerIsRunning AndAlso Me.theDecompiledRelativePathFileNames.Count > 0
 	End Sub
 
@@ -528,8 +576,8 @@ Public Class DecompileUserControl
 			'NOTE: Do not sort because the list is already sorted by file and then by folder.
 			'Me.theDecompiledRelativePathFileNames.Sort()
 			'NOTE: Need to set to nothing first to force it to update.
-			Me.DecompiledFilesComboBox.DataSource = Nothing
-			Me.DecompiledFilesComboBox.DataSource = Me.theDecompiledRelativePathFileNames
+			Me.DecompiledFilesComboUserControl.DataSource = Nothing
+			Me.DecompiledFilesComboUserControl.DataSource = Me.theDecompiledRelativePathFileNames
 		End If
 	End Sub
 
@@ -539,7 +587,7 @@ Public Class DecompileUserControl
 
 		anEnumList = EnumHelper.ToList(GetType(InputOptions))
 		previousSelectedInputOption = TheApp.Settings.DecompileMode
-		Me.DecompileComboBox.DataBindings.Clear()
+		Me.DecompileInputComboUserControl.DataBindings.Clear()
 		Try
 			If File.Exists(TheApp.Settings.DecompileMdlPathFileName) Then
 				' Set file mode when a file is selected.
@@ -554,10 +602,10 @@ Public Class DecompileUserControl
 				'	Exit Try
 			End If
 
-			Me.DecompileComboBox.DisplayMember = "Value"
-			Me.DecompileComboBox.ValueMember = "Key"
-			Me.DecompileComboBox.DataSource = anEnumList
-			Me.DecompileComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "DecompileMode", False, DataSourceUpdateMode.OnPropertyChanged)
+			Me.DecompileInputComboUserControl.DataSource = anEnumList
+			Me.DecompileInputComboUserControl.ValueMember = "Key"
+			Me.DecompileInputComboUserControl.DisplayMember = "Value"
+			Me.DecompileInputComboUserControl.DataBindings.Add("SelectedValue", TheApp.Settings, "DecompileMode", False, DataSourceUpdateMode.OnPropertyChanged)
 
 			If EnumHelper.Contains(previousSelectedInputOption, anEnumList) Then
 				TheApp.Settings.DecompileMode = previousSelectedInputOption

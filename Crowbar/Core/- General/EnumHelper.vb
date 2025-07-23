@@ -1,4 +1,26 @@
+Imports System.ComponentModel
+
 Public NotInheritable Class EnumHelper
+
+	Public Shared Function GetKey(ByVal description As String, ByVal type As Type) As System.Enum
+		Dim key As System.Enum = Nothing
+		For Each field As System.Reflection.FieldInfo In type.GetFields()
+			Dim attribute As DescriptionAttribute = DirectCast(System.Attribute.GetCustomAttribute(field, GetType(DescriptionAttribute)), DescriptionAttribute)
+			If attribute IsNot Nothing Then
+				If attribute.Description = description Then
+					key = DirectCast(field.GetValue(Nothing), System.Enum)
+					Exit For
+				End If
+			Else
+				' If no Description attribute, check the field name itself
+				If field.Name = description Then
+					key = DirectCast(field.GetValue(Nothing), System.Enum)
+					Exit For
+				End If
+			End If
+		Next
+		Return key
+	End Function
 
 	Public Shared Function GetDescription(ByVal value As System.Enum) As String
 		If value Is Nothing Then
@@ -6,7 +28,7 @@ Public NotInheritable Class EnumHelper
 		End If
 		Dim description As String = value.ToString()
 		Dim fieldInfo As Reflection.FieldInfo = value.GetType().GetField(description)
-		Dim attributes As System.ComponentModel.DescriptionAttribute() = CType(fieldInfo.GetCustomAttributes(GetType(System.ComponentModel.DescriptionAttribute), False), System.ComponentModel.DescriptionAttribute())
+		Dim attributes As DescriptionAttribute() = CType(fieldInfo.GetCustomAttributes(GetType(DescriptionAttribute), False), DescriptionAttribute())
 		If attributes IsNot Nothing AndAlso attributes.Length > 0 Then
 			description = attributes(0).Description
 		End If

@@ -6,8 +6,25 @@ Public Class SetUpGamesUserControl
 #Region "Creation and Destruction"
 
 	Public Sub New()
+		MyBase.New()
+		'IMPORTANT: The Panel that the DataGridView (DGV) is in must be defined AFTER the DGV
+		'    so that colors (and probably font) of the DGV
+		'    are not overwritten by the top-level UserControl or Form.
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
+	End Sub
+
+	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
+		Try
+			If disposing Then
+				Me.Free()
+				If components IsNot Nothing Then
+					components.Dispose()
+				End If
+			End If
+		Finally
+			MyBase.Dispose(disposing)
+		End Try
 	End Sub
 
 #End Region
@@ -15,10 +32,17 @@ Public Class SetUpGamesUserControl
 #Region "Init and Free"
 
 	Protected Overrides Sub Init()
-		Me.GameSetupComboBox.DisplayMember = "GameName"
-		Me.GameSetupComboBox.ValueMember = "GameName"
-		Me.GameSetupComboBox.DataSource = TheApp.Settings.GameSetups
-		Me.GameSetupComboBox.DataBindings.Add("SelectedIndex", TheApp.Settings, "SetUpGamesGameSetupSelectedIndex", False, DataSourceUpdateMode.OnPropertyChanged)
+		MyBase.Init()
+
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If TheApp Is Nothing Then
+			Exit Sub
+		End If
+
+		'NOTE: For ComboUserControl, must assign DataSource before ValueMember.
+		Me.GameSetupComboUserControl.DataSource = TheApp.Settings.GameSetups
+		Me.GameSetupComboUserControl.ValueMember = "GameName"
+		Me.GameSetupComboUserControl.DataBindings.Add("SelectedIndex", TheApp.Settings, "SetUpGamesGameSetupSelectedIndex", False, DataSourceUpdateMode.OnPropertyChanged)
 
 		Dim textColumn As DataGridViewTextBoxColumn
 		Dim buttonColumn As DataGridViewButtonColumn
@@ -28,7 +52,6 @@ Public Class SetUpGamesUserControl
 		textColumn = New DataGridViewTextBoxColumn()
 		textColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
 		textColumn.DataPropertyName = "Macro"
-		textColumn.DefaultCellStyle.BackColor = SystemColors.Control
 		textColumn.DisplayIndex = 0
 		textColumn.HeaderText = "Macro"
 		textColumn.Name = "Macro"
@@ -38,7 +61,6 @@ Public Class SetUpGamesUserControl
 
 		textColumn = New DataGridViewTextBoxColumn()
 		textColumn.DataPropertyName = "LibraryPath"
-		textColumn.DefaultCellStyle.BackColor = SystemColors.Control
 		textColumn.DisplayIndex = 1
 		textColumn.FillWeight = 100
 		textColumn.HeaderText = "Library Path"
@@ -49,7 +71,6 @@ Public Class SetUpGamesUserControl
 		buttonColumn = New DataGridViewButtonColumn()
 		buttonColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
 		buttonColumn.DisplayIndex = 2
-		buttonColumn.DefaultCellStyle.BackColor = SystemColors.Control
 		buttonColumn.HeaderText = "Browse"
 		buttonColumn.Name = "Browse"
 		buttonColumn.SortMode = DataGridViewColumnSortMode.NotSortable
@@ -60,10 +81,10 @@ Public Class SetUpGamesUserControl
 		textColumn = New DataGridViewTextBoxColumn()
 		textColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
 		textColumn.DataPropertyName = "UseCount"
-		textColumn.DefaultCellStyle.BackColor = SystemColors.Control
 		textColumn.DisplayIndex = 4
 		textColumn.HeaderText = "Use Count"
 		textColumn.Name = "UseCount"
+		textColumn.ReadOnly = True
 		textColumn.SortMode = DataGridViewColumnSortMode.NotSortable
 		Me.SteamLibraryPathsDataGridView.Columns.Add(textColumn)
 
@@ -78,6 +99,7 @@ Public Class SetUpGamesUserControl
 
 		AddHandler TheApp.Settings.PropertyChanged, AddressOf Me.AppSettings_PropertyChanged
 		AddHandler TheApp.Settings.GameSetups.ListChanged, AddressOf Me.GameSetups_ListChanged
+		AddHandler Me.EngineComboUserControl.SelectedValueChanged, AddressOf Me.EngineComboUserControl_SelectedValueChanged
 		AddHandler Me.SteamLibraryPathsDataGridView.SetMacroInSelectedGameSetupToolStripMenuItem.Click, AddressOf Me.SetMacroInSelectedGameSetupToolStripMenuItem_Click
 		AddHandler Me.SteamLibraryPathsDataGridView.SetMacroInAllGameSetupsToolStripMenuItem.Click, AddressOf Me.SetMacroInAllGameSetupsToolStripMenuItem_Click
 		AddHandler Me.SteamLibraryPathsDataGridView.ClearMacroInSelectedGameSetupToolStripMenuItem.Click, AddressOf Me.ClearMacroInSelectedGameSetupToolStripMenuItem_Click
@@ -86,25 +108,33 @@ Public Class SetUpGamesUserControl
 		AddHandler Me.SteamLibraryPathsDataGridView.ChangeToThisMacroInAllGameSetupsToolStripMenuItem.Click, AddressOf Me.ChangeToThisMacroInAllGameSetupsToolStripMenuItem_Click
 	End Sub
 
-	' Do not need Free() because this widget is destroyed only on program exit.
-	'Protected Overrides Sub Free()
-	'	RemoveHandler TheApp.Settings.PropertyChanged, AddressOf Me.AppSettings_PropertyChanged
-	'	RemoveHandler TheApp.Settings.GameSetups.ListChanged, AddressOf Me.GameSetups_ListChanged
-	'	RemoveHandler Me.GamePathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
-	'	RemoveHandler Me.SteamLibraryPathsDataGridView.SetMacroInSelectedGameSetupToolStripMenuItem.Click, AddressOf Me.SetMacroInSelectedGameSetupToolStripMenuItem_Click
-	'	RemoveHandler Me.SteamLibraryPathsDataGridView.SetMacroInAllGameSetupsToolStripMenuItem.Click, AddressOf Me.SetMacroInAllGameSetupsToolStripMenuItem_Click
-	'	RemoveHandler Me.SteamLibraryPathsDataGridView.ClearMacroInSelectedGameSetupToolStripMenuItem.Click, AddressOf Me.ClearMacroInSelectedGameSetupToolStripMenuItem_Click
-	'	RemoveHandler Me.SteamLibraryPathsDataGridView.ClearMacroInAllGameSetupsToolStripMenuItem.Click, AddressOf Me.ClearMacroInAllGameSetupsToolStripMenuItem_Click
-	'	RemoveHandler Me.SteamLibraryPathsDataGridView.ChangeToThisMacroInSelectedGameSetupToolStripMenuItem.Click, AddressOf Me.ChangeToThisMacroInSelectedGameSetupToolStripMenuItem_Click
-	'	RemoveHandler Me.SteamLibraryPathsDataGridView.ChangeToThisMacroInAllGameSetupsToolStripMenuItem.Click, AddressOf Me.ChangeToThisMacroInAllGameSetupsToolStripMenuItem_Click
+	Protected Overrides Sub Free()
+		MyBase.Free()
 
-	'	'IMPORTANT: Call in this order to prevent calling GameSetupComboBox_SelectedIndexChanged() and prevent changing an app setting. 
-	'	Me.GameSetupComboBox.DataBindings.Clear()
-	'	Me.GameSetupComboBox.DataSource = Nothing
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If Not Me.InitHasBeenCalled OrElse TheApp Is Nothing Then
+			Exit Sub
+		End If
 
-	'	Me.SteamAppPathFileNameTextBox.DataBindings.Clear()
-	'	Me.SteamLibraryPathsDataGridView.DataSource = Nothing
-	'End Sub
+		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf Me.AppSettings_PropertyChanged
+		RemoveHandler TheApp.Settings.GameSetups.ListChanged, AddressOf Me.GameSetups_ListChanged
+		RemoveHandler Me.GameSetupComboUserControl.SelectedIndexChanged, AddressOf Me.GameSetupComboUserControl_SelectedIndexChanged
+		RemoveHandler Me.EngineComboUserControl.SelectedValueChanged, AddressOf Me.EngineComboUserControl_SelectedValueChanged
+		RemoveHandler Me.GamePathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
+		RemoveHandler Me.SteamLibraryPathsDataGridView.SetMacroInSelectedGameSetupToolStripMenuItem.Click, AddressOf Me.SetMacroInSelectedGameSetupToolStripMenuItem_Click
+		RemoveHandler Me.SteamLibraryPathsDataGridView.SetMacroInAllGameSetupsToolStripMenuItem.Click, AddressOf Me.SetMacroInAllGameSetupsToolStripMenuItem_Click
+		RemoveHandler Me.SteamLibraryPathsDataGridView.ClearMacroInSelectedGameSetupToolStripMenuItem.Click, AddressOf Me.ClearMacroInSelectedGameSetupToolStripMenuItem_Click
+		RemoveHandler Me.SteamLibraryPathsDataGridView.ClearMacroInAllGameSetupsToolStripMenuItem.Click, AddressOf Me.ClearMacroInAllGameSetupsToolStripMenuItem_Click
+		RemoveHandler Me.SteamLibraryPathsDataGridView.ChangeToThisMacroInSelectedGameSetupToolStripMenuItem.Click, AddressOf Me.ChangeToThisMacroInSelectedGameSetupToolStripMenuItem_Click
+		RemoveHandler Me.SteamLibraryPathsDataGridView.ChangeToThisMacroInAllGameSetupsToolStripMenuItem.Click, AddressOf Me.ChangeToThisMacroInAllGameSetupsToolStripMenuItem_Click
+
+		Me.GameSetupComboUserControl.DataSource = Nothing
+		Me.GameSetupComboUserControl.DataBindings.Clear()
+		'Me.GameSetupComboBox.DataSource = Nothing
+		'Me.GameSetupComboBox.DataBindings.Clear()
+		Me.SteamAppPathFileNameTextBox.DataBindings.Clear()
+		Me.SteamLibraryPathsDataGridView.DataSource = Nothing
+	End Sub
 
 #End Region
 
@@ -114,12 +144,15 @@ Public Class SetUpGamesUserControl
 
 #Region "Widget Event Handlers"
 
-	'Private Sub SetUpGamesUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
-	'	If Not Me.DesignMode Then
-	'		Me.Init()
-	'		Me.theControlIsInDesignMode = True
-	'	End If
-	'End Sub
+	Private Sub SetUpGamesUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
+		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.GameSetupComboUserControl, Me.AddGameSetupButton)
+
+		' [04-Feb-2026] Me.DesignMode is unreliable in nested widgets.
+		'If Not Me.DesignMode Then
+		Me.Init()
+		'End If
+	End Sub
 
 #End Region
 
@@ -130,12 +163,19 @@ Public Class SetUpGamesUserControl
 	'	Me.UpdateWidgetsBasedOnGameEngine()
 	'End Sub
 
+	Private Sub EngineComboUserControl_SelectedValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+		' Because this enum is passed to DataSource as an IList, must manually bind for this direction.
+		Me.theSelectedGameSetup.GameEngine = CType(EngineComboUserControl.SelectedValue, GameEngine)
+		Me.UpdateWidgetsBasedOnGameEngine()
+	End Sub
+
 	Private Sub AddGameSetupButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AddGameSetupButton.Click
 		Dim gamesetup As New GameSetup()
 		gamesetup.GameName = "<New Game>"
 		TheApp.Settings.GameSetups.Add(gamesetup)
 
-		Me.GameSetupComboBox.SelectedIndex = TheApp.Settings.GameSetups.IndexOf(gamesetup)
+		'Me.GameSetupComboBox.SelectedIndex = TheApp.Settings.GameSetups.IndexOf(gamesetup)
+		Me.GameSetupComboUserControl.SelectedIndex = TheApp.Settings.GameSetups.IndexOf(gamesetup)
 
 		Me.UpdateWidgets()
 		Me.UpdateUseCounts()
@@ -293,7 +333,8 @@ Public Class SetUpGamesUserControl
 		cloneGameSetup.GameName = "Clone of " + Me.theSelectedGameSetup.GameName
 		TheApp.Settings.GameSetups.Add(cloneGameSetup)
 
-		Me.GameSetupComboBox.SelectedIndex = TheApp.Settings.GameSetups.IndexOf(cloneGameSetup)
+		'Me.GameSetupComboBox.SelectedIndex = TheApp.Settings.GameSetups.IndexOf(cloneGameSetup)
+		Me.GameSetupComboUserControl.SelectedIndex = TheApp.Settings.GameSetups.IndexOf(cloneGameSetup)
 
 		Me.UpdateWidgets()
 		Me.UpdateUseCounts()
@@ -422,6 +463,12 @@ Public Class SetUpGamesUserControl
 #Region "Core Event Handlers"
 
 	Private Sub AppSettings_PropertyChanged(ByVal sender As Object, ByVal e As System.ComponentModel.PropertyChangedEventArgs)
+		'If e.PropertyName = "AppThemeName" Then
+		'	Me.UpdateTheme()
+		'	Me.Refresh()
+		'ElseIf e.PropertyName = "SteamAppPathFileName" Then
+		'	Me.UpdateUseCounts()
+		'End If
 		If e.PropertyName = "SteamAppPathFileName" Then
 			Me.UpdateUseCounts()
 		ElseIf e.PropertyName = "SetUpGamesGameSetupSelectedIndex" Then
@@ -438,8 +485,9 @@ Public Class SetUpGamesUserControl
 			If e.PropertyDescriptor IsNot Nothing Then
 				If e.PropertyDescriptor.Name = "GamePathFileName" OrElse e.PropertyDescriptor.Name = "GameAppPathFileName" OrElse e.PropertyDescriptor.Name = "CompilerPathFileName" OrElse e.PropertyDescriptor.Name = "ViewerPathFileName" OrElse e.PropertyDescriptor.Name = "MappingToolPathFileName" OrElse e.PropertyDescriptor.Name = "PackerPathFileName" Then
 					Me.UpdateUseCounts()
-				ElseIf e.PropertyDescriptor.Name = "GameEngine" Then
-					Me.UpdateWidgetsBasedOnGameEngine()
+					' This will not be called because GameEngine is passed to DataSource as an IList, which does not raise these events.
+					'ElseIf e.PropertyDescriptor.Name = "GameEngine" Then
+					'	Me.UpdateWidgetsBasedOnGameEngine()
 				End If
 			End If
 		End If
@@ -463,11 +511,27 @@ Public Class SetUpGamesUserControl
 
 #Region "Private Methods"
 
+	'Private Sub UpdateTheme()
+	'	Dim theme As PanelTheme = Nothing
+	'	If TheApp IsNot Nothing Then
+	'		theme = TheApp.Settings.SelectedAppTheme.PanelTheme
+	'	End If
+	'	If theme IsNot Nothing Then
+	'		Me.ForeColor = theme.EnabledForeColor
+	'		MyBase.BackColor = theme.EnabledBackColor
+	'		'MyBase.BackColor = Color.Red
+	'	Else
+	'		Me.ForeColor = Control.DefaultForeColor
+	'		MyBase.BackColor = Control.DefaultBackColor
+	'	End If
+	'End Sub
+
 	Private Sub UpdateWidgets()
 		Dim gameSetupCount As Integer
 		gameSetupCount = TheApp.Settings.GameSetups.Count
 
-		Me.GameSetupComboBox.Enabled = (gameSetupCount > 0)
+		'Me.GameSetupComboBox.Enabled = (gameSetupCount > 0)
+		Me.GameSetupComboUserControl.Enabled = (gameSetupCount > 0)
 
 		Me.GamePathFileNameTextBox.Enabled = (gameSetupCount > 0)
 		Me.BrowseForGamePathFileNameButton.Enabled = (gameSetupCount > 0)
@@ -492,12 +556,13 @@ Public Class SetUpGamesUserControl
 
 		'NOTE: Reset the bindings, because a new game setup has been chosen.
 
-		Me.theSelectedGameSetup = TheApp.Settings.GameSetups(Me.GameSetupComboBox.SelectedIndex)
+		'Me.theSelectedGameSetup = TheApp.Settings.GameSetups(Me.GameSetupComboBox.SelectedIndex)
+		Me.theSelectedGameSetup = TheApp.Settings.GameSetups(Me.GameSetupComboUserControl.SelectedIndex)
 
 		Me.GameNameTextBox.DataBindings.Clear()
 		Me.GameNameTextBox.DataBindings.Add("Text", Me.theSelectedGameSetup, "GameName", False, DataSourceUpdateMode.OnValidation)
 
-		Me.UpdateGameEngineComboBox()
+		Me.UpdateGameEngineComboUserControl()
 
 		Me.GamePathFileNameTextBox.DataBindings.Clear()
 		Me.GamePathFileNameTextBox.DataBindings.Add("Text", Me.theSelectedGameSetup, "GamePathFileNameUnprocessed", False, DataSourceUpdateMode.OnValidation)
@@ -536,19 +601,17 @@ Public Class SetUpGamesUserControl
 		AddHandler Me.PackerPathFileNameTextBox.DataBindings("Text").Parse, AddressOf Me.ParsePathFileName
 	End Sub
 
-	Private Sub UpdateGameEngineComboBox()
-		Dim anEnumList As IList
-
-		anEnumList = EnumHelper.ToList(GetType(GameEngine))
+	Private Sub UpdateGameEngineComboUserControl()
+		Dim anEnumList As IList = EnumHelper.ToList(GetType(GameEngine))
 		'NOTE: For now, remove the Source 2 value.
 		EnumHelper.RemoveFromList(GameEngine.Source2, anEnumList)
-
-		Me.EngineComboBox.DataBindings.Clear()
+		Me.EngineComboUserControl.DataBindings.Clear()
 		Try
-			Me.EngineComboBox.DisplayMember = "Value"
-			Me.EngineComboBox.ValueMember = "Key"
-			Me.EngineComboBox.DataSource = anEnumList
-			Me.EngineComboBox.DataBindings.Add("SelectedValue", Me.theSelectedGameSetup, "GameEngine", False, DataSourceUpdateMode.OnPropertyChanged)
+			Me.EngineComboUserControl.DataSource = anEnumList
+			Me.EngineComboUserControl.ValueMember = "Key"
+			Me.EngineComboUserControl.DisplayMember = "Value"
+			' This is only a one-way binding because IList does not raise ListChanged events.
+			Me.EngineComboUserControl.DataBindings.Add("SelectedValue", Me.theSelectedGameSetup, "GameEngine", False, DataSourceUpdateMode.OnPropertyChanged)
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		End Try

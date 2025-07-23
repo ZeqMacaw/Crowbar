@@ -1,6 +1,6 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class DownloadUserControl
-    Inherits BaseUserControl
+	Inherits BaseUserControl
 
 	'Required by the Windows Form Designer
 	Private components As System.ComponentModel.IContainer
@@ -17,15 +17,15 @@ Partial Class DownloadUserControl
 	'NOTE: The following procedure is required by the Windows Form Designer
 	'It can be modified using the Windows Form Designer.  
 	'Do not modify it using the code editor.
-	<System.Diagnostics.DebuggerStepThrough()> _
-    Private Sub InitializeComponent()
+	<System.Diagnostics.DebuggerStepThrough()>
+	Private Sub InitializeComponent()
 		Me.components = New System.ComponentModel.Container()
 		Me.ItemIdTextBox = New Crowbar.RichTextBoxEx()
 		Me.DownloadButton = New Crowbar.ButtonEx()
 		Me.LogTextBox = New Crowbar.RichTextBoxEx()
-		Me.ItemIdOrLinkLabel = New System.Windows.Forms.Label()
-		Me.OuputToLabel = New System.Windows.Forms.Label()
-		Me.OutputPathComboBox = New Crowbar.ComboBoxEx()
+		Me.ItemIdOrLinkLabel = New Crowbar.LabelEx()
+		Me.OuputToLabel = New Crowbar.LabelEx()
+		Me.OutputPathComboBox = New Crowbar.ComboUserControl()
 		Me.OutputPathTextBox = New Crowbar.RichTextBoxEx()
 		Me.GotoOutputPathButton = New Crowbar.ButtonEx()
 		Me.BrowseForOutputPathButton = New Crowbar.ButtonEx()
@@ -37,14 +37,14 @@ Partial Class DownloadUserControl
 		Me.ReplaceSpacesWithUnderscoresCheckBox = New Crowbar.CheckBoxEx()
 		Me.OptionsUseDefaultsButton = New Crowbar.ButtonEx()
 		Me.ConvertToExpectedFileOrFolderCheckBox = New Crowbar.CheckBoxEx()
-		Me.ExampleOutputFileNameLabel = New System.Windows.Forms.Label()
+		Me.ExampleOutputFileNameLabel = New Crowbar.LabelEx()
 		Me.ExampleOutputFileNameTextBox = New Crowbar.RichTextBoxEx()
 		Me.CancelDownloadButton = New Crowbar.ButtonEx()
 		Me.DownloadProgressBar = New Crowbar.ProgressBarEx()
 		Me.OpenWorkshopPageButton = New Crowbar.ButtonEx()
 		Me.DocumentsOutputPathTextBox = New Crowbar.RichTextBoxEx()
 		Me.DownloadedItemTextBox = New Crowbar.RichTextBoxEx()
-		Me.DownloadedLabel = New System.Windows.Forms.Label()
+		Me.DownloadedLabel = New Crowbar.LabelEx()
 		Me.GotoDownloadedItemButton = New Crowbar.ButtonEx()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
 		Me.DownloadUserControlFillPanel = New Crowbar.PanelEx()
@@ -68,11 +68,9 @@ Partial Class DownloadUserControl
 		'
 		Me.ItemIdTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ItemIdTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-		Me.ItemIdTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.ItemIdTextBox.CueBannerText = ""
+		Me.ItemIdTextBox.DetectUrls = False
 		Me.ItemIdTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-		Me.ItemIdTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.ItemIdTextBox.Location = New System.Drawing.Point(87, 4)
 		Me.ItemIdTextBox.Multiline = False
 		Me.ItemIdTextBox.Name = "ItemIdTextBox"
@@ -80,6 +78,7 @@ Partial Class DownloadUserControl
 		Me.ItemIdTextBox.Size = New System.Drawing.Size(616, 22)
 		Me.ItemIdTextBox.TabIndex = 1
 		Me.ItemIdTextBox.Text = ""
+		Me.ItemIdTextBox.WordWrap = False
 		'
 		'DownloadButton
 		'
@@ -92,12 +91,10 @@ Partial Class DownloadUserControl
 		'
 		'LogTextBox
 		'
-		Me.LogTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-		Me.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.LogTextBox.CueBannerText = ""
+		Me.LogTextBox.DetectUrls = False
 		Me.LogTextBox.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.LogTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-		Me.LogTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.LogTextBox.HideSelection = False
 		Me.LogTextBox.Location = New System.Drawing.Point(0, 26)
 		Me.LogTextBox.Name = "LogTextBox"
@@ -127,11 +124,6 @@ Partial Class DownloadUserControl
 		'
 		'OutputPathComboBox
 		'
-		Me.OutputPathComboBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-		Me.OutputPathComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
-		Me.OutputPathComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-		Me.OutputPathComboBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
-		Me.OutputPathComboBox.FormattingEnabled = True
 		Me.OutputPathComboBox.IsReadOnly = False
 		Me.OutputPathComboBox.Location = New System.Drawing.Point(87, 33)
 		Me.OutputPathComboBox.Name = "OutputPathComboBox"
@@ -143,11 +135,9 @@ Partial Class DownloadUserControl
 		Me.OutputPathTextBox.AllowDrop = True
 		Me.OutputPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.OutputPathTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-		Me.OutputPathTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.OutputPathTextBox.CueBannerText = ""
+		Me.OutputPathTextBox.DetectUrls = False
 		Me.OutputPathTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-		Me.OutputPathTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.OutputPathTextBox.Location = New System.Drawing.Point(233, 33)
 		Me.OutputPathTextBox.Multiline = False
 		Me.OutputPathTextBox.Name = "OutputPathTextBox"
@@ -178,10 +168,8 @@ Partial Class DownloadUserControl
 		'
 		'OptionsGroupBox
 		'
-		Me.OptionsGroupBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.OptionsGroupBox.Controls.Add(Me.OptionsGroupBoxFillPanel)
 		Me.OptionsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.OptionsGroupBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.OptionsGroupBox.IsReadOnly = False
 		Me.OptionsGroupBox.Location = New System.Drawing.Point(0, 0)
 		Me.OptionsGroupBox.Name = "OptionsGroupBox"
@@ -194,7 +182,6 @@ Partial Class DownloadUserControl
 		'OptionsGroupBoxFillPanel
 		'
 		Me.OptionsGroupBoxFillPanel.AutoScroll = True
-		Me.OptionsGroupBoxFillPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.UseIdCheckBox)
 		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.PrependTitleCheckBox)
 		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.AppendDateTimeCheckBox)
@@ -204,7 +191,6 @@ Partial Class DownloadUserControl
 		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.ExampleOutputFileNameLabel)
 		Me.OptionsGroupBoxFillPanel.Controls.Add(Me.ExampleOutputFileNameTextBox)
 		Me.OptionsGroupBoxFillPanel.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.OptionsGroupBoxFillPanel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.OptionsGroupBoxFillPanel.Location = New System.Drawing.Point(3, 18)
 		Me.OptionsGroupBoxFillPanel.Name = "OptionsGroupBoxFillPanel"
 		Me.OptionsGroupBoxFillPanel.SelectedIndex = -1
@@ -290,9 +276,8 @@ Partial Class DownloadUserControl
 		'
 		Me.ExampleOutputFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ExampleOutputFileNameTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-		Me.ExampleOutputFileNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.ExampleOutputFileNameTextBox.CueBannerText = ""
+		Me.ExampleOutputFileNameTextBox.DetectUrls = False
 		Me.ExampleOutputFileNameTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
 		Me.ExampleOutputFileNameTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.ExampleOutputFileNameTextBox.Location = New System.Drawing.Point(3, 147)
@@ -318,7 +303,6 @@ Partial Class DownloadUserControl
 		'
 		Me.DownloadProgressBar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.DownloadProgressBar.ForeColor = System.Drawing.SystemColors.ControlText
 		Me.DownloadProgressBar.Location = New System.Drawing.Point(252, 0)
 		Me.DownloadProgressBar.Margin = New System.Windows.Forms.Padding(3, 3, 0, 3)
 		Me.DownloadProgressBar.Name = "DownloadProgressBar"
@@ -339,11 +323,9 @@ Partial Class DownloadUserControl
 		'
 		Me.DocumentsOutputPathTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.DocumentsOutputPathTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-		Me.DocumentsOutputPathTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.DocumentsOutputPathTextBox.CueBannerText = ""
+		Me.DocumentsOutputPathTextBox.DetectUrls = False
 		Me.DocumentsOutputPathTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-		Me.DocumentsOutputPathTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.DocumentsOutputPathTextBox.Location = New System.Drawing.Point(233, 32)
 		Me.DocumentsOutputPathTextBox.Multiline = False
 		Me.DocumentsOutputPathTextBox.Name = "DocumentsOutputPathTextBox"
@@ -357,11 +339,9 @@ Partial Class DownloadUserControl
 		'
 		Me.DownloadedItemTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.DownloadedItemTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-		Me.DownloadedItemTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.DownloadedItemTextBox.CueBannerText = ""
+		Me.DownloadedItemTextBox.DetectUrls = False
 		Me.DownloadedItemTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-		Me.DownloadedItemTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.DownloadedItemTextBox.Location = New System.Drawing.Point(83, 3)
 		Me.DownloadedItemTextBox.Multiline = False
 		Me.DownloadedItemTextBox.Name = "DownloadedItemTextBox"
@@ -392,7 +372,6 @@ Partial Class DownloadUserControl
 		'
 		'DownloadUserControlFillPanel
 		'
-		Me.DownloadUserControlFillPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.DownloadUserControlFillPanel.Controls.Add(Me.ItemIdOrLinkLabel)
 		Me.DownloadUserControlFillPanel.Controls.Add(Me.ItemIdTextBox)
 		Me.DownloadUserControlFillPanel.Controls.Add(Me.OpenWorkshopPageButton)
@@ -404,7 +383,6 @@ Partial Class DownloadUserControl
 		Me.DownloadUserControlFillPanel.Controls.Add(Me.GotoOutputPathButton)
 		Me.DownloadUserControlFillPanel.Controls.Add(Me.Options_LogSplitContainer)
 		Me.DownloadUserControlFillPanel.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.DownloadUserControlFillPanel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.DownloadUserControlFillPanel.Location = New System.Drawing.Point(0, 0)
 		Me.DownloadUserControlFillPanel.Name = "DownloadUserControlFillPanel"
 		Me.DownloadUserControlFillPanel.SelectedIndex = -1
@@ -437,12 +415,10 @@ Partial Class DownloadUserControl
 		'
 		'DownloadButtonsPanel
 		'
-		Me.DownloadButtonsPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.DownloadButtonsPanel.Controls.Add(Me.DownloadButton)
 		Me.DownloadButtonsPanel.Controls.Add(Me.CancelDownloadButton)
 		Me.DownloadButtonsPanel.Controls.Add(Me.DownloadProgressBar)
 		Me.DownloadButtonsPanel.Dock = System.Windows.Forms.DockStyle.Top
-		Me.DownloadButtonsPanel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.DownloadButtonsPanel.Location = New System.Drawing.Point(0, 0)
 		Me.DownloadButtonsPanel.Name = "DownloadButtonsPanel"
 		Me.DownloadButtonsPanel.SelectedIndex = -1
@@ -452,13 +428,11 @@ Partial Class DownloadUserControl
 		'
 		'PostDownloadPanel
 		'
-		Me.PostDownloadPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.PostDownloadPanel.Controls.Add(Me.UseInUnpackButton)
 		Me.PostDownloadPanel.Controls.Add(Me.DownloadedLabel)
 		Me.PostDownloadPanel.Controls.Add(Me.DownloadedItemTextBox)
 		Me.PostDownloadPanel.Controls.Add(Me.GotoDownloadedItemButton)
 		Me.PostDownloadPanel.Dock = System.Windows.Forms.DockStyle.Bottom
-		Me.PostDownloadPanel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.PostDownloadPanel.Location = New System.Drawing.Point(0, 252)
 		Me.PostDownloadPanel.Name = "PostDownloadPanel"
 		Me.PostDownloadPanel.SelectedIndex = -1
@@ -506,14 +480,14 @@ Partial Class DownloadUserControl
 	Friend WithEvents ItemIdTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents DownloadButton As ButtonEx
 	Friend WithEvents LogTextBox As RichTextBoxEx
-	Friend WithEvents ItemIdOrLinkLabel As Label
-	Friend WithEvents OuputToLabel As Label
+	Friend WithEvents ItemIdOrLinkLabel As LabelEx
+	Friend WithEvents OuputToLabel As LabelEx
 	Friend WithEvents OutputPathTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents GotoOutputPathButton As ButtonEx
 	Friend WithEvents BrowseForOutputPathButton As ButtonEx
 	Friend WithEvents OptionsGroupBox As GroupBoxEx
 	Friend WithEvents CancelDownloadButton As ButtonEx
-	Friend WithEvents ExampleOutputFileNameLabel As Label
+	Friend WithEvents ExampleOutputFileNameLabel As LabelEx
 	Friend WithEvents AppendDateTimeCheckBox As CheckBoxEx
 	Friend WithEvents PrependTitleCheckBox As CheckBoxEx
 	Friend WithEvents UseIdCheckBox As CheckBoxEx
@@ -523,7 +497,7 @@ Partial Class DownloadUserControl
 	Friend WithEvents OpenWorkshopPageButton As ButtonEx
 	Friend WithEvents DocumentsOutputPathTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents DownloadedItemTextBox As Crowbar.RichTextBoxEx
-	Friend WithEvents DownloadedLabel As Label
+	Friend WithEvents DownloadedLabel As LabelEx
 	Friend WithEvents GotoDownloadedItemButton As ButtonEx
 	Friend WithEvents ExampleOutputFileNameTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents ConvertToExpectedFileOrFolderCheckBox As CheckBoxEx
@@ -531,7 +505,7 @@ Partial Class DownloadUserControl
 	Friend WithEvents Timer1 As Timer
 	Friend WithEvents Options_LogSplitContainer As SplitContainer
 	Friend WithEvents UseInUnpackButton As ButtonEx
-	Friend WithEvents OutputPathComboBox As ComboBoxEx
+	Friend WithEvents OutputPathComboBox As ComboUserControl
 	Friend WithEvents DownloadUserControlFillPanel As PanelEx
 	Friend WithEvents PostDownloadPanel As PanelEx
 	Friend WithEvents DownloadButtonsPanel As PanelEx

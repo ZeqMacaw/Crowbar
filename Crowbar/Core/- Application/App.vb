@@ -54,6 +54,7 @@ Public Class App
 		'NOTE: Needed for using DLLs placed in folder separate from main EXE file.
 		Environment.SetEnvironmentVariable("path", Me.GetCustomDataPath(), EnvironmentVariableTarget.Process)
 		Me.WriteRequiredFiles()
+		Me.LoadThemeData()
 		Me.LoadAppSettings()
 
 		If Me.Settings.SteamLibraryPaths.Count = 0 Then
@@ -86,6 +87,12 @@ Public Class App
 #End Region
 
 #Region "Properties"
+
+	Public ReadOnly Property AppThemes() As BindingListExAutoSort(Of AppTheme)
+		Get
+			Return Me.theThemeData.AppThemes
+		End Get
+	End Property
 
 	Public ReadOnly Property Settings() As AppSettings
 		Get
@@ -232,6 +239,23 @@ Public Class App
 		End Try
 	End Sub
 
+	Public Sub LoadThemeData()
+		Dim themeDataPathFileName As String
+		themeDataPathFileName = Me.GetThemeDataPathFileName()
+
+		If File.Exists(themeDataPathFileName) Then
+			Try
+				VersionModule.ConvertSettingsFile(themeDataPathFileName)
+				Me.theThemeData = CType(FileManager.ReadXml(GetType(ThemeData), themeDataPathFileName), ThemeData)
+			Catch
+				Me.CreateThemeData()
+			End Try
+		Else
+			' File not found, so init default values.
+			Me.CreateThemeData()
+		End If
+	End Sub
+
 	Public Sub SetSteamAppId(ByVal appID As UInteger)
 		Me.SetSteamAppId(appID.ToString())
 	End Sub
@@ -311,6 +335,50 @@ Public Class App
 
 #Region "Private Methods"
 
+	Public Function GetThemeDataPathFileName() As String
+		Return Path.Combine(Me.GetCustomDataPath(), App.theThemeDataFileName)
+	End Function
+
+	Private Sub CreateThemeData()
+		Me.theThemeData = New ThemeData()
+
+		' Create default settings.
+		Dim defaultTheme As New AppTheme()
+		Me.theThemeData.AppThemes.Add(defaultTheme)
+		Dim defaultCrowbarTheme As New AppTheme()
+		defaultCrowbarTheme.Name = "Crowbar Dark"
+		defaultCrowbarTheme.GlobalTheme = New GlobalTheme()
+		defaultCrowbarTheme.ButtonTheme = New ButtonTheme()
+		defaultCrowbarTheme.CheckBoxTheme = New CheckBoxTheme()
+		defaultCrowbarTheme.ComboUserControlTheme = New ComboUserControlTheme()
+		defaultCrowbarTheme.DataGridViewTheme = New DataGridViewTheme()
+		defaultCrowbarTheme.GroupBoxTheme = New GroupBoxTheme()
+		defaultCrowbarTheme.LabelTheme = New LabelTheme()
+		defaultCrowbarTheme.PanelTheme = New PanelTheme()
+		defaultCrowbarTheme.ProgressBarTheme = New ProgressBarTheme()
+		defaultCrowbarTheme.RadioButtonTheme = New RadioButtonTheme()
+		defaultCrowbarTheme.RichTextBoxTheme = New RichTextBoxTheme()
+		defaultCrowbarTheme.SplitContainerTheme = New SplitContainerTheme()
+		defaultCrowbarTheme.TabControlTheme = New TabControlTheme()
+		defaultCrowbarTheme.ToolStripTheme = New ToolStripTheme()
+		defaultCrowbarTheme.TreeViewTheme = New TreeViewTheme()
+		Me.theThemeData.AppThemes.Add(defaultCrowbarTheme)
+
+		Me.SaveThemeData()
+	End Sub
+
+	Public Sub SaveThemeData()
+		Dim themeDataPath As String
+		Dim themeDataPathFileName As String
+
+		themeDataPathFileName = Me.GetThemeDataPathFileName()
+		themeDataPath = FileManager.GetPath(themeDataPathFileName)
+
+		If FileManager.PathExistsAfterTryToCreate(themeDataPath) Then
+			FileManager.WriteXml(Me.theThemeData, themeDataPathFileName)
+		End If
+	End Sub
+
 	Private Sub LoadAppSettings()
 		Dim appSettingsPathFileName As String
 		appSettingsPathFileName = Me.GetAppSettingsPathFileName()
@@ -345,9 +413,9 @@ Public Class App
 	Private Sub CreateAppSettings()
 		Me.theSettings = New AppSettings()
 
+		' Create default settings.
 		Dim gameSetup As New GameSetup()
 		Me.theSettings.GameSetups.Add(gameSetup)
-
 		Dim aPath As New SteamLibraryPath()
 		Me.theSettings.SteamLibraryPaths.Add(aPath)
 
@@ -448,6 +516,8 @@ Public Class App
 	Private theInternalCultureInfo As CultureInfo
 	Private theInternalNumberFormat As NumberFormatInfo
 
+	Private theThemeData As ThemeData
+
 	Private theSettings As AppSettings
 	'NOTE: Use slash at start to avoid confusing with a pathFileName that Windows Explorer might use with auto-open.
 	Public Const SettingsParameter As String = "/settings="
@@ -471,6 +541,7 @@ Public Class App
 	Public Const CrowbarSteamPipeFileName As String = "CrowbarSteamPipe.exe"
 	Private Const theSteamAppIDFileName As String = "steam_appid.txt"
 	'Private Const theDataFolderName As String = "Data"
+	Private Const theThemeDataFileName As String = "Crowbar Theme Data.xml"
 	Private Const theAppSettingsFileName As String = "Crowbar Settings.xml"
 
 	Public Const AnimsSubFolderName As String = "anims"

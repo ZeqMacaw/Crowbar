@@ -14,10 +14,10 @@
 		'If Win32Api.DwmSetWindowAttribute(Handle, 19, {1}, 4) <> 0 Then
 		'	Win32Api.DwmSetWindowAttribute(Handle, 20, {1}, 4)
 		'End If
-		Win32Api.EnableWin32DarkMode(Me.Handle, True)
+		Win32Api.UseWindowsTitleBarThemeColor(Me.Handle, True)
 		'Win32Api.SetWindowTheme(Me.Handle, "DarkMode_Explorer", Nothing)
 		'Win32Api.SetWindowTheme(Me.Handle, "Explorer", Nothing)
-		Me.BackColor = WidgetBackColor
+		'Me.BackColor = WidgetBackColor
 	End Sub
 
 	'Protected Sub InitWidgets(ByVal container As Control)

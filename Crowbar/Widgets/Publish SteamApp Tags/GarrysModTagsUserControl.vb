@@ -2,6 +2,8 @@
 
 Public Class GarrysModTagsUserControl
 
+#Region "Creation and Destruction"
+
 	Public Sub New()
 		MyBase.New()
 
@@ -12,6 +14,10 @@ Public Class GarrysModTagsUserControl
 		Me.theOrientation = OrientationType.Vertical
 		Me.ChangeOrientation()
 	End Sub
+
+#End Region
+
+#Region "Init and Free"
 
 	Protected Overrides Sub Init()
 		MyBase.Init()
@@ -36,6 +42,10 @@ Public Class GarrysModTagsUserControl
 			End If
 		Next
 	End Sub
+
+#End Region
+
+#Region "Properties"
 
 	Public Property Orientation() As OrientationType
 		Get
@@ -91,6 +101,10 @@ Public Class GarrysModTagsUserControl
 		End Set
 	End Property
 
+#End Region
+
+#Region "Widget Event Handlers"
+
 	Protected Overrides Sub OnCheckBox_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs)
 		If Not Me.theCheckBoxesAreChangingViaMe Then
 			Dim selectedCheckBox As CheckBoxEx = CType(sender, CheckBoxEx)
@@ -114,6 +128,10 @@ Public Class GarrysModTagsUserControl
 		MyBase.OnCheckBox_CheckedChanged(sender, e)
 	End Sub
 
+#End Region
+
+#Region "Private Methods"
+
 	Private Sub ChangeOrientation()
 		If Me.theOrientation = OrientationType.Horizontal Then
 			''Build
@@ -135,7 +153,7 @@ Public Class GarrysModTagsUserControl
 			'Water
 			Me.CheckBox9.Location = New System.Drawing.Point(294, 20)
 			'GroupBox1
-			Me.GroupBox1.Size = New System.Drawing.Size(356, 68)
+			Me.GroupBox1.Size = New System.Drawing.Size(356, 67)
 		Else
 			''Build
 			'Me.CheckBox1.Location = New System.Drawing.Point(6, 20)
@@ -159,6 +177,10 @@ Public Class GarrysModTagsUserControl
 			Me.GroupBox1.Size = New System.Drawing.Size(161, 235)
 		End If
 	End Sub
+
+#End Region
+
+#Region "Data"
 
 	Private theCheckBoxes As List(Of CheckBoxEx)
 	Private theCheckmarkedCheckBoxes As List(Of CheckBoxEx)
@@ -186,5 +208,7 @@ Public Class GarrysModTagsUserControl
 	'"water"
 	'"comic"
 	'"build"
+
+#End Region
 
 End Class

@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class PatchUserControl
 	Inherits BaseUserControl
 
@@ -20,34 +20,34 @@ Partial Class PatchUserControl
 	'NOTE: The following procedure is required by the Windows Form Designer
 	'It can be modified using the Windows Form Designer.  
 	'Do not modify it using the code editor.
-	<System.Diagnostics.DebuggerStepThrough()> _
+	<System.Diagnostics.DebuggerStepThrough()>
 	Private Sub InitializeComponent()
 		Me.components = New System.ComponentModel.Container()
 		Me.ViewButton = New Crowbar.ButtonEx()
 		Me.MdlPathFileNameTextBox = New Crowbar.RichTextBoxEx()
 		Me.BrowseForMdlFileButton = New Crowbar.ButtonEx()
-		Me.Label1 = New System.Windows.Forms.Label()
+		Me.Label1 = New Crowbar.LabelEx()
 		Me.Panel2 = New Crowbar.PanelEx()
-		Me.DecompileComboBox = New Crowbar.ComboBoxEx()
+		Me.DecompileComboBox = New Crowbar.ComboUserControl()
 		Me.GotoMdlFileButton = New Crowbar.ButtonEx()
 		Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
 		Me.PatchableValuesForSingleMDLGroupBox = New Crowbar.GroupBoxEx()
 		Me.RefreshOrRevertButton = New Crowbar.ButtonEx()
-		Me.Label11 = New System.Windows.Forms.Label()
-		Me.Label10 = New System.Windows.Forms.Label()
+		Me.Label11 = New Crowbar.LabelEx()
+		Me.Label10 = New Crowbar.LabelEx()
 		Me.GroupBox5 = New Crowbar.GroupBoxEx()
 		Me.DataGridView4 = New System.Windows.Forms.DataGridView()
-		Me.Label9 = New System.Windows.Forms.Label()
+		Me.Label9 = New Crowbar.LabelEx()
 		Me.TextBoxEx6 = New Crowbar.RichTextBoxEx()
 		Me.TextBoxEx5 = New Crowbar.RichTextBoxEx()
 		Me.TextBoxEx4 = New Crowbar.RichTextBoxEx()
-		Me.Label8 = New System.Windows.Forms.Label()
+		Me.Label8 = New Crowbar.LabelEx()
 		Me.GroupBox4 = New Crowbar.GroupBoxEx()
 		Me.DataGridView3 = New System.Windows.Forms.DataGridView()
 		Me.Button9 = New Crowbar.ButtonEx()
 		Me.Button11 = New Crowbar.ButtonEx()
-		Me.Label6 = New System.Windows.Forms.Label()
-		Me.Label7 = New System.Windows.Forms.Label()
+		Me.Label6 = New Crowbar.LabelEx()
+		Me.Label7 = New Crowbar.LabelEx()
 		Me.TextBoxEx3 = New Crowbar.RichTextBoxEx()
 		Me.GroupBox3 = New Crowbar.GroupBoxEx()
 		Me.DataGridView2 = New System.Windows.Forms.DataGridView()
@@ -61,30 +61,30 @@ Partial Class PatchUserControl
 		Me.Button1 = New Crowbar.ButtonEx()
 		Me.Button3 = New Crowbar.ButtonEx()
 		Me.Button2 = New Crowbar.ButtonEx()
-		Me.CheckBox3 = New System.Windows.Forms.CheckBox()
-		Me.CheckBox2 = New System.Windows.Forms.CheckBox()
-		Me.CheckBox1 = New System.Windows.Forms.CheckBox()
-		Me.Label4 = New System.Windows.Forms.Label()
-		Me.Label5 = New System.Windows.Forms.Label()
+		Me.CheckBox3 = New CheckBoxEx()
+		Me.CheckBox2 = New CheckBoxEx()
+		Me.CheckBox1 = New CheckBoxEx()
+		Me.Label4 = New Crowbar.LabelEx()
+		Me.Label5 = New Crowbar.LabelEx()
 		Me.TextBoxEx2 = New Crowbar.RichTextBoxEx()
-		Me.Label3 = New System.Windows.Forms.Label()
-		Me.Label2 = New System.Windows.Forms.Label()
+		Me.Label3 = New Crowbar.LabelEx()
+		Me.Label2 = New Crowbar.LabelEx()
 		Me.TextBoxEx1 = New Crowbar.RichTextBoxEx()
 		Me.PatchableValuesForMultipleMDLsGroupBox = New Crowbar.GroupBoxEx()
 		Me.Button10 = New Crowbar.ButtonEx()
 		Me.GroupBox6 = New Crowbar.GroupBoxEx()
 		Me.DataGridView5 = New System.Windows.Forms.DataGridView()
-		Me.Label14 = New System.Windows.Forms.Label()
+		Me.Label14 = New Crowbar.LabelEx()
 		Me.TextBoxEx7 = New Crowbar.RichTextBoxEx()
 		Me.TextBoxEx8 = New Crowbar.RichTextBoxEx()
 		Me.TextBoxEx9 = New Crowbar.RichTextBoxEx()
-		Me.Label15 = New System.Windows.Forms.Label()
+		Me.Label15 = New Crowbar.LabelEx()
 		Me.GroupBox7 = New Crowbar.GroupBoxEx()
 		Me.DataGridView6 = New System.Windows.Forms.DataGridView()
 		Me.Button12 = New Crowbar.ButtonEx()
 		Me.Button13 = New Crowbar.ButtonEx()
-		Me.Label16 = New System.Windows.Forms.Label()
-		Me.Label17 = New System.Windows.Forms.Label()
+		Me.Label16 = New Crowbar.LabelEx()
+		Me.Label17 = New Crowbar.LabelEx()
 		Me.TextBoxEx10 = New Crowbar.RichTextBoxEx()
 		Me.GroupBox8 = New Crowbar.GroupBoxEx()
 		Me.DataGridView7 = New System.Windows.Forms.DataGridView()
@@ -98,10 +98,10 @@ Partial Class PatchUserControl
 		Me.Button19 = New Crowbar.ButtonEx()
 		Me.Button20 = New Crowbar.ButtonEx()
 		Me.Button21 = New Crowbar.ButtonEx()
-		Me.CheckBox4 = New System.Windows.Forms.CheckBox()
-		Me.CheckBox5 = New System.Windows.Forms.CheckBox()
-		Me.CheckBox6 = New System.Windows.Forms.CheckBox()
-		Me.Label12 = New System.Windows.Forms.Label()
+		Me.CheckBox4 = New CheckBoxEx()
+		Me.CheckBox5 = New CheckBoxEx()
+		Me.CheckBox6 = New CheckBoxEx()
+		Me.Label12 = New Crowbar.LabelEx()
 		Me.CancelDecompileButton = New Crowbar.ButtonEx()
 		Me.SkipCurrentModelButton = New Crowbar.ButtonEx()
 		Me.MessageTextBox = New Crowbar.RichTextBoxEx()
@@ -145,7 +145,7 @@ Partial Class PatchUserControl
 		Me.MdlPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.MdlPathFileNameTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-		Me.MdlPathFileNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.MdlPathFileNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
 		Me.MdlPathFileNameTextBox.CueBannerText = ""
 		Me.MdlPathFileNameTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
 		Me.MdlPathFileNameTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
@@ -197,11 +197,6 @@ Partial Class PatchUserControl
 		'
 		'DecompileComboBox
 		'
-		Me.DecompileComboBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(75, Byte), Integer))
-		Me.DecompileComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
-		Me.DecompileComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-		Me.DecompileComboBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
-		Me.DecompileComboBox.FormattingEnabled = True
 		Me.DecompileComboBox.IsReadOnly = False
 		Me.DecompileComboBox.Location = New System.Drawing.Point(63, 4)
 		Me.DecompileComboBox.Name = "DecompileComboBox"
@@ -805,11 +800,8 @@ Partial Class PatchUserControl
 		'
 		Me.TextBoxEx8.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TextBoxEx8.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-		Me.TextBoxEx8.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.TextBoxEx8.CueBannerText = ""
 		Me.TextBoxEx8.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-		Me.TextBoxEx8.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.TextBoxEx8.Location = New System.Drawing.Point(131, 95)
 		Me.TextBoxEx8.Name = "TextBoxEx8"
 		Me.TextBoxEx8.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
@@ -821,11 +813,8 @@ Partial Class PatchUserControl
 		'
 		Me.TextBoxEx9.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TextBoxEx9.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-		Me.TextBoxEx9.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.TextBoxEx9.CueBannerText = ""
 		Me.TextBoxEx9.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-		Me.TextBoxEx9.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.TextBoxEx9.Location = New System.Drawing.Point(85, 95)
 		Me.TextBoxEx9.Name = "TextBoxEx9"
 		Me.TextBoxEx9.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
@@ -908,11 +897,8 @@ Partial Class PatchUserControl
 		'
 		Me.TextBoxEx10.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TextBoxEx10.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-		Me.TextBoxEx10.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.TextBoxEx10.CueBannerText = ""
 		Me.TextBoxEx10.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-		Me.TextBoxEx10.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.TextBoxEx10.Location = New System.Drawing.Point(122, 68)
 		Me.TextBoxEx10.Name = "TextBoxEx10"
 		Me.TextBoxEx10.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
@@ -1114,11 +1100,8 @@ Partial Class PatchUserControl
 		Me.MessageTextBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.MessageTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-		Me.MessageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.MessageTextBox.CueBannerText = ""
 		Me.MessageTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-		Me.MessageTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.MessageTextBox.Location = New System.Drawing.Point(0, 31)
 		Me.MessageTextBox.Name = "MessageTextBox"
 		Me.MessageTextBox.ReadOnly = True
@@ -1167,24 +1150,24 @@ Partial Class PatchUserControl
 	Friend WithEvents ViewButton As ButtonEx
 	Friend WithEvents MdlPathFileNameTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents BrowseForMdlFileButton As ButtonEx
-	Friend WithEvents Label1 As System.Windows.Forms.Label
+	Friend WithEvents Label1 As Crowbar.LabelEx
 	Friend WithEvents Panel2 As PanelEx
 	Friend WithEvents GotoMdlFileButton As ButtonEx
 	Friend WithEvents PatchableValuesForSingleMDLGroupBox As GroupBoxEx
 	Friend WithEvents MessageTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents SplitContainer1 As System.Windows.Forms.SplitContainer
-	Friend WithEvents DecompileComboBox As ComboBoxEx
+	Friend WithEvents DecompileComboBox As ComboUserControl
 	Friend WithEvents CancelDecompileButton As ButtonEx
 	Friend WithEvents SkipCurrentModelButton As ButtonEx
-	Friend WithEvents Label4 As System.Windows.Forms.Label
-	Friend WithEvents Label5 As System.Windows.Forms.Label
+	Friend WithEvents Label4 As Crowbar.LabelEx
+	Friend WithEvents Label5 As Crowbar.LabelEx
 	Friend WithEvents TextBoxEx2 As Crowbar.RichTextBoxEx
-	Friend WithEvents Label3 As System.Windows.Forms.Label
-	Friend WithEvents Label2 As System.Windows.Forms.Label
+	Friend WithEvents Label3 As Crowbar.LabelEx
+	Friend WithEvents Label2 As Crowbar.LabelEx
 	Friend WithEvents TextBoxEx1 As Crowbar.RichTextBoxEx
-	Friend WithEvents CheckBox3 As System.Windows.Forms.CheckBox
-	Friend WithEvents CheckBox2 As System.Windows.Forms.CheckBox
-	Friend WithEvents CheckBox1 As System.Windows.Forms.CheckBox
+	Friend WithEvents CheckBox3 As CheckBoxEx
+	Friend WithEvents CheckBox2 As CheckBoxEx
+	Friend WithEvents CheckBox1 As CheckBoxEx
 	Friend WithEvents Button4 As ButtonEx
 	Friend WithEvents Button3 As ButtonEx
 	Friend WithEvents Button2 As ButtonEx
@@ -1197,38 +1180,38 @@ Partial Class PatchUserControl
 	Friend WithEvents Button7 As ButtonEx
 	Friend WithEvents Button8 As ButtonEx
 	Friend WithEvents GroupBox2 As GroupBoxEx
-	Friend WithEvents Label6 As System.Windows.Forms.Label
-	Friend WithEvents Label7 As System.Windows.Forms.Label
+	Friend WithEvents Label6 As Crowbar.LabelEx
+	Friend WithEvents Label7 As Crowbar.LabelEx
 	Friend WithEvents TextBoxEx3 As Crowbar.RichTextBoxEx
 	Friend WithEvents GroupBox4 As GroupBoxEx
 	Friend WithEvents DataGridView3 As System.Windows.Forms.DataGridView
 	Friend WithEvents Button9 As ButtonEx
 	Friend WithEvents Button11 As ButtonEx
-	Friend WithEvents Label9 As System.Windows.Forms.Label
+	Friend WithEvents Label9 As Crowbar.LabelEx
 	Friend WithEvents TextBoxEx6 As Crowbar.RichTextBoxEx
 	Friend WithEvents TextBoxEx5 As Crowbar.RichTextBoxEx
 	Friend WithEvents TextBoxEx4 As Crowbar.RichTextBoxEx
-	Friend WithEvents Label8 As System.Windows.Forms.Label
+	Friend WithEvents Label8 As Crowbar.LabelEx
 	Friend WithEvents GroupBox5 As GroupBoxEx
 	Friend WithEvents DataGridView4 As System.Windows.Forms.DataGridView
-	Friend WithEvents Label11 As Label
-	Friend WithEvents Label10 As Label
+	Friend WithEvents Label11 As LabelEx
+	Friend WithEvents Label10 As LabelEx
 	Friend WithEvents RefreshOrRevertButton As ButtonEx
 	Friend WithEvents PatchableValuesForMultipleMDLsGroupBox As GroupBoxEx
 	Friend WithEvents Button10 As ButtonEx
 	Friend WithEvents GroupBox6 As GroupBoxEx
 	Friend WithEvents DataGridView5 As DataGridView
-	Friend WithEvents Label14 As Label
+	Friend WithEvents Label14 As LabelEx
 	Friend WithEvents TextBoxEx7 As Crowbar.RichTextBoxEx
 	Friend WithEvents TextBoxEx8 As Crowbar.RichTextBoxEx
 	Friend WithEvents TextBoxEx9 As Crowbar.RichTextBoxEx
-	Friend WithEvents Label15 As Label
+	Friend WithEvents Label15 As LabelEx
 	Friend WithEvents GroupBox7 As GroupBoxEx
 	Friend WithEvents DataGridView6 As DataGridView
 	Friend WithEvents Button12 As ButtonEx
 	Friend WithEvents Button13 As ButtonEx
-	Friend WithEvents Label16 As Label
-	Friend WithEvents Label17 As Label
+	Friend WithEvents Label16 As LabelEx
+	Friend WithEvents Label17 As LabelEx
 	Friend WithEvents TextBoxEx10 As Crowbar.RichTextBoxEx
 	Friend WithEvents GroupBox8 As GroupBoxEx
 	Friend WithEvents DataGridView7 As DataGridView
@@ -1242,8 +1225,8 @@ Partial Class PatchUserControl
 	Friend WithEvents Button19 As ButtonEx
 	Friend WithEvents Button20 As ButtonEx
 	Friend WithEvents Button21 As ButtonEx
-	Friend WithEvents CheckBox4 As CheckBox
-	Friend WithEvents CheckBox5 As CheckBox
-	Friend WithEvents CheckBox6 As CheckBox
-	Friend WithEvents Label12 As Label
+	Friend WithEvents CheckBox4 As CheckBoxEx
+	Friend WithEvents CheckBox5 As CheckBoxEx
+	Friend WithEvents CheckBox6 As CheckBoxEx
+	Friend WithEvents Label12 As LabelEx
 End Class

@@ -7,8 +7,23 @@ Public Class CompileUserControl
 
 	Public Sub New()
 		MyBase.New()
+		'NOTE: Due to unexplained reason, the Designer shows "Size(764," for the full-width Controls in OptionsGroupBox
+		'      even though set manually to "Size(761,)" to avoid showing unneeded horizontal scrollbar.
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
+	End Sub
+
+	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
+		Try
+			If disposing Then
+				Me.Free()
+				If components IsNot Nothing Then
+					components.Dispose()
+				End If
+			End If
+		Finally
+			MyBase.Dispose(disposing)
+		End Try
 	End Sub
 
 #End Region
@@ -16,6 +31,13 @@ Public Class CompileUserControl
 #Region "Init and Free"
 
 	Protected Overrides Sub Init()
+		MyBase.Init()
+
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If TheApp Is Nothing Then
+			Exit Sub
+		End If
+
 		Me.QcPathFileNameTextBox.DataBindings.Add("Text", TheApp.Settings, "CompileQcPathFileName", False, DataSourceUpdateMode.OnValidation)
 
 		Me.OutputPathTextBox.DataBindings.Add("Text", TheApp.Settings, "CompileOutputFullPath", False, DataSourceUpdateMode.OnValidation)
@@ -24,18 +46,18 @@ Public Class CompileUserControl
 		Me.UpdateOutputPathWidgets()
 
 		'NOTE: Prevent changing this combobox's SelectedIndex when another combobox's (which also accesses "SelectedIndex" and TheApp.Settings) SelectedIndex changes.
-		Me.GameSetupComboBox.BindingContext = New BindingContext()
+		Me.GameSetupComboUserControl.BindingContext = New BindingContext()
 		'NOTE: The DataSource, DisplayMember, and ValueMember need to be set before DataBindings, or else an exception is raised.
-		Me.GameSetupComboBox.DisplayMember = "GameName"
-		Me.GameSetupComboBox.ValueMember = "GameName"
-		Me.GameSetupComboBox.DataSource = TheApp.Settings.GameSetups
-		Me.GameSetupComboBox.DataBindings.Add("SelectedIndex", TheApp.Settings, "CompileGameSetupSelectedIndex", False, DataSourceUpdateMode.OnPropertyChanged)
+		Me.GameSetupComboUserControl.DataSource = TheApp.Settings.GameSetups
+		Me.GameSetupComboUserControl.ValueMember = "GameName"
+		Me.GameSetupComboUserControl.DisplayMember = "GameName"
+		Me.GameSetupComboUserControl.DataBindings.Add("SelectedIndex", TheApp.Settings, "CompileGameSetupSelectedIndex", False, DataSourceUpdateMode.OnPropertyChanged)
 
 		Me.InitCrowbarOptions()
 		Me.InitCompilerOptions()
 
 		Me.theCompiledRelativePathFileNames = New BindingListEx(Of String)
-		Me.CompiledFilesComboBox.DataSource = Me.theCompiledRelativePathFileNames
+		Me.CompiledFilesComboUserControl.DataSource = Me.theCompiledRelativePathFileNames
 
 		Me.UpdateCompileMode()
 		Me.UpdateWidgets(False)
@@ -45,7 +67,9 @@ Public Class CompileUserControl
 		AddHandler TheApp.Compiler.ProgressChanged, AddressOf Me.CompilerBackgroundWorker_ProgressChanged
 		AddHandler TheApp.Compiler.RunWorkerCompleted, AddressOf Me.CompilerBackgroundWorker_RunWorkerCompleted
 
+		AddHandler Me.CompileComboUserControl.SelectedValueChanged, AddressOf Me.CompileComboUserControl_SelectedValueChanged
 		AddHandler Me.QcPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		AddHandler Me.OutputPathComboUserControl.SelectedValueChanged, AddressOf Me.OutputPathComboUserControl_SelectedValueChanged
 		AddHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
 	End Sub
 
@@ -53,15 +77,12 @@ Public Class CompileUserControl
 		Dim anEnumList As IList
 
 		anEnumList = EnumHelper.ToList(GetType(CompileOutputPathOptions))
-		Me.OutputPathComboBox.DataBindings.Clear()
+		Me.OutputPathComboUserControl.DataBindings.Clear()
 		Try
-			Me.OutputPathComboBox.DisplayMember = "Value"
-			Me.OutputPathComboBox.ValueMember = "Key"
-			Me.OutputPathComboBox.DataSource = anEnumList
-			Me.OutputPathComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "CompileOutputFolderOption", False, DataSourceUpdateMode.OnPropertyChanged)
-
-			' Do not use this line because it will override the value automatically assigned by the data bindings above.
-			'Me.OutputPathComboBox.SelectedIndex = 0
+			Me.OutputPathComboUserControl.DataSource = anEnumList
+			Me.OutputPathComboUserControl.ValueMember = "Key"
+			Me.OutputPathComboUserControl.DisplayMember = "Value"
+			Me.OutputPathComboUserControl.DataBindings.Add("SelectedValue", TheApp.Settings, "CompileOutputFolderOption", False, DataSourceUpdateMode.OnPropertyChanged)
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		End Try
@@ -92,29 +113,38 @@ Public Class CompileUserControl
 		Me.DirectCompilerOptionsTextBox.DataBindings.Add("Text", TheApp.Settings, "CompileOptionsDirectText", False, DataSourceUpdateMode.OnPropertyChanged)
 	End Sub
 
-	' Do not need Free() because this widget is destroyed only on program exit.
-	'Protected Overrides Sub Free()
-	'	RemoveHandler Me.QcPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
-	'	RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
-	'	RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
-	'	RemoveHandler TheApp.Compiler.ProgressChanged, AddressOf Me.CompilerBackgroundWorker_ProgressChanged
-	'	RemoveHandler TheApp.Compiler.RunWorkerCompleted, AddressOf Me.CompilerBackgroundWorker_RunWorkerCompleted
+	Protected Overrides Sub Free()
+		MyBase.Free()
 
-	'	Me.QcPathFileNameTextBox.DataBindings.Clear()
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If Not Me.InitHasBeenCalled OrElse TheApp Is Nothing Then
+			Exit Sub
+		End If
 
-	'	Me.OutputPathTextBox.DataBindings.Clear()
-	'	Me.OutputSubfolderTextBox.DataBindings.Clear()
+		RemoveHandler Me.CompileComboUserControl.SelectedValueChanged, AddressOf Me.CompileComboUserControl_SelectedValueChanged
+		RemoveHandler Me.QcPathFileNameTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		RemoveHandler Me.OutputPathComboUserControl.SelectedValueChanged, AddressOf Me.OutputPathComboUserControl_SelectedValueChanged
+		RemoveHandler Me.OutputPathTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		RemoveHandler Me.DirectCompilerOptionsTextBox.TextChanged, AddressOf Me.DirectCompilerOptionsTextBox_TextChanged
+		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
+		RemoveHandler TheApp.Compiler.ProgressChanged, AddressOf Me.CompilerBackgroundWorker_ProgressChanged
+		RemoveHandler TheApp.Compiler.RunWorkerCompleted, AddressOf Me.CompilerBackgroundWorker_RunWorkerCompleted
 
-	'	Me.GameSetupComboBox.DataBindings.Clear()
-	'	Me.GameSetupComboBox.DataSource = Nothing
+		Me.QcPathFileNameTextBox.DataBindings.Clear()
 
-	'	Me.FreeCrowbarOptions()
-	'	Me.FreeCompilerOptions()
+		Me.OutputPathTextBox.DataBindings.Clear()
+		Me.OutputSubfolderTextBox.DataBindings.Clear()
 
-	'	Me.CompileComboBox.DataBindings.Clear()
+		Me.GameSetupComboUserControl.DataSource = Nothing
+		Me.GameSetupComboUserControl.DataBindings.Clear()
 
-	'	Me.CompiledFilesComboBox.DataBindings.Clear()
-	'End Sub
+		Me.FreeCrowbarOptions()
+		Me.FreeCompilerOptions()
+
+		Me.CompileComboUserControl.DataBindings.Clear()
+
+		Me.CompiledFilesComboUserControl.DataBindings.Clear()
+	End Sub
 
 	Private Sub FreeCrowbarOptions()
 		Me.GoldSourceEngineLogFileCheckBox.DataBindings.Clear()
@@ -143,24 +173,41 @@ Public Class CompileUserControl
 
 #Region "Widget Event Handlers"
 
-	'Private Sub CompileUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
-	'	If Not Me.DesignMode Then
-	'		Me.Init()
-	'		Me.theControlIsInDesignMode = True
-	'	End If
-	'End Sub
-
-	Private Sub CompileUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
+	Private Sub CompileUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.QcPathFileNameTextBox, Me.BrowseForQcPathFolderOrFileNameButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputPathTextBox, Me.BrowseForOutputPathButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.OutputSubfolderTextBox, Me.BrowseForOutputPathButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.GameModelsOutputPathTextBox, Me.BrowseForOutputPathButton)
+
+		'NOTE: This code prevents Visual Studio or Windows often inexplicably incorrectly positioning or sizing these widgets.
+		Workarounds.WorkaroundForFrameworkAnchorRightLocationBug(Me.SetUpGamesButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.GameSetupComboUserControl, Me.SetUpGamesButton)
+
+		'NOTE: This code prevents Visual Studio or Windows often inexplicably incorrectly positioning these widgets.
+		'Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.CompilerOptionsGoldSourceEnginePanel, Me.CompilerOptionsGoldSourceEnginePanel.Parent, True)
+		'Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.CompilerOptionsSourceEnginePanel, Me.CompilerOptionsSourceEnginePanel.Parent, True)
+		Workarounds.WorkaroundForFrameworkAnchorRightLocationBug(Me.CompileOptionsGoldSourceEngineUseDefaultsButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightLocationBug(Me.CompileOptionsSourceEngineUseDefaultsButton)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DirectCompilerOptionsTextBox, Me.DirectCompilerOptionsTextBox.Parent, True)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.CompilerOptionsTextBox, Me.CompilerOptionsTextBox.Parent, True)
+		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.CompilerOptionsTextBoxMinScrollPanel, Me.CompilerOptionsTextBoxMinScrollPanel.Parent, True)
+
+		' [04-Feb-2026] Me.DesignMode is unreliable in nested widgets.
+		'If Not Me.DesignMode Then
+		Me.Init()
+		'End If
 	End Sub
 
 #End Region
 
 #Region "Child Widget Event Handlers"
+
+	Private Sub CompileComboUserControl_SelectedValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+		' Because this enum is passed to DataSource as an IList, must manually bind for this direction.
+		TheApp.Settings.CompileMode = CType(CompileComboUserControl.SelectedValue, InputOptions)
+		'Me.UpdateDecompileMode()
+	End Sub
 
 	'Private Sub QcPathFileNameTextBox_Validated(ByVal sender As System.Object, ByVal e As System.EventArgs)
 	'	'Me.QcPathFileNameTextBox.Text = FileManager.GetCleanPathFileName(Me.QcPathFileNameTextBox.Text)
@@ -206,6 +253,12 @@ Public Class CompileUserControl
 
 	Private Sub GotoQcButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GotoQcButton.Click
 		FileManager.OpenWindowsExplorer(TheApp.Settings.CompileQcPathFileName)
+	End Sub
+
+	Private Sub OutputPathComboUserControl_SelectedValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+		' Because this enum is passed to DataSource as an IList, must manually bind for this direction.
+		TheApp.Settings.CompileOutputFolderOption = CType(OutputPathComboUserControl.SelectedValue, CompileOutputPathOptions)
+		'Me.UpdateOutputPathWidgets()
 	End Sub
 
 	'Private Sub OutputFolderCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles OutputFolderCheckBox.CheckedChanged
@@ -299,9 +352,9 @@ Public Class CompileUserControl
 		TheApp.Settings.SetDefaultCompileOutputSubfolderName()
 	End Sub
 
-	'Private Sub GameSetupComboBox_SelectedValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
+	'Private Sub GameSetupComboUserControl_SelectedValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs)
 	'	'Me.SetCompilerOptionsText()
-	'	Me.UpdateCompilerOptions(TheApp.Settings.GameSetups(TheApp.Settings.CompileGameSetupSelectedIndex), TheApp.Settings.GameSetups(Me.GameSetupComboBox.SelectedIndex))
+	'	'Me.UpdateCompilerOptions(TheApp.Settings.GameSetups(TheApp.Settings.CompileGameSetupSelectedIndex), TheApp.Settings.GameSetups(Me.GameSetupComboBox.SelectedIndex))
 	'End Sub
 
 	'Private Sub SetUpGamesButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles EditGameSetupButton.Click
@@ -361,7 +414,7 @@ Public Class CompileUserControl
 	End Sub
 
 	Private Sub UseInViewButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UseInViewButton.Click
-		TheApp.Settings.ViewMdlPathFileName = TheApp.Compiler.GetOutputPathFileName(Me.theCompiledRelativePathFileNames(Me.CompiledFilesComboBox.SelectedIndex))
+		TheApp.Settings.ViewMdlPathFileName = TheApp.Compiler.GetOutputPathFileName(Me.theCompiledRelativePathFileNames(Me.CompiledFilesComboUserControl.SelectedIndex))
 		TheApp.Settings.ViewGameSetupSelectedIndex = TheApp.Settings.CompileGameSetupSelectedIndex
 	End Sub
 
@@ -375,7 +428,7 @@ Public Class CompileUserControl
 
 	Private Sub GotoCompiledMdlButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GotoCompiledMdlButton.Click
 		Dim pathFileName As String
-		pathFileName = TheApp.Compiler.GetOutputPathFileName(Me.theCompiledRelativePathFileNames(Me.CompiledFilesComboBox.SelectedIndex))
+		pathFileName = TheApp.Compiler.GetOutputPathFileName(Me.theCompiledRelativePathFileNames(Me.CompiledFilesComboUserControl.SelectedIndex))
 		FileManager.OpenWindowsExplorer(pathFileName)
 	End Sub
 
@@ -603,7 +656,7 @@ Public Class CompileUserControl
 	Private Sub UpdateWidgets(ByVal compilerIsRunning As Boolean)
 		TheApp.Settings.CompilerIsRunning = compilerIsRunning
 
-		Me.CompileComboBox.Enabled = Not compilerIsRunning
+		Me.CompileComboUserControl.Enabled = Not compilerIsRunning
 		Me.QcPathFileNameTextBox.Enabled = Not compilerIsRunning
 		Me.BrowseForQcPathFolderOrFileNameButton.Enabled = Not compilerIsRunning
 
@@ -613,7 +666,7 @@ Public Class CompileUserControl
 		'Me.OutputFullPathRadioButton.Enabled = Not compilerIsRunning
 		'Me.OutputFullPathTextBox.Enabled = Not compilerIsRunning
 		'Me.BrowseForOutputPathNameButton.Enabled = Not compilerIsRunning
-		Me.OutputPathComboBox.Enabled = Not compilerIsRunning
+		Me.OutputPathComboUserControl.Enabled = Not compilerIsRunning
 		Me.OutputPathTextBox.Enabled = Not compilerIsRunning
 		Me.OutputSubfolderTextBox.Enabled = Not compilerIsRunning
 		Me.BrowseForOutputPathButton.Enabled = Not compilerIsRunning
@@ -627,8 +680,8 @@ Public Class CompileUserControl
 		Me.CancelCompileButton.Enabled = compilerIsRunning
 		Me.UseAllInPackButton.Enabled = Not compilerIsRunning AndAlso Me.theCompiledRelativePathFileNames.Count > 0
 
-		Me.CompiledFilesComboBox.Enabled = Not compilerIsRunning AndAlso Me.theCompiledRelativePathFileNames.Count > 0
-		Me.UseInViewButton.Enabled = Not compilerIsRunning AndAlso Me.theCompiledRelativePathFileNames.Count > 0 AndAlso (Path.GetExtension(Me.theCompiledRelativePathFileNames(Me.CompiledFilesComboBox.SelectedIndex)) = ".mdl")
+		Me.CompiledFilesComboUserControl.Enabled = Not compilerIsRunning AndAlso Me.theCompiledRelativePathFileNames.Count > 0
+		Me.UseInViewButton.Enabled = Not compilerIsRunning AndAlso Me.theCompiledRelativePathFileNames.Count > 0 AndAlso (Path.GetExtension(Me.theCompiledRelativePathFileNames(Me.CompiledFilesComboUserControl.SelectedIndex)) = ".mdl")
 		Me.RecompileButton.Enabled = Not compilerIsRunning AndAlso Me.theCompiledRelativePathFileNames.Count > 0
 		Me.UseInPackButton.Enabled = Not compilerIsRunning AndAlso Me.theCompiledRelativePathFileNames.Count > 0
 		Me.GotoCompiledMdlButton.Enabled = Not compilerIsRunning AndAlso Me.theCompiledRelativePathFileNames.Count > 0
@@ -644,8 +697,8 @@ Public Class CompileUserControl
 			'NOTE: Do not sort because the list is already sorted by file and then by folder.
 			'Me.theCompiledRelativePathFileNames.Sort()
 			'NOTE: Need to set to nothing first to force it to update.
-			Me.CompiledFilesComboBox.DataSource = Nothing
-			Me.CompiledFilesComboBox.DataSource = Me.theCompiledRelativePathFileNames
+			Me.CompiledFilesComboUserControl.DataSource = Nothing
+			Me.CompiledFilesComboUserControl.DataSource = Me.theCompiledRelativePathFileNames
 		End If
 	End Sub
 
@@ -655,7 +708,7 @@ Public Class CompileUserControl
 
 		anEnumList = EnumHelper.ToList(GetType(InputOptions))
 		previousSelectedInputOption = TheApp.Settings.CompileMode
-		Me.CompileComboBox.DataBindings.Clear()
+		Me.CompileComboUserControl.DataBindings.Clear()
 		Try
 			If File.Exists(TheApp.Settings.CompileQcPathFileName) Then
 				' Set file mode when a file is selected.
@@ -670,10 +723,10 @@ Public Class CompileUserControl
 				'	Exit Try
 			End If
 
-			Me.CompileComboBox.DisplayMember = "Value"
-			Me.CompileComboBox.ValueMember = "Key"
-			Me.CompileComboBox.DataSource = anEnumList
-			Me.CompileComboBox.DataBindings.Add("SelectedValue", TheApp.Settings, "CompileMode", False, DataSourceUpdateMode.OnPropertyChanged)
+			Me.CompileComboUserControl.DataSource = anEnumList
+			Me.CompileComboUserControl.ValueMember = "Key"
+			Me.CompileComboUserControl.DisplayMember = "Value"
+			Me.CompileComboUserControl.DataBindings.Add("SelectedValue", TheApp.Settings, "CompileMode", False, DataSourceUpdateMode.OnPropertyChanged)
 
 			If EnumHelper.Contains(previousSelectedInputOption, anEnumList) Then
 				TheApp.Settings.CompileMode = previousSelectedInputOption

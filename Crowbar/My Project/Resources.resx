@@ -135,7 +135,7 @@
 * Unpacker of Fairy Tale Busters APK, Tactical Intervention FPX, Garry's Mod GMA, Vampire: The Masquerade - Bloodlines VPK files, and Source-engine VPK files.
 * Packer interface to Garry's Mod GMA and Source-engine VPK packer tools.
 * Downloader of Workshop items from any Steam game that allows public downloads.
-* Publisher of Workshop items for several Source-engine games.</value>
+* Publisher of Workshop items for various Source-engine games.</value>
   </data>
   <data name="Decompile_DebugAniFileNameSuffix" xml:space="preserve">
     <value>decompile-ANI.txt</value>

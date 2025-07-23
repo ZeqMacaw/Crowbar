@@ -1,18 +1,22 @@
 ﻿Imports System.ComponentModel
+Imports System.Windows.Forms.Design
 
+' This attribute is required for a ToolStripControlHost to appear in the ToolStrip dropdown list in the Designer.
+<ToolStripItemDesignerAvailability(ToolStripItemDesignerAvailability.All)>
 Public Class ToolStripTextBoxEx
 	'Inherits ToolStripTextBox
 	Inherits ToolStripControlHost
 
 	Public Sub New()
-		'MyBase.New()
 		MyBase.New(New Crowbar.RichTextBoxEx())
 
 		Me.theTextBox = CType(Me.Control, RichTextBoxEx)
+		Me.theTextBox.Name = "ToolStripTextBox"
+		'Me.theTextBox.BackColor = Color.Red
 		'NOTE: Force to False to allow it to be default value, because RichTextBoxEx default is True.
 		Me.theTextBox.Multiline = False
 
-		Me.BackColor = WidgetConstants.WidgetBackColor
+		'Me.BackColor = Color.Red
 	End Sub
 
 	'Public ReadOnly Property TextBox As Crowbar.RichTextBoxEx

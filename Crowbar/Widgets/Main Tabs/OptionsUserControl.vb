@@ -3,8 +3,22 @@ Public Class OptionsUserControl
 #Region "Creation and Destruction"
 
 	Public Sub New()
+		MyBase.New()
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
+	End Sub
+
+	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
+		Try
+			If disposing Then
+				Me.Free()
+				If components IsNot Nothing Then
+					components.Dispose()
+				End If
+			End If
+		Finally
+			MyBase.Dispose(disposing)
+		End Try
 	End Sub
 
 #End Region
@@ -12,7 +26,18 @@ Public Class OptionsUserControl
 #Region "Init and Free"
 
 	Protected Overrides Sub Init()
+		MyBase.Init()
+
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If TheApp Is Nothing Then
+			Exit Sub
+		End If
+
+		'Me.UpdateTheme()
+
 		Me.SingleInstanceCheckBox.DataBindings.Add("Checked", TheApp.Settings, "AppIsSingleInstance", False, DataSourceUpdateMode.OnPropertyChanged)
+
+		Me.InitThemeComboBox()
 
 		' Auto-Open
 
@@ -92,45 +117,75 @@ Public Class OptionsUserControl
 		Me.DragAndDropFolderForPackRadioButton.Checked = (TheApp.Settings.OptionsDragAndDropFolderOption = ActionType.Pack)
 	End Sub
 
-	' Do not need Free() because this widget is destroyed only on program exit.
-	'Protected Overrides Sub Free()
-	'	RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
+	Protected Overrides Sub Free()
+		MyBase.Free()
 
-	'	Me.SingleInstanceCheckBox.DataBindings.Clear()
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If Not Me.InitHasBeenCalled OrElse TheApp Is Nothing Then
+			Exit Sub
+		End If
 
-	'	' Auto-Open
+		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf AppSettings_PropertyChanged
 
-	'	Me.AutoOpenVpkFileCheckBox.DataBindings.Clear()
-	'	Me.AutoOpenGmaFileCheckBox.DataBindings.Clear()
-	'	Me.AutoOpenFpxFileCheckBox.DataBindings.Clear()
-	'	Me.AutoOpenMdlFileCheckBox.DataBindings.Clear()
-	'	Me.AutoOpenMdlFileForPreviewCheckBox.DataBindings.Clear()
-	'	Me.AutoOpenMdlFileForDecompileCheckBox.DataBindings.Clear()
-	'	Me.AutoOpenMdlFileForViewCheckBox.DataBindings.Clear()
-	'	Me.AutoOpenQcFileCheckBox.DataBindings.Clear()
+		'	Me.SingleInstanceCheckBox.DataBindings.Clear()
 
-	'	' Drag and Drop
+		Me.FreeThemeComboBox()
 
-	'	Me.DragAndDropMdlFileForPreviewCheckBox.DataBindings.Clear()
-	'	Me.DragAndDropMdlFileForDecompileCheckBox.DataBindings.Clear()
-	'	Me.DragAndDropMdlFileForViewCheckBox.DataBindings.Clear()
+		' Auto-Open
 
-	'	' Context Menu
+		Me.AutoOpenVpkFileCheckBox.DataBindings.Clear()
+		Me.AutoOpenGmaFileCheckBox.DataBindings.Clear()
+		Me.AutoOpenFpxFileCheckBox.DataBindings.Clear()
+		Me.AutoOpenMdlFileCheckBox.DataBindings.Clear()
+		Me.AutoOpenMdlFileForPreviewCheckBox.DataBindings.Clear()
+		Me.AutoOpenMdlFileForDecompileCheckBox.DataBindings.Clear()
+		Me.AutoOpenMdlFileForViewCheckBox.DataBindings.Clear()
+		Me.AutoOpenQcFileCheckBox.DataBindings.Clear()
 
-	'	Me.IntegrateContextMenuItemsCheckBox.DataBindings.Clear()
-	'	Me.IntegrateAsSubmenuCheckBox.DataBindings.Clear()
+		' Drag and Drop
 
-	'	Me.OptionsContextMenuOpenWithCrowbarCheckBox.DataBindings.Clear()
-	'	Me.OptionsContextMenuViewMdlFileCheckBox.DataBindings.Clear()
+		Me.DragAndDropMdlFileForPreviewCheckBox.DataBindings.Clear()
+		Me.DragAndDropMdlFileForDecompileCheckBox.DataBindings.Clear()
+		Me.DragAndDropMdlFileForViewCheckBox.DataBindings.Clear()
 
-	'	Me.OptionsContextMenuDecompileMdlFileCheckBox.DataBindings.Clear()
-	'	Me.OptionsContextMenuDecompileFolderCheckBox.DataBindings.Clear()
-	'	Me.OptionsContextMenuDecompileFolderAndSubfoldersCheckBox.DataBindings.Clear()
+		' Context Menu
 
-	'	Me.OptionsContextMenuCompileQcFileCheckBox.DataBindings.Clear()
-	'	Me.OptionsContextMenuCompileFolderCheckBox.DataBindings.Clear()
-	'	Me.OptionsContextMenuCompileFolderAndSubfoldersCheckBox.DataBindings.Clear()
-	'End Sub
+		Me.IntegrateContextMenuItemsCheckBox.DataBindings.Clear()
+		Me.IntegrateAsSubmenuCheckBox.DataBindings.Clear()
+
+		Me.OptionsContextMenuOpenWithCrowbarCheckBox.DataBindings.Clear()
+		Me.OptionsContextMenuViewMdlFileCheckBox.DataBindings.Clear()
+
+		Me.OptionsContextMenuDecompileMdlFileCheckBox.DataBindings.Clear()
+		Me.OptionsContextMenuDecompileFolderCheckBox.DataBindings.Clear()
+		Me.OptionsContextMenuDecompileFolderAndSubfoldersCheckBox.DataBindings.Clear()
+
+		Me.OptionsContextMenuCompileQcFileCheckBox.DataBindings.Clear()
+		Me.OptionsContextMenuCompileFolderCheckBox.DataBindings.Clear()
+		Me.OptionsContextMenuCompileFolderAndSubfoldersCheckBox.DataBindings.Clear()
+	End Sub
+
+	Private Sub InitThemeComboBox()
+		Me.ThemeComboUserControl.DataBindings.Clear()
+		Try
+			'NOTE: Prevent changing this combobox's SelectedIndex when another combobox's (which also accesses "SelectedIndex" and TheApp.Settings) SelectedIndex changes.
+			Me.ThemeComboUserControl.BindingContext = New BindingContext()
+			'NOTE: The DataSource, DisplayMember, and ValueMember need to be set before DataBindings, or else an exception is raised.
+			Me.ThemeComboUserControl.DataSource = TheApp.AppThemes
+			Me.ThemeComboUserControl.ValueMember = "Name"
+			Me.ThemeComboUserControl.DisplayMember = "Name"
+			Me.ThemeComboUserControl.DataBindings.Add("SelectedValue", TheApp.Settings, "AppThemeName", False, DataSourceUpdateMode.OnPropertyChanged)
+		Catch ex As Exception
+			Dim debug As Integer = 4242
+		End Try
+
+		'AddHandler Me.ThemeComboUserControl.SelectedValueChanged, AddressOf Me.ThemeComboUserControl_SelectedValueChanged
+	End Sub
+
+	Private Sub FreeThemeComboBox()
+		'RemoveHandler Me.ThemeComboUserControl.SelectedValueChanged, AddressOf Me.ThemeComboUserControl_SelectedValueChanged
+		Me.ThemeComboUserControl.DataBindings.Clear()
+	End Sub
 
 #End Region
 
@@ -139,6 +194,26 @@ Public Class OptionsUserControl
 #End Region
 
 #Region "Widget Event Handlers"
+
+	Private Sub OptionsUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
+		' [04-Feb-2026] Me.DesignMode is unreliable in nested widgets.
+		'If Not Me.DesignMode Then
+		Me.Init()
+		'End If
+	End Sub
+
+	'Protected Overrides Sub OnHandleCreated(e As EventArgs)
+	'	MyBase.OnHandleCreated(e)
+	'	' [04-Feb-2026] Me.DesignMode is unreliable in nested widgets.
+	'	'If Not Me.DesignMode Then
+	'	Me.Init()
+	'	'End If
+	'End Sub
+
+	'Protected Overrides Sub OnHandleDestroyed(e As EventArgs)
+	'	Me.Free()
+	'	MyBase.OnHandleDestroyed(e)
+	'End Sub
 
 #End Region
 
@@ -245,6 +320,9 @@ Public Class OptionsUserControl
 	Private Sub AppSettings_PropertyChanged(ByVal sender As System.Object, ByVal e As System.ComponentModel.PropertyChangedEventArgs)
 		If e.PropertyName = "AppIsSingleInstance" Then
 			TheApp.SaveAppSettings()
+			'ElseIf e.PropertyName = "AppThemeName" Then
+			'	Me.UpdateTheme()
+			'	Me.Refresh()
 		ElseIf e.PropertyName = "OptionsAutoOpenVpkFileIsChecked" Then
 			Me.ApplyAutoOpenVpkFileOptions()
 		ElseIf e.PropertyName = "OptionsAutoOpenGmaFileIsChecked" Then
@@ -261,6 +339,20 @@ Public Class OptionsUserControl
 #End Region
 
 #Region "Private Methods"
+
+	'Private Sub UpdateTheme()
+	'	Dim theme As PanelTheme = Nothing
+	'	If TheApp IsNot Nothing Then
+	'		theme = TheApp.Settings.SelectedAppTheme.PanelTheme
+	'	End If
+	'	If theme IsNot Nothing Then
+	'		Me.ForeColor = theme.EnabledForeColor
+	'		Me.BackColor = theme.EnabledBackColor
+	'	Else
+	'		Me.ForeColor = Control.DefaultForeColor
+	'		Me.BackColor = Control.DefaultBackColor
+	'	End If
+	'End Sub
 
 	Private Sub ApplyAutoOpenVpkFileOptions()
 		If TheApp.Settings.OptionsAutoOpenVpkFileIsChecked Then

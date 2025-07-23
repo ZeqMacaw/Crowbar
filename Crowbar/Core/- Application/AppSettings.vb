@@ -1,4 +1,5 @@
 Imports System.ComponentModel
+Imports System.Linq
 Imports System.Xml.Serialization
 
 ' Purpose: Stores application-related settings, such as UI widget locations and auto-recover data.
@@ -16,6 +17,7 @@ Public Class AppSettings
 		Me.theWindowState = FormWindowState.Normal
 		'NOTE: 0 means the Set Up Games tab.
 		Me.theMainWindowSelectedTabIndex = 0
+		Me.theAppThemeName = "Windows Default"
 
 		Me.thePreviewDataViewerIsRunning = False
 		'Me.thePreviewerIsRunning = False
@@ -166,6 +168,32 @@ Public Class AppSettings
 		End Get
 		Set(ByVal value As Integer)
 			theMainWindowSelectedTabIndex = value
+		End Set
+	End Property
+
+	<XmlIgnore()>
+	Public ReadOnly Property SelectedAppTheme() As AppTheme
+		Get
+			Dim appTheme As AppTheme
+			If TheApp.AppThemes Is Nothing Then
+				appTheme = New AppTheme()
+			Else
+				appTheme = TheApp.AppThemes.First(Function(theme) theme.Name = Me.theAppThemeName)
+				If appTheme Is Nothing Then
+					appTheme = TheApp.AppThemes(0)
+				End If
+			End If
+			Return appTheme
+		End Get
+	End Property
+
+	Public Property AppThemeName() As String
+		Get
+			Return Me.theAppThemeName
+		End Get
+		Set(ByVal value As String)
+			Me.theAppThemeName = value
+			NotifyPropertyChanged("AppThemeName")
 		End Set
 	End Property
 
@@ -367,8 +395,10 @@ Public Class AppSettings
 			Return Me.theUnpackOutputFullPath
 		End Get
 		Set(ByVal value As String)
-			Me.theUnpackOutputFullPath = value
-			NotifyPropertyChanged("UnpackOutputFullPath")
+			If Me.theUnpackOutputFullPath <> value Then
+				Me.theUnpackOutputFullPath = value
+				NotifyPropertyChanged("UnpackOutputFullPath")
+			End If
 		End Set
 	End Property
 
@@ -1835,6 +1865,7 @@ Public Class AppSettings
 	Private theWindowState As FormWindowState
 	Private theAboutTabBackgroundColor As Color
 	Private theMainWindowSelectedTabIndex As Integer
+	Private theAppThemeName As String
 
 	' Set Up Games tab
 

@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class EditUserControl
 	Inherits BaseUserControl
 
@@ -20,12 +20,12 @@ Partial Class EditUserControl
 	'NOTE: The following procedure is required by the Windows Form Designer
 	'It can be modified using the Windows Form Designer.  
 	'Do not modify it using the code editor.
-	<System.Diagnostics.DebuggerStepThrough()> _
+	<System.Diagnostics.DebuggerStepThrough()>
 	Private Sub InitializeComponent()
 		Me.components = New System.ComponentModel.Container()
 		Me.Panel1 = New Crowbar.PanelEx()
 		Me.GotoQcButton = New Crowbar.ButtonEx()
-		Me.Label6 = New System.Windows.Forms.Label()
+		Me.Label6 = New Crowbar.LabelEx()
 		Me.QcPathFileNameTextBox = New Crowbar.RichTextBoxEx()
 		Me.BrowseForQcPathFolderOrFileNameButton = New Crowbar.ButtonEx()
 		Me.UseInCompileButton = New Crowbar.ButtonEx()
@@ -34,7 +34,6 @@ Partial Class EditUserControl
 		'
 		'Panel1
 		'
-		Me.Panel1.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
 		Me.Panel1.Controls.Add(Me.GotoQcButton)
 		Me.Panel1.Controls.Add(Me.Label6)
 		Me.Panel1.Controls.Add(Me.QcPathFileNameTextBox)
@@ -72,11 +71,8 @@ Partial Class EditUserControl
 		'
 		Me.QcPathFileNameTextBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.QcPathFileNameTextBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-		Me.QcPathFileNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.QcPathFileNameTextBox.CueBannerText = ""
 		Me.QcPathFileNameTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-		Me.QcPathFileNameTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer), CType(CType(241, Byte), Integer))
 		Me.QcPathFileNameTextBox.Location = New System.Drawing.Point(91, 5)
 		Me.QcPathFileNameTextBox.Multiline = False
 		Me.QcPathFileNameTextBox.Name = "QcPathFileNameTextBox"
@@ -120,7 +116,7 @@ Partial Class EditUserControl
 	Friend WithEvents Panel1 As PanelEx
 	Friend WithEvents UseInCompileButton As ButtonEx
 	Friend WithEvents GotoQcButton As ButtonEx
-	Friend WithEvents Label6 As System.Windows.Forms.Label
+	Friend WithEvents Label6 As Crowbar.LabelEx
 	Friend WithEvents QcPathFileNameTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents BrowseForQcPathFolderOrFileNameButton As ButtonEx
 

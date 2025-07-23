@@ -479,6 +479,44 @@ Public Class FileManager
 		Return cleanPathFileName
 	End Function
 
+	Public Shared Function GetPathFileNames(ByVal givenDividedPathFileName As String) As String()
+		Dim pathFileNames As String() = {}
+		If givenDividedPathFileName <> String.Empty Then
+			Dim divider As Char() = {"|"c}
+			pathFileNames = givenDividedPathFileName.Split(divider)
+		End If
+		Return pathFileNames
+	End Function
+
+	Public Shared Function GetCleanDividedPathFileName(ByVal givenDividedPathFileName As String, ByVal returnFullPathFileName As Boolean) As String
+		Dim cleanedDividedPathFileName As String = String.Empty
+
+		If givenDividedPathFileName <> String.Empty Then
+			Dim divider As Char() = {"|"c}
+			Dim pathFileNames As String() = givenDividedPathFileName.Split(divider)
+			cleanedDividedPathFileName = FileManager.GetCleanDividedPathFileName(pathFileNames, returnFullPathFileName)
+		End If
+
+		Return cleanedDividedPathFileName
+	End Function
+
+	Public Shared Function GetCleanDividedPathFileName(ByVal givenPathFileNames As String(), ByVal returnFullPathFileName As Boolean) As String
+		Dim cleanedDividedPathFileName As String = String.Empty
+
+		Dim cleanedPathFileName As String
+		'NOTE: Using pipe character as divider because it is invalid path character.
+		Dim divider As Char() = {"|"c}
+		For Each pathFileName As String In givenPathFileNames
+			cleanedPathFileName = FileManager.GetCleanPathFileName(pathFileName, returnFullPathFileName)
+			If cleanedPathFileName <> String.Empty Then
+				cleanedDividedPathFileName += cleanedPathFileName + divider
+			End If
+		Next
+		cleanedDividedPathFileName = cleanedDividedPathFileName.TrimEnd(divider)
+
+		Return cleanedDividedPathFileName
+	End Function
+
 	Public Shared Sub ParsePath(ByVal sender As Object, ByVal e As ConvertEventArgs)
 		If e.DesiredType IsNot GetType(String) Then
 			Exit Sub
@@ -494,6 +532,15 @@ Public Class FileManager
 		End If
 		If CStr(e.Value) <> "" Then
 			e.Value = FileManager.GetCleanPathFileName(CStr(e.Value), True)
+		End If
+	End Sub
+
+	Public Shared Sub ParseDividedPathFileName(ByVal sender As Object, ByVal e As ConvertEventArgs)
+		If e.DesiredType IsNot GetType(String) Then
+			Exit Sub
+		End If
+		If CStr(e.Value) <> "" Then
+			e.Value = FileManager.GetCleanDividedPathFileName(CStr(e.Value), True)
 		End If
 	End Sub
 

@@ -17,22 +17,42 @@
 'End Property
 
 Public Class XmlColor
-	Private theColor As Color
 
 	Public Sub New()
+		Me.theColorName = ""
 	End Sub
 
 	Public Sub New(ByVal color As Color)
 		Me.theColor = color
+		Me.theColorName = ""
+	End Sub
+
+	Public Sub New(ByVal colorName As String)
+		If colorName = "WindowColorizationColor" Then
+			Me.theColor = Win32Api.GetWindowColorizationColor(True)
+			Me.theColorName = colorName
+		Else
+			Me.theColor = ColorTranslator.FromHtml(colorName)
+			Me.theColorName = ""
+		End If
 	End Sub
 
 	<XmlText()>
 	Public Property ColorName() As String
 		Get
-			Return ColorTranslator.ToHtml(Me.theColor)
+			If Me.theColorName <> "" Then
+				Return Me.theColorName
+			Else
+				Return ColorTranslator.ToHtml(Me.theColor)
+			End If
 		End Get
 		Set(ByVal value As String)
-			Me.theColor = ColorTranslator.FromHtml(value)
+			If value = "WindowColorizationColor" Then
+				Me.theColor = Win32Api.GetWindowColorizationColor(True)
+			Else
+				Me.theColor = ColorTranslator.FromHtml(value)
+			End If
+			Me.theColorName = value
 		End Set
 	End Property
 
@@ -53,5 +73,8 @@ Public Class XmlColor
 	Public Shared Narrowing Operator CType(ByVal b As Color) As XmlColor
 		Return New XmlColor(b)
 	End Operator
+
+	Private theColor As Color
+	Private theColorName As String
 
 End Class

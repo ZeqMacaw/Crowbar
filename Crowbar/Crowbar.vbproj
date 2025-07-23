@@ -105,6 +105,27 @@
     <Compile Include="Core\- Application\AppExceptionHandler.vb" />
     <Compile Include="Core\- Application\SingleInstanceApplication.vb" />
     <Compile Include="Core\- Application\SingleInstanceEventArgs.vb" />
+    <Compile Include="Core\- AppThemes\AppTheme.vb" />
+    <Compile Include="Core\- AppThemes\LabelTheme.vb" />
+    <Compile Include="Core\- AppThemes\DataGridViewTheme.vb" />
+    <Compile Include="Core\- AppThemes\ComboUserControlTheme.vb" />
+    <Compile Include="Core\- AppThemes\GroupBoxTheme.vb" />
+    <Compile Include="Core\- AppThemes\SelectableBorderWidgetTheme.vb" />
+    <Compile Include="Core\- AppThemes\SplitContainerTheme.vb" />
+    <Compile Include="Core\- AppThemes\RadioButtonTheme.vb" />
+    <Compile Include="Core\- AppThemes\ToolStripTheme.vb" />
+    <Compile Include="Core\- AppThemes\TreeViewTheme.vb" />
+    <Compile Include="Core\- AppThemes\ProgressBarTheme.vb" />
+    <Compile Include="Core\- AppThemes\TabControlTheme.vb" />
+    <Compile Include="Core\- AppThemes\RichTextBoxTheme.vb" />
+    <Compile Include="Core\- AppThemes\PanelTheme.vb" />
+    <Compile Include="Core\- AppThemes\ButtonTheme.vb" />
+    <Compile Include="Core\- AppThemes\CheckBoxTheme.vb" />
+    <Compile Include="Core\- AppThemes\ThemeData.vb" />
+    <Compile Include="Core\- AppThemes\GlobalTheme.vb" />
+    <Compile Include="Core\- AppThemes\SelectableWidgetTheme.vb" />
+    <Compile Include="Core\- AppThemes\FocusableWidgetTheme.vb" />
+    <Compile Include="Core\- AppThemes\WidgetTheme.vb" />
     <Compile Include="Core\- Application\VersionModule.vb" />
     <Compile Include="Core\- General\BackgroundWorkerEx.vb">
       <SubType>Component</SubType>
@@ -113,6 +134,35 @@
     <Compile Include="Core\- General\Bitmap\BitmapFileHeader.vb" />
     <Compile Include="Core\- General\Bitmap\BitmapInfoHeader.vb" />
     <Compile Include="Core\- General\Bitmap\BitmapRgbQuad.vb" />
+    <Compile Include="Widgets\- Application\TESTUserControlForm.Designer.vb">
+      <DependentUpon>TESTUserControlForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Widgets\- Application\TESTUserControlForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Widgets\- General\LabelEx.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Widgets\- General\RadioButtonEx.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Widgets\- General\ComboUserControl.Designer.vb">
+      <DependentUpon>ComboUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Widgets\- General\ComboUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Widgets\- General\Helpers\HelperFunctions.vb" />
+    <Compile Include="Widgets\- General\Helpers\ScrollBarPanel.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Widgets\- General\TabPageEx.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Widgets\- General\Helpers\TabScroller.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Widgets\- General\Helpers\Workarounds.vb" />
     <Compile Include="Core\- General\BufferedBinaryReader.vb" />
     <Compile Include="Core\- General\LzhamApi.vb" />
     <Compile Include="Core\- General\Workarounds.vb" />
@@ -367,6 +417,7 @@
     <Compile Include="Core\GameModel\SourceModel53\SourceMdlFileData\SourceMdlFileData53.vb" />
     <Compile Include="Core\GameModel\SourceModel53\SourceModel53.vb" />
     <Compile Include="Core\GameModel\SourceModel53\SourceQcFile53.vb" />
+    <Compile Include="Core\GameModel\SourceModel53\SourceSmdFile53.vb" />
     <Compile Include="Core\GameModel\SourceModel53\SourceVrdFile53.vb" />
     <Compile Include="Core\GameModel\SourceModel53\SourceVtaFile53.vb" />
     <Compile Include="Core\GameModel\CompiledFiles\VtxFile\VtxFile06\SourceVtxMaterialReplacement06.vb" />
@@ -574,46 +625,43 @@
     <Compile Include="Widgets\- General\DataGridViewEx.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Widgets\- General\DataGridViewRadioButtonColumn.vb" />
-    <Compile Include="Widgets\- General\DateTimeTextBoxEx.vb">
+    <Compile Include="Widgets\- General\Helpers\DataGridViewRadioButtonColumn.vb" />
+    <Compile Include="Widgets\- General\Helpers\DateTimeTextBoxEx.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Widgets\- General\FileDragDropHelper.vb" />
+    <Compile Include="Widgets\- General\Helpers\FileDragDropHelper.vb" />
     <Compile Include="Widgets\- General\GroupBoxEx.vb">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Widgets\- General\ListViewEx.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Widgets\- General\PanelEx.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Widgets\- General\ScrollBarEx.vb">
+    <Compile Include="Widgets\- General\Helpers\Popup.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Widgets\- General\ScrollValueEventArgs.vb" />
+    <Compile Include="Widgets\- General\Helpers\ScrollBarEx.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Widgets\- General\Helpers\ScrollValueEventArgs.vb" />
     <Compile Include="Widgets\- General\TabControlEx.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Widgets\- General\SingleLineTextBoxEx.vb">
+    <Compile Include="Widgets\- General\Helpers\ToolStripButtonEx.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Widgets\- General\ToolStripButtonEx.vb">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Widgets\- General\ToolStripComboBoxEx.vb">
+    <Compile Include="Widgets\- General\Helpers\ToolStripComboBoxEx.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Widgets\- General\ToolStripEx.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Widgets\- General\ToolStripLabelEx.vb">
+    <Compile Include="Widgets\- General\Helpers\ToolStripLabelEx.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Widgets\- General\ToolStripSeparatorEx.vb">
+    <Compile Include="Widgets\- General\Helpers\ToolStripSeparatorEx.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Widgets\- General\ToolStripTextBoxEx.vb">
+    <Compile Include="Widgets\- General\Helpers\ToolStripTextBoxEx.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Widgets\- General\TreeViewEx.vb">
@@ -631,10 +679,7 @@
     <Compile Include="Widgets\- General\SplitContainerEx.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Widgets\- General\TextBoxEx.vb">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Widgets\- General\ToolStripSpringTextBox.vb">
+    <Compile Include="Widgets\- General\Helpers\ToolStripSpringTextBoxEx.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Widgets\Main Tabs\AboutUserControl.Designer.vb">
@@ -896,6 +941,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\- Application\TESTFORM.resx">
       <DependentUpon>TESTFORM.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\- Application\TESTUserControlForm.resx">
+      <DependentUpon>TESTUserControlForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Widgets\- General\ComboUserControl.resx">
+      <DependentUpon>ComboUserControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Widgets\- General\DataGridViewEx.resx">
       <DependentUpon>DataGridViewEx.vb</DependentUpon>

@@ -1,5 +1,6 @@
 Imports System.ComponentModel
 Imports System.Runtime.InteropServices
+Imports System.Windows.Forms.VisualStyles
 
 Public Class RichTextBoxEx
 	Inherits RichTextBox
@@ -9,19 +10,16 @@ Public Class RichTextBoxEx
 	Public Sub New()
 		MyBase.New()
 
+		MyBase.DetectUrls = True
 		'NOTE: Make sure MultiLine is True because single-line is visually glitched.
 		MyBase.Multiline = True
-		'NOTE: Disable to use custom.
+		'NOTE: Avoid automatic "disabled" coloring by always having Enabled = True.
+		MyBase.Enabled = True
+		Me.theWidgetIsEnabled = True
+
+		'NOTE: Disable to use custom. Must have these 2 lines here to prevent exception at startup.
 		MyBase.BorderStyle = BorderStyle.None
 		MyBase.ScrollBars = RichTextBoxScrollBars.None
-		'MyBase.WordWrap = False
-
-		Me.ForeColor = WidgetTextColor
-		Me.BackColor = WidgetDeepBackColor
-		Me.SelectionBackColor = WidgetDeepBackColor
-		'Me.thePaddingColor = WidgetDeepBackColor
-		'TEST:
-		Me.thePaddingColor = Color.Pink
 
 		Me.HorizontalScrollbar = New ScrollBarEx()
 		Me.Controls.Add(Me.HorizontalScrollbar)
@@ -58,10 +56,20 @@ Public Class RichTextBoxEx
 
 		Me.theControlHasShown = False
 
-		'NOTE: Set each of these to the default value used by RichTextBox because Visual Studio Designer will not set the value if default is used.
-		Me.theControlIsBehavingAsMultiLine = True
-		'Me.theControlIsWordWrapping = True
+		'NOTE: Use NoPadding to avoid incorrect caret placement.
+		Me.theTextFormatFlags = TextFormatFlags.ExpandTabs Or TextFormatFlags.NoPadding Or TextFormatFlags.NoPrefix Or TextFormatFlags.PreserveGraphicsClipping
+		'If Me.theControlIsBehavingAsMultiLine AndAlso Me.WordWrap Then
+		'	'DEBUG: I suspect that word-breaks in this OnPaint are not the same as the underlying RichTextBox.
+		'	formatFlags = formatFlags Or TextFormatFlags.WordBreak
+		'	'formatFlags = formatFlags Or TextFormatFlags.WordBreak Or TextFormatFlags.TextBoxControl
+		'	'formatFlags = formatFlags Or TextFormatFlags.TextBoxControl
+		'End If
 
+		'NOTE: Set each of these to the default value used by RichTextBox because Visual Studio Designer will not set the value if default is used.
+		' Internal var for RichTextBox.MultiLine.
+		Me.theControlIsBehavingAsMultiLine = True
+
+		Me.theSelectionIsEnabled = True
 		Me.theCueBannerText = ""
 		Me.theTextAlignment = HorizontalAlignment.Left
 
@@ -73,37 +81,54 @@ Public Class RichTextBoxEx
 
 #Region "Init and Free"
 
-	'Private Sub Init()
-	'End Sub
+	Private Sub Init()
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If TheApp IsNot Nothing Then
+			Me.UpdateTheme()
+			AddHandler TheApp.Settings.PropertyChanged, AddressOf Me.AppSettings_PropertyChanged
+		End If
+	End Sub
 
-	'Private Sub Free()
-	'End Sub
+	Private Sub Free()
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If TheApp IsNot Nothing Then
+			RemoveHandler TheApp.Settings.PropertyChanged, AddressOf Me.AppSettings_PropertyChanged
+		End If
+	End Sub
 
 #End Region
 
 #Region "Properties"
 
-	<Browsable(True)>
-	<Category("Appearance")>
-	<Description("Colorable BorderStyle.")>
-	Public Overloads Property BorderStyle As BorderStyle
-		Get
-			Return Me.theBorderStyle
-		End Get
-		Set
-			Me.theBorderStyle = Value
-		End Set
-	End Property
-
-	<Browsable(True)>
-	<Category("Behavior")>
-	<Description("Allows multiple lines of text.")>
+	'<Browsable(True)>
+	'<Category("Behavior")>
+	'<Description("Allows multiple lines of text.")>
 	Public Overrides Property Multiline As Boolean
 		Get
 			Return Me.theControlIsBehavingAsMultiLine
 		End Get
 		Set
 			Me.theControlIsBehavingAsMultiLine = Value
+		End Set
+	End Property
+
+	Public Shadows Property Enabled As Boolean
+		Get
+			Return Me.theWidgetIsEnabled
+		End Get
+		Set
+			Me.theWidgetIsEnabled = Value
+			Me.UpdateTheme()
+		End Set
+	End Property
+
+	Public Shadows Property [ReadOnly] As Boolean
+		Get
+			Return MyBase.ReadOnly
+		End Get
+		Set
+			MyBase.ReadOnly = Value
+			Me.UpdateTheme()
 		End Set
 	End Property
 
@@ -119,17 +144,14 @@ Public Class RichTextBoxEx
 		End Set
 	End Property
 
-	'<Browsable(True)>
-	'<Category("Behavior")>
-	'<Description("Wrap a text line when it extends past control width.")>
-	'Public Overloads Property WordWrap As Boolean
-	'	Get
-	'		Return Me.theControlIsWordWrapping
-	'	End Get
-	'	Set
-	'		Me.theControlIsWordWrapping = Value
-	'	End Set
-	'End Property
+	Public Property SelectionEnabled As Boolean
+		Get
+			Return Me.theSelectionIsEnabled
+		End Get
+		Set
+			Me.theSelectionIsEnabled = Value
+		End Set
+	End Property
 
 	<Browsable(True)>
 	<Category("Appearance")>
@@ -162,11 +184,6 @@ Public Class RichTextBoxEx
 
 #Region "Widget Event Handlers"
 
-	Protected Overrides Sub OnGotFocus(e As EventArgs)
-		MyBase.OnGotFocus(e)
-		Me.Invalidate()
-	End Sub
-
 	Protected Overrides Sub OnHandleCreated(e As EventArgs)
 		MyBase.OnHandleCreated(e)
 
@@ -175,14 +192,76 @@ Public Class RichTextBoxEx
 			'NOTE: Font gets changed at some point after changing style, messing up when cue banner is turned off, 
 			'      so save the Font before changing style.
 			Me.theOriginalFont = New System.Drawing.Font(Me.Font.FontFamily, Me.Font.Size, Me.Font.Style, Me.Font.Unit)
-
-			SetStyle(ControlStyles.AllPaintingInWmPaint, True)
-			SetStyle(ControlStyles.DoubleBuffer, True)
-			SetStyle(ControlStyles.UserPaint, True)
-
-			Me.AutoWordSelection = True
-			Me.AutoWordSelection = False
 		End If
+
+		' [04-Feb-2026] Me.DesignMode is unreliable in nested widgets.
+		'If Not Me.DesignMode Then
+		Me.Init()
+		'End If
+
+		' Sometimes this is True for unknown reason, so force it to False.
+		MyBase.AutoWordSelection = False
+	End Sub
+
+	Protected Overrides Sub OnHandleDestroyed(e As EventArgs)
+		Me.Free()
+		MyBase.OnHandleDestroyed(e)
+	End Sub
+
+	' Win32 constants for changing system color parameters locally
+	Private Const COLOR_HIGHLIGHT As Integer = 13
+	Private Const COLOR_HIGHLIGHTTEXT As Integer = 14
+
+	<DllImport("user32.dll", SetLastError:=True)>
+	Private Shared Function SetSysColors(ByVal nChanges As Integer, ByVal lpSysColor As Integer(), ByVal lpColorValues As Integer()) As Boolean
+	End Function
+
+	<DllImport("user32.dll", SetLastError:=True)>
+	Private Shared Function GetSysColor(ByVal nIndex As Integer) As Integer
+	End Function
+
+	Private _originalBackColor As Integer
+	Private _originalForeColor As Integer
+
+	Protected Overrides Sub OnGotFocus(e As EventArgs)
+		' This 'If' block prevents selection of text, as wanted in ComboUserControl.
+		If Not Me.theSelectionIsEnabled Then
+			MyBase.Enabled = False
+			MyBase.Enabled = True
+		End If
+
+		Dim theme As RichTextBoxTheme = Nothing
+		' This check prevents problems with viewing and saving Forms in VS Designer.
+		If TheApp IsNot Nothing Then
+			theme = TheApp.Settings.SelectedAppTheme.RichTextBoxTheme
+		End If
+		If theme IsNot Nothing Then
+			'Me.SelectionLength = 0
+
+			'  Store the current Windows highlight colors.
+			_originalBackColor = GetSysColor(COLOR_HIGHLIGHT)
+			_originalForeColor = GetSysColor(COLOR_HIGHLIGHTTEXT)
+
+			' Set the Windows highlight colors to custom colors for this widget.
+			Dim elements As Integer() = {COLOR_HIGHLIGHT, COLOR_HIGHLIGHTTEXT}
+			Dim colors As Integer() = {ColorTranslator.ToWin32(theme.SelectedBackColor), ColorTranslator.ToWin32(theme.SelectedForeColor)}
+			SetSysColors(elements.Length, elements, colors)
+		End If
+
+		MyBase.OnGotFocus(e)
+
+		Me.Invalidate()
+	End Sub
+
+	Protected Overrides Sub OnLostFocus(e As EventArgs)
+		' Restore Windows highlight colors.
+		Dim elements As Integer() = {COLOR_HIGHLIGHT, COLOR_HIGHLIGHTTEXT}
+		Dim colors As Integer() = {_originalBackColor, _originalForeColor}
+		SetSysColors(elements.Length, elements, colors)
+
+		MyBase.OnLostFocus(e)
+
+		'Me.Invalidate()
 	End Sub
 
 	Protected Overrides Sub OnHScroll(e As EventArgs)
@@ -208,15 +287,22 @@ Public Class RichTextBoxEx
 		MyBase.OnKeyPress(e)
 	End Sub
 
-	Protected Overrides Sub OnMouseDown(e As MouseEventArgs)
-		MyBase.OnMouseDown(e)
-		Me.Invalidate()
-	End Sub
+	'Protected Overrides Sub OnLinkClicked(ByVal e As LinkClickedEventArgs)
+	'	MyBase.OnLinkClicked(e)
+	'	If Me.[ReadOnly] Then
+	'		Process.Start(e.LinkText)
+	'	End If
+	'End Sub
 
-	Protected Overrides Sub OnMouseMove(e As MouseEventArgs)
-		MyBase.OnMouseMove(e)
-		Me.Invalidate()
-	End Sub
+	'Protected Overrides Sub OnMouseDown(e As MouseEventArgs)
+	'	MyBase.OnMouseDown(e)
+	'	Me.Invalidate()
+	'End Sub
+
+	'Protected Overrides Sub OnMouseMove(e As MouseEventArgs)
+	'	MyBase.OnMouseMove(e)
+	'	Me.Invalidate()
+	'End Sub
 
 	Protected Overrides Sub OnMouseWheel(e As MouseEventArgs)
 		MyBase.OnMouseWheel(e)
@@ -228,10 +314,10 @@ Public Class RichTextBoxEx
 
 			If e.Delta > 0 Then
 				' Moving wheel away from user = up.
-				VerticalScrollbar.Value -= upOrDownValue
+				Me.VerticalScrollbar.Value -= upOrDownValue
 			Else
 				' Moving wheel toward user = down.
-				VerticalScrollbar.Value += upOrDownValue
+				Me.VerticalScrollbar.Value += upOrDownValue
 			End If
 		End If
 	End Sub
@@ -239,73 +325,578 @@ Public Class RichTextBoxEx
 	'NOTE: Single-line caret is visually glitched so always use Multiline.
 	'      Fake the single-line.
 	'NOTE: This all works by working with the underlying RTB positioning of text and caret.
-	Protected Overrides Sub OnPaint(e As PaintEventArgs)
-		'NOTE: Completely override painting by OS.
-		'MyBase.OnPaint(e)
+	' Need the following line for OnPaint() to be called by Windows:
+	'	Me.SetStyle(ControlStyles.UserPaint, True)
+	'Protected Overrides Sub OnPaint(e As PaintEventArgs)
+	'	'NOTE: Completely override painting by OS.
+	'	'MyBase.OnPaint(e)
 
-		Dim g As Graphics = e.Graphics
-		Dim clipRectangle As Rectangle = e.ClipRectangle
-		Dim clientRectangle As Rectangle = Me.ClientRectangle
+	'	'Dim theme As RichTextBoxTheme = Nothing
+	'	'' This check prevents problems with viewing and saving Forms in VS Designer.
+	'	'If TheApp IsNot Nothing Then
+	'	'	theme = TheApp.Settings.SelectedAppTheme.RichTextBoxTheme
+	'	'End If
+	'	'If theme IsNot Nothing AndAlso Me.theThemeIsUsed Then
+	'	'	'IMPORTANT: Only assign ForeColor and BackColor once in OnPaint();
+	'	'	'           otherwise OnPaint will be called over 100 times
+	'	'	'           and much of the window will not be painted.
+	'	'	If Me.Enabled Then
+	'	'		Me.ForeColor = theme.EnabledForeColor
+	'	'	Else
+	'	'		Me.ForeColor = theme.DisabledForeColor
+	'	'	End If
+	'	'	If MyBase.[ReadOnly] Then
+	'	'		MyBase.BackColor = theme.DisabledBackColor
+	'	'	Else
+	'	'		MyBase.BackColor = theme.EnabledBackColor
+	'	'	End If
+	'	'End If
 
-		' Draw text.
-		If Me.Text <> "" AndAlso Me.theOriginalFont IsNot Nothing Then
-			'NOTE: Use NoPadding to avoid incorrect caret placement.
-			Dim formatFlags As TextFormatFlags = TextFormatFlags.NoPadding Or TextFormatFlags.WordBreak
+	'	Dim g As Graphics = e.Graphics
 
-			' All of the Get* functions return values based on what is displayed, not what is assigned (Lines property).
-			Dim textPositionRect As Rectangle = clientRectangle
-			Dim startCharIndex As Integer = Me.GetCharIndexFromPosition(clipRectangle.Location)
-			Dim endCharIndex As Integer = Me.GetCharIndexFromPosition(New Point(clipRectangle.Right, clipRectangle.Bottom))
-			For charIndex As Integer = startCharIndex To endCharIndex
-				textPositionRect.Location = Me.GetPositionFromCharIndex(charIndex)
-				TextRenderer.DrawText(g, Me.Text(charIndex), Me.theOriginalFont, textPositionRect, WidgetTextColor, WidgetDeepBackColor, formatFlags)
-			Next
-			'TextRenderer.DrawText(g, Me.Text.Substring(startCharIndex, endCharIndex - startCharIndex + 1), Me.theOriginalFont, Me.GetPositionFromCharIndex(startCharIndex), WidgetTextColor, WidgetDeepBackColor, formatFlags)
+	'	' Draw text.
+	'	If Me.Text <> "" AndAlso Me.theOriginalFont IsNot Nothing Then
+	'		If Not Me.theControlIsBehavingAsMultiLine AndAlso Not Me.WordWrap Then
+	'			' Draw full text.
 
-			Dim selectionPositionRect As Rectangle = clientRectangle
-			Dim selectionEndCharIndex As Integer = Me.SelectionStart + Me.SelectionLength - 1
-			For selectionCharIndex As Integer = Me.SelectionStart To selectionEndCharIndex
-				selectionPositionRect.Location = Me.GetPositionFromCharIndex(selectionCharIndex)
-				TextRenderer.DrawText(g, Me.SelectedText(selectionCharIndex - Me.SelectionStart), Me.theOriginalFont, selectionPositionRect, WidgetTextColor, WidgetDeepSelectedBackColor, formatFlags)
-			Next
-		End If
+	'			TextRenderer.DrawText(g, Me.Text, Me.theOriginalFont, Me.GetPositionFromCharIndex(0), Me.ForeColor, Me.BackColor, Me.theTextFormatFlags)
+	'			'TextRenderer.DrawText(g, Me.Text, Me.theOriginalFont, clientRectangle, Me.ForeColor, Me.BackColor, Me.theTextFormatFlags)
+	'			'Dim textLinePositionRect As Rectangle = Me.ClientRectangle
+	'			'textLinePositionRect.Location = Me.GetPositionFromCharIndex(0)
+	'			'TextRenderer.DrawText(g, Me.Text, Me.theOriginalFont, textLinePositionRect, Me.ForeColor, MyBase.BackColor, Me.theTextFormatFlags)
+	'			'Dim endCharIndex As Integer = Me.GetCharIndexFromPosition(New Point(clipRectangle.Right, clipRectangle.Bottom))
+	'			'Me.DrawNormalText(g, 0, 0, endCharIndex)
 
-		' Draw cue banner text.
-		If Me.theCueBannerText <> "" AndAlso Me.Text = "" AndAlso Me.theOriginalFont IsNot Nothing Then
-			Dim drawFont As System.Drawing.Font = New System.Drawing.Font(Me.theOriginalFont.FontFamily, Me.theOriginalFont.Size, FontStyle.Italic, Me.theOriginalFont.Unit)
-			' Add top and bottom padding.
-			clientRectangle.Inflate(0, -1)
-			TextRenderer.DrawText(g, Me.theCueBannerText, drawFont, clientRectangle, WidgetDisabledTextColor, WidgetDeepBackColor, TextFormatFlags.Left)
-		End If
-	End Sub
+	'			If Me.SelectionLength > 0 Then
+	'				Me.DrawSelectedText(g, Me.SelectionStart, Me.GetFirstCharIndexFromLine(0), Me.SelectionStart + Me.SelectionLength - 1)
+	'			End If
+	'		Else
+	'			Dim clipRectangle As Rectangle = e.ClipRectangle
+	'			'DEBUG: Color the clip rectangle.
+	'			'If Me.theTestColorIsBlue Then
+	'			'	Using backColorBrush As New SolidBrush(Color.Blue)
+	'			'		Dim aRect As Rectangle = e.ClipRectangle
+	'			'		e.Graphics.FillRectangle(backColorBrush, aRect)
+	'			'	End Using
+	'			'	Me.theTestColorIsBlue = False
+	'			'Else
+	'			'	Using backColorBrush As New SolidBrush(Color.Red)
+	'			'		Dim aRect As Rectangle = e.ClipRectangle
+	'			'		e.Graphics.FillRectangle(backColorBrush, aRect)
+	'			'	End Using
+	'			'	Me.theTestColorIsBlue = True
+	'			'End If
 
-	Protected Overrides Sub OnPaintBackground(e As PaintEventArgs)
-		'NOTE: Completely override painting by OS.
-		'MyBase.OnPaintBackground(e)
+	'			'======
 
-		' Draw background border.
-		'Using borderColorPen As New Pen(WidgetDisabledTextColor)
-		Using borderColorPen As New Pen(Color.Green)
-			Dim aRect As Rectangle = Me.ClientRectangle
-			'NOTE: DrawRectangle width and height are interpreted as the right and bottom pixels to draw.
-			aRect.Width += -1
-			aRect.Height += -1
-			e.Graphics.DrawRectangle(borderColorPen, aRect)
-		End Using
+	'			' All of the Get* functions return values based on what is displayed, not what is assigned (Lines property).
+	'			Dim startCharIndex As Integer = Me.GetCharIndexFromPosition(clipRectangle.Location)
+	'			Dim endCharIndex As Integer = Me.GetCharIndexFromPosition(New Point(clipRectangle.Right, clipRectangle.Bottom))
 
-		' Draw background.
-		'Using backColorBrush As New SolidBrush(WidgetDeepBackColor)
-		Using backColorBrush As New SolidBrush(Color.Red)
-			Dim aRect As Rectangle = Me.ClientRectangle
-			aRect.Inflate(-1, -1)
-			e.Graphics.FillRectangle(backColorBrush, aRect)
-		End Using
-	End Sub
+	'			Dim firstUnselectedStartCharIndex As Integer = startCharIndex
+	'			Dim firstUnselectedEndCharIndex As Integer = endCharIndex
+	'			Dim selectedStartCharIndex As Integer = -1
+	'			Dim selectedLineStartCharIndex As Integer = -1
+	'			Dim selectedEndCharIndex As Integer = -1
+	'			Dim secondUnselectedStartCharIndex As Integer = -1
+	'			Dim secondUnselectedLineStartCharIndex As Integer = -1
+	'			Dim secondUnselectedEndCharIndex As Integer = -1
+	'			Dim lineIndex As Integer
+
+	'			If Me.SelectionLength > 0 AndAlso startCharIndex <= Me.SelectionStart + Me.SelectionLength - 1 AndAlso endCharIndex >= Me.SelectionStart Then
+	'				selectedStartCharIndex = Me.SelectionStart
+	'				If selectedStartCharIndex <= startCharIndex Then
+	'					firstUnselectedStartCharIndex = -1
+	'					firstUnselectedEndCharIndex = -1
+	'					selectedStartCharIndex = startCharIndex
+	'				Else
+	'					firstUnselectedEndCharIndex = selectedStartCharIndex - 1
+	'				End If
+
+	'				lineIndex = Me.GetLineFromCharIndex(selectedStartCharIndex)
+	'				selectedLineStartCharIndex = Me.GetFirstCharIndexFromLine(lineIndex)
+
+	'				selectedEndCharIndex = Me.SelectionStart + Me.SelectionLength - 1
+	'				If selectedEndCharIndex > endCharIndex Then
+	'					selectedEndCharIndex = endCharIndex
+	'				Else
+	'					secondUnselectedStartCharIndex = selectedEndCharIndex + 1
+	'					secondUnselectedEndCharIndex = endCharIndex
+
+	'					lineIndex = Me.GetLineFromCharIndex(secondUnselectedStartCharIndex)
+	'					secondUnselectedLineStartCharIndex = Me.GetFirstCharIndexFromLine(lineIndex)
+	'				End If
+	'			End If
+
+	'			Dim startOfLineCharIndex As Integer
+	'			Dim endOfLineCharIndex As Integer
+
+	'			If firstUnselectedStartCharIndex >= 0 Then
+	'				' Draw normal (unselected) text in first line that is before any selected text.
+	'				lineIndex = Me.GetLineFromCharIndex(firstUnselectedStartCharIndex)
+	'				startOfLineCharIndex = Me.GetFirstCharIndexFromLine(lineIndex)
+	'				lineIndex += 1
+	'				endOfLineCharIndex = Me.GetFirstCharIndexFromLine(lineIndex) - 1
+	'				'NOTE: If lineIndex is greater than the last line, then GetFirstCharIndexFromLine() returns -1.
+	'				If endOfLineCharIndex < 0 OrElse endOfLineCharIndex > firstUnselectedEndCharIndex Then
+	'					endOfLineCharIndex = firstUnselectedEndCharIndex
+	'				End If
+	'				Me.DrawNormalText(g, firstUnselectedStartCharIndex, startOfLineCharIndex, endOfLineCharIndex)
+
+	'				' Draw remaining normal (unselected) text lines that are before any selected text.
+	'				While endOfLineCharIndex <> firstUnselectedEndCharIndex AndAlso (startOfLineCharIndex < selectedStartCharIndex OrElse selectedStartCharIndex = -1)
+	'					startOfLineCharIndex = Me.GetFirstCharIndexFromLine(lineIndex)
+	'					lineIndex += 1
+	'					endOfLineCharIndex = Me.GetFirstCharIndexFromLine(lineIndex) - 1
+	'					'NOTE: If lineIndex is greater than the last line, then GetFirstCharIndexFromLine() returns -1.
+	'					If endOfLineCharIndex < 0 OrElse endOfLineCharIndex > firstUnselectedEndCharIndex Then
+	'						endOfLineCharIndex = firstUnselectedEndCharIndex
+	'					End If
+	'					Me.DrawNormalText(g, startOfLineCharIndex, startOfLineCharIndex, endOfLineCharIndex)
+	'				End While
+	'			End If
+
+	'			If selectedStartCharIndex >= 0 Then
+	'				' Draw selected text in first line that has a selection.
+	'				lineIndex = Me.GetLineFromCharIndex(selectedStartCharIndex)
+	'				startOfLineCharIndex = Me.GetFirstCharIndexFromLine(lineIndex)
+	'				lineIndex += 1
+	'				endOfLineCharIndex = Me.GetFirstCharIndexFromLine(lineIndex) - 1
+	'				'NOTE: If lineIndex is greater than the last line, then GetFirstCharIndexFromLine() returns -1.
+	'				If endOfLineCharIndex < 0 OrElse endOfLineCharIndex > selectedEndCharIndex Then
+	'					endOfLineCharIndex = selectedEndCharIndex
+	'				End If
+	'				If endOfLineCharIndex <> selectedEndCharIndex AndAlso (startOfLineCharIndex < secondUnselectedStartCharIndex OrElse secondUnselectedStartCharIndex = -1) Then
+	'					Me.DrawSelectedText(g, selectedStartCharIndex, startOfLineCharIndex, endOfLineCharIndex)
+	'				Else
+	'					Me.DrawSelectedText(g, selectedStartCharIndex, startOfLineCharIndex, endOfLineCharIndex, True)
+	'				End If
+
+	'				' Draw selected text in remaining lines that have a selection.
+	'				While endOfLineCharIndex <> selectedEndCharIndex AndAlso (startOfLineCharIndex < secondUnselectedStartCharIndex OrElse secondUnselectedStartCharIndex = -1)
+	'					startOfLineCharIndex = Me.GetFirstCharIndexFromLine(lineIndex)
+	'					lineIndex += 1
+	'					endOfLineCharIndex = Me.GetFirstCharIndexFromLine(lineIndex) - 1
+	'					'NOTE: If lineIndex is greater than the last line, then GetFirstCharIndexFromLine() returns -1.
+	'					If endOfLineCharIndex < 0 OrElse endOfLineCharIndex > selectedEndCharIndex Then
+	'						endOfLineCharIndex = selectedEndCharIndex
+	'					End If
+	'					Me.DrawSelectedText(g, startOfLineCharIndex, startOfLineCharIndex, endOfLineCharIndex)
+	'				End While
+
+	'				If secondUnselectedStartCharIndex >= 0 Then
+	'					' Draw normal (unselected) text in first line that is after any selected text.
+	'					lineIndex = Me.GetLineFromCharIndex(secondUnselectedStartCharIndex)
+	'					startOfLineCharIndex = Me.GetFirstCharIndexFromLine(lineIndex)
+	'					lineIndex += 1
+	'					endOfLineCharIndex = Me.GetFirstCharIndexFromLine(lineIndex) - 1
+	'					'NOTE: If lineIndex is greater than the last line, then GetFirstCharIndexFromLine() returns -1.
+	'					If endOfLineCharIndex < 0 OrElse endOfLineCharIndex > secondUnselectedEndCharIndex Then
+	'						endOfLineCharIndex = secondUnselectedEndCharIndex
+	'					End If
+	'					Me.DrawNormalText(g, secondUnselectedStartCharIndex, startOfLineCharIndex, endOfLineCharIndex)
+
+	'					' Draw remaining normal (unselected) text lines that are after any selected text.
+	'					While endOfLineCharIndex <> secondUnselectedEndCharIndex
+	'						startOfLineCharIndex = Me.GetFirstCharIndexFromLine(lineIndex)
+	'						lineIndex += 1
+	'						endOfLineCharIndex = Me.GetFirstCharIndexFromLine(lineIndex) - 1
+	'						'NOTE: If lineIndex is greater than the last line, then GetFirstCharIndexFromLine() returns -1.
+	'						If endOfLineCharIndex < 0 OrElse endOfLineCharIndex > secondUnselectedEndCharIndex Then
+	'							endOfLineCharIndex = secondUnselectedEndCharIndex
+	'						End If
+	'						Me.DrawNormalText(g, startOfLineCharIndex, startOfLineCharIndex, endOfLineCharIndex)
+	'					End While
+	'				End If
+	'			End If
+	'		End If
+	'	End If
+
+	'	' Draw cue banner text.
+	'	If Me.theCueBannerText <> "" AndAlso Me.Text = "" AndAlso Me.theOriginalFont IsNot Nothing Then
+	'		Dim drawFont As System.Drawing.Font = New System.Drawing.Font(Me.theOriginalFont.FontFamily, Me.theOriginalFont.Size, FontStyle.Italic, Me.theOriginalFont.Unit)
+	'		Dim clientRectangle As Rectangle = Me.ClientRectangle
+	'		' Add top and bottom padding.
+	'		clientRectangle.Inflate(0, -1)
+	'		TextRenderer.DrawText(g, Me.theCueBannerText, drawFont, clientRectangle, WidgetDisabledTextColor, WidgetDeepBackColor, TextFormatFlags.Left)
+	'	End If
+	'End Sub
+
+	'TEST 1 from OnPaint.
+	' Draw text.
+	'' All of the Get* functions return values based on what is displayed, not what is assigned (Lines property).
+	'Dim startCharIndex As Integer = Me.GetCharIndexFromPosition(clipRectangle.Location)
+	'Dim endCharIndex As Integer = Me.GetCharIndexFromPosition(New Point(clipRectangle.Right, clipRectangle.Bottom))
+	''Dim textPositionRect As Rectangle = clipRectangle
+	''For charIndex As Integer = startCharIndex To endCharIndex
+	''	textPositionRect.Location = Me.GetPositionFromCharIndex(charIndex)
+	''	TextRenderer.DrawText(g, Me.Text(charIndex), Me.theOriginalFont, textPositionRect, WidgetTextColor, WidgetDeepBackColor, formatFlags)
+	''Next
+	'Dim textPositionRect As Rectangle
+	'If Me.TextAlign = HorizontalAlignment.Center Then
+	'	formatFlags = formatFlags Or TextFormatFlags.HorizontalCenter
+	'	textPositionRect = clientRectangle
+	'	TextRenderer.DrawText(g, Me.Text.Substring(startCharIndex, endCharIndex - startCharIndex + 1), Me.theOriginalFont, textPositionRect, WidgetTextColor, WidgetDeepBackColor, formatFlags)
+	'Else
+	'	textPositionRect = clipRectangle
+	'	textPositionRect.Location = Me.GetPositionFromCharIndex(startCharIndex)
+	'	TextRenderer.DrawText(g, Me.Text.Substring(startCharIndex, endCharIndex - startCharIndex + 1), Me.theOriginalFont, textPositionRect, WidgetTextColor, WidgetDeepBackColor, formatFlags)
+	'End If
+	'
+	'If Me.SelectionLength > 0 AndAlso startCharIndex <= Me.SelectionStart + Me.SelectionLength - 1 AndAlso endCharIndex >= Me.SelectionStart Then
+	'	Dim selectionPositionRect As Rectangle = e.ClipRectangle
+	'	'======
+	'	'Dim selectionEndCharIndex As Integer = Me.SelectionStart + Me.SelectionLength - 1
+	'	' This 'For' loop causes extra spacing between some selected characters.
+	'	'For selectionCharIndex As Integer = Me.SelectionStart To selectionEndCharIndex
+	'	'	selectionPositionRect.Location = Me.GetPositionFromCharIndex(selectionCharIndex)
+	'	'	'TextRenderer.DrawText(g, Me.SelectedText(selectionCharIndex - Me.SelectionStart), Me.theOriginalFont, selectionPositionRect, WidgetTextColor, WidgetDeepSelectedBackColor, formatFlags)
+	'	'	TextRenderer.DrawText(g, Me.Text(selectionCharIndex), Me.theOriginalFont, selectionPositionRect, WidgetTextColor, WidgetDeepSelectedBackColor, formatFlags)
+	'	'Next
+	'	'------
+	'	'' This location setting is correct only for first line of selection.
+	'	'selectionPositionRect.Location = Me.GetPositionFromCharIndex(Me.SelectionStart)
+	'	'TextRenderer.DrawText(g, Me.Text.Substring(Me.SelectionStart, Me.SelectionLength), Me.theOriginalFont, selectionPositionRect, WidgetTextColor, WidgetDeepSelectedBackColor, formatFlags)
+	'	'------
+	'	'Dim selectionPositionRect As Rectangle
+	'	'If Me.TextAlign = HorizontalAlignment.Center Then
+	'	'	selectionPositionRect = clientRectangle
+	'	'Else
+	'	'	selectionPositionRect = clientRectangle
+	'	'	'selectionPositionRect = clipRectangle
+	'	'	'selectionPositionRect.Location = Me.GetPositionFromCharIndex(Me.SelectionStart)
+	'	'End If
+	'	'TextRenderer.DrawText(g, Me.Text.Substring(Me.SelectionStart, Me.SelectionLength), Me.theOriginalFont, selectionPositionRect, WidgetTextColor, WidgetDeepSelectedBackColor, formatFlags)
+	'	'------
+	'	Dim selectionStartLineIndex As Integer = Me.GetLineFromCharIndex(Me.SelectionStart)
+	'	Dim selectionEndLineIndex As Integer = Me.GetLineFromCharIndex(Me.SelectionStart + Me.SelectionLength - 1)
+	'	Dim startOfSecondLineCharIndex As Integer = Me.GetFirstCharIndexFromLine(selectionStartLineIndex + 1)
+	'	If Me.TextAlign = HorizontalAlignment.Center Then
+	'		selectionPositionRect = clientRectangle
+	'		selectionPositionRect.Location = Me.GetPositionFromCharIndex(Me.SelectionStart)
+	'		selectionPositionRect.X = clientRectangle.X
+	'	Else
+	'		selectionPositionRect.Location = Me.GetPositionFromCharIndex(Me.SelectionStart)
+	'	End If
+	'	If selectionStartLineIndex < selectionEndLineIndex Then
+	'		'selectionPositionRect.Location = Me.GetPositionFromCharIndex(Me.SelectionStart)
+	'		TextRenderer.DrawText(g, Me.Text.Substring(Me.SelectionStart, startOfSecondLineCharIndex - Me.SelectionStart), Me.theOriginalFont, selectionPositionRect, WidgetTextColor, WidgetDeepSelectedBackColor, formatFlags)
+	'		selectionPositionRect = clientRectangle
+	'		selectionPositionRect.Location = Me.GetPositionFromCharIndex(startOfSecondLineCharIndex)
+	'		TextRenderer.DrawText(g, Me.Text.Substring(startOfSecondLineCharIndex, Me.SelectionLength - (startOfSecondLineCharIndex - Me.SelectionStart)), Me.theOriginalFont, selectionPositionRect, WidgetTextColor, WidgetDeepSelectedBackColor, formatFlags)
+	'	Else
+	'		'selectionPositionRect.Location = Me.GetPositionFromCharIndex(Me.SelectionStart)
+	'		TextRenderer.DrawText(g, Me.Text.Substring(Me.SelectionStart, Me.SelectionLength), Me.theOriginalFont, selectionPositionRect, WidgetTextColor, Color.Blue, formatFlags)
+	'	End If
+	'End If
+
+	'TEST 2 from OnPaint.
+	' Draw text.
+	'' All of the Get* functions return values based on what is displayed, not what is assigned (Lines property).
+	'Dim startCharIndex As Integer = Me.GetCharIndexFromPosition(clipRectangle.Location)
+	'Dim endCharIndex As Integer = Me.GetCharIndexFromPosition(New Point(clipRectangle.Right, clipRectangle.Bottom))
+	'
+	'Dim firstUnselectedStartCharIndex As Integer = startCharIndex
+	'Dim firstUnselectedEndCharIndex As Integer = endCharIndex
+	'Dim selectedStartCharIndex As Integer = -1
+	'Dim selectedLineStartCharIndex As Integer = -1
+	'Dim selectedEndCharIndex As Integer = -1
+	'Dim secondUnselectedStartCharIndex As Integer = -1
+	'Dim secondUnselectedLineStartCharIndex As Integer = -1
+	'Dim secondUnselectedEndCharIndex As Integer = -1
+	'
+	'If Me.SelectionLength > 0 AndAlso startCharIndex <= Me.SelectionStart + Me.SelectionLength - 1 AndAlso endCharIndex >= Me.SelectionStart Then
+	'	selectedStartCharIndex = Me.SelectionStart
+	'	If selectedStartCharIndex <= startCharIndex Then
+	'		firstUnselectedStartCharIndex = -1
+	'		firstUnselectedEndCharIndex = -1
+	'		selectedStartCharIndex = startCharIndex
+	'	Else
+	'		firstUnselectedEndCharIndex = selectedStartCharIndex - 1
+	'	End If
+	'
+	'	Dim lineIndex As Integer = Me.GetLineFromCharIndex(selectedStartCharIndex)
+	'	selectedLineStartCharIndex = Me.GetFirstCharIndexFromLine(lineIndex)
+	'
+	'	selectedEndCharIndex = Me.SelectionStart + Me.SelectionLength - 1
+	'	If selectedEndCharIndex > endCharIndex Then
+	'		selectedEndCharIndex = endCharIndex
+	'	Else
+	'		secondUnselectedStartCharIndex = selectedEndCharIndex + 1
+	'		secondUnselectedEndCharIndex = endCharIndex
+
+	'		lineIndex = Me.GetLineFromCharIndex(secondUnselectedStartCharIndex)
+	'		secondUnselectedLineStartCharIndex = Me.GetFirstCharIndexFromLine(lineIndex)
+	'	End If
+	'End If
+	'
+	'Dim textPositionRect As Rectangle
+	'Dim textLinePositionRect As Rectangle
+	'If Me.TextAlign = HorizontalAlignment.Center Then
+	'	'TODO: This handling of HorizontalAlignment.Center probably needs to merge with the 'Else' block below.
+	'	formatFlags = formatFlags Or TextFormatFlags.HorizontalCenter
+	'	textPositionRect = clientRectangle
+	'	TextRenderer.DrawText(g, Me.Text.Substring(startCharIndex, endCharIndex - startCharIndex + 1), Me.theOriginalFont, textPositionRect, WidgetTextColor, WidgetDeepBackColor, formatFlags)
+	'Else
+	'	Dim graphicsClipBounds As Rectangle = Rectangle.Round(g.ClipBounds)
+	'	Dim textPosition As Point
+	'	Dim startOfLineCharIndex As Integer
+	'	Dim lineIndex As Integer
+	'	Dim endOfLineCharIndex As Integer
+	'
+	'	'' Draw initial text lines that do not include selection, which can be all lines when no selection in widget.
+	'	'Dim textPosition As Point = Me.GetPositionFromCharIndex(firstNonSelectedStartCharIndex)
+	'	''TEST: This line is probably not needed.
+	'	''textLinePositionRect = graphicsClipBounds
+	'	'textLinePositionRect.Location = textPosition
+	'	''DEBUG: Extending the width here allows more of the first line of wrapped text to show, but do not know why last character seems to be clipped.
+	'	'textLinePositionRect.Width = clientRectangle.Width
+	'	'' Give plenty of height to prevent vertical clipping of text lines.
+	'	''textLinePositionRect.Height += Screen.FromControl(Me).Bounds.Height
+	'	'textLinePositionRect.Height = Screen.FromControl(Me).Bounds.Height
+	'	'''DEBUG: 
+	'	''Using backColorBrush As New SolidBrush(Color.Red)
+	'	''	g.FillRectangle(backColorBrush, textLinePositionRect)
+	'	''End Using
+	'	'TextRenderer.DrawText(g, Me.Text.Substring(firstNonSelectedStartCharIndex, firstNonSelectedEndCharIndex - firstNonSelectedStartCharIndex + 1), Me.theOriginalFont, textLinePositionRect, WidgetTextColor, WidgetDeepBackColor, formatFlags)
+	'	'------
+	'	If firstUnselectedStartCharIndex >= 0 Then
+	'		' Draw normal (unselected) text in first line that is before any selected text.
+	'		startOfLineCharIndex = firstUnselectedStartCharIndex
+	'		lineIndex = Me.GetLineFromCharIndex(startOfLineCharIndex)
+	'		lineIndex += 1
+	'		endOfLineCharIndex = Me.GetFirstCharIndexFromLine(lineIndex) - 1
+	'		'NOTE: If lineIndex is greater than the last line, then GetFirstCharIndexFromLine() returns -1.
+	'		If endOfLineCharIndex < 0 OrElse endOfLineCharIndex > firstUnselectedEndCharIndex Then
+	'			endOfLineCharIndex = firstUnselectedEndCharIndex
+	'		End If
+	'		Me.DrawNormalText(g, startOfLineCharIndex, endOfLineCharIndex)
+	'
+	'		' Draw remaining normal (unselected) text lines that are before any selected text.
+	'		While endOfLineCharIndex <> firstUnselectedEndCharIndex AndAlso (startOfLineCharIndex < selectedStartCharIndex OrElse selectedStartCharIndex = -1)
+	'			startOfLineCharIndex = Me.GetFirstCharIndexFromLine(lineIndex)
+	'			lineIndex += 1
+	'			endOfLineCharIndex = Me.GetFirstCharIndexFromLine(lineIndex) - 1
+	'			'NOTE: If lineIndex is greater than the last line, then GetFirstCharIndexFromLine() returns -1.
+	'			If endOfLineCharIndex < 0 OrElse endOfLineCharIndex > firstUnselectedEndCharIndex Then
+	'				endOfLineCharIndex = firstUnselectedEndCharIndex
+	'			End If
+	'			Me.DrawNormalText(g, startOfLineCharIndex, endOfLineCharIndex)
+	'		End While
+	'	End If
+	'
+	'	If selectedStartCharIndex >= 0 Then
+	'		'' Draw selected text in first line that has a selection.
+	'		'textPositionRect = clipRectangle
+	'		'textPositionRect.Location = Me.GetPositionFromCharIndex(selectionStartCharIndex)
+	'		'g.IntersectClip(textPositionRect)
+	'		'textPosition = Me.GetPositionFromCharIndex(selectionLineStartCharIndex)
+	'		'textLinePositionRect = graphicsClipBounds
+	'		'textLinePositionRect.Location = textPosition
+	'		'textLinePositionRect.Width = clientRectangle.Width
+	'		'TextRenderer.DrawText(g, Me.Text.Substring(selectionLineStartCharIndex, selectionEndCharIndex - selectionLineStartCharIndex + 1), Me.theOriginalFont, textLinePositionRect, WidgetTextColor, WidgetDeepSelectedBackColor, formatFlags)
+	'		'g.ResetClip()
+	'		'------
+	'		' Draw selected text in first line that has a selection.
+	'		'textPositionRect = clipRectangle
+	'		'textPositionRect.Location = Me.GetPositionFromCharIndex(selectionStartCharIndex)
+	'		'g.IntersectClip(textPositionRect)
+	'		startOfLineCharIndex = selectedStartCharIndex
+	'		lineIndex = Me.GetLineFromCharIndex(startOfLineCharIndex)
+	'		lineIndex += 1
+	'		endOfLineCharIndex = Me.GetFirstCharIndexFromLine(lineIndex) - 1
+	'		'NOTE: If lineIndex is greater than the last line, then GetFirstCharIndexFromLine() returns -1.
+	'		If endOfLineCharIndex < 0 OrElse endOfLineCharIndex > selectedEndCharIndex Then
+	'			endOfLineCharIndex = selectedEndCharIndex
+	'		End If
+	'		Me.DrawSelectedText(g, startOfLineCharIndex, endOfLineCharIndex)
+	'		'g.ResetClip()
+	'
+	'		'' Draw selected text in remaining lines that have a selection.
+	'		'Dim selectionStartLineIndex As Integer = Me.GetLineFromCharIndex(selectionStartCharIndex)
+	'		'Dim selectionEndLineIndex As Integer = Me.GetLineFromCharIndex(selectionEndCharIndex)
+	'		'Dim startOfSecondLineCharIndex As Integer = Me.GetFirstCharIndexFromLine(selectionStartLineIndex + 1)
+	'		'If selectionStartLineIndex <> selectionEndLineIndex Then
+	'		'	textPosition = Me.GetPositionFromCharIndex(startOfSecondLineCharIndex)
+	'		'	textLinePositionRect = graphicsClipBounds
+	'		'	textLinePositionRect.Location = textPosition
+	'		'	textLinePositionRect.Width = clientRectangle.Width
+	'		'	textLinePositionRect.Height += Screen.FromControl(Me).Bounds.Height
+	'		'	TextRenderer.DrawText(g, Me.Text.Substring(startOfSecondLineCharIndex, selectionEndCharIndex - startOfSecondLineCharIndex + 1), Me.theOriginalFont, textLinePositionRect, WidgetTextColor, WidgetDeepSelectedBackColor, formatFlags)
+	'
+	'		'	'DEBUG: 
+	'		'	'Dim temp As Integer = Me.SelectionLength - (startOfSecondLineCharIndex - Me.SelectionStart)
+	'		'	'TextRenderer.DrawText(g, startOfSecondLineCharIndex.ToString() + ", " + temp.ToString(), Me.theOriginalFont, clientRectangle.Location, WidgetTextColor, Color.Blue, formatFlags)
+	'		'	'TextRenderer.DrawText(g, graphicsClipBounds.ToString(), Me.theOriginalFont, clientRectangle.Location, WidgetTextColor, Color.Blue, formatFlags)
+	'		'End If
+	'		'------
+	'		' Draw selected text in remaining lines that have a selection.
+	'		While endOfLineCharIndex <> selectedEndCharIndex AndAlso (startOfLineCharIndex >= selectedStartCharIndex AndAlso startOfLineCharIndex <= selectedEndCharIndex)
+	'			startOfLineCharIndex = Me.GetFirstCharIndexFromLine(lineIndex)
+	'			lineIndex += 1
+	'			endOfLineCharIndex = Me.GetFirstCharIndexFromLine(lineIndex) - 1
+	'			'NOTE: If lineIndex is greater than the last line, then GetFirstCharIndexFromLine() returns -1.
+	'			If endOfLineCharIndex < 0 OrElse endOfLineCharIndex > selectedEndCharIndex Then
+	'				endOfLineCharIndex = selectedEndCharIndex
+	'			End If
+	'			Me.DrawSelectedText(g, startOfLineCharIndex, endOfLineCharIndex)
+	'		End While
+	'
+	'		If secondUnselectedStartCharIndex >= 0 Then
+	'			' Draw the non-selected ending part of text line that has a selection.
+	'			textPositionRect = clipRectangle
+	'			textPositionRect.Location = Me.GetPositionFromCharIndex(secondUnselectedStartCharIndex)
+	'			g.IntersectClip(textPositionRect)
+	'			textPosition = Me.GetPositionFromCharIndex(secondUnselectedLineStartCharIndex)
+	'			textLinePositionRect = graphicsClipBounds
+	'			textLinePositionRect.Location = textPosition
+	'			textLinePositionRect.Width = clientRectangle.Width
+	'			''DEBUG: 
+	'			'Using backColorBrush As New SolidBrush(Color.Red)
+	'			'	g.FillRectangle(backColorBrush, textLinePositionRect)
+	'			'End Using
+	'			TextRenderer.DrawText(g, Me.Text.Substring(secondUnselectedLineStartCharIndex, secondUnselectedEndCharIndex - secondUnselectedLineStartCharIndex + 1), Me.theOriginalFont, textLinePositionRect, WidgetTextColor, WidgetDeepBackColor, formatFlags)
+	'			g.ResetClip()
+	'			'------
+	'			' Draw the non-selected ending part of text line that has a selection.
+	'
+	'			' Draw remaining non-selected text lines.
+	'			Dim nonSelectedStartLineIndex As Integer = Me.GetLineFromCharIndex(secondUnselectedStartCharIndex)
+	'			Dim nonSelectedEndLineIndex As Integer = Me.GetLineFromCharIndex(secondUnselectedEndCharIndex)
+	'			Dim startOfSecondNonSelectedLineCharIndex As Integer = Me.GetFirstCharIndexFromLine(nonSelectedStartLineIndex + 1)
+	'			If nonSelectedStartLineIndex <> nonSelectedEndLineIndex Then
+	'				textPosition = Me.GetPositionFromCharIndex(startOfSecondNonSelectedLineCharIndex)
+	'				textLinePositionRect = graphicsClipBounds
+	'				textLinePositionRect.Location = textPosition
+	'				textLinePositionRect.Width = clientRectangle.Width
+	'				textLinePositionRect.Height += Screen.FromControl(Me).Bounds.Height
+	'				TextRenderer.DrawText(g, Me.Text.Substring(startOfSecondNonSelectedLineCharIndex, secondUnselectedEndCharIndex - startOfSecondNonSelectedLineCharIndex + 1), Me.theOriginalFont, textLinePositionRect, WidgetTextColor, WidgetDeepBackColor, formatFlags)
+	'			End If
+	'			'------
+	'			' Draw remaining non-selected text lines.
+	'		End If
+	'	End If
+	'End If
+
+	'Protected Sub DrawNormalText(ByVal g As Graphics, ByVal startCharIndex As Integer, ByVal startOfLineCharIndex As Integer, ByVal endOfLineCharIndex As Integer, Optional ByVal firstOfManyLines As Boolean = False)
+	'	Dim textLinePositionRect As Rectangle = Me.ClientRectangle
+	'	textLinePositionRect.Location = Me.GetPositionFromCharIndex(startOfLineCharIndex)
+	'	'textLinePositionRect.X -= 1
+	'	Dim testStartOfLineCharIndex As Integer = Me.GetCharIndexFromPosition(textLinePositionRect.Location)
+	'	If testStartOfLineCharIndex <> startOfLineCharIndex Then
+	'		Dim debug As Integer = 4242
+	'	End If
+
+	'	Dim textPositionRect As Rectangle = Me.ClientRectangle
+	'	textPositionRect.Location = Me.GetPositionFromCharIndex(startCharIndex)
+	'	'textPositionRect.X -= 1
+	'	Dim testStartCharIndex As Integer = Me.GetCharIndexFromPosition(textPositionRect.Location)
+	'	If testStartCharIndex <> startCharIndex Then
+	'		Dim debug As Integer = 4242
+	'	End If
+
+	'	g.IntersectClip(textPositionRect)
+
+	'	'Dim formatFlags As TextFormatFlags = Me.theFormatFlags
+	'	'If Me.TextAlign = HorizontalAlignment.Center Then
+	'	'	formatFlags = formatFlags Or TextFormatFlags.HorizontalCenter
+	'	'End If
+	'	Dim normalTextFormatFlags As TextFormatFlags = Me.theTextFormatFlags
+	'	If firstOfManyLines Then
+	'		normalTextFormatFlags = normalTextFormatFlags Or TextFormatFlags.GlyphOverhangPadding
+	'	End If
+
+	'	TextRenderer.DrawText(g, Me.Text.Substring(startOfLineCharIndex, endOfLineCharIndex - startOfLineCharIndex + 1), Me.theOriginalFont, textLinePositionRect, Me.ForeColor, MyBase.BackColor, normalTextFormatFlags)
+	'	g.ResetClip()
+	'End Sub
+
+	'Protected Sub DrawSelectedText(ByVal g As Graphics, ByVal startCharIndex As Integer, ByVal startOfLineCharIndex As Integer, ByVal endOfLineCharIndex As Integer, Optional ByVal firstOfManyLines As Boolean = False)
+	'	Dim textLinePositionRect As Rectangle = Me.ClientRectangle
+	'	textLinePositionRect.Location = Me.GetPositionFromCharIndex(startOfLineCharIndex)
+	'	Dim testStartOfLineCharIndex As Integer = Me.GetCharIndexFromPosition(textLinePositionRect.Location)
+	'	If testStartOfLineCharIndex <> startOfLineCharIndex Then
+	'		Dim debug As Integer = 4242
+	'	End If
+
+	'	Dim textPositionRect As Rectangle = Me.ClientRectangle
+	'	textPositionRect.Location = Me.GetPositionFromCharIndex(startCharIndex)
+	'	'textPositionRect.X -= 1
+	'	Dim testStartCharIndex As Integer = Me.GetCharIndexFromPosition(textPositionRect.Location)
+	'	If testStartCharIndex <> startCharIndex Then
+	'		Dim debug As Integer = 4242
+	'	End If
+
+	'	g.IntersectClip(textPositionRect)
+
+	'	'Dim selectedTextForeColor As Color = WidgetConstants.WidgetTextColor
+	'	'Dim selectedTextBackColor As Color = WidgetConstants.WidgetDeepSelectedBackColor
+	'	''If [ReadOnly] Then
+	'	''	backgroundColor = WidgetConstants.WidgetDeepDisabledBackColor
+	'	''End If
+	'	''If Not Me.Enabled Then
+	'	''	textColor = WidgetConstants.WidgetDisabledTextColor
+	'	''End If
+	'	'------
+	'	Dim selectedTextForeColor As Color = Me.ForeColor
+	'	Dim selectedTextBackColor As Color = SystemColors.Highlight
+	'	Dim theme As RichTextBoxTheme = Nothing
+	'	' This check prevents problems with viewing and saving Forms in VS Designer.
+	'	If TheApp IsNot Nothing Then
+	'		theme = TheApp.Settings.SelectedAppTheme.RichTextBoxTheme
+	'	End If
+	'	If theme IsNot Nothing Then
+	'		selectedTextForeColor = theme.SelectedForeColor
+	'		selectedTextBackColor = theme.SelectedBackColor
+	'	End If
+
+	'	'Dim formatFlags As TextFormatFlags = Me.theFormatFlags
+	'	'If Me.TextAlign = HorizontalAlignment.Center Then
+	'	'	formatFlags = formatFlags Or TextFormatFlags.HorizontalCenter
+	'	'End If
+	'	Dim selectedTextFormatFlags As TextFormatFlags = Me.theTextFormatFlags
+	'	If firstOfManyLines Then
+	'		selectedTextFormatFlags = selectedTextFormatFlags Or TextFormatFlags.GlyphOverhangPadding
+	'	End If
+
+	'	TextRenderer.DrawText(g, Me.Text.Substring(startOfLineCharIndex, endOfLineCharIndex - startOfLineCharIndex + 1), Me.theOriginalFont, textLinePositionRect, selectedTextForeColor, selectedTextBackColor, selectedTextFormatFlags)
+	'	g.ResetClip()
+	'End Sub
+
+	' Need the following line for OnPaint() to be called by Windows:
+	'	Me.SetStyle(ControlStyles.UserPaint, True)
+	'Protected Overrides Sub OnPaintBackground(e As PaintEventArgs)
+	'	'NOTE: Completely override painting by OS.
+	'	'MyBase.OnPaintBackground(e)
+
+	'	'' Draw background border.
+	'	'Using borderColorPen As New Pen(WidgetDisabledTextColor)
+	'	'	'Using borderColorPen As New Pen(Color.Green)
+	'	'	Dim aRect As Rectangle = Me.ClientRectangle
+	'	'	'NOTE: DrawRectangle width and height are interpreted as the right and bottom pixels to draw.
+	'	'	aRect.Width -= 1
+	'	'	aRect.Height -= 1
+	'	'	e.Graphics.DrawRectangle(borderColorPen, aRect)
+	'	'End Using
+
+	'	' Draw background.
+	'	Using backColorBrush As New SolidBrush(MyBase.BackColor)
+	'		Dim aRect As Rectangle = Me.ClientRectangle
+	'		e.Graphics.FillRectangle(backColorBrush, aRect)
+	'	End Using
+	'End Sub
 
 	Protected Overrides Sub OnSizeChanged(e As EventArgs)
 		MyBase.OnSizeChanged(e)
-		Me.Invalidate()
-		Me.UpdateScrollbars()
+
+		' This check prevents incorrect painting due to premature creation of Handle.
+		If Me.theControlHasShown Then
+			If Me.theControlIsBehavingAsMultiLine AndAlso Me.theLineCount <> Me.GetLineFromCharIndex(Me.TextLength - 1) - 1 Then
+				'NOTE: Raise the OnNonClientCalcSize and OnNonClientPaint "events".
+				Win32Api.SetWindowPos(Me.Handle, IntPtr.Zero, 0, 0, 0, 0, Win32Api.SWP.SWP_FRAMECHANGED Or Win32Api.SWP.SWP_NOMOVE Or Win32Api.SWP.SWP_NOSIZE Or Win32Api.SWP.SWP_NOZORDER)
+			End If
+			Me.Invalidate()
+			Me.UpdateScrollbars()
+		End If
 	End Sub
 
 	Protected Overrides Sub OnTextChanged(e As EventArgs)
@@ -313,7 +904,7 @@ Public Class RichTextBoxEx
 
 		If Me.theControlIsBehavingAsMultiLine AndAlso Me.theLineCount <> Me.GetLineFromCharIndex(Me.TextLength - 1) - 1 Then
 			'NOTE: Raise the OnNonClientCalcSize and OnNonClientPaint "events".
-			Win32Api.SetWindowPos(Handle, IntPtr.Zero, 0, 0, 0, 0, Win32Api.SWP.SWP_FRAMECHANGED Or Win32Api.SWP.SWP_NOMOVE Or Win32Api.SWP.SWP_NOSIZE Or Win32Api.SWP.SWP_NOZORDER)
+			Win32Api.SetWindowPos(Me.Handle, IntPtr.Zero, 0, 0, 0, 0, Win32Api.SWP.SWP_FRAMECHANGED Or Win32Api.SWP.SWP_NOMOVE Or Win32Api.SWP.SWP_NOSIZE Or Win32Api.SWP.SWP_NOZORDER)
 		End If
 		Me.Invalidate()
 		Me.UpdateScrollbars()
@@ -330,7 +921,7 @@ Public Class RichTextBoxEx
 				Me.SelectionLength = 0
 
 				'NOTE: Raise the OnNonClientCalcSize and OnNonClientPaint "events".
-				Win32Api.SetWindowPos(Handle, IntPtr.Zero, 0, 0, 0, 0, Win32Api.SWP.SWP_FRAMECHANGED Or Win32Api.SWP.SWP_NOMOVE Or Win32Api.SWP.SWP_NOSIZE Or Win32Api.SWP.SWP_NOZORDER)
+				Win32Api.SetWindowPos(Me.Handle, IntPtr.Zero, 0, 0, 0, 0, Win32Api.SWP.SWP_FRAMECHANGED Or Win32Api.SWP.SWP_NOMOVE Or Win32Api.SWP.SWP_NOSIZE Or Win32Api.SWP.SWP_NOZORDER)
 			End If
 
 			Me.Invalidate()
@@ -361,18 +952,48 @@ Public Class RichTextBoxEx
 		End Select
 
 		MyBase.WndProc(m)
+
+		If m.Msg = Win32Api.WindowsMessages.WM_PAINT Then
+			'Using graphic As Graphics = Me.CreateGraphics()
+			'	OnPaint(New PaintEventArgs(graphic, Me.ClientRectangle))
+			'End Using
+			'------
+			' Draw cue banner text.
+			Using g As Graphics = Me.CreateGraphics()
+				If Me.theCueBannerText <> "" AndAlso Me.Text = "" AndAlso Me.theOriginalFont IsNot Nothing Then
+					Dim drawFont As System.Drawing.Font = New System.Drawing.Font(Me.theOriginalFont.FontFamily, Me.theOriginalFont.Size, FontStyle.Italic, Me.theOriginalFont.Unit)
+					Dim clientRectangle As Rectangle = Me.ClientRectangle
+					' Add top and bottom padding.
+					clientRectangle.Inflate(0, -1)
+
+					Dim textColor As Color = WidgetDisabledTextColor
+					Dim textBackColor As Color = WidgetDeepBackColor
+					Dim theme As RichTextBoxTheme = Nothing
+					' This check prevents problems with viewing and saving Forms in VS Designer.
+					If TheApp IsNot Nothing Then
+						theme = TheApp.Settings.SelectedAppTheme.RichTextBoxTheme
+					End If
+					If theme IsNot Nothing Then
+						textColor = theme.DisabledForeColor
+						textBackColor = theme.DisabledBackColor
+					End If
+
+					TextRenderer.DrawText(g, Me.theCueBannerText, drawFont, clientRectangle, textColor, textBackColor, TextFormatFlags.Left)
+				End If
+			End Using
+		End If
 	End Sub
 
 	Private Sub OnNonClientCalcSize(ByRef m As Message)
-		Me.UpdatePadding()
+		Me.UpdateNonClientPadding()
 		If CInt(m.WParam) = 0 Then
 			Dim rect As Win32Api.RECT = CType(Marshal.PtrToStructure(m.LParam, GetType(Win32Api.RECT)), Win32Api.RECT)
-			Me.ResizeClientRect(Me.Padding, rect)
+			Me.ResizeClientRect(Me.NonClientPadding, rect)
 			Marshal.StructureToPtr(rect, m.LParam, False)
 			m.Result = IntPtr.Zero
 		ElseIf CInt(m.WParam) = 1 Then
 			Dim nccsp As Win32Api.NCCALCSIZE_PARAMS = CType(Marshal.PtrToStructure(m.LParam, GetType(Win32Api.NCCALCSIZE_PARAMS)), Win32Api.NCCALCSIZE_PARAMS)
-			Me.ResizeClientRect(Me.Padding, nccsp.rect0)
+			Me.ResizeClientRect(Me.NonClientPadding, nccsp.rect0)
 			Marshal.StructureToPtr(nccsp, m.LParam, False)
 			m.Result = IntPtr.Zero
 		End If
@@ -382,14 +1003,66 @@ Public Class RichTextBoxEx
 		Dim hDC As IntPtr = Win32Api.GetWindowDC(Me.Handle)
 		Try
 			Using g As Graphics = Graphics.FromHdc(hDC)
-				Using backColorBrush As New SolidBrush(Me.thePaddingColor)
-					Dim aRect As RectangleF = g.VisibleClipBounds
-					g.FillRectangle(backColorBrush, aRect)
+				Dim aRectF As RectangleF = g.VisibleClipBounds
+				' Important to clip away the client rectangle to prevent text painting issues when scrolling widget into view.
+				Dim textPositionRect As Rectangle = Me.ClientRectangle
+				textPositionRect.X = Me.NonClientPadding.Left
+				textPositionRect.Y = Me.NonClientPadding.Top
+				g.ExcludeClip(textPositionRect)
+
+				' Draw background.
+				Using backColorBrush As New SolidBrush(Me.BackColor)
+					g.FillRectangle(backColorBrush, aRectF)
 				End Using
+
+				' Draw border.
+				Dim theme As RichTextBoxTheme = Nothing
+				' This check prevents problems with viewing and saving Forms in VS Designer.
+				If TheApp IsNot Nothing Then
+					theme = TheApp.Settings.SelectedAppTheme.RichTextBoxTheme
+				End If
+				If theme IsNot Nothing Then
+					Dim borderColor As Color
+					Dim borderWidth As Integer
+					If Me.theWidgetIsEnabled Then
+						'If Me.theButtonCanBeFocused AndAlso Me.theMouseIsOverButton Then
+						'	borderColor = theme.FocusBorderColor
+						'	borderWidth = theme.FocusBorderWidth
+						'Else
+						borderColor = theme.EnabledBorderColor
+						borderWidth = theme.EnabledBorderWidth
+						'End If
+					Else
+						borderColor = theme.DisabledBorderColor
+						borderWidth = theme.DisabledBorderWidth
+					End If
+
+					Using borderColorPen As New Pen(borderColor, borderWidth)
+						borderColorPen.Alignment = Drawing2D.PenAlignment.Inset
+						If borderWidth = 1 Then
+							'NOTE: DrawRectangle width and height are interpreted as the right and bottom pixels to draw.
+							aRectF.Width -= 1
+							aRectF.Height -= 1
+						End If
+						g.DrawRectangle(borderColorPen, aRectF.Left, aRectF.Top, aRectF.Width, aRectF.Height)
+					End Using
+					'Else
+					'	If MyBase.BorderStyle = BorderStyle.FixedSingle Then
+					'		Using borderColorPen As New Pen(Me.theBorderColor)
+					'			'NOTE: DrawRectangle width and height are interpreted as the right and bottom pixels to draw.
+					'			aRectF.Width -= 1
+					'			aRectF.Height -= 1
+					'			g.DrawRectangle(borderColorPen, aRectF.Left, aRectF.Top, aRectF.Width, aRectF.Height)
+					'		End Using
+					'	End If
+				End If
+
+				g.ResetClip()
 			End Using
 		Finally
 			Win32Api.ReleaseDC(Me.Handle, hDC)
 		End Try
+
 		m.Result = IntPtr.Zero
 	End Sub
 
@@ -398,11 +1071,11 @@ Public Class RichTextBoxEx
 #Region "Child Widget Event Handlers"
 
 	Private Sub HorizontalScrollbar_ValueChanged(ByVal sender As Object, ByVal e As ScrollValueEventArgs) Handles HorizontalScrollbar.ValueChanged
-		Me.UpdateScrolling(e.Value, 0)
+		Me.UpdateScrolling(e.Value, Me.VerticalScrollbar.Value)
 	End Sub
 
 	Private Sub VerticalScrollBar_ValueChanged(ByVal sender As Object, ByVal e As ScrollValueEventArgs) Handles VerticalScrollbar.ValueChanged
-		Me.UpdateScrolling(0, e.Value)
+		Me.UpdateScrolling(Me.HorizontalScrollbar.Value, e.Value)
 	End Sub
 
 #Region "ContextMenu Event Handlers"
@@ -457,9 +1130,83 @@ Public Class RichTextBoxEx
 
 #Region "Core Event Handlers"
 
+	Private Sub AppSettings_PropertyChanged(ByVal sender As Object, ByVal e As System.ComponentModel.PropertyChangedEventArgs)
+		If e.PropertyName = "AppThemeName" Then
+			Me.UpdateTheme()
+			Me.Refresh()
+		End If
+	End Sub
+
 #End Region
 
 #Region "Private Methods"
+
+	Private Sub UpdateTheme()
+		Dim theme As RichTextBoxTheme = Nothing
+		' This check prevents problems with viewing and saving Forms in VS Designer.
+		If TheApp IsNot Nothing Then
+			theme = TheApp.Settings.SelectedAppTheme.RichTextBoxTheme
+		End If
+		If theme IsNot Nothing Then
+			If Me.theWidgetIsEnabled Then
+				Me.ForeColor = theme.EnabledForeColor
+				Me.BackColor = theme.EnabledBackColor
+				If MyBase.[ReadOnly] Then
+					Me.ForeColor = theme.ReadOnlyForeColor
+					Me.BackColor = theme.ReadOnlyBackColor
+				End If
+			Else
+				Me.ForeColor = theme.DisabledForeColor
+				Me.BackColor = theme.DisabledBackColor
+			End If
+
+			'Me.SelectionColor = theme.SelectedForeColor
+			'Me.SelectionBackColor = theme.SelectedBackColor
+			Me.SelectionLength = 0
+
+			'NOTE: Disable to use custom.
+			Me.BorderStyle = BorderStyle.None
+			MyBase.ScrollBars = RichTextBoxScrollBars.None
+
+			'Me.SetStyle(ControlStyles.AllPaintingInWmPaint, True)
+			'Me.SetStyle(ControlStyles.DoubleBuffer, True)
+			'Me.SetStyle(ControlStyles.UserPaint, True)
+		Else
+			Me.ForeColor = SystemColors.WindowText
+			If MyBase.[ReadOnly] Then
+				Me.BackColor = SystemColors.Control
+			Else
+				Me.BackColor = SystemColors.Window
+			End If
+
+			' Draw background here because the OnPaintBackground will not be called. 
+			Dim hDC As IntPtr = Win32Api.GetWindowDC(Me.Handle)
+			Try
+				Using g As Graphics = Graphics.FromHdc(hDC)
+					Using backColorBrush As New SolidBrush(Me.BackColor)
+						Dim aRect As Rectangle = Me.ClientRectangle
+						g.FillRectangle(backColorBrush, aRect)
+					End Using
+				End Using
+			Finally
+				Win32Api.ReleaseDC(Me.Handle, hDC)
+			End Try
+
+			'If Me.theControlIsBehavingAsMultiLine Then
+			'	'MyBase.BorderStyle = BorderStyle.None
+			'	MyBase.ScrollBars = RichTextBoxScrollBars.Both
+			'End If
+
+			'Me.SetStyle(ControlStyles.AllPaintingInWmPaint, False)
+			'Me.SetStyle(ControlStyles.DoubleBuffer, False)
+			'Me.SetStyle(ControlStyles.UserPaint, False)
+		End If
+
+		Me.Font = Me.theOriginalFont
+
+		'NOTE: Raise the OnNonClientCalcSize and OnNonClientPaint "events".
+		Win32Api.SetWindowPos(Me.Handle, IntPtr.Zero, 0, 0, 0, 0, Win32Api.SWP.SWP_FRAMECHANGED Or Win32Api.SWP.SWP_NOMOVE Or Win32Api.SWP.SWP_NOSIZE Or Win32Api.SWP.SWP_NOZORDER)
+	End Sub
 
 	Private Function GetContentWidthWithNoWordWrap() As Integer
 		Dim contentWidth As Integer = 0
@@ -500,20 +1247,23 @@ Public Class RichTextBoxEx
 		Return contentWidth
 	End Function
 
-	'NOTE: Me.Padding is unused by the underlying RichTextBox, but using it in this widget.
-	Private Sub UpdatePadding()
-		Dim left As Integer = 2
-		Dim top As Integer = 2
-		Dim right As Integer = 2
-		Dim bottom As Integer = 2
+	Private Sub UpdateNonClientPadding()
+		Dim left As Integer = 0
+		Dim top As Integer = 0
+		Dim right As Integer = 0
+		Dim bottom As Integer = 0
 		Dim textSize As Size = TextRenderer.MeasureText("Wy", Me.theOriginalFont)
 
-		If Not Me.theControlIsBehavingAsMultiLine Then
-			'Me.Padding = New Padding(2, CInt(Me.Height * 0.5 - textSize.Height * 0.5), 2, 2)
-			top = CInt(Me.Height * 0.5 - textSize.Height * 0.5)
-		Else
+		'If Not Me.theControlIsBehavingAsMultiLine Then
+		'	top = CInt(Me.Height * 0.5 - textSize.Height * 0.5)
+		'Else
+		If Me.theControlIsBehavingAsMultiLine Then
+			left = 2
+			top = 2
+			right = 2
+			bottom = 2
+
 			If Not Me.WordWrap Then
-				'If Not Me.theControlIsWordWrapping Then
 				Dim contentWidth As Integer = Me.GetContentWidthWithNoWordWrap()
 				If contentWidth > Me.ClientRectangle.Width Then
 					bottom += ScrollBarEx.Consts.ScrollBarSize
@@ -523,21 +1273,43 @@ Public Class RichTextBoxEx
 			Dim lineCount As Integer = Me.GetLineFromCharIndex(Me.TextLength - 1) + 1
 			Dim contentHeight As Integer = lineCount * textSize.Height
 			If contentHeight > Me.ClientRectangle.Height Then
-				'Me.Padding = New Padding(2, 2, 2 + ScrollBarEx.Consts.ScrollBarSize, 2)
 				right += ScrollBarEx.Consts.ScrollBarSize
-				'Else
-				'	Me.Padding = New Padding(2, 2, 2, 2)
 			End If
 		End If
 
-		Me.Padding = New Padding(left, top, right, bottom)
+		Dim theme As RichTextBoxTheme = Nothing
+		If TheApp IsNot Nothing Then
+			theme = TheApp.Settings.SelectedAppTheme.RichTextBoxTheme
+		End If
+		If theme IsNot Nothing Then
+			Dim borderWidth As Integer
+			If Me.theWidgetIsEnabled Then
+				If Me.Focused Then
+					borderWidth = theme.FocusBorderWidth
+				Else
+					borderWidth = theme.EnabledBorderWidth
+				End If
+			Else
+				borderWidth = theme.DisabledBorderWidth
+			End If
+			left += borderWidth
+			top += borderWidth
+			right += borderWidth
+			bottom += borderWidth
+		End If
+
+		If Not Me.theControlIsBehavingAsMultiLine Then
+			top = CInt(Me.Height * 0.5 - textSize.Height * 0.5)
+		End If
+
+		Me.NonClientPadding = New Padding(left, top, right, bottom)
 	End Sub
 
 	Private Sub ResizeClientRect(ByVal padding As Padding, ByRef rect As Win32Api.RECT)
-		rect.Left += Me.Padding.Left
-		rect.Top += Me.Padding.Top
-		rect.Right -= Me.Padding.Right
-		rect.Bottom -= Me.Padding.Bottom
+		rect.Left += padding.Left
+		rect.Top += padding.Top
+		rect.Right -= padding.Right
+		rect.Bottom -= padding.Bottom
 	End Sub
 
 	Private Sub UpdateScrolling(ByVal leftOrRightValue As Integer, ByVal upOrDownValue As Integer)
@@ -556,16 +1328,14 @@ Public Class RichTextBoxEx
 		Me.UpdateVerticalScrollbar()
 
 		If Me.HorizontalScrollbar.Visible AndAlso Me.VerticalScrollbar.Visible Then
-			Me.HorizontalScrollbar.Size = New System.Drawing.Size(Me.Width - ScrollBarEx.Consts.ScrollBarSize, ScrollBarEx.Consts.ScrollBarSize)
-			Me.VerticalScrollbar.Size = New System.Drawing.Size(ScrollBarEx.Consts.ScrollBarSize, Me.Height - ScrollBarEx.Consts.ScrollBarSize)
+			Me.HorizontalScrollbar.Size = New System.Drawing.Size(Me.Width - 2 - ScrollBarEx.Consts.ScrollBarSize, ScrollBarEx.Consts.ScrollBarSize)
+			Me.VerticalScrollbar.Size = New System.Drawing.Size(ScrollBarEx.Consts.ScrollBarSize, Me.Height - 2 - ScrollBarEx.Consts.ScrollBarSize)
 		End If
 	End Sub
 
 	Private Sub UpdateHorizontalScrollbar()
 		'NOTE: Parent can be Nothing on exiting. Prevent the exception with this check.
 		If Not Me.theScrollingIsActive AndAlso Not Me.WordWrap AndAlso Me.theControlIsBehavingAsMultiLine AndAlso Me.Parent IsNot Nothing Then
-			'If Not Me.theScrollingIsActive AndAlso Not Me.theControlIsWordWrapping AndAlso Me.HorizontalScrollbar.Created AndAlso Me.Parent IsNot Nothing AndAlso Me.Parent.Created Then
-			'Me.theLineCount = lineCount
 			Dim contentWidth As Integer = Me.GetContentWidthWithNoWordWrap()
 			If contentWidth > Me.ClientRectangle.Width Then
 				Me.theScrollingIsActive = True
@@ -580,17 +1350,22 @@ Public Class RichTextBoxEx
 				Me.HorizontalScrollbar.SmallChange = textSizeForCharWidth.Width
 				Me.HorizontalScrollbar.LargeChange = Me.Width - textSizeForCharWidth.Width * 2
 
-				Me.HorizontalScrollbar.Show()
+				'Me.HorizontalScrollbar.Show()
 
-				Me.HorizontalScrollbar.Size = New System.Drawing.Size(Me.Width, ScrollBarEx.Consts.ScrollBarSize)
 				'NOTE: Assign to Parent so it can draw over non-client area of RichTextBoxEx.
 				Me.HorizontalScrollbar.Parent = Me.Parent
 				Me.HorizontalScrollbar.BringToFront()
 				'NOTE: Location must be relative to Parent.
-				Dim aPoint As New Point(Me.ClientRectangle.Left - Me.Padding.Left, Me.ClientRectangle.Height + Me.Padding.Top)
+				'Dim aPoint As New Point(Me.ClientRectangle.Left - Me.NonClientPadding.Left, Me.ClientRectangle.Height + Me.NonClientPadding.Top)
+				'Dim aPoint As New Point(Me.ClientRectangle.Left - 1, Me.ClientRectangle.Height + 1)
+				Dim aPoint As New Point(Me.ClientRectangle.Left, Me.ClientRectangle.Height)
 				aPoint = Me.PointToScreen(aPoint)
-				aPoint = Me.Parent.PointToClient(aPoint)
+				aPoint = Me.HorizontalScrollbar.Parent.PointToClient(aPoint)
 				Me.HorizontalScrollbar.Location = aPoint
+				'Me.HorizontalScrollbar.Size = New System.Drawing.Size(Me.Width - 2, ScrollBarEx.Consts.ScrollBarSize)
+				Me.HorizontalScrollbar.Size = New System.Drawing.Size(Me.ClientRectangle.Width, ScrollBarEx.Consts.ScrollBarSize)
+
+				Me.HorizontalScrollbar.Show()
 
 				Me.theScrollingIsActive = False
 			Else
@@ -621,17 +1396,19 @@ Public Class RichTextBoxEx
 				Me.VerticalScrollbar.SmallChange = textSize.Height
 				Me.VerticalScrollbar.LargeChange = Me.Height - textSize.Height * 2
 
-				Me.VerticalScrollbar.Show()
-
-				Me.VerticalScrollbar.Size = New System.Drawing.Size(ScrollBarEx.Consts.ScrollBarSize, Me.Height)
-				'NOTE: Assign to Parent so it can draw over non-client area of RichTextBoxEx.
+				'NOTE: Assign to Parent so it can draw over non-client area.
 				Me.VerticalScrollbar.Parent = Me.Parent
 				Me.VerticalScrollbar.BringToFront()
 				'NOTE: Location must be relative to Parent.
-				Dim aPoint As New Point(Me.ClientRectangle.Width + Me.Padding.Left, Me.ClientRectangle.Top - Me.Padding.Top)
+				'Dim aPoint As New Point(Me.ClientRectangle.Width + Me.NonClientPadding.Left, Me.ClientRectangle.Top - Me.NonClientPadding.Top)
+				'Dim aPoint As New Point(Me.ClientRectangle.Width + 1, Me.ClientRectangle.Top - 1)
+				Dim aPoint As New Point(Me.ClientRectangle.Width, Me.ClientRectangle.Top)
 				aPoint = Me.PointToScreen(aPoint)
-				aPoint = Me.Parent.PointToClient(aPoint)
+				aPoint = Me.VerticalScrollbar.Parent.PointToClient(aPoint)
 				Me.VerticalScrollbar.Location = aPoint
+				'Me.VerticalScrollbar.Size = New System.Drawing.Size(ScrollBarEx.Consts.ScrollBarSize, Me.Height - 2)
+				Me.VerticalScrollbar.Size = New System.Drawing.Size(ScrollBarEx.Consts.ScrollBarSize, Me.ClientRectangle.Height)
+				Me.VerticalScrollbar.Show()
 
 				Me.theScrollingIsActive = False
 			Else
@@ -644,10 +1421,12 @@ Public Class RichTextBoxEx
 
 #Region "Data"
 
-	Private theBorderStyle As BorderStyle
+	Private NonClientPadding As Padding
+
+	Private theWidgetIsEnabled As Boolean
 	Private theControlIsBehavingAsMultiLine As Boolean
+	Private theSelectionIsEnabled As Boolean
 	Private theScrollBars As RichTextBoxScrollBars
-	'Private theControlIsWordWrapping As Boolean
 
 	Private WithEvents CustomMenu As ContextMenuStrip
 
@@ -663,16 +1442,17 @@ Public Class RichTextBoxEx
 	Private WithEvents CopyAllToolStripMenuItem As New ToolStripMenuItem("Copy A&ll")
 
 	Private theControlHasShown As Boolean
+	Private theTextFormatFlags As TextFormatFlags
 	Private theCueBannerText As String
 	Private theOriginalFont As Font
 	Private theTextAlignment As HorizontalAlignment
-
-	Private thePaddingColor As Color
 
 	Private WithEvents HorizontalScrollbar As ScrollBarEx
 	Private WithEvents VerticalScrollbar As ScrollBarEx
 	Private theLineCount As Integer
 	Private theScrollingIsActive As Boolean
+
+	'Private theTestColorIsBlue As Boolean
 
 #End Region
 

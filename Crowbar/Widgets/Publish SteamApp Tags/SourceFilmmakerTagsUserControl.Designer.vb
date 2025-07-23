@@ -22,14 +22,13 @@ Partial Class SourceFilmmakerTagsUserControl
 	'Do not modify it using the code editor.
 	<System.Diagnostics.DebuggerStepThrough()> _
 	Private Sub InitializeComponent()
-		Me.ComboBox1 = New ComboBoxEx()
-		Me.ComboBox2 = New ComboBoxEx()
-		Me.ComboBox3 = New ComboBoxEx()
+		Me.ComboBox1 = New ComboUserControl()
+		Me.ComboBox2 = New ComboUserControl()
+		Me.ComboBox3 = New ComboUserControl()
 		Me.SuspendLayout()
 		'
 		'ComboBox1
 		'
-		Me.ComboBox1.FormattingEnabled = True
 		Me.ComboBox1.Location = New System.Drawing.Point(3, 3)
 		Me.ComboBox1.Name = "ComboBox1"
 		Me.ComboBox1.Size = New System.Drawing.Size(121, 21)
@@ -37,7 +36,6 @@ Partial Class SourceFilmmakerTagsUserControl
 		'
 		'ComboBox2
 		'
-		Me.ComboBox2.FormattingEnabled = True
 		Me.ComboBox2.Location = New System.Drawing.Point(3, 30)
 		Me.ComboBox2.Name = "ComboBox2"
 		Me.ComboBox2.Size = New System.Drawing.Size(121, 21)
@@ -45,7 +43,6 @@ Partial Class SourceFilmmakerTagsUserControl
 		'
 		'ComboBox3
 		'
-		Me.ComboBox3.FormattingEnabled = True
 		Me.ComboBox3.Location = New System.Drawing.Point(3, 57)
 		Me.ComboBox3.Name = "ComboBox3"
 		Me.ComboBox3.Size = New System.Drawing.Size(121, 21)
@@ -64,7 +61,7 @@ Partial Class SourceFilmmakerTagsUserControl
 
 	End Sub
 
-	Friend WithEvents ComboBox1 As ComboBoxEx
-	Friend WithEvents ComboBox2 As ComboBoxEx
-	Friend WithEvents ComboBox3 As ComboBoxEx
+	Friend WithEvents ComboBox1 As ComboUserControl
+	Friend WithEvents ComboBox2 As ComboUserControl
+	Friend WithEvents ComboBox3 As ComboUserControl
 End Class

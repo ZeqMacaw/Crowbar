@@ -1037,16 +1037,17 @@ Public Class SourceSmdFile10
 				'	if (v < -Q_PI)
 				'		v += Q_PI * 2;
 				'	value[n] = v / bonetable[j].rotscale[k-3]; 
-				v1 = animValues(animValueIndex + k + 1).value * scale + adjustment
+				v1 = animValues(animValueIndex + k + 1).value
 			Else
 				'NOTE: The animValues index needs to be offset from current animValues index to match the C++ code above in comment.
-				v1 = animValues(animValueIndex + animValues(animValueIndex).valid).value * scale + adjustment
+				v1 = animValues(animValueIndex + animValues(animValueIndex).valid).value
 			End If
 		Catch ex As Exception
 			Dim debug As Integer = 4242
 		End Try
 
-		Return v1
+		Console.Write(v1)
+		Return v1 * scale + adjustment
 	End Function
 
 #End Region

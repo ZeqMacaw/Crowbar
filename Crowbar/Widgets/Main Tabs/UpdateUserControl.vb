@@ -16,11 +16,31 @@ Public Class UpdateUserControl
 		Me.theUpdater = New Updater()
 	End Sub
 
+	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
+		Try
+			If disposing Then
+				Me.Free()
+				If components IsNot Nothing Then
+					components.Dispose()
+				End If
+			End If
+		Finally
+			MyBase.Dispose(disposing)
+		End Try
+	End Sub
+
 #End Region
 
 #Region "Init and Free"
 
 	Protected Overrides Sub Init()
+		MyBase.Init()
+
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If TheApp Is Nothing Then
+			Exit Sub
+		End If
+
 		Me.DownloadFolderTextBox.DataBindings.Add("Text", TheApp.Settings, "UpdateDownloadPath", False, DataSourceUpdateMode.OnValidation)
 
 		Me.UpdateToNewPathCheckBox.DataBindings.Add("Checked", TheApp.Settings, "UpdateUpdateToNewPathIsChecked", False, DataSourceUpdateMode.OnPropertyChanged)
@@ -33,17 +53,23 @@ Public Class UpdateUserControl
 		Me.CurrentVersionLabel.Text = "Current Version: " + My.Application.Info.Version.ToString(2)
 	End Sub
 
-	' Do not need Free() because this widget is destroyed only on program exit.
-	'Protected Overrides Sub Free()
-	'	RemoveHandler Me.DownloadFolderTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
-	'	RemoveHandler Me.UpdateFolderTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+	Protected Overrides Sub Free()
+		MyBase.Free()
 
-	'	Me.DownloadFolderTextBox.DataBindings.Clear()
+		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
+		If Not Me.InitHasBeenCalled OrElse TheApp Is Nothing Then
+			Exit Sub
+		End If
 
-	'	Me.UpdateToNewPathCheckBox.DataBindings.Clear()
-	'	Me.UpdateFolderTextBox.DataBindings.Clear()
-	'	Me.UpdateCopySettingsCheckBox.DataBindings.Clear()
-	'End Sub
+		RemoveHandler Me.DownloadFolderTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+		RemoveHandler Me.UpdateFolderTextBox.DataBindings("Text").Parse, AddressOf FileManager.ParsePathFileName
+
+		Me.DownloadFolderTextBox.DataBindings.Clear()
+
+		Me.UpdateToNewPathCheckBox.DataBindings.Clear()
+		Me.UpdateFolderTextBox.DataBindings.Clear()
+		Me.UpdateCopySettingsCheckBox.DataBindings.Clear()
+	End Sub
 
 #End Region
 
@@ -70,18 +96,17 @@ Public Class UpdateUserControl
 
 #Region "Widget Event Handlers"
 
-	'Private Sub UpdateUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-	'	If Not Me.DesignMode Then
-	'		Me.Init()
-	'	End If
-	'End Sub
-
-	Private Sub UpdateUserControl_Resize(sender As Object, e As EventArgs) Handles Me.Resize
+	Private Sub UpdateUserControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 		'NOTE: This code prevents Visual Studio or Windows often inexplicably extending the right side of these widgets.
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DownloadFolderTextBox, Me.BrowseForDownloadFolderButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.DownloadProgressBarEx, Me.CancelDownloadButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.UpdateFolderTextBox, Me.BrowseForUpdateFolderButton)
 		Workarounds.WorkaroundForFrameworkAnchorRightSizingBug(Me.UpdateProgressBarEx, Me.CancelUpdateButton)
+
+		' [04-Feb-2026] Me.DesignMode is unreliable in nested widgets.
+		'If Not Me.DesignMode Then
+		Me.Init()
+		'End If
 	End Sub
 
 #End Region
