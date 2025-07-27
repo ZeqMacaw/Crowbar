@@ -413,13 +413,22 @@ Public Class SourceSmdFile52
 								aFrameLine.rotation = MathModule.ToEulerAngles(aBoneConstantInfo.theConstantRawRot.quaternion)
 								aFrameLine.rotation.debug_text = "RAWROT"
 							End If
-							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWPOS) > 0 Then
-								aFrameLine.position.x = aBoneConstantInfo.theConstantRawPos.x
-								aFrameLine.position.y = aBoneConstantInfo.theConstantRawPos.y
-								aFrameLine.position.z = aBoneConstantInfo.theConstantRawPos.z
-								aFrameLine.position.debug_text = "RAWPOS"
+
+							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_FULLANIM) > 0 Then
+								If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWPOS) > 0 Then
+									aFrameLine.position.x = aBoneConstantInfo.theConstantPosition2.x
+									aFrameLine.position.y = aBoneConstantInfo.theConstantPosition2.y
+									aFrameLine.position.z = aBoneConstantInfo.theConstantPosition2.z
+									aFrameLine.position.debug_text = "FULLRAWPOS"
+								End If
+							Else
+								If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWPOS) > 0 Then
+									aFrameLine.position.x = aBoneConstantInfo.theConstantRawPos.x
+									aFrameLine.position.y = aBoneConstantInfo.theConstantRawPos.y
+									aFrameLine.position.z = aBoneConstantInfo.theConstantRawPos.z
+									aFrameLine.position.debug_text = "RAWPOS"
+								End If
 							End If
-							' Scale would be read after this but we cannot use it
 						End If
 						If aSectionOfAnimation.theBoneFrameDataInfos IsNot Nothing Then
 							aBoneFrameDataInfo = aSectionOfAnimation.theBoneFrameDataInfos(sectionFrameIndex)(boneIndex)
@@ -427,13 +436,23 @@ Public Class SourceSmdFile52
 								aFrameLine.rotation = MathModule.ToEulerAngles(aBoneFrameDataInfo.theAnimRotation.quaternion)
 								aFrameLine.rotation.debug_text = "ANIMROT"
 							End If
-							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMPOS) > 0 Then
-								aFrameLine.position.x = aBoneFrameDataInfo.theAnimPosition.x
-								aFrameLine.position.y = aBoneFrameDataInfo.theAnimPosition.y
-								aFrameLine.position.z = aBoneFrameDataInfo.theAnimPosition.z
-								aFrameLine.position.debug_text = "ANIMPOS"
+
+							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_FULLANIM) > 0 Then
+								If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMPOS) > 0 Then
+									aFrameLine.position.x = aBoneFrameDataInfo.theFullAnimPosition.x
+									aFrameLine.position.y = aBoneFrameDataInfo.theFullAnimPosition.y
+									aFrameLine.position.z = aBoneFrameDataInfo.theFullAnimPosition.z
+									aFrameLine.position.debug_text = "FULLANIMPOS"
+								End If
+							Else
+								If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMPOS) > 0 Then
+									aFrameLine.position.x = aBoneFrameDataInfo.theAnimPosition.x
+									aFrameLine.position.y = aBoneFrameDataInfo.theAnimPosition.y
+									aFrameLine.position.z = aBoneFrameDataInfo.theAnimPosition.z
+									aFrameLine.position.debug_text = "ANIMPOS"
+								End If
 							End If
-							' Scale would be read after this but we cannot use it
+
 						End If
 					Next
 				Else

@@ -1328,8 +1328,8 @@ Public Class SourceMdlFile52
 			aSectionOfAnimation.constantsOffset = Me.theInputFileReader.ReadInt32()
 			aSectionOfAnimation.frameOffset = Me.theInputFileReader.ReadInt32()
 			aSectionOfAnimation.frameLength = Me.theInputFileReader.ReadInt32()
-			aSectionOfAnimation.oldBoneFlags = Me.theInputFileReader.ReadInt32()
-			aSectionOfAnimation.unkDataIndex = Me.theInputFileReader.ReadInt32()
+			aSectionOfAnimation.fixedOldBoneFlags = Me.theInputFileReader.ReadInt32()
+			aSectionOfAnimation.boneLookupTableOffset = Me.theInputFileReader.ReadInt32()
 			aSectionOfAnimation.unused = Me.theInputFileReader.ReadInt32()
 
 			fileOffsetEnd = Me.theInputFileReader.BaseStream.Position - 1
@@ -1342,12 +1342,7 @@ Public Class SourceMdlFile52
 				boneFlag = Me.theInputFileReader.ReadByte()
 				aSectionOfAnimation.theBoneFlags.Add(boneFlag)
 
-				'DEBUG:
-				'If (boneFlag And &H20) > 0 Then
-				'	'TODO: Titanfall models get here.
-				'	Dim unknownFlagIsUsed As Integer = 4242
-				'End If
-				If boneFlag > &HFF Then
+				If boneFlag > &H7F Then
 					Dim unknownFlagIsUsed As Integer = 4242
 				End If
 			Next
@@ -1410,17 +1405,34 @@ Public Class SourceMdlFile52
 						aBoneConstantInfo.theConstantRawRot.theYInput = Me.theInputFileReader.ReadUInt16()
 						aBoneConstantInfo.theConstantRawRot.theZWInput = Me.theInputFileReader.ReadUInt16()
 					End If
-					If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWPOS) > 0 Then
-						aBoneConstantInfo.theConstantRawPos = New SourceVector48bits()
-						aBoneConstantInfo.theConstantRawPos.theXInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
-						aBoneConstantInfo.theConstantRawPos.theYInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
-						aBoneConstantInfo.theConstantRawPos.theZInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
-					End If
-					' just read these because we can't really use it
-					If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWSCALE) > 0 Then
-						Me.theInputFileReader.ReadUInt16()
-						Me.theInputFileReader.ReadUInt16()
-						Me.theInputFileReader.ReadUInt16()
+
+					' check if using full size vectors
+					If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_FULLANIM) > 0 Then
+						If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWPOS) > 0 Then
+							aBoneConstantInfo.theConstantPosition2 = New SourceVector()
+							aBoneConstantInfo.theConstantPosition2.x = Me.theInputFileReader.ReadSingle()
+							aBoneConstantInfo.theConstantPosition2.y = Me.theInputFileReader.ReadSingle()
+							aBoneConstantInfo.theConstantPosition2.z = Me.theInputFileReader.ReadSingle()
+						End If
+						' just read these because we can't really use it
+						If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWSCALE) > 0 Then
+							Me.theInputFileReader.ReadSingle()
+							Me.theInputFileReader.ReadSingle()
+							Me.theInputFileReader.ReadSingle()
+						End If
+					Else
+						If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWPOS) > 0 Then
+							aBoneConstantInfo.theConstantRawPos = New SourceVector48bits()
+							aBoneConstantInfo.theConstantRawPos.theXInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+							aBoneConstantInfo.theConstantRawPos.theYInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+							aBoneConstantInfo.theConstantRawPos.theZInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+						End If
+						' just read these because we can't really use it
+						If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWSCALE) > 0 Then
+							Me.theInputFileReader.ReadUInt16()
+							Me.theInputFileReader.ReadUInt16()
+							Me.theInputFileReader.ReadUInt16()
+						End If
 					End If
 				Next
 
@@ -1465,17 +1477,34 @@ Public Class SourceMdlFile52
 							aBoneFrameDataInfo.theAnimRotation.theYInput = Me.theInputFileReader.ReadUInt16()
 							aBoneFrameDataInfo.theAnimRotation.theZWInput = Me.theInputFileReader.ReadUInt16()
 						End If
-						If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMPOS) > 0 Then
-							aBoneFrameDataInfo.theAnimPosition = New SourceVector48bits()
-							aBoneFrameDataInfo.theAnimPosition.theXInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
-							aBoneFrameDataInfo.theAnimPosition.theYInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
-							aBoneFrameDataInfo.theAnimPosition.theZInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
-						End If
-						' just read these because we can't really use it
-						If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMSCALE) > 0 Then
-							Me.theInputFileReader.ReadUInt16()
-							Me.theInputFileReader.ReadUInt16()
-							Me.theInputFileReader.ReadUInt16()
+
+						' check if using full size vectors
+						If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_FULLANIM) > 0 Then
+							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMPOS) > 0 Then
+								aBoneFrameDataInfo.theFullAnimPosition = New SourceVector()
+								aBoneFrameDataInfo.theFullAnimPosition.x = Me.theInputFileReader.ReadSingle()
+								aBoneFrameDataInfo.theFullAnimPosition.y = Me.theInputFileReader.ReadSingle()
+								aBoneFrameDataInfo.theFullAnimPosition.z = Me.theInputFileReader.ReadSingle()
+							End If
+							' just read these because we can't really use it
+							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMSCALE) > 0 Then
+								Me.theInputFileReader.ReadSingle()
+								Me.theInputFileReader.ReadSingle()
+								Me.theInputFileReader.ReadSingle()
+							End If
+						Else
+							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMPOS) > 0 Then
+								aBoneFrameDataInfo.theAnimPosition = New SourceVector48bits()
+								aBoneFrameDataInfo.theAnimPosition.theXInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+								aBoneFrameDataInfo.theAnimPosition.theYInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+								aBoneFrameDataInfo.theAnimPosition.theZInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
+							End If
+							' just read these because we can't really use it
+							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMSCALE) > 0 Then
+								Me.theInputFileReader.ReadUInt16()
+								Me.theInputFileReader.ReadUInt16()
+								Me.theInputFileReader.ReadUInt16()
+							End If
 						End If
 					Next
 
