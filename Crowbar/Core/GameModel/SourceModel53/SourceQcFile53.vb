@@ -1609,6 +1609,12 @@ Public Class SourceQcFile53
 			For i As Integer = 0 To Me.theMdlFileData.theAttachments.Count - 1
 				Dim anAttachment As SourceMdlAttachment
 				anAttachment = Me.theMdlFileData.theAttachments(i)
+
+				' Do not write an attachment line for the $illumposition attachment.
+				If i = Me.theMdlFileData.illumPositionAttachmentIndex - 1 Then
+					Continue For
+				End If
+
 				If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
 					line = "$Attachment "
 				Else
@@ -1940,10 +1946,31 @@ Public Class SourceQcFile53
 		Dim offsetX As Double
 		Dim offsetY As Double
 		Dim offsetZ As Double
+		Dim illumPosBoneName As String = ""
 
-		offsetX = Math.Round(Me.theMdlFileData.illuminationPosition.y, 3)
-		offsetY = -Math.Round(Me.theMdlFileData.illuminationPosition.x, 3)
-		offsetZ = Math.Round(Me.theMdlFileData.illuminationPosition.z, 3)
+		If Me.theMdlFileData.illumPositionAttachmentIndex = 0 Then
+			'FROM: [48] SourceEngine2007_source se2007_src\src_main\utils\studiomdl\studiomdl.cpp Cmd_Illumposition()
+			'		g_illumpositionattachment = 0;
+			'		float flTemp = illumposition[0];
+			'		illumposition[0] = -illumposition[1];
+			'		illumposition[1] = flTemp;
+			offsetX = Math.Round(Me.theMdlFileData.illuminationPosition.y, 3)
+			offsetY = -Math.Round(Me.theMdlFileData.illuminationPosition.x, 3)
+			offsetZ = Math.Round(Me.theMdlFileData.illuminationPosition.z, 3)
+		Else
+			'FROM: [48] SourceEngine2007_source se2007_src\src_main\utils\studiomdl\studiomdl.cpp Cmd_Illumposition()
+			'		Q_strncpy( g_attachment[g_numattachments].name, "__illumPosition", sizeof(g_attachment[g_numattachments].name) );
+			'		Q_strncpy( g_attachment[g_numattachments].bonename, token, sizeof(g_attachment[g_numattachments].bonename) );
+			'		AngleMatrix( QAngle( 0, 0, 0 ), illumposition, g_attachment[g_numattachments].local );
+			'		g_attachment[g_numattachments].type |= IS_RIGID;
+			'		g_illumpositionattachment = g_numattachments + 1;
+			Dim illumPosAttachment As SourceMdlAttachment
+			illumPosAttachment = Me.theMdlFileData.theAttachments(Me.theMdlFileData.illumPositionAttachmentIndex - 1)
+			offsetX = Math.Round(illumPosAttachment.localM14, 2)
+			offsetY = Math.Round(illumPosAttachment.localM24, 2)
+			offsetZ = Math.Round(illumPosAttachment.localM34, 2)
+			illumPosBoneName = Me.theMdlFileData.theBones(illumPosAttachment.localBoneIndex).theName
+		End If
 
 		line = ""
 		Me.theOutputFileStreamWriter.WriteLine(line)
@@ -1959,6 +1986,11 @@ Public Class SourceQcFile53
 		line += offsetY.ToString("0.######", TheApp.InternalNumberFormat)
 		line += " "
 		line += offsetZ.ToString("0.######", TheApp.InternalNumberFormat)
+		If illumPosBoneName <> "" Then
+			line += " """
+			line += illumPosBoneName
+			line += """"
+		End If
 		Me.theOutputFileStreamWriter.WriteLine(line)
 	End Sub
 
