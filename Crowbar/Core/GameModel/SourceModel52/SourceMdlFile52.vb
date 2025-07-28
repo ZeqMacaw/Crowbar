@@ -1399,15 +1399,13 @@ Public Class SourceMdlFile52
 					aSectionOfAnimation.theBoneConstantInfos.Add(aBoneConstantInfo)
 
 					boneFlag = aSectionOfAnimation.theBoneFlags(boneIndex)
-					If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWROT) > 0 Then
-						aBoneConstantInfo.theConstantRawRot = New SourceQuaternion48bits()
-						aBoneConstantInfo.theConstantRawRot.theXInput = Me.theInputFileReader.ReadUInt16()
-						aBoneConstantInfo.theConstantRawRot.theYInput = Me.theInputFileReader.ReadUInt16()
-						aBoneConstantInfo.theConstantRawRot.theZWInput = Me.theInputFileReader.ReadUInt16()
-					End If
 
 					' check if using full size vectors
 					If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_FULLANIM) > 0 Then
+						If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWROT) > 0 Then
+							aBoneConstantInfo.theConstantRotation2 = New SourceQuaternion48bitsViaBytes()
+							aBoneConstantInfo.theConstantRotation2.theBytes = Me.theInputFileReader.ReadBytes(6)
+						End If
 						If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWPOS) > 0 Then
 							aBoneConstantInfo.theConstantPosition2 = New SourceVector()
 							aBoneConstantInfo.theConstantPosition2.x = Me.theInputFileReader.ReadSingle()
@@ -1421,6 +1419,12 @@ Public Class SourceMdlFile52
 							Me.theInputFileReader.ReadSingle()
 						End If
 					Else
+						If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWROT) > 0 Then
+							aBoneConstantInfo.theConstantRawRot = New SourceQuaternion48bits()
+							aBoneConstantInfo.theConstantRawRot.theXInput = Me.theInputFileReader.ReadUInt16()
+							aBoneConstantInfo.theConstantRawRot.theYInput = Me.theInputFileReader.ReadUInt16()
+							aBoneConstantInfo.theConstantRawRot.theZWInput = Me.theInputFileReader.ReadUInt16()
+						End If
 						If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWPOS) > 0 Then
 							aBoneConstantInfo.theConstantRawPos = New SourceVector48bits()
 							aBoneConstantInfo.theConstantRawPos.theXInput.the16BitValue = Me.theInputFileReader.ReadUInt16()
@@ -1471,15 +1475,12 @@ Public Class SourceMdlFile52
 
 						boneFlag = aSectionOfAnimation.theBoneFlags(boneIndex)
 
-						If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMROT) > 0 Then
-							aBoneFrameDataInfo.theAnimRotation = New SourceQuaternion48bits()
-							aBoneFrameDataInfo.theAnimRotation.theXInput = Me.theInputFileReader.ReadUInt16()
-							aBoneFrameDataInfo.theAnimRotation.theYInput = Me.theInputFileReader.ReadUInt16()
-							aBoneFrameDataInfo.theAnimRotation.theZWInput = Me.theInputFileReader.ReadUInt16()
-						End If
-
 						' check if using full size vectors
 						If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_FULLANIM) > 0 Then
+							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMROT) > 0 Then
+								aBoneFrameDataInfo.theAnimRotationUnknown = New SourceQuaternion48bitsViaBytes()
+								aBoneFrameDataInfo.theAnimRotationUnknown.theBytes = Me.theInputFileReader.ReadBytes(6)
+							End If
 							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMPOS) > 0 Then
 								aBoneFrameDataInfo.theFullAnimPosition = New SourceVector()
 								aBoneFrameDataInfo.theFullAnimPosition.x = Me.theInputFileReader.ReadSingle()
@@ -1493,6 +1494,12 @@ Public Class SourceMdlFile52
 								Me.theInputFileReader.ReadSingle()
 							End If
 						Else
+							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMROT) > 0 Then
+								aBoneFrameDataInfo.theAnimRotation = New SourceQuaternion48bits()
+								aBoneFrameDataInfo.theAnimRotation.theXInput = Me.theInputFileReader.ReadUInt16()
+								aBoneFrameDataInfo.theAnimRotation.theYInput = Me.theInputFileReader.ReadUInt16()
+								aBoneFrameDataInfo.theAnimRotation.theZWInput = Me.theInputFileReader.ReadUInt16()
+							End If
 							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMPOS) > 0 Then
 								aBoneFrameDataInfo.theAnimPosition = New SourceVector48bits()
 								aBoneFrameDataInfo.theAnimPosition.theXInput.the16BitValue = Me.theInputFileReader.ReadUInt16()

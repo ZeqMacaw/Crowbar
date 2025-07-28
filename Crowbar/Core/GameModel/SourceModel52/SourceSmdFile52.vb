@@ -409,12 +409,12 @@ Public Class SourceSmdFile52
 						boneFlag = aSectionOfAnimation.theBoneFlags(boneIndex)
 						If aSectionOfAnimation.theBoneConstantInfos IsNot Nothing Then
 							aBoneConstantInfo = aSectionOfAnimation.theBoneConstantInfos(boneIndex)
-							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWROT) > 0 Then
-								aFrameLine.rotation = MathModule.ToEulerAngles(aBoneConstantInfo.theConstantRawRot.quaternion)
-								aFrameLine.rotation.debug_text = "RAWROT"
-							End If
 
 							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_FULLANIM) > 0 Then
+								If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWROT) > 0 Then
+									aFrameLine.rotation = MathModule.ToEulerAngles(aBoneConstantInfo.theConstantRotation2.quaternion)
+									aFrameLine.rotation.debug_text = "FULLRAWROT"
+								End If
 								If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWPOS) > 0 Then
 									aFrameLine.position.x = aBoneConstantInfo.theConstantPosition2.x
 									aFrameLine.position.y = aBoneConstantInfo.theConstantPosition2.y
@@ -422,6 +422,10 @@ Public Class SourceSmdFile52
 									aFrameLine.position.debug_text = "FULLRAWPOS"
 								End If
 							Else
+								If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWROT) > 0 Then
+									aFrameLine.rotation = MathModule.ToEulerAngles(aBoneConstantInfo.theConstantRawRot.quaternion)
+									aFrameLine.rotation.debug_text = "RAWROT"
+								End If
 								If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_RAWPOS) > 0 Then
 									aFrameLine.position.x = aBoneConstantInfo.theConstantRawPos.x
 									aFrameLine.position.y = aBoneConstantInfo.theConstantRawPos.y
@@ -432,12 +436,12 @@ Public Class SourceSmdFile52
 						End If
 						If aSectionOfAnimation.theBoneFrameDataInfos IsNot Nothing Then
 							aBoneFrameDataInfo = aSectionOfAnimation.theBoneFrameDataInfos(sectionFrameIndex)(boneIndex)
-							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMROT) > 0 Then
-								aFrameLine.rotation = MathModule.ToEulerAngles(aBoneFrameDataInfo.theAnimRotation.quaternion)
-								aFrameLine.rotation.debug_text = "ANIMROT"
-							End If
 
 							If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_FULLANIM) > 0 Then
+								If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMROT) > 0 Then
+									aFrameLine.rotation = MathModule.ToEulerAngles(aBoneFrameDataInfo.theAnimRotationUnknown.quaternion)
+									aFrameLine.rotation.debug_text = "FULLANIMROT"
+								End If
 								If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMPOS) > 0 Then
 									aFrameLine.position.x = aBoneFrameDataInfo.theFullAnimPosition.x
 									aFrameLine.position.y = aBoneFrameDataInfo.theFullAnimPosition.y
@@ -445,6 +449,10 @@ Public Class SourceSmdFile52
 									aFrameLine.position.debug_text = "FULLANIMPOS"
 								End If
 							Else
+								If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMROT) > 0 Then
+									aFrameLine.rotation = MathModule.ToEulerAngles(aBoneFrameDataInfo.theAnimRotation.quaternion)
+									aFrameLine.rotation.debug_text = "ANIMROT"
+								End If
 								If (boneFlag And SourceAniFrameAnim52.STUDIO_FRAME_ANIMPOS) > 0 Then
 									aFrameLine.position.x = aBoneFrameDataInfo.theAnimPosition.x
 									aFrameLine.position.y = aBoneFrameDataInfo.theAnimPosition.y
