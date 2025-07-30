@@ -3438,36 +3438,6 @@ Public Class SourceQcFile53
 					aParentBoneName = Me.theMdlFileData.theBones(aBone.parentBoneIndex).theName
 				End If
 
-				If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
-					line = "$DefineBone "
-				Else
-					line = "$definebone "
-				End If
-				line += """"
-				line += aBone.theName
-				line += """"
-				line += " "
-				line += """"
-				line += aParentBoneName
-				line += """"
-
-				line += " "
-				line += aBone.position.x.ToString("0.######", TheApp.InternalNumberFormat)
-				line += " "
-				line += aBone.position.y.ToString("0.######", TheApp.InternalNumberFormat)
-				line += " "
-				line += aBone.position.z.ToString("0.######", TheApp.InternalNumberFormat)
-
-				If Me.theMdlFileData.version = 2531 Then
-					line += " 0.000000 0.000000 0.000000"
-				Else
-					line += " "
-					line += MathModule.RadiansToDegrees(aBone.rotation.y).ToString("0.######", TheApp.InternalNumberFormat)
-					line += " "
-					line += MathModule.RadiansToDegrees(aBone.rotation.z).ToString("0.######", TheApp.InternalNumberFormat)
-					line += " "
-					line += MathModule.RadiansToDegrees(aBone.rotation.x).ToString("0.######", TheApp.InternalNumberFormat)
-				End If
 
 				'TODO: These fixups are all zeroes for now.
 				'      They might be found in the srcbonetransform list.
@@ -3506,6 +3476,63 @@ Public Class SourceQcFile53
 				'	AddToStringTable( &pSrcBoneTransform[bt], &pSrcBoneTransform[bt].sznameindex, g_bonetable[i].name );
 				'	++bt;
 				'}
+
+				' the fixup data gets parsed into srcRealign and srcRealign gets parsed into posttransform
+				aFixupPosition.x = 0
+				aFixupPosition.y = 0
+				aFixupPosition.z = 0
+				aFixupRotation.x = 0
+				aFixupRotation.y = 0
+				aFixupPosition.z = 0
+
+				If Me.theMdlFileData.theBoneTransforms IsNot Nothing Then
+
+					Dim aBoneTransform As SourceMdlBoneTransform
+
+					For j As Integer = 0 To Me.theMdlFileData.sourceBoneTransformCount - 1
+						aBoneTransform = Me.theMdlFileData.theBoneTransforms(j)
+
+						If String.Compare(aBoneTransform.theName, aBone.theName) = 0 Then
+							MathModule.MatrixAnglesInDegrees(aBoneTransform.postTransformColumn0, aBoneTransform.postTransformColumn1, aBoneTransform.postTransformColumn2, aBoneTransform.postTransformColumn3, aFixupRotation.x, aFixupRotation.y, aFixupRotation.z)
+							aFixupPosition.x = Math.Round(aBoneTransform.postTransformColumn3.x, 6)
+							aFixupPosition.y = Math.Round(aBoneTransform.postTransformColumn3.y, 6)
+							aFixupPosition.z = Math.Round(aBoneTransform.postTransformColumn3.z, 6)
+							Exit For
+						End If
+					Next
+
+				End If
+
+				If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+					line = "$DefineBone "
+				Else
+					line = "$definebone "
+				End If
+				line += """"
+				line += aBone.theName
+				line += """"
+				line += " "
+				line += """"
+				line += aParentBoneName
+				line += """"
+
+				line += " "
+				line += aBone.position.x.ToString("0.######", TheApp.InternalNumberFormat)
+				line += " "
+				line += aBone.position.y.ToString("0.######", TheApp.InternalNumberFormat)
+				line += " "
+				line += aBone.position.z.ToString("0.######", TheApp.InternalNumberFormat)
+
+				If Me.theMdlFileData.version = 2531 Then
+					line += " 0.000000 0.000000 0.000000"
+				Else
+					line += " "
+					line += MathModule.RadiansToDegrees(aBone.rotation.y).ToString("0.######", TheApp.InternalNumberFormat)
+					line += " "
+					line += MathModule.RadiansToDegrees(aBone.rotation.z).ToString("0.######", TheApp.InternalNumberFormat)
+					line += " "
+					line += MathModule.RadiansToDegrees(aBone.rotation.x).ToString("0.######", TheApp.InternalNumberFormat)
+				End If
 
 				line += " "
 				line += aFixupPosition.x.ToString("0.######", TheApp.InternalNumberFormat)
