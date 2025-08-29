@@ -1388,16 +1388,9 @@ Public Class SourceQcFile53
 				line = "$opaque"
 			End If
 			Me.theOutputFileStreamWriter.WriteLine(line)
-		ElseIf (Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_TRANSLUCENT_TWOPASS) > 0 Then
-			Me.theOutputFileStreamWriter.WriteLine()
-
-			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
-				line = "$MostlyOpaque"
-			Else
-				line = "$mostlyopaque"
-			End If
-			Me.theOutputFileStreamWriter.WriteLine(line)
 		End If
+
+		' STUDIOHDR_FLAGS_TRANSLUCENT_TWOPASS was removed in Titanfall 1, this data is now parsed from materials
 	End Sub
 
 	Public Sub WriteObsoleteCommand()
