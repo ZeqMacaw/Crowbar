@@ -1351,8 +1351,15 @@ Public Class SourceQcFile53
 				line += aPoseParamDesc.startingValue.ToString("0.######", TheApp.InternalNumberFormat)
 				line += " "
 				line += aPoseParamDesc.endingValue.ToString("0.######", TheApp.InternalNumberFormat)
-				line += " loop "
-				line += aPoseParamDesc.loopingRange.ToString("0.######", TheApp.InternalNumberFormat)
+
+				If (aPoseParamDesc.flags And SourceMdlAnimationDesc.STUDIO_LOOPING) > 0 Then
+					If (aPoseParamDesc.endingValue - aPoseParamDesc.startingValue) = aPoseParamDesc.loopingRange Then
+						line += " wrap"
+					Else
+						line += " loop "
+						line += aPoseParamDesc.loopingRange.ToString("0.######", TheApp.InternalNumberFormat)
+					End If
+				End If
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
 		End If
