@@ -1771,7 +1771,7 @@ Public Class SourceMdlFile53
 			Me.theInputFileReader.BaseStream.Seek(animInputFileStreamPosition + anAnimationDesc.frameMovementOffset, SeekOrigin.Begin)
 			fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-			anAnimationDesc.theFrameMovement = New RSourceMdlFrameMovement
+			anAnimationDesc.theFrameMovement = New SourceMdlFrameMovement52
 
 			For j As Integer = 0 To 3
 				anAnimationDesc.theFrameMovement.scale(j) = Me.theInputFileReader.ReadSingle()
@@ -3830,7 +3830,7 @@ Public Class SourceMdlFile53
 		Me.theInputFileReader.BaseStream.Seek(Me.theMdlFileData.perTriCollisionOffset, SeekOrigin.Begin)
 		fileOffsetStart = Me.theInputFileReader.BaseStream.Position
 
-		Dim theDetailedCollision As New RSourcePerTriCollisionHeader52
+		Dim theDetailedCollision As New SourcePerTriCollisionHeader52
 
 		theDetailedCollision.version = Me.theInputFileReader.ReadInt32()
 

@@ -1,4 +1,4 @@
-﻿Public Class RSourceMdlFrameMovement
+﻿Public Class SourceMdlFrameMovement52
     Public scale(3) As Single
     Public offset(3) As Short
 

@@ -590,7 +590,6 @@
 	Public theTexturePaths As List(Of String)
 	Public theTextures As List(Of SourceMdlTexture)
 	Public theMayaStrings As String
-	Public theDetailedCollision As RSourcePerTriCollisionHeader52
 
 	Public theSectionFrameCount As Integer
 	Public theSectionFrameMinFrameCount As Integer

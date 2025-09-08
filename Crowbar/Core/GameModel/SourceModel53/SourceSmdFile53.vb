@@ -535,7 +535,7 @@ Public Class SourceSmdFile53
 		End If
 	End Sub
 
-	Private Sub AdjustPositionAndRotationByPiecewiseMovement(ByVal frameIndex As Integer, ByVal boneIndex As Integer, ByVal movements As List(Of SourceMdlMovement), ByVal frameMovement As RSourceMdlFrameMovement, ByVal iPosition As SourceVector, ByVal iRotation As SourceVector, ByRef oPosition As SourceVector, ByRef oRotation As SourceVector)
+	Private Sub AdjustPositionAndRotationByPiecewiseMovement(ByVal frameIndex As Integer, ByVal boneIndex As Integer, ByVal movements As List(Of SourceMdlMovement), ByVal frameMovement As SourceMdlFrameMovement52, ByVal iPosition As SourceVector, ByVal iRotation As SourceVector, ByRef oPosition As SourceVector, ByRef oRotation As SourceVector)
 		Dim aBone As SourceMdlBone53
 		aBone = Me.theMdlFileData.theBones(boneIndex)
 
