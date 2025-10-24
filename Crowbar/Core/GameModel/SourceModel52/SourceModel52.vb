@@ -423,6 +423,7 @@ Public Class SourceModel52
 			phyFile.ReadSourcePhysCollisionModels()
 			phyFile.ReadSourcePhyRagdollConstraintDescs()
 			phyFile.ReadSourcePhyCollisionRules()
+			phyFile.ReadSourcePhyAnimatedFrictionSection()
 			phyFile.ReadSourcePhyEditParamsSection()
 			phyFile.ReadCollisionTextSection()
 		End If
