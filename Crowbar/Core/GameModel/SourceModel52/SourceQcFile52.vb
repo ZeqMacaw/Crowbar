@@ -1412,8 +1412,15 @@ Public Class SourceQcFile52
 				line += aPoseParamDesc.startingValue.ToString("0.######", TheApp.InternalNumberFormat)
 				line += " "
 				line += aPoseParamDesc.endingValue.ToString("0.######", TheApp.InternalNumberFormat)
-				line += " loop "
-				line += aPoseParamDesc.loopingRange.ToString("0.######", TheApp.InternalNumberFormat)
+
+				If (aPoseParamDesc.flags And SourceMdlAnimationDesc.STUDIO_LOOPING) > 0 Then
+					If (aPoseParamDesc.endingValue - aPoseParamDesc.startingValue) = aPoseParamDesc.loopingRange Then
+						line += " wrap"
+					Else
+						line += " loop "
+						line += aPoseParamDesc.loopingRange.ToString("0.######", TheApp.InternalNumberFormat)
+					End If
+				End If
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
 		End If
@@ -1449,16 +1456,9 @@ Public Class SourceQcFile52
 				line = "$opaque"
 			End If
 			Me.theOutputFileStreamWriter.WriteLine(line)
-		ElseIf (Me.theMdlFileData.flags And SourceMdlFileData.STUDIOHDR_FLAGS_TRANSLUCENT_TWOPASS) > 0 Then
-			Me.theOutputFileStreamWriter.WriteLine()
-
-			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
-				line = "$MostlyOpaque"
-			Else
-				line = "$mostlyopaque"
-			End If
-			Me.theOutputFileStreamWriter.WriteLine(line)
 		End If
+
+		' STUDIOHDR_FLAGS_TRANSLUCENT_TWOPASS was removed in Titanfall 1, this data is now parsed from materials
 	End Sub
 
 	Public Sub WriteObsoleteCommand()
@@ -1670,6 +1670,12 @@ Public Class SourceQcFile52
 			For i As Integer = 0 To Me.theMdlFileData.theAttachments.Count - 1
 				Dim anAttachment As SourceMdlAttachment
 				anAttachment = Me.theMdlFileData.theAttachments(i)
+
+				' Do not write an attachment line for the $illumposition attachment.
+				If i = Me.theMdlFileData.illumPositionAttachmentIndex - 1 Then
+					Continue For
+				End If
+
 				If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
 					line = "$Attachment "
 				Else
@@ -2001,10 +2007,31 @@ Public Class SourceQcFile52
 		Dim offsetX As Double
 		Dim offsetY As Double
 		Dim offsetZ As Double
+		Dim illumPosBoneName As String = ""
 
-		offsetX = Math.Round(Me.theMdlFileData.illuminationPosition.y, 3)
-		offsetY = -Math.Round(Me.theMdlFileData.illuminationPosition.x, 3)
-		offsetZ = Math.Round(Me.theMdlFileData.illuminationPosition.z, 3)
+		If Me.theMdlFileData.illumPositionAttachmentIndex = 0 Then
+			'FROM: [48] SourceEngine2007_source se2007_src\src_main\utils\studiomdl\studiomdl.cpp Cmd_Illumposition()
+			'		g_illumpositionattachment = 0;
+			'		float flTemp = illumposition[0];
+			'		illumposition[0] = -illumposition[1];
+			'		illumposition[1] = flTemp;
+			offsetX = Math.Round(Me.theMdlFileData.illuminationPosition.y, 3)
+			offsetY = -Math.Round(Me.theMdlFileData.illuminationPosition.x, 3)
+			offsetZ = Math.Round(Me.theMdlFileData.illuminationPosition.z, 3)
+		Else
+			'FROM: [48] SourceEngine2007_source se2007_src\src_main\utils\studiomdl\studiomdl.cpp Cmd_Illumposition()
+			'		Q_strncpy( g_attachment[g_numattachments].name, "__illumPosition", sizeof(g_attachment[g_numattachments].name) );
+			'		Q_strncpy( g_attachment[g_numattachments].bonename, token, sizeof(g_attachment[g_numattachments].bonename) );
+			'		AngleMatrix( QAngle( 0, 0, 0 ), illumposition, g_attachment[g_numattachments].local );
+			'		g_attachment[g_numattachments].type |= IS_RIGID;
+			'		g_illumpositionattachment = g_numattachments + 1;
+			Dim illumPosAttachment As SourceMdlAttachment
+			illumPosAttachment = Me.theMdlFileData.theAttachments(Me.theMdlFileData.illumPositionAttachmentIndex - 1)
+			offsetX = Math.Round(illumPosAttachment.localM14, 2)
+			offsetY = Math.Round(illumPosAttachment.localM24, 2)
+			offsetZ = Math.Round(illumPosAttachment.localM34, 2)
+			illumPosBoneName = Me.theMdlFileData.theBones(illumPosAttachment.localBoneIndex).theName
+		End If
 
 		line = ""
 		Me.theOutputFileStreamWriter.WriteLine(line)
@@ -2020,6 +2047,11 @@ Public Class SourceQcFile52
 		line += offsetY.ToString("0.######", TheApp.InternalNumberFormat)
 		line += " "
 		line += offsetZ.ToString("0.######", TheApp.InternalNumberFormat)
+		If illumPosBoneName <> "" Then
+			line += " """
+			line += illumPosBoneName
+			line += """"
+		End If
 		Me.theOutputFileStreamWriter.WriteLine(line)
 	End Sub
 
@@ -3448,6 +3480,22 @@ Public Class SourceQcFile52
 			line += Me.thePhyFileData.theSourcePhyMaxConvexPieces.ToString()
 			Me.theOutputFileStreamWriter.WriteLine(line)
 		End If
+
+		If Me.thePhyFileData.theSourcePhyAnimatedFrictionSection IsNot Nothing Then
+			line = vbTab
+			line += "$animatedfriction "
+			line += Me.thePhyFileData.theSourcePhyAnimatedFrictionSection.animFrictionTimeIn.ToString("0.######", TheApp.InternalNumberFormat)
+			line += " "
+			line += Me.thePhyFileData.theSourcePhyAnimatedFrictionSection.animFrictionTimeOut.ToString("0.######", TheApp.InternalNumberFormat)
+			line += " "
+			line += Me.thePhyFileData.theSourcePhyAnimatedFrictionSection.animFrictionTimeHold.ToString("0.######", TheApp.InternalNumberFormat)
+			line += " "
+			line += Me.thePhyFileData.theSourcePhyAnimatedFrictionSection.animFrictionMin.ToString("0.######", TheApp.InternalNumberFormat)
+			line += " "
+			line += Me.thePhyFileData.theSourcePhyAnimatedFrictionSection.animFrictionMax.ToString("0.######", TheApp.InternalNumberFormat)
+			Me.theOutputFileStreamWriter.WriteLine(line)
+		End If
+
 		If Me.thePhyFileData.theSourcePhyCollisionDatas.Count > 1 Then
 			For Each collisionData As SourcePhyCollisionData In Me.thePhyFileData.theSourcePhyCollisionDatas
 				If collisionData.theConvexMeshes.Count > 1 Then
@@ -3644,32 +3692,6 @@ Public Class SourceQcFile52
 					aParentBoneName = Me.theMdlFileData.theBones(aBone.parentBoneIndex).theName
 				End If
 
-				If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
-					line = "$DefineBone "
-				Else
-					line = "$definebone "
-				End If
-				line += """"
-				line += aBone.theName
-				line += """"
-				line += " "
-				line += """"
-				line += aParentBoneName
-				line += """"
-
-				line += " "
-				line += aBone.position.x.ToString("0.######", TheApp.InternalNumberFormat)
-				line += " "
-				line += aBone.position.y.ToString("0.######", TheApp.InternalNumberFormat)
-				line += " "
-				line += aBone.position.z.ToString("0.######", TheApp.InternalNumberFormat)
-
-				line += " "
-				line += MathModule.RadiansToDegrees(aBone.rotation.y).ToString("0.######", TheApp.InternalNumberFormat)
-				line += " "
-				line += MathModule.RadiansToDegrees(aBone.rotation.z).ToString("0.######", TheApp.InternalNumberFormat)
-				line += " "
-				line += MathModule.RadiansToDegrees(aBone.rotation.x).ToString("0.######", TheApp.InternalNumberFormat)
 
 				'TODO: These fixups are all zeroes for now.
 				'      They might be found in the srcbonetransform list.
@@ -3708,6 +3730,63 @@ Public Class SourceQcFile52
 				'	AddToStringTable( &pSrcBoneTransform[bt], &pSrcBoneTransform[bt].sznameindex, g_bonetable[i].name );
 				'	++bt;
 				'}
+
+				' the fixup data gets parsed into srcRealign and srcRealign gets parsed into posttransform
+				aFixupPosition.x = 0
+				aFixupPosition.y = 0
+				aFixupPosition.z = 0
+				aFixupRotation.x = 0
+				aFixupRotation.y = 0
+				aFixupPosition.z = 0
+
+				If Me.theMdlFileData.theBoneTransforms IsNot Nothing Then
+
+					Dim aBoneTransform As SourceMdlBoneTransform
+
+					For j As Integer = 0 To Me.theMdlFileData.sourceBoneTransformCount - 1
+						aBoneTransform = Me.theMdlFileData.theBoneTransforms(j)
+
+						If String.Compare(aBoneTransform.theName, aBone.theName) = 0 Then
+							MathModule.MatrixAnglesInDegrees(aBoneTransform.postTransformColumn0, aBoneTransform.postTransformColumn1, aBoneTransform.postTransformColumn2, aBoneTransform.postTransformColumn3, aFixupRotation.x, aFixupRotation.y, aFixupRotation.z)
+							aFixupPosition.x = Math.Round(aBoneTransform.postTransformColumn3.x, 6)
+							aFixupPosition.y = Math.Round(aBoneTransform.postTransformColumn3.y, 6)
+							aFixupPosition.z = Math.Round(aBoneTransform.postTransformColumn3.z, 6)
+							Exit For
+						End If
+					Next
+
+				End If
+
+				If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+					line = "$DefineBone "
+				Else
+					line = "$definebone "
+				End If
+				line += """"
+				line += aBone.theName
+				line += """"
+				line += " "
+				line += """"
+				line += aParentBoneName
+				line += """"
+
+				line += " "
+				line += aBone.position.x.ToString("0.######", TheApp.InternalNumberFormat)
+				line += " "
+				line += aBone.position.y.ToString("0.######", TheApp.InternalNumberFormat)
+				line += " "
+				line += aBone.position.z.ToString("0.######", TheApp.InternalNumberFormat)
+
+				If Me.theMdlFileData.version = 2531 Then
+					line += " 0.000000 0.000000 0.000000"
+				Else
+					line += " "
+					line += MathModule.RadiansToDegrees(aBone.rotation.y).ToString("0.######", TheApp.InternalNumberFormat)
+					line += " "
+					line += MathModule.RadiansToDegrees(aBone.rotation.z).ToString("0.######", TheApp.InternalNumberFormat)
+					line += " "
+					line += MathModule.RadiansToDegrees(aBone.rotation.x).ToString("0.######", TheApp.InternalNumberFormat)
+				End If
 
 				line += " "
 				line += aFixupPosition.x.ToString("0.######", TheApp.InternalNumberFormat)
@@ -4235,7 +4314,7 @@ Public Class SourceQcFile52
 			Me.WriteHBoxCommands(aHitboxSet.theHitboxes, commentTag, aHitboxSet.theName, skipBoneInBBoxCommandWasUsed)
 		Next
 
-		If skipBoneInBBoxCommandWasUsed Then
+		If skipBoneInBBoxCommandWasUsed And hitBoxWasAutoGenerated Then
 			If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
 				line = "$SkipBoneInBBox"
 			Else

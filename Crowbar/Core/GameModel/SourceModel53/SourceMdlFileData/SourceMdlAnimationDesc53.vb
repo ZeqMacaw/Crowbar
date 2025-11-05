@@ -142,7 +142,7 @@ Public Class SourceMdlAnimationDesc53
 	Public theIkRules As List(Of SourceMdlIkRule53)
 	Public theSections As List(Of SourceMdlAnimationSection)
 	Public theMovements As List(Of SourceMdlMovement)
-	Public theFrameMovement As RSourceMdlFrameMovement
+	Public theFrameMovement As SourceMdlFrameMovement52
 	Public theLocalHierarchies As List(Of SourceMdlLocalHierarchy)
 
 	Public theAnimIsLinkedToSequence As Boolean

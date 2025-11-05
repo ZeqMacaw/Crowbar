@@ -588,9 +588,6 @@
 	Public theTexturePaths As List(Of String)
 	Public theTextures As List(Of SourceMdlTexture)
 	Public theMayaStrings As String
-	Public theDetailedCollision As RSourcePerTriCollisionHeader52
-	Public theRuiHeaders As List(Of RSourceRuiHeader53)
-	Public theRuiMeshes As List(Of RSourceRuiMeshHeader53)
 
 	Public theSectionFrameCount As Integer
 	Public theSectionFrameMinFrameCount As Integer

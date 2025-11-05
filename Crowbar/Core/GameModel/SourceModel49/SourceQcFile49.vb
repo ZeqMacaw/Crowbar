@@ -3811,6 +3811,22 @@ Public Class SourceQcFile49
 			line += Me.thePhyFileData.theSourcePhyMaxConvexPieces.ToString()
 			Me.theOutputFileStreamWriter.WriteLine(line)
 		End If
+
+		If Me.thePhyFileData.theSourcePhyAnimatedFrictionSection IsNot Nothing Then
+			line = vbTab
+			line += "$animatedfriction "
+			line += Me.thePhyFileData.theSourcePhyAnimatedFrictionSection.animFrictionTimeIn.ToString("0.######", TheApp.InternalNumberFormat)
+			line += " "
+			line += Me.thePhyFileData.theSourcePhyAnimatedFrictionSection.animFrictionTimeOut.ToString("0.######", TheApp.InternalNumberFormat)
+			line += " "
+			line += Me.thePhyFileData.theSourcePhyAnimatedFrictionSection.animFrictionTimeHold.ToString("0.######", TheApp.InternalNumberFormat)
+			line += " "
+			line += Me.thePhyFileData.theSourcePhyAnimatedFrictionSection.animFrictionMin.ToString("0.######", TheApp.InternalNumberFormat)
+			line += " "
+			line += Me.thePhyFileData.theSourcePhyAnimatedFrictionSection.animFrictionMax.ToString("0.######", TheApp.InternalNumberFormat)
+			Me.theOutputFileStreamWriter.WriteLine(line)
+		End If
+
 		If Me.thePhyFileData.theSourcePhyCollisionDatas.Count > 1 Then
 			For Each collisionData As SourcePhyCollisionData In Me.thePhyFileData.theSourcePhyCollisionDatas
 				If collisionData.theConvexMeshes.Count > 1 Then

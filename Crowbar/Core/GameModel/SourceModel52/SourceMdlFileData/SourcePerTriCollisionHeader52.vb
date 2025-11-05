@@ -1,4 +1,4 @@
-﻿Public Class RSourcePerTriCollisionHeader52
+﻿Public Class SourcePerTriCollisionHeader52
 
     'struct pertriheader_t
     '{

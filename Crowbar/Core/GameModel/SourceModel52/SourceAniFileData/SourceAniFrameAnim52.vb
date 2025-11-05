@@ -21,17 +21,13 @@ Public Class SourceAniFrameAnim52
 	Public constantsOffset As Integer
 	Public frameOffset As Integer
 	Public frameLength As Integer
-	Public oldBoneFlags As Integer
-	Public unkDataIndex As Integer
+	Public fixedOldBoneFlags As Integer
+	Public boneLookupTableOffset As Integer
 	Public unused As Integer
 
 
 	'NOTE: These are indexed by global bone index.
 	Public theBoneFlags As List(Of Byte)
-	'Public theUnknownBytes01 As List(Of Byte)
-	'Public theUnknownBytes02 As List(Of Byte)
-	'Public theUnknownBytes03 As List(Of Byte)
-	Public theUnknownBytes As List(Of Integer)
 	Public theBoneConstantInfos As List(Of BoneConstantInfo49)
 	'NOTE: This is indexed by frame index and global bone index.
 	Public theBoneFrameDataInfos As List(Of List(Of BoneFrameDataInfo49))
@@ -43,5 +39,6 @@ Public Class SourceAniFrameAnim52
 	Public Const STUDIO_FRAME_ANIMPOS As Integer = &H8
 	Public Const STUDIO_FRAME_ANIMROT As Integer = &H10
 	Public Const STUDIO_FRAME_ANIMSCALE As Integer = &H20
+	Public Const STUDIO_FRAME_FULLANIM As Integer = &H40 ' use full size vectors (12 bytes) for scale and position, and Quaternion48S for rotations.
 
 End Class

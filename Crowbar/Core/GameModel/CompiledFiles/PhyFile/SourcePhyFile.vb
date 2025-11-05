@@ -627,7 +627,7 @@ Public Class SourcePhyFile
 			Dim key As String = ""
 			Dim value As String = ""
 			Dim tempStreamOffset As Long
-			Me.thePhyFileData.theSourcePhyAnimatedFrictionSection = New SourcePhyAnimatedFrictionSection()
+
 			Do
 				tempStreamOffset = Me.theInputFileReader.BaseStream.Position
 				line = FileManager.ReadTextLine(Me.theInputFileReader)
@@ -635,6 +635,9 @@ Public Class SourcePhyFile
 					Me.theInputFileReader.BaseStream.Seek(tempStreamOffset, SeekOrigin.Begin)
 					Exit Do
 				End If
+
+				' properties has animatedfriction key
+				Me.thePhyFileData.theSourcePhyAnimatedFrictionSection = New SourcePhyAnimatedFrictionSection()
 
 				While thereIsAValue
 					thereIsAValue = FileManager.ReadKeyValueLine(Me.theInputFileReader, key, value)
