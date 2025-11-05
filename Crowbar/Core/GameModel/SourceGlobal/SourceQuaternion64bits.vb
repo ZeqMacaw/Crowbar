@@ -148,11 +148,14 @@ Public Class SourceQuaternion64bits
 
 	Public ReadOnly Property w() As Double
 		Get
-			Dim result As Double
+			Dim dprem As Double = 1.0 - ((Me.x * Me.x) + (Me.y * Me.y) + (Me.z * Me.z))
 
-			'result = Me.wneg
-			result = Math.Sqrt(1 - Me.x * Me.x - Me.y * Me.y - Me.z * Me.z) * Me.wneg
-			Return result
+			' floating point precision
+			If dprem < 0.0 Then
+				dprem = 0.0
+			End If
+
+			Return Math.Sqrt(dprem) * Me.wneg
 		End Get
 	End Property
 
