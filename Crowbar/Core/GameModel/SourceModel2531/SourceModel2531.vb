@@ -74,7 +74,7 @@ Public Class SourceModel2531
 	Public Overrides ReadOnly Property HasPhysicsMeshData As Boolean
 		Get
 			If Me.thePhyFileDataGeneric IsNot Nothing _
-			 AndAlso Me.thePhyFileDataGeneric.theSourcePhyCollisionDatas IsNot Nothing _
+			 AndAlso Me.thePhyFileDataGeneric.solidCount > 0 _
 			 AndAlso Not Me.theMdlFileData.theMdlFileOnlyHasAnimations _
 			 AndAlso Me.theMdlFileData.theBones IsNot Nothing _
 			 AndAlso Me.theMdlFileData.theBones.Count > 0 Then
@@ -166,11 +166,7 @@ Public Class SourceModel2531
 	Public Overrides Function WritePhysicsMeshSmdFile(ByVal modelOutputPath As String) As AppEnums.StatusMessage
 		Dim status As AppEnums.StatusMessage = StatusMessage.Success
 
-		Dim physicsMeshPathFileName As String
-		'Me.thePhysicsMeshSmdFileName = SourceFileNamesModule.CreatePhysicsSmdFileName(Me.thePhysicsMeshSmdFileName, Me.theName)
-		'physicsMeshPathFileName = Path.Combine(modelOutputPath, Me.thePhysicsMeshSmdFileName)
-		Me.thePhyFileDataGeneric.thePhysicsMeshSmdFileName = SourceFileNamesModule.CreatePhysicsSmdFileName(Me.thePhyFileDataGeneric.thePhysicsMeshSmdFileName, Me.theName)
-		physicsMeshPathFileName = Path.Combine(modelOutputPath, Me.thePhyFileDataGeneric.thePhysicsMeshSmdFileName)
+		Dim physicsMeshPathFileName As String = Path.Combine(modelOutputPath, Me.thePhyFileDataGeneric.thePhysicsFileName)
 		Me.NotifySourceModelProgress(ProgressOptions.WritingFileStarted, physicsMeshPathFileName)
 		Me.WriteTextFile(physicsMeshPathFileName, AddressOf Me.WritePhysicsMeshSmdFile)
 		Me.NotifySourceModelProgress(ProgressOptions.WritingFileFinished, physicsMeshPathFileName)
@@ -437,12 +433,7 @@ Public Class SourceModel2531
 		phyFile.ReadSourcePhyHeader()
 		If Me.thePhyFileDataGeneric.solidCount > 0 Then
 			phyFile.ReadSourceCollisionData()
-			phyFile.CalculateVertexNormals()
-			phyFile.ReadSourcePhysCollisionModels()
-			phyFile.ReadSourcePhyRagdollConstraintDescs()
-			phyFile.ReadSourcePhyCollisionRules()
-			phyFile.ReadSourcePhyEditParamsSection()
-			phyFile.ReadCollisionTextSection()
+			phyFile.ReadSourceCollisionText()
 		End If
 		phyFile.ReadUnreadBytes()
 	End Sub

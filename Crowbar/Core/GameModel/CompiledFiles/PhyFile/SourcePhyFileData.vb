@@ -1,40 +1,19 @@
 Public Class SourcePhyFileData
 	Inherits SourceFileData
 
-
-	'FROM: SourceEngine2007\src_main\public\phyfile.h
-	'typedef struct phyheader_s
-	'{
-	'	int		size;
-	'	int		id;
-	'	int		solidCount;
-	'	long	checkSum;	// checksum of source .mdl file
-	'} phyheader_t;
-
-
-
-	'	int		size;
 	Public size As Integer
-	'	int		id;
 	Public id As Integer
-	'	int		solidCount;
 	Public solidCount As Integer
-	'	long	checkSum;	// checksum of source .mdl file
 	Public checksum As Integer
 
+	Public theSolids As List(Of SourcePhyFileCompactSurface)
+	Public theCollisions As List(Of SourcePhyFileCollision)
+	Public theConstraints As List(Of SourcePhyFileConstraints)
+	Public theSelfCollisions As Boolean
+	Public theCollisionRules As List(Of SourcePhyFileCollisionRules)
+	Public theAnimatedFriction As SourcePhyFileAnimatedFriction
+	Public theEditParameters As SourcePhyFileEditParameters
+	Public theCollisionText As String
 
-
-	Public thePhysicsMeshSmdFileName As String
-	Public theSourcePhyKeyValueDataOffset As Long
-	Public theSourcePhyCollisionDatas As List(Of SourcePhyCollisionData)
-	Public theSourcePhyPhysCollisionModels As List(Of SourcePhyPhysCollisionModel)
-	Public theSourcePhyRagdollConstraintDescs As SortedList(Of Integer, SourcePhyRagdollConstraint)
-	Public theSourcePhyCollisionPairs As List(Of SourcePhyCollisionPair)
-	Public theSourcePhySelfCollides As Boolean = True
-	Public theSourcePhyAnimatedFrictionSection As SourcePhyAnimatedFrictionSection
-	Public theSourcePhyEditParamsSection As SourcePhyEditParamsSection
-	Public theSourcePhyPhysCollisionModelMostUsedValues As SourcePhyPhysCollisionModel
-	Public theSourcePhyCollisionText As String
-	Public theSourcePhyMaxConvexPieces As Integer
-
+	Public thePhysicsFileName As String
 End Class

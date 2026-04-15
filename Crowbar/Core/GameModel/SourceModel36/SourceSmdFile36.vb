@@ -176,91 +176,35 @@ Public Class SourceSmdFile36
 	End Sub
 
 	Public Sub WriteTrianglesSectionForPhysics()
-		Dim line As String = ""
+		Me.theOutputFileStreamWriter.WriteLine("triangles")
 
-		'triangles
-		line = "triangles"
-		Me.theOutputFileStreamWriter.WriteLine(line)
+		For soildIndex As Integer = 0 To Me.thePhyFileData.solidCount - 1
+			Dim solid As SourcePhyFileCompactSurface = Me.thePhyFileData.theSolids(soildIndex)
+			Dim collision As SourcePhyFileCollision = Me.thePhyFileData.theCollisions(soildIndex)
+			Dim boneIndex As Integer = 0
 
-		Dim collisionData As SourcePhyCollisionData
-		Dim aBone As SourceMdlBone37
-		Dim boneIndex As Integer
-		Dim aTriangle As SourcePhyFace
-		Dim faceSection As SourcePhyConvexMesh
-		Dim phyVertex As SourcePhyVertex
-		Dim aVectorTransformed As SourceVector
-		Dim aSourcePhysCollisionModel As SourcePhyPhysCollisionModel
-
-		Try
-			If Me.thePhyFileData.theSourcePhyCollisionDatas IsNot Nothing Then
-				For collisionDataIndex As Integer = 0 To Me.thePhyFileData.theSourcePhyCollisionDatas.Count - 1
-					collisionData = Me.thePhyFileData.theSourcePhyCollisionDatas(collisionDataIndex)
-
-					If collisionDataIndex < Me.thePhyFileData.theSourcePhyPhysCollisionModels.Count Then
-						aSourcePhysCollisionModel = Me.thePhyFileData.theSourcePhyPhysCollisionModels(collisionDataIndex)
-					Else
-						aSourcePhysCollisionModel = Nothing
-					End If
-
-					For faceSectionIndex As Integer = 0 To collisionData.theConvexMeshes.Count - 1
-						faceSection = collisionData.theConvexMeshes(faceSectionIndex)
-
-						If faceSection.theBoneIndex >= Me.theMdlFileData.theBones.Count Then
-							Continue For
-						End If
-						If aSourcePhysCollisionModel IsNot Nothing AndAlso Me.theMdlFileData.theBoneNameToBoneIndexMap.ContainsKey(aSourcePhysCollisionModel.theName) Then
-							boneIndex = Me.theMdlFileData.theBoneNameToBoneIndexMap(aSourcePhysCollisionModel.theName)
-						Else
-							boneIndex = faceSection.theBoneIndex
-						End If
-						aBone = Me.theMdlFileData.theBones(boneIndex)
-
-						For triangleIndex As Integer = 0 To faceSection.theFaces.Count - 1
-							aTriangle = faceSection.theFaces(triangleIndex)
-
-							line = "  phy"
-							'line = "  collisionDataBlock_" + collisionDataIndex.ToString()
-							Me.theOutputFileStreamWriter.WriteLine(line)
-
-							For vertexIndex As Integer = 0 To aTriangle.vertexIndex.Length - 1
-								'phyVertex = collisionData.theVertices(aTriangle.vertexIndex(vertexIndex))
-								phyVertex = faceSection.theVertices(aTriangle.vertexIndex(vertexIndex))
-
-								aVectorTransformed = Me.TransformPhyVertex(aBone, phyVertex.vertex, aSourcePhysCollisionModel)
-
-								line = "    "
-								line += boneIndex.ToString(TheApp.InternalNumberFormat)
-								line += " "
-								line += aVectorTransformed.x.ToString("0.000000", TheApp.InternalNumberFormat)
-								line += " "
-								line += aVectorTransformed.y.ToString("0.000000", TheApp.InternalNumberFormat)
-								line += " "
-								line += aVectorTransformed.z.ToString("0.000000", TheApp.InternalNumberFormat)
-
-								'line += " 0 0 0"
-								'------
-								line += " "
-								line += phyVertex.Normal.x.ToString("0.000000", TheApp.InternalNumberFormat)
-								line += " "
-								line += phyVertex.Normal.y.ToString("0.000000", TheApp.InternalNumberFormat)
-								line += " "
-								line += phyVertex.Normal.z.ToString("0.000000", TheApp.InternalNumberFormat)
-
-								line += " 0 0"
-								'NOTE: The studiomdl.exe doesn't need the integer values at end.
-								'line += " 1 0"
-								Me.theOutputFileStreamWriter.WriteLine(line)
-							Next
-						Next
-					Next
-				Next
+			Dim transformedPoints As New List(Of SourceVector)
+			If Me.theMdlFileData.theBoneNameToBoneIndexMap.ContainsKey((collision.name)) Then
+				boneIndex = Me.theMdlFileData.theBoneNameToBoneIndexMap(collision.name)
+				Dim bone As SourceMdlBone37 = Me.theMdlFileData.theBones(boneIndex)
+				Me.TransformPhysicsPoints(solid.thePoints, transformedPoints, bone)
+			Else
+				Me.TransformPhysicsPoints(solid.thePoints, transformedPoints, Nothing)
 			End If
-		Catch ex As Exception
-			Dim debug As Integer = 4242
-		End Try
 
-		line = "end"
-		Me.theOutputFileStreamWriter.WriteLine(line)
+			Dim pointsNormals As New List(Of SourceVector)
+			For normalIndex As Integer = 0 To transformedPoints.Count - 1
+				pointsNormals.Add(New SourceVector())
+			Next
+			Me.CalculatePhysicsPointNormals(solid.theRootLedgeTree, transformedPoints, pointsNormals)
+			For normalIndex As Integer = 0 To transformedPoints.Count - 1
+				pointsNormals(normalIndex) = pointsNormals(normalIndex).Normalize()
+			Next
+
+			Me.WriteLedgeTreeNode(solid.theRootLedgeTree, boneIndex, transformedPoints, pointsNormals)
+		Next
+
+		Me.theOutputFileStreamWriter.WriteLine("end")
 	End Sub
 
 	''TODO: Write the firstAnimDesc's first frame's frameLines because it is used for "subtract" option.
@@ -531,91 +475,84 @@ Public Class SourceSmdFile36
 		Return line
 	End Function
 
-	Private Function TransformPhyVertex(ByVal aBone As SourceMdlBone37, ByVal vertex As SourceVector, ByVal aSourcePhysCollisionModel As SourcePhyPhysCollisionModel) As SourceVector
-		Dim aVectorTransformed As New SourceVector
-		Dim aVector As New SourceVector()
+	Private Sub TransformPhysicsPoints(ByRef vertices As List(Of SourceVector), ByRef transformedPoints As List(Of SourceVector), ByRef bone As SourceMdlBone37)
+		For Each vertex As SourceVector In vertices
+			Dim transformedVertex As New SourceVector(vertex.x * (1.0 / 0.0254), vertex.z * (1.0 / 0.0254), -(vertex.y * (1.0 / 0.0254)))
 
-		'If Me.thePhyFileData.theSourcePhyIsCollisionModel Then
-		'	aVectorTransformed.x = 1 / 0.0254 * vertex.z
-		'	aVectorTransformed.y = 1 / 0.0254 * -vertex.x
-		'	aVectorTransformed.z = 1 / 0.0254 * -vertex.y
-		'Else
-		'	aVector.x = 1 / 0.0254 * vertex.x
-		'	aVector.y = 1 / 0.0254 * vertex.z
-		'	aVector.z = 1 / 0.0254 * -vertex.y
-		'	aVectorTransformed = MathModule.VectorITransform(aVector, aBone.poseToBoneColumn0, aBone.poseToBoneColumn1, aBone.poseToBoneColumn2, aBone.poseToBoneColumn3)
-		'End If
-		'======
-		'aVector.x = 1 / 0.0254 * vertex.x
-		'aVector.y = 1 / 0.0254 * vertex.z
-		'aVector.z = 1 / 0.0254 * -vertex.y
-		'Dim aParentBone As SourceMdlBone37
-		'Dim aChildBone As SourceMdlBone37
-		'Dim parentBoneIndex As Integer
-		'Dim inputBoneMatrixColumn0 As New SourceVector()
-		'Dim inputBoneMatrixColumn1 As New SourceVector()
-		'Dim inputBoneMatrixColumn2 As New SourceVector()
-		'Dim inputBoneMatrixColumn3 As New SourceVector()
-		'Dim boneMatrixColumn0 As New SourceVector()
-		'Dim boneMatrixColumn1 As New SourceVector()
-		'Dim boneMatrixColumn2 As New SourceVector()
-		'Dim boneMatrixColumn3 As New SourceVector()
-
-		'aChildBone = aBone
-		'inputBoneMatrixColumn0.x = aChildBone.poseToBoneColumn0.x
-		'inputBoneMatrixColumn0.y = aChildBone.poseToBoneColumn0.y
-		'inputBoneMatrixColumn0.z = aChildBone.poseToBoneColumn0.z
-		'inputBoneMatrixColumn1.x = aChildBone.poseToBoneColumn1.x
-		'inputBoneMatrixColumn1.y = aChildBone.poseToBoneColumn1.y
-		'inputBoneMatrixColumn1.z = aChildBone.poseToBoneColumn1.z
-		'inputBoneMatrixColumn2.x = aChildBone.poseToBoneColumn2.x
-		'inputBoneMatrixColumn2.y = aChildBone.poseToBoneColumn2.y
-		'inputBoneMatrixColumn2.z = aChildBone.poseToBoneColumn2.z
-		'inputBoneMatrixColumn3.x = aChildBone.poseToBoneColumn3.x
-		'inputBoneMatrixColumn3.y = aChildBone.poseToBoneColumn3.y
-		'inputBoneMatrixColumn3.z = aChildBone.poseToBoneColumn3.z
-		'While True
-		'	parentBoneIndex = aChildBone.parentBoneIndex
-		'	If parentBoneIndex = -1 Then
-		'		aVectorTransformed = MathModule.VectorITransform(aVector, inputBoneMatrixColumn0, inputBoneMatrixColumn1, inputBoneMatrixColumn2, inputBoneMatrixColumn3)
-		'		Exit While
-		'	Else
-		'		aParentBone = Me.theMdlFileData.theBones(parentBoneIndex)
-		'		MathModule.R_ConcatTransforms(aParentBone.poseToBoneColumn0, aParentBone.poseToBoneColumn1, aParentBone.poseToBoneColumn2, aParentBone.poseToBoneColumn3, inputBoneMatrixColumn0, inputBoneMatrixColumn1, inputBoneMatrixColumn2, inputBoneMatrixColumn3, boneMatrixColumn0, boneMatrixColumn1, boneMatrixColumn2, boneMatrixColumn3)
-		'		aChildBone = aParentBone
-		'		inputBoneMatrixColumn0.x = boneMatrixColumn0.x
-		'		inputBoneMatrixColumn0.y = boneMatrixColumn0.y
-		'		inputBoneMatrixColumn0.z = boneMatrixColumn0.z
-		'		inputBoneMatrixColumn1.x = boneMatrixColumn1.x
-		'		inputBoneMatrixColumn1.y = boneMatrixColumn1.y
-		'		inputBoneMatrixColumn1.z = boneMatrixColumn1.z
-		'		inputBoneMatrixColumn2.x = boneMatrixColumn2.x
-		'		inputBoneMatrixColumn2.y = boneMatrixColumn2.y
-		'		inputBoneMatrixColumn2.z = boneMatrixColumn2.z
-		'		inputBoneMatrixColumn3.x = boneMatrixColumn3.x
-		'		inputBoneMatrixColumn3.y = boneMatrixColumn3.y
-		'		inputBoneMatrixColumn3.z = boneMatrixColumn3.z
-		'	End If
-		'End While
-		'======
-		'TODO: Probably not the correct way, but it works for bullsquid and ship01.
-		aVector.x = 1 / 0.0254 * vertex.x
-		aVector.y = 1 / 0.0254 * vertex.z
-		aVector.z = 1 / 0.0254 * -vertex.y
-		If aSourcePhysCollisionModel IsNot Nothing Then
-			If Me.theMdlFileData.theBoneNameToBoneIndexMap.ContainsKey(aSourcePhysCollisionModel.theName) Then
-				aBone = Me.theMdlFileData.theBones(Me.theMdlFileData.theBoneNameToBoneIndexMap(aSourcePhysCollisionModel.theName))
+			If bone IsNot Nothing Then
+				transformedVertex = MathModule.VectorITransform(transformedVertex, bone.poseToBoneColumn0, bone.poseToBoneColumn1, bone.poseToBoneColumn2, bone.poseToBoneColumn3)
 			Else
-				aVectorTransformed.x = 1 / 0.0254 * vertex.z
-				aVectorTransformed.y = 1 / 0.0254 * -vertex.x
-				aVectorTransformed.z = 1 / 0.0254 * -vertex.y
-				Return aVectorTransformed
+				Dim rotationTransform As SourceVector() = {New SourceVector(), New SourceVector(), New SourceVector(), New SourceVector()}
+				MathModule.AngleMatrix(0.0, DegreesToRadians(-90.0), 0.0, rotationTransform(0), rotationTransform(1), rotationTransform(2), rotationTransform(3))
+				transformedVertex = MathModule.VectorRotate(transformedVertex, rotationTransform(0), rotationTransform(1), rotationTransform(2), rotationTransform(3))
 			End If
-		End If
-		aVectorTransformed = MathModule.VectorITransform(aVector, aBone.poseToBoneColumn0, aBone.poseToBoneColumn1, aBone.poseToBoneColumn2, aBone.poseToBoneColumn3)
 
-		Return aVectorTransformed
-	End Function
+			transformedPoints.Add(transformedVertex)
+		Next
+
+	End Sub
+
+	Private Sub CalculatePhysicsPointNormals(ByRef ledgeTreeNode As SourcePhyFileCompactLedgeTreeNode, ByRef points As List(Of SourceVector), ByRef normals As List(Of SourceVector))
+		If ledgeTreeNode.offsetRightNode = 0 Then
+			For Each triangle As SourcePhyFileCompactTriangle In ledgeTreeNode.theCompactLedge.theTriangles
+				Dim vertices() As SourceVector = {
+					points(triangle.edges(0).startPointIndex),
+					points(triangle.edges(1).startPointIndex),
+					points(triangle.edges(2).startPointIndex)
+				}
+
+				Dim edge0 As New SourceVector(vertices(1).x - vertices(0).x, vertices(1).y - vertices(0).y, vertices(1).z - vertices(0).z)
+				Dim edge1 As New SourceVector(vertices(2).x - vertices(0).x, vertices(2).y - vertices(0).y, vertices(2).z - vertices(0).z)
+				Dim triangleNormal As SourceVector = edge0.CrossProduct(edge1)
+
+				normals(triangle.edges(0).startPointIndex).x += triangleNormal.x
+				normals(triangle.edges(0).startPointIndex).y += triangleNormal.y
+				normals(triangle.edges(0).startPointIndex).z += triangleNormal.z
+				normals(triangle.edges(1).startPointIndex).x += triangleNormal.x
+				normals(triangle.edges(1).startPointIndex).y += triangleNormal.y
+				normals(triangle.edges(1).startPointIndex).z += triangleNormal.z
+				normals(triangle.edges(2).startPointIndex).x += triangleNormal.x
+				normals(triangle.edges(2).startPointIndex).y += triangleNormal.y
+				normals(triangle.edges(2).startPointIndex).z += triangleNormal.z
+			Next
+		End If
+
+		If ledgeTreeNode.offsetRightNode <> 0 Then
+			Me.CalculatePhysicsPointNormals(ledgeTreeNode.leftNode, points, normals)
+			Me.CalculatePhysicsPointNormals(ledgeTreeNode.rightNode, points, normals)
+		End If
+	End Sub
+
+	Private Sub WriteLedgeTreeNode(ByRef ledgeTreeNode As SourcePhyFileCompactLedgeTreeNode, ByVal boneIndex As Integer, ByRef points As List(Of SourceVector), ByRef normals As List(Of SourceVector))
+		If ledgeTreeNode.offsetRightNode = 0 Then
+			For Each triangle As SourcePhyFileCompactTriangle In ledgeTreeNode.theCompactLedge.theTriangles
+				Me.theOutputFileStreamWriter.WriteLine("phy")
+				For Each edge As SourcePhyFileCompactEdge In triangle.edges
+					Me.theOutputFileStreamWriter.WriteLine(
+						"  " +
+						boneIndex.ToString() +
+						" " +
+						points(edge.startPointIndex).x.ToString("F20") +
+						" " +
+						points(edge.startPointIndex).y.ToString("F20") +
+						" " +
+						points(edge.startPointIndex).z.ToString("F20") +
+						" " +
+						normals(edge.startPointIndex).x.ToString("F20") +
+						" " +
+						normals(edge.startPointIndex).y.ToString("F20") +
+						" " +
+						normals(edge.startPointIndex).z.ToString("F20") +
+						" 0 0")
+				Next
+			Next
+		End If
+
+		If ledgeTreeNode.offsetRightNode <> 0 Then
+			Me.WriteLedgeTreeNode(ledgeTreeNode.leftNode, boneIndex, points, normals)
+			Me.WriteLedgeTreeNode(ledgeTreeNode.rightNode, boneIndex, points, normals)
+		End If
+	End Sub
 
 	''NOTE: From disassembling of MDL Decompiler with OllyDbg, the following calculations are used in VPHYSICS.DLL for each face:
 	''      convertedZ = 1.0 / 0.0254 * lastVertex.position.z

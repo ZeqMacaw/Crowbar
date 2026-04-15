@@ -611,4 +611,6 @@
 	Public theBoneTransforms As List(Of SourceMdlBoneTransform)
 	Public theLinearBoneTable As SourceMdlLinearBone
 
+	Public theBoneNameToBoneIndexMap As New SortedList(Of String, Integer)()
+
 End Class

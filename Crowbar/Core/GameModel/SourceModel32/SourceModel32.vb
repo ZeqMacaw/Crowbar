@@ -76,7 +76,7 @@ Public Class SourceModel32
 	Public Overrides ReadOnly Property HasPhysicsMeshData As Boolean
 		Get
 			If Me.thePhyFileDataGeneric IsNot Nothing _
-			 AndAlso Me.thePhyFileDataGeneric.theSourcePhyCollisionDatas IsNot Nothing _
+			 AndAlso Me.thePhyFileDataGeneric.solidCount > 0 _
 			 AndAlso Not Me.theMdlFileData.theMdlFileOnlyHasAnimations _
 			 AndAlso Me.theMdlFileData.theBones IsNot Nothing _
 			 AndAlso Me.theMdlFileData.theBones.Count > 0 Then
@@ -388,12 +388,7 @@ Public Class SourceModel32
 		phyFile.ReadSourcePhyHeader()
 		If Me.thePhyFileDataGeneric.solidCount > 0 Then
 			phyFile.ReadSourceCollisionData()
-			phyFile.CalculateVertexNormals()
-			phyFile.ReadSourcePhysCollisionModels()
-			phyFile.ReadSourcePhyRagdollConstraintDescs()
-			phyFile.ReadSourcePhyCollisionRules()
-			phyFile.ReadSourcePhyEditParamsSection()
-			phyFile.ReadCollisionTextSection()
+			phyFile.ReadSourceCollisionText()
 		End If
 		phyFile.ReadUnreadBytes()
 	End Sub

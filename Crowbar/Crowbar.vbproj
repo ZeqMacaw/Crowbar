@@ -124,7 +124,18 @@
     <Compile Include="Core\Compiler\CompilerOutputInfo.vb" />
     <Compile Include="Core\Compiler\ParseMeshSmdInfo.vb" />
     <Compile Include="Core\Compiler\ParseSMD.vb" />
-    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyAnimatedFrictionSection.vb" />
+    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyFileAnimatedFriction.vb" />
+    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyFileCollision.vb" />
+    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyFileCollisionRules.vb" />
+    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyFileCompactEdge.vb" />
+    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyFileCompactLedge.vb" />
+    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyFileCompactLedgeTreeNode.vb" />
+    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyFileCompactSurface.vb" />
+    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyFileCompactSurfaceHeader.vb" />
+    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyFileCompactTriangle.vb" />
+    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyFileConstraints.vb" />
+    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyFileEditParameters.vb" />
+    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyFileJointMerge.vb" />
     <Compile Include="Core\GameModel\CompiledFiles\VvdFile\VvdFile04\SourceVvdExtraData04.vb" />
     <Compile Include="Core\GameModel\SourceCommon\SourceMdlFileData\SourceMdlAnimTag.vb" />
     <Compile Include="Core\GameModel\SourceGlobal\SourceTextureCoordinates.vb" />
@@ -516,9 +527,6 @@
     <Compile Include="Core\GameModel\SourceCommon\SourceMdlFileData\SourceMdlQuatInterpBoneInfo.vb" />
     <Compile Include="Core\GameModel\SourceCommon\SourceMdlFileData\SourceMdlVertAnim.vb" />
     <Compile Include="Core\GameModel\SourceCommon\SourceMdlFileData\SourceMdlVertAnimWrinkle.vb" />
-    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyConvexMesh.vb" />
-    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyFace.vb" />
-    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyVertex.vb" />
     <Compile Include="Core\GameModel\CompiledFiles\VvdFile\VvdFile04\SourceVvdFileData04.vb" />
     <Compile Include="Core\GameModel\CompiledFiles\VtxFile\VtxFile07\SourceVtxBoneStateChange07.vb" />
     <Compile Include="Core\GameModel\CompiledFiles\VtxFile\VtxFile07\SourceVtxBodyPart07.vb" />
@@ -702,12 +710,7 @@
     </Compile>
     <Compile Include="Core\GameModel\- Base\SourceMdlFile.vb" />
     <Compile Include="Core\GameModel\- Base\SourceQcFile.vb" />
-    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyCollisionPair.vb" />
-    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyEditParamsSection.vb" />
-    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyRagdollConstraint.vb" />
-    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyCollisionData.vb" />
     <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyFileData.vb" />
-    <Compile Include="Core\GameModel\CompiledFiles\PhyFile\SourcePhyPhysCollisionModel.vb" />
     <Compile Include="Core\GameModel\SourceCommon\SourceMdlFileData\SourceMdlSkinFamily.vb" />
     <Compile Include="Core\GameModel\SourceGlobal\SourceVector.vb" />
     <Compile Include="Core\GameModel\SourceCommon\SourceMdlFileData\SourceMdlAnimationDesc.vb" />

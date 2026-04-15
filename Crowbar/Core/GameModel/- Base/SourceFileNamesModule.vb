@@ -260,19 +260,13 @@ Module SourceFileNamesModule
 		Return vtaFileName
 	End Function
 
-	Public Function CreatePhysicsSmdFileName(ByVal givenPhysicsSmdFileName As String, ByVal modelName As String) As String
+	Public Function CreatePhysicsSmdFileName(ByVal modelName As String) As String
 		Dim physicsSmdFileName As String
 
-		If Not String.IsNullOrEmpty(givenPhysicsSmdFileName) Then
-			physicsSmdFileName = givenPhysicsSmdFileName
-		Else
-			physicsSmdFileName = modelName
-			physicsSmdFileName += "_physics"
-
-			physicsSmdFileName = SourceFileNamesModule.GetUniqueSmdFileName(physicsSmdFileName)
-
-			physicsSmdFileName += ".smd"
-		End If
+		physicsSmdFileName = modelName
+		physicsSmdFileName += "_physics"
+		physicsSmdFileName = SourceFileNamesModule.GetUniqueSmdFileName(physicsSmdFileName)
+		physicsSmdFileName += ".smd"
 
 		Return physicsSmdFileName
 	End Function

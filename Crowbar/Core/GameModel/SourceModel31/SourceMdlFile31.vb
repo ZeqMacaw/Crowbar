@@ -300,6 +300,7 @@ Public Class SourceMdlFile31
 					ElseIf aBone.theName Is Nothing Then
 						aBone.theName = ""
 					End If
+					Me.theMdlFileData.theBoneNameToBoneIndexMap.Add(aBone.theName, i)
 
 					'If aBone.proceduralRuleOffset <> 0 Then
 					'	If aBone.proceduralRuleType = SourceMdlBone37.STUDIO_PROC_AXISINTERP Then

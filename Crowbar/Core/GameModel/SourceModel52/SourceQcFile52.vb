@@ -3230,150 +3230,39 @@ Public Class SourceQcFile52
 	Public Sub WriteCollisionModelOrCollisionJointsCommand()
 		Dim line As String = ""
 
-		'NOTE: Data is from PHY file.
-		'$collisionmodel "tree_deciduous_01a_physbox.smd"
-		'{
-		'	$mass 350.0
-		'	$concave
-		'}	
-		'$collisionjoints "phymodel.smd"
-		'{
-		'	$mass 100.0
-		'	$inertia 10.00
-		'	$damping 0.05
-		'	$rotdamping 5.00
-		'	$rootbone "valvebiped.bip01_pelvis"
-		'	$jointrotdamping "valvebiped.bip01_pelvis" 3.00
-		'
-		'	$jointmassbias "valvebiped.bip01_spine1" 8.00
-		'	$jointconstrain "valvebiped.bip01_spine1" x limit -10.00 10.00 0.00
-		'	$jointconstrain "valvebiped.bip01_spine1" y limit -16.00 16.00 0.00
-		'	$jointconstrain "valvebiped.bip01_spine1" z limit -20.00 30.00 0.00
-		'
-		'	$jointmassbias "valvebiped.bip01_spine2" 9.00
-		'	$jointconstrain "valvebiped.bip01_spine2" x limit -10.00 10.00 0.00
-		'	$jointconstrain "valvebiped.bip01_spine2" y limit -10.00 10.00 0.00
-		'	$jointconstrain "valvebiped.bip01_spine2" z limit -20.00 20.00 0.00
-		'
-		'	$jointmassbias "valvebiped.bip01_r_clavicle" 4.00
-		'	$jointrotdamping "valvebiped.bip01_r_clavicle" 6.00
-		'	$jointconstrain "valvebiped.bip01_r_clavicle" x limit -15.00 15.00 0.00
-		'	$jointconstrain "valvebiped.bip01_r_clavicle" y limit -10.00 10.00 0.00
-		'	$jointconstrain "valvebiped.bip01_r_clavicle" z limit -0.00 45.00 0.00
-		'
-		'	$jointmassbias "valvebiped.bip01_l_clavicle" 4.00
-		'	$jointrotdamping "valvebiped.bip01_l_clavicle" 6.00
-		'	$jointconstrain "valvebiped.bip01_l_clavicle" x limit -15.00 15.00 0.00
-		'	$jointconstrain "valvebiped.bip01_l_clavicle" y limit -10.00 10.00 0.00
-		'	$jointconstrain "valvebiped.bip01_l_clavicle" z limit -0.00 45.00 0.00
-		'
-		'	$jointmassbias "valvebiped.bip01_l_upperarm" 5.00
-		'	$jointrotdamping "valvebiped.bip01_l_upperarm" 2.00
-		'	$jointconstrain "valvebiped.bip01_l_upperarm" x limit -15.00 20.00 0.00
-		'	$jointconstrain "valvebiped.bip01_l_upperarm" y limit -40.00 32.00 0.00
-		'	$jointconstrain "valvebiped.bip01_l_upperarm" z limit -80.00 25.00 0.00
-		'
-		'	$jointmassbias "valvebiped.bip01_l_forearm" 4.00
-		'	$jointrotdamping "valvebiped.bip01_l_forearm" 4.00
-		'	$jointconstrain "valvebiped.bip01_l_forearm" x limit -40.00 15.00 0.00
-		'	$jointconstrain "valvebiped.bip01_l_forearm" y limit 0.00 0.00 0.00
-		'	$jointconstrain "valvebiped.bip01_l_forearm" z limit -120.00 10.00 0.00
-		'
-		'	$jointrotdamping "valvebiped.bip01_l_hand" 1.00
-		'	$jointconstrain "valvebiped.bip01_l_hand" x limit -25.00 25.00 0.00
-		'	$jointconstrain "valvebiped.bip01_l_hand" y limit -35.00 35.00 0.00
-		'	$jointconstrain "valvebiped.bip01_l_hand" z limit -50.00 50.00 0.00
-		'
-		'	$jointmassbias "valvebiped.bip01_r_upperarm" 5.00
-		'	$jointrotdamping "valvebiped.bip01_r_upperarm" 2.00
-		'	$jointconstrain "valvebiped.bip01_r_upperarm" x limit -15.00 20.00 0.00
-		'	$jointconstrain "valvebiped.bip01_r_upperarm" y limit -40.00 32.00 0.00
-		'	$jointconstrain "valvebiped.bip01_r_upperarm" z limit -80.00 25.00 0.00
-		'
-		'	$jointmassbias "valvebiped.bip01_r_forearm" 4.00
-		'	$jointrotdamping "valvebiped.bip01_r_forearm" 4.00
-		'	$jointconstrain "valvebiped.bip01_r_forearm" x limit -40.00 15.00 0.00
-		'	$jointconstrain "valvebiped.bip01_r_forearm" y limit 0.00 0.00 0.00
-		'	$jointconstrain "valvebiped.bip01_r_forearm" z limit -120.00 10.00 0.00
-		'
-		'	$jointrotdamping "valvebiped.bip01_r_hand" 1.00
-		'	$jointconstrain "valvebiped.bip01_r_hand" x limit -25.00 25.00 0.00
-		'	$jointconstrain "valvebiped.bip01_r_hand" y limit -35.00 35.00 0.00
-		'	$jointconstrain "valvebiped.bip01_r_hand" z limit -50.00 50.00 0.00
-		'
-		'	$jointmassbias "valvebiped.bip01_r_thigh" 7.00
-		'	$jointrotdamping "valvebiped.bip01_r_thigh" 7.00
-		'	$jointconstrain "valvebiped.bip01_r_thigh" x limit -25.00 25.00 0.00
-		'	$jointconstrain "valvebiped.bip01_r_thigh" y limit -10.00 15.00 0.00
-		'	$jointconstrain "valvebiped.bip01_r_thigh" z limit -55.00 25.00 0.00
-		'
-		'	$jointmassbias "valvebiped.bip01_r_calf" 4.00
-		'	$jointconstrain "valvebiped.bip01_r_calf" x limit -10.00 25.00 0.00
-		'	$jointconstrain "valvebiped.bip01_r_calf" y limit -5.00 5.00 0.00
-		'	$jointconstrain "valvebiped.bip01_r_calf" z limit -10.00 115.00 0.00
-		'
-		'	$jointrotdamping "valvebiped.bip01_r_foot" 2.00
-		'	$jointconstrain "valvebiped.bip01_r_foot" x limit -20.00 30.00 0.00
-		'	$jointconstrain "valvebiped.bip01_r_foot" y limit -30.00 20.00 0.00
-		'	$jointconstrain "valvebiped.bip01_r_foot" z limit -30.00 50.00 0.00
-		'
-		'	$jointmassbias "valvebiped.bip01_l_thigh" 7.00
-		'	$jointrotdamping "valvebiped.bip01_l_thigh" 7.00
-		'	$jointconstrain "valvebiped.bip01_l_thigh" x limit -25.00 25.00 0.00
-		'	$jointconstrain "valvebiped.bip01_l_thigh" y limit -10.00 15.00 0.00
-		'	$jointconstrain "valvebiped.bip01_l_thigh" z limit -55.00 25.00 0.00
-		'
-		'	$jointmassbias "valvebiped.bip01_l_calf" 4.00
-		'	$jointconstrain "valvebiped.bip01_l_calf" x limit -10.00 25.00 0.00
-		'	$jointconstrain "valvebiped.bip01_l_calf" y limit -5.00 5.00 0.00
-		'	$jointconstrain "valvebiped.bip01_l_calf" z limit -10.00 115.00 0.00
-		'
-		'	$jointrotdamping "valvebiped.bip01_l_foot" 2.00
-		'	$jointconstrain "valvebiped.bip01_l_foot" x limit -20.00 30.00 0.00
-		'	$jointconstrain "valvebiped.bip01_l_foot" y limit -30.00 20.00 0.00
-		'	$jointconstrain "valvebiped.bip01_l_foot" z limit -30.00 50.00 0.00
-		'
-		'	$jointmassbias "valvebiped.bip01_head1" 4.00
-		'	$jointrotdamping "valvebiped.bip01_head1" 3.00
-		'	$jointconstrain "valvebiped.bip01_head1" x limit -50.00 50.00 0.00
-		'	$jointconstrain "valvebiped.bip01_head1" y limit -20.00 20.00 0.00
-		'	$jointconstrain "valvebiped.bip01_head1" z limit -26.00 30.00 0.00
-		'}
 		If Me.thePhyFileData IsNot Nothing AndAlso Me.thePhyFileData.solidCount > 0 Then
 			Me.theOutputFileStreamWriter.WriteLine(line)
 
-			'If Me.theSourceEngineModel.PhyFileHeader.checksum <> Me.theSourceEngineModel.MdlFileHeader.checksum Then
-			'	line = "// The PHY file's checksum value is not the same as the MDL file's checksum value."
-			'	Me.theOutputFileStreamWriter.WriteLine(line)
-			'End If
-
-			'NOTE: The smd file name for $collisionjoints is not stored in the mdl file, 
-			'      so use the same name that MDL Decompiler uses.
-			'TODO: Find a better way to determine which to use.
-			'NOTE: "If Me.theSourceEngineModel.theMdlFileHeader.theAnimationDescs.Count < 2" 
-			'      works for survivors but not for witch (which has only one sequence).
-			'If theSourceEngineModel.thePhyFileHeader.theSourcePhyPhysCollisionModels.Count < 2 Then
-			'TODO: Why not use this "if" statement? It seems reasonable that a solid matches a set of convex shapes for one bone.
-			'      For example, L4D2 van has several convex shapes, but only one solid and one bone.
-			'      Same for w_minigun. Both use $concave.
-			'If Me.theSourceEngineModel.thePhyFileHeader.solidCount = 1 Then
-			If Me.thePhyFileData.theSourcePhyCollisionDatas.Count = 1 Then
-				If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
-					line = "$CollisionModel "
-				Else
-					line = "$collisionmodel "
-				End If
+			Dim useJoints As Boolean = False
+			If Me.thePhyFileData.theCollisionRules.Count > 0 Then
+				useJoints = True
 			Else
+				'NOTE: If using $collisionmodel the collision name is the source file name,
+				'      this method breaks if the model has a bone as the source file,
+				'      I don't think this will be a huge issue. - Jakob
+				For Each collision As SourcePhyFileCollision In Me.thePhyFileData.theCollisions
+					If Me.theMdlFileData.theBoneNameToBoneIndexMap.ContainsKey((collision.name)) Or collision.parent IsNot Nothing Then
+						useJoints = True
+					End If
+				Next
+			End If
+
+			If useJoints Then
 				If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
 					line = "$CollisionJoints "
 				Else
 					line = "$collisionjoints "
 				End If
+			Else
+				If TheApp.Settings.DecompileQcUseMixedCaseForKeywordsIsChecked Then
+					line = "$CollisionModel "
+				Else
+					line = "$collisionmodel "
+				End If
 			End If
-			'line += """phymodel.smd"""
+			Me.thePhyFileData.thePhysicsFileName = SourceFileNamesModule.CreatePhysicsSmdFileName(Me.theModelName)
 			line += """"
-			Me.thePhyFileData.thePhysicsMeshSmdFileName = SourceFileNamesModule.CreatePhysicsSmdFileName(Me.thePhyFileData.thePhysicsMeshSmdFileName, Me.theModelName)
-			line += Me.thePhyFileData.thePhysicsMeshSmdFileName
+			line += Me.thePhyFileData.thePhysicsFileName
 			line += """"
 			Me.theOutputFileStreamWriter.WriteLine(line)
 			line = "{"
@@ -3386,202 +3275,246 @@ Public Class SourceQcFile52
 		End If
 	End Sub
 
-	'$animatedfriction
-	'$assumeworldspace
-	'$automass          // baked-in as mass
-	'$concave           // done
-	'$concaveperjoint   // done
-	'$damping           // done
-	'$drag
-	'$inertia           // done
-	'$jointcollide
-	'$jointconstrain    // done
-	'$jointdamping      // done
-	'$jointinertia      // done
-	'$jointmassbias     // done
-	'$jointmerge
-	'$jointrotdamping   // done
-	'$jointskip
-	'$mass              // done
-	'$masscenter
-	'$maxconvexpieces
-	'$noselfcollisions  //done
-	'$remove2d
-	'$rollingDrag
-	'$rootbone          // done
-	'$rotdamping        // done
-	'$weldnormal
-	'$weldposition
 	Private Sub WriteCollisionModelOrCollisionJointsOptions()
 		Dim line As String = ""
 
-		' for some reason it doesn't read this correctly so I am doing a janky fix for now.
 		line = vbTab
 		line += "$mass "
-		line += Me.theMdlFileData.mass.ToString("0.######", TheApp.InternalNumberFormat)
+		line += Me.thePhyFileData.theEditParameters.totalMass.ToString("0.######", TheApp.InternalNumberFormat)
 		Me.theOutputFileStreamWriter.WriteLine(line)
+
+		Dim dampingToCountMap As New SortedList(Of Single, Integer)
+		Dim inertiaToCountMap As New SortedList(Of Single, Integer)
+		Dim rotationDampingToCountMap As New SortedList(Of Single, Integer)
+
+		For Each collision As SourcePhyFileCollision In Me.thePhyFileData.theCollisions
+			If dampingToCountMap.ContainsKey(collision.damping) Then
+				dampingToCountMap(collision.damping) += 1
+			Else
+				dampingToCountMap.Add(collision.damping, 1)
+			End If
+			If inertiaToCountMap.ContainsKey(collision.inertia) Then
+				inertiaToCountMap(collision.inertia) += 1
+			Else
+				inertiaToCountMap.Add(collision.inertia, 1)
+			End If
+			If rotationDampingToCountMap.ContainsKey(collision.rotationDamping) Then
+				rotationDampingToCountMap(collision.rotationDamping) += 1
+			Else
+				rotationDampingToCountMap.Add(collision.rotationDamping, 1)
+			End If
+		Next
+
+		Dim commonDampingValue As Single
+		Dim commonDampingCount As Integer
+		For dampingToCountMapIndex As Integer = 0 To dampingToCountMap.Count - 1
+			If commonDampingCount <= dampingToCountMap.Values(dampingToCountMapIndex) Then
+				commonDampingValue = dampingToCountMap.Keys(dampingToCountMapIndex)
+				commonDampingCount = dampingToCountMap.Values(dampingToCountMapIndex)
+			End If
+		Next
+
+		Dim commonInertiaValue As Single
+		Dim commonInertiaCount As Integer
+		For inertiaToCountMapIndex As Integer = 0 To inertiaToCountMap.Count - 1
+			If commonInertiaCount <= inertiaToCountMap.Values(inertiaToCountMapIndex) Then
+				commonInertiaValue = inertiaToCountMap.Keys(inertiaToCountMapIndex)
+				commonInertiaCount = inertiaToCountMap.Values(inertiaToCountMapIndex)
+			End If
+		Next
+
+		Dim commonRotationDampingValue As Single
+		Dim commonRotationDampingCount As Integer
+		For rotationDampingToCountMapIndex As Integer = 0 To rotationDampingToCountMap.Count - 1
+			If commonRotationDampingCount <= rotationDampingToCountMap.Values(rotationDampingToCountMapIndex) Then
+				commonRotationDampingValue = rotationDampingToCountMap.Keys(rotationDampingToCountMapIndex)
+				commonRotationDampingCount = rotationDampingToCountMap.Values(rotationDampingToCountMapIndex)
+			End If
+		Next
+
 		line = vbTab
 		line += "$inertia "
-		line += Me.thePhyFileData.theSourcePhyPhysCollisionModelMostUsedValues.theInertia.ToString("0.######", TheApp.InternalNumberFormat)
+		line += commonInertiaValue.ToString("0.######", TheApp.InternalNumberFormat)
 		Me.theOutputFileStreamWriter.WriteLine(line)
 		line = vbTab
 		line += "$damping "
-		line += Me.thePhyFileData.theSourcePhyPhysCollisionModelMostUsedValues.theDamping.ToString("0.######", TheApp.InternalNumberFormat)
+		line += commonDampingValue.ToString("0.######", TheApp.InternalNumberFormat)
 		Me.theOutputFileStreamWriter.WriteLine(line)
 		line = vbTab
 		line += "$rotdamping "
-		line += Me.thePhyFileData.theSourcePhyPhysCollisionModelMostUsedValues.theRotDamping.ToString("0.######", TheApp.InternalNumberFormat)
+		line += commonRotationDampingValue.ToString("0.######", TheApp.InternalNumberFormat)
 		Me.theOutputFileStreamWriter.WriteLine(line)
-		If Me.thePhyFileData.theSourcePhyEditParamsSection.rootName <> "" Then
+
+		If Me.thePhyFileData.theEditParameters.rootName <> "" Then
 			line = vbTab
 			line += "$rootbone """
-			line += Me.thePhyFileData.theSourcePhyEditParamsSection.rootName
+			line += Me.thePhyFileData.theEditParameters.rootName
 			line += """"
 			Me.theOutputFileStreamWriter.WriteLine(line)
 		End If
-		If Me.thePhyFileData.theSourcePhyEditParamsSection.concave = "1" Then
+
+		If Me.thePhyFileData.theEditParameters.concave Then
 			line = vbTab
 			line += "$concave"
 			Me.theOutputFileStreamWriter.WriteLine(line)
-			line = vbTab
-			line += "$maxconvexpieces "
-			line += Me.thePhyFileData.theSourcePhyMaxConvexPieces.ToString()
-			Me.theOutputFileStreamWriter.WriteLine(line)
+			'line = vbTab
+			'line += "$maxconvexpieces "
+			'line += Me.thePhyFileData.theSourcePhyMaxConvexPieces.ToString()
+			'Me.theOutputFileStreamWriter.WriteLine(line)
 		End If
-		If Me.thePhyFileData.theSourcePhyCollisionDatas.Count > 1 Then
-			For Each collisionData As SourcePhyCollisionData In Me.thePhyFileData.theSourcePhyCollisionDatas
-				If collisionData.theConvexMeshes.Count > 1 Then
-					line = vbTab
-					line += "$concaveperjoint"
-					Me.theOutputFileStreamWriter.WriteLine(line)
-					Exit For
-				End If
+		'If Me.thePhyFileData.theSourcePhyCollisionDatas.Count > 1 Then
+		'	For Each collisionData As SourcePhyCollisionData In Me.thePhyFileData.theSourcePhyCollisionDatas
+		'		If collisionData.theConvexMeshes.Count > 1 Then
+		'			line = vbTab
+		'			line += "$concaveperjoint"
+		'			Me.theOutputFileStreamWriter.WriteLine(line)
+		'			Exit For
+		'		End If
+		'	Next
+		'End If
+
+		If Me.thePhyFileData.theEditParameters.jointMergers.Count > 0 Then
+			Me.theOutputFileStreamWriter.WriteLine()
+			For Each jointMerge As SourcePhyFileJointMerge In Me.thePhyFileData.theEditParameters.jointMergers
+				line = vbTab
+				line += "$jointmerge "
+				line += jointMerge.parent
+				line += " "
+				line += jointMerge.child
+				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
 		End If
 
-		For i As Integer = 0 To Me.thePhyFileData.theSourcePhyPhysCollisionModels.Count - 1
-			Dim aSourcePhysCollisionModel As SourcePhyPhysCollisionModel
-			aSourcePhysCollisionModel = Me.thePhyFileData.theSourcePhyPhysCollisionModels(i)
-
-			line = ""
-			Me.theOutputFileStreamWriter.WriteLine(line)
-
-			'If aSourcePhysCollisionModel.theDragCoefficientIsValid Then
-			'End If
-
-			If aSourcePhysCollisionModel.theMassBiasIsValid Then
+		For Each collision As SourcePhyFileCollision In Me.thePhyFileData.theCollisions
+			Me.theOutputFileStreamWriter.WriteLine()
+			If collision.massBias <> 1.0 Then
 				line = vbTab
 				line += "$jointmassbias """
-				line += aSourcePhysCollisionModel.theName
+				line += collision.name
 				line += """ "
-				line += aSourcePhysCollisionModel.theMassBias.ToString("0.######", TheApp.InternalNumberFormat)
+				line += collision.massBias.ToString("0.######", TheApp.InternalNumberFormat)
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			End If
 
-			If aSourcePhysCollisionModel.theDamping <> Me.thePhyFileData.theSourcePhyPhysCollisionModelMostUsedValues.theDamping Then
+			If collision.damping <> commonDampingValue Then
 				line = vbTab
 				line += "$jointdamping """
-				line += aSourcePhysCollisionModel.theName
+				line += collision.name
 				line += """ "
-				line += aSourcePhysCollisionModel.theDamping.ToString("0.######", TheApp.InternalNumberFormat)
+				line += collision.damping.ToString("0.######", TheApp.InternalNumberFormat)
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			End If
 
-			If aSourcePhysCollisionModel.theInertia <> Me.thePhyFileData.theSourcePhyPhysCollisionModelMostUsedValues.theInertia Then
+			If collision.inertia <> commonInertiaValue Then
 				line = vbTab
 				line += "$jointinertia """
-				line += aSourcePhysCollisionModel.theName
+				line += collision.name
 				line += """ "
-				line += aSourcePhysCollisionModel.theInertia.ToString("0.######", TheApp.InternalNumberFormat)
+				line += collision.inertia.ToString("0.######", TheApp.InternalNumberFormat)
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			End If
 
-			If aSourcePhysCollisionModel.theRotDamping <> Me.thePhyFileData.theSourcePhyPhysCollisionModelMostUsedValues.theRotDamping Then
+			If collision.rotationDamping <> commonRotationDampingValue Then
 				line = vbTab
 				line += "$jointrotdamping """
-				line += aSourcePhysCollisionModel.theName
+				line += collision.name
 				line += """ "
-				line += aSourcePhysCollisionModel.theRotDamping.ToString("0.######", TheApp.InternalNumberFormat)
+				line += collision.rotationDamping.ToString("0.######", TheApp.InternalNumberFormat)
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			End If
 
-			If Me.thePhyFileData.theSourcePhyRagdollConstraintDescs.ContainsKey(aSourcePhysCollisionModel.theIndex) Then
-				Dim aConstraint As SourcePhyRagdollConstraint
-				aConstraint = Me.thePhyFileData.theSourcePhyRagdollConstraintDescs(aSourcePhysCollisionModel.theIndex)
-
-				'FROM: [44] SourceEngine2006_source\utils\studiomdl\collisionmodel.cpp
-				'FROM: [48] SourceEngine2007_source se2007_src [VS2017]\src_main\utils\studiomdl\collisionmodel.cpp
-				'FROM: [49] csgo_studiomdl\utils\studiomdl\collisionmodel.cpp
-				'	// In the editor/qc friction values are shown as 5X so 1.0 can be the default.
-				'	CJointConstraint *pConstraint = new CJointConstraint( pJointName, axis, jointType, limitMin, limitMax, friction * (1.0f/5.0f) );
-				Dim xFrictionValue As Double
-				xFrictionValue = aConstraint.theXFriction * 5
-				Dim yFrictionValue As Double
-				yFrictionValue = aConstraint.theYFriction * 5
-				Dim zFrictionValue As Double
-				zFrictionValue = aConstraint.theZFriction * 5
-
+			Dim collisionConstraint As SourcePhyFileConstraints = Me.thePhyFileData.theConstraints.Find(Function(constraint) constraint.child = collision.index)
+			If collisionConstraint IsNot Nothing Then
 				line = vbTab
 				line += "$jointconstrain """
-				line += aSourcePhysCollisionModel.theName
+				line += collision.name
 				line += """ x limit "
-				line += aConstraint.theXMin.ToString("0.######", TheApp.InternalNumberFormat)
+				line += collisionConstraint.rollMinmum.ToString("0.######", TheApp.InternalNumberFormat)
 				line += " "
-				line += aConstraint.theXMax.ToString("0.######", TheApp.InternalNumberFormat)
+				line += collisionConstraint.rollMaxmum.ToString("0.######", TheApp.InternalNumberFormat)
 				line += " "
-				line += xFrictionValue.ToString("0.######", TheApp.InternalNumberFormat)
+				line += (collisionConstraint.rollFriction * 5.0).ToString("0.######", TheApp.InternalNumberFormat)
 				Me.theOutputFileStreamWriter.WriteLine(line)
 				line = vbTab
 				line += "$jointconstrain """
-				line += aSourcePhysCollisionModel.theName
+				line += collision.name
 				line += """ y limit "
-				line += aConstraint.theYMin.ToString("0.######", TheApp.InternalNumberFormat)
+				line += collisionConstraint.pitchMinmum.ToString("0.######", TheApp.InternalNumberFormat)
 				line += " "
-				line += aConstraint.theYMax.ToString("0.######", TheApp.InternalNumberFormat)
+				line += collisionConstraint.pitchMaxmum.ToString("0.######", TheApp.InternalNumberFormat)
 				line += " "
-				line += yFrictionValue.ToString("0.######", TheApp.InternalNumberFormat)
+				line += (collisionConstraint.pitchFriction * 5.0).ToString("0.######", TheApp.InternalNumberFormat)
 				Me.theOutputFileStreamWriter.WriteLine(line)
 				line = vbTab
 				line += "$jointconstrain """
-				line += aSourcePhysCollisionModel.theName
+				line += collision.name
 				line += """ z limit "
-				line += aConstraint.theZMin.ToString("0.######", TheApp.InternalNumberFormat)
+				line += collisionConstraint.yawMinmum.ToString("0.######", TheApp.InternalNumberFormat)
 				line += " "
-				line += aConstraint.theZMax.ToString("0.######", TheApp.InternalNumberFormat)
+				line += collisionConstraint.yawMaxmum.ToString("0.######", TheApp.InternalNumberFormat)
 				line += " "
-				line += zFrictionValue.ToString("0.######", TheApp.InternalNumberFormat)
+				line += (collisionConstraint.yawFriction * 5.0).ToString("0.######", TheApp.InternalNumberFormat)
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			End If
 		Next
 
-		If Not Me.thePhyFileData.theSourcePhySelfCollides Then
+		If Not Me.thePhyFileData.theSelfCollisions Then
+			Me.theOutputFileStreamWriter.WriteLine()
 			line = vbTab
 			line += "$noselfcollisions"
 			Me.theOutputFileStreamWriter.WriteLine(line)
-		ElseIf Me.thePhyFileData.theSourcePhyCollisionPairs.Count > 0 Then
+		ElseIf Me.thePhyFileData.theCollisionRules.Count > 0 Then
 			Me.theOutputFileStreamWriter.WriteLine()
 
-			For Each aSourcePhyCollisionPair As SourcePhyCollisionPair In Me.thePhyFileData.theSourcePhyCollisionPairs
+			For Each collisionPair As SourcePhyFileCollisionRules In Me.thePhyFileData.theCollisionRules
+				Dim jointCollision As SourcePhyFileCollision = Me.thePhyFileData.theCollisions(collisionPair.jointBone)
+				If jointCollision Is Nothing Then
+					Continue For
+				End If
+
+				Dim otherCollision As SourcePhyFileCollision = Me.thePhyFileData.theCollisions(collisionPair.collidBone)
+				If otherCollision Is Nothing Then
+					Continue For
+				End If
+
 				line = vbTab
 				line += "$jointcollide"
 				line += " "
 				line += """"
-				line += Me.thePhyFileData.theSourcePhyPhysCollisionModels(aSourcePhyCollisionPair.obj0).theName
+				line += jointCollision.name
 				line += """"
 				line += " "
 				line += """"
-				line += Me.thePhyFileData.theSourcePhyPhysCollisionModels(aSourcePhyCollisionPair.obj1).theName
+				line += otherCollision.name
 				line += """"
 				Me.theOutputFileStreamWriter.WriteLine(line)
 			Next
 		End If
+
+		If Me.thePhyFileData.theAnimatedFriction IsNot Nothing Then
+			Me.theOutputFileStreamWriter.WriteLine()
+
+			line = vbTab
+			line += "$animatedfriction "
+			line += Me.thePhyFileData.theAnimatedFriction.animatedFrictionMinmum.ToString()
+			line += " "
+			line += Me.thePhyFileData.theAnimatedFriction.animatedFrictionMaxmum.ToString()
+			line += " "
+			line += Me.thePhyFileData.theAnimatedFriction.animatedFrictionTimeIn.ToString()
+			line += " "
+			line += Me.thePhyFileData.theAnimatedFriction.animatedFrictionTimeHold.ToString()
+			line += " "
+			line += Me.thePhyFileData.theAnimatedFriction.animatedFrictionTimeOut.ToString()
+			Me.theOutputFileStreamWriter.WriteLine(line)
+		End If
+
 	End Sub
 
 	Public Sub WriteCollisionTextCommand()
 		Dim line As String = ""
 
 		Try
-			If Me.thePhyFileData IsNot Nothing AndAlso Me.thePhyFileData.theSourcePhyCollisionText IsNot Nothing AndAlso Me.thePhyFileData.theSourcePhyCollisionText.Length > 0 Then
+			If Me.thePhyFileData IsNot Nothing AndAlso Me.thePhyFileData.theCollisionText IsNot Nothing AndAlso Me.thePhyFileData.theCollisionText.Length > 0 Then
 				line = ""
 				Me.theOutputFileStreamWriter.WriteLine(line)
 
@@ -3595,7 +3528,7 @@ Public Class SourceQcFile52
 				line = "{"
 				Me.theOutputFileStreamWriter.WriteLine(line)
 
-				Me.WriteTextLines(Me.thePhyFileData.theSourcePhyCollisionText, 1)
+				Me.WriteTextLines(Me.thePhyFileData.theCollisionText, 1)
 
 				line = "}"
 				Me.theOutputFileStreamWriter.WriteLine(line)
