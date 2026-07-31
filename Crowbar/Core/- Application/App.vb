@@ -336,28 +336,30 @@ Public Class App
 		Return Path.Combine(Me.GetCustomDataPath(), App.theThemeDataFileName)
 	End Function
 
+	' Create default theme settings.
 	Private Sub CreateThemeData()
 		Me.theThemeData = New ThemeData()
 
-		' Create default settings.
 		Dim defaultTheme As New AppTheme()
 		Me.theThemeData.AppThemes.Add(defaultTheme)
-		Dim defaultCrowbarTheme As New AppTheme()
-		defaultCrowbarTheme.Name = "Crowbar Dark"
-		defaultCrowbarTheme.GlobalTheme = New GlobalTheme()
-		defaultCrowbarTheme.ButtonTheme = New ButtonTheme()
-		defaultCrowbarTheme.CheckBoxTheme = New CheckBoxTheme()
-		defaultCrowbarTheme.ComboUserControlTheme = New ComboUserControlTheme()
-		defaultCrowbarTheme.DataGridViewTheme = New DataGridViewTheme()
-		defaultCrowbarTheme.GroupBoxTheme = New GroupBoxTheme()
-		defaultCrowbarTheme.PanelTheme = New PanelTheme()
-		defaultCrowbarTheme.ProgressBarTheme = New ProgressBarTheme()
-		defaultCrowbarTheme.RadioButtonTheme = New RadioButtonTheme()
-		defaultCrowbarTheme.RichTextBoxTheme = New RichTextBoxTheme()
-		defaultCrowbarTheme.SplitContainerTheme = New SplitContainerTheme()
-		defaultCrowbarTheme.TabControlTheme = New TabControlTheme()
-		defaultCrowbarTheme.ToolStripTheme = New ToolStripTheme()
-		defaultCrowbarTheme.TreeViewTheme = New TreeViewTheme()
+
+		'Dim defaultCrowbarTheme As New AppTheme()
+		'defaultCrowbarTheme.Name = "Crowbar Dark"
+		'defaultCrowbarTheme.GlobalTheme = New GlobalTheme()
+		'defaultCrowbarTheme.ButtonTheme = New ButtonTheme()
+		'defaultCrowbarTheme.CheckBoxTheme = New CheckBoxTheme()
+		'defaultCrowbarTheme.ComboUserControlTheme = New ComboUserControlTheme()
+		'defaultCrowbarTheme.DataGridViewTheme = New DataGridViewTheme()
+		'defaultCrowbarTheme.GroupBoxTheme = New GroupBoxTheme()
+		'defaultCrowbarTheme.PanelTheme = New PanelTheme()
+		'defaultCrowbarTheme.ProgressBarTheme = New ProgressBarTheme()
+		'defaultCrowbarTheme.RadioButtonTheme = New RadioButtonTheme()
+		'defaultCrowbarTheme.RichTextBoxTheme = New RichTextBoxTheme()
+		'defaultCrowbarTheme.SplitContainerTheme = New SplitContainerTheme()
+		'defaultCrowbarTheme.TabControlTheme = New TabControlTheme()
+		'defaultCrowbarTheme.ToolStripTheme = New ToolStripTheme()
+		'defaultCrowbarTheme.TreeViewTheme = New TreeViewTheme()
+		Dim defaultCrowbarTheme As New AppTheme("Crowbar Dark")
 		Me.theThemeData.AppThemes.Add(defaultCrowbarTheme)
 
 		Me.SaveThemeData()
