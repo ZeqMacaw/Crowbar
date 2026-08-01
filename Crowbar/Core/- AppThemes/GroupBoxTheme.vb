@@ -1,7 +1,7 @@
 ﻿Imports System.Xml.Serialization
 
 Public Class GroupBoxTheme
-    Inherits WidgetTheme
+    Inherits FocusableWidgetTheme
 
 #Region "Create and Destroy"
 

@@ -17,6 +17,8 @@ Public Class GroupBoxEx
 		'Me.BackColor = WidgetBackColor
 
 		'Me.SetStyle(ControlStyles.UserPaint, True)
+
+		Me.theMouseIsOverButton = False
 	End Sub
 
 #End Region
@@ -205,6 +207,20 @@ Public Class GroupBoxEx
 		MyBase.OnControlRemoved(e)
 	End Sub
 
+	Protected Overrides Sub OnMouseEnter(e As EventArgs)
+		MyBase.OnMouseEnter(e)
+		Me.theMouseIsOverButton = True
+		'NOTE: Raise the OnNonClientCalcSize and OnNonClientPaint "events".
+		Win32Api.SetWindowPos(Me.Handle, IntPtr.Zero, 0, 0, 0, 0, Win32Api.SWP.SWP_FRAMECHANGED Or Win32Api.SWP.SWP_NOMOVE Or Win32Api.SWP.SWP_NOSIZE Or Win32Api.SWP.SWP_NOZORDER)
+	End Sub
+
+	Protected Overrides Sub OnMouseLeave(e As EventArgs)
+		MyBase.OnMouseLeave(e)
+		Me.theMouseIsOverButton = False
+		'NOTE: Raise the OnNonClientCalcSize and OnNonClientPaint "events".
+		Win32Api.SetWindowPos(Me.Handle, IntPtr.Zero, 0, 0, 0, 0, Win32Api.SWP.SWP_FRAMECHANGED Or Win32Api.SWP.SWP_NOMOVE Or Win32Api.SWP.SWP_NOSIZE Or Win32Api.SWP.SWP_NOZORDER)
+	End Sub
+
 	' Works without needing to call SetStyle.
 	Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
 		Dim theme As GroupBoxTheme = Nothing
@@ -213,6 +229,21 @@ Public Class GroupBoxEx
 			theme = TheApp.Settings.SelectedAppTheme.GroupBoxTheme
 		End If
 		If theme IsNot Nothing Then
+			Dim borderColor As Color
+			Dim borderWidth As Integer
+			If Me.Enabled Then
+				If Me.theMouseIsOverButton Then
+					borderColor = theme.FocusBorderColor
+					borderWidth = theme.FocusBorderWidth
+				Else
+					borderColor = theme.EnabledBorderColor
+					borderWidth = theme.EnabledBorderWidth
+				End If
+			Else
+				borderColor = theme.DisabledBorderColor
+				borderWidth = theme.DisabledBorderWidth
+			End If
+
 			Dim g As Graphics = e.Graphics
 			Dim clientRectangle As Rectangle = Me.ClientRectangle
 
@@ -224,7 +255,7 @@ Public Class GroupBoxEx
 			Dim stringSize As SizeF = TextRenderer.MeasureText(Me.Text, Me.Font)
 
 			' Draw groupbox border.
-			Using borderPen As New Pen(theme.EnabledBorderColor)
+			Using borderPen As New Pen(borderColor, borderWidth)
 				Dim borderRect As New Rectangle(0, CInt(stringSize.Height / 2), clientRectangle.Width - 1, clientRectangle.Height - CInt(stringSize.Height / 2) - 1)
 				g.DrawRectangle(borderPen, borderRect)
 			End Using
@@ -328,6 +359,8 @@ Public Class GroupBoxEx
 	Private theRadioButtonList As New System.Collections.Generic.List(Of RadioButton)()
 	'Private theSelectedIndex As Integer
 	Private theSelectedValue As System.Enum
+
+	Private theMouseIsOverButton As Boolean
 
 #End Region
 

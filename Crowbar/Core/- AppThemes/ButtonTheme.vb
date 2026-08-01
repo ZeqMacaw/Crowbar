@@ -1,7 +1,7 @@
 ﻿Imports System.Xml.Serialization
 
 Public Class ButtonTheme
-    Inherits WidgetTheme
+    Inherits FocusableWidgetTheme
 
 #Region "Create and Destroy"
 

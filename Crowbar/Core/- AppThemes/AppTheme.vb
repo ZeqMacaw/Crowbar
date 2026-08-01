@@ -10,27 +10,6 @@ Public Class AppTheme
         Me.theName = "Windows Default"
     End Sub
 
-    Public Sub New(ByVal name As String)
-        'MyBase.New()
-
-        Me.theName = name
-
-        Me.GlobalTheme = New GlobalTheme()
-        Me.ButtonTheme = New ButtonTheme()
-        Me.CheckBoxTheme = New CheckBoxTheme()
-        Me.ComboUserControlTheme = New ComboUserControlTheme()
-        Me.DataGridViewTheme = New DataGridViewTheme()
-        Me.GroupBoxTheme = New GroupBoxTheme()
-        Me.PanelTheme = New PanelTheme()
-        Me.ProgressBarTheme = New ProgressBarTheme()
-        Me.RadioButtonTheme = New RadioButtonTheme()
-        Me.RichTextBoxTheme = New RichTextBoxTheme()
-        Me.SplitContainerTheme = New SplitContainerTheme()
-        Me.TabControlTheme = New TabControlTheme()
-        Me.ToolStripTheme = New ToolStripTheme()
-        Me.TreeViewTheme = New TreeViewTheme()
-    End Sub
-
 #End Region
 
 #Region "Init and Free"

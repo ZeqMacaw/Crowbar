@@ -123,6 +123,7 @@
     <Compile Include="Core\- AppThemes\ThemeData.vb" />
     <Compile Include="Core\- AppThemes\GlobalTheme.vb" />
     <Compile Include="Core\- AppThemes\SelectableWidgetTheme.vb" />
+    <Compile Include="Core\- AppThemes\FocusableWidgetTheme.vb" />
     <Compile Include="Core\- AppThemes\WidgetTheme.vb" />
     <Compile Include="Core\- Application\VersionModule.vb" />
     <Compile Include="Core\- General\BackgroundWorkerEx.vb">
@@ -137,6 +138,9 @@
     </Compile>
     <Compile Include="Widgets\- Application\TESTUserControlForm.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Widgets\- General\LabelEx.vb">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Widgets\- General\RadioButtonEx.vb">
       <SubType>Component</SubType>

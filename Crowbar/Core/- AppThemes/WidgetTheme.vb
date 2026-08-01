@@ -16,13 +16,6 @@ Public Class WidgetTheme
         Me.theDisabledBackColor = New XmlColor(Color.FromArgb(&HFF2D2D2D))
         Me.theDisabledBorderColor = New XmlColor(Color.FromArgb(&HFF454545))
         Me.theDisabledBorderWidth = 1
-
-        Me.theFocusForeColor = New XmlColor(Color.FromArgb(&HFFF1F1F1))
-        Me.theFocusBackColor = New XmlColor(Color.FromArgb(&HFF4B4B4B))
-        'Me.theFocusTopBackColor = New XmlColor("WindowColorizationColor")
-        'Me.theFocusBottomBackColor = New XmlColor(Color.FromArgb(&HFF4B4B4B))
-        Me.theFocusBorderColor = New XmlColor("WindowColorizationColor")
-        Me.theFocusBorderWidth = 1
     End Sub
 
 #End Region
@@ -111,42 +104,6 @@ Public Class WidgetTheme
         End Set
     End Property
 
-    Public Property FocusForeColor As XmlColor
-        Get
-            Return Me.theFocusForeColor
-        End Get
-        Set(value As XmlColor)
-            Me.theFocusForeColor = value
-        End Set
-    End Property
-
-    Public Property FocusBackColor As XmlColor
-        Get
-            Return Me.theFocusBackColor
-        End Get
-        Set(value As XmlColor)
-            Me.theFocusBackColor = value
-        End Set
-    End Property
-
-    Public Property FocusBorderColor As XmlColor
-        Get
-            Return Me.theFocusBorderColor
-        End Get
-        Set(value As XmlColor)
-            Me.theFocusBorderColor = value
-        End Set
-    End Property
-
-    Public Property FocusBorderWidth As Integer
-        Get
-            Return Me.theFocusBorderWidth
-        End Get
-        Set(value As Integer)
-            Me.theFocusBorderWidth = value
-        End Set
-    End Property
-
 #End Region
 
 #Region "Methods"
@@ -173,11 +130,6 @@ Public Class WidgetTheme
     Protected theDisabledBackColor As XmlColor
     Protected theDisabledBorderColor As XmlColor
     Protected theDisabledBorderWidth As Integer
-
-    Protected theFocusForeColor As XmlColor
-    Protected theFocusBackColor As XmlColor
-    Protected theFocusBorderColor As XmlColor
-    Protected theFocusBorderWidth As Integer
 
 #End Region
 
