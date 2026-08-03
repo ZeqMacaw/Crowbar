@@ -78,22 +78,17 @@ Public Class DataGridViewEx
 
 	Protected Sub Init()
 		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
-		If TheApp Is Nothing Then
-			Exit Sub
+		If TheApp IsNot Nothing Then
+			Me.UpdateTheme()
+			AddHandler TheApp.Settings.PropertyChanged, AddressOf Me.AppSettings_PropertyChanged
 		End If
-
-		Me.UpdateTheme()
-
-		AddHandler TheApp.Settings.PropertyChanged, AddressOf Me.AppSettings_PropertyChanged
 	End Sub
 
 	Protected Sub Free()
 		' [04-Feb-2026] Because Me.DesignMode is unreliable in nested widgets, must do this check to prevent a crash.
-		If TheApp Is Nothing Then
-			Exit Sub
+		If TheApp IsNot Nothing Then
+			RemoveHandler TheApp.Settings.PropertyChanged, AddressOf Me.AppSettings_PropertyChanged
 		End If
-
-		RemoveHandler TheApp.Settings.PropertyChanged, AddressOf Me.AppSettings_PropertyChanged
 	End Sub
 
 #End Region
@@ -948,12 +943,6 @@ Public Class DataGridViewEx
 			End If
 		End If
 
-		'If Me.theBorderStyle = Windows.Forms.BorderStyle.FixedSingle Then
-		'	left += 1
-		'	top += 1
-		'	right += 1
-		'	bottom += 1
-		'End If
 		Dim theme As DataGridViewTheme = Nothing
 		If TheApp IsNot Nothing Then
 			theme = TheApp.Settings.SelectedAppTheme.DataGridViewTheme

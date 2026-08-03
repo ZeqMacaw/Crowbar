@@ -106,6 +106,7 @@
     <Compile Include="Core\- Application\SingleInstanceApplication.vb" />
     <Compile Include="Core\- Application\SingleInstanceEventArgs.vb" />
     <Compile Include="Core\- AppThemes\AppTheme.vb" />
+    <Compile Include="Core\- AppThemes\LabelTheme.vb" />
     <Compile Include="Core\- AppThemes\DataGridViewTheme.vb" />
     <Compile Include="Core\- AppThemes\ComboUserControlTheme.vb" />
     <Compile Include="Core\- AppThemes\GroupBoxTheme.vb" />

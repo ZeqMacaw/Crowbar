@@ -15,41 +15,41 @@ Partial Class SetUpGamesUserControl
 		Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
 		Me.AddLibraryPathButton = New Crowbar.ButtonEx()
 		Me.DeleteLibraryPathButton = New Crowbar.ButtonEx()
-		Me.Label11 = New System.Windows.Forms.Label()
-		Me.Label10 = New System.Windows.Forms.Label()
+		Me.Label11 = New Crowbar.LabelEx()
+		Me.Label10 = New Crowbar.LabelEx()
 		Me.BrowseForSteamAppPathFileNameButton = New Crowbar.ButtonEx()
 		Me.SteamAppPathFileNameTextBox = New Crowbar.RichTextBoxEx()
 		Me.AddGameSetupButton = New Crowbar.ButtonEx()
 		Me.GameGroupBox = New Crowbar.GroupBoxEx()
-		Me.EngineLabel = New System.Windows.Forms.Label()
+		Me.EngineLabel = New Crowbar.LabelEx()
 		Me.EngineComboUserControl = New Crowbar.ComboUserControl()
 		Me.CreateModelsFolderTreeButton = New Crowbar.ButtonEx()
 		Me.BrowseForMappingToolPathFileNameButton = New Crowbar.ButtonEx()
 		Me.MappingToolPathFileNameTextBox = New Crowbar.RichTextBoxEx()
-		Me.MappingToolLabel = New System.Windows.Forms.Label()
+		Me.MappingToolLabel = New Crowbar.LabelEx()
 		Me.GameAppOptionsRichTextBoxExIncorrectTextSpacingWorkaroundPanel = New System.Windows.Forms.Panel()
 		Me.GameAppOptionsTextBox = New Crowbar.RichTextBoxEx()
-		Me.ExecutableOptionsLabel = New System.Windows.Forms.Label()
+		Me.ExecutableOptionsLabel = New Crowbar.LabelEx()
 		Me.ClearGameAppOptionsButton = New Crowbar.ButtonEx()
 		Me.BrowseForGameAppPathFileNameButton = New Crowbar.ButtonEx()
 		Me.GameAppPathFileNameTextBox = New Crowbar.RichTextBoxEx()
-		Me.ExecutableLabel = New System.Windows.Forms.Label()
-		Me.PackerLabel = New System.Windows.Forms.Label()
+		Me.ExecutableLabel = New Crowbar.LabelEx()
+		Me.PackerLabel = New Crowbar.LabelEx()
 		Me.BrowseForUnpackerPathFileNameButton = New Crowbar.ButtonEx()
 		Me.PackerPathFileNameTextBox = New Crowbar.RichTextBoxEx()
-		Me.ModelViewerLabel = New System.Windows.Forms.Label()
+		Me.ModelViewerLabel = New Crowbar.LabelEx()
 		Me.BrowseForViewerPathFileNameButton = New Crowbar.ButtonEx()
 		Me.ViewerPathFileNameTextBox = New Crowbar.RichTextBoxEx()
 		Me.CloneGameSetupButton = New Crowbar.ButtonEx()
 		Me.GameNameTextBox = New Crowbar.RichTextBoxEx()
-		Me.NameLabel = New System.Windows.Forms.Label()
+		Me.NameLabel = New Crowbar.LabelEx()
 		Me.DeleteGameSetupButton = New Crowbar.ButtonEx()
 		Me.BrowseForGamePathFileNameButton = New Crowbar.ButtonEx()
 		Me.GamePathFileNameTextBox = New Crowbar.RichTextBoxEx()
-		Me.ModelCompilerLabel = New System.Windows.Forms.Label()
+		Me.ModelCompilerLabel = New Crowbar.LabelEx()
 		Me.BrowseForCompilerPathFileNameButton = New Crowbar.ButtonEx()
 		Me.CompilerPathFileNameTextBox = New Crowbar.RichTextBoxEx()
-		Me.GamePathLabel = New System.Windows.Forms.Label()
+		Me.GamePathLabel = New Crowbar.LabelEx()
 		Me.GoBackButton = New Crowbar.ButtonEx()
 		Me.SteamLibraryPathsDataGridView = New Crowbar.MacroDataGridView()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
@@ -653,8 +653,8 @@ Partial Class SetUpGamesUserControl
 	Friend WithEvents AddLibraryPathButton As ButtonEx
 	Friend WithEvents DeleteLibraryPathButton As ButtonEx
 	Friend WithEvents SteamLibraryPathsDataGridView As Crowbar.MacroDataGridView
-	Friend WithEvents Label11 As System.Windows.Forms.Label
-	Friend WithEvents Label10 As System.Windows.Forms.Label
+	Friend WithEvents Label11 As Crowbar.LabelEx
+	Friend WithEvents Label10 As Crowbar.LabelEx
 	Friend WithEvents BrowseForSteamAppPathFileNameButton As ButtonEx
 	Friend WithEvents SteamAppPathFileNameTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents AddGameSetupButton As ButtonEx
@@ -662,31 +662,31 @@ Partial Class SetUpGamesUserControl
 	Friend WithEvents CreateModelsFolderTreeButton As ButtonEx
 	Friend WithEvents BrowseForMappingToolPathFileNameButton As ButtonEx
 	Friend WithEvents MappingToolPathFileNameTextBox As Crowbar.RichTextBoxEx
-	Friend WithEvents MappingToolLabel As System.Windows.Forms.Label
+	Friend WithEvents MappingToolLabel As Crowbar.LabelEx
 	Friend WithEvents GameAppOptionsTextBox As Crowbar.RichTextBoxEx
-	Friend WithEvents ExecutableOptionsLabel As System.Windows.Forms.Label
+	Friend WithEvents ExecutableOptionsLabel As Crowbar.LabelEx
 	Friend WithEvents ClearGameAppOptionsButton As ButtonEx
 	Friend WithEvents BrowseForGameAppPathFileNameButton As ButtonEx
 	Friend WithEvents GameAppPathFileNameTextBox As Crowbar.RichTextBoxEx
-	Friend WithEvents ExecutableLabel As System.Windows.Forms.Label
-	Friend WithEvents PackerLabel As System.Windows.Forms.Label
+	Friend WithEvents ExecutableLabel As Crowbar.LabelEx
+	Friend WithEvents PackerLabel As Crowbar.LabelEx
 	Friend WithEvents BrowseForUnpackerPathFileNameButton As ButtonEx
 	Friend WithEvents PackerPathFileNameTextBox As Crowbar.RichTextBoxEx
-	Friend WithEvents ModelViewerLabel As System.Windows.Forms.Label
+	Friend WithEvents ModelViewerLabel As Crowbar.LabelEx
 	Friend WithEvents BrowseForViewerPathFileNameButton As ButtonEx
 	Friend WithEvents ViewerPathFileNameTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents CloneGameSetupButton As ButtonEx
 	Friend WithEvents GameNameTextBox As Crowbar.RichTextBoxEx
-	Friend WithEvents NameLabel As System.Windows.Forms.Label
+	Friend WithEvents NameLabel As Crowbar.LabelEx
 	Friend WithEvents DeleteGameSetupButton As ButtonEx
 	Friend WithEvents BrowseForGamePathFileNameButton As ButtonEx
 	Friend WithEvents GamePathFileNameTextBox As Crowbar.RichTextBoxEx
-	Friend WithEvents ModelCompilerLabel As System.Windows.Forms.Label
+	Friend WithEvents ModelCompilerLabel As Crowbar.LabelEx
 	Friend WithEvents BrowseForCompilerPathFileNameButton As ButtonEx
 	Friend WithEvents CompilerPathFileNameTextBox As Crowbar.RichTextBoxEx
-	Friend WithEvents GamePathLabel As System.Windows.Forms.Label
+	Friend WithEvents GamePathLabel As Crowbar.LabelEx
 	Friend WithEvents EngineComboUserControl As ComboUserControl
-	Friend WithEvents EngineLabel As System.Windows.Forms.Label
+	Friend WithEvents EngineLabel As Crowbar.LabelEx
 	Friend WithEvents GoBackButton As ButtonEx
 	Friend WithEvents ToolTip1 As ToolTip
 	Friend WithEvents Panel1 As PanelEx

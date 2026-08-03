@@ -21,12 +21,12 @@ Partial Class CompileUserControl
         Me.CompilerOptionDefineBonesModifyQcFileCheckBox = New Crowbar.CheckBoxEx()
         Me.CompilerOptionDefineBonesWriteQciFileCheckBox = New Crowbar.CheckBoxEx()
         Me.CompilerOptionDefineBonesFileNameTextBox = New Crowbar.RichTextBoxEx()
-        Me.DirectCompilerOptionsLabel = New System.Windows.Forms.Label()
+        Me.DirectCompilerOptionsLabel = New Crowbar.LabelEx()
         Me.DirectCompilerOptionsTextBox = New Crowbar.RichTextBoxEx()
         Me.BrowseForQcPathFolderOrFileNameButton = New Crowbar.ButtonEx()
-        Me.Label6 = New System.Windows.Forms.Label()
+        Me.Label6 = New Crowbar.LabelEx()
         Me.SetUpGamesButton = New Crowbar.ButtonEx()
-        Me.GameSetupLabel = New System.Windows.Forms.Label()
+        Me.GameSetupLabel = New Crowbar.LabelEx()
         Me.CompileButton = New Crowbar.ButtonEx()
         Me.Panel1 = New Crowbar.PanelEx()
         Me.QcPathFileNameTextBox = New Crowbar.RichTextBoxEx()
@@ -37,7 +37,7 @@ Partial Class CompileUserControl
         Me.BrowseForOutputPathButton = New Crowbar.ButtonEx()
         Me.OutputPathComboUserControl = New Crowbar.ComboUserControl()
         Me.CompileComboUserControl = New Crowbar.ComboUserControl()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label1 = New Crowbar.LabelEx()
         Me.GotoQcButton = New Crowbar.ButtonEx()
         Me.Options_LogSplitContainer = New System.Windows.Forms.SplitContainer()
         Me.OptionsGroupBox = New Crowbar.GroupBoxEx()
@@ -810,13 +810,13 @@ Partial Class CompileUserControl
     Friend WithEvents CompilerOptionsTextBox As Crowbar.RichTextBoxEx
     Friend WithEvents GameSetupComboUserControl As ComboUserControl
     Friend WithEvents BrowseForQcPathFolderOrFileNameButton As ButtonEx
-	Friend WithEvents Label6 As System.Windows.Forms.Label
+	Friend WithEvents Label6 As Crowbar.LabelEx
 	Friend WithEvents SetUpGamesButton As ButtonEx
-	Friend WithEvents GameSetupLabel As System.Windows.Forms.Label
+	Friend WithEvents GameSetupLabel As Crowbar.LabelEx
 	Friend WithEvents CompileButton As ButtonEx
 	Friend WithEvents CompilerOptionNoP4CheckBox As CheckBoxEx
 	Friend WithEvents CompilerOptionVerboseCheckBox As CheckBoxEx
-	Friend WithEvents DirectCompilerOptionsLabel As System.Windows.Forms.Label
+	Friend WithEvents DirectCompilerOptionsLabel As Crowbar.LabelEx
 	Friend WithEvents DirectCompilerOptionsTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents Options_LogSplitContainer As System.Windows.Forms.SplitContainer
 	Friend WithEvents CompileLogRichTextBox As Crowbar.RichTextBoxEx
@@ -846,7 +846,7 @@ Partial Class CompileUserControl
 	Friend WithEvents UseDefaultOutputSubfolderButton As ButtonEx
 	Friend WithEvents OutputPathTextBox As Crowbar.RichTextBoxEx
     Friend WithEvents OutputPathComboUserControl As ComboUserControl
-    Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents Label1 As Crowbar.LabelEx
 	Friend WithEvents GameModelsOutputPathTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents CompilerOptionsSourceEnginePanel As PanelEx
 	Friend WithEvents CompilerOptionsGoldSourceEnginePanel As PanelEx

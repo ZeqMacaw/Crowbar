@@ -14,8 +14,8 @@ Partial Class DownloadUserControl
 		Me.ItemIdTextBox = New Crowbar.RichTextBoxEx()
 		Me.DownloadButton = New Crowbar.ButtonEx()
 		Me.LogTextBox = New Crowbar.RichTextBoxEx()
-		Me.ItemIdOrLinkLabel = New System.Windows.Forms.Label()
-		Me.OuputToLabel = New System.Windows.Forms.Label()
+		Me.ItemIdOrLinkLabel = New Crowbar.LabelEx()
+		Me.OuputToLabel = New Crowbar.LabelEx()
 		Me.OutputPathComboBox = New Crowbar.ComboUserControl()
 		Me.OutputPathTextBox = New Crowbar.RichTextBoxEx()
 		Me.GotoOutputPathButton = New Crowbar.ButtonEx()
@@ -28,14 +28,14 @@ Partial Class DownloadUserControl
 		Me.ReplaceSpacesWithUnderscoresCheckBox = New Crowbar.CheckBoxEx()
 		Me.OptionsUseDefaultsButton = New Crowbar.ButtonEx()
 		Me.ConvertToExpectedFileOrFolderCheckBox = New Crowbar.CheckBoxEx()
-		Me.ExampleOutputFileNameLabel = New System.Windows.Forms.Label()
+		Me.ExampleOutputFileNameLabel = New Crowbar.LabelEx()
 		Me.ExampleOutputFileNameTextBox = New Crowbar.RichTextBoxEx()
 		Me.CancelDownloadButton = New Crowbar.ButtonEx()
 		Me.DownloadProgressBar = New Crowbar.ProgressBarEx()
 		Me.OpenWorkshopPageButton = New Crowbar.ButtonEx()
 		Me.DocumentsOutputPathTextBox = New Crowbar.RichTextBoxEx()
 		Me.DownloadedItemTextBox = New Crowbar.RichTextBoxEx()
-		Me.DownloadedLabel = New System.Windows.Forms.Label()
+		Me.DownloadedLabel = New Crowbar.LabelEx()
 		Me.GotoDownloadedItemButton = New Crowbar.ButtonEx()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
 		Me.DownloadUserControlFillPanel = New Crowbar.PanelEx()
@@ -476,14 +476,14 @@ Partial Class DownloadUserControl
 	Friend WithEvents ItemIdTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents DownloadButton As ButtonEx
 	Friend WithEvents LogTextBox As RichTextBoxEx
-	Friend WithEvents ItemIdOrLinkLabel As Label
-	Friend WithEvents OuputToLabel As Label
+	Friend WithEvents ItemIdOrLinkLabel As LabelEx
+	Friend WithEvents OuputToLabel As LabelEx
 	Friend WithEvents OutputPathTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents GotoOutputPathButton As ButtonEx
 	Friend WithEvents BrowseForOutputPathButton As ButtonEx
 	Friend WithEvents OptionsGroupBox As GroupBoxEx
 	Friend WithEvents CancelDownloadButton As ButtonEx
-	Friend WithEvents ExampleOutputFileNameLabel As Label
+	Friend WithEvents ExampleOutputFileNameLabel As LabelEx
 	Friend WithEvents AppendDateTimeCheckBox As CheckBoxEx
 	Friend WithEvents PrependTitleCheckBox As CheckBoxEx
 	Friend WithEvents UseIdCheckBox As CheckBoxEx
@@ -493,7 +493,7 @@ Partial Class DownloadUserControl
 	Friend WithEvents OpenWorkshopPageButton As ButtonEx
 	Friend WithEvents DocumentsOutputPathTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents DownloadedItemTextBox As Crowbar.RichTextBoxEx
-	Friend WithEvents DownloadedLabel As Label
+	Friend WithEvents DownloadedLabel As LabelEx
 	Friend WithEvents GotoDownloadedItemButton As ButtonEx
 	Friend WithEvents ExampleOutputFileNameTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents ConvertToExpectedFileOrFolderCheckBox As CheckBoxEx

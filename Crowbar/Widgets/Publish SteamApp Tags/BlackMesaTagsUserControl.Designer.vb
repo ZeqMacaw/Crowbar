@@ -36,11 +36,11 @@ Partial Class BlackMesaTagsUserControl
 		Me.ExtraTag3TextBox = New Crowbar.RichTextBoxEx()
 		Me.ExtraTag4TextBox = New Crowbar.RichTextBoxEx()
 		Me.ExtraTag5TextBox = New Crowbar.RichTextBoxEx()
-		Me.Label5 = New System.Windows.Forms.Label()
-		Me.Label4 = New System.Windows.Forms.Label()
-		Me.Label3 = New System.Windows.Forms.Label()
-		Me.Label2 = New System.Windows.Forms.Label()
-		Me.Label1 = New System.Windows.Forms.Label()
+		Me.Label5 = New Crowbar.LabelEx()
+		Me.Label4 = New Crowbar.LabelEx()
+		Me.Label3 = New Crowbar.LabelEx()
+		Me.Label2 = New Crowbar.LabelEx()
+		Me.Label1 = New Crowbar.LabelEx()
 		Me.MapTagsGroupBox.SuspendLayout()
 		Me.ModelTagsGroupBox.SuspendLayout()
 		Me.GroupBox1.SuspendLayout()
@@ -279,9 +279,9 @@ Partial Class BlackMesaTagsUserControl
 	Friend WithEvents ExtraTag3TextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents ExtraTag2TextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents ExtraTag1TextBox As Crowbar.RichTextBoxEx
-	Friend WithEvents Label5 As Label
-	Friend WithEvents Label4 As Label
-	Friend WithEvents Label3 As Label
-	Friend WithEvents Label2 As Label
-	Friend WithEvents Label1 As Label
+	Friend WithEvents Label5 As LabelEx
+	Friend WithEvents Label4 As LabelEx
+	Friend WithEvents Label3 As LabelEx
+	Friend WithEvents Label2 As LabelEx
+	Friend WithEvents Label1 As LabelEx
 End Class

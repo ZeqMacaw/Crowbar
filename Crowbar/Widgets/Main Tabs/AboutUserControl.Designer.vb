@@ -48,7 +48,6 @@ Partial Class AboutUserControl
 		'ProductDescriptionTextBox
 		'
 		Me.ProductDescriptionTextBox.CueBannerText = ""
-		Me.ProductDescriptionTextBox.DetectUrls = False
 		Me.ProductDescriptionTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!)
 		Me.ProductDescriptionTextBox.Location = New System.Drawing.Point(175, 3)
 		Me.ProductDescriptionTextBox.Name = "ProductDescriptionTextBox"

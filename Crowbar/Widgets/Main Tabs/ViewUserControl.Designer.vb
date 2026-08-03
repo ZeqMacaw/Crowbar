@@ -14,17 +14,17 @@ Partial Class ViewUserControl
 		Me.ViewButton = New Crowbar.ButtonEx()
 		Me.MdlPathFileNameTextBox = New Crowbar.RichTextBoxEx()
 		Me.BrowseForMdlFileButton = New Crowbar.ButtonEx()
-		Me.Label1 = New System.Windows.Forms.Label()
+		Me.Label1 = New Crowbar.LabelEx()
 		Me.Panel2 = New Crowbar.PanelEx()
 		Me.RefreshButton = New Crowbar.ButtonEx()
-		Me.OverrideMdlVersionLabel = New System.Windows.Forms.Label()
+		Me.OverrideMdlVersionLabel = New Crowbar.LabelEx()
 		Me.OverrideMdlVersionComboUserControl = New Crowbar.ComboUserControl()
 		Me.GotoMdlFileButton = New Crowbar.ButtonEx()
 		Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
 		Me.GroupBox1 = New Crowbar.GroupBoxEx()
 		Me.Panel1 = New System.Windows.Forms.Panel()
 		Me.InfoRichTextBox = New Crowbar.RichTextBoxEx()
-		Me.GameLabel = New System.Windows.Forms.Label()
+		Me.GameLabel = New Crowbar.LabelEx()
 		Me.GameSetupComboBox = New Crowbar.ComboUserControl()
 		Me.SetUpGameButton = New Crowbar.ButtonEx()
 		Me.ViewAsReplacementButton = New Crowbar.ButtonEx()
@@ -333,9 +333,9 @@ Partial Class ViewUserControl
 	Friend WithEvents ViewButton As ButtonEx
 	Friend WithEvents MdlPathFileNameTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents BrowseForMdlFileButton As ButtonEx
-	Friend WithEvents Label1 As System.Windows.Forms.Label
+	Friend WithEvents Label1 As Crowbar.LabelEx
 	Friend WithEvents Panel2 As PanelEx
-	Friend WithEvents GameLabel As System.Windows.Forms.Label
+	Friend WithEvents GameLabel As Crowbar.LabelEx
 	Friend WithEvents SetUpGameButton As ButtonEx
 	Friend WithEvents GameSetupComboBox As ComboUserControl
 	Friend WithEvents GotoMdlFileButton As ButtonEx
@@ -348,7 +348,7 @@ Partial Class ViewUserControl
 	Friend WithEvents SplitContainer1 As System.Windows.Forms.SplitContainer
 	Friend WithEvents RunGameButton As ButtonEx
 	Friend WithEvents OpenMappingToolButton As ButtonEx
-	Friend WithEvents OverrideMdlVersionLabel As Label
+	Friend WithEvents OverrideMdlVersionLabel As LabelEx
 	Friend WithEvents OverrideMdlVersionComboUserControl As ComboUserControl
 	Friend WithEvents RefreshButton As ButtonEx
 	Friend WithEvents Panel1 As Panel

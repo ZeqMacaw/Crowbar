@@ -13,7 +13,7 @@ Partial Class EditUserControl
 		Me.components = New System.ComponentModel.Container()
 		Me.Panel1 = New Crowbar.PanelEx()
 		Me.GotoQcButton = New Crowbar.ButtonEx()
-		Me.Label6 = New System.Windows.Forms.Label()
+		Me.Label6 = New Crowbar.LabelEx()
 		Me.QcPathFileNameTextBox = New Crowbar.RichTextBoxEx()
 		Me.BrowseForQcPathFolderOrFileNameButton = New Crowbar.ButtonEx()
 		Me.UseInCompileButton = New Crowbar.ButtonEx()
@@ -104,7 +104,7 @@ Partial Class EditUserControl
 	Friend WithEvents Panel1 As PanelEx
 	Friend WithEvents UseInCompileButton As ButtonEx
 	Friend WithEvents GotoQcButton As ButtonEx
-	Friend WithEvents Label6 As System.Windows.Forms.Label
+	Friend WithEvents Label6 As Crowbar.LabelEx
 	Friend WithEvents QcPathFileNameTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents BrowseForQcPathFolderOrFileNameButton As ButtonEx
 

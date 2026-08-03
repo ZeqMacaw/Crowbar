@@ -18,9 +18,9 @@ Partial Class PackUserControl
 		Me.OutputParentPathTextBox = New Crowbar.RichTextBoxEx()
 		Me.OutputPathComboUserControl = New Crowbar.ComboUserControl()
 		Me.InputComboUserControl = New Crowbar.ComboUserControl()
-		Me.Label1 = New System.Windows.Forms.Label()
+		Me.Label1 = New Crowbar.LabelEx()
 		Me.GotoInputPathButton = New Crowbar.ButtonEx()
-		Me.Label6 = New System.Windows.Forms.Label()
+		Me.Label6 = New Crowbar.LabelEx()
 		Me.InputPathFileNameTextBox = New Crowbar.RichTextBoxEx()
 		Me.BrowseForInputFolderOrFileNameButton = New Crowbar.ButtonEx()
 		Me.Options_LogSplitContainer = New System.Windows.Forms.SplitContainer()
@@ -32,13 +32,13 @@ Partial Class PackUserControl
 		Me.LogFileCheckBox = New Crowbar.CheckBoxEx()
 		Me.GmaPanel = New Crowbar.PanelEx()
 		Me.GmaTitleTextBox = New Crowbar.RichTextBoxEx()
-		Me.GmaTitleLabel = New System.Windows.Forms.Label()
+		Me.GmaTitleLabel = New Crowbar.LabelEx()
 		Me.GmaGarrysModTagsUserControl = New Crowbar.GarrysModTagsUserControl()
 		Me.GameSetupPanel = New Crowbar.PanelEx()
-		Me.GameSetupLabel = New System.Windows.Forms.Label()
+		Me.GameSetupLabel = New Crowbar.LabelEx()
 		Me.GameSetupComboUserControl = New Crowbar.ComboUserControl()
 		Me.SetUpGamesButton = New Crowbar.ButtonEx()
-		Me.DirectPackOptionsLabel = New System.Windows.Forms.Label()
+		Me.DirectPackOptionsLabel = New Crowbar.LabelEx()
 		Me.DirectPackOptionsPanel = New Crowbar.PanelEx()
 		Me.DirectPackOptionsTextBox = New Crowbar.RichTextBoxEx()
 		Me.PackOptionsTextPanel = New Crowbar.PanelEx()
@@ -624,9 +624,9 @@ Partial Class PackUserControl
 	Friend WithEvents OutputPathTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents OutputPathComboUserControl As ComboUserControl
 	Friend WithEvents InputComboUserControl As ComboUserControl
-	Friend WithEvents Label1 As System.Windows.Forms.Label
+	Friend WithEvents Label1 As Crowbar.LabelEx
 	Friend WithEvents GotoInputPathButton As ButtonEx
-	Friend WithEvents Label6 As System.Windows.Forms.Label
+	Friend WithEvents Label6 As Crowbar.LabelEx
 	Friend WithEvents InputPathFileNameTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents BrowseForInputFolderOrFileNameButton As ButtonEx
 	Friend WithEvents Options_LogSplitContainer As System.Windows.Forms.SplitContainer
@@ -635,7 +635,7 @@ Partial Class PackUserControl
 	Friend WithEvents PackOptionsPanel As PanelEx
 	Friend WithEvents PackOptionsUseDefaultsButton As ButtonEx
 	Friend WithEvents LogFileCheckBox As CheckBoxEx
-	Friend WithEvents GameSetupLabel As System.Windows.Forms.Label
+	Friend WithEvents GameSetupLabel As Crowbar.LabelEx
 	Friend WithEvents GameSetupComboUserControl As ComboUserControl
 	Friend WithEvents SetUpGamesButton As ButtonEx
 	Friend WithEvents CancelPackButton As ButtonEx
@@ -645,12 +645,12 @@ Partial Class PackUserControl
 	Friend WithEvents LogRichTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents PackedFilesComboUserControl As ComboUserControl
 	Friend WithEvents GotoPackedFileButton As ButtonEx
-	Friend WithEvents DirectPackOptionsLabel As Label
+	Friend WithEvents DirectPackOptionsLabel As LabelEx
 	Friend WithEvents DirectPackOptionsTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents PackOptionsTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents ToolTip1 As ToolTip
 	Friend WithEvents MultiFileVpkCheckBox As CheckBoxEx
-	Friend WithEvents GmaTitleLabel As Label
+	Friend WithEvents GmaTitleLabel As LabelEx
 	Friend WithEvents GmaTitleTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents GmaGarrysModTagsUserControl As GarrysModTagsUserControl
 	Friend WithEvents PackButtonsPanel As PanelEx

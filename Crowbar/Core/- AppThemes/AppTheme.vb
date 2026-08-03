@@ -96,6 +96,15 @@ Public Class AppTheme
         End Set
     End Property
 
+    Public Property LabelTheme() As LabelTheme
+        Get
+            Return Me.theLabelTheme
+        End Get
+        Set(ByVal value As LabelTheme)
+            Me.theLabelTheme = value
+        End Set
+    End Property
+
     Public Property PanelTheme() As PanelTheme
         Get
             Return Me.thePanelTheme
@@ -220,6 +229,7 @@ Public Class AppTheme
     Private theDataGridViewTheme As DataGridViewTheme
     Private theDateTimeTextBoxTheme As WidgetTheme
     Private theGroupBoxTheme As GroupBoxTheme
+    Private theLabelTheme As LabelTheme
     Private thePanelTheme As PanelTheme
     Private theProgressBarTheme As ProgressBarTheme
     Private theRadioButtonTheme As RadioButtonTheme

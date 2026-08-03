@@ -8,6 +8,8 @@ Public Class PanelTheme
     Public Sub New()
         MyBase.New()
 
+        Me.theEnabledBorderWidth = 0
+        Me.theDisabledBorderWidth = 0
     End Sub
 
 #End Region

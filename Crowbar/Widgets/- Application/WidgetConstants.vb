@@ -9,7 +9,7 @@
 	Public WidgetHighSelectedBackColor As Color = Color.FromArgb(&HFF107C10)
 	Public WidgetHighDisabledBackColor As Color = Color.FromArgb(&HFF4B4B4B)
 
-	'For: CheckBox label, Label, MenuBar, Panel, TabControl, TabPage
+	'For: CheckBox label, LabelEx, MenuBar, Panel, TabControl, TabPage
 	Public WidgetBackColor As Color = Color.FromArgb(&HFF2D2D2D)
 	Public WidgetSelectedBackColor As Color = Color.FromArgb(&HFF107C10)
 	Public WidgetDisabledBackColor As Color = Color.FromArgb(&HFF2D2D2D)

@@ -19,11 +19,11 @@ Partial Class DecompileUserControl
 		Me.UseMixedCaseForKeywordsCheckBox = New Crowbar.CheckBoxEx()
 		Me.RemovePathFromMaterialFileNamesCheckBox = New Crowbar.CheckBoxEx()
 		Me.UseNonValveUvConversionCheckBox = New Crowbar.CheckBoxEx()
-		Me.OverrideMdlVersionLabel = New System.Windows.Forms.Label()
+		Me.OverrideMdlVersionLabel = New Crowbar.LabelEx()
 		Me.OverrideMdlVersionComboUserControl = New Crowbar.ComboUserControl()
 		Me.PrefixMeshFileNamesWithModelNameCheckBox = New Crowbar.CheckBoxEx()
 		Me.Panel2 = New Crowbar.PanelEx()
-		Me.Label1 = New System.Windows.Forms.Label()
+		Me.Label1 = New Crowbar.LabelEx()
 		Me.DecompileInputComboUserControl = New Crowbar.ComboUserControl()
 		Me.MdlPathFileNameTextBox = New Crowbar.RichTextBoxEx()
 		Me.BrowseForMdlPathFolderOrFileNameButton = New Crowbar.ButtonEx()
@@ -33,7 +33,7 @@ Partial Class DecompileUserControl
 		Me.OutputPathTextBox = New Crowbar.RichTextBoxEx()
 		Me.OutputSubfolderTextBox = New Crowbar.RichTextBoxEx()
 		Me.OutputPathComboUserControl = New Crowbar.ComboUserControl()
-		Me.Label3 = New System.Windows.Forms.Label()
+		Me.Label3 = New Crowbar.LabelEx()
 		Me.UseDefaultOutputSubfolderButton = New Crowbar.ButtonEx()
 		Me.Options_LogSplitContainer = New System.Windows.Forms.SplitContainer()
 		Me.DecompileOptionsPanel = New Crowbar.PanelEx()
@@ -44,7 +44,7 @@ Partial Class DecompileUserControl
 		Me.TextureBmpFilesCheckBox = New Crowbar.CheckBoxEx()
 		Me.DecompileOptionsUseDefaultsButton = New Crowbar.ButtonEx()
 		Me.ModelFormatComboUserControl = New Crowbar.ComboUserControl()
-		Me.Label2 = New System.Windows.Forms.Label()
+		Me.Label2 = New Crowbar.LabelEx()
 		Me.IncludeDefineBoneLinesCheckBox = New Crowbar.CheckBoxEx()
 		Me.GroupIntoQciFilesCheckBox = New Crowbar.CheckBoxEx()
 		Me.PlaceInAnimsSubfolderCheckBox = New Crowbar.CheckBoxEx()
@@ -873,7 +873,7 @@ Partial Class DecompileUserControl
 	Friend WithEvents DecompileButton As ButtonEx
 	Friend WithEvents MdlPathFileNameTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents BrowseForMdlPathFolderOrFileNameButton As ButtonEx
-	Friend WithEvents Label1 As System.Windows.Forms.Label
+	Friend WithEvents Label1 As Crowbar.LabelEx
 	Friend WithEvents ReCreateFilesGroupBox As GroupBoxEx
 	Friend WithEvents Panel1 As PanelEx
 	Friend WithEvents LodMeshSmdFilesCheckBox As CheckBoxEx
@@ -890,7 +890,7 @@ Partial Class DecompileUserControl
 	Friend WithEvents SkipCurrentModelButton As ButtonEx
 	Friend WithEvents DecompileInputComboUserControl As ComboUserControl
 	Friend WithEvents Options_LogSplitContainer As System.Windows.Forms.SplitContainer
-	Friend WithEvents Label2 As System.Windows.Forms.Label
+	Friend WithEvents Label2 As Crowbar.LabelEx
 	Friend WithEvents ModelFormatComboUserControl As ComboUserControl
 	Friend WithEvents FormatForStricterImportersCheckBox As CheckBoxEx
 	Friend WithEvents GroupIntoQciFilesCheckBox As CheckBoxEx
@@ -915,14 +915,14 @@ Partial Class DecompileUserControl
 	Friend WithEvents BrowseForOutputPathButton As ButtonEx
 	Friend WithEvents OutputPathTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents OutputPathComboUserControl As ComboUserControl
-	Friend WithEvents Label3 As System.Windows.Forms.Label
+	Friend WithEvents Label3 As Crowbar.LabelEx
 	Friend WithEvents UseDefaultOutputSubfolderButton As ButtonEx
 	Friend WithEvents OptionsGroupBox As GroupBoxEx
 	Friend WithEvents Panel3 As PanelEx
 	Friend WithEvents OnlyChangedMaterialsInTextureGroupLinesCheckBox As CheckBoxEx
 	Friend WithEvents OutputSubfolderTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents UseNonValveUvConversionCheckBox As CheckBoxEx
-	Friend WithEvents OverrideMdlVersionLabel As System.Windows.Forms.Label
+	Friend WithEvents OverrideMdlVersionLabel As Crowbar.LabelEx
 	Friend WithEvents OverrideMdlVersionComboUserControl As ComboUserControl
 	Friend WithEvents PrefixMeshFileNamesWithModelNameCheckBox As CheckBoxEx
 	Friend WithEvents DecompileButtonsPanel As PanelEx

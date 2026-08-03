@@ -23,7 +23,7 @@ Partial Class GarrysModTagsUserControl
 	<System.Diagnostics.DebuggerStepThrough()> _
 	Private Sub InitializeComponent()
 		Me.ComboBox1 = New ComboUserControl()
-		Me.Label1 = New System.Windows.Forms.Label()
+		Me.Label1 = New Crowbar.LabelEx()
 		Me.CheckBox1 = New Crowbar.CheckBoxEx()
 		Me.CheckBox2 = New Crowbar.CheckBoxEx()
 		Me.CheckBox3 = New Crowbar.CheckBoxEx()
@@ -35,7 +35,7 @@ Partial Class GarrysModTagsUserControl
 		Me.CheckBox9 = New Crowbar.CheckBoxEx()
 		Me.GroupBox1 = New Crowbar.GroupBoxEx()
 		Me.AddonTagCheckBox = New Crowbar.CheckBoxEx()
-		Me.Label2 = New System.Windows.Forms.Label()
+		Me.Label2 = New Crowbar.LabelEx()
 		Me.GroupBox1.SuspendLayout()
 		Me.SuspendLayout()
 		'
@@ -225,7 +225,7 @@ Partial Class GarrysModTagsUserControl
 	End Sub
 
 	Friend WithEvents ComboBox1 As ComboUserControl
-	Friend WithEvents Label1 As Label
+	Friend WithEvents Label1 As LabelEx
 	Friend WithEvents CheckBox1 As CheckBoxEx
 	Friend WithEvents CheckBox2 As CheckBoxEx
 	Friend WithEvents CheckBox3 As CheckBoxEx
@@ -237,5 +237,5 @@ Partial Class GarrysModTagsUserControl
 	Friend WithEvents CheckBox9 As CheckBoxEx
 	Friend WithEvents GroupBox1 As GroupBoxEx
 	Friend WithEvents AddonTagCheckBox As CheckBoxEx
-	Friend WithEvents Label2 As Label
+	Friend WithEvents Label2 As LabelEx
 End Class

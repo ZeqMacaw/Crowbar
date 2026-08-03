@@ -80,10 +80,10 @@ Public Class LabelEx
 	End Sub
 
 	Private Sub OnNonClientPaint(ByRef m As Message)
-		Dim theme As ButtonTheme = Nothing
+		Dim theme As LabelTheme = Nothing
 		' This check prevents problems with viewing and saving Forms in VS Designer.
 		If TheApp IsNot Nothing Then
-			theme = TheApp.Settings.SelectedAppTheme.ButtonTheme
+			theme = TheApp.Settings.SelectedAppTheme.LabelTheme
 		End If
 		If theme IsNot Nothing Then
 			Dim borderColor As Color
@@ -138,13 +138,22 @@ Public Class LabelEx
 #Region "Private Methods"
 
 	Private Sub UpdateTheme()
-		'Dim theme As ButtonTheme = Nothing
-		'If TheApp IsNot Nothing Then
-		'	theme = TheApp.Settings.SelectedAppTheme.ButtonTheme
-		'End If
-		'If theme IsNot Nothing Then
-		'Else
-		'End If
+		Dim theme As LabelTheme = Nothing
+		If TheApp IsNot Nothing Then
+			theme = TheApp.Settings.SelectedAppTheme.LabelTheme
+		End If
+		If theme IsNot Nothing Then
+			If Me.Enabled Then
+				Me.ForeColor = theme.EnabledForeColor
+				Me.BackColor = theme.EnabledBackColor
+			Else
+				Me.ForeColor = theme.DisabledForeColor
+				Me.BackColor = theme.DisabledBackColor
+			End If
+		Else
+			Me.ForeColor = Control.DefaultForeColor
+			Me.BackColor = Control.DefaultBackColor
+		End If
 		'NOTE: Raise the OnNonClientCalcSize and OnNonClientPaint "events".
 		Win32Api.SetWindowPos(Me.Handle, IntPtr.Zero, 0, 0, 0, 0, Win32Api.SWP.SWP_FRAMECHANGED Or Win32Api.SWP.SWP_NOMOVE Or Win32Api.SWP.SWP_NOSIZE Or Win32Api.SWP.SWP_NOZORDER)
 	End Sub
@@ -159,9 +168,9 @@ Public Class LabelEx
 		Dim right As Integer = 0
 		Dim bottom As Integer = 0
 
-		Dim theme As ButtonTheme = Nothing
+		Dim theme As LabelTheme = Nothing
 		If TheApp IsNot Nothing Then
-			theme = TheApp.Settings.SelectedAppTheme.ButtonTheme
+			theme = TheApp.Settings.SelectedAppTheme.LabelTheme
 		End If
 		If theme IsNot Nothing Then
 			Dim borderWidth As Integer

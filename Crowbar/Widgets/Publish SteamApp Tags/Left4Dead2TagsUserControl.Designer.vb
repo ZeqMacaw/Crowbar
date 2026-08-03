@@ -52,12 +52,12 @@ Partial Class Left4Dead2TagsUserControl
         Me.ChargerCheckBox = New Crowbar.CheckBoxEx()
         Me.BoomerCheckBox = New Crowbar.CheckBoxEx()
         Me.CommonInfectedCheckBox = New Crowbar.CheckBoxEx()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.Label6 = New System.Windows.Forms.Label()
+        Me.Label1 = New Crowbar.LabelEx()
+        Me.Label2 = New Crowbar.LabelEx()
+        Me.Label3 = New Crowbar.LabelEx()
+        Me.Label4 = New Crowbar.LabelEx()
+        Me.Label5 = New Crowbar.LabelEx()
+        Me.Label6 = New Crowbar.LabelEx()
         Me.SpecialInfectedCheckBox = New Crowbar.CheckBoxEx()
         Me.ModelsCheckBox = New Crowbar.CheckBoxEx()
         Me.TexturesCheckBox = New Crowbar.CheckBoxEx()
@@ -897,12 +897,12 @@ Partial Class Left4Dead2TagsUserControl
 	Friend WithEvents ChargerCheckBox As CheckBoxEx
 	Friend WithEvents BoomerCheckBox As CheckBoxEx
 	Friend WithEvents CommonInfectedCheckBox As CheckBoxEx
-	Friend WithEvents Label1 As Label
-	Friend WithEvents Label2 As Label
-	Friend WithEvents Label3 As Label
-	Friend WithEvents Label4 As Label
-	Friend WithEvents Label5 As Label
-	Friend WithEvents Label6 As Label
+	Friend WithEvents Label1 As LabelEx
+	Friend WithEvents Label2 As LabelEx
+	Friend WithEvents Label3 As LabelEx
+	Friend WithEvents Label4 As LabelEx
+	Friend WithEvents Label5 As LabelEx
+	Friend WithEvents Label6 As LabelEx
 	Friend WithEvents SpecialInfectedCheckBox As CheckBoxEx
 	Friend WithEvents ModelsCheckBox As CheckBoxEx
 	Friend WithEvents TexturesCheckBox As CheckBoxEx

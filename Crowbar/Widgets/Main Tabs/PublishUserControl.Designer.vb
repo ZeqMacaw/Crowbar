@@ -16,7 +16,7 @@ Partial Class PublishUserControl
 		Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PublishUserControl))
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
 		Me.RefreshGameItemsButton = New Crowbar.ButtonEx()
-		Me.ItemOwnerLabel = New System.Windows.Forms.Label()
+		Me.ItemOwnerLabel = New Crowbar.LabelEx()
 		Me.ItemPostedTextBox = New Crowbar.DateTimeTextBoxEx()
 		Me.ItemUpdatedTextBox = New Crowbar.DateTimeTextBoxEx()
 		Me.QuotaProgressBar = New Crowbar.ProgressBarEx()
@@ -33,9 +33,9 @@ Partial Class PublishUserControl
 		Me.ItemCountsToolStripLabel = New Crowbar.ToolStripLabelEx()
 		Me.FindItemToolStripTextBox = New Crowbar.ToolStripSpringTextBoxEx()
 		Me.GamePanel = New Crowbar.PanelEx()
-		Me.GameLabel = New System.Windows.Forms.Label()
+		Me.GameLabel = New Crowbar.LabelEx()
 		Me.AppIdComboBox = New Crowbar.ComboUserControl()
-		Me.PublishRequiresSteamLabel = New System.Windows.Forms.Label()
+		Me.PublishRequiresSteamLabel = New Crowbar.LabelEx()
 		Me.OpenSteamSubscriberAgreementButton = New Crowbar.ButtonEx()
 		Me.MiddleBottomSplitContainer = New System.Windows.Forms.SplitContainer()
 		Me.ItemGroupBox = New Crowbar.GroupBoxEx()
@@ -46,31 +46,31 @@ Partial Class PublishUserControl
 		Me.ItemDescriptionTextBox = New Crowbar.RichTextBoxEx()
 		Me.ItemDescriptionTopPanel = New Crowbar.PanelEx()
 		Me.ToggleWordWrapForDescriptionCheckBox = New Crowbar.CheckBoxEx()
-		Me.ItemDescriptionLabel = New System.Windows.Forms.Label()
+		Me.ItemDescriptionLabel = New Crowbar.LabelEx()
 		Me.Panel3 = New System.Windows.Forms.Panel()
 		Me.ItemChangeNoteTextBox = New Crowbar.RichTextBoxEx()
 		Me.ItemChangeNoteTopPanel = New Crowbar.PanelEx()
 		Me.ToggleWordWrapForChangeNotePanel = New Crowbar.PanelEx()
 		Me.ToggleWordWrapForChangeNoteCheckBox = New Crowbar.CheckBoxEx()
-		Me.ItemChangeNoteLabel = New System.Windows.Forms.Label()
+		Me.ItemChangeNoteLabel = New Crowbar.LabelEx()
 		Me.ItemTopPanel = New Crowbar.PanelEx()
-		Me.ItemIDLabel = New System.Windows.Forms.Label()
+		Me.ItemIDLabel = New Crowbar.LabelEx()
 		Me.ItemIDTextBox = New Crowbar.RichTextBoxEx()
 		Me.ItemOwnerTextBox = New Crowbar.RichTextBoxEx()
-		Me.ItemTitleLabel = New System.Windows.Forms.Label()
+		Me.ItemTitleLabel = New Crowbar.LabelEx()
 		Me.Panel4 = New System.Windows.Forms.Panel()
 		Me.ItemTitleTextBox = New Crowbar.RichTextBoxEx()
 		Me.ItemBottomPanel = New Crowbar.PanelEx()
 		Me.Panel2 = New System.Windows.Forms.Panel()
-		Me.ItemPreviewImageLabel = New System.Windows.Forms.Label()
-		Me.ItemContentFolderOrFileLabel = New System.Windows.Forms.Label()
+		Me.ItemPreviewImageLabel = New Crowbar.LabelEx()
+		Me.ItemContentFolderOrFileLabel = New Crowbar.LabelEx()
 		Me.ItemPreviewImagePathFileNameTextBox = New Crowbar.RichTextBoxEx()
 		Me.ItemContentPathFileNameTextBox = New Crowbar.RichTextBoxEx()
 		Me.BrowseItemContentPathFileNameButton = New Crowbar.ButtonEx()
 		Me.BrowseItemPreviewImagePathFileNameButton = New Crowbar.ButtonEx()
 		Me.ItemPreviewImagePictureBox = New System.Windows.Forms.PictureBox()
 		Me.ItemVisibilityComboBox = New Crowbar.ComboUserControl()
-		Me.ItemVisibilityLabel = New System.Windows.Forms.Label()
+		Me.ItemVisibilityLabel = New Crowbar.LabelEx()
 		Me.SaveAsTemplateOrDraftItemButton = New Crowbar.ButtonEx()
 		Me.RefreshOrRevertItemButton = New Crowbar.ButtonEx()
 		Me.SaveTemplateButton = New Crowbar.ButtonEx()
@@ -1022,35 +1022,35 @@ Partial Class PublishUserControl
 
 	Friend WithEvents TopMiddleSplitContainer As SplitContainerEx
 	Friend WithEvents ItemsDataGridView As DataGridViewEx
-	Friend WithEvents PublishRequiresSteamLabel As Label
+	Friend WithEvents PublishRequiresSteamLabel As LabelEx
 	Friend WithEvents OpenSteamSubscriberAgreementButton As ButtonEx
     Friend WithEvents AppIdComboBox As ComboUserControl
-    Friend WithEvents GameLabel As Label
+    Friend WithEvents GameLabel As LabelEx
 	Friend WithEvents MiddleBottomSplitContainer As SplitContainer
 	Friend WithEvents ItemGroupBox As GroupBoxEx
 	Friend WithEvents ItemTagsSplitContainer As SplitContainer
 	Friend WithEvents OpenWorkshopPageButton As ButtonEx
-	Friend WithEvents ItemTitleLabel As Label
+	Friend WithEvents ItemTitleLabel As LabelEx
 	Friend WithEvents DeleteItemButton As ButtonEx
     Friend WithEvents ItemVisibilityComboBox As ComboUserControl
     Friend WithEvents BrowseItemPreviewImagePathFileNameButton As ButtonEx
 	Friend WithEvents ItemTitleTextBox As Crowbar.RichTextBoxEx
-	Friend WithEvents ItemPreviewImageLabel As Label
+	Friend WithEvents ItemPreviewImageLabel As LabelEx
 	Friend WithEvents ItemIDTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents ItemPreviewImagePathFileNameTextBox As Crowbar.RichTextBoxEx
-	Friend WithEvents ItemVisibilityLabel As Label
+	Friend WithEvents ItemVisibilityLabel As LabelEx
 	Friend WithEvents ItemPostedTextBox As DateTimeTextBoxEx
 	Friend WithEvents BrowseItemContentPathFileNameButton As ButtonEx
 	Friend WithEvents ItemUpdatedTextBox As DateTimeTextBoxEx
 	Friend WithEvents ItemContentPathFileNameTextBox As Crowbar.RichTextBoxEx
-	Friend WithEvents ItemContentFolderOrFileLabel As Label
+	Friend WithEvents ItemContentFolderOrFileLabel As LabelEx
 	Friend WithEvents DescriptionChangeNoteSplitContainer As SplitContainer
-	Friend WithEvents ItemDescriptionLabel As Label
+	Friend WithEvents ItemDescriptionLabel As LabelEx
 	Friend WithEvents ItemDescriptionTextBox As RichTextBoxEx
-	Friend WithEvents ItemChangeNoteLabel As Label
+	Friend WithEvents ItemChangeNoteLabel As LabelEx
 	Friend WithEvents ItemChangeNoteTextBox As RichTextBoxEx
 	Friend WithEvents ItemPreviewImagePictureBox As PictureBox
-	Friend WithEvents ItemIDLabel As Label
+	Friend WithEvents ItemIDLabel As LabelEx
 	Friend WithEvents ItemTagsGroupBox As GroupBoxEx
 	Friend WithEvents QueueListView As DataGridViewEx
 	Friend WithEvents LogTextBox As RichTextBoxEx
@@ -1062,7 +1062,7 @@ Partial Class PublishUserControl
 	Friend WithEvents SearchItemsToolStripTextBox As ToolStripTextBoxEx
 	Friend WithEvents SaveAsTemplateOrDraftItemButton As ButtonEx
 	Friend WithEvents ItemOwnerTextBox As Crowbar.RichTextBoxEx
-	Friend WithEvents ItemOwnerLabel As Label
+	Friend WithEvents ItemOwnerLabel As LabelEx
 	Friend WithEvents ToolTip1 As ToolTip
 	Friend WithEvents SearchItemsToolStripComboBox As ToolStripComboBoxEx
 	Friend WithEvents SaveTemplateButton As ButtonEx

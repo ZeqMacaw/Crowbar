@@ -11,6 +11,10 @@ Public Class RichTextBoxTheme
         Me.theEnabledBackColor = New XmlColor(Color.FromArgb(&HFF1E1E1E))
         Me.theDisabledForeColor = New XmlColor(Color.FromArgb(&HFFC0C0C0))
         Me.theDisabledBackColor = New XmlColor(Color.FromArgb(&HFF262626))
+
+        Me.theReadOnlyForeColor = New XmlColor(Color.FromArgb(&HFFF1F1F1))
+        Me.theReadOnlyBackColor = New XmlColor(Color.FromArgb(&HFF4B4B4B))
+        Me.theReadOnlyBorderColor = New XmlColor(Color.FromArgb(&HFFF1F1F1))
     End Sub
 
 #End Region
@@ -27,6 +31,33 @@ Public Class RichTextBoxTheme
 
 #Region "Properties"
 
+    Public Property ReadOnlyForeColor As XmlColor
+        Get
+            Return Me.theReadOnlyForeColor
+        End Get
+        Set(value As XmlColor)
+            Me.theReadOnlyForeColor = value
+        End Set
+    End Property
+
+    Public Property ReadOnlyBackColor As XmlColor
+        Get
+            Return Me.theReadOnlyBackColor
+        End Get
+        Set(value As XmlColor)
+            Me.theReadOnlyBackColor = value
+        End Set
+    End Property
+
+    Public Property ReadOnlyBorderColor As XmlColor
+        Get
+            Return Me.theReadOnlyBorderColor
+        End Get
+        Set(value As XmlColor)
+            Me.theReadOnlyBorderColor = value
+        End Set
+    End Property
+
 #End Region
 
 #Region "Methods"
@@ -42,6 +73,10 @@ Public Class RichTextBoxTheme
 #End Region
 
 #Region "Data"
+
+    Private theReadOnlyForeColor As XmlColor
+    Private theReadOnlyBackColor As XmlColor
+    Private theReadOnlyBorderColor As XmlColor
 
 #End Region
 

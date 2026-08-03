@@ -70,8 +70,6 @@ Public Class RichTextBoxEx
 		Me.theCueBannerText = ""
 		Me.theTextAlignment = HorizontalAlignment.Left
 
-		Me.theThemeIsUsed = True
-
 		Me.theLineCount = 0
 		Me.theScrollingIsActive = False
 	End Sub
@@ -98,59 +96,6 @@ Public Class RichTextBoxEx
 #End Region
 
 #Region "Properties"
-
-	<Browsable(True)>
-	<Category("Appearance")>
-	<DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
-	Public Overloads Property ForeColor As Color
-		Get
-			Return MyBase.ForeColor
-		End Get
-		Set
-			MyBase.ForeColor = Value
-		End Set
-	End Property
-
-	<Browsable(True)>
-	<Category("Appearance")>
-	<DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
-	Public Overloads Property BackColor As Color
-		Get
-			Return MyBase.BackColor
-		End Get
-		Set
-			MyBase.BackColor = Value
-			Me.theThemeIsUsed = False
-		End Set
-	End Property
-
-	<Browsable(True)>
-	<Category("Appearance")>
-	<DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
-	Public Overloads Property BorderColor As Color
-		Get
-			Return Me.theBorderColor
-		End Get
-		Set
-			Me.theBorderColor = Value
-			Me.theThemeIsUsed = False
-		End Set
-	End Property
-
-	<Browsable(True)>
-	<Category("Appearance")>
-	<Description("Colorable BorderStyle.")>
-	<DefaultValue(BorderStyle.FixedSingle)>
-	<DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
-	Public Overloads Property BorderStyle As BorderStyle
-		Get
-			Return Me.theBorderStyle
-		End Get
-		Set
-			Me.theBorderStyle = Value
-			Me.theThemeIsUsed = False
-		End Set
-	End Property
 
 	<Browsable(True)>
 	<Category("Behavior")>
@@ -351,20 +296,25 @@ Public Class RichTextBoxEx
 		'End If
 
 		Dim g As Graphics = e.Graphics
-		Dim clipRectangle As Rectangle = e.ClipRectangle
-		Dim clientRectangle As Rectangle = Me.ClientRectangle
 
 		' Draw text.
 		If Me.Text <> "" AndAlso Me.theOriginalFont IsNot Nothing Then
 			If Not Me.theControlIsBehavingAsMultiLine AndAlso Not Me.WordWrap Then
 				' Draw full text.
 
-				TextRenderer.DrawText(g, Me.Text, Me.theOriginalFont, Me.GetPositionFromCharIndex(0), Me.ForeColor, MyBase.BackColor, Me.theTextFormatFlags)
+				TextRenderer.DrawText(g, Me.Text, Me.theOriginalFont, Me.GetPositionFromCharIndex(0), Me.ForeColor, Me.BackColor, Me.theTextFormatFlags)
+				'TextRenderer.DrawText(g, Me.Text, Me.theOriginalFont, clientRectangle, Me.ForeColor, Me.BackColor, Me.theTextFormatFlags)
+				'Dim textLinePositionRect As Rectangle = Me.ClientRectangle
+				'textLinePositionRect.Location = Me.GetPositionFromCharIndex(0)
+				'TextRenderer.DrawText(g, Me.Text, Me.theOriginalFont, textLinePositionRect, Me.ForeColor, MyBase.BackColor, Me.theTextFormatFlags)
+				'Dim endCharIndex As Integer = Me.GetCharIndexFromPosition(New Point(clipRectangle.Right, clipRectangle.Bottom))
+				'Me.DrawNormalText(g, 0, 0, endCharIndex)
 
 				If Me.SelectionLength > 0 Then
 					Me.DrawSelectedText(g, Me.SelectionStart, Me.GetFirstCharIndexFromLine(0), Me.SelectionStart + Me.SelectionLength - 1)
 				End If
 			Else
+				Dim clipRectangle As Rectangle = e.ClipRectangle
 				'DEBUG: Color the clip rectangle.
 				'If Me.theTestColorIsBlue Then
 				'	Using backColorBrush As New SolidBrush(Color.Blue)
@@ -459,7 +409,11 @@ Public Class RichTextBoxEx
 					If endOfLineCharIndex < 0 OrElse endOfLineCharIndex > selectedEndCharIndex Then
 						endOfLineCharIndex = selectedEndCharIndex
 					End If
-					Me.DrawSelectedText(g, selectedStartCharIndex, startOfLineCharIndex, endOfLineCharIndex)
+					If endOfLineCharIndex <> selectedEndCharIndex AndAlso (startOfLineCharIndex < secondUnselectedStartCharIndex OrElse secondUnselectedStartCharIndex = -1) Then
+						Me.DrawSelectedText(g, selectedStartCharIndex, startOfLineCharIndex, endOfLineCharIndex)
+					Else
+						Me.DrawSelectedText(g, selectedStartCharIndex, startOfLineCharIndex, endOfLineCharIndex, True)
+					End If
 
 					' Draw selected text in remaining lines that have a selection.
 					While endOfLineCharIndex <> selectedEndCharIndex AndAlso (startOfLineCharIndex < secondUnselectedStartCharIndex OrElse secondUnselectedStartCharIndex = -1)
@@ -504,6 +458,7 @@ Public Class RichTextBoxEx
 		' Draw cue banner text.
 		If Me.theCueBannerText <> "" AndAlso Me.Text = "" AndAlso Me.theOriginalFont IsNot Nothing Then
 			Dim drawFont As System.Drawing.Font = New System.Drawing.Font(Me.theOriginalFont.FontFamily, Me.theOriginalFont.Size, FontStyle.Italic, Me.theOriginalFont.Unit)
+			Dim clientRectangle As Rectangle = Me.ClientRectangle
 			' Add top and bottom padding.
 			clientRectangle.Inflate(0, -1)
 			TextRenderer.DrawText(g, Me.theCueBannerText, drawFont, clientRectangle, WidgetDisabledTextColor, WidgetDeepBackColor, TextFormatFlags.Left)
@@ -766,27 +721,54 @@ Public Class RichTextBoxEx
 	'	End If
 	'End If
 
-	Protected Sub DrawNormalText(ByVal g As Graphics, ByVal startCharIndex As Integer, ByVal startOfLineCharIndex As Integer, ByVal endOfLineCharIndex As Integer)
+	Protected Sub DrawNormalText(ByVal g As Graphics, ByVal startCharIndex As Integer, ByVal startOfLineCharIndex As Integer, ByVal endOfLineCharIndex As Integer, Optional ByVal firstOfManyLines As Boolean = False)
 		Dim textLinePositionRect As Rectangle = Me.ClientRectangle
 		textLinePositionRect.Location = Me.GetPositionFromCharIndex(startOfLineCharIndex)
+		'textLinePositionRect.X -= 1
+		Dim testStartOfLineCharIndex As Integer = Me.GetCharIndexFromPosition(textLinePositionRect.Location)
+		If testStartOfLineCharIndex <> startOfLineCharIndex Then
+			Dim debug As Integer = 4242
+		End If
+
 		Dim textPositionRect As Rectangle = Me.ClientRectangle
 		textPositionRect.Location = Me.GetPositionFromCharIndex(startCharIndex)
+		'textPositionRect.X -= 1
+		Dim testStartCharIndex As Integer = Me.GetCharIndexFromPosition(textPositionRect.Location)
+		If testStartCharIndex <> startCharIndex Then
+			Dim debug As Integer = 4242
+		End If
+
 		g.IntersectClip(textPositionRect)
 
 		'Dim formatFlags As TextFormatFlags = Me.theFormatFlags
 		'If Me.TextAlign = HorizontalAlignment.Center Then
 		'	formatFlags = formatFlags Or TextFormatFlags.HorizontalCenter
 		'End If
+		Dim normalTextFormatFlags As TextFormatFlags = Me.theTextFormatFlags
+		If firstOfManyLines Then
+			normalTextFormatFlags = normalTextFormatFlags Or TextFormatFlags.GlyphOverhangPadding
+		End If
 
-		TextRenderer.DrawText(g, Me.Text.Substring(startOfLineCharIndex, endOfLineCharIndex - startOfLineCharIndex + 1), Me.theOriginalFont, textLinePositionRect, Me.ForeColor, MyBase.BackColor, Me.theTextFormatFlags)
+		TextRenderer.DrawText(g, Me.Text.Substring(startOfLineCharIndex, endOfLineCharIndex - startOfLineCharIndex + 1), Me.theOriginalFont, textLinePositionRect, Me.ForeColor, MyBase.BackColor, normalTextFormatFlags)
 		g.ResetClip()
 	End Sub
 
-	Protected Sub DrawSelectedText(ByVal g As Graphics, ByVal startCharIndex As Integer, ByVal startOfLineCharIndex As Integer, ByVal endOfLineCharIndex As Integer)
+	Protected Sub DrawSelectedText(ByVal g As Graphics, ByVal startCharIndex As Integer, ByVal startOfLineCharIndex As Integer, ByVal endOfLineCharIndex As Integer, Optional ByVal firstOfManyLines As Boolean = False)
 		Dim textLinePositionRect As Rectangle = Me.ClientRectangle
 		textLinePositionRect.Location = Me.GetPositionFromCharIndex(startOfLineCharIndex)
+		Dim testStartOfLineCharIndex As Integer = Me.GetCharIndexFromPosition(textLinePositionRect.Location)
+		If testStartOfLineCharIndex <> startOfLineCharIndex Then
+			Dim debug As Integer = 4242
+		End If
+
 		Dim textPositionRect As Rectangle = Me.ClientRectangle
 		textPositionRect.Location = Me.GetPositionFromCharIndex(startCharIndex)
+		'textPositionRect.X -= 1
+		Dim testStartCharIndex As Integer = Me.GetCharIndexFromPosition(textPositionRect.Location)
+		If testStartCharIndex <> startCharIndex Then
+			Dim debug As Integer = 4242
+		End If
+
 		g.IntersectClip(textPositionRect)
 
 		'Dim selectedTextForeColor As Color = WidgetConstants.WidgetTextColor
@@ -814,8 +796,12 @@ Public Class RichTextBoxEx
 		'If Me.TextAlign = HorizontalAlignment.Center Then
 		'	formatFlags = formatFlags Or TextFormatFlags.HorizontalCenter
 		'End If
+		Dim selectedTextFormatFlags As TextFormatFlags = Me.theTextFormatFlags
+		If firstOfManyLines Then
+			selectedTextFormatFlags = selectedTextFormatFlags Or TextFormatFlags.GlyphOverhangPadding
+		End If
 
-		TextRenderer.DrawText(g, Me.Text.Substring(startOfLineCharIndex, endOfLineCharIndex - startOfLineCharIndex + 1), Me.theOriginalFont, textLinePositionRect, selectedTextForeColor, selectedTextBackColor, Me.theTextFormatFlags)
+		TextRenderer.DrawText(g, Me.Text.Substring(startOfLineCharIndex, endOfLineCharIndex - startOfLineCharIndex + 1), Me.theOriginalFont, textLinePositionRect, selectedTextForeColor, selectedTextBackColor, selectedTextFormatFlags)
 		g.ResetClip()
 	End Sub
 
@@ -909,6 +895,12 @@ Public Class RichTextBoxEx
 		End Select
 
 		MyBase.WndProc(m)
+
+		'If m.Msg = Win32Api.WindowsMessages.WM_PAINT Then
+		'	Using graphic As Graphics = Me.CreateGraphics()
+		'		OnPaint(New PaintEventArgs(graphic, Me.ClientRectangle))
+		'	End Using
+		'End If
 	End Sub
 
 	Private Sub OnNonClientCalcSize(ByRef m As Message)
@@ -949,23 +941,41 @@ Public Class RichTextBoxEx
 					theme = TheApp.Settings.SelectedAppTheme.RichTextBoxTheme
 				End If
 				If theme IsNot Nothing Then
-					If Me.theBorderStyle = BorderStyle.FixedSingle Then
-						Using borderColorPen As New Pen(Me.theBorderColor)
+					Dim borderColor As Color
+					Dim borderWidth As Integer
+					If Me.Enabled Then
+						'If Me.theButtonCanBeFocused AndAlso Me.theMouseIsOverButton Then
+						'	borderColor = theme.FocusBorderColor
+						'	borderWidth = theme.FocusBorderWidth
+						'Else
+						borderColor = theme.EnabledBorderColor
+						borderWidth = theme.EnabledBorderWidth
+						'End If
+					Else
+						borderColor = theme.DisabledBorderColor
+						borderWidth = theme.DisabledBorderWidth
+					End If
+					Me.SelectionColor = theme.SelectedForeColor
+					Me.SelectionBackColor = theme.SelectedBackColor
+
+					Using borderColorPen As New Pen(borderColor, borderWidth)
+						borderColorPen.Alignment = Drawing2D.PenAlignment.Inset
+						If borderWidth = 1 Then
 							'NOTE: DrawRectangle width and height are interpreted as the right and bottom pixels to draw.
 							aRectF.Width -= 1
 							aRectF.Height -= 1
-							g.DrawRectangle(borderColorPen, aRectF.Left, aRectF.Top, aRectF.Width, aRectF.Height)
-						End Using
-					End If
-				Else
-					If Me.theBorderStyle = BorderStyle.FixedSingle Then
-						Using borderColorPen As New Pen(Me.theBorderColor)
-							'NOTE: DrawRectangle width and height are interpreted as the right and bottom pixels to draw.
-							aRectF.Width -= 1
-							aRectF.Height -= 1
-							g.DrawRectangle(borderColorPen, aRectF.Left, aRectF.Top, aRectF.Width, aRectF.Height)
-						End Using
-					End If
+						End If
+						g.DrawRectangle(borderColorPen, aRectF.Left, aRectF.Top, aRectF.Width, aRectF.Height)
+					End Using
+					'Else
+					'	If MyBase.BorderStyle = BorderStyle.FixedSingle Then
+					'		Using borderColorPen As New Pen(Me.theBorderColor)
+					'			'NOTE: DrawRectangle width and height are interpreted as the right and bottom pixels to draw.
+					'			aRectF.Width -= 1
+					'			aRectF.Height -= 1
+					'			g.DrawRectangle(borderColorPen, aRectF.Left, aRectF.Top, aRectF.Width, aRectF.Height)
+					'		End Using
+					'	End If
 				End If
 
 				g.ResetClip()
@@ -1059,31 +1069,30 @@ Public Class RichTextBoxEx
 			theme = TheApp.Settings.SelectedAppTheme.RichTextBoxTheme
 		End If
 		If theme IsNot Nothing Then
-			If Me.theThemeIsUsed Then
-				If MyBase.[ReadOnly] Then
-					Me.ForeColor = theme.DisabledForeColor
-					MyBase.BackColor = theme.DisabledBackColor
-				Else
-					Me.ForeColor = theme.EnabledForeColor
-					MyBase.BackColor = theme.EnabledBackColor
-				End If
+			If MyBase.[ReadOnly] Then
+				Me.ForeColor = theme.DisabledForeColor
+				Me.BackColor = theme.DisabledBackColor
+			Else
+				Me.ForeColor = theme.EnabledForeColor
+				Me.BackColor = theme.EnabledBackColor
 			End If
 
+			Me.SelectionColor = theme.SelectedForeColor
+			Me.SelectionBackColor = theme.SelectedBackColor
+
 			'NOTE: Disable to use custom.
-			MyBase.BorderStyle = BorderStyle.None
-			Me.theBorderStyle = BorderStyle.FixedSingle
-			Me.theBorderWidth = 1
+			Me.BorderStyle = BorderStyle.None
 			MyBase.ScrollBars = RichTextBoxScrollBars.None
 
-			Me.SetStyle(ControlStyles.AllPaintingInWmPaint, True)
-			Me.SetStyle(ControlStyles.DoubleBuffer, True)
-			Me.SetStyle(ControlStyles.UserPaint, True)
+			'Me.SetStyle(ControlStyles.AllPaintingInWmPaint, True)
+			'Me.SetStyle(ControlStyles.DoubleBuffer, True)
+			'Me.SetStyle(ControlStyles.UserPaint, True)
 		Else
 			Me.ForeColor = SystemColors.WindowText
 			If MyBase.[ReadOnly] Then
-				MyBase.BackColor = SystemColors.Control
+				Me.BackColor = SystemColors.Control
 			Else
-				MyBase.BackColor = SystemColors.Window
+				Me.BackColor = SystemColors.Window
 			End If
 
 			' Draw background here because the OnPaintBackground will not be called. 
@@ -1155,15 +1164,21 @@ Public Class RichTextBoxEx
 	End Function
 
 	Private Sub UpdateNonClientPadding()
-		Dim left As Integer = 2
-		Dim top As Integer = 2
-		Dim right As Integer = 2
-		Dim bottom As Integer = 2
+		Dim left As Integer = 0
+		Dim top As Integer = 0
+		Dim right As Integer = 0
+		Dim bottom As Integer = 0
 		Dim textSize As Size = TextRenderer.MeasureText("Wy", Me.theOriginalFont)
 
-		If Not Me.theControlIsBehavingAsMultiLine Then
-			top = CInt(Me.Height * 0.5 - textSize.Height * 0.5)
-		Else
+		'If Not Me.theControlIsBehavingAsMultiLine Then
+		'	top = CInt(Me.Height * 0.5 - textSize.Height * 0.5)
+		'Else
+		If Me.theControlIsBehavingAsMultiLine Then
+			left = 2
+			top = 2
+			right = 2
+			bottom = 2
+
 			If Not Me.WordWrap Then
 				Dim contentWidth As Integer = Me.GetContentWidthWithNoWordWrap()
 				If contentWidth > Me.ClientRectangle.Width Then
@@ -1176,6 +1191,31 @@ Public Class RichTextBoxEx
 			If contentHeight > Me.ClientRectangle.Height Then
 				right += ScrollBarEx.Consts.ScrollBarSize
 			End If
+		End If
+
+		Dim theme As RichTextBoxTheme = Nothing
+		If TheApp IsNot Nothing Then
+			theme = TheApp.Settings.SelectedAppTheme.RichTextBoxTheme
+		End If
+		If theme IsNot Nothing Then
+			Dim borderWidth As Integer
+			If Me.Enabled Then
+				If Me.Focused Then
+					borderWidth = theme.FocusBorderWidth
+				Else
+					borderWidth = theme.EnabledBorderWidth
+				End If
+			Else
+				borderWidth = theme.DisabledBorderWidth
+			End If
+			left += borderWidth
+			top += borderWidth
+			right += borderWidth
+			bottom += borderWidth
+		End If
+
+		If Not Me.theControlIsBehavingAsMultiLine Then
+			top = CInt(Me.Height * 0.5 - textSize.Height * 0.5)
 		End If
 
 		Me.NonClientPadding = New Padding(left, top, right, bottom)
@@ -1233,11 +1273,13 @@ Public Class RichTextBoxEx
 				Me.HorizontalScrollbar.BringToFront()
 				'NOTE: Location must be relative to Parent.
 				'Dim aPoint As New Point(Me.ClientRectangle.Left - Me.NonClientPadding.Left, Me.ClientRectangle.Height + Me.NonClientPadding.Top)
-				Dim aPoint As New Point(Me.ClientRectangle.Left - 1, Me.ClientRectangle.Height + 1)
+				'Dim aPoint As New Point(Me.ClientRectangle.Left - 1, Me.ClientRectangle.Height + 1)
+				Dim aPoint As New Point(Me.ClientRectangle.Left, Me.ClientRectangle.Height)
 				aPoint = Me.PointToScreen(aPoint)
 				aPoint = Me.HorizontalScrollbar.Parent.PointToClient(aPoint)
 				Me.HorizontalScrollbar.Location = aPoint
-				Me.HorizontalScrollbar.Size = New System.Drawing.Size(Me.Width - 2, ScrollBarEx.Consts.ScrollBarSize)
+				'Me.HorizontalScrollbar.Size = New System.Drawing.Size(Me.Width - 2, ScrollBarEx.Consts.ScrollBarSize)
+				Me.HorizontalScrollbar.Size = New System.Drawing.Size(Me.ClientRectangle.Width, ScrollBarEx.Consts.ScrollBarSize)
 
 				Me.HorizontalScrollbar.Show()
 
@@ -1275,11 +1317,13 @@ Public Class RichTextBoxEx
 				Me.VerticalScrollbar.BringToFront()
 				'NOTE: Location must be relative to Parent.
 				'Dim aPoint As New Point(Me.ClientRectangle.Width + Me.NonClientPadding.Left, Me.ClientRectangle.Top - Me.NonClientPadding.Top)
-				Dim aPoint As New Point(Me.ClientRectangle.Width + 1, Me.ClientRectangle.Top - 1)
+				'Dim aPoint As New Point(Me.ClientRectangle.Width + 1, Me.ClientRectangle.Top - 1)
+				Dim aPoint As New Point(Me.ClientRectangle.Width, Me.ClientRectangle.Top)
 				aPoint = Me.PointToScreen(aPoint)
 				aPoint = Me.VerticalScrollbar.Parent.PointToClient(aPoint)
 				Me.VerticalScrollbar.Location = aPoint
-				Me.VerticalScrollbar.Size = New System.Drawing.Size(ScrollBarEx.Consts.ScrollBarSize, Me.Height - 2)
+				'Me.VerticalScrollbar.Size = New System.Drawing.Size(ScrollBarEx.Consts.ScrollBarSize, Me.Height - 2)
+				Me.VerticalScrollbar.Size = New System.Drawing.Size(ScrollBarEx.Consts.ScrollBarSize, Me.ClientRectangle.Height)
 				Me.VerticalScrollbar.Show()
 
 				Me.theScrollingIsActive = False
@@ -1293,11 +1337,7 @@ Public Class RichTextBoxEx
 
 #Region "Data"
 
-	Private theBorderColor As Color
-	Private theBorderStyle As BorderStyle
-	Private theBorderWidth As Integer
 	Private NonClientPadding As Padding
-	Private theThemeIsUsed As Boolean
 
 	Private theControlIsBehavingAsMultiLine As Boolean
 	Private theSelectionIsEnabled As Boolean

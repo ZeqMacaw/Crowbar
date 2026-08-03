@@ -24,9 +24,9 @@ Partial Class UnpackUserControl
 		Me.OutputPathTextBox = New Crowbar.RichTextBoxEx()
 		Me.OutputSubfolderTextBox = New Crowbar.RichTextBoxEx()
 		Me.OutputPathComboBox = New Crowbar.ComboUserControl()
-		Me.Label2 = New System.Windows.Forms.Label()
+		Me.Label2 = New Crowbar.LabelEx()
 		Me.UseDefaultOutputSubfolderButton = New Crowbar.ButtonEx()
-		Me.PackagesLabel = New System.Windows.Forms.Label()
+		Me.PackagesLabel = New Crowbar.LabelEx()
 		Me.PackagePathFileNameTextBox = New Crowbar.RichTextBoxEx()
 		Me.BrowseForPackagePathFolderOrFileNameButton = New Crowbar.ButtonEx()
 		Me.GotoPackageButton = New Crowbar.ButtonEx()
@@ -51,7 +51,7 @@ Partial Class UnpackUserControl
 		Me.OptionsGroupBoxFillPanel = New Crowbar.PanelEx()
 		Me.KeepFullPathCheckBox = New Crowbar.CheckBoxEx()
 		Me.FolderForEachPackageCheckBox = New Crowbar.CheckBoxEx()
-		Me.Label3 = New System.Windows.Forms.Label()
+		Me.Label3 = New Crowbar.LabelEx()
 		Me.EditGameSetupButton = New Crowbar.ButtonEx()
 		Me.GameSetupComboBox = New Crowbar.ComboUserControl()
 		Me.SelectAllModelsAndMaterialsFoldersCheckBox = New Crowbar.CheckBoxEx()
@@ -851,7 +851,7 @@ Partial Class UnpackUserControl
 	End Sub
 	Friend WithEvents Panel2 As PanelEx
 	Friend WithEvents GotoPackageButton As ButtonEx
-	Friend WithEvents PackagesLabel As System.Windows.Forms.Label
+	Friend WithEvents PackagesLabel As Crowbar.LabelEx
 	Friend WithEvents BrowseForPackagePathFolderOrFileNameButton As ButtonEx
 	Friend WithEvents PackagePathFileNameTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents Options_LogSplitContainer As System.Windows.Forms.SplitContainer
@@ -874,7 +874,7 @@ Partial Class UnpackUserControl
 	Friend WithEvents SelectionPathTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents SelectAllModelsAndMaterialsFoldersCheckBox As CheckBoxEx
 	Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
-	Friend WithEvents Label3 As System.Windows.Forms.Label
+	Friend WithEvents Label3 As Crowbar.LabelEx
 	Friend WithEvents GameSetupComboBox As ComboUserControl
 	Friend WithEvents EditGameSetupButton As ButtonEx
 	Friend WithEvents LogFileCheckBox As CheckBoxEx
@@ -886,7 +886,7 @@ Partial Class UnpackUserControl
 	Friend WithEvents BrowseForOutputPathButton As ButtonEx
 	Friend WithEvents OutputPathTextBox As Crowbar.RichTextBoxEx
     Friend WithEvents OutputPathComboBox As ComboUserControl
-    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents Label2 As Crowbar.LabelEx
 	Friend WithEvents UseDefaultOutputSubfolderButton As ButtonEx
 	Friend WithEvents OutputSubfolderTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents OutputSamePathTextBox As Crowbar.RichTextBoxEx

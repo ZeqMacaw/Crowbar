@@ -8,6 +8,9 @@ Public Class CheckBoxTheme
     Public Sub New()
         MyBase.New()
 
+        Me.theEnabledBorderWidth = 0
+        Me.theDisabledBorderWidth = 0
+
         Me.theUntickedBoxEnabledBackColor = New XmlColor(Color.FromArgb(&HFF4B4B4B))
         Me.theUntickedBoxEnabledBorderColor = New XmlColor(Color.FromArgb(&HFFF1F1F1))
 

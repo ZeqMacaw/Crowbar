@@ -15,8 +15,6 @@ Public Class PanelEx
 
         ' Override BorderStyle to allow custom border width.
         MyBase.BorderStyle = BorderStyle.None
-        Me.theBorderStyle = BorderStyle.None
-        Me.theBorderWidth = 0
 
         Me.theScrollingIsActive = False
 
@@ -73,62 +71,6 @@ Public Class PanelEx
 #End Region
 
 #Region "Properties"
-
-    <Browsable(True)>
-    <Category("Appearance")>
-    <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
-    Public Overloads Property ForeColor As Color
-        Get
-            Return MyBase.ForeColor
-        End Get
-        Set
-            MyBase.ForeColor = Value
-        End Set
-    End Property
-
-    <Browsable(True)>
-    <Category("Appearance")>
-    <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
-    Public Overloads Property BackColor As Color
-        Get
-            Return MyBase.BackColor
-        End Get
-        Set
-            MyBase.BackColor = Value
-        End Set
-    End Property
-
-    <Browsable(True)>
-    <Category("Appearance")>
-    <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
-    Public Overloads Property BorderColor As Color
-        Get
-            Return Me.theBorderColor
-        End Get
-        Set
-            Me.theBorderColor = Value
-        End Set
-    End Property
-
-    <Browsable(True)>
-    <Category("Appearance")>
-    <Description("Colorable BorderStyle.")>
-    <DefaultValue(BorderStyle.None)>
-    <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
-    Public Overloads Property BorderStyle As BorderStyle
-        Get
-            Return Me.theBorderStyle
-        End Get
-        Set
-            Me.theBorderStyle = Value
-
-            If Me.theBorderStyle = Windows.Forms.BorderStyle.None Then
-                Me.theBorderWidth = 0
-            ElseIf Me.theBorderStyle = Windows.Forms.BorderStyle.FixedSingle Then
-                Me.theBorderWidth = 1
-            End If
-        End Set
-    End Property
 
     Public ReadOnly Property RadioButtons() As RadioButton()
         Get
@@ -301,8 +243,8 @@ Public Class PanelEx
             Select Case m.Msg
                 Case Win32Api.WindowsMessages.WM_NCCALCSIZE
                     Me.OnNonClientCalcSize(m)
-                    'Case Win32Api.WindowsMessages.WM_NCPAINT
-                    '    Me.OnNonClientPaint(m)
+                Case Win32Api.WindowsMessages.WM_NCPAINT
+                    Me.OnNonClientPaint(m)
             End Select
         End If
 
@@ -331,23 +273,44 @@ Public Class PanelEx
         End If
     End Sub
 
-    'Private Sub OnNonClientPaint(ByRef m As Message)
-    '    Dim hDC As IntPtr = Win32Api.GetWindowDC(Me.Handle)
-    '    Try
-    '        Using g As Graphics = Graphics.FromHdc(hDC)
-    '            Using backColorBrush As New SolidBrush(Me.theNonClientPaddingColor)
-    '                'Dim rect As Rectangle = Me.ClientRectangle
-    '                'rect.Offset(Me.NonClientPadding.Left, Me.NonClientPadding.Top)
-    '                'g.ExcludeClip(rect)
-    '                Dim aRect As RectangleF = g.VisibleClipBounds
-    '                g.FillRectangle(backColorBrush, aRect)
-    '            End Using
-    '        End Using
-    '    Finally
-    '        Win32Api.ReleaseDC(Me.Handle, hDC)
-    '    End Try
-    '    m.Result = IntPtr.Zero
-    'End Sub
+    Private Sub OnNonClientPaint(ByRef m As Message)
+        Dim theme As PanelTheme = Nothing
+        ' This check prevents problems with viewing and saving Forms in VS Designer.
+        If TheApp IsNot Nothing Then
+            theme = TheApp.Settings.SelectedAppTheme.PanelTheme
+        End If
+        If theme IsNot Nothing Then
+            Dim borderColor As Color
+            Dim borderWidth As Integer
+            If Me.Enabled Then
+                borderColor = theme.EnabledBorderColor
+                borderWidth = theme.EnabledBorderWidth
+            Else
+                borderColor = theme.DisabledBorderColor
+                borderWidth = theme.DisabledBorderWidth
+            End If
+
+            Dim hDC As IntPtr = Win32Api.GetWindowDC(Me.Handle)
+            Try
+                Using g As Graphics = Graphics.FromHdc(hDC)
+                    ' Draw border.
+                    Using borderColorPen As New Pen(borderColor, borderWidth)
+                        borderColorPen.Alignment = Drawing2D.PenAlignment.Inset
+                        Dim aRect As Rectangle = Rectangle.Truncate(g.VisibleClipBounds)
+                        If borderWidth = 1 Then
+                            'NOTE: DrawRectangle width and height are interpreted as the right and bottom pixels to draw when pen width is 1.
+                            aRect.Width -= 1
+                            aRect.Height -= 1
+                        End If
+                        g.DrawRectangle(borderColorPen, aRect)
+                    End Using
+                End Using
+            Finally
+                Win32Api.ReleaseDC(Me.Handle, hDC)
+            End Try
+            m.Result = IntPtr.Zero
+        End If
+    End Sub
 
 #End Region
 
@@ -462,11 +425,11 @@ Public Class PanelEx
         End If
         If theme IsNot Nothing Then
             Me.ForeColor = theme.EnabledForeColor
-            MyBase.BackColor = theme.EnabledBackColor
+            Me.BackColor = theme.EnabledBackColor
             'MyBase.BackColor = Color.Red
         Else
             Me.ForeColor = Control.DefaultForeColor
-            MyBase.BackColor = Control.DefaultBackColor
+            Me.BackColor = Control.DefaultBackColor
         End If
 
         'NOTE: Raise the OnNonClientCalcSize and OnNonClientPaint "events".
@@ -496,11 +459,21 @@ Public Class PanelEx
             End If
         End If
 
-        If Me.theBorderStyle = Windows.Forms.BorderStyle.FixedSingle Then
-            left += 1
-            top += 1
-            right += 1
-            bottom += 1
+        Dim theme As PanelTheme = Nothing
+        If TheApp IsNot Nothing Then
+            theme = TheApp.Settings.SelectedAppTheme.PanelTheme
+        End If
+        If theme IsNot Nothing Then
+            Dim borderWidth As Integer
+            If Me.Enabled Then
+                borderWidth = theme.EnabledBorderWidth
+            Else
+                borderWidth = theme.DisabledBorderWidth
+            End If
+            left += borderWidth
+            top += borderWidth
+            right += borderWidth
+            bottom += borderWidth
         End If
 
         Me.NonClientPadding = New Padding(left, top, right, bottom)
@@ -555,13 +528,8 @@ Public Class PanelEx
             Me.UpdateVerticalScrollbar()
 
             If Me.CustomHorizontalScrollbar.Visible AndAlso Me.CustomVerticalScrollBar.Visible Then
-                If Me.theBorderStyle = Windows.Forms.BorderStyle.FixedSingle Then
-                    Me.ScrollbarCornerPanel.Size = New System.Drawing.Size(ScrollBarEx.Consts.ScrollBarSize + Me.theBorderWidth, ScrollBarEx.Consts.ScrollBarSize + Me.theBorderWidth)
-                    Me.ScrollbarCornerPanel.RightAndBottomBorderWidth = 1
-                Else
-                    Me.ScrollbarCornerPanel.Size = New System.Drawing.Size(ScrollBarEx.Consts.ScrollBarSize, ScrollBarEx.Consts.ScrollBarSize)
-                    Me.ScrollbarCornerPanel.RightAndBottomBorderWidth = 0
-                End If
+                Me.ScrollbarCornerPanel.Size = New System.Drawing.Size(ScrollBarEx.Consts.ScrollBarSize + theme.EnabledBorderWidth, ScrollBarEx.Consts.ScrollBarSize + theme.EnabledBorderWidth)
+                Me.ScrollbarCornerPanel.RightAndBottomBorderWidth = 1
                 'NOTE: Assign to Parent so it can draw over non-client area.
                 Me.ScrollbarCornerPanel.Parent = Me.Parent
                 Me.ScrollbarCornerPanel.BringToFront()
@@ -615,13 +583,9 @@ Public Class PanelEx
                 aPoint = Me.PointToScreen(aPoint)
                 aPoint = Me.CustomHorizontalScrollbar.Parent.PointToClient(aPoint)
                 Me.CustomHorizontalScrollbar.Location = aPoint
-                If Me.theBorderStyle = Windows.Forms.BorderStyle.FixedSingle Then
-                    Me.CustomHorizontalScrollbar.Size = New System.Drawing.Size(Me.ClientRectangle.Width, ScrollBarEx.Consts.ScrollBarSize + Me.theBorderWidth)
-                    Me.CustomHorizontalScrollbar.RightAndBottomBorderWidth = 1
-                Else
-                    Me.CustomHorizontalScrollbar.Size = New System.Drawing.Size(Me.ClientRectangle.Width, ScrollBarEx.Consts.ScrollBarSize)
-                    Me.CustomHorizontalScrollbar.RightAndBottomBorderWidth = 0
-                End If
+                Dim theme As PanelTheme = TheApp.Settings.SelectedAppTheme.PanelTheme
+                Me.CustomHorizontalScrollbar.Size = New System.Drawing.Size(Me.ClientRectangle.Width, ScrollBarEx.Consts.ScrollBarSize + theme.EnabledBorderWidth)
+                Me.CustomHorizontalScrollbar.RightAndBottomBorderWidth = 1
                 Me.CustomHorizontalScrollbar.Show()
 
                 Me.theScrollingIsActive = False
@@ -665,13 +629,9 @@ Public Class PanelEx
                 aPoint = Me.PointToScreen(aPoint)
                 aPoint = Me.CustomVerticalScrollBar.Parent.PointToClient(aPoint)
                 Me.CustomVerticalScrollBar.Location = aPoint
-                If Me.theBorderStyle = Windows.Forms.BorderStyle.FixedSingle Then
-                    Me.CustomVerticalScrollBar.Size = New System.Drawing.Size(ScrollBarEx.Consts.ScrollBarSize + Me.theBorderWidth, Me.ClientRectangle.Height)
-                    Me.CustomVerticalScrollBar.RightAndBottomBorderWidth = 1
-                Else
-                    Me.CustomVerticalScrollBar.Size = New System.Drawing.Size(ScrollBarEx.Consts.ScrollBarSize, Me.ClientRectangle.Height)
-                    Me.CustomVerticalScrollBar.RightAndBottomBorderWidth = 0
-                End If
+                Dim theme As PanelTheme = TheApp.Settings.SelectedAppTheme.PanelTheme
+                Me.CustomVerticalScrollBar.Size = New System.Drawing.Size(ScrollBarEx.Consts.ScrollBarSize + theme.EnabledBorderWidth, Me.ClientRectangle.Height)
+                Me.CustomVerticalScrollBar.RightAndBottomBorderWidth = 1
                 Me.CustomVerticalScrollBar.Show()
 
                 Me.theScrollingIsActive = False
@@ -701,9 +661,6 @@ Public Class PanelEx
     Private theSelectedIndex As Integer
     Private theSelectedValue As System.Enum
 
-    Private theBorderColor As Color
-    Private theBorderStyle As BorderStyle
-    Private theBorderWidth As Integer
     Private NonClientPadding As Padding
     Private WithEvents CustomHorizontalScrollbar As ScrollBarEx
     Private WithEvents CustomVerticalScrollBar As ScrollBarEx

@@ -1,7 +1,7 @@
 ﻿Imports System.Xml.Serialization
 
-Public Class RadioButtonTheme
-    Inherits CheckBoxTheme
+Public Class LabelTheme
+    Inherits WidgetTheme
 
 #Region "Create and Destroy"
 

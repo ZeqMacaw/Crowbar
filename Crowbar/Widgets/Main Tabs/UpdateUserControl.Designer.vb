@@ -15,7 +15,7 @@ Partial Class UpdateUserControl
 		Me.CheckForUpdateGroupBox = New Crowbar.GroupBoxEx()
 		Me.Panel1 = New Crowbar.PanelEx()
 		Me.ChangelogTextBox = New Crowbar.RichTextBoxEx()
-		Me.CurrentVersionLabel = New System.Windows.Forms.Label()
+		Me.CurrentVersionLabel = New Crowbar.LabelEx()
 		Me.CheckForUpdateTopPanel = New Crowbar.PanelEx()
 		Me.CheckForUpdateButton = New Crowbar.ButtonEx()
 		Me.CheckForUpdateTextBox = New Crowbar.RichTextBoxEx()
@@ -25,7 +25,7 @@ Partial Class UpdateUserControl
 		Me.DownloadFolderTextBox = New Crowbar.RichTextBoxEx()
 		Me.DownloadProgressBarEx = New Crowbar.ProgressBarEx()
 		Me.BrowseForDownloadFolderButton = New Crowbar.ButtonEx()
-		Me.DownloadFolderLabel = New System.Windows.Forms.Label()
+		Me.DownloadFolderLabel = New Crowbar.LabelEx()
 		Me.GotoDownloadFileButton = New Crowbar.ButtonEx()
 		Me.CancelDownloadButton = New Crowbar.ButtonEx()
 		Me.DownloadButton = New Crowbar.ButtonEx()
@@ -386,7 +386,7 @@ Partial Class UpdateUserControl
 	Friend WithEvents UpdateProgressBarEx As ProgressBarEx
 	Friend WithEvents DownloadGroupBox As GroupBoxEx
 	Friend WithEvents DownloadProgressBarEx As ProgressBarEx
-	Friend WithEvents DownloadFolderLabel As Label
+	Friend WithEvents DownloadFolderLabel As LabelEx
 	Friend WithEvents BrowseForDownloadFolderButton As ButtonEx
 	Friend WithEvents DownloadFolderTextBox As Crowbar.RichTextBoxEx
 	Friend WithEvents BrowseForUpdateFolderButton As ButtonEx
@@ -397,7 +397,7 @@ Partial Class UpdateUserControl
 	Friend WithEvents CancelDownloadButton As ButtonEx
 	Friend WithEvents CancelCheckButton As ButtonEx
 	Friend WithEvents CheckForUpdateGroupBox As GroupBoxEx
-	Friend WithEvents CurrentVersionLabel As Label
+	Friend WithEvents CurrentVersionLabel As LabelEx
 	Friend WithEvents GotoDownloadFileButton As ButtonEx
 	Friend WithEvents UpdateUserControlFillPanel As PanelEx
 	Friend WithEvents CheckForUpdateTopPanel As PanelEx

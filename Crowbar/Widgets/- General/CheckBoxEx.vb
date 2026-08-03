@@ -211,6 +211,7 @@ Public Class CheckBoxEx
 				Dim left As Integer = boxRect.Left
 				Dim top As Integer = boxRect.Top
 
+				'TODO: If checkbox is smaller, draw a filled rectangle instead of checkmark.
 				' Checkmark is 9 pixels wide, 6 pixels high.
 				Using checkmarkPen As New Pen(checkmarkColor)
 					'checkmarkPen.Width = 2
