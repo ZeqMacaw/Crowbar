@@ -197,14 +197,60 @@ Public Class RichTextBoxEx
 		MyBase.OnHandleDestroyed(e)
 	End Sub
 
+	' Win32 constants for changing system color parameters locally
+	Private Const COLOR_HIGHLIGHT As Integer = 13
+	Private Const COLOR_HIGHLIGHTTEXT As Integer = 14
+
+	<DllImport("user32.dll", SetLastError:=True)>
+	Private Shared Function SetSysColors(ByVal nChanges As Integer, ByVal lpSysColor As Integer(), ByVal lpColorValues As Integer()) As Boolean
+	End Function
+
+	<DllImport("user32.dll", SetLastError:=True)>
+	Private Shared Function GetSysColor(ByVal nIndex As Integer) As Integer
+	End Function
+
+	Private _originalBackColor As Integer
+	Private _originalForeColor As Integer
+
 	Protected Overrides Sub OnGotFocus(e As EventArgs)
 		' This 'If' block prevents selection of text, as wanted in ComboUserControl.
 		If Not Me.theSelectionIsEnabled Then
 			MyBase.Enabled = False
 			MyBase.Enabled = True
 		End If
+
+		Dim theme As RichTextBoxTheme = Nothing
+		' This check prevents problems with viewing and saving Forms in VS Designer.
+		If TheApp IsNot Nothing Then
+			theme = TheApp.Settings.SelectedAppTheme.RichTextBoxTheme
+		End If
+		If theme IsNot Nothing Then
+			'Me.SelectionLength = 0
+
+			'  Store the current Windows highlight colors.
+			_originalBackColor = GetSysColor(COLOR_HIGHLIGHT)
+			_originalForeColor = GetSysColor(COLOR_HIGHLIGHTTEXT)
+
+			' Set the Windows highlight colors to custom colors for this widget.
+			Dim elements As Integer() = {COLOR_HIGHLIGHT, COLOR_HIGHLIGHTTEXT}
+			Dim colors As Integer() = {ColorTranslator.ToWin32(theme.SelectedBackColor), ColorTranslator.ToWin32(theme.SelectedForeColor)}
+			SetSysColors(elements.Length, elements, colors)
+		End If
+
 		MyBase.OnGotFocus(e)
+
 		Me.Invalidate()
+	End Sub
+
+	Protected Overrides Sub OnLostFocus(e As EventArgs)
+		' Restore Windows highlight colors.
+		Dim elements As Integer() = {COLOR_HIGHLIGHT, COLOR_HIGHLIGHTTEXT}
+		Dim colors As Integer() = {_originalBackColor, _originalForeColor}
+		SetSysColors(elements.Length, elements, colors)
+
+		MyBase.OnLostFocus(e)
+
+		'Me.Invalidate()
 	End Sub
 
 	Protected Overrides Sub OnHScroll(e As EventArgs)
@@ -242,10 +288,10 @@ Public Class RichTextBoxEx
 	'	Me.Invalidate()
 	'End Sub
 
-	Protected Overrides Sub OnMouseMove(e As MouseEventArgs)
-		MyBase.OnMouseMove(e)
-		Me.Invalidate()
-	End Sub
+	'Protected Overrides Sub OnMouseMove(e As MouseEventArgs)
+	'	MyBase.OnMouseMove(e)
+	'	Me.Invalidate()
+	'End Sub
 
 	Protected Overrides Sub OnMouseWheel(e As MouseEventArgs)
 		MyBase.OnMouseWheel(e)
@@ -897,9 +943,18 @@ Public Class RichTextBoxEx
 		MyBase.WndProc(m)
 
 		'If m.Msg = Win32Api.WindowsMessages.WM_PAINT Then
-		'	Using graphic As Graphics = Me.CreateGraphics()
-		'		OnPaint(New PaintEventArgs(graphic, Me.ClientRectangle))
-		'	End Using
+		'	'Using graphic As Graphics = Me.CreateGraphics()
+		'	'	OnPaint(New PaintEventArgs(graphic, Me.ClientRectangle))
+		'	'End Using
+		'	Dim theme As RichTextBoxTheme = Nothing
+		'	' This check prevents problems with viewing and saving Forms in VS Designer.
+		'	If TheApp IsNot Nothing Then
+		'		theme = TheApp.Settings.SelectedAppTheme.RichTextBoxTheme
+		'	End If
+		'	If theme IsNot Nothing Then
+		'		Me.SelectionColor = theme.SelectedForeColor
+		'		Me.SelectionBackColor = theme.SelectedBackColor
+		'	End If
 		'End If
 	End Sub
 
@@ -955,8 +1010,6 @@ Public Class RichTextBoxEx
 						borderColor = theme.DisabledBorderColor
 						borderWidth = theme.DisabledBorderWidth
 					End If
-					Me.SelectionColor = theme.SelectedForeColor
-					Me.SelectionBackColor = theme.SelectedBackColor
 
 					Using borderColorPen As New Pen(borderColor, borderWidth)
 						borderColorPen.Alignment = Drawing2D.PenAlignment.Inset
@@ -1070,15 +1123,19 @@ Public Class RichTextBoxEx
 		End If
 		If theme IsNot Nothing Then
 			If MyBase.[ReadOnly] Then
-				Me.ForeColor = theme.DisabledForeColor
-				Me.BackColor = theme.DisabledBackColor
-			Else
+				Me.ForeColor = theme.ReadOnlyForeColor
+				Me.BackColor = theme.ReadOnlyBackColor
+			ElseIf Me.Enabled Then
 				Me.ForeColor = theme.EnabledForeColor
 				Me.BackColor = theme.EnabledBackColor
+			Else
+				Me.ForeColor = theme.DisabledForeColor
+				Me.BackColor = theme.DisabledBackColor
 			End If
 
-			Me.SelectionColor = theme.SelectedForeColor
-			Me.SelectionBackColor = theme.SelectedBackColor
+			'Me.SelectionColor = theme.SelectedForeColor
+			'Me.SelectionBackColor = theme.SelectedBackColor
+			Me.SelectionLength = 0
 
 			'NOTE: Disable to use custom.
 			Me.BorderStyle = BorderStyle.None
