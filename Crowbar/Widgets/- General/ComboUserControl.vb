@@ -17,9 +17,11 @@ Public Class ComboUserControl
 		'NOTE: Disable to use custom.
 		MyBase.BorderStyle = BorderStyle.None
 
-		Me.theBorderStyle = BorderStyle.FixedSingle
+		'NOTE: Avoid automatic "disabled" coloring by always having Enabled = True.
+		MyBase.Enabled = True
+		Me.theWidgetIsEnabled = True
 		Me.theControlIsReadOnly = False
-		Me.theComboPanelBorderColor = Color.Red
+		'Me.theComboPanelBorderColor = Color.Red
 		Me.theMouseIsOverWidget = False
 		Me.CreateContextMenu()
 
@@ -86,29 +88,43 @@ Public Class ComboUserControl
 
 #Region "Properties"
 
-	<Browsable(True)>
-	<Category("Appearance")>
-	<DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
-	Public Overloads Property ForeColor As Color
+	' Prevent automatic disabling of child controls, particularly the child RichTextBox (RTB).
+	' Because the RTB.Enabled property is not overridable, the UserControl calls Control.Enabled instead of RTB.Enabled.
+	Public Shadows Property Enabled As Boolean
 		Get
-			Return MyBase.ForeColor
+			Return Me.theWidgetIsEnabled
 		End Get
 		Set
-			MyBase.ForeColor = Value
+			Me.theWidgetIsEnabled = Value
+			Me.ComboTextBox.Enabled = Value
+			Me.TextHistoryDropDownButton.Enabled = Value
+			Me.UpdateTheme()
 		End Set
 	End Property
 
-	<Browsable(True)>
-	<Category("Appearance")>
-	<DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
-	Public Overloads Property BackColor As Color
-		Get
-			Return MyBase.BackColor
-		End Get
-		Set
-			MyBase.BackColor = Value
-		End Set
-	End Property
+	'<Browsable(True)>
+	'<Category("Appearance")>
+	'<DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
+	'Public Overloads Property ForeColor As Color
+	'	Get
+	'		Return MyBase.ForeColor
+	'	End Get
+	'	Set
+	'		MyBase.ForeColor = Value
+	'	End Set
+	'End Property
+
+	'<Browsable(True)>
+	'<Category("Appearance")>
+	'<DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
+	'Public Overloads Property BackColor As Color
+	'	Get
+	'		Return MyBase.BackColor
+	'	End Get
+	'	Set
+	'		MyBase.BackColor = Value
+	'	End Set
+	'End Property
 
 	'<Browsable(True)>
 	'<Category("Appearance")>
@@ -816,15 +832,37 @@ Public Class ComboUserControl
 			theme = TheApp.Settings.SelectedAppTheme.ComboUserControlTheme
 		End If
 		If theme IsNot Nothing Then
-			Me.ForeColor = theme.EnabledForeColor
-			Me.BackColor = theme.EnabledBackColor
-			''Me.ComboTextBox.Visible = True
-			'Me.ComboTextBox.Visible = False
+			'Me.ForeColor = theme.EnabledForeColor
+			'Me.BackColor = theme.EnabledBackColor
+			'''Me.ComboTextBox.Visible = True
+			''Me.ComboTextBox.Visible = False
+			''Me.ComboTextBox.ForeColor = theme.EnabledForeColor
+			''Me.ComboTextBox.BackColor = theme.EnabledBackColor
+			If Me.theWidgetIsEnabled Then
+				Me.ForeColor = theme.EnabledForeColor
+				Me.BackColor = theme.EnabledBackColor
+				Me.ComboTextBox.ForeColor = theme.EnabledForeColor
+				Me.ComboTextBox.BackColor = theme.EnabledBackColor
+				If Me.IsReadOnly Then
+					Me.ForeColor = theme.ReadOnlyForeColor
+					Me.BackColor = theme.ReadOnlyBackColor
+					Me.ComboTextBox.ForeColor = theme.ReadOnlyForeColor
+					Me.ComboTextBox.BackColor = theme.ReadOnlyBackColor
+				End If
+			Else
+				Me.ForeColor = theme.DisabledForeColor
+				Me.BackColor = theme.DisabledBackColor
+				Me.ComboTextBox.ForeColor = theme.DisabledForeColor
+				Me.ComboTextBox.BackColor = theme.DisabledBackColor
+			End If
 		Else
 			Me.ForeColor = Control.DefaultForeColor
 			Me.BackColor = Control.DefaultBackColor
 			'Me.ComboTextBox.Visible = False
 		End If
+
+		'NOTE: Raise the OnNonClientCalcSize and OnNonClientPaint "events".
+		Win32Api.SetWindowPos(Me.Handle, IntPtr.Zero, 0, 0, 0, 0, Win32Api.SWP.SWP_FRAMECHANGED Or Win32Api.SWP.SWP_NOMOVE Or Win32Api.SWP.SWP_NOSIZE Or Win32Api.SWP.SWP_NOZORDER)
 	End Sub
 
 	Private Sub UpdateNonClientPadding()
@@ -857,12 +895,10 @@ Public Class ComboUserControl
 			right += borderWidth
 			bottom += borderWidth
 		Else
-			If Me.theBorderStyle = BorderStyle.FixedSingle Then
-				left = 1
-				top = 1
-				right = 1
-				bottom = 1
-			End If
+			left = 1
+			top = 1
+			right = 1
+			bottom = 1
 		End If
 
 		Me.NonClientPadding = New Padding(left, top, right, bottom)
@@ -999,7 +1035,7 @@ Public Class ComboUserControl
 	End Sub
 
 	Private Sub OnDropDownButton_MouseDown()
-		If Not Me.theDropDownButtonWasClickedWhenPopupShowing Then
+		If Me.TextHistoryDropDownButton.Enabled AndAlso Not Me.theDropDownButtonWasClickedWhenPopupShowing Then
 			Dim itemCount As Integer = Me.TextHistoryDataGridView.Rows.Count
 			If itemCount > Me.theMaxDropDownItemCount Then
 				itemCount = Me.theMaxDropDownItemCount
@@ -1194,9 +1230,10 @@ Public Class ComboUserControl
 #Region "Data"
 
 	Private NonClientPadding As Padding
-	Private theBorderStyle As BorderStyle
+	'Private theBorderStyle As BorderStyle
+	Private theWidgetIsEnabled As Boolean
 	Protected theControlIsReadOnly As Boolean
-	Protected theComboPanelBorderColor As Color
+	'Protected theComboPanelBorderColor As Color
 	Protected theDefaultSize As Size
 	Protected theMouseIsOverWidget As Boolean
 
